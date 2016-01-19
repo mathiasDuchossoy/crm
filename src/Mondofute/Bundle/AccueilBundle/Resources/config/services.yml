@@ -1,0 +1,4 @@
+services:
+#    mondofute_accueil.example:
+#        class: Mondofute\Bundle\AccueilBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

@@ -1,1 +1,9 @@
+mondofute_accueil:
+    resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_site:
+    resource: "@MondofuteSiteBundle/Resources/config/routing.yml"
+    prefix:   /site
+
 
