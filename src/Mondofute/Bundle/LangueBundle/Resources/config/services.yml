@@ -1,0 +1,4 @@
+services:
+#    mondofute_langue.example:
+#        class: Mondofute\Bundle\LangueBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

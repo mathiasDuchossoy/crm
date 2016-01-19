@@ -1,0 +1,3 @@
+mondofute_langue_homepage:
+    path:     /
+    defaults: { _controller: MondofuteLangueBundle:Default:index }

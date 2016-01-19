@@ -1,0 +1,22 @@
+Mondofute\Bundle\LangueBundle\Entity\Langue:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LangueBundle\Repository\LangueRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        code:
+            type: string
+            length: '10'
+            unique: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\LangueTraduction
+            mappedBy: langue
+    lifecycleCallbacks: {  }

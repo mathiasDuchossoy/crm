@@ -1,11 +1,11 @@
 <?php
 
-namespace Mondofute\Bundle\SiteBundle\Entity;
+namespace Mondofute\Bundle\LangueBundle\Entity;
 
 /**
- * Site
+ * LangueTraduction
  */
-class Site
+class LangueTraduction
 {
     /**
      * @var int
@@ -16,11 +16,6 @@ class Site
      * @var string
      */
     private $libelle;
-
-    /**
-     * @var bool
-     */
-    private $crm;
 
 
     /**
@@ -38,7 +33,7 @@ class Site
      *
      * @param string $libelle
      *
-     * @return Site
+     * @return LangueTraduction
      */
     public function setLibelle($libelle)
     {
@@ -56,28 +51,33 @@ class Site
     {
         return $this->libelle;
     }
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
+
 
     /**
-     * Set crm
+     * Set langue
      *
-     * @param boolean $crm
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
      *
-     * @return Site
+     * @return LangueTraduction
      */
-    public function setCrm($crm)
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
-        $this->crm = $crm;
+        $this->langue = $langue;
 
         return $this;
     }
 
     /**
-     * Get crm
+     * Get langue
      *
-     * @return bool
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getCrm()
+    public function getLangue()
     {
-        return $this->crm;
+        return $this->langue;
     }
 }

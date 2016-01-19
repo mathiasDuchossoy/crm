@@ -1,7 +1,7 @@
-Mondofute\Bundle\SiteBundle\Entity\Site:
+Mondofute\Bundle\LangueBundle\Entity\LangueTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\SiteBundle\Repository\SiteRepository
+    repositoryClass: Mondofute\Bundle\LangueBundle\Repository\LangueTraductionRepository
     id:
         id:
             type: integer
@@ -14,7 +14,9 @@ Mondofute\Bundle\SiteBundle\Entity\Site:
         libelle:
             type: string
             length: 255
-            unique: true
-        crm:
-            type: boolean
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+            inversedBy: traductions
     lifecycleCallbacks: {  }
+
