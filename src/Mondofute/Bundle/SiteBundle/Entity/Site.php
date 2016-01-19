@@ -80,4 +80,62 @@ class Site
     {
         return $this->crm;
     }
+    /**
+     * @var integer
+     */
+    private $classementAffichage;
+
+
+    /**
+     * Set classementAffichage
+     *
+     * @param integer $classementAffichage
+     *
+     * @return Site
+     */
+    public function setClassementAffichage($classementAffichage)
+    {
+        $this->classementAffichage = $classementAffichage;
+
+        return $this;
+    }
+
+    /**
+     * Get classementAffichage
+     *
+     * @return integer
+     */
+    public function getClassementAffichage()
+    {
+        return $this->classementAffichage;
+    }
+    /**
+     * @var integer
+     */
+    private $classementReferent;
+
+
+    /**
+     * Set classementReferent
+     *
+     * @param integer $classementReferent
+     *
+     * @return Site
+     */
+    public function setClassementReferent($classementReferent)
+    {
+        $this->classementReferent = $classementReferent;
+
+        return $this;
+    }
+
+    /**
+     * Get classementReferent
+     *
+     * @return integer
+     */
+    public function getClassementReferent()
+    {
+        return $this->classementReferent;
+    }
 }

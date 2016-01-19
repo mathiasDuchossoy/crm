@@ -51,5 +51,33 @@ class LangueTraduction
     {
         return $this->libelle;
     }
-}
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
+
+    /**
+     * Set langue
+     *
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     *
+     * @return LangueTraduction
+     */
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+}

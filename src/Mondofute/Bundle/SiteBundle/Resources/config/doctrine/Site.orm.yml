@@ -17,4 +17,12 @@ Mondofute\Bundle\SiteBundle\Entity\Site:
             unique: true
         crm:
             type: boolean
+        classementAffichage:
+            type: smallint
+            options:
+                unsigned: true
+        classementReferent:
+            type: smallint
+            options:
+                unsigned: true
     lifecycleCallbacks: {  }
