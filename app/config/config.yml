@@ -66,6 +66,7 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+# Assetic Configuration
 assetic:
     debug:  true
     use_controller: false
