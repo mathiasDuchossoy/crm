@@ -18,5 +18,7 @@ Mondofute\Bundle\LangueBundle\Entity\LangueTraduction:
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
             inversedBy: traductions
+        langueTraduction:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\LangueTraduction
     lifecycleCallbacks: {  }
 
