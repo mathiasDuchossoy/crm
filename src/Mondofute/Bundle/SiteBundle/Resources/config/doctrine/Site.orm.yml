@@ -1,0 +1,18 @@
+Mondofute\Bundle\SiteBundle\Entity\Site:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\SiteBundle\Repository\SiteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+            unique: true
+        crm:
+            type: boolean
+    lifecycleCallbacks: {  }
