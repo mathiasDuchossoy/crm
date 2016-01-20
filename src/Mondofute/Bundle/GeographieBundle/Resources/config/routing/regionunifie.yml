@@ -1,0 +1,24 @@
+geographie_region_index:
+    path:     /
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:index" }
+    methods:  GET
+
+geographie_region_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:show" }
+    methods:  GET
+
+geographie_region_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:new" }
+    methods:  [GET, POST]
+
+geographie_region_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:edit" }
+    methods:  [GET, POST]
+
+geographie_region_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:delete" }
+    methods:  DELETE

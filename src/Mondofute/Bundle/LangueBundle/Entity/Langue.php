@@ -16,7 +16,18 @@ class Langue
      * @var string
      */
     private $code;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -26,6 +37,16 @@ class Langue
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -43,28 +64,6 @@ class Langue
     }
 
     /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
      * Add traduction
      *
      * @param \Mondofute\Bundle\LangueBundle\Entity\LangueTraduction $traduction
@@ -73,7 +72,7 @@ class Langue
      */
     public function addTraduction(\Mondofute\Bundle\LangueBundle\Entity\LangueTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setLangueTraduction($traduction);
 
         return $this;
     }

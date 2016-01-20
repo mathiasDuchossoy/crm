@@ -1,0 +1,7 @@
+{% extends '@MondofuteGeographie/regionunifie/fiche.html.twig' %}
+{% block titre %}Ajout d'une région{% endblock %}
+{% block formulaire %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+{% endblock %}

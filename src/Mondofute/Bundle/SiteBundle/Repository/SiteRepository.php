@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\SiteBundle\Repository;
 
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 /**
  * SiteRepository
  *
@@ -10,4 +11,11 @@ namespace Mondofute\Bundle\SiteBundle\Repository;
  */
 class SiteRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function chargerSansCrmParClassementAffichage()
+    {
+        $em = $this->getEntityManager();
+        $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0),
+            array('classementAffichage' => 'ASC'));
+        return $sites;
+    }
 }

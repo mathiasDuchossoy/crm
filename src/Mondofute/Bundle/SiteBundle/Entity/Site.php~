@@ -21,7 +21,14 @@ class Site
      * @var bool
      */
     private $crm;
-
+    /**
+     * @var integer
+     */
+    private $classementAffichage;
+    /**
+     * @var integer
+     */
+    private $classementReferent;
 
     /**
      * Get id
@@ -31,6 +38,16 @@ class Site
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -48,13 +65,13 @@ class Site
     }
 
     /**
-     * Get libelle
+     * Get crm
      *
-     * @return string
+     * @return bool
      */
-    public function getLibelle()
+    public function getCrm()
     {
-        return $this->libelle;
+        return $this->crm;
     }
 
     /**
@@ -72,19 +89,14 @@ class Site
     }
 
     /**
-     * Get crm
+     * Get classementAffichage
      *
-     * @return bool
+     * @return integer
      */
-    public function getCrm()
+    public function getClassementAffichage()
     {
-        return $this->crm;
+        return $this->classementAffichage;
     }
-    /**
-     * @var integer
-     */
-    private $classementAffichage;
-
 
     /**
      * Set classementAffichage
@@ -101,19 +113,14 @@ class Site
     }
 
     /**
-     * Get classementAffichage
+     * Get classementReferent
      *
      * @return integer
      */
-    public function getClassementAffichage()
+    public function getClassementReferent()
     {
-        return $this->classementAffichage;
+        return $this->classementReferent;
     }
-    /**
-     * @var integer
-     */
-    private $classementReferent;
-
 
     /**
      * Set classementReferent
@@ -127,15 +134,5 @@ class Site
         $this->classementReferent = $classementReferent;
 
         return $this;
-    }
-
-    /**
-     * Get classementReferent
-     *
-     * @return integer
-     */
-    public function getClassementReferent()
-    {
-        return $this->classementReferent;
     }
 }

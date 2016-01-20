@@ -1,0 +1,4 @@
+services:
+#    mondofute_geographie.example:
+#        class: Mondofute\Bundle\GeographieBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

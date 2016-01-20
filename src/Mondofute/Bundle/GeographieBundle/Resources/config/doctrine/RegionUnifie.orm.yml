@@ -1,0 +1,17 @@
+Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\RegionUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        regions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region
+            mappedBy: regionUnifie
+    lifecycleCallbacks: {  }

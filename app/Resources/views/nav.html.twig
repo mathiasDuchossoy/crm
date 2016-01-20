@@ -1,18 +1,28 @@
  {#<div class="container-fluid">#}
 
-     <nav class="container-fluid">
-         <ul class="nav nav-pills">
+     <nav role="navigation">
+         <ul class="nav navbar-nav">
+             <li>
+                 <a href="{{ path('mondofute_accueil_homepage') }}">{{ 'accueil' | capitalize }}</a>
+             </li>
              <li role="presentation"
-             class="dropdown">
-                 <a href="#"
-                    class="dropdown-toggle"
-                    data-toggle="dropdown"
-                    role="button"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                 >
+             class="dropdown {% if 'geographie' in app.request.attributes.get('_route') %} active {% endif %}">
+                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                      Géographie <span class="caret"></span>
                  </a>
+                 <ul class="dropdown-menu">
+                     <li role="presentation" class="dropdown-submenu {% if 'region' in app.request.attributes.get('_route') %} active {% endif %}">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="">Région</a>
+                         <ul class="dropdown-menu">
+                             <li class="{% if 'region_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                                 <a href="{{ path('geographie_region_index') }}">{{ 'liste' |capitalize }}</a>
+                             </li>
+                             <li class="{% if 'region_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                                 <a href="{{ path('geographie_region_new') }}">{{ 'ajouter' | capitalize }}</a>
+                             </li>
+                         </ul>
+                     </li>
+                 </ul>
              </li>
          </ul>
      </nav>

@@ -1,0 +1,14 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <div>
+        {% block formulaire %}
+        {% endblock %}
+    </div>
+{% endblock %}

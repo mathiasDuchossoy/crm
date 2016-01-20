@@ -1,7 +1,7 @@
-Mondofute\Bundle\LangueBundle\Entity\LangueTraduction:
+Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\LangueBundle\Repository\LangueTraductionRepository
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\RegionTraductionRepository
     id:
         id:
             type: integer
@@ -14,11 +14,13 @@ Mondofute\Bundle\LangueBundle\Entity\LangueTraduction:
         libelle:
             type: string
             length: 255
+        description:
+            type: string
+            length: 255
     manyToOne:
+        region:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region
+            inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
-            inversedBy: traductions
-        langueTraduction:
-            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }
-

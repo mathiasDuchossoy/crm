@@ -16,7 +16,14 @@ class LangueTraduction
      * @var string
      */
     private $libelle;
-
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\LangueTraduction
+     */
+    private $langueTraduction;
 
     /**
      * Get id
@@ -26,6 +33,16 @@ class LangueTraduction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -43,19 +60,14 @@ class LangueTraduction
     }
 
     /**
-     * Get libelle
+     * Get langue
      *
-     * @return string
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getLibelle()
+    public function getLangue()
     {
-        return $this->libelle;
+        return $this->langue;
     }
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
 
     /**
      * Set langue
@@ -72,12 +84,26 @@ class LangueTraduction
     }
 
     /**
-     * Get langue
+     * Get langueTraduction
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return \Mondofute\Bundle\LangueBundle\Entity\LangueTraduction
      */
-    public function getLangue()
+    public function getLangueTraduction()
     {
-        return $this->langue;
+        return $this->langueTraduction;
+    }
+
+    /**
+     * Set langueTraduction
+     *
+     * @param \Mondofute\Bundle\LangueBundle\Entity\LangueTraduction $langueTraduction
+     *
+     * @return LangueTraduction
+     */
+    public function setLangueTraduction(\Mondofute\Bundle\LangueBundle\Entity\LangueTraduction $langueTraduction = null)
+    {
+        $this->langueTraduction = $langueTraduction;
+
+        return $this;
     }
 }
