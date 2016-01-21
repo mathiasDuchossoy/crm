@@ -22,8 +22,7 @@ class RegionType extends AbstractType
                 'entry_type' => RegionTraductionType::class,
                 'required' => false,
             ))
-            ->add('site',HiddenType::class,array('mapped' => false))
-//            ->add('regionUnifie')
+            ->add('site', HiddenType::class, array('mapped' => false))//            ->add('regionUnifie')
         ;
     }
 

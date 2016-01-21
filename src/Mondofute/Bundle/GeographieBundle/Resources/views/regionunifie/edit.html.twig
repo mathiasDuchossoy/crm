@@ -1,11 +1,18 @@
 {% extends '@MondofuteGeographie/regionunifie/fiche.html.twig' %}
 
-{#{% block body %}#}
-    {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
-    {% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
-    {% block titre %}
-        Modification de la région
-    {% endblock %}
+{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+
+{% block title %}
+    {{ 'édition de la région ' | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification de la région
+{% endblock %}
+
+{#  BLOCK CONTENANT LE FORMULAIRE #}
 {% block formulaire %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
@@ -18,6 +25,7 @@
     {% endfor %}
 
     {% set region = edit_form.regions | first %}
+    {# ajout des attributs "communs" #}
     {#<div>#}
     {#{{ form_row( region.nbVache ) }}#}
     {#{{ form_row( region.nbHabitant ) }}#}
@@ -41,21 +49,14 @@
         {% for region in edit_form.regions %}
             <div id="region_site_{{ region.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
-                {#<div>#}
-                {#{{ form_row(region.nbVache) }}#}
-                {#{{ form_row(region.nbHabitant) }}#}
-                {#</div>#}
                 {{ form_row(region.site) }}
                 <ul class="nav nav-tabs">
                     {% set iTraduc = 0 %}
-                    {#{% for traduction in region.traductions %}#}
-                    {#{% set langues[] = traduction %}#}
-                    {#{% endfor %}#}
-                    {#{{ dump(langues) }}#}
                     {% for traduction in region.traductions %}
                         <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
                             <a data-toggle="tab"
                                href="#{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                {# affiche la langue en fonction de la locale#}
                                 {% for traductionLangue in  traduction.vars.value.langue.traductions %}
                                     {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
                                         {{ traductionLangue.libelle }}
@@ -63,17 +64,20 @@
                                 {% endfor %}
                             </a>
                         </li>
-                        {#{{ form_row(traduction) }}#}
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
-                    {% set iTraduc = 0 %}
-                    {% for traduction in region.traductions %}
-                        <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                             class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                            {{ form_row(traduction) }}
-                        </div>
+                    <p>
+                        {% set iTraduc = 0 %}
+                        {% for traduction in region.traductions %}
+                    <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {#{{ form_row(traduction) }}#}
+                        {{ form_widget(traduction) }}
+                        {{ form_errors(traduction) }}
+                    </div>
                     {% endfor %}
+                    </p>
                 </div>
             </div>
         {% endfor %}
@@ -82,21 +86,76 @@
     {{ form_row(edit_form._token) }}
     {{ form_end(edit_form, {'render_rest': false}) }}
 {% endblock %}
-    {#<h1>RegionUnifie edit</h1>#}
 
-    {#{{ form_start(edit_form) }}#}
-    {#{{ form_widget(edit_form) }}#}
-    {#<input type="submit" value="Edit"/>#}
-    {#{{ form_end(edit_form) }}#}
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('geographie_region_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
 
-    {#<ul>#}
-        {#<li>#}
-            {#<a href="{{ path('geographie_region_index') }}">Back to the list</a>#}
-        {#</li>#}
-        {#<li>#}
-            {#{{ form_start(delete_form) }}#}
-            {#<input type="submit" value="Delete">#}
-            {#{{ form_end(delete_form) }}#}
-        {#</li>#}
-    {#</ul>#}
-{#{% endblock %}#}
+    </div>
+
+{% endblock %}
+
+{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+
+            {% endfor %}
+            {% for site in sites %}
+
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#menu_region_site_{{ site.id }}").hide();
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function ($a, $element) {
+
+                    if ($(this).is(':checked')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+//                    alert('impossible');
+                    $("#modal_small .modal-title").text("Attention !!!");
+                    $("#modal_small .modal-body").text("attention vous devez selectionner au moins 1 site");
+                    $('#modal_small').modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                if (!$(this).is(':checked')) {
+
+                    if ($("#menu_region_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='region_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#menu_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#menu_region_site_{{ site.id }}").hide();
+
+                } else {
+                    $("#menu_region_site_{{ site.id }}").show();
+                }
+            });
+            {% endfor %}
+
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#menu_region_site_" + siteIdFirst + " a").tab('show');
+        });
+    </script>
+{% endblock %}

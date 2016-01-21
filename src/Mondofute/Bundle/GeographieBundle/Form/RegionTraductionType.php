@@ -19,10 +19,9 @@ class RegionTraductionType extends AbstractType
             ->add('libelle')
             ->add('description')
 //            ->add('region')
-            ->add('langue',HiddenType::class,array('mapped' => false))
-        ;
+            ->add('langue', HiddenType::class, array('mapped' => false));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

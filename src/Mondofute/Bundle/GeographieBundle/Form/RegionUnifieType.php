@@ -3,9 +3,9 @@
 namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegionUnifieType extends AbstractType
 {
@@ -21,6 +21,7 @@ class RegionUnifieType extends AbstractType
 //            ->add('regionUnifie')
         ;
     }
+
     /**
      * @param OptionsResolver $resolver
      */

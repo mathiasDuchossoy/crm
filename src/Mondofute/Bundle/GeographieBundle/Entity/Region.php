@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Region
  */
@@ -114,6 +116,20 @@ class Region
         $this->traductions->removeElement($traduction);
     }
 
+    public function __clone()
+    {
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setRegion($this);
+            }
+        }
+    }
+
     /**
      * Get traductions
      *
@@ -123,7 +139,9 @@ class Region
     {
         return $this->traductions;
     }
-    public function setTraductions($traductions){
+
+    public function setTraductions($traductions)
+    {
         $this->traductions = $traductions;
         return $this;
     }

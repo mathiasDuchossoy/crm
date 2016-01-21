@@ -31,18 +31,22 @@
 
         </tbody>
     </table>
+    <div style="text-align: right">
 
-    <ul>
-        <li>
-            <a href="{{ path('geographie_region_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            {#<input type="submit" value="Delete">#}
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('geographie_region_index') }}">Back to the list</a>
+            </li>
+            <li>
+                <div class="btn btn-default">
+                    <a style="color: #000000" href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}">Edit</a>
+                </div>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}

@@ -20,4 +20,5 @@ Mondofute\Bundle\GeographieBundle\Entity\Region:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction
             mappedBy: region
+            cascade:  ['persist' , 'remove']
     lifecycleCallbacks: {  }
