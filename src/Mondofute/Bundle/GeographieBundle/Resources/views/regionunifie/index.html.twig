@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    {{ 'Liste de régions' | capitalize }}
+{% endblock %}
 {% block body %}
     <h1>{{ 'liste des régions' | capitalize }}</h1>
 
@@ -28,14 +30,14 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <ul>
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="{{ path('geographie_region_show', { 'id': regionUnifie.id }) }}">show</a>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_region_show', { 'id': regionUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
-                            <a class="btn btn-default btn-lg"
-                               href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}"><span
-                                        class="glyphicon glyphicon-pencil"></span></a>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -46,9 +48,7 @@
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li>
-                <div class="btn btn-default">
-                    <a href="{{ path('geographie_region_new') }}">{{ 'ajouter' | capitalize }}</a>
-                </div>
+                <a class="btn btn-default" href="{{ path('geographie_region_new') }}">{{ 'ajouter' | capitalize }}</a>
             </li>
         </ul>
     </div>

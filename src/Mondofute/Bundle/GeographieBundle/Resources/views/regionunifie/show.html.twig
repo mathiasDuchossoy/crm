@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %}
+
 {% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la region' | capitalize }}
+{% endblock %}
 {% block body %}
     <h1>{{ 'Visualisation de la région' | capitalize }}</h1>
     <table class="table table-responsive table-striped">
@@ -38,9 +42,8 @@
                 <a href="{{ path('geographie_region_index') }}">Back to the list</a>
             </li>
             <li>
-                <div class="btn btn-default">
-                    <a style="color: #000000" href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}">Edit</a>
-                </div>
+                <a class="btn btn-default"
+                   href="{{ path('geographie_region_edit', { 'id': regionUnifie.id }) }}">Edit</a>
             </li>
             <li>
                 {{ form_start(delete_form) }}
