@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste de départements' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des départements' | capitalize }}</h1>
+
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'libelle' | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for departementUnifie in departementUnifies %}
+            <tr>
+                <td>
+                    <a href="{{ path('geographie_departement_show', { 'id': departementUnifie.id }) }}">{{ departementUnifie.id }}</a>
+                </td>
+                <td>
+                    {% for departement in departementUnifie.departements %}
+                        {% if departement.site.crm == 1 %}
+                            {% for traduction in departement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_departement_show', { 'id': departementUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_departement_edit', { 'id': departementUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('geographie_departement_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

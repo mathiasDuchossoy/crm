@@ -1,0 +1,129 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * Departement
+ */
+class Departement
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
+     */
+    private $departementUnifie;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     *
+     * @return Departement
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    {
+        $this->traductions[] = $traduction;
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Set site
+     *
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     *
+     * @return Departement
+     */
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set departementUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie
+     *
+     * @return Departement
+     */
+    public function setDepartementUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null)
+    {
+        $this->departementUnifie = $departementUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get departementUnifie
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
+     */
+    public function getDepartementUnifie()
+    {
+        return $this->departementUnifie;
+    }
+}

@@ -1,0 +1,18 @@
+Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DepartementUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        departements:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
+            mappedBy: departementUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

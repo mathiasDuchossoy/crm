@@ -2,6 +2,10 @@ mondofute_geographie_region:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/regionunifie.yml"
     prefix:   /region
 
+mondofute_geographie_departement:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/departementunifie.yml"
+    prefix:   /departement
+
 #mondofute_geographie_homepage:
 #    path:     /
 #    defaults: { _controller: MondofuteGeographieBundle:Default:index }
