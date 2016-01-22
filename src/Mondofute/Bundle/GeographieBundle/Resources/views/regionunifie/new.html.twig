@@ -12,36 +12,20 @@
 {% block formulaire %}
     {{ form_errors(form) }}
     {{ form_start(form) }}
-    <div>
-        {% for site in sites %}
-            <input id="siteAEnregistrer_{{ site.id }}" checked="checked" type="checkbox" name="sites[]"
-                   value="{{ site.id }}">{{ site.libelle }}
-        {% endfor %}
-    </div>
+    {% include '::coches_sites.html.twig' %}
+
     {% set region = form.regions | first %}
     {#<div>#}
     {#{{ form_row( region.nbVache ) }}#}
     {#{{ form_row( region.nbHabitant ) }}#}
     {#</div>#}
-    {#include #}
-    <ul class="nav nav-tabs">
-        {% set iSite = 0 %}
-        {% for region in form.regions %}
-            <li id="menu_region_site_{{ region.vars.value.site.id }}"
-                {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
-                <a data-toggle="tab"
-                   href="#region_site_{{ region.vars.value.site.id }}">
-                    {{ region.vars.value.site.libelle }}
-                </a>
-            </li>
-            {#{{ form_row(traduction) }}#}
-        {% endfor %}
-    </ul>
+    {% set mesSites = form.regions %}
+    {% include '::onglets_sites.html.twig' %}
 
     <div class="tab-content" style="padding:20px;">
         {% set iSite = 0 %}
         {% for region in form.regions %}
-            <div id="region_site_{{ region.vars.value.site.id }}"
+            <div id="data_site_{{ region.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {#{{ form_row(region.enneige) }}#}
                 {{ form_row(region.site) }}
@@ -68,7 +52,6 @@
                         {% for traduction in region.traductions %}
                     <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                          class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                        {{ form_label(traduction) }}
                         {{ form_widget(traduction) }}
                         {{ form_errors(traduction) }}
                     </div>
@@ -107,7 +90,7 @@
             {% for site in sites %}
 
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
-                $("#menu_region_site_{{ site.id }}").hide();
+                $("#onglet_data_site_{{ site.id }}").hide();
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -130,21 +113,21 @@
 
                 if (!$(this).is(':checked')) {
 
-                    if ($("#menu_region_site_{{ site.id }}").hasClass('active')) {
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
-                        $("[id^='region_site_']").each(function (value, element) {
+                        $("[id^='data_site_']").each(function (value, element) {
 
                             if (!$(element).hasClass('active')) {
-                                $("#menu_" + element.id + " a").tab('show');
+                                $("#onglet_" + element.id + " a").tab('show');
                                 return false;
                             }
 
                         });
                     }
-                    $("#menu_region_site_{{ site.id }}").hide();
+                    $("#onglet_data_site_{{ site.id }}").hide();
 
                 } else {
-                    $("#menu_region_site_{{ site.id }}").show();
+                    $("#onglet_data_site_{{ site.id }}").show();
                 }
             });
             {% endfor %}

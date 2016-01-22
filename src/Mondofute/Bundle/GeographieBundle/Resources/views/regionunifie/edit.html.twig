@@ -19,10 +19,7 @@
 
     {{ form_errors(edit_form) }}
     {{ form_start(edit_form) }}
-    {% for site in sites %}
-        <input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"
-               value="{{ site.id }}">{{ site.libelle }}
-    {% endfor %}
+    {% include '::coches_sites.html.twig' %}
 
     {% set region = edit_form.regions | first %}
     {# ajout des attributs "communs" #}
@@ -30,24 +27,14 @@
     {#{{ form_row( region.nbVache ) }}#}
     {#{{ form_row( region.nbHabitant ) }}#}
     {#</div>#}
-    <ul class="nav nav-tabs">
-        {% set iSite = 0 %}
-        {% for region in edit_form.regions %}
-            <li id="menu_region_site_{{ region.vars.value.site.id }}"
-                {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
-                <a data-toggle="tab"
-                   href="#region_site_{{ region.vars.value.site.id }}">
-                    {{ region.vars.value.site.libelle }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% set mesSites = edit_form.regions %}
+    {% include '::onglets_sites.html.twig' %}
 
     <div class="tab-content" style="padding:20px;">
 
         {% set iSite = 0 %}
         {% for region in edit_form.regions %}
-            <div id="region_site_{{ region.vars.value.site.id }}"
+            <div id="data_site_{{ region.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(region.site) }}
                 <ul class="nav nav-tabs">
@@ -111,7 +98,7 @@
             {% for site in sites %}
 
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
-                $("#menu_region_site_{{ site.id }}").hide();
+                $("#onglet_data_site_{{ site.id }}").hide();
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -134,28 +121,28 @@
 
                 if (!$(this).is(':checked')) {
 
-                    if ($("#menu_region_site_{{ site.id }}").hasClass('active')) {
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
-                        $("[id^='region_site_']").each(function (value, element) {
+                        $("[id^='data_site_']").each(function (value, element) {
 
                             if (!$(element).hasClass('active')) {
-                                $("#menu_" + element.id + " a").tab('show');
+                                $("#onglet_" + element.id + " a").tab('show');
                                 return false;
                             }
 
                         });
                     }
-                    $("#menu_region_site_{{ site.id }}").hide();
+                    $("#onglet_data_site_{{ site.id }}").hide();
 
                 } else {
-                    $("#menu_region_site_{{ site.id }}").show();
+                    $("#onglet_data_site_{{ site.id }}").show();
                 }
             });
             {% endfor %}
 
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
-            $("#menu_region_site_" + siteIdFirst + " a").tab('show');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
     </script>
 {% endblock %}

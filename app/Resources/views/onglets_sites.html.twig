@@ -1,0 +1,13 @@
+<ul class="nav nav-tabs">
+    {% set iSite = 0 %}
+    {% for site in mesSites %}
+        <li id="onglet_data_site_{{ site.vars.value.site.id }}"
+            {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
+            <a data-toggle="tab"
+               href="#data_site_{{ site.vars.value.site.id }}">
+                {{ site.vars.value.site.libelle }}
+            </a>
+        </li>
+        {#{{ form_row(traduction) }}#}
+    {% endfor %}
+</ul>
