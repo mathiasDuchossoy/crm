@@ -12,35 +12,19 @@
 {% block formulaire %}
     {{ form_errors(form) }}
     {{ form_start(form) }}
-    <div>
-        {% for site in sites %}
-            <input id="siteAEnregistrer_{{ site.id }}" checked="checked" type="checkbox" name="sites[]"
-                   value="{{ site.id }}">{{ site.libelle }}
-        {% endfor %}
-    </div>
+    {% include '::coches_sites.html.twig' %}
     {% set departement = form.departements | first %}
+    {% set mesSites = form.departements %}
+    {% include '::onglets_sites.html.twig' %}
     {#<div>#}
     {#{{ form_row( departement.nbVache ) }}#}
     {#{{ form_row( departement.nbHabitant ) }}#}
     {#</div>#}
-    <ul class="nav nav-tabs">
-        {% set iSite = 0 %}
-        {% for departement in form.departements %}
-            <li id="menu_departement_site_{{ departement.vars.value.site.id }}"
-                {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
-                <a data-toggle="tab"
-                   href="#departement_site_{{ departement.vars.value.site.id }}">
-                    {{ departement.vars.value.site.libelle }}
-                </a>
-            </li>
-            {#{{ form_row(traduction) }}#}
-        {% endfor %}
-    </ul>
 
     <div class="tab-content" style="padding:20px;">
         {% set iSite = 0 %}
         {% for departement in form.departements %}
-            <div id="departement_site_{{ departement.vars.value.site.id }}"
+            <div id="data_site_{{ departement.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {#{{ form_row(departement.enneige) }}#}
                 {{ form_row(departement.site) }}
@@ -105,7 +89,7 @@
             {% for site in sites %}
 
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
-                $("#menu_departement_site_{{ site.id }}").hide();
+                $("#onglet_data_site_{{ site.id }}").hide();
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -128,21 +112,21 @@
 
                 if (!$(this).is(':checked')) {
 
-                    if ($("#menu_departement_site_{{ site.id }}").hasClass('active')) {
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
-                        $("[id^='departement_site_']").each(function (value, element) {
+                        $("[id^='data_site_']").each(function (value, element) {
 
                             if (!$(element).hasClass('active')) {
-                                $("#menu_" + element.id + " a").tab('show');
+                                $("#onglet_" + element.id + " a").tab('show');
                                 return false;
                             }
 
                         });
                     }
-                    $("#menu_departement_site_{{ site.id }}").hide();
+                    $("#onglet_data_site_{{ site.id }}").hide();
 
                 } else {
-                    $("#menu_departement_site_{{ site.id }}").show();
+                    $("#onglet_data_site_{{ site.id }}").show();
                 }
             });
             {% endfor %}

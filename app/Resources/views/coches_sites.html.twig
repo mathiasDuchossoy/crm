@@ -1,0 +1,6 @@
+<div>
+    {% for site in sites %}
+        <input id="siteAEnregistrer_{{ site.id }}" checked="checked" type="checkbox" name="sites[]"
+               value="{{ site.id }}">{{ site.libelle }}
+    {% endfor %}
+</div>
