@@ -15,8 +15,7 @@ Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction:
             type: string
             length: 255
         description:
-            type: string
-            length: 255
+            type: text
     manyToOne:
         region:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region

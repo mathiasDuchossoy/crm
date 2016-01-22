@@ -3,8 +3,6 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction;
-use Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -72,16 +70,6 @@ class Secteur
     }
 
     /**
-     * Get traductions
-     *
-     * @return Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
      * Get site
      *
      * @return Site
@@ -129,13 +117,6 @@ class Secteur
         return $this;
     }
 
-    public function setTraductions($traductions)
-    {
-        $this->traductions = $traductions;
-        return $this;
-    }
-
-
     public function __clone()
     {
         $this->id = null;
@@ -148,6 +129,22 @@ class Secteur
                 $cloneTraduction->setSecteur($this);
             }
         }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
     }
 
 

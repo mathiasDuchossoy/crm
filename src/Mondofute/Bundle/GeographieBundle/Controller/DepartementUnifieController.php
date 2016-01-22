@@ -326,6 +326,7 @@ class DepartementUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('geographie_departement_delete', array('id' => $departementUnifie->getId())))
+            ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -535,6 +536,17 @@ class DepartementUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Parcourir la collection de départements.
+            foreach ($departementUnifie->getDepartements() as $departement) {
+                // Récupérer le manager du site.
+                $emSite = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
+                // Récupérer l'entité sur le site distant puis la suprrimer.
+                $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
+                if (!empty($departementUnifieSite)) {
+                    $emSite->remove($departementUnifieSite);
+                    $emSite->flush();
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->remove($departementUnifie);
             $em->flush();

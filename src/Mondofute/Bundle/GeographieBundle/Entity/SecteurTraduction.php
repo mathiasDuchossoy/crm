@@ -1,7 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
-use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**

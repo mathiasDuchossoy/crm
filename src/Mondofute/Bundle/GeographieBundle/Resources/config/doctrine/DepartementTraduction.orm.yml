@@ -15,8 +15,7 @@ Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction:
             type: string
             length: 255
         description:
-            type: string
-            length: 255
+            type: text
     manyToOne:
         departement:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
