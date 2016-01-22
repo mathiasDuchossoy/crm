@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,7 +18,7 @@ class SecteurTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('description')
+            ->add('description', TextareaType::class, array('required' => false))
 //            ->add('secteur')
             ->add('langue', HiddenType::class, array('mapped' => false));
         ;

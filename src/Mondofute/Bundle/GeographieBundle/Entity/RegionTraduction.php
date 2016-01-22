@@ -16,7 +16,7 @@ class RegionTraduction
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Region
      */
@@ -29,6 +29,12 @@ class RegionTraduction
      * @var string
      */
     private $libelle = '';
+
+    public function __construct()
+    {
+        $this->libelle = '';
+        $this->description = '';
+    }
 
     /**
      * Get id
@@ -59,7 +65,7 @@ class RegionTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }

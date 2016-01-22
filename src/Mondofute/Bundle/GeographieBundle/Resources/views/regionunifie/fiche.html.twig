@@ -73,7 +73,10 @@
                 }
 
                 if (!$(this).is(':checked')) {
-
+//                    supprime le required des champs libelle des traductions
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
                         $("[id^='data_site_']").each(function (value, element) {
@@ -88,6 +91,10 @@
                     $("#onglet_data_site_{{ site.id }}").hide();
 
                 } else {
+//                    rend les champs libelle des traductions required
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
                     $("#onglet_data_site_{{ site.id }}").show();
                 }
             });

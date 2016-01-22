@@ -19,7 +19,6 @@ class DepartementType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DepartementTraductionType::class,
-                'required' => false,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))//            ->add('regionUnifie')
         ;

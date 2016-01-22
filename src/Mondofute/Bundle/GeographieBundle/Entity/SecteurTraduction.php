@@ -16,12 +16,12 @@ class SecteurTraduction
     /**
      * @var string
      */
-    private $libelle;
+    private $libelle = '';
 
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
     /**
      * @var Secteur
      */
@@ -84,7 +84,7 @@ class SecteurTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }

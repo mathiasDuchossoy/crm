@@ -14,8 +14,12 @@ Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction:
         libelle:
             type: string
             length: 255
+            options:
+                default: ""
         description:
             type: text
+            options:
+                default: ""
     manyToOne:
         secteur:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur

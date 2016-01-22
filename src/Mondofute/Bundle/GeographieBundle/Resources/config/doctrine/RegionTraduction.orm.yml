@@ -18,6 +18,8 @@ Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction:
                 default: ""
         description:
             type: text
+            options:
+                default: ""
     manyToOne:
         region:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region

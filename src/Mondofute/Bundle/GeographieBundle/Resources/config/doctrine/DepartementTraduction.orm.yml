@@ -14,8 +14,12 @@ Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction:
         libelle:
             type: string
             length: 255
+            options:
+                default: ""
         description:
             type: text
+            options:
+                default: ""
     manyToOne:
         departement:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
