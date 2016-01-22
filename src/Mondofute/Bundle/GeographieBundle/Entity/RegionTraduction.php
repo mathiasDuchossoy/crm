@@ -12,10 +12,6 @@ class RegionTraduction
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $libelle;
 
     /**
      * @var string
@@ -29,6 +25,10 @@ class RegionTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $libelle = '';
 
     /**
      * Get id
@@ -38,30 +38,6 @@ class RegionTraduction
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return RegionTraduction
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
     }
 
     /**
@@ -132,6 +108,30 @@ class RegionTraduction
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return RegionTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }
