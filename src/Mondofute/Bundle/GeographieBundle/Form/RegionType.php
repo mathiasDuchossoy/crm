@@ -20,7 +20,7 @@ class RegionType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => RegionTraductionType::class,
-                'required' => false,
+//                'required' => false,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))//            ->add('regionUnifie')
         ;
