@@ -19,10 +19,11 @@
 
     {{ form_errors(edit_form) }}
     {{ form_start(edit_form) }}
-    {% for site in sites %}
-        <input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"
-               value="{{ site.id }}">{{ site.libelle }}
-    {% endfor %}
+    {% include '::coches_sites.html.twig' %}
+    {#{% for site in sites %}#}
+    {#<input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"#}
+    {#value="{{ site.id }}">{{ site.libelle }}#}
+    {#{% endfor %}#}
 
     {% set secteur = edit_form.secteurs | first %}
     {# ajout des attributs "communs" #}
@@ -30,24 +31,26 @@
     {#{{ form_row( secteur.nbVache ) }}#}
     {#{{ form_row( secteur.nbHabitant ) }}#}
     {#</div>#}
-    <ul class="nav nav-tabs">
-        {% set iSite = 0 %}
-        {% for secteur in edit_form.secteurs %}
-            <li id="menu_secteur_site_{{ secteur.vars.value.site.id }}"
-                {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
-                <a data-toggle="tab"
-                   href="#secteur_site_{{ secteur.vars.value.site.id }}">
-                    {{ secteur.vars.value.site.libelle }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% set mesSites = edit_form.secteurs %}
+    {% include '::onglets_sites.html.twig' %}
+    {#<ul class="nav nav-tabs">#}
+    {#{% set iSite = 0 %}#}
+    {#{% for secteur in edit_form.secteurs %}#}
+    {#<li id="menu_secteur_site_{{ secteur.vars.value.site.id }}"#}
+    {#{% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>#}
+    {#<a data-toggle="tab"#}
+    {#href="#secteur_site_{{ secteur.vars.value.site.id }}">#}
+    {#{{ secteur.vars.value.site.libelle }}#}
+    {#</a>#}
+    {#</li>#}
+    {#{% endfor %}#}
+    {#</ul>#}
 
     <div class="tab-content" style="padding:20px;">
 
         {% set iSite = 0 %}
         {% for secteur in edit_form.secteurs %}
-            <div id="secteur_site_{{ secteur.vars.value.site.id }}"
+            <div id="data_site_{{ secteur.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(secteur.site) }}
                 <ul class="nav nav-tabs">
@@ -67,17 +70,15 @@
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
-                    <p>
-                        {% set iTraduc = 0 %}
-                        {% for traduction in secteur.traductions %}
-                    <div id="{{ secteur.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                        {#{{ form_row(traduction) }}#}
-                        {{ form_widget(traduction) }}
-                        {{ form_errors(traduction) }}
-                    </div>
+                    {% set iTraduc = 0 %}
+                    {% for traduction in secteur.traductions %}
+                        <div id="{{ secteur.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                             class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                            {#{{ form_row(traduction) }}#}
+                            {{ form_widget(traduction) }}
+                            {{ form_errors(traduction) }}
+                        </div>
                     {% endfor %}
-                    </p>
                 </div>
             </div>
         {% endfor %}
@@ -102,60 +103,4 @@
 {#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            {% for siteAEnregistrer in sitesAEnregistrer %}
-            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
-
-            {% endfor %}
-            {% for site in sites %}
-
-            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
-                $("#menu_secteur_site_{{ site.id }}").hide();
-            }
-
-            $("#siteAEnregistrer_{{ site.id }}").change(function () {
-                var checked = false;
-                $("[id^='siteAEnregistrer_']").each(function ($a, $element) {
-
-                    if ($(this).is(':checked')) {
-                        checked = true;
-                    }
-                });
-
-                if (!checked) {
-//                    alert('impossible');
-                    $("#modal_small .modal-title").text("Attention !!!");
-                    $("#modal_small .modal-body").text("attention vous devez selectionner au moins 1 site");
-                    $('#modal_small').modal().show();
-                    $(this).prop('checked', true);
-                    return false;
-                }
-
-                if (!$(this).is(':checked')) {
-
-                    if ($("#menu_secteur_site_{{ site.id }}").hasClass('active')) {
-
-                        $("[id^='secteur_site_']").each(function (value, element) {
-
-                            if (!$(element).hasClass('active')) {
-                                $("#menu_" + element.id + " a").tab('show');
-                                return false;
-                            }
-
-                        });
-                    }
-                    $("#menu_secteur_site_{{ site.id }}").hide();
-
-                } else {
-                    $("#menu_secteur_site_{{ site.id }}").show();
-                }
-            });
-            {% endfor %}
-
-//            selectionne le premier onglet coché
-            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
-            $("#menu_secteur_site_" + siteIdFirst + " a").tab('show');
-        });
-    </script>
 {% endblock %}

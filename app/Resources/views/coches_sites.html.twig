@@ -1,6 +1,6 @@
 <div>
     {% for site in sites %}
-        <input id="siteAEnregistrer_{{ site.id }}" checked="checked" type="checkbox" name="sites[]"
-               value="{{ site.id }}">{{ site.libelle }}
+        <label><input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"
+                      value="{{ site.id }}"> {{ site.libelle }}</label>
     {% endfor %}
 </div>

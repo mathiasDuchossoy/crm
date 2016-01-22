@@ -46,16 +46,14 @@
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
-                    <p>
-                        {% set iTraduc = 0 %}
-                        {% for traduction in departement.traductions %}
-                    <div id="{{ departement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                        {{ form_widget(traduction) }}
-                        {{ form_errors(traduction) }}
-                    </div>
+                    {% set iTraduc = 0 %}
+                    {% for traduction in departement.traductions %}
+                        <div id="{{ departement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                             class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                            {{ form_widget(traduction) }}
+                            {{ form_errors(traduction) }}
+                        </div>
                     {% endfor %}
-                    </p>
                 </div>
             </div>
         {% endfor %}
@@ -78,59 +76,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-            {% if sitesAEnregistrer is defined %}
-            {% for siteAEnregistrer in sitesAEnregistrer %}
-            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
-            {% endfor %}
-            {% endif %}
-
-            {% for site in sites %}
-
-            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
-                $("#onglet_data_site_{{ site.id }}").hide();
-            }
-
-            $("#siteAEnregistrer_{{ site.id }}").change(function () {
-                var checked = false;
-                $("[id^='siteAEnregistrer_']").each(function ($a, $element) {
-
-                    if ($(this).is(':checked')) {
-                        checked = true;
-                    }
-                });
-
-                if (!checked) {
-                    //                    alert('impossible');
-                    $("#modal_small .modal-title").text("Attention !!!");
-                    $("#modal_small .modal-body").text("attention vous devez selectionner au moins 1 site");
-                    $('#modal_small').modal().show();
-                    $(this).prop('checked', true);
-                    return false;
-                }
-
-                if (!$(this).is(':checked')) {
-
-                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
-
-                        $("[id^='data_site_']").each(function (value, element) {
-
-                            if (!$(element).hasClass('active')) {
-                                $("#onglet_" + element.id + " a").tab('show');
-                                return false;
-                            }
-
-                        });
-                    }
-                    $("#onglet_data_site_{{ site.id }}").hide();
-
-                } else {
-                    $("#onglet_data_site_{{ site.id }}").show();
-                }
-            });
-            {% endfor %}
-
-        });
-    </script>
 {% endblock %}
