@@ -23,6 +23,7 @@
     {#{{ form_row( region.nbVache ) }}#}
     {#{{ form_row( region.nbHabitant ) }}#}
     {#</div>#}
+    {#include #}
     <ul class="nav nav-tabs">
         {% set iSite = 0 %}
         {% for region in form.regions %}
@@ -67,6 +68,7 @@
                         {% for traduction in region.traductions %}
                     <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                          class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {{ form_label(traduction) }}
                         {{ form_widget(traduction) }}
                         {{ form_errors(traduction) }}
                     </div>
