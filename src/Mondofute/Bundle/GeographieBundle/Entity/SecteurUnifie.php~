@@ -1,6 +1,8 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * SecteurUnifie
@@ -11,7 +13,18 @@ class SecteurUnifie
      * @var int
      */
     private $id;
+    /**
+     * @var Collection
+     */
+    private $secteurs;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->secteurs = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -22,29 +35,17 @@ class SecteurUnifie
     {
         return $this->id;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $secteurs;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->secteurs = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add secteur
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     * @param Secteur $secteur
      *
      * @return SecteurUnifie
      */
-    public function addSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    public function addSecteur(Secteur $secteur)
     {
-        $this->secteurs[] = $secteur;
+        $this->secteurs[] = $secteur->setSecteurUnifie($this);
 
         return $this;
     }
@@ -52,9 +53,9 @@ class SecteurUnifie
     /**
      * Remove secteur
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     * @param Secteur $secteur
      */
-    public function removeSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    public function removeSecteur(Secteur $secteur)
     {
         $this->secteurs->removeElement($secteur);
     }
@@ -62,10 +63,20 @@ class SecteurUnifie
     /**
      * Get secteurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getSecteurs()
     {
         return $this->secteurs;
+    }
+
+    /**
+     * @param ArrayCollection $secteurs
+     * @return $this
+     */
+    public function setSecteurs(ArrayCollection $secteurs)
+    {
+        $this->secteurs = $secteurs;
+        return $this;
     }
 }

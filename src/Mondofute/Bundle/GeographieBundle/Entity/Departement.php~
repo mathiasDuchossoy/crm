@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Departement
  */
@@ -11,27 +13,14 @@ class Departement
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
-
     /**
      * @var \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     private $site;
-
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
      */
@@ -46,6 +35,16 @@ class Departement
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Add traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
@@ -54,7 +53,7 @@ class Departement
      */
     public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setDepartement($this);
 
         return $this;
     }
@@ -70,13 +69,13 @@ class Departement
     }
 
     /**
-     * Get traductions
+     * Get site
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
      */
-    public function getTraductions()
+    public function getSite()
     {
-        return $this->traductions;
+        return $this->site;
     }
 
     /**
@@ -93,27 +92,33 @@ class Departement
         return $this;
     }
 
-    /**
-     * Get site
-     *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
-     */
-    public function getSite()
+    public function __clone()
     {
-        return $this->site;
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setDepartement($this);
+            }
+        }
     }
 
     /**
-     * Set departementUnifie
+     * Get traductions
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie
-     *
-     * @return Departement
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function setDepartementUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null)
+    public function getTraductions()
     {
-        $this->departementUnifie = $departementUnifie;
+        return $this->traductions;
+    }
 
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
         return $this;
     }
 
@@ -125,5 +130,20 @@ class Departement
     public function getDepartementUnifie()
     {
         return $this->departementUnifie;
+    }
+
+    /**
+     * Set departementUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie
+     *
+     * @return Departement
+     */
+    public function setDepartementUnifie(
+        \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null
+    ) {
+        $this->departementUnifie = $departementUnifie;
+
+        return $this;
     }
 }
