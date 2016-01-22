@@ -1,0 +1,141 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * SecteurTraduction
+ */
+class SecteurTraduction
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $libelle;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return SecteurTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return SecteurTraduction
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Secteur
+     */
+    private $secteur;
+
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
+
+
+    /**
+     * Set secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     *
+     * @return SecteurTraduction
+     */
+    public function setSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur = null)
+    {
+        $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    /**
+     * Get secteur
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Secteur
+     */
+    public function getSecteur()
+    {
+        return $this->secteur;
+    }
+
+    /**
+     * Set langue
+     *
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     *
+     * @return SecteurTraduction
+     */
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+}

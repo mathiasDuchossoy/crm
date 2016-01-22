@@ -1,0 +1,24 @@
+Mondofute\Bundle\GeographieBundle\Entity\Secteur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        secteurUnifie:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie
+            inversedBy: secteurs
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction
+            mappedBy: secteur
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }

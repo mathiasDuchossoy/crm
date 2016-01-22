@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste de secteurs' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des secteurs' | capitalize }}</h1>
+
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'libelle' | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for secteurUnifie in secteurUnifies %}
+            <tr>
+                <td><a href="{{ path('geographie_secteur_show', { 'id': secteurUnifie.id }) }}">{{ secteurUnifie.id }}</a>
+                </td>
+                <td>
+                    {% for secteur in secteurUnifie.secteurs %}
+                        {% if secteur.site.crm == 1 %}
+                            {% for traduction in secteur.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_secteur_show', { 'id': secteurUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_secteur_edit', { 'id': secteurUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('geographie_secteur_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

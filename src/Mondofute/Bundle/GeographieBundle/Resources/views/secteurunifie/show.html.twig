@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la secteur' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation du secteur' | capitalize }}</h1>
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ secteurUnifie.id }}</td>
+        </tr>
+        {% for secteur in secteurUnifie.secteurs %}
+            {% if secteur.site.crm == 1 %}
+                {% for traduction in secteur.traductions %}
+                    {% if traduction.langue.code == app.request.locale %}
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+                            <td>
+                                {{ traduction.libelle }}
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'description' | capitalize }}</th>
+                            <td>
+                                {{ traduction.description }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('geographie_secteur_index') }}">Back to the list</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('geographie_secteur_edit', { 'id': secteurUnifie.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}

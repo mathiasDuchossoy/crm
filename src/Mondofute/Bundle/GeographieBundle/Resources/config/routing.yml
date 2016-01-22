@@ -5,3 +5,7 @@ mondofute_geographie_region:
 #mondofute_geographie_homepage:
 #    path:     /
 #    defaults: { _controller: MondofuteGeographieBundle:Default:index }
+
+mondofute_geographie_secteur:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/secteurunifie.yml"
+    prefix:   /secteur

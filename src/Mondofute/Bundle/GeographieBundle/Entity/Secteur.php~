@@ -1,0 +1,129 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * Secteur
+ */
+class Secteur
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie
+     */
+    private $secteurUnifie;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction $traduction
+     *
+     * @return Secteur
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction $traduction)
+    {
+        $this->traductions[] = $traduction;
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Set site
+     *
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     *
+     * @return Secteur
+     */
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set secteurUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie $secteurUnifie
+     *
+     * @return Secteur
+     */
+    public function setSecteurUnifie(\Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie $secteurUnifie = null)
+    {
+        $this->secteurUnifie = $secteurUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get secteurUnifie
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie
+     */
+    public function getSecteurUnifie()
+    {
+        return $this->secteurUnifie;
+    }
+}
