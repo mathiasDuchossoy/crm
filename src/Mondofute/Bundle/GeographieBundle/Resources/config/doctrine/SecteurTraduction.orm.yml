@@ -1,0 +1,25 @@
+Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\SecteurTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        description:
+            type: text
+    manyToOne:
+        secteur:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

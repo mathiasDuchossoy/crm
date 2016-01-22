@@ -59,7 +59,7 @@ class RegionUnifieController extends Controller
             $this->supprimerRegions($regionUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($regionUnifie);
 
-            $em = $this->getDoctrine()->getManager();
+//            $em = $this->getDoctrine()->getManager();
             $em->persist($regionUnifie);
             $em->flush();
 
@@ -281,7 +281,6 @@ class RegionUnifieController extends Controller
     public function ajouterRegionUnifieSiteDistant($idUnifie, $regions)
     {
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
@@ -292,7 +291,6 @@ class RegionUnifieController extends Controller
                 $entity = new RegionUnifie();
                 $emSite->persist($entity);
                 $emSite->flush();
-//                echo 'ajouter ' . $site->getLibelle();
             }
         }
     }
@@ -384,7 +382,6 @@ class RegionUnifieController extends Controller
                     $regionSite = $entitySite->getRegions()->first();
                     $emSite->remove($regionSite);
                     $emSite->flush();
-//                    dump($region);
                     $region->setRegionUnifie(null);
                     $em->remove($region);
                 }
@@ -517,7 +514,6 @@ class RegionUnifieController extends Controller
                 }
             }
         }
-//die;
     }
 
     /**
@@ -530,6 +526,19 @@ class RegionUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Parcourir la collection de régions.
+            foreach($regionUnifie->getRegions() as $region)
+            {
+                // Récupérer le manager du site.
+                $emSite             = $this->getDoctrine()->getManager($region->getSite()->getLibelle());
+                // Récupérer l'entité sur le site distant puis la suprrimer.
+                $regionUnifieSite   = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
+                if(!empty($regionUnifieSite))
+                {
+                    $emSite->remove($regionUnifieSite);
+                    $emSite->flush();
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->remove($regionUnifie);
             $em->flush();
