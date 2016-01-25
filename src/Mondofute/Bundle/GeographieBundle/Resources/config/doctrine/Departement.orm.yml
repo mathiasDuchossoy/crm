@@ -16,6 +16,9 @@ Mondofute\Bundle\GeographieBundle\Entity\Departement:
         departementUnifie:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
             inversedBy: departements
+        region:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region
+            inversedBy: departements
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction

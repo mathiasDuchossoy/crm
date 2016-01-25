@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie;
+use Mondofute\Bundle\GeographieBundle\Entity\Region;
+use Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie;
 use Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -51,11 +53,16 @@ class DepartementUnifieController extends Controller
         $departementUnifie = new DepartementUnifie();
 
         $this->ajouterDepartementsDansForm($departementUnifie);
+//        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie);
+        $form = $this->createForm(new DepartementUnifieType(), $departementUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
+
+
+        // dispacher les données communes
+        $this->dispacherDonneesCommune($departementUnifie);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -170,6 +177,17 @@ class DepartementUnifieController extends Controller
     }
 
     /**
+     * dispacher les données communes dans chaque stations
+     * @param DepartementUnifie $entity
+     */
+    private function dispacherDonneesCommune(DepartementUnifie $entity)
+    {
+        foreach ($entity->getDepartements() as $departement) {
+            $departement->setRegion($entity->getDepartements()->first()->getRegion());
+        }
+    }
+
+    /**
      * @param DepartementUnifie $entity
      * @return $this
      */
@@ -219,7 +237,7 @@ class DepartementUnifieController extends Controller
      * Copie dans la base de données site l'entité station
      * @param DepartementUnifie $entity
      */
-    public function copieVersSites(DepartementUnifie $entity)
+    private function copieVersSites(DepartementUnifie $entity)
     {
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getDepartements() as $departement) {
@@ -228,6 +246,7 @@ class DepartementUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $departement->getSite()->getId()));
+                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -243,7 +262,8 @@ class DepartementUnifieController extends Controller
 //            copie des données station
                 $departementSite
                     ->setSite($site)
-                    ->setDepartementUnifie($entitySite);
+                    ->setDepartementUnifie($entitySite)
+                    ->setRegion($region);
 
 //            Gestion des traductions
                 foreach ($departement->getTraductions() as $departementTraduc) {
@@ -282,7 +302,7 @@ class DepartementUnifieController extends Controller
      * @param $idUnifie
      * @param $departements
      */
-    public function ajouterDepartementUnifieSiteDistant($idUnifie, $departements)
+    private function ajouterDepartementUnifieSiteDistant($idUnifie, $departements)
     {
         $em = $this->getDoctrine()->getManager();
         echo $idUnifie;
@@ -364,7 +384,7 @@ class DepartementUnifieController extends Controller
         }
 
         $this->ajouterDepartementsDansForm($departementUnifie);
-//        $this->dispacherDonneesCommune($departementUnifie);
+        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
         $deleteForm = $this->createDeleteForm($departementUnifie);
 
@@ -375,6 +395,7 @@ class DepartementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->dispacherDonneesCommune($departementUnifie);
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
             $this->mettreAJourDepartementCrm($departementUnifie, $departementCrm);
             $em->persist($departementCrm);
@@ -463,6 +484,11 @@ class DepartementUnifieController extends Controller
             if ($departement->getSite() == $siteReferent) {
 //                dump($departement);
 //              ajouter les champs "communs"
+
+                $departementCrm
+                    ->setRegion($departement->getRegion());
+
+
                 foreach ($langues as $langue) {
 //                    dump($langue);
 //                    recupere la traduction pour l'entite du site referent
@@ -477,7 +503,6 @@ class DepartementUnifieController extends Controller
                     })->first();
 //                    dump($departementTraduc);
 
-
 //                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
                     if (is_null($departementTraduc->getLibelle())) {
                         $departementTraduc->setLibelle('');
@@ -485,6 +510,7 @@ class DepartementUnifieController extends Controller
                     if (is_null($departementTraduc->getDescription())) {
                         $departementTraduc->setDescription('');
                     }
+
 //                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
                     if (empty($departementTraducCrm)) {
                         $departementTraducCrm = new DepartementTraduction();

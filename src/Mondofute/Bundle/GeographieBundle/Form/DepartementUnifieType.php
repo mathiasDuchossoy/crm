@@ -15,8 +15,9 @@ class DepartementUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
-            ->add('departements', CollectionType::class, array('entry_type' => DepartementType::class))
+            ->add('departements', CollectionType::class, array('entry_type' => DepartementType::class, 'options' => array('locale' => $options["locale"])))
 //            ->add('site')
 //            ->add('regionUnifie')
         ;
@@ -28,7 +29,8 @@ class DepartementUnifieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie'
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie',
+            'locale' => 'en'
         ));
     }
 }

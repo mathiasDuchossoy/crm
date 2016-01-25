@@ -23,10 +23,10 @@
 
     {% set departement = edit_form.departements | first %}
     {# ajout des attributs "communs" #}
-    {#<div>#}
-    {#{{ form_row( departement.nbVache ) }}#}
+    <div>
+        {{ form_row( departement.region ) }}
     {#{{ form_row( departement.nbHabitant ) }}#}
-    {#</div>#}
+    </div>
     {% set mesSites = edit_form.departements %}
     {% include '::onglets_sites.html.twig' %}
 

@@ -21,4 +21,7 @@ Mondofute\Bundle\GeographieBundle\Entity\Region:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction
             mappedBy: region
             cascade:  ['persist' , 'remove']
+        departements:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
+            mappedBy: region
     lifecycleCallbacks: {  }

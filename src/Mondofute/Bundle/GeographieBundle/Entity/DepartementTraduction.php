@@ -41,30 +41,6 @@ class DepartementTraduction
     }
 
     /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return DepartementTraduction
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
      * Get description
      *
      * @return string
@@ -132,6 +108,35 @@ class DepartementTraduction
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return DepartementTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }
