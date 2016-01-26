@@ -13,3 +13,7 @@ mondofute_geographie_departement:
 mondofute_geographie_secteur:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/secteurunifie.yml"
     prefix:   /secteur
+
+mondofute_geographie_profil:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/profilunifie.yml"
+    prefix:   /profil

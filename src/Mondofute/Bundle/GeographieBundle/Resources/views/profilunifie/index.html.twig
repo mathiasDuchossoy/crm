@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>ProfilUnifie list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for profilUnifie in profilUnifies %}
+            <tr>
+                <td><a href="{{ path('profil_show', { 'id': profilUnifie.id }) }}">{{ profilUnifie.id }}</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('profil_show', { 'id': profilUnifie.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('profil_edit', { 'id': profilUnifie.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('profil_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
