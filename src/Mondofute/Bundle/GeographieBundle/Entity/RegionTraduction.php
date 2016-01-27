@@ -30,6 +30,12 @@ class RegionTraduction
      */
     private $libelle = '';
 
+    public function __construct()
+    {
+        $this->libelle = '';
+        $this->description = '';
+    }
+
     /**
      * Get id
      *

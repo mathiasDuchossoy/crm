@@ -51,6 +51,9 @@
             {% for site in sites %}
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
+                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    $(this).attr('required', false);
+                });
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -71,9 +74,13 @@
                     $(this).prop('checked', true);
                     return false;
                 }
+//                alert($(this).is(':checked'));
 
                 if (!$(this).is(':checked')) {
-
+//                    supprime le required des champs libelle des traductions
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
                         $("[id^='data_site_']").each(function (value, element) {
@@ -88,11 +95,14 @@
                     $("#onglet_data_site_{{ site.id }}").hide();
 
                 } else {
+//                    rend les champs libelle des traductions required
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
                     $("#onglet_data_site_{{ site.id }}").show();
                 }
             });
             {% endfor %}
-
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');

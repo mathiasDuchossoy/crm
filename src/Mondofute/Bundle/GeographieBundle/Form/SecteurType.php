@@ -19,7 +19,6 @@ class SecteurType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => SecteurTraductionType::class,
-                'required' => false,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
         ;

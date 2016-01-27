@@ -15,12 +15,12 @@ class DepartementTraduction
     /**
      * @var string
      */
-    private $libelle;
+    private $libelle = '';
 
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
@@ -29,6 +29,12 @@ class DepartementTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+
+    public function __construct()
+    {
+        $this->description = '';
+        $this->libelle = '';
+    }
 
     /**
      * Get id
@@ -59,7 +65,7 @@ class DepartementTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }
