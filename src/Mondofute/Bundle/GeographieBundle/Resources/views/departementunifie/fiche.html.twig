@@ -107,5 +107,37 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
+
+//        function test(){
+//            var sitesChecked = [];
+//            $("input[type=checkbox][name^=site]").each(
+//                function (index , element)
+//                {
+//                    if ($(element).is(':checked'))
+//                    {
+//                        sitesChecked.push(element.value);
+//                    }
+//                }
+//            );
+            {#console.log(sitesChecked);#}
+            {#$.ajax(#}
+                    {#'{{ path('geographie_regions_communes_by_sites') }}',#}
+                    {#{#}
+                        {#method: 'POST',#}
+                        {#data: { sites : sitesChecked }#}
+                    {#}#}
+            {#)#}
+            {#.done(function() {#}
+{#//                alert( "success" );#}
+            {#})#}
+            {#.fail(function() {#}
+{#//                alert( "error" );#}
+            {#})#}
+            {#.always(function() {#}
+{#//                alert( "complete" );#}
+            {#});#}
+
+        {#}#}
+        {#$("input[type=checkbox][name^=site]").on("click", test);#}
     </script>
 {% endblock %}

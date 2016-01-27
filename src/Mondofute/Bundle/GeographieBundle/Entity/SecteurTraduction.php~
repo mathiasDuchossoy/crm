@@ -21,7 +21,11 @@ class SecteurTraduction
     /**
      * @var string
      */
+<<<<<<< HEAD
     private $description = '';
+=======
+    private $description;
+>>>>>>> correction-departement-liaison-region
     /**
      * @var Secteur
      */

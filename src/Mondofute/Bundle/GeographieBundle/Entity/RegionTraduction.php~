@@ -25,11 +25,20 @@ class RegionTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+<<<<<<< HEAD
+=======
     /**
      * @var string
      */
     private $libelle = '';
 
+>>>>>>> correction-departement-liaison-region
+    /**
+     * @var string
+     */
+    private $libelle = '';
+
+<<<<<<< HEAD
     public function __construct()
     {
         $this->libelle = '';
@@ -46,6 +55,8 @@ class RegionTraduction
         return $this->id;
     }
 
+=======
+>>>>>>> correction-departement-liaison-region
     /**
      * Get description
      *

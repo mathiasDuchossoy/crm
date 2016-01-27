@@ -549,4 +549,43 @@ class RegionUnifieController extends Controller
 
         return $this->redirectToRoute('geographie_region_index');
     }
+
+    /**
+     * @param Request $request
+     */
+    public function getRegionsCommunesBySiteAction (Request $request)
+    {
+        $sites = $request->get('sites');
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $regionUnifies  = $em->getRepository(RegionUnifie::class)->findAll();
+//        $regionUnifiesNotEmpty  = new ArrayCollection();
+        $regionUnifieCollection = new ArrayCollection();
+        foreach($regionUnifies as $regionUnifie)
+        {
+            $regionUnifieCollection->add($regionUnifie);
+        }
+        dump($regionUnifieCollection);
+        foreach($sites as $site)
+        {
+            $siteEntity    = $em->find(Site::class,$site);
+            foreach($regionUnifieCollection as $regionUnifie)
+            {
+                $region = $regionUnifie->getRegions()->filter(function ($element) use ($siteEntity) {
+                    return $element->getSite() == $siteEntity;
+                });
+                dump($region);
+                if (!empty($region))
+                {
+//                    $regionUnifieCollection->add($regionUnifie);
+                    $regionUnifieCollection->remove($regionUnifie);
+                }
+            }
+        }
+        dump($regionUnifieCollection);
+
+        die;
+
+    }
+
 }

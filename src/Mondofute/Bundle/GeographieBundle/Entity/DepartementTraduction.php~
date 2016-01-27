@@ -20,7 +20,11 @@ class DepartementTraduction
     /**
      * @var string
      */
+<<<<<<< HEAD
     private $description = '';
+=======
+    private $description;
+>>>>>>> correction-departement-liaison-region
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
@@ -29,12 +33,15 @@ class DepartementTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+<<<<<<< HEAD
 
     public function __construct()
     {
         $this->description = '';
         $this->libelle = '';
     }
+=======
+>>>>>>> correction-departement-liaison-region
 
     /**
      * Get id

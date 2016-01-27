@@ -61,10 +61,10 @@ class DepartementUnifieController extends Controller
         $form->handleRequest($request);
 
 
-        // dispacher les données communes
-        $this->dispacherDonneesCommune($departementUnifie);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // dispacher les données communes
+            $this->dispacherDonneesCommune($departementUnifie);
 
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($departementUnifie);
@@ -183,7 +183,10 @@ class DepartementUnifieController extends Controller
     private function dispacherDonneesCommune(DepartementUnifie $entity)
     {
         foreach ($entity->getDepartements() as $departement) {
-            $departement->setRegion($entity->getDepartements()->first()->getRegion());
+            $region = $entity->getDepartements()->first()->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($departement) {
+                return $element->getSite() == $departement->getSite();
+            })->first();
+            $departement->setRegion($region);
         }
     }
 
@@ -204,6 +207,10 @@ class DepartementUnifieController extends Controller
             if ($i === 0 || $departement->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $departementCrm = clone $departement;
                 $departementCrm->setSite($siteCrm);
+                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+                $departementCrm->setRegion($region);
                 $classementReferentTmp = $departement->getSite()->getClassementReferent();
             }
             $i++;
@@ -246,8 +253,10 @@ class DepartementUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $departement->getSite()->getId()));
-                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
-
+//                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
+                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()));
+//                dump($region);die;
+                // todo: prendre en compte le fait qu'une région n'est pas sur un site (faire un message d'infos dans a page?)
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $em->getRepository(DepartementUnifie::class)->findOneById(array($entity->getId()))))) {
@@ -316,6 +325,7 @@ class DepartementUnifieController extends Controller
                 $entity = new DepartementUnifie();
                 $emSite->persist($entity);
                 $emSite->flush();
+                // todo: signaler si l'id est différent de celui de la base CRM
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }

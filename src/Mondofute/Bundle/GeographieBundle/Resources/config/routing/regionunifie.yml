@@ -22,3 +22,8 @@ geographie_region_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:delete" }
     methods:  DELETE
+
+geographie_regions_communes_by_sites:
+    path:     /ajax/regions-communes-by-sites
+    defaults: { _controller: MondofuteGeographieBundle:RegionUnifie:getRegionsCommunesBySite }
+    methods:  POST
