@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Profil
  */
@@ -51,7 +53,7 @@ class Profil
      */
     public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setProfil($this);
 
         return $this;
     }
@@ -64,16 +66,6 @@ class Profil
     public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
     }
 
     /**
@@ -123,4 +115,40 @@ class Profil
 
         return $this;
     }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setProfil($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * @param $traductions
+     * @return Profil $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
+    }
+
+
 }

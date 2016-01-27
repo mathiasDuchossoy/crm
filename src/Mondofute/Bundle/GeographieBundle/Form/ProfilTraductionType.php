@@ -3,11 +3,11 @@
 namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RegionUnifieType extends AbstractType
+class ProfilTraductionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,8 +16,11 @@ class RegionUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('regions', CollectionType::class, array('entry_type' => RegionType::class))
-        ;
+            ->add('libelle')
+            ->add('description', null, array('required' => false))
+            ->add('accueil')
+            ->add('langue', HiddenType::class, array('mapped' => false));
+
     }
 
     /**
@@ -26,7 +29,7 @@ class RegionUnifieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie'
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction'
         ));
     }
 }

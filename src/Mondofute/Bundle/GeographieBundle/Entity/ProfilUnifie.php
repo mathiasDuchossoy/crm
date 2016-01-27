@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\GeographieBundle\Entity\Profil;
+
 /**
  * ProfilUnifie
  */
@@ -12,7 +16,7 @@ class ProfilUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $profils;
 
@@ -37,13 +41,13 @@ class ProfilUnifie
     /**
      * Add profil
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     * @param Profil $profil
      *
      * @return ProfilUnifie
      */
-    public function addProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    public function addProfil(Profil $profil)
     {
-        $this->profils[] = $profil;
+        $this->profils[] = $profil->setProfilUnifie($this);
 
         return $this;
     }
@@ -51,9 +55,9 @@ class ProfilUnifie
     /**
      * Remove profil
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     * @param Profil $profil
      */
-    public function removeProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    public function removeProfil(Profil $profil)
     {
         $this->profils->removeElement($profil);
     }
@@ -61,10 +65,16 @@ class ProfilUnifie
     /**
      * Get profils
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getProfils()
     {
         return $this->profils;
     }
+
+    public function setProfils(ArrayCollection $profils)
+    {
+        $this->profils = $profils;
+    }
+
 }

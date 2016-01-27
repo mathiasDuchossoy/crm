@@ -116,6 +116,10 @@ class Departement
         return $this->traductions;
     }
 
+    /**
+     * @param $traductions
+     * @return Departement $this
+     */
     public function setTraductions($traductions)
     {
         $this->traductions = $traductions;

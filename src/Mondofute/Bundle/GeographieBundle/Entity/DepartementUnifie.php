@@ -72,7 +72,7 @@ class DepartementUnifie
 
     /**
      * @param ArrayCollection $departements
-     * @return ArrayCollection
+     * @return DepartementUnifie $this
      */
     public function setDepartements(ArrayCollection $departements)
     {

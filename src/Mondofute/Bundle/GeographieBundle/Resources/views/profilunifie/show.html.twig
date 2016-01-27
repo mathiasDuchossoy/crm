@@ -1,28 +1,61 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la profil' | capitalize }}
+{% endblock %}
 {% block body %}
-    <h1>ProfilUnifie</h1>
-
-    <table>
+    <h1>{{ 'Visualisation du profil' | capitalize }}</h1>
+    <table class="table table-responsive table-striped">
         <tbody>
-        <tr>
-            <th>Id</th>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
             <td>{{ profilUnifie.id }}</td>
         </tr>
+        {% for profil in profilUnifie.profils %}
+            {% if profil.site.crm == 1 %}
+                {% for traduction in profil.traductions %}
+                    {% if traduction.langue.code == app.request.locale %}
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+                            <td>
+                                {{ traduction.libelle }}
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'description' | capitalize }}</th>
+                            <td>
+                                {{ traduction.description }}
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'accueil' | capitalize }}</th>
+                            <td>
+                                {{ traduction.accueil }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
         </tbody>
     </table>
+    <div style="text-align: right">
 
-    <ul>
-        <li>
-            <a href="{{ path('profil_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('profil_edit', { 'id': profilUnifie.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('geographie_profil_index') }}">Back to the list</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('geographie_profil_edit', { 'id': profilUnifie.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}

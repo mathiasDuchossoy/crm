@@ -1,26 +1,43 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    {{ 'Liste des profils' | capitalize }}
+{% endblock %}
 {% block body %}
-    <h1>ProfilUnifie list</h1>
+    <h1>{{ 'liste des profils' | capitalize }}</h1>
 
-    <table>
+    <table class="table-responsive table-striped table">
         <thead>
         <tr>
             <th>Id</th>
+            <th>{{ 'libelle' | capitalize }}</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for profilUnifie in profilUnifies %}
             <tr>
-                <td><a href="{{ path('profil_show', { 'id': profilUnifie.id }) }}">{{ profilUnifie.id }}</a></td>
+                <td><a href="{{ path('geographie_profil_show', { 'id': profilUnifie.id }) }}">{{ profilUnifie.id }}</a>
+                </td>
                 <td>
-                    <ul>
+                    {% for profil in profilUnifie.profils %}
+                        {% if profil.site.crm == 1 %}
+                            {% for traduction in profil.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="{{ path('profil_show', { 'id': profilUnifie.id }) }}">show</a>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_profil_show', { 'id': profilUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
-                            <a href="{{ path('profil_edit', { 'id': profilUnifie.id }) }}">edit</a>
+                            <a class="btn btn-default"
+                               href="{{ path('geographie_profil_edit', { 'id': profilUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -28,10 +45,11 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('profil_new') }}">Create a new entry</a>
-        </li>
-    </ul>
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('geographie_profil_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
