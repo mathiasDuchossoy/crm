@@ -5,9 +5,9 @@ namespace Mondofute\Bundle\GeographieBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Departement
+ * Profil
  */
-class Departement
+class Profil
 {
     /**
      * @var int
@@ -22,13 +22,9 @@ class Departement
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
      */
-    private $departementUnifie;
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Region
-     */
-    private $region;
+    private $profilUnifie;
 
     /**
      * Constructor
@@ -51,13 +47,13 @@ class Departement
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
      *
-     * @return Departement
+     * @return Profil
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
     {
-        $this->traductions[] = $traduction->setDepartement($this);
+        $this->traductions[] = $traduction->setProfil($this);
 
         return $this;
     }
@@ -65,9 +61,9 @@ class Departement
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -87,11 +83,35 @@ class Departement
      *
      * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
      *
-     * @return Departement
+     * @return Profil
      */
     public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get profilUnifie
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     */
+    public function getProfilUnifie()
+    {
+        return $this->profilUnifie;
+    }
+
+    /**
+     * Set profilUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie
+     *
+     * @return Profil
+     */
+    public function setProfilUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie = null)
+    {
+        $this->profilUnifie = $profilUnifie;
 
         return $this;
     }
@@ -105,7 +125,7 @@ class Departement
             foreach ($traductions as $traduction) {
                 $cloneTraduction = clone $traduction;
                 $this->traductions->add($cloneTraduction);
-                $cloneTraduction->setDepartement($this);
+                $cloneTraduction->setProfil($this);
             }
         }
     }
@@ -122,7 +142,7 @@ class Departement
 
     /**
      * @param $traductions
-     * @return Departement $this
+     * @return Profil $this
      */
     public function setTraductions($traductions)
     {
@@ -130,52 +150,5 @@ class Departement
         return $this;
     }
 
-    /**
-     * Get departementUnifie
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
-     */
-    public function getDepartementUnifie()
-    {
-        return $this->departementUnifie;
-    }
 
-    /**
-     * Set departementUnifie
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie
-     *
-     * @return Departement
-     */
-    public function setDepartementUnifie(
-        \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null
-    ) {
-        $this->departementUnifie = $departementUnifie;
-
-        return $this;
-    }
-
-    /**
-     * Get region
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Region
-     */
-    public function getRegion()
-    {
-        return $this->region;
-    }
-
-    /**
-     * Set region
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
-     *
-     * @return Departement
-     */
-    public function setRegion(\Mondofute\Bundle\GeographieBundle\Entity\Region $region = null)
-    {
-        $this->region = $region;
-
-        return $this;
-    }
 }

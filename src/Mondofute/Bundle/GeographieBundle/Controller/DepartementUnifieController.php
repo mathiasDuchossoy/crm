@@ -562,10 +562,13 @@ class DepartementUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Parcourir la collection de départements.
-            foreach ($departementUnifie->getDepartements() as $departement) {
+            $em = $this->getDoctrine()->getEntityManager();
+
+            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+            // Parcourir les sites non CRM
+            foreach ($sitesDistants as $siteDistant) {
                 // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
                 // Récupérer l'entité sur le site distant puis la suprrimer.
                 $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
                 if (!empty($departementUnifieSite)) {

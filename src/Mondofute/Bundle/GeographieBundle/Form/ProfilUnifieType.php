@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RegionUnifieType extends AbstractType
+class ProfilUnifieType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,8 +16,7 @@ class RegionUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('regions', CollectionType::class, array('entry_type' => RegionType::class))
-        ;
+            ->add('profils', CollectionType::class, array('entry_type' => ProfilType::class));
     }
 
     /**
@@ -26,7 +25,7 @@ class RegionUnifieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie'
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie'
         ));
     }
 }

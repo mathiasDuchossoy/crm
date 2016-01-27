@@ -526,11 +526,14 @@ class RegionUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Parcourir la collection de régions.
-            foreach($regionUnifie->getRegions() as $region)
+            $em = $this->getDoctrine()->getEntityManager();
+
+            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+            // Parcourir les sites non CRM
+            foreach ($sitesDistants as $siteDistant)
             {
                 // Récupérer le manager du site.
-                $emSite             = $this->getDoctrine()->getManager($region->getSite()->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
                 // Récupérer l'entité sur le site distant puis la suprrimer.
                 $regionUnifieSite   = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
                 if(!empty($regionUnifieSite))

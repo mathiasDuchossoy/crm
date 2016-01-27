@@ -1,0 +1,24 @@
+geographie_profil_index:
+    path:     /
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:index" }
+    methods:  GET
+
+geographie_profil_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:show" }
+    methods:  GET
+
+geographie_profil_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:new" }
+    methods:  [GET, POST]
+
+geographie_profil_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:edit" }
+    methods:  [GET, POST]
+
+geographie_profil_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:delete" }
+    methods:  DELETE
