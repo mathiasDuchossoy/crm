@@ -21,7 +21,14 @@ class DepartementTraduction
      * @var string
      */
     private $description;
-
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
+     */
+    private $departement;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -31,6 +38,16 @@ class DepartementTraduction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -48,13 +65,13 @@ class DepartementTraduction
     }
 
     /**
-     * Get libelle
+     * Get description
      *
      * @return string
      */
-    public function getLibelle()
+    public function getDescription()
     {
-        return $this->libelle;
+        return $this->description;
     }
 
     /**
@@ -72,24 +89,14 @@ class DepartementTraduction
     }
 
     /**
-     * Get description
+     * Get departement
      *
-     * @return string
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
-    public function getDescription()
+    public function getDepartement()
     {
-        return $this->description;
+        return $this->departement;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
-     */
-    private $departement;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
 
     /**
      * Set departement
@@ -106,13 +113,13 @@ class DepartementTraduction
     }
 
     /**
-     * Get departement
+     * Get langue
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Departement
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getDepartement()
+    public function getLangue()
     {
-        return $this->departement;
+        return $this->langue;
     }
 
     /**
@@ -127,15 +134,5 @@ class DepartementTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }
