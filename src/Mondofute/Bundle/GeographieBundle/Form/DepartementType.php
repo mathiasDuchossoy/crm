@@ -44,7 +44,7 @@ class DepartementType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Departement',
-            'locale' => 'en'
+            'locale' => 'fr_FR'
         ));
     }
 }

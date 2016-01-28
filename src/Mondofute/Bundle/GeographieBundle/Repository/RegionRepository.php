@@ -19,12 +19,13 @@ class RegionRepository extends \Doctrine\ORM\EntityRepository
     {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r , rt')
+        $qb->select('ru, r , rt , l, s')
             ->from('MondofuteGeographieBundle:Region', 'r')
 //            ->leftJoin( 'Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction' , 'rt' , 'WITH' , 'r.id = rt.region')
 //            ->LeftJoin('Mondofute\Bundle\SiteBundle\Entity\Site' , 's' , 'WITH' , 'r.site = s.id')
 //            ->LeftJoin('Mondofute\Bundle\LangueBundle\Entity\Langue' , 'l' , 'WITH' , 'rt.langue = l.id')
             ->join('r.traductions', 'rt')
+            ->join('r.regionUnifie', 'ru')
             ->join('r.site', 's')
             ->join('rt.langue', 'l')
             ->where("l.code = '$locale'")

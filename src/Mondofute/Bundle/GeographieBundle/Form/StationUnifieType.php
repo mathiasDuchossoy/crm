@@ -16,7 +16,7 @@ class StationUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'options' => array('locale' => $options["locale"])))
+            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"])))
         ;
     }
 
@@ -27,7 +27,7 @@ class StationUnifieType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\StationUnifie',
-            'locale' => 'en'
+            'locale' => 'fr_FR'
         ));
     }
 }

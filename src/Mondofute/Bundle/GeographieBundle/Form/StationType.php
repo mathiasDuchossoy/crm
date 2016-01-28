@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -20,8 +21,8 @@ class StationType extends AbstractType
     {
         $locale = $options["locale"];
         $builder
-            ->add('zoneTouristique', 'entity', array('class' => ZoneTouristique::class,
-                "property" => "traductions[0].libelle",
+            ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
+                "choice_label" => "traductions[0].libelle",
                 'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
                     return $rr->getTraductionsZoneTouristiquesCRMByLocale($locale);
                 },
@@ -45,7 +46,7 @@ class StationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Station',
-            'locale' => 'en'
+            'locale' => 'fr_FR'
         ));
     }
 }

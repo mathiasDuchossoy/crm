@@ -29,7 +29,7 @@ class DepartementUnifieType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie',
-            'locale' => 'en'
+            'locale' => 'fr_FR'
         ));
     }
 }

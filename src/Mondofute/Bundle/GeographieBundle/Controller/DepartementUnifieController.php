@@ -56,7 +56,7 @@ class DepartementUnifieController extends Controller
 //        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
 
-        $form = $this->createForm(new DepartementUnifieType(), $departementUnifie, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 

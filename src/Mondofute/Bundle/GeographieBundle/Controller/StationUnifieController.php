@@ -54,7 +54,7 @@ class StationUnifieController extends Controller
 //        $this->dispacherDonneesCommune($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
-        $form = $this->createForm(new StationUnifieType(), $stationUnifie, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
