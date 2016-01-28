@@ -15,9 +15,8 @@ class DepartementUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
-            ->add('departements', CollectionType::class, array('entry_type' => DepartementType::class, 'options' => array('locale' => $options["locale"])))
+            ->add('departements', CollectionType::class, array('entry_type' => DepartementType::class, 'entry_options' => array('locale' => $options["locale"])))
 //            ->add('site')
 //            ->add('regionUnifie')
         ;
