@@ -399,7 +399,7 @@ class DepartementUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($departementUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType',
-            $departementUnifie)
+            $departementUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);

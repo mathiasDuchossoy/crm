@@ -35,6 +35,9 @@ Mondofute\Bundle\GeographieBundle\Entity\Station:
         stationUnifie:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
             inversedBy: stations
+        zoneTouristique:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            inversedBy: zoneTouristiques
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationTraduction

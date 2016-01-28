@@ -18,7 +18,6 @@ class DepartementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $locale = $options["locale"];
         $builder
             ->add('region', 'entity', array('class' => Region::class,

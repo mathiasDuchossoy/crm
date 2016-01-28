@@ -7,8 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\Station;
 use Mondofute\Bundle\GeographieBundle\Entity\StationTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\StationUnifie;
-use Mondofute\Bundle\GeographieBundle\Entity\Region;
-use Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -55,7 +54,7 @@ class StationUnifieController extends Controller
 //        $this->dispacherDonneesCommune($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
-        $form = $this->createForm(new StationUnifieType(), $stationUnifie);
+        $form = $this->createForm(new StationUnifieType(), $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
@@ -181,14 +180,18 @@ class StationUnifieController extends Controller
      */
     private function dispacherDonneesCommune(StationUnifie $entity)
     {
-        $stationRef    = $entity->getStations()->first();
+        $stationFirst = $entity->getStations()->first();
         foreach ($entity->getStations() as $station) {
-            $station->setCodePostal($stationRef->getCodePostal());
-            $station->setMoisOuverture($stationRef->getMoisOuverture());
-            $station->setJourOuverture($stationRef->getJourOuverture());
-            $station->setMoisFermeture($stationRef->getMoisFermeture());
-            $station->setJourFermeture($stationRef->getJourFermeture());
-            $station->setLienMeteo($stationRef->getLienMeteo());
+            $zoneTouristique = $stationFirst->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
+                return $element->getSite() == $station->getSite();
+            })->first();
+            $station->setZoneTouristique($zoneTouristique);
+            $station->setCodePostal($stationFirst->getCodePostal());
+            $station->setMoisOuverture($stationFirst->getMoisOuverture());
+            $station->setJourOuverture($stationFirst->getJourOuverture());
+            $station->setMoisFermeture($stationFirst->getMoisFermeture());
+            $station->setJourFermeture($stationFirst->getJourFermeture());
+            $station->setLienMeteo($stationFirst->getLienMeteo());
         }
     }
 
@@ -209,6 +212,10 @@ class StationUnifieController extends Controller
             if ($i === 0 || $station->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $stationCrm = clone $station;
                 $stationCrm->setSite($siteCrm);
+                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+                $station->setZoneTouristique($zoneTouristique);
                 $station->setCodePostal($station->getCodePostal());
                 $station->setMoisOuverture($station->getMoisOuverture());
                 $station->setJourOuverture($station->getJourOuverture());
@@ -257,6 +264,8 @@ class StationUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $station->getSite()->getId()));
+                $zoneTouristique = $em->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
+
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $em->getRepository(StationUnifie::class)->findOneById(array($entity->getId()))))) {
@@ -272,6 +281,7 @@ class StationUnifieController extends Controller
                 $stationSite
                     ->setSite($site)
                     ->setStationUnifie($entitySite)
+                    ->setZoneTouristique($zoneTouristique)
                     ->setCodePostal($station->getCodePostal())
                     ->setMoisOuverture($station->getMoisOuverture())
                     ->setJourOuverture($station->getJourOuverture())
@@ -407,7 +417,7 @@ class StationUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType',
-            $stationUnifie)
+            $stationUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
@@ -503,6 +513,7 @@ class StationUnifieController extends Controller
 //                dump($station);
 //           ajouter les champs "communs"
                 $stationCrm
+                    ->setZoneTouristique($station->getZoneTouristique())
                     ->setCodePostal($station->getCodePostal())
                     ->setMoisOuverture($station->getMoisOuverture())
                     ->setJourOuverture($station->getJourOuverture())

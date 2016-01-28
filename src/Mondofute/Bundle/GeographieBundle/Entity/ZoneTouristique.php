@@ -25,6 +25,10 @@ class ZoneTouristique
      * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
      */
     private $zoneTouristiqueUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stations;
 
     /**
      * Constructor
@@ -146,5 +150,37 @@ class ZoneTouristique
         return $this;
     }
 
+    /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     *
+     * @return ZoneTouristique
+     */
+    public function addStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station->setZoneTouristique($this);
 
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
+    }
 }

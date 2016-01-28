@@ -10,4 +10,27 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
  */
 class ZoneTouristiqueRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des zone touristiques crm qui sont de la langue locale
+    public function getTraductionsZoneTouristiquesCRMByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('r , rt')
+            ->from('MondofuteGeographieBundle:ZoneTouristique', 'r')
+            ->join('r.traductions', 'rt')
+            ->join('r.site', 's')
+            ->join('rt.langue', 'l')
+            ->where("l.code = '$locale'")
+//        ->setParameter('code' , $locale)
+            ->andWhere('s.crm = :crm')
+            ->setParameter('crm', 1)
+            ->orderBy('r.id', 'ASC');
+
+        return $qb;
+    }
 }

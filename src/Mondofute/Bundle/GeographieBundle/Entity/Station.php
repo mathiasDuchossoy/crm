@@ -54,6 +54,10 @@ class Station
      * @var \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
      */
     private $stationUnifie;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     */
+    private $zoneTouristique;
 
     /**
      * Constructor
@@ -319,5 +323,27 @@ class Station
         return $this;
     }
 
+    /**
+     * Get zoneTouristique
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     */
+    public function getZoneTouristique()
+    {
+        return $this->zoneTouristique;
+    }
 
+    /**
+     * Set zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     *
+     * @return Station
+     */
+    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
+    {
+        $this->zoneTouristique = $zoneTouristique;
+
+        return $this;
+    }
 }
