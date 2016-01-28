@@ -1,0 +1,24 @@
+geographie_zonetouristique_index:
+    path:     /
+    defaults: { _controller: "MondofuteGeographieBundle:ZoneTouristiqueUnifie:index" }
+    methods:  GET
+
+geographie_zonetouristique_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:ZoneTouristiqueUnifie:show" }
+    methods:  GET
+
+geographie_zonetouristique_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:ZoneTouristiqueUnifie:new" }
+    methods:  [GET, POST]
+
+geographie_zonetouristique_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:ZoneTouristiqueUnifie:edit" }
+    methods:  [GET, POST]
+
+geographie_zonetouristique_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:ZoneTouristiqueUnifie:delete" }
+    methods:  DELETE

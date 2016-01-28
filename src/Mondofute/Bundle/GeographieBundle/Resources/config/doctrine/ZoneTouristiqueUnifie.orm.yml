@@ -1,0 +1,18 @@
+Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        zoneTouristiques:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            mappedBy: zoneTouristiqueUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

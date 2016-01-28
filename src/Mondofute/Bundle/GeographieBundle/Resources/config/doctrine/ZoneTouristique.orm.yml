@@ -1,0 +1,24 @@
+Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        zoneTouristiqueUnifie:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
+            inversedBy: zoneTouristiques
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction
+            mappedBy: zoneTouristique
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }

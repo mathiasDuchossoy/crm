@@ -1,0 +1,118 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {% block formulaire %}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    $(this).attr('required', false);
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+//                    alert('impossible');
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_{{ site.id }}").hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_{{ site.id }}").show();
+                }
+            });
+            {% endfor %}
+
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+
+        //        $(document).on('shown.bs.tab','a[data-toggle="tab"]',function(e){
+        //            $(':input[required]:hidden').removeAttr('required').addClass('wasrequired');
+        //            $('.wasrequired:visible').removeClass('wasrequired').prop('required', 'required');
+        //        })
+
+    </script>
+{% endblock %}

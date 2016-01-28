@@ -1,0 +1,26 @@
+Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        description:
+            type: text
+            nullable: true
+    manyToOne:
+        zoneTouristique:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

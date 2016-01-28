@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la zone touristique' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation du zone touristique' | capitalize }}</h1>
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ zoneTouristiqueUnifie.id }}</td>
+        </tr>
+        {% for zoneTouristique in zoneTouristiqueUnifie.zoneTouristiques %}
+            {% if zoneTouristique.site.crm == 1 %}
+                {% for traduction in zoneTouristique.traductions %}
+                    {% if traduction.langue.code == app.request.locale %}
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+                            <td>
+                                {{ traduction.libelle }}
+                            </td>
+                        </tr>
+                        <tr class="row">
+                            <th class="col-sm-1">{{ 'description' | capitalize }}</th>
+                            <td>
+                                {{ traduction.description }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('geographie_zonetouristique_index') }}">Back to the list</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('geographie_zonetouristique_edit', { 'id': zoneTouristiqueUnifie.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}
