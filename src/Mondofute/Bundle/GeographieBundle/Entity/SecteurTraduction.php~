@@ -21,11 +21,7 @@ class SecteurTraduction
     /**
      * @var string
      */
-<<<<<<< HEAD
     private $description = '';
-=======
-    private $description;
->>>>>>> correction-departement-liaison-region
     /**
      * @var Secteur
      */
@@ -88,7 +84,7 @@ class SecteurTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }

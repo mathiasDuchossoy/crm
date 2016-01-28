@@ -20,11 +20,7 @@ class DepartementTraduction
     /**
      * @var string
      */
-<<<<<<< HEAD
     private $description = '';
-=======
-    private $description;
->>>>>>> correction-departement-liaison-region
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
@@ -33,15 +29,12 @@ class DepartementTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
-<<<<<<< HEAD
 
     public function __construct()
     {
         $this->description = '';
         $this->libelle = '';
     }
-=======
->>>>>>> correction-departement-liaison-region
 
     /**
      * Get id
@@ -51,30 +44,6 @@ class DepartementTraduction
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return DepartementTraduction
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
     }
 
     /**
@@ -96,7 +65,7 @@ class DepartementTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }
@@ -145,6 +114,35 @@ class DepartementTraduction
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return DepartementTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }

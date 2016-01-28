@@ -25,20 +25,11 @@ class RegionTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
-<<<<<<< HEAD
-=======
     /**
      * @var string
      */
     private $libelle = '';
 
->>>>>>> correction-departement-liaison-region
-    /**
-     * @var string
-     */
-    private $libelle = '';
-
-<<<<<<< HEAD
     public function __construct()
     {
         $this->libelle = '';
@@ -55,8 +46,6 @@ class RegionTraduction
         return $this->id;
     }
 
-=======
->>>>>>> correction-departement-liaison-region
     /**
      * Get description
      *
@@ -76,7 +65,7 @@ class RegionTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }
@@ -129,6 +118,11 @@ class RegionTraduction
         return $this;
     }
 
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
     /**
      * Get libelle
      *
@@ -152,4 +146,6 @@ class RegionTraduction
 
         return $this;
     }
+
+
 }

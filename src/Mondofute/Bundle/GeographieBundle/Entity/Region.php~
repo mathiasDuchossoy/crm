@@ -25,6 +25,10 @@ class Region
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $departements;
 
     /**
      * Constructor
@@ -145,4 +149,42 @@ class Region
         $this->traductions = $traductions;
         return $this;
     }
+
+    /**
+     * Add departement
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
+     *
+     * @return Region
+     */
+    public function addDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
+    {
+        $this->departements[] = $departement;
+
+        return $this;
+    }
+
+    /**
+     * Remove departement
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
+     */
+    public function removeDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
+    {
+        $this->departements->removeElement($departement);
+    }
+
+    /**
+     * Get departements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDepartements()
+    {
+        return $this->departements;
+    }
+
+
+
+
 }

@@ -2,31 +2,31 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
- * ProfilTraduction
+ * ZoneTouristiqueTraduction
  */
-class ProfilTraduction
+class ZoneTouristiqueTraduction
 {
     /**
      * @var int
      */
     private $id;
+
     /**
      * @var string
      */
     private $libelle;
+
     /**
      * @var string
      */
     private $description;
     /**
-     * @var string
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
      */
-    private $accueil;
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Profil
-     */
-    private $profil;
+    private $zoneTouristique;
     /**
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
@@ -57,7 +57,7 @@ class ProfilTraduction
      *
      * @param string $libelle
      *
-     * @return ProfilTraduction
+     * @return ZoneTouristiqueTraduction
      */
     public function setLibelle($libelle)
     {
@@ -81,7 +81,7 @@ class ProfilTraduction
      *
      * @param string $description
      *
-     * @return ProfilTraduction
+     * @return ZoneTouristiqueTraduction
      */
     public function setDescription($description)
     {
@@ -91,49 +91,25 @@ class ProfilTraduction
     }
 
     /**
-     * Get accueil
+     * Get zoneTouristique
      *
-     * @return string
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
      */
-    public function getAccueil()
+    public function getZoneTouristique()
     {
-        return $this->accueil;
+        return $this->zoneTouristique;
     }
 
     /**
-     * Set accueil
+     * Set zoneTouristique
      *
-     * @param string $accueil
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
      *
-     * @return ProfilTraduction
+     * @return ZoneTouristiqueTraduction
      */
-    public function setAccueil($accueil)
+    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
     {
-        $this->accueil = $accueil;
-
-        return $this;
-    }
-
-    /**
-     * Get profil
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Profil
-     */
-    public function getProfil()
-    {
-        return $this->profil;
-    }
-
-    /**
-     * Set profil
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
-     *
-     * @return ProfilTraduction
-     */
-    public function setProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil = null)
-    {
-        $this->profil = $profil;
+        $this->zoneTouristique = $zoneTouristique;
 
         return $this;
     }
@@ -153,7 +129,7 @@ class ProfilTraduction
      *
      * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
      *
-     * @return ProfilTraduction
+     * @return ZoneTouristiqueTraduction
      */
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
@@ -161,4 +137,6 @@ class ProfilTraduction
 
         return $this;
     }
+
+
 }

@@ -25,6 +25,10 @@ class Departement
      * @var \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
      */
     private $departementUnifie;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Region
+     */
+    private $region;
 
     /**
      * Constructor
@@ -116,6 +120,10 @@ class Departement
         return $this->traductions;
     }
 
+    /**
+     * @param $traductions
+     * @return Departement $this
+     */
     public function setTraductions($traductions)
     {
         $this->traductions = $traductions;
@@ -143,6 +151,30 @@ class Departement
         \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null
     ) {
         $this->departementUnifie = $departementUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get region
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Region
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Set region
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
+     *
+     * @return Departement
+     */
+    public function setRegion(\Mondofute\Bundle\GeographieBundle\Entity\Region $region = null)
+    {
+        $this->region = $region;
 
         return $this;
     }

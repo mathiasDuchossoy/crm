@@ -1,0 +1,24 @@
+geographie_station_index:
+    path:     /
+    defaults: { _controller: "MondofuteGeographieBundle:StationUnifie:index" }
+    methods:  GET
+
+geographie_station_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:StationUnifie:show" }
+    methods:  GET
+
+geographie_station_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:StationUnifie:new" }
+    methods:  [GET, POST]
+
+geographie_station_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:StationUnifie:edit" }
+    methods:  [GET, POST]
+
+geographie_station_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:StationUnifie:delete" }
+    methods:  DELETE

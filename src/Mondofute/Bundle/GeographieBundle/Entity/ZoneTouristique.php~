@@ -5,9 +5,9 @@ namespace Mondofute\Bundle\GeographieBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Profil
+ * ZoneTouristique
  */
-class Profil
+class ZoneTouristique
 {
     /**
      * @var int
@@ -22,9 +22,9 @@ class Profil
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
      */
-    private $profilUnifie;
+    private $zoneTouristiqueUnifie;
 
     /**
      * Constructor
@@ -47,13 +47,13 @@ class Profil
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
      *
-     * @return Profil
+     * @return ZoneTouristique
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
     {
-        $this->traductions[] = $traduction->setProfil($this);
+        $this->traductions[] = $traduction->setZoneTouristique($this);
 
         return $this;
     }
@@ -61,9 +61,9 @@ class Profil
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -83,7 +83,7 @@ class Profil
      *
      * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
      *
-     * @return Profil
+     * @return ZoneTouristique
      */
     public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
     {
@@ -93,25 +93,25 @@ class Profil
     }
 
     /**
-     * Get profilUnifie
+     * Get zoneTouristiqueUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
      */
-    public function getProfilUnifie()
+    public function getZoneTouristiqueUnifie()
     {
-        return $this->profilUnifie;
+        return $this->zoneTouristiqueUnifie;
     }
 
     /**
-     * Set profilUnifie
+     * Set zoneTouristiqueUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie $zoneTouristiqueUnifie
      *
-     * @return Profil
+     * @return ZoneTouristique
      */
-    public function setProfilUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie = null)
+    public function setZoneTouristiqueUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie $zoneTouristiqueUnifie = null)
     {
-        $this->profilUnifie = $profilUnifie;
+        $this->zoneTouristiqueUnifie = $zoneTouristiqueUnifie;
 
         return $this;
     }
@@ -125,7 +125,7 @@ class Profil
             foreach ($traductions as $traduction) {
                 $cloneTraduction = clone $traduction;
                 $this->traductions->add($cloneTraduction);
-                $cloneTraduction->setProfil($this);
+                $cloneTraduction->setZoneTouristique($this);
             }
         }
     }
@@ -140,10 +140,6 @@ class Profil
         return $this->traductions;
     }
 
-    /**
-     * @param $traductions
-     * @return Profil $this
-     */
     public function setTraductions($traductions)
     {
         $this->traductions = $traductions;
