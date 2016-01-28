@@ -21,3 +21,7 @@ mondofute_geographie_profil:
 mondofute_geographie_zonetouristique:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/zonetouristiqueunifie.yml"
     prefix:   /zonetouristique
+
+mondofute_geographie_station:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/stationunifie.yml"
+    prefix:   /station

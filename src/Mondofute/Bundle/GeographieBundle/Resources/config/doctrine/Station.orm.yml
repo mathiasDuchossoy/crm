@@ -1,0 +1,43 @@
+Mondofute\Bundle\GeographieBundle\Entity\Station:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\StationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        codePostal:
+            type: integer
+        moisOuverture:
+            type: string
+            length: '2'
+        jourOuverture:
+            type: string
+            length: '2'
+        moisFermeture:
+            type: string
+            length: '2'
+        jourFermeture:
+            type: string
+            length: '2'
+        lienMeteo:
+            type: string
+            length: 255
+            nullable: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        stationUnifie:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
+            inversedBy: stations
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationTraduction
+            mappedBy: station
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }

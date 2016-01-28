@@ -1,0 +1,18 @@
+Mondofute\Bundle\GeographieBundle\Entity\StationUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\StationUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        stations:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Station
+            mappedBy: stationUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
