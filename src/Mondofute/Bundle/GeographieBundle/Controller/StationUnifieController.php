@@ -187,10 +187,10 @@ class StationUnifieController extends Controller
             })->first();
             $station->setZoneTouristique($zoneTouristique);
             $station->setCodePostal($stationFirst->getCodePostal());
-            $station->setMoisOuverture($stationFirst->getMoisOuverture());
-            $station->setJourOuverture($stationFirst->getJourOuverture());
-            $station->setMoisFermeture($stationFirst->getMoisFermeture());
-            $station->setJourFermeture($stationFirst->getJourFermeture());
+//            $station->setMoisOuverture($stationFirst->getMoisOuverture());
+//            $station->setJourOuverture($stationFirst->getJourOuverture());
+//            $station->setMoisFermeture($stationFirst->getMoisFermeture());
+//            $station->setJourFermeture($stationFirst->getJourFermeture());
             $station->setLienMeteo($stationFirst->getLienMeteo());
         }
     }
@@ -512,8 +512,14 @@ class StationUnifieController extends Controller
             if ($station->getSite() == $siteReferent) {
 //                dump($station);
 //           ajouter les champs "communs"
+                $siteCrm = $stationCrm->getSite();
+                $zoneTouristiqueCrm = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+
                 $stationCrm
-                    ->setZoneTouristique($station->getZoneTouristique())
+//                    ->setZoneTouristique($station->getZoneTouristique())
+                    ->setZoneTouristique($zoneTouristiqueCrm)
                     ->setCodePostal($station->getCodePostal())
                     ->setMoisOuverture($station->getMoisOuverture())
                     ->setJourOuverture($station->getJourOuverture())

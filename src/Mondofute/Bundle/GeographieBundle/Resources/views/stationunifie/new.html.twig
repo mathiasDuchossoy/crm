@@ -17,10 +17,6 @@
     <div>
         {{ form_row( station.zoneTouristique ) }}
         {{ form_row( station.codePostal ) }}
-        {{ form_row( station.moisOuverture ) }}
-        {{ form_row( station.jourOuverture ) }}
-        {{ form_row( station.moisFermeture ) }}
-        {{ form_row( station.jourFermeture ) }}
         {{ form_row( station.lienMeteo ) }}
     </div>
 
@@ -35,6 +31,10 @@
                 {#{{ form_row(station.enneige) }}#}
                 {{ form_row(station.site) }}
                 <ul class="nav nav-tabs">
+                    {{ form_row( station.jourOuverture ) }}
+                    {{ form_row( station.moisOuverture ) }}
+                    {{ form_row( station.jourFermeture ) }}
+                    {{ form_row( station.moisFermeture ) }}
                     {% set iTraduc = 0 %}
                     {% for traduction in station.traductions %}
                         <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>

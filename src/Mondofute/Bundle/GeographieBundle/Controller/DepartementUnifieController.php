@@ -494,9 +494,13 @@ class DepartementUnifieController extends Controller
             if ($departement->getSite() == $siteReferent) {
 //                dump($departement);
 //              ajouter les champs "communs"
-
+                $siteCrm = $departementCrm->getSite();
+                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
                 $departementCrm
-                    ->setRegion($departement->getRegion());
+                    ->setRegion($regionCrm);
+//                    ->setRegion($departement->getRegion());
 
 
                 foreach ($langues as $langue) {
