@@ -15,8 +15,10 @@ class StationUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $firstZoneTouristique = $builder->getData()->getStations()->First()->getZoneTouristique();
+        $siteZoneTouristique = (!empty($firstZoneTouristique)) ? $firstZoneTouristique->getSite() : null;
         $builder
-            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"])))
+            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"], 'siteZoneTouristique' => $siteZoneTouristique)))
         ;
     }
 

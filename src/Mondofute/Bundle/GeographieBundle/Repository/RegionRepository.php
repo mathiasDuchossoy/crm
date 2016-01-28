@@ -15,34 +15,26 @@ class RegionRepository extends \Doctrine\ORM\EntityRepository
      * @return \Doctrine\ORM\QueryBuilder
      */
     // récupérer les traductioin des regions crm qui sont de la langue locale
-    public function getTraductionsRegionsCRMByLocale($locale)
+    public function getTraductionsRegionsCRMByLocale($locale, $siteRegion)
     {
-
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('ru, r , rt , l, s')
+        $qb->select('r , rt ')
             ->from('MondofuteGeographieBundle:Region', 'r')
-//            ->leftJoin( 'Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction' , 'rt' , 'WITH' , 'r.id = rt.region')
-//            ->LeftJoin('Mondofute\Bundle\SiteBundle\Entity\Site' , 's' , 'WITH' , 'r.site = s.id')
-//            ->LeftJoin('Mondofute\Bundle\LangueBundle\Entity\Langue' , 'l' , 'WITH' , 'rt.langue = l.id')
             ->join('r.traductions', 'rt')
             ->join('r.regionUnifie', 'ru')
             ->join('r.site', 's')
             ->join('rt.langue', 'l')
-            ->where("l.code = '$locale'")
+            ->where("l.code = '$locale'");
 //        ->setParameter('code' , $locale)
-            ->andWhere('s.crm = :crm')
-            ->setParameter('crm', 1)
-            ->orderBy('r.id', 'ASC');
-//        echo($qb);die;
+        if (!empty($siteRegion)) {
+            $qb->andWhere('s.id = :site')
+                ->setParameter('site', $siteRegion->getId());
+        } else {
+            $qb->andWhere('s.crm = :crm')
+                ->setParameter('crm', 1);
+        }
+        $qb->orderBy('r.id', 'ASC');
 
         return $qb;
-//        $qb->leftJoin( 'Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction' , 'rt' , 'WITH' , 'r.id = rt.region')
-//            ->LeftJoin('Mondofute\Bundle\SiteBundle\Entity\Site' , 's' , 'WITH' , 'r.site = s.id')
-//            ->LeftJoin('Mondofute\Bundle\LangueBundle\Entity\Langue' , 'l' , 'WITH' , 'rt.langue = l.id');
-//        $qb->where('l.code = :locale')
-//            ->setParameter('locale' , $locale);
-//        $qb->andWhere( 's.crm = :crm')
-//            ->setParameter('crm' , 1);
-//        return $qb->orderBy('r.id' , 'ASC');
     }
 }

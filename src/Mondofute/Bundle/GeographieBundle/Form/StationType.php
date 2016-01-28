@@ -20,11 +20,12 @@ class StationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale = $options["locale"];
+        $siteZoneTouristique = $options["siteZoneTouristique"];
         $builder
             ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
                 "choice_label" => "traductions[0].libelle",
-                'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
-                    return $rr->getTraductionsZoneTouristiquesCRMByLocale($locale);
+                'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale, $siteZoneTouristique) {
+                    return $rr->getTraductionsZoneTouristiquesCRMByLocale($locale, $siteZoneTouristique);
                 },
             ))
             ->add('codePostal')
@@ -46,7 +47,8 @@ class StationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Station',
-            'locale' => 'fr_FR'
+            'locale' => 'fr_FR',
+            'siteZoneTouristique' => ''
         ));
     }
 }

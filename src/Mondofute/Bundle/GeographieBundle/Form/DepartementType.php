@@ -22,11 +22,18 @@ class DepartementType extends AbstractType
 //        echo $this->id;
 //        dump($idDomaine= $builder->getData()->getId());die;
         $locale = $options["locale"];
+        $siteRegion = $options["siteRegion"];
+//        dump($siteRegion);die;
         $builder
+//            ->add('region', EntityType::class, array('class' => Region::class,
+//                'choice_label' => 'id',
+//                'choice_value' => 'id',
+//            ))
             ->add('region', EntityType::class, array('class' => Region::class,
                 'choice_label' => 'traductions[0].libelle',
-                'query_builder' => function (RegionRepository $rr) use ($locale) {
-                    return $rr->getTraductionsRegionsCRMByLocale($locale);
+//                'choice_value' => 'id',
+                'query_builder' => function (RegionRepository $rr) use ($locale, $siteRegion) {
+                    return $rr->getTraductionsRegionsCRMByLocale($locale, $siteRegion);
                 },
             ))
             ->add('traductions', CollectionType::class, array(
@@ -44,7 +51,8 @@ class DepartementType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Departement',
-            'locale' => 'fr_FR'
+            'locale' => 'fr_FR',
+            'siteRegion' => ''
         ));
     }
 }
