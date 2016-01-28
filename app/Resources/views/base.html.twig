@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>{% block title %}{{ 'CRM Mondofute !' }}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
     {% block stylesheets %}
         {% stylesheets 'css/bootstrap.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
@@ -69,7 +70,6 @@
             color: #ffe100
         }
     </style>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body>
 {% block header %}
