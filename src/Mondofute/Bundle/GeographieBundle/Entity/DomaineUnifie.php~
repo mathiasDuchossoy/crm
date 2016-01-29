@@ -1,0 +1,71 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * DomaineUnifie
+ */
+class DomaineUnifie
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $domaines;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->domaines = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     *
+     * @return DomaineUnifie
+     */
+    public function addDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines[] = $domaine;
+
+        return $this;
+    }
+
+    /**
+     * Remove domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     */
+    public function removeDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines->removeElement($domaine);
+    }
+
+    /**
+     * Get domaines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDomaines()
+    {
+        return $this->domaines;
+    }
+}

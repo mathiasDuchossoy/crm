@@ -1,0 +1,112 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * DomaineTraduction
+ */
+class DomaineTraduction
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    private $domaine;
+
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
+
+
+    /**
+     * Set domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     *
+     * @return DomaineTraduction
+     */
+    public function setDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine = null)
+    {
+        $this->domaine = $domaine;
+
+        return $this;
+    }
+
+    /**
+     * Get domaine
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    public function getDomaine()
+    {
+        return $this->domaine;
+    }
+
+    /**
+     * Set langue
+     *
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     *
+     * @return DomaineTraduction
+     */
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+    /**
+     * @var string
+     */
+    private $libelle;
+
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return DomaineTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+}

@@ -1,0 +1,129 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * Domaine
+ */
+class Domaine
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
+     */
+    private $domaineUnifie;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction
+     *
+     * @return Domaine
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction)
+    {
+        $this->traductions[] = $traduction;
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Set site
+     *
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     *
+     * @return Domaine
+     */
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set domaineUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie $domaineUnifie
+     *
+     * @return Domaine
+     */
+    public function setDomaineUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie $domaineUnifie = null)
+    {
+        $this->domaineUnifie = $domaineUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineUnifie
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
+     */
+    public function getDomaineUnifie()
+    {
+        return $this->domaineUnifie;
+    }
+}
