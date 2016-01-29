@@ -36,7 +36,14 @@ class StationTraduction
      * @var string
      */
     private $distancesGrandesVilles;
-
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Station
+     */
+    private $station;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -46,6 +53,16 @@ class StationTraduction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -63,13 +80,13 @@ class StationTraduction
     }
 
     /**
-     * Get libelle
+     * Get enVoiture
      *
      * @return string
      */
-    public function getLibelle()
+    public function getEnVoiture()
     {
-        return $this->libelle;
+        return $this->enVoiture;
     }
 
     /**
@@ -87,13 +104,13 @@ class StationTraduction
     }
 
     /**
-     * Get enVoiture
+     * Get enTrain
      *
      * @return string
      */
-    public function getEnVoiture()
+    public function getEnTrain()
     {
-        return $this->enVoiture;
+        return $this->enTrain;
     }
 
     /**
@@ -111,13 +128,13 @@ class StationTraduction
     }
 
     /**
-     * Get enTrain
+     * Get enAvion
      *
      * @return string
      */
-    public function getEnTrain()
+    public function getEnAvion()
     {
-        return $this->enTrain;
+        return $this->enAvion;
     }
 
     /**
@@ -135,13 +152,13 @@ class StationTraduction
     }
 
     /**
-     * Get enAvion
+     * Get distancesGrandesVilles
      *
      * @return string
      */
-    public function getEnAvion()
+    public function getDistancesGrandesVilles()
     {
-        return $this->enAvion;
+        return $this->distancesGrandesVilles;
     }
 
     /**
@@ -159,24 +176,14 @@ class StationTraduction
     }
 
     /**
-     * Get distancesGrandesVilles
+     * Get station
      *
-     * @return string
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Station
      */
-    public function getDistancesGrandesVilles()
+    public function getStation()
     {
-        return $this->distancesGrandesVilles;
+        return $this->station;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Station
-     */
-    private $station;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
 
     /**
      * Set station
@@ -193,13 +200,13 @@ class StationTraduction
     }
 
     /**
-     * Get station
+     * Get langue
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Station
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getStation()
+    public function getLangue()
     {
-        return $this->station;
+        return $this->langue;
     }
 
     /**
@@ -214,15 +221,5 @@ class StationTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }

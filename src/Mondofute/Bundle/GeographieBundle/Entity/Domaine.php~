@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+
 /**
  * Domaine
  */
@@ -11,7 +15,26 @@ class Domaine
      * @var int
      */
     private $id;
+    /**
+     * @var Collection
+     */
+    private $traductions;
+    /**
+     * @var Site
+     */
+    private $site;
+    /**
+     * @var DomaineUnifie
+     */
+    private $domaineUnifie;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -22,39 +45,17 @@ class Domaine
     {
         return $this->id;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
-
-    /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
-     */
-    private $site;
-
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
-     */
-    private $domaineUnifie;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction
+     * @param DomaineTraduction $traduction
      *
      * @return Domaine
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction)
+    public function addTraduction(DomaineTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setDomaine($this);
 
         return $this;
     }
@@ -62,41 +63,17 @@ class Domaine
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction
+     * @param DomaineTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction $traduction)
+    public function removeTraduction(DomaineTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
 
     /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
-     * Set site
-     *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
-     *
-     * @return Domaine
-     */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
-    {
-        $this->site = $site;
-
-        return $this;
-    }
-
-    /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -104,15 +81,15 @@ class Domaine
     }
 
     /**
-     * Set domaineUnifie
+     * Set site
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie $domaineUnifie
+     * @param Site $site
      *
      * @return Domaine
      */
-    public function setDomaineUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie $domaineUnifie = null)
+    public function setSite(Site $site = null)
     {
-        $this->domaineUnifie = $domaineUnifie;
+        $this->site = $site;
 
         return $this;
     }
@@ -120,10 +97,54 @@ class Domaine
     /**
      * Get domaineUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
+     * @return DomaineUnifie
      */
     public function getDomaineUnifie()
     {
         return $this->domaineUnifie;
+    }
+
+    /**
+     * Set domaineUnifie
+     *
+     * @param DomaineUnifie $domaineUnifie
+     *
+     * @return Domaine
+     */
+    public function setDomaineUnifie(DomaineUnifie $domaineUnifie = null)
+    {
+        $this->domaineUnifie = $domaineUnifie;
+
+        return $this;
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setDomaine($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
     }
 }

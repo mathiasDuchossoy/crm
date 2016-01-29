@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Station
@@ -41,7 +42,30 @@ class Station
      * @var string
      */
     private $lienMeteo;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
+     */
+    private $stationUnifie;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     */
+    private $zoneTouristique;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -51,6 +75,16 @@ class Station
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get codePostal
+     *
+     * @return int
+     */
+    public function getCodePostal()
+    {
+        return $this->codePostal;
     }
 
     /**
@@ -68,13 +102,13 @@ class Station
     }
 
     /**
-     * Get codePostal
+     * Get moisOuverture
      *
-     * @return int
+     * @return string
      */
-    public function getCodePostal()
+    public function getMoisOuverture()
     {
-        return $this->codePostal;
+        return $this->moisOuverture;
     }
 
     /**
@@ -92,13 +126,13 @@ class Station
     }
 
     /**
-     * Get moisOuverture
+     * Get jourOuverture
      *
      * @return string
      */
-    public function getMoisOuverture()
+    public function getJourOuverture()
     {
-        return $this->moisOuverture;
+        return $this->jourOuverture;
     }
 
     /**
@@ -116,13 +150,13 @@ class Station
     }
 
     /**
-     * Get jourOuverture
+     * Get moisFermeture
      *
      * @return string
      */
-    public function getJourOuverture()
+    public function getMoisFermeture()
     {
-        return $this->jourOuverture;
+        return $this->moisFermeture;
     }
 
     /**
@@ -140,13 +174,13 @@ class Station
     }
 
     /**
-     * Get moisFermeture
+     * Get jourFermeture
      *
      * @return string
      */
-    public function getMoisFermeture()
+    public function getJourFermeture()
     {
-        return $this->moisFermeture;
+        return $this->jourFermeture;
     }
 
     /**
@@ -164,13 +198,13 @@ class Station
     }
 
     /**
-     * Get jourFermeture
+     * Get lienMeteo
      *
      * @return string
      */
-    public function getJourFermeture()
+    public function getLienMeteo()
     {
-        return $this->jourFermeture;
+        return $this->lienMeteo;
     }
 
     /**
@@ -188,47 +222,15 @@ class Station
     }
 
     /**
-     * Get lienMeteo
-     *
-     * @return string
-     */
-    public function getLienMeteo()
-    {
-        return $this->lienMeteo;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
-
-    /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
-     */
-    private $site;
-
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
-     */
-    private $stationUnifie;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction
+     * @param StationTraduction $traduction
      *
      * @return Station
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction)
+    public function addTraduction(StationTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setStation($this);
 
         return $this;
     }
@@ -236,21 +238,21 @@ class Station
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction
+     * @param StationTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction)
+    public function removeTraduction(StationTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
 
     /**
-     * Get traductions
+     * Get site
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
      */
-    public function getTraductions()
+    public function getSite()
     {
-        return $this->traductions;
+        return $this->site;
     }
 
     /**
@@ -268,13 +270,13 @@ class Station
     }
 
     /**
-     * Get site
+     * Get stationUnifie
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
      */
-    public function getSite()
+    public function getStationUnifie()
     {
-        return $this->site;
+        return $this->stationUnifie;
     }
 
     /**
@@ -291,13 +293,57 @@ class Station
         return $this;
     }
 
-    /**
-     * Get stationUnifie
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
-     */
-    public function getStationUnifie()
+    public function __clone()
     {
-        return $this->stationUnifie;
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setStation($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
+    }
+
+    /**
+     * Get zoneTouristique
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     */
+    public function getZoneTouristique()
+    {
+        return $this->zoneTouristique;
+    }
+
+    /**
+     * Set zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     *
+     * @return Station
+     */
+    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
+    {
+        $this->zoneTouristique = $zoneTouristique;
+
+        return $this;
     }
 }

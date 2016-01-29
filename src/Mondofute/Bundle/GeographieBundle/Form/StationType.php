@@ -6,10 +6,12 @@ use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Date;
 
 class StationType extends AbstractType
 {
@@ -29,7 +31,14 @@ class StationType extends AbstractType
                 },
             ))
             ->add('codePostal')
-            ->add('moisOuverture')
+            ->add('moisOuverture', 'text', array(
+                'required' => true,
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-provide' => 'datepicker',
+                    'data-format' => 'dd-mm-yyyy HH:ii',
+                ),
+            ))
             ->add('jourOuverture')
             ->add('moisFermeture')
             ->add('jourFermeture')

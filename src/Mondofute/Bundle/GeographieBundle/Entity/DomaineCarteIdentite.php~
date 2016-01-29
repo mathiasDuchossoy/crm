@@ -1,0 +1,245 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * DomaineCarteIdentite
+ */
+class DomaineCarteIdentite
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var int
+     */
+    private $altitudeMini;
+
+    /**
+     * @var int
+     */
+    private $altitudeMaxi;
+
+    /**
+     * @var int
+     */
+    private $kmPistesSkiAlpin;
+
+    /**
+     * @var int
+     */
+    private $kmPistesSkiNordique;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set altitudeMini
+     *
+     * @param integer $altitudeMini
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setAltitudeMini($altitudeMini)
+    {
+        $this->altitudeMini = $altitudeMini;
+
+        return $this;
+    }
+
+    /**
+     * Get altitudeMini
+     *
+     * @return int
+     */
+    public function getAltitudeMini()
+    {
+        return $this->altitudeMini;
+    }
+
+    /**
+     * Set altitudeMaxi
+     *
+     * @param integer $altitudeMaxi
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setAltitudeMaxi($altitudeMaxi)
+    {
+        $this->altitudeMaxi = $altitudeMaxi;
+
+        return $this;
+    }
+
+    /**
+     * Get altitudeMaxi
+     *
+     * @return int
+     */
+    public function getAltitudeMaxi()
+    {
+        return $this->altitudeMaxi;
+    }
+
+    /**
+     * Set kmPistesSkiAlpin
+     *
+     * @param integer $kmPistesSkiAlpin
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setKmPistesSkiAlpin($kmPistesSkiAlpin)
+    {
+        $this->kmPistesSkiAlpin = $kmPistesSkiAlpin;
+
+        return $this;
+    }
+
+    /**
+     * Get kmPistesSkiAlpin
+     *
+     * @return int
+     */
+    public function getKmPistesSkiAlpin()
+    {
+        return $this->kmPistesSkiAlpin;
+    }
+
+    /**
+     * Set kmPistesSkiNordique
+     *
+     * @param integer $kmPistesSkiNordique
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setKmPistesSkiNordique($kmPistesSkiNordique)
+    {
+        $this->kmPistesSkiNordique = $kmPistesSkiNordique;
+
+        return $this;
+    }
+
+    /**
+     * Get kmPistesSkiNordique
+     *
+     * @return int
+     */
+    public function getKmPistesSkiNordique()
+    {
+        return $this->kmPistesSkiNordique;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+     */
+    private $domaineCarteIdentiteUnifie;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
+    {
+        $this->traductions[] = $traduction;
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Set site
+     *
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set domaineCarteIdentiteUnifie
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setDomaineCarteIdentiteUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie = null)
+    {
+        $this->domaineCarteIdentiteUnifie = $domaineCarteIdentiteUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineCarteIdentiteUnifie
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+     */
+    public function getDomaineCarteIdentiteUnifie()
+    {
+        return $this->domaineCarteIdentiteUnifie;
+    }
+}

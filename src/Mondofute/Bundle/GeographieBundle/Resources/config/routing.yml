@@ -29,3 +29,7 @@ mondofute_geographie_station:
 mondofute_geographie_domaine:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/domaineunifie.yml"
     prefix:   /domaine
+
+mondofute_geographie_domainecarteidentite:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/domainecarteidentiteunifie.yml"
+    prefix:   /domainecarteidentite

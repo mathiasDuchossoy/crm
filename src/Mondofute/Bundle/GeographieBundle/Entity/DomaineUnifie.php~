@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * DomaineUnifie
  */
@@ -11,7 +14,18 @@ class DomaineUnifie
      * @var int
      */
     private $id;
+    /**
+     * @var Collection
+     */
+    private $domaines;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->domaines = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -22,29 +36,17 @@ class DomaineUnifie
     {
         return $this->id;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $domaines;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->domaines = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add domaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     * @param Domaine $domaine
      *
      * @return DomaineUnifie
      */
-    public function addDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    public function addDomaine(Domaine $domaine)
     {
-        $this->domaines[] = $domaine;
+        $this->domaines[] = $domaine->setDomaineUnifie($this);
 
         return $this;
     }
@@ -52,9 +54,9 @@ class DomaineUnifie
     /**
      * Remove domaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     * @param Domaine $domaine
      */
-    public function removeDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    public function removeDomaine(Domaine $domaine)
     {
         $this->domaines->removeElement($domaine);
     }
@@ -62,10 +64,20 @@ class DomaineUnifie
     /**
      * Get domaines
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDomaines()
     {
         return $this->domaines;
+    }
+
+    /**
+     * @param $domaines
+     * @return DomaineUnifie
+     */
+    public function setDomaines($domaines)
+    {
+        $this->domaines = $domaines;
+        return $this;
     }
 }

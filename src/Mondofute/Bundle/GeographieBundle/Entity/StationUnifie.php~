@@ -11,17 +11,6 @@ class StationUnifie
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -36,6 +25,16 @@ class StationUnifie
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Add station
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
@@ -44,7 +43,7 @@ class StationUnifie
      */
     public function addStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
     {
-        $this->stations[] = $station;
+        $this->stations[] = $station->setStationUnifie($this);
 
         return $this;
     }
@@ -67,5 +66,11 @@ class StationUnifie
     public function getStations()
     {
         return $this->stations;
+    }
+
+    public function setStations($stations)
+    {
+        $this->stations = $stations;
+        return $this;
     }
 }

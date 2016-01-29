@@ -1,0 +1,24 @@
+geographie_domaineCarteIdentite_index:
+    path:     /
+    defaults: { _controller: "MondofuteGeographieBundle:DomaineCarteIdentiteUnifie:index" }
+    methods:  GET
+
+geographie_domaineCarteIdentite_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:DomaineCarteIdentiteUnifie:show" }
+    methods:  GET
+
+geographie_domaineCarteIdentite_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:DomaineCarteIdentiteUnifie:new" }
+    methods:  [GET, POST]
+
+geographie_domaineCarteIdentite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:DomaineCarteIdentiteUnifie:edit" }
+    methods:  [GET, POST]
+
+geographie_domaineCarteIdentite_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:DomaineCarteIdentiteUnifie:delete" }
+    methods:  DELETE

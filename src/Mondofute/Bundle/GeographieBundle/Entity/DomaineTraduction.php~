@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+
 /**
  * DomaineTraduction
  */
@@ -11,7 +13,18 @@ class DomaineTraduction
      * @var int
      */
     private $id;
-
+    /**
+     * @var Domaine
+     */
+    private $domaine;
+    /**
+     * @var Langue
+     */
+    private $langue;
+    /**
+     * @var string
+     */
+    private $libelle;
 
     /**
      * Get id
@@ -22,35 +35,11 @@ class DomaineTraduction
     {
         return $this->id;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
-     */
-    private $domaine;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
-
-    /**
-     * Set domaine
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
-     *
-     * @return DomaineTraduction
-     */
-    public function setDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine = null)
-    {
-        $this->domaine = $domaine;
-
-        return $this;
-    }
 
     /**
      * Get domaine
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     * @return Domaine
      */
     public function getDomaine()
     {
@@ -58,15 +47,15 @@ class DomaineTraduction
     }
 
     /**
-     * Set langue
+     * Set domaine
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Domaine $domaine
      *
      * @return DomaineTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setDomaine(Domaine $domaine = null)
     {
-        $this->langue = $langue;
+        $this->domaine = $domaine;
 
         return $this;
     }
@@ -74,17 +63,36 @@ class DomaineTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
         return $this->langue;
     }
-    /**
-     * @var string
-     */
-    private $libelle;
 
+    /**
+     * Set langue
+     *
+     * @param Langue $langue
+     *
+     * @return DomaineTraduction
+     */
+    public function setLangue(Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
 
     /**
      * Set libelle
@@ -98,15 +106,5 @@ class DomaineTraduction
         $this->libelle = $libelle;
 
         return $this;
-    }
-
-    /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
     }
 }

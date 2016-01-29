@@ -8,6 +8,8 @@ imports:
 parameters:
     locale: fr_FR
 #    locale: en_EN
+    database_name_skifute: skifute2
+    database_name_francefute: francefute2
 
 framework:
     #esi:             ~

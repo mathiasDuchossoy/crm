@@ -24,7 +24,8 @@
         "symfony/assetic-bundle": "^2.7",
         "components/jquery": "^2.1",
         "twitter/bootstrap": "^3.3",
-        "oyejorge/less.php": "v1.7.0.10"
+        "oyejorge/less.php": "v1.7.0.10",
+        "stephanecollot/datetimepicker-bundle": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
