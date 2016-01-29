@@ -27,6 +27,14 @@ class Domaine
      * @var DomaineUnifie
      */
     private $domaineUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $sousDomaines;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    private $domaineParent;
 
     /**
      * Constructor
@@ -147,16 +155,6 @@ class Domaine
         $this->traductions = $traductions;
         return $this;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $sousDomaines;
-
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
-     */
-    private $domaineParent;
-
 
     /**
      * Add sousDomaine
@@ -167,7 +165,7 @@ class Domaine
      */
     public function addSousDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine)
     {
-        $this->sousDomaines[] = $sousDomaine;
+        $this->sousDomaines[] = $sousDomaine->setDomaineParent($this);
 
         return $this;
     }
@@ -193,6 +191,16 @@ class Domaine
     }
 
     /**
+     * Get domaineParent
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    public function getDomaineParent()
+    {
+        return $this->domaineParent;
+    }
+
+    /**
      * Set domaineParent
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaineParent
@@ -205,14 +213,33 @@ class Domaine
 
         return $this;
     }
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
+
 
     /**
-     * Get domaineParent
+     * Set domaineCarteIdentite
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     *
+     * @return Domaine
      */
-    public function getDomaineParent()
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
     {
-        return $this->domaineParent;
+        $this->domaineCarteIdentite = $domaineCarteIdentite;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
     }
 }

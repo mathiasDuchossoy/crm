@@ -265,4 +265,43 @@ class DomaineCarteIdentite
         $this->traductions = $traductions;
         return $this;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $domaines;
+
+
+    /**
+     * Add domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines[] = $domaine;
+
+        return $this;
+    }
+
+    /**
+     * Remove domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     */
+    public function removeDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines->removeElement($domaine);
+    }
+
+    /**
+     * Get domaines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDomaines()
+    {
+        return $this->domaines;
+    }
 }

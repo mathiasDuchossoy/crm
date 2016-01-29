@@ -19,6 +19,9 @@ Mondofute\Bundle\GeographieBundle\Entity\Domaine:
         domaineParent:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
             inversedBy: sousDomaines
+        domaineCarteIdentite:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+            inversedBy: domaines
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction

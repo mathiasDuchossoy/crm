@@ -213,4 +213,33 @@ class Domaine
 
         return $this;
     }
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
+
+
+    /**
+     * Set domaineCarteIdentite
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     *
+     * @return Domaine
+     */
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    {
+        $this->domaineCarteIdentite = $domaineCarteIdentite;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
+    }
 }

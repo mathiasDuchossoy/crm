@@ -30,4 +30,7 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction
             mappedBy: domaineCarteIdentite
             cascade:  ['persist' , 'remove']
+        domaines:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            mappedBy: domaineCarteIdentite
     lifecycleCallbacks: {  }

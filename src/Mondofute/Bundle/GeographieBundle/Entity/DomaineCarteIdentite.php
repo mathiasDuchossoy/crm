@@ -45,6 +45,10 @@ class DomaineCarteIdentite
      * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
      */
     private $domaineCarteIdentiteUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $domaines;
 
     /**
      * Constructor
@@ -264,5 +268,39 @@ class DomaineCarteIdentite
     {
         $this->traductions = $traductions;
         return $this;
+    }
+
+    /**
+     * Add domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines[] = $domaine->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove domaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     */
+    public function removeDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    {
+        $this->domaines->removeElement($domaine);
+    }
+
+    /**
+     * Get domaines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDomaines()
+    {
+        return $this->domaines;
     }
 }
