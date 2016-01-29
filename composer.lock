@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a956a49d8a534257d75fde2b313674c5",
-    "content-hash": "2ef089a10c8cd52d7bd7f3b52a83dcae",
+    "hash": "dd9c6c49eb360a8f19a6cceec82b8d53",
+    "content-hash": "9af10051ea2e9c5f919ebfa5276d16ce",
     "packages": [
         {
             "name": "components/jquery",
@@ -1409,52 +1409,6 @@
             ],
             "description": "A security checker for your composer.lock",
             "time": "2015-11-07 08:07:40"
-        },
-        {
-            "name": "stephanecollot/datetimepicker-bundle",
-            "version": "1.0.1",
-            "target-dir": "SC/DatetimepickerBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stephanecollot/DatetimepickerBundle.git",
-                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stephanecollot/DatetimepickerBundle/zipball/dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
-                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3",
-                "symfony/framework-bundle": "2.*",
-                "symfony/symfony": "2.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "SC\\DatetimepickerBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stephane Collot"
-                }
-            ],
-            "description": "Symfony bundle for Bootstrap DateTime picker",
-            "keywords": [
-                "bootstrap",
-                "bundle",
-                "datepicker",
-                "picker",
-                "symfony",
-                "timepicker"
-            ],
-            "time": "2015-02-27 05:46:07"
         },
         {
             "name": "swiftmailer/swiftmailer",

@@ -31,14 +31,7 @@ class StationType extends AbstractType
                 },
             ))
             ->add('codePostal')
-            ->add('moisOuverture', 'text', array(
-                'required' => true,
-                'attr' => array(
-                    'class' => 'datetimepicker',
-                    'data-provide' => 'datepicker',
-                    'data-format' => 'dd-mm-yyyy HH:ii',
-                ),
-            ))
+            ->add('moisOuverture')
             ->add('jourOuverture')
             ->add('moisFermeture')
             ->add('jourFermeture')
