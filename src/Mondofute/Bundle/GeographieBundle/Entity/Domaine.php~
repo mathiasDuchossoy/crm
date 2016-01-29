@@ -147,4 +147,72 @@ class Domaine
         $this->traductions = $traductions;
         return $this;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $sousDomaines;
+
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    private $domaineParent;
+
+
+    /**
+     * Add sousDomaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine
+     *
+     * @return Domaine
+     */
+    public function addSousDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine)
+    {
+        $this->sousDomaines[] = $sousDomaine;
+
+        return $this;
+    }
+
+    /**
+     * Remove sousDomaine
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine
+     */
+    public function removeSousDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine)
+    {
+        $this->sousDomaines->removeElement($sousDomaine);
+    }
+
+    /**
+     * Get sousDomaines
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSousDomaines()
+    {
+        return $this->sousDomaines;
+    }
+
+    /**
+     * Set domaineParent
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaineParent
+     *
+     * @return Domaine
+     */
+    public function setDomaineParent(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaineParent = null)
+    {
+        $this->domaineParent = $domaineParent;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineParent
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     */
+    public function getDomaineParent()
+    {
+        return $this->domaineParent;
+    }
 }

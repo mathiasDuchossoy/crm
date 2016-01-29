@@ -16,9 +16,15 @@ Mondofute\Bundle\GeographieBundle\Entity\Domaine:
         domaineUnifie:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
             inversedBy: domaines
+        domaineParent:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            inversedBy: sousDomaines
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction
             mappedBy: domaine
             cascade:  ['persist' , 'remove']
+        sousDomaines:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            mappedBy: domaineParent
     lifecycleCallbacks: {  }

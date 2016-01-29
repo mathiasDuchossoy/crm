@@ -10,4 +10,39 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
  */
 class DomaineRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des domaines crm qui sont de la langue locale
+    public function getTraductionsDomainesCRMByLocale($locale, $siteDomaineParent , $domaineUnifieId)
+    {
+//        dump($domaineUnifieId);die;
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('d , dt ')
+            ->from('MondofuteGeographieBundle:DOmaine', 'd')
+            ->join('d.traductions', 'dt')
+            ->join('d.domaineUnifie', 'du')
+            ->join('d.site', 's')
+            ->join('dt.langue', 'l')
+            ->where("l.code = '$locale'");
+//        ->setParameter('code' , $locale)
+        if (!empty($siteDomaineParent)) {
+            $qb->andWhere('s.id = :site')
+                ->setParameter('site', $siteDomaineParent->getId());
+        } else {
+            $qb->andWhere('s.crm = :crm')
+                ->setParameter('crm', 1);
+        }
+        if (!empty($domaineUnifieId))
+        {
+            $qb->andWhere('du.id != :domaineUnifieId')
+                ->setParameter('domaineUnifieId' , $domaineUnifieId);
+        }
+        $qb->andWhere('d.domaineParent IS NULL');
+        $qb->orderBy('d.id', 'ASC');
+
+        return $qb;
+    }
+    
 }

@@ -23,10 +23,10 @@
 
     {% set domaine = edit_form.domaines | first %}
     {# ajout des attributs "communs" #}
-    {#<div>#}
-    {#{{ form_row( domaine.nbVache ) }}#}
+    <div>
+    {{ form_row( domaine.domaineParent ) }}
     {#{{ form_row( domaine.nbHabitant ) }}#}
-    {#</div>#}
+    </div>
     {% set mesSites = edit_form.domaines %}
     {% include '::onglets_sites.html.twig' %}
 

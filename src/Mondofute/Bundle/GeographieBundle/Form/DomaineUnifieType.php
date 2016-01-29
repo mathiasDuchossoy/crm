@@ -15,8 +15,19 @@ class DomaineUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $domaineUnifieId  =$builder->getData()->getId();
+        $firstDomaineParent = $builder->getData()->getDomaines()->First()->getDomaineParent();
+        $siteDomaineParent = (!empty($firstDomaineParent)) ? $firstDomaineParent->getSite() : null;
         $builder
-            ->add('domaines', CollectionType::class, array('entry_type' => DomaineType::class));
+            ->add('domaines', CollectionType::class, array(
+                'entry_type' => DomaineType::class ,
+                'entry_options' => array(
+                    'locale' => $options['locale'] ,
+                    'siteDomaineParent' => $siteDomaineParent,
+                    'domaineUnifieId' => $domaineUnifieId
+                )
+            )
+            );
     }
 
     /**
@@ -25,7 +36,8 @@ class DomaineUnifieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie'
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie',
+            'locale' => 'fr_FR'
         ));
     }
 }

@@ -15,10 +15,10 @@
     {% include '::coches_sites.html.twig' %}
 
     {% set domaine = form.domaines | first %}
-    {#<div>#}
-    {#{{ form_row( domaine.nbVache ) }}#}
+    <div>
+    {{ form_row( domaine.domaineParent ) }}
     {#{{ form_row( domaine.nbHabitant ) }}#}
-    {#</div>#}
+    </div>
     {% set mesSites = form.domaines %}
     {% include '::onglets_sites.html.twig' %}
 

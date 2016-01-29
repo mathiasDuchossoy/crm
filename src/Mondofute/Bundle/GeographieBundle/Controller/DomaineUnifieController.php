@@ -50,11 +50,12 @@ class DomaineUnifieController extends Controller
         $this->ajouterDomainesDansForm($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie);
+        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie , array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->dispacherDonneesCommune($domaineUnifie);
 
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($domaineUnifie);
@@ -165,6 +166,25 @@ class DomaineUnifieController extends Controller
         }
     }
 
+
+    /**
+     * dispacher les données communes dans chaque stations
+     * @param DomaineUnifie $entity
+     */
+    private function dispacherDonneesCommune(DomaineUnifie $entity)
+    {
+        foreach ($entity->getDomaines() as $domaine) {
+            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
+            if (!empty($firstDomaineParent))
+            {
+                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
+                    return $element->getSite() == $domaine->getSite();
+                })->first();
+                $domaine->setDomaineParent($domaineParent);
+            }
+        }
+    }
+
     /**
      * @param DomaineUnifie $entity
      * @return $this
@@ -182,6 +202,10 @@ class DomaineUnifieController extends Controller
             if ($i === 0 || $domaine->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $domaineCrm = clone $domaine;
                 $domaineCrm->setSite($siteCrm);
+                $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+                $domaineCrm->setDomaineParent($domaineParent);
                 $classementReferentTmp = $domaine->getSite()->getClassementReferent();
             }
             $i++;
@@ -224,6 +248,7 @@ class DomaineUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $domaine->getSite()->getId()));
+                $domaineParent = $em->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -239,7 +264,8 @@ class DomaineUnifieController extends Controller
 //            copie des données station
                 $domaineSite
                     ->setSite($site)
-                    ->setDomaineUnifie($entitySite);
+                    ->setDomaineUnifie($entitySite)
+                    ->setDomaineParent($domaineParent);
 
 //            Gestion des traductions
                 foreach ($domaine->getTraductions() as $domaineTraduc) {
@@ -357,16 +383,17 @@ class DomaineUnifieController extends Controller
         }
 
         $this->ajouterDomainesDansForm($domaineUnifie);
-//        $this->dispacherDonneesCommune($domaineUnifie);
+        $this->dispacherDonneesCommune($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie)
+        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie , array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->dispacherDonneesCommune($domaineUnifie);
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
             $this->mettreAJourDomaineCrm($domaineUnifie, $domaineCrm);
             $em->persist($domaineCrm);
@@ -452,6 +479,13 @@ class DomaineUnifieController extends Controller
 
             // Si la site de la station est égale au site de référence
             if ($domaine->getSite() == $siteReferent) {
+
+                $siteCrm = $domaineCrm->getSite();
+                $domaineParentCrm = $domaineCrm->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+                $domaineCrm
+                    ->setDomaineParent($domaineParentCrm);
 //                dump($domaine);
 //              ajouter les champs "communs"
                 foreach ($langues as $langue) {

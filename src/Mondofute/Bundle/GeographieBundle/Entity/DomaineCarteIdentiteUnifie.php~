@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * DomaineCarteIdentiteUnifie
@@ -11,17 +12,6 @@ class DomaineCarteIdentiteUnifie
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -36,6 +26,16 @@ class DomaineCarteIdentiteUnifie
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Add domaineCarteIdentite
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
@@ -44,7 +44,7 @@ class DomaineCarteIdentiteUnifie
      */
     public function addDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
     {
-        $this->domaineCarteIdentites[] = $domaineCarteIdentite;
+        $this->domaineCarteIdentites[] = $domaineCarteIdentite->setDomaineCarteIdentiteUnifie($this);
 
         return $this;
     }
@@ -67,5 +67,12 @@ class DomaineCarteIdentiteUnifie
     public function getDomaineCarteIdentites()
     {
         return $this->domaineCarteIdentites;
+    }
+
+
+    public function setDomaineCarteIdentites(ArrayCollection $domaineCarteIdentites)
+    {
+        $this->domaineCarteIdentites = $domaineCarteIdentites;
+        return $this;
     }
 }

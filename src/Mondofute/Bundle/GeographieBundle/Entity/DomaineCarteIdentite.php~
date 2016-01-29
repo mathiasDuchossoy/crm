@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * DomaineCarteIdentite
  */
@@ -31,7 +33,26 @@ class DomaineCarteIdentite
      * @var int
      */
     private $kmPistesSkiNordique;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+     */
+    private $domaineCarteIdentiteUnifie;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -41,6 +62,16 @@ class DomaineCarteIdentite
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get altitudeMini
+     *
+     * @return int
+     */
+    public function getAltitudeMini()
+    {
+        return $this->altitudeMini;
     }
 
     /**
@@ -58,13 +89,13 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get altitudeMini
+     * Get altitudeMaxi
      *
      * @return int
      */
-    public function getAltitudeMini()
+    public function getAltitudeMaxi()
     {
-        return $this->altitudeMini;
+        return $this->altitudeMaxi;
     }
 
     /**
@@ -82,13 +113,13 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get altitudeMaxi
+     * Get kmPistesSkiAlpin
      *
      * @return int
      */
-    public function getAltitudeMaxi()
+    public function getKmPistesSkiAlpin()
     {
-        return $this->altitudeMaxi;
+        return $this->kmPistesSkiAlpin;
     }
 
     /**
@@ -106,13 +137,13 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get kmPistesSkiAlpin
+     * Get kmPistesSkiNordique
      *
      * @return int
      */
-    public function getKmPistesSkiAlpin()
+    public function getKmPistesSkiNordique()
     {
-        return $this->kmPistesSkiAlpin;
+        return $this->kmPistesSkiNordique;
     }
 
     /**
@@ -130,38 +161,6 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get kmPistesSkiNordique
-     *
-     * @return int
-     */
-    public function getKmPistesSkiNordique()
-    {
-        return $this->kmPistesSkiNordique;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
-
-    /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
-     */
-    private $site;
-
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
-     */
-    private $domaineCarteIdentiteUnifie;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
      * Add traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction
@@ -170,7 +169,7 @@ class DomaineCarteIdentite
      */
     public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
 
         return $this;
     }
@@ -186,13 +185,13 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get traductions
+     * Get site
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
      */
-    public function getTraductions()
+    public function getSite()
     {
-        return $this->traductions;
+        return $this->site;
     }
 
     /**
@@ -210,13 +209,13 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Get site
+     * Get domaineCarteIdentiteUnifie
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
      */
-    public function getSite()
+    public function getDomaineCarteIdentiteUnifie()
     {
-        return $this->site;
+        return $this->domaineCarteIdentiteUnifie;
     }
 
     /**
@@ -233,13 +232,37 @@ class DomaineCarteIdentite
         return $this;
     }
 
-    /**
-     * Get domaineCarteIdentiteUnifie
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
-     */
-    public function getDomaineCarteIdentiteUnifie()
+    public function __clone()
     {
-        return $this->domaineCarteIdentiteUnifie;
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setDomaineCarteIdentite($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * @param $traductions
+     * @return DomaineCarteIdentite $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
     }
 }

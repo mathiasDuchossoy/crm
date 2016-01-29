@@ -21,7 +21,14 @@ class DomaineCarteIdentiteTraduction
      * @var string
      */
     private $description;
-
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -31,6 +38,16 @@ class DomaineCarteIdentiteTraduction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get accroche
+     *
+     * @return string
+     */
+    public function getAccroche()
+    {
+        return $this->accroche;
     }
 
     /**
@@ -48,13 +65,13 @@ class DomaineCarteIdentiteTraduction
     }
 
     /**
-     * Get accroche
+     * Get description
      *
      * @return string
      */
-    public function getAccroche()
+    public function getDescription()
     {
-        return $this->accroche;
+        return $this->description;
     }
 
     /**
@@ -72,24 +89,14 @@ class DomaineCarteIdentiteTraduction
     }
 
     /**
-     * Get description
+     * Get domaineCarteIdentite
      *
-     * @return string
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
      */
-    public function getDescription()
+    public function getDomaineCarteIdentite()
     {
-        return $this->description;
+        return $this->domaineCarteIdentite;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
-     */
-    private $domaineCarteIdentite;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
 
     /**
      * Set domaineCarteIdentite
@@ -106,13 +113,13 @@ class DomaineCarteIdentiteTraduction
     }
 
     /**
-     * Get domaineCarteIdentite
+     * Get langue
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getDomaineCarteIdentite()
+    public function getLangue()
     {
-        return $this->domaineCarteIdentite;
+        return $this->langue;
     }
 
     /**
@@ -127,15 +134,5 @@ class DomaineCarteIdentiteTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }
