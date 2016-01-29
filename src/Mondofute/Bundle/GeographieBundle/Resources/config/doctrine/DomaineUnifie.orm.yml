@@ -1,0 +1,18 @@
+Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        domaines:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            mappedBy: domaineUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

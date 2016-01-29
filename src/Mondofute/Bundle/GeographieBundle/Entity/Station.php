@@ -224,11 +224,11 @@ class Station
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction
+     * @param StationTraduction $traduction
      *
      * @return Station
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction)
+    public function addTraduction(StationTraduction $traduction)
     {
         $this->traductions[] = $traduction->setStation($this);
 
@@ -238,9 +238,9 @@ class Station
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction
+     * @param StationTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\StationTraduction $traduction)
+    public function removeTraduction(StationTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
