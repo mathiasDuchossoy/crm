@@ -27,9 +27,9 @@ class DomaineType extends AbstractType
         $builder
             ->add('domaineParent' , EntityType::class , array(
                 'class' => Domaine::class ,
-                'empty_value' => '--- choisir un domaine parent ---',
+                'placeholder' => '--- choisir un domaine parent ---',
                 'required' => false ,
-                'property' => 'traductions[0].libelle',
+                'choice_label' => 'traductions[0].libelle',
                 'query_builder' => function (DomaineRepository $rr) use ($locale , $siteDomaineParent , $domaineUnifieId) {
                     return $rr->getTraductionsDomainesCRMByLocale($locale , $siteDomaineParent , $domaineUnifieId);
                 },
@@ -39,7 +39,7 @@ class DomaineType extends AbstractType
                 'entry_type' => DomaineTraductionType::class,
                 'required' => false,
             ))
-            ->add('domaineCarteIdentite' , new DomaineCarteIdentiteType())
+            ->add('domaineCarteIdentite' , 'Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteType')
             ->add('site', HiddenType::class, array('mapped' => false));
     }
 
