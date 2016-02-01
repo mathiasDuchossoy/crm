@@ -31,10 +31,10 @@ class StationType extends AbstractType
                 },
             ))
             ->add('codePostal')
-            ->add('moisOuverture')
             ->add('jourOuverture')
-            ->add('moisFermeture')
+            ->add('moisOuverture')
             ->add('jourFermeture')
+            ->add('moisFermeture')
             ->add('lienMeteo')
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationTraductionType::class,

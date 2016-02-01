@@ -1,5 +1,10 @@
 {% extends '@MondofuteGeographie/stationunifie/fiche.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ form_stylesheet(form) }}
+{% endblock %}
+
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
     {{ 'création d\une station' | capitalize }}
@@ -82,4 +87,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ form_javascript(form) }}
 {% endblock %}
+
