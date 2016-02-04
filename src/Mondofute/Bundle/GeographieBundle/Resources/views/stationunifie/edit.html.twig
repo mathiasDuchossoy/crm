@@ -27,12 +27,27 @@
     <div class="tab-content" style="padding:20px;">
 
         {% set iSite = 0 %}
+        {% set index = 0 %}
         {% for station in edit_form.stations %}
             <div id="data_site_{{ station.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(station.site) }}
                 <ul class="nav nav-tabs">
-                    {{ form_row( station.zoneTouristique ) }}
+                    {#{{ form_row( station.zoneTouristique ) }}#}
+                    <div class="form-group">
+                        {{ form_label( station.zoneTouristique ) }}
+                        <div class="col-sm-10">
+                            <select class="form-control" name="station_unifie[stations][{{ index }}][zoneTouristique]"
+                                    id="station_unifie_stations_{{ index }}_zoneTouristique">
+                                <option value="">{{ station.zoneTouristique.vars.placeholder }}</option>
+                                {% for choice in station.zoneTouristique.vars.choices %}
+                                    {% if choice.data.site == station.vars.value.site %}
+                                        <option value="{{ choice.value }}">{{ choice.label }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     {{ form_row( station.codePostal ) }}
                     {{ form_row( station.lienMeteo ) }}
                     {{ form_row( station.jourOuverture ) }}
@@ -65,6 +80,7 @@
                     {% endfor %}
                 </div>
             </div>
+            {% set index = (index + 1) %}
         {% endfor %}
     </div>
     {{ form_row(edit_form.submit) }}

@@ -31,8 +31,8 @@ class ZoneTouristiqueRepository extends \Doctrine\ORM\EntityRepository
             $qb->andWhere('s.id = :site')
                 ->setParameter('site', $siteZoneTouristique->getId());
         } else {
-            $qb->andWhere('s.crm = :crm')
-                ->setParameter('crm', 1);
+//            $qb->andWhere('s.crm = :crm')
+//                ->setParameter('crm', 1);
         }
         $qb->orderBy('r.id', 'ASC');
 

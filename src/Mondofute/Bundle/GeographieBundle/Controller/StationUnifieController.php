@@ -71,6 +71,8 @@ class StationUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($stationUnifie);
+
+
             return $this->redirectToRoute('geographie_station_show', array('id' => $stationUnifie->getId()));
         }
 
