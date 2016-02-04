@@ -14,6 +14,7 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * StationUnifie controller.
@@ -72,8 +73,17 @@ class StationUnifieController extends Controller
 
             $this->copieVersSites($stationUnifie);
 
+//            $session = new Session();
+            $session = $request->getSession();
+            $session->start();
 
-            return $this->redirectToRoute('geographie_station_show', array('id' => $stationUnifie->getId()));
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'La station a bien été créé.'
+            );
+
+            return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/stationunifie/new.html.twig', array(
@@ -450,9 +460,15 @@ class StationUnifieController extends Controller
 
             $this->copieVersSites($stationUnifie);
 
-//            dump($stationUnifie);
-//            dump($stationCrm);
-//            die;
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'La station a bien été modifié.'
+            );
+
             return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
         }
 

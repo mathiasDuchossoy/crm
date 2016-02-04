@@ -22,8 +22,7 @@ class StationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale = $options["locale"];
-//        $siteZoneTouristique = $options["siteZoneTouristique"];
-        $siteZoneTouristique = null;
+        $siteZoneTouristique = $options["siteZoneTouristique"];
         $builder
             ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
                 "choice_label" => "traductions[0].libelle",
