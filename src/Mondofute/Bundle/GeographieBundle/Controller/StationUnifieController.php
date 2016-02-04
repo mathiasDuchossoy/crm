@@ -422,8 +422,9 @@ class StationUnifieController extends Controller
             $originalStations->add($station);
         }
 
-        $this->ajouterStationsDansForm($stationUnifie);
+
         $this->affilierEntities($stationUnifie);
+        $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
