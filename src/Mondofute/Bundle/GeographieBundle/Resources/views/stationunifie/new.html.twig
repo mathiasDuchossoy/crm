@@ -18,12 +18,6 @@
     {{ form_errors(form) }}
     {{ form_start(form) }}
     {% include '::coches_sites.html.twig' %}
-    {% set station = form.stations | first %}
-    <div>
-        {{ form_row( station.zoneTouristique ) }}
-        {{ form_row( station.codePostal ) }}
-        {{ form_row( station.lienMeteo ) }}
-    </div>
 
     {% set mesSites = form.stations %}
     {% include '::onglets_sites.html.twig' %}
@@ -36,6 +30,9 @@
                 {#{{ form_row(station.enneige) }}#}
                 {{ form_row(station.site) }}
                 <ul class="nav nav-tabs">
+                    {{ form_row( station.zoneTouristique ) }}
+                    {{ form_row( station.codePostal ) }}
+                    {{ form_row( station.lienMeteo ) }}
                     {{ form_row( station.jourOuverture ) }}
                     {{ form_row( station.moisOuverture ) }}
                     {{ form_row( station.jourFermeture ) }}
@@ -53,7 +50,6 @@
                                 {% endfor %}
                             </a>
                         </li>
-                        {#{{ form_row(traduction) }}#}
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
@@ -79,7 +75,6 @@
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li><a href="{{ path('geographie_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
-            {#<li>{{ form(delete_form) }}</li>#}
         </ul>
 
     </div>

@@ -51,7 +51,6 @@ class StationUnifieController extends Controller
         $stationUnifie = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
-//        $this->dispacherDonneesCommune($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
@@ -61,8 +60,8 @@ class StationUnifieController extends Controller
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // dispacher les données communes
-            $this->dispacherDonneesCommune($stationUnifie);
+            // affilier les entités liés
+            $this->affilierEntities($stationUnifie);
 
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($stationUnifie);
@@ -175,23 +174,23 @@ class StationUnifieController extends Controller
     }
 
     /**
-     * dispacher les données communes dans chaque stations
+     *
      * @param StationUnifie $entity
      */
-    private function dispacherDonneesCommune(StationUnifie $entity)
+    private function affilierEntities(StationUnifie $entity)
     {
-        $stationFirst = $entity->getStations()->first();
+//        $stationFirst = $entity->getStations()->first();
         foreach ($entity->getStations() as $station) {
-            $zoneTouristique = $stationFirst->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
+            $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
                 return $element->getSite() == $station->getSite();
             })->first();
             $station->setZoneTouristique($zoneTouristique);
-            $station->setCodePostal($stationFirst->getCodePostal());
+//            $station->setCodePostal($stationFirst->getCodePostal());
 //            $station->setMoisOuverture($stationFirst->getMoisOuverture());
 //            $station->setJourOuverture($stationFirst->getJourOuverture());
 //            $station->setMoisFermeture($stationFirst->getMoisFermeture());
 //            $station->setJourFermeture($stationFirst->getJourFermeture());
-            $station->setLienMeteo($stationFirst->getLienMeteo());
+//            $station->setLienMeteo($stationFirst->getLienMeteo());
         }
     }
 
@@ -215,13 +214,13 @@ class StationUnifieController extends Controller
                 $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
                     return $element->getSite() == $siteCrm;
                 })->first();
-                $station->setZoneTouristique($zoneTouristique);
-                $station->setCodePostal($station->getCodePostal());
-                $station->setMoisOuverture($station->getMoisOuverture());
-                $station->setJourOuverture($station->getJourOuverture());
-                $station->setMoisFermeture($station->getMoisFermeture());
-                $station->setJourFermeture($station->getJourFermeture());
-                $station->setLienMeteo($station->getLienMeteo());
+                $stationCrm->setZoneTouristique($zoneTouristique);
+                $stationCrm->setCodePostal($station->getCodePostal());
+                $stationCrm->setMoisOuverture($station->getMoisOuverture());
+                $stationCrm->setJourOuverture($station->getJourOuverture());
+                $stationCrm->setMoisFermeture($station->getMoisFermeture());
+                $stationCrm->setJourFermeture($station->getJourFermeture());
+                $stationCrm->setLienMeteo($station->getLienMeteo());
                 $classementReferentTmp = $station->getSite()->getClassementReferent();
             }
             $i++;
@@ -412,7 +411,7 @@ class StationUnifieController extends Controller
         }
 
         $this->ajouterStationsDansForm($stationUnifie);
-        $this->dispacherDonneesCommune($stationUnifie);
+        $this->affilierEntities($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
@@ -423,7 +422,7 @@ class StationUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->dispacherDonneesCommune($stationUnifie);
+            $this->affilierEntities($stationUnifie);
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
             $this->mettreAJourStationCrm($stationUnifie, $stationCrm);
             $em->persist($stationCrm);

@@ -20,36 +20,9 @@
     {{ form_errors(edit_form) }}
     {{ form_start(edit_form) }}
     {% include '::coches_sites.html.twig' %}
-    {#{% for site in sites %}#}
-    {#<input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"#}
-    {#value="{{ site.id }}">{{ site.libelle }}#}
-    {#{% endfor %}#}
 
-    {% set station = edit_form.stations | first %}
-    {# ajout des attributs "communs" #}
-    {#<div>#}
-    {#{{ form_row( station.nbVache ) }}#}
-    {#{{ form_row( station.nbHabitant ) }}#}
-    {#</div>#}
-    <div>
-        {{ form_row( station.zoneTouristique ) }}
-        {{ form_row( station.codePostal ) }}
-        {{ form_row( station.lienMeteo ) }}
-    </div>
     {% set mesSites = edit_form.stations %}
     {% include '::onglets_sites.html.twig' %}
-    {#<ul class="nav nav-tabs">#}
-    {#{% set iSite = 0 %}#}
-    {#{% for station in edit_form.stations %}#}
-    {#<li id="menu_station_site_{{ station.vars.value.site.id }}"#}
-    {#{% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>#}
-    {#<a data-toggle="tab"#}
-    {#href="#station_site_{{ station.vars.value.site.id }}">#}
-    {#{{ station.vars.value.site.libelle }}#}
-    {#</a>#}
-    {#</li>#}
-    {#{% endfor %}#}
-    {#</ul>#}
 
     <div class="tab-content" style="padding:20px;">
 
@@ -59,6 +32,9 @@
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(station.site) }}
                 <ul class="nav nav-tabs">
+                    {{ form_row( station.zoneTouristique ) }}
+                    {{ form_row( station.codePostal ) }}
+                    {{ form_row( station.lienMeteo ) }}
                     {{ form_row( station.jourOuverture ) }}
                     {{ form_row( station.moisOuverture ) }}
                     {{ form_row( station.jourFermeture ) }}
@@ -83,7 +59,6 @@
                     {% for traduction in station.traductions %}
                         <div id="{{ station.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                              class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                            {#{{ form_row(traduction) }}#}
                             {{ form_widget(traduction) }}
                             {{ form_errors(traduction) }}
                         </div>
