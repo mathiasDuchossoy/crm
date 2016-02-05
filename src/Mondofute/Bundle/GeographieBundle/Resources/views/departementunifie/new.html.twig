@@ -17,23 +17,35 @@
     {% set mesSites = form.departements %}
 
 
-    {% set departement = form.departements | first %}
-    <div>
-        {{ form_row( departement.region ) }}
-    </div>
+    {#{% set departement = form.departements | first %}#}
+    {#<div>#}
+    {#{{ form_row( departement.region ) }}#}
+    {#</div>#}
 
     {% include '::onglets_sites.html.twig' %}
+    {#{{ form_row(departement) }}#}
     {#<div>#}
     {#{{ form_row( departement.nbVache ) }}#}
     {#{{ form_row( departement.nbHabitant ) }}#}
     {#</div>#}
-
+    {#{% set iSite = 0 %}#}
+    {#{% for site in mesSites %}#}
+    {#<li id="onglet_data_site_{{ site.vars.value.site.id }}"#}
+    {#{% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>#}
+    {#<a data-toggle="tab"#}
+    {#href="#data_site_{{ site.vars.value.site.id }}">#}
+    {#{{ site.vars.value.site.libelle }}#}
+    {#</a>#}
+    {#</li>#}
+    {#{{ form_row(traduction) }}#}
+    {#{% endfor %}#}
     <div class="tab-content" style="padding:20px;">
         {% set iSite = 0 %}
         {% for departement in form.departements %}
             <div id="data_site_{{ departement.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {#{{ form_row(departement.enneige) }}#}
+                {{ form_row(departement.region) }}
                 {{ form_row(departement.site) }}
                 <ul class="nav nav-tabs">
                     {% set iTraduc = 0 %}

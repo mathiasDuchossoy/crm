@@ -23,10 +23,10 @@
 
     {% set departement = edit_form.departements | first %}
     {# ajout des attributs "communs" #}
-    <div>
-        {{ form_row( departement.region ) }}
+    {#<div>#}
+    {#{{ form_row( departement.region ) }}#}
     {#{{ form_row( departement.nbHabitant ) }}#}
-    </div>
+    {#</div>#}
     {% set mesSites = edit_form.departements %}
     {% include '::onglets_sites.html.twig' %}
 
@@ -36,6 +36,7 @@
         {% for departement in edit_form.departements %}
             <div id="data_site_{{ departement.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
+                {{ form_row(departement.region) }}
                 {{ form_row(departement.site) }}
                 <ul class="nav nav-tabs">
                     {% set iTraduc = 0 %}

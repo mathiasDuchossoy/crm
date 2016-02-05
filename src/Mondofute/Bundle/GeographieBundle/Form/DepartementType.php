@@ -22,24 +22,36 @@ class DepartementType extends AbstractType
 //        echo $this->id;
 //        dump($idDomaine= $builder->getData()->getId());die;
         $locale = $options["locale"];
-        $siteRegion = $options["siteRegion"];
+//        $siteRegion = $options["siteRegion"];
 //        dump($siteRegion);die;
         $builder
 //            ->add('region', EntityType::class, array('class' => Region::class,
 //                'choice_label' => 'id',
 //                'choice_value' => 'id',
 //            ))
-            ->add('region', EntityType::class, array('class' => Region::class,
-                'choice_label' => 'traductions[0].libelle',
-//                'choice_value' => 'id',
-                'query_builder' => function (RegionRepository $rr) use ($locale, $siteRegion) {
-                    return $rr->getTraductionsRegionsCRMByLocale($locale, $siteRegion);
-                },
-            ))
+
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DepartementTraductionType::class,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('region', EntityType::class, array(
+                'class' => Region::class,
+                'choice_label' => 'traductions[0].libelle',
+//////                'choice_value' => 'id',
+                'query_builder' => function (RegionRepository $rr) use ($locale) {
+//                    return $rr->getTraductionsRegionsCRMByLocale($locale, $siteRegion);
+                    return $rr->createQueryBuilder('r')
+                        ->join('r.traductions', 'rt')
+                        ->join('r.site', 's')
+                        ->join('rt.langue', 'l')
+                        ->where('l.code= \'' . $locale . '\'')
+//                        ->andWhere('s.id=3')
+//                        ->setParameter('site','site.id')
+//                        ->setParameter('site','site')
+//                        ->innerJoin('r.site','site')
+                        ;
+                },
+            ))
         ;
 
     }

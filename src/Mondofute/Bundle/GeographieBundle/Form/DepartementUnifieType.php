@@ -5,6 +5,8 @@ namespace Mondofute\Bundle\GeographieBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DepartementUnifieType extends AbstractType
@@ -16,10 +18,11 @@ class DepartementUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 //        dump();die;
-        $firstRegion = $builder->getData()->getDepartements()->First()->getRegion();
-        $siteRegion = (!empty($firstRegion)) ? $firstRegion->getSite() : null;
+//        $firstRegion = $builder->getData()->getDepartements()->First()->getRegion();
+//        $siteRegion = (!empty($firstRegion)) ? $firstRegion->getSite() : null;
         $builder
-            ->add('departements', CollectionType::class, array('entry_type' => DepartementType::class, 'entry_options' => array('locale' => $options["locale"], 'siteRegion' => $siteRegion)))
+            ->add('departements', CollectionType::class,
+                array('entry_type' => DepartementType::class, 'entry_options' => array('locale' => $options["locale"])))
 //            ->add('site')
 //            ->add('regionUnifie')
         ;
@@ -34,5 +37,23 @@ class DepartementUnifieType extends AbstractType
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie',
             'locale' => 'fr_FR'
         ));
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $entities = 'departements';
+        $entitySelect = 'region';
+        foreach ($view->children[$entities]->children as $viewChild) {
+            $siteId = $viewChild->vars['value']->getSite()->getId();
+            $choices = $viewChild->children[$entitySelect]->vars['choices'];
+
+            $newChoices = array();
+            foreach ($choices as $key => $choice) {
+                if ($choice->data->getSite()->getId() == $siteId) {
+                    $newChoices[$key] = $choice;
+                }
+            }
+            $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+        }
     }
 }

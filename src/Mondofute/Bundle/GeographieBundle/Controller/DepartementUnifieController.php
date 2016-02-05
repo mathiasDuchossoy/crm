@@ -8,7 +8,6 @@ use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\Region;
-use Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie;
 use Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -64,7 +63,7 @@ class DepartementUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             // dispacher les données communes
-            $this->dispacherDonneesCommune($departementUnifie);
+//            $this->dispacherDonneesCommune($departementUnifie);
 
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($departementUnifie);
@@ -84,7 +83,21 @@ class DepartementUnifieController extends Controller
             'form' => $form->createView(),
         ));
     }
-
+//    /**
+//     *
+//     * @param StationUnifie $entity
+//     */
+//    private function affilierEntities(DepartementUnifie $entity)
+//    {
+//        foreach ($entity->getDepartements() as $departement) {
+//            if (!empty($departement->getRegion())) {
+//                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
+//                    return $element->getSite() == $station->getSite();
+//                })->first();
+//                $station->setZoneTouristique($zoneTouristique);
+//            }
+//        }
+//    }
     /**
      * Ajouter les stations qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
      * @param DepartementUnifie $entity
@@ -177,20 +190,6 @@ class DepartementUnifieController extends Controller
     }
 
     /**
-     * dispacher les données communes dans chaque stations
-     * @param DepartementUnifie $entity
-     */
-    private function dispacherDonneesCommune(DepartementUnifie $entity)
-    {
-        foreach ($entity->getDepartements() as $departement) {
-            $region = $entity->getDepartements()->first()->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($departement) {
-                return $element->getSite() == $departement->getSite();
-            })->first();
-            $departement->setRegion($region);
-        }
-    }
-
-    /**
      * @param DepartementUnifie $entity
      * @return $this
      */
@@ -207,7 +206,9 @@ class DepartementUnifieController extends Controller
             if ($i === 0 || $departement->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $departementCrm = clone $departement;
                 $departementCrm->setSite($siteCrm);
-                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($siteCrm) {
+                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use (
+                    $siteCrm
+                ) {
                     return $element->getSite() == $siteCrm;
                 })->first();
                 $departementCrm->setRegion($region);
@@ -394,7 +395,7 @@ class DepartementUnifieController extends Controller
         }
 
         $this->ajouterDepartementsDansForm($departementUnifie);
-        $this->dispacherDonneesCommune($departementUnifie);
+//        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
         $deleteForm = $this->createDeleteForm($departementUnifie);
 
@@ -405,7 +406,7 @@ class DepartementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->dispacherDonneesCommune($departementUnifie);
+//            $this->dispacherDonneesCommune($departementUnifie);
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
             $this->mettreAJourDepartementCrm($departementUnifie, $departementCrm);
             $em->persist($departementCrm);
@@ -461,6 +462,7 @@ class DepartementUnifieController extends Controller
                 return $departement;
             }
         }
+        return false;
     }
 
     /**
@@ -495,7 +497,10 @@ class DepartementUnifieController extends Controller
 //                dump($departement);
 //              ajouter les champs "communs"
                 $siteCrm = $departementCrm->getSite();
-                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use ($siteCrm) {
+                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use
+                (
+                    $siteCrm
+                ) {
                     return $element->getSite() == $siteCrm;
                 })->first();
                 $departementCrm
@@ -597,5 +602,21 @@ class DepartementUnifieController extends Controller
 
         return $this->redirectToRoute('geographie_departement_index');
     }
+
+//    /**
+//     * dispacher les données communes dans chaque stations
+//     * @param DepartementUnifie $entity
+//     */
+//    private function dispacherDonneesCommune(DepartementUnifie $entity)
+//    {
+//        foreach ($entity->getDepartements() as $departement) {
+//            $region = $entity->getDepartements()->first()->getRegion()->getRegionUnifie()->getRegions()->filter(function (
+//                $element
+//            ) use ($departement) {
+//                return $element->getSite() == $departement->getSite();
+//            })->first();
+//            $departement->setRegion($region);
+//        }
+//    }
 
 }
