@@ -193,10 +193,12 @@ class StationUnifieController extends Controller
     {
 //        $stationFirst = $entity->getStations()->first();
         foreach ($entity->getStations() as $station) {
-            $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
-                return $element->getSite() == $station->getSite();
-            })->first();
-            $station->setZoneTouristique($zoneTouristique);
+            if (!empty($station->getZoneTouristique())) {
+                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
+                    return $element->getSite() == $station->getSite();
+                })->first();
+                $station->setZoneTouristique($zoneTouristique);
+            }
 //            $station->setCodePostal($stationFirst->getCodePostal());
 //            $station->setMoisOuverture($stationFirst->getMoisOuverture());
 //            $station->setJourOuverture($stationFirst->getJourOuverture());
@@ -223,10 +225,12 @@ class StationUnifieController extends Controller
             if ($i === 0 || $station->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $stationCrm = clone $station;
                 $stationCrm->setSite($siteCrm);
-                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $stationCrm->setZoneTouristique($zoneTouristique);
+                if (!empty($station->getZoneTouristique())) {
+                    $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
+                        return $element->getSite() == $siteCrm;
+                    })->first();
+                    $stationCrm->setZoneTouristique($zoneTouristique);
+                }
                 $stationCrm->setCodePostal($station->getCodePostal());
                 $stationCrm->setMoisOuverture($station->getMoisOuverture());
                 $stationCrm->setJourOuverture($station->getJourOuverture());
@@ -422,9 +426,9 @@ class StationUnifieController extends Controller
             $originalStations->add($station);
         }
 
-
-        $this->affilierEntities($stationUnifie);
         $this->ajouterStationsDansForm($stationUnifie);
+        $this->affilierEntities($stationUnifie);
+
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
@@ -432,7 +436,10 @@ class StationUnifieController extends Controller
             $stationUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
+//        dump($editForm);die;
+
         $editForm->handleRequest($request);
+//        dump($stationUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->affilierEntities($stationUnifie);

@@ -40,24 +40,24 @@
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(station.site) }}
                 <ul class="nav nav-tabs">
-                    {#{{ form_row( station.zoneTouristique ) }}#}
-                    <div class="form-group">
-                        {{ form_label( station.zoneTouristique ) }}
-                        {#{{ dump(station.zoneTouristique) }}#}
-                        <div class="col-sm-10">
-                            <select required="required" class="form-control"
-                                    name="station_unifie[stations][{{ index }}][zoneTouristique]"
-                                    id="station_unifie_stations_{{ index }}_zoneTouristique">
-                                <option value="">{{ station.zoneTouristique.vars.placeholder }}</option>
-                                {% for choice in station.zoneTouristique.vars.choices %}
-                                    {% if choice.data.site == station.vars.value.site %}
-                                        <option value="{{ choice.value }}" {% if choice is selectedchoice(station.zoneTouristique.vars.value) %} selected="selected"{% endif %}
-                                        >{{ choice.label }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
+                    {#<div class="form-group">#}
+                    {#{{ form_label( station.zoneTouristique ) }}#}
+                    {#<div class="col-sm-10">#}
+                    {#<select class="form-control"#}
+                    {#name="station_unifie[stations][{{ index }}][zoneTouristique]"#}
+                    {#id="station_unifie_stations_{{ index }}_zoneTouristique">#}
+                    {#<option value="">{{ station.zoneTouristique.vars.placeholder }}</option>#}
+                    {#{% for choice in station.zoneTouristique.vars.choices %}#}
+                    {#{% if choice.data.site == station.vars.value.site %}#}
+                    {#<option value="{{ choice.value }}" {% if choice is selectedchoice(station.zoneTouristique.vars.value) %} selected="selected"{% endif %}#}
+                    {#>{{ choice.label }}</option>#}
+                    {#{% endif %}#}
+                    {#{% endfor %}#}
+                    {#</select>#}
+                    {#</div>#}
+                    {#</div>#}
+                    {{ form_row( station.zoneTouristique ) }}
+
                     {{ form_row( station.codePostal ) }}
                     {{ form_row( station.lienMeteo ) }}
                     {{ form_row( station.jourOuverture ) }}
