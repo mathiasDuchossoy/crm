@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\GeographieBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie;
@@ -55,10 +56,10 @@ class DepartementUnifieController extends Controller
 //        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie,
+            array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
-
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -576,27 +577,41 @@ class DepartementUnifieController extends Controller
      */
     public function deleteAction(Request $request, DepartementUnifie $departementUnifie)
     {
-        $form = $this->createDeleteForm($departementUnifie);
-        $form->handleRequest($request);
+        try {
+            $form = $this->createDeleteForm($departementUnifie);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
-                if (!empty($departementUnifieSite)) {
-                    $emSite->remove($departementUnifieSite);
-                    $emSite->flush();
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
+                    if (!empty($departementUnifieSite)) {
+                        $emSite->remove($departementUnifieSite);
+                        $emSite->flush();
+                    }
                 }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($departementUnifie);
+                $em->flush();
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($departementUnifie);
-            $em->flush();
+        } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+            switch ($except->getCode()) {
+                case 0:
+                    $this->addFlash('error',
+                        'impossible de supprimer le département, il est utilisé par une autre entité');
+                    break;
+                default:
+                    $this->addFlash('error', 'une erreur inconnue');
+                    break;
+            }
+            return $this->redirect($request->headers->get('referer'));
         }
         $this->addFlash('success', 'le département a bien été supprimé');
         return $this->redirectToRoute('geographie_departement_index');
