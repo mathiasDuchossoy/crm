@@ -431,10 +431,8 @@ class DepartementUnifieController extends Controller
 
 
             $this->copieVersSites($departementUnifie);
+            $this->addFlash('success', 'le département a bien été modifié');
 
-//            dump($departementUnifie);
-//            dump($departementCrm);
-//            die;
             return $this->redirectToRoute('geographie_departement_edit', array('id' => $departementUnifie->getId()));
         }
 
