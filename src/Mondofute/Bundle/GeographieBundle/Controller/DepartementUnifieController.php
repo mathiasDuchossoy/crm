@@ -73,6 +73,7 @@ class DepartementUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($departementUnifie);
+            $this->addFlash('success', 'le département a bien été créé');
             return $this->redirectToRoute('geographie_departement_edit', array('id' => $departementUnifie->getId()));
         }
 
@@ -597,7 +598,7 @@ class DepartementUnifieController extends Controller
             $em->remove($departementUnifie);
             $em->flush();
         }
-
+        $this->addFlash('success', 'le département a bien été supprimé');
         return $this->redirectToRoute('geographie_departement_index');
     }
 
