@@ -73,7 +73,7 @@ class DepartementUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($departementUnifie);
-            return $this->redirectToRoute('geographie_departement_show', array('id' => $departementUnifie->getId()));
+            return $this->redirectToRoute('geographie_departement_edit', array('id' => $departementUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/departementunifie/new.html.twig', array(
