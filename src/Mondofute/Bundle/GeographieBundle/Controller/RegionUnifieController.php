@@ -65,6 +65,7 @@ class RegionUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($regionUnifie);
+            $this->addFlash('success', 'la région a bien été créée');
             return $this->redirectToRoute('geographie_region_edit', array('id' => $regionUnifie->getId()));
         }
 
@@ -537,31 +538,46 @@ class RegionUnifieController extends Controller
      */
     public function deleteAction(Request $request, RegionUnifie $regionUnifie)
     {
-        $form = $this->createDeleteForm($regionUnifie);
-        $form->handleRequest($request);
+//        dump($request->headers->get('referer')).die();
+        try {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant)
-            {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $regionUnifieSite   = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
-                if(!empty($regionUnifieSite))
-                {
-                    $emSite->remove($regionUnifieSite);
-                    $emSite->flush();
+            $form = $this->createDeleteForm($regionUnifie);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $regionUnifieSite = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
+                    if (!empty($regionUnifieSite)) {
+                        $emSite->remove($regionUnifieSite);
+                        $emSite->flush();
+                    }
                 }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($regionUnifie);
+                $em->flush();
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($regionUnifie);
-            $em->flush();
+        } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+            switch ($except->getCode()) {
+                case 0:
+                    $this->addFlash('error',
+                        'impossible de supprimer la région, elle est utilisée par une autre entité');
+                    break;
+                default:
+                    $this->addFlash('error', 'une erreur inconnue');
+                    break;
+            }
+            return $this->redirect($request->headers->get('referer'));
         }
-
+        $this->addFlash('success', 'la région a bien été supprimée');
         return $this->redirectToRoute('geographie_region_index');
     }
 
