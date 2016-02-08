@@ -62,7 +62,7 @@ class StationUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             // affilier les entités liés
-            $this->affilierEntities($stationUnifie);
+//            $this->affilierEntities($stationUnifie);
 
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($stationUnifie);
@@ -182,29 +182,6 @@ class StationUnifieController extends Controller
             // passer le tableau trié dans une nouvelle collection
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $station->setTraductions($traductions);
-        }
-    }
-
-    /**
-     *
-     * @param StationUnifie $entity
-     */
-    private function affilierEntities(StationUnifie $entity)
-    {
-//        $stationFirst = $entity->getStations()->first();
-        foreach ($entity->getStations() as $station) {
-            if (!empty($station->getZoneTouristique())) {
-                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
-                    return $element->getSite() == $station->getSite();
-                })->first();
-                $station->setZoneTouristique($zoneTouristique);
-            }
-//            $station->setCodePostal($stationFirst->getCodePostal());
-//            $station->setMoisOuverture($stationFirst->getMoisOuverture());
-//            $station->setJourOuverture($stationFirst->getJourOuverture());
-//            $station->setMoisFermeture($stationFirst->getMoisFermeture());
-//            $station->setJourFermeture($stationFirst->getJourFermeture());
-//            $station->setLienMeteo($stationFirst->getLienMeteo());
         }
     }
 
@@ -427,7 +404,7 @@ class StationUnifieController extends Controller
         }
 
         $this->ajouterStationsDansForm($stationUnifie);
-        $this->affilierEntities($stationUnifie);
+//        $this->affilierEntities($stationUnifie);
 
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
@@ -442,7 +419,7 @@ class StationUnifieController extends Controller
 //        dump($stationUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->affilierEntities($stationUnifie);
+//            $this->affilierEntities($stationUnifie);
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
             $this->mettreAJourStationCrm($stationUnifie, $stationCrm);
             $em->persist($stationCrm);
