@@ -22,7 +22,6 @@ class DomaineType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale             = $options['locale'];
-        $siteDomaineParent  = $options['siteDomaineParent'];
         $domaineUnifieId          = $options['domaineUnifieId'];
         $builder
             ->add('domaineParent' , EntityType::class , array(
@@ -30,8 +29,8 @@ class DomaineType extends AbstractType
                 'placeholder' => '--- choisir un domaine parent ---',
                 'required' => false ,
                 'choice_label' => 'traductions[0].libelle',
-                'query_builder' => function (DomaineRepository $rr) use ($locale , $siteDomaineParent , $domaineUnifieId) {
-                    return $rr->getTraductionsDomainesCRMByLocale($locale , $siteDomaineParent , $domaineUnifieId);
+                'query_builder' => function (DomaineRepository $rr) use ($locale, $domaineUnifieId) {
+                    return $rr->getTraductionsDomainesByLocale($locale, $domaineUnifieId);
                 },
 
             ))
@@ -39,7 +38,7 @@ class DomaineType extends AbstractType
                 'entry_type' => DomaineTraductionType::class,
                 'required' => false,
             ))
-            ->add('domaineCarteIdentite' , 'Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteType')
+//            ->add('domaineCarteIdentite' , 'Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteType')
             ->add('site', HiddenType::class, array('mapped' => false));
     }
 

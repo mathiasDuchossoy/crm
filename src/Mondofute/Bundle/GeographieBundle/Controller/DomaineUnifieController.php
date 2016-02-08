@@ -55,7 +55,7 @@ class DomaineUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->dispacherDonneesCommune($domaineUnifie);
+//            $this->dispacherDonneesCommune($domaineUnifie);
 
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($domaineUnifie);
@@ -65,7 +65,17 @@ class DomaineUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($domaineUnifie);
-            return $this->redirectToRoute('geographie_domaine_show', array('id' => $domaineUnifie->getId()));
+
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'Le domaine a bien été créé.'
+            );
+
+            return $this->redirectToRoute('geographie_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/domaineunifie/new.html.twig', array(
@@ -202,10 +212,12 @@ class DomaineUnifieController extends Controller
             if ($i === 0 || $domaine->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $domaineCrm = clone $domaine;
                 $domaineCrm->setSite($siteCrm);
-                $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $domaineCrm->setDomaineParent($domaineParent);
+                if (!empty($domaine->getDomaineParent())) {
+                    $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                        return $element->getSite() == $siteCrm;
+                    })->first();
+                    $domaineCrm->setDomaineParent($domaineParent);
+                }
                 $classementReferentTmp = $domaine->getSite()->getClassementReferent();
             }
             $i++;
@@ -248,7 +260,11 @@ class DomaineUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $domaine->getSite()->getId()));
-                $domaineParent = $em->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
+                if (!empty($domaine->getDomaineParent())) {
+                    $domaineParent = $em->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
+                } else {
+                    $domaineParent = null;
+                }
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -383,7 +399,7 @@ class DomaineUnifieController extends Controller
         }
 
         $this->ajouterDomainesDansForm($domaineUnifie);
-        $this->dispacherDonneesCommune($domaineUnifie);
+//        $this->dispacherDonneesCommune($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
@@ -393,7 +409,7 @@ class DomaineUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->dispacherDonneesCommune($domaineUnifie);
+//            $this->dispacherDonneesCommune($domaineUnifie);
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
             $this->mettreAJourDomaineCrm($domaineUnifie, $domaineCrm);
             $em->persist($domaineCrm);
@@ -418,9 +434,15 @@ class DomaineUnifieController extends Controller
 
             $this->copieVersSites($domaineUnifie);
 
-//            dump($domaineUnifie);
-//            dump($domaineCrm);
-//            die;
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'Le domaine a bien été modifié.'
+            );
+
             return $this->redirectToRoute('geographie_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
@@ -481,9 +503,13 @@ class DomaineUnifieController extends Controller
             if ($domaine->getSite() == $siteReferent) {
 
                 $siteCrm = $domaineCrm->getSite();
-                $domaineParentCrm = $domaineCrm->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
+                if (!empty($domaine->getDomaineParent())) {
+                    $domaineParentCrm = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                        return $element->getSite() == $siteCrm;
+                    })->first();
+                } else {
+                    $domaineParentCrm = null;
+                }
                 $domaineCrm
                     ->setDomaineParent($domaineParentCrm);
 //                dump($domaine);

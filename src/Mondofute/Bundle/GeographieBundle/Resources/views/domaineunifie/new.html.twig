@@ -14,11 +14,6 @@
     {{ form_start(form) }}
     {% include '::coches_sites.html.twig' %}
 
-    {% set domaine = form.domaines | first %}
-    <div>
-    {{ form_row( domaine.domaineParent ) }}
-    {#{{ form_row( domaine.nbHabitant ) }}#}
-    </div>
     {% set mesSites = form.domaines %}
     {% include '::onglets_sites.html.twig' %}
 
@@ -30,6 +25,7 @@
                 {#{{ form_row(domaine.enneige) }}#}
                 {{ form_row(domaine.site) }}
                 <ul class="nav nav-tabs">
+                    {{ form_row( domaine.domaineParent ) }}
                     {% set iTraduc = 0 %}
                     {% for traduction in domaine.traductions %}
                         <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>

@@ -14,6 +14,13 @@
 
 {#  BLOCK CONTENANT LE FORMULAIRE #}
 {% block formulaire %}
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
 
@@ -21,12 +28,6 @@
     {{ form_start(edit_form) }}
     {% include '::coches_sites.html.twig' %}
 
-    {% set domaine = edit_form.domaines | first %}
-    {# ajout des attributs "communs" #}
-    <div>
-    {{ form_row( domaine.domaineParent ) }}
-    {#{{ form_row( domaine.nbHabitant ) }}#}
-    </div>
     {% set mesSites = edit_form.domaines %}
     {% include '::onglets_sites.html.twig' %}
 
@@ -38,6 +39,7 @@
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
                 {{ form_row(domaine.site) }}
                 <ul class="nav nav-tabs">
+                    {{ form_row( domaine.domaineParent ) }}
                     {% set iTraduc = 0 %}
                     {% for traduction in domaine.traductions %}
                         <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
