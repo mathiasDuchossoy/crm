@@ -14,6 +14,7 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * StationUnifie controller.
@@ -51,7 +52,6 @@ class StationUnifieController extends Controller
         $stationUnifie = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
-//        $this->dispacherDonneesCommune($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
@@ -61,8 +61,8 @@ class StationUnifieController extends Controller
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // dispacher les données communes
-            $this->dispacherDonneesCommune($stationUnifie);
+            // affilier les entités liés
+//            $this->affilierEntities($stationUnifie);
 
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($stationUnifie);
@@ -72,7 +72,18 @@ class StationUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($stationUnifie);
-            return $this->redirectToRoute('geographie_station_show', array('id' => $stationUnifie->getId()));
+
+//            $session = new Session();
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'La station a bien été créé.'
+            );
+
+            return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/stationunifie/new.html.twig', array(
@@ -175,27 +186,6 @@ class StationUnifieController extends Controller
     }
 
     /**
-     * dispacher les données communes dans chaque stations
-     * @param StationUnifie $entity
-     */
-    private function dispacherDonneesCommune(StationUnifie $entity)
-    {
-        $stationFirst = $entity->getStations()->first();
-        foreach ($entity->getStations() as $station) {
-            $zoneTouristique = $stationFirst->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($station) {
-                return $element->getSite() == $station->getSite();
-            })->first();
-            $station->setZoneTouristique($zoneTouristique);
-            $station->setCodePostal($stationFirst->getCodePostal());
-//            $station->setMoisOuverture($stationFirst->getMoisOuverture());
-//            $station->setJourOuverture($stationFirst->getJourOuverture());
-//            $station->setMoisFermeture($stationFirst->getMoisFermeture());
-//            $station->setJourFermeture($stationFirst->getJourFermeture());
-            $station->setLienMeteo($stationFirst->getLienMeteo());
-        }
-    }
-
-    /**
      * @param StationUnifie $entity
      * @return $this
      */
@@ -212,16 +202,18 @@ class StationUnifieController extends Controller
             if ($i === 0 || $station->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $stationCrm = clone $station;
                 $stationCrm->setSite($siteCrm);
-                $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $station->setZoneTouristique($zoneTouristique);
-                $station->setCodePostal($station->getCodePostal());
-                $station->setMoisOuverture($station->getMoisOuverture());
-                $station->setJourOuverture($station->getJourOuverture());
-                $station->setMoisFermeture($station->getMoisFermeture());
-                $station->setJourFermeture($station->getJourFermeture());
-                $station->setLienMeteo($station->getLienMeteo());
+                if (!empty($station->getZoneTouristique())) {
+                    $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
+                        return $element->getSite() == $siteCrm;
+                    })->first();
+                    $stationCrm->setZoneTouristique($zoneTouristique);
+                }
+                $stationCrm->setCodePostal($station->getCodePostal());
+                $stationCrm->setMoisOuverture($station->getMoisOuverture());
+                $stationCrm->setJourOuverture($station->getJourOuverture());
+                $stationCrm->setMoisFermeture($station->getMoisFermeture());
+                $stationCrm->setJourFermeture($station->getJourFermeture());
+                $stationCrm->setLienMeteo($station->getLienMeteo());
                 $classementReferentTmp = $station->getSite()->getClassementReferent();
             }
             $i++;
@@ -412,7 +404,8 @@ class StationUnifieController extends Controller
         }
 
         $this->ajouterStationsDansForm($stationUnifie);
-        $this->dispacherDonneesCommune($stationUnifie);
+//        $this->affilierEntities($stationUnifie);
+
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
@@ -420,10 +413,13 @@ class StationUnifieController extends Controller
             $stationUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
+//        dump($editForm);die;
+
         $editForm->handleRequest($request);
+//        dump($stationUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->dispacherDonneesCommune($stationUnifie);
+//            $this->affilierEntities($stationUnifie);
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
             $this->mettreAJourStationCrm($stationUnifie, $stationCrm);
             $em->persist($stationCrm);
@@ -449,9 +445,15 @@ class StationUnifieController extends Controller
 
             $this->copieVersSites($stationUnifie);
 
-//            dump($stationUnifie);
-//            dump($stationCrm);
-//            die;
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'La station a bien été modifié.'
+            );
+
             return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
         }
 

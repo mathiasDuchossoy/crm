@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,12 +23,12 @@ class StationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale = $options["locale"];
-        $siteZoneTouristique = $options["siteZoneTouristique"];
         $builder
             ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
                 "choice_label" => "traductions[0].libelle",
-                'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale, $siteZoneTouristique) {
-                    return $rr->getTraductionsZoneTouristiquesCRMByLocale($locale, $siteZoneTouristique);
+                "placeholder" => " --- choisir une zone touristique ---",
+                'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
+                    return $rr->getTraductionsZoneTouristiquesByLocale($locale);
                 },
             ))
             ->add('codePostal')
@@ -39,6 +40,8 @@ class StationType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationTraductionType::class,
             ))
+//            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' , 'data_class' => Site::class ));//'mapped' => false ,
+//            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' ));//'mapped' => false ,
             ->add('site', HiddenType::class, array('mapped' => false));
     }
 
@@ -50,7 +53,6 @@ class StationType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Station',
             'locale' => 'fr_FR',
-            'siteZoneTouristique' => ''
         ));
     }
 }

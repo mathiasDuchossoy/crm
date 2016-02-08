@@ -16,7 +16,7 @@ class ZoneTouristiqueRepository extends \Doctrine\ORM\EntityRepository
      * @return \Doctrine\ORM\QueryBuilder
      */
     // récupérer les traductioin des zone touristiques crm qui sont de la langue locale
-    public function getTraductionsZoneTouristiquesCRMByLocale($locale, $siteZoneTouristique)
+    public function getTraductionsZoneTouristiquesByLocale($locale)
     {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -27,13 +27,6 @@ class ZoneTouristiqueRepository extends \Doctrine\ORM\EntityRepository
             ->join('rt.langue', 'l')
             ->where("l.code = '$locale'");
 //        ->setParameter('code' , $locale)
-        if (!empty($siteZoneTouristique)) {
-            $qb->andWhere('s.id = :site')
-                ->setParameter('site', $siteZoneTouristique->getId());
-        } else {
-            $qb->andWhere('s.crm = :crm')
-                ->setParameter('crm', 1);
-        }
         $qb->orderBy('r.id', 'ASC');
 
         return $qb;
