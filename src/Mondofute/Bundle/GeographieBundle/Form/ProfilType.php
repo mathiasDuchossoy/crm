@@ -18,7 +18,7 @@ class ProfilType extends AbstractType
     {
         $builder
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => ProfilTraductionType::class,
+                'entry_type' => ProfilTraductionType::class
             ))
             ->add('site', HiddenType::class, array('mapped' => false));
 

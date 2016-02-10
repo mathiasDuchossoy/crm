@@ -3,9 +3,7 @@
 namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\GeographieBundle\Entity\Domaine;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\GeographieBundle\Repository\DomaineRepository;
-use Mondofute\Bundle\GeographieBundle\Tests\Controller\DomaineCarteIdentiteUnifieControllerTest;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -35,8 +33,7 @@ class DomaineType extends AbstractType
 
             ))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => DomaineTraductionType::class,
-                'required' => false,
+                'entry_type' => DomaineTraductionType::class
             ))
 //            ->add('domaineCarteIdentite' , 'Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteType')
             ->add('site', HiddenType::class, array('mapped' => false));

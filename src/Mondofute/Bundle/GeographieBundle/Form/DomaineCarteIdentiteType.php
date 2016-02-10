@@ -17,10 +17,10 @@ class DomaineCarteIdentiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('altitudeMini', null, array('required' => false))
-            ->add('altitudeMaxi', null, array('required' => false))
-            ->add('kmPistesSkiAlpin', null, array('required' => false))
-            ->add('kmPistesSkiNordique', null, array('required' => false))
+            ->add('altitudeMini', null, array('required' => false, 'attr' => array('min' => 0)))
+            ->add('altitudeMaxi', null, array('required' => false, 'attr' => array('min' => 0)))
+            ->add('kmPistesSkiAlpin', null, array('required' => false, 'attr' => array('min' => 0)))
+            ->add('kmPistesSkiNordique', null, array('required' => false, 'attr' => array('min' => 0)))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DomaineCarteIdentiteTraductionType::class,
                 'required' => false,
