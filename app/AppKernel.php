@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\GeographieBundle\MondofuteGeographieBundle(),
             new SC\DatetimepickerBundle\SCDatetimepickerBundle(),
             new Mondofute\Bundle\StationBundle\MondofuteStationBundle(),
+            new Mondofute\Bundle\DomaineBundle\MondofuteDomaineBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

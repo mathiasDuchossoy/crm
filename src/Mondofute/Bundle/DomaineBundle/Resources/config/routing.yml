@@ -1,0 +1,3 @@
+mondofute_domaine_homepage:
+    path:     /
+    defaults: { _controller: MondofuteDomaineBundle:Default:index }
