@@ -1,3 +1,7 @@
+mondofute_domaine:
+    resource: "@MondofuteDomaineBundle/Resources/config/routing.yml"
+    prefix:   /
+
 
 
 #mondofute_langue:
