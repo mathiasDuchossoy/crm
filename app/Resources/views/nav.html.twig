@@ -82,10 +82,10 @@
                        aria-expanded="false" href="">Station</a>
                     <ul class="dropdown-menu">
                         <li class="{% if 'station_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('geographie_station_index') }}">{{ 'liste' |capitalize }}</a>
+                            <a href="{{ path('station_station_index') }}">{{ 'liste' |capitalize }}</a>
                         </li>
                         <li class="{% if 'station_new' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('geographie_station_new') }}">{{ 'ajouter' | capitalize }}</a>
+                            <a href="{{ path('station_station_new') }}">{{ 'ajouter' | capitalize }}</a>
                         </li>
                     </ul>
                 </li>

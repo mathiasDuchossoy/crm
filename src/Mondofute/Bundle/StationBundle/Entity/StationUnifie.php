@@ -1,6 +1,9 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\StationBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * StationUnifie
@@ -12,7 +15,7 @@ class StationUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
 
@@ -21,7 +24,7 @@ class StationUnifie
      */
     public function __construct()
     {
-        $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stations = new ArrayCollection();
     }
 
     /**
@@ -37,11 +40,11 @@ class StationUnifie
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return StationUnifie
      */
-    public function addStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station->setStationUnifie($this);
 
@@ -51,9 +54,9 @@ class StationUnifie
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -61,7 +64,7 @@ class StationUnifie
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {

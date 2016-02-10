@@ -77,6 +77,10 @@
                 }
 
                 if (!$(this).is(':checked')) {
+
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name$=\'[codePostal]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
 //                    supprime le required des champs libelle des traductions
                     $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                         $(this).attr('required', false);

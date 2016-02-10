@@ -1,18 +1,16 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Form;
+namespace Mondofute\Bundle\StationBundle\Form;
 
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Date;
 
 class StationType extends AbstractType
 {
@@ -25,13 +23,14 @@ class StationType extends AbstractType
         $locale = $options["locale"];
         $builder
             ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
+                'required' => false,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir une zone touristique ---",
                 'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
                     return $rr->getTraductionsZoneTouristiquesByLocale($locale);
                 },
             ))
-            ->add('codePostal')
+            ->add('codePostal', IntegerType::class, array('attr' => array('min' => 0)))
             ->add('jourOuverture')
             ->add('moisOuverture')
             ->add('jourFermeture')
@@ -51,7 +50,7 @@ class StationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Station',
+            'data_class' => 'Mondofute\Bundle\StationBundle\Entity\Station',
             'locale' => 'fr_FR',
         ));
     }

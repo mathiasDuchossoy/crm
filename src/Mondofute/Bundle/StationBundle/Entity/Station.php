@@ -1,7 +1,10 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\StationBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * Station
@@ -43,19 +46,19 @@ class Station
      */
     private $lienMeteo;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
+     * @var StationUnifie
      */
     private $stationUnifie;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     * @var ZoneTouristique
      */
     private $zoneTouristique;
 
@@ -248,7 +251,7 @@ class Station
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -258,11 +261,11 @@ class Station
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return Station
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -272,7 +275,7 @@ class Station
     /**
      * Get stationUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
+     * @return StationUnifie
      */
     public function getStationUnifie()
     {
@@ -282,11 +285,11 @@ class Station
     /**
      * Set stationUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\StationUnifie $stationUnifie
+     * @param StationUnifie $stationUnifie
      *
      * @return Station
      */
-    public function setStationUnifie(\Mondofute\Bundle\GeographieBundle\Entity\StationUnifie $stationUnifie = null)
+    public function setStationUnifie(StationUnifie $stationUnifie = null)
     {
         $this->stationUnifie = $stationUnifie;
 
@@ -310,7 +313,7 @@ class Station
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -326,7 +329,7 @@ class Station
     /**
      * Get zoneTouristique
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     * @return ZoneTouristique
      */
     public function getZoneTouristique()
     {
@@ -340,7 +343,7 @@ class Station
      *
      * @return Station
      */
-    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
+    public function setZoneTouristique(ZoneTouristique $zoneTouristique = null)
     {
         $this->zoneTouristique = $zoneTouristique;
 

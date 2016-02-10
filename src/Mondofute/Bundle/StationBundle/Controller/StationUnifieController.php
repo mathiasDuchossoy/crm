@@ -1,14 +1,14 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Controller;
+namespace Mondofute\Bundle\StationBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Mondofute\Bundle\GeographieBundle\Entity\Station;
-use Mondofute\Bundle\GeographieBundle\Entity\StationTraduction;
-use Mondofute\Bundle\GeographieBundle\Entity\StationUnifie;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
+use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
-use Mondofute\Bundle\GeographieBundle\Form\StationUnifieType;
+use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,9 +30,9 @@ class StationUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $stationUnifies = $em->getRepository('MondofuteGeographieBundle:StationUnifie')->findAll();
+        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
 
-        return $this->render('@MondofuteGeographie/stationunifie/index.html.twig', array(
+        return $this->render('@MondofuteStation/stationunifie/index.html.twig', array(
             'stationUnifies' => $stationUnifies,
         ));
     }
@@ -54,7 +54,7 @@ class StationUnifieController extends Controller
         $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
@@ -83,10 +83,10 @@ class StationUnifieController extends Controller
                 'La station a bien été créé.'
             );
 
-            return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
+            return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/stationunifie/new.html.twig', array(
+        return $this->render('@MondofuteStation/stationunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
             'entity' => $stationUnifie,
@@ -256,13 +256,21 @@ class StationUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $em = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $station->getSite()->getId()));
-                $zoneTouristique = $em->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
+                if (!empty($station->getZoneTouristique())) {
+                    $zoneTouristique = $em->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
+                } else {
+                    $zoneTouristique = null;
+                }
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $em->getRepository(StationUnifie::class)->findOneById(array($entity->getId()))))) {
                     $entitySite = new StationUnifie();
                 }
+//                if (is_null(($entitySite = $em->getRepository('MondofuteStationBundle:StationUnifie')->find(array($entity->getId()))))) {
+//                    $entitySite = new StationUnifie();
+//                }
+
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($stationSite = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $entitySite))))) {
@@ -349,7 +357,7 @@ class StationUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
-        return $this->render('@MondofuteGeographie/stationunifie/show.html.twig', array(
+        return $this->render('@MondofuteStation/stationunifie/show.html.twig', array(
             'stationUnifie' => $stationUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -365,7 +373,7 @@ class StationUnifieController extends Controller
     private function createDeleteForm(StationUnifie $stationUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('geographie_station_delete', array('id' => $stationUnifie->getId())))
+            ->setAction($this->generateUrl('station_station_delete', array('id' => $stationUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -409,7 +417,7 @@ class StationUnifieController extends Controller
         $this->stationsSortByAffichage($stationUnifie);
         $deleteForm = $this->createDeleteForm($stationUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\StationUnifieType',
+        $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType',
             $stationUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
@@ -454,10 +462,10 @@ class StationUnifieController extends Controller
                 'La station a bien été modifié.'
             );
 
-            return $this->redirectToRoute('geographie_station_edit', array('id' => $stationUnifie->getId()));
+            return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/stationunifie/edit.html.twig', array(
+        return $this->render('@MondofuteStation/stationunifie/edit.html.twig', array(
             'entity' => $stationUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,
@@ -515,9 +523,13 @@ class StationUnifieController extends Controller
 //                dump($station);
 //           ajouter les champs "communs"
                 $siteCrm = $stationCrm->getSite();
-                $zoneTouristiqueCrm = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
+                if (!empty($station->getZoneTouristique())) {
+                    $zoneTouristiqueCrm = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
+                        return $element->getSite() == $siteCrm;
+                    })->first();
+                } else {
+                    $zoneTouristiqueCrm = null;
+                }
 
                 $stationCrm
 //                    ->setZoneTouristique($station->getZoneTouristique())
@@ -648,9 +660,20 @@ class StationUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($stationUnifie);
             $em->flush();
+
+
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'La station a été supprimé avec succès.'
+            );
+
         }
 
-        return $this->redirectToRoute('geographie_station_index');
+        return $this->redirectToRoute('station_station_index');
     }
 
 }

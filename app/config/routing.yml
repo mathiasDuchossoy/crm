@@ -1,4 +1,6 @@
-
+mondofute_station:
+    resource: "@MondofuteStationBundle/Resources/config/routing.yml"
+    prefix:   /
 
 #mondofute_langue:
 #    resource: "@MondofuteLangueBundle/Resources/config/routing.yml"

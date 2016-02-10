@@ -1,4 +1,4 @@
-{% extends '@MondofuteGeographie/stationunifie/fiche.html.twig' %}
+{% extends '@MondofuteStation/stationunifie/fiche.html.twig' %}
 
 {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
@@ -102,7 +102,7 @@
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('geographie_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li><a href="{{ path('station_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
             <li>{{ form(delete_form) }}</li>
         </ul>
 

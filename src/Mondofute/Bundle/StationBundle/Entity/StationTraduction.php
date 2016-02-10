@@ -1,6 +1,8 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\StationBundle\Entity;
+
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
  * StationTraduction
@@ -37,11 +39,11 @@ class StationTraduction
      */
     private $distancesGrandesVilles;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Station
+     * @var Station
      */
     private $station;
     /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @var Langue
      */
     private $langue;
 
@@ -178,7 +180,7 @@ class StationTraduction
     /**
      * Get station
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Station
+     * @return Station
      */
     public function getStation()
     {
@@ -188,11 +190,11 @@ class StationTraduction
     /**
      * Set station
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return StationTraduction
      */
-    public function setStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station = null)
+    public function setStation(Station $station = null)
     {
         $this->station = $station;
 
@@ -202,7 +204,7 @@ class StationTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
@@ -212,11 +214,11 @@ class StationTraduction
     /**
      * Set langue
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Langue $langue
      *
      * @return StationTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
 

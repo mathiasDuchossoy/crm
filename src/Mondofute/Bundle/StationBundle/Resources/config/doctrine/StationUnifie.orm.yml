@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\StationUnifie:
+Mondofute\Bundle\StationBundle\Entity\StationUnifie:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\StationUnifieRepository
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationUnifieRepository
     id:
         id:
             type: integer
@@ -12,7 +12,7 @@ Mondofute\Bundle\GeographieBundle\Entity\StationUnifie:
                 unsigned: true
     oneToMany:
         stations:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Station
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationUnifie
             cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
