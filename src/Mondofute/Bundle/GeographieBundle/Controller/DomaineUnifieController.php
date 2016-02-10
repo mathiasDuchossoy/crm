@@ -176,25 +176,6 @@ class DomaineUnifieController extends Controller
         }
     }
 
-
-    /**
-     * dispacher les données communes dans chaque stations
-     * @param DomaineUnifie $entity
-     */
-    private function dispacherDonneesCommune(DomaineUnifie $entity)
-    {
-        foreach ($entity->getDomaines() as $domaine) {
-            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
-            if (!empty($firstDomaineParent))
-            {
-                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
-                    return $element->getSite() == $domaine->getSite();
-                })->first();
-                $domaine->setDomaineParent($domaineParent);
-            }
-        }
-    }
-
     /**
      * @param DomaineUnifie $entity
      * @return $this
@@ -403,7 +384,7 @@ class DomaineUnifieController extends Controller
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie , array('locale' => $request->getLocale()))
+        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
@@ -596,8 +577,34 @@ class DomaineUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($domaineUnifie);
             $em->flush();
+
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            $session->getFlashBag()->add(
+                'success',
+                'Le domaine a été supprimé avec succès.'
+            );
         }
 
         return $this->redirectToRoute('geographie_domaine_index');
+    }
+
+    /**
+     * dispacher les données communes dans chaque stations
+     * @param DomaineUnifie $entity
+     */
+    private function dispacherDonneesCommune(DomaineUnifie $entity)
+    {
+        foreach ($entity->getDomaines() as $domaine) {
+            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
+            if (!empty($firstDomaineParent)) {
+                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
+                    return $element->getSite() == $domaine->getSite();
+                })->first();
+                $domaine->setDomaineParent($domaineParent);
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
         $domaineCarteIdentiteUnifies = $em->getRepository('MondofuteGeographieBundle:DomaineCarteIdentiteUnifie')->findAll();
 
-        return $this->render('@MondofuteGeographie/domaineCarteIdentiteunifie/index.html.twig', array(
+        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/index.html.twig', array(
             'domaineCarteIdentiteUnifies' => $domaineCarteIdentiteUnifies,
         ));
     }
@@ -73,7 +73,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             return $this->redirectToRoute('geographie_domaineCarteIdentite_show', array('id' => $domaineCarteIdentiteUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domaineCarteIdentiteunifie/new.html.twig', array(
+        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
             'entity' => $domaineCarteIdentiteUnifie,
@@ -342,7 +342,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 
-        return $this->render('@MondofuteGeographie/domaineCarteIdentiteunifie/show.html.twig', array(
+        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/show.html.twig', array(
             'domaineCarteIdentiteUnifie' => $domaineCarteIdentiteUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -440,7 +440,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             return $this->redirectToRoute('geographie_domaineCarteIdentite_edit', array('id' => $domaineCarteIdentiteUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domaineCarteIdentiteunifie/edit.html.twig', array(
+        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/edit.html.twig', array(
             'entity' => $domaineCarteIdentiteUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,

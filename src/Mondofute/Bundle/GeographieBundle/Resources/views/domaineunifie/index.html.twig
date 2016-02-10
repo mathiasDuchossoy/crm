@@ -5,6 +5,13 @@
 {% block body %}
     <h1>{{ 'liste des domaines' | capitalize }}</h1>
 
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
     <table class="table-responsive table-striped table">
         <thead>
         <tr>
