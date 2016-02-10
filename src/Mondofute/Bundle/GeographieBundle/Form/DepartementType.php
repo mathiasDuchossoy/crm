@@ -36,19 +36,14 @@ class DepartementType extends AbstractType
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('region', EntityType::class, array(
                 'class' => Region::class,
+                'placeholder' => '--- Veuillez choisir une région ---',
                 'choice_label' => 'traductions[0].libelle',
-//////                'choice_value' => 'id',
                 'query_builder' => function (RegionRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsRegionsCRMByLocale($locale, $siteRegion);
                     return $rr->createQueryBuilder('r')
                         ->join('r.traductions', 'rt')
                         ->join('r.site', 's')
                         ->join('rt.langue', 'l')
                         ->where('l.code= \'' . $locale . '\'')
-//                        ->andWhere('s.id=3')
-//                        ->setParameter('site','site.id')
-//                        ->setParameter('site','site')
-//                        ->innerJoin('r.site','site')
                         ;
                 },
             ))

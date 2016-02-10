@@ -54,6 +54,9 @@
                 $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                     $(this).attr('required', false);
                 });
+                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[region]\']').each(function () {
+                    $(this).attr('required', false);
+                });
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -81,6 +84,9 @@
                     $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                         $(this).attr('required', false);
                     });
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[region]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
                         $("[id^='data_site_']").each(function (value, element) {
@@ -99,6 +105,9 @@
                     $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                         $(this).attr('required', true);
                     });
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[region]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
                     $("#onglet_data_site_{{ site.id }}").show();
                 }
             });
@@ -107,37 +116,5 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
-
-//        function test(){
-//            var sitesChecked = [];
-//            $("input[type=checkbox][name^=site]").each(
-//                function (index , element)
-//                {
-//                    if ($(element).is(':checked'))
-//                    {
-//                        sitesChecked.push(element.value);
-//                    }
-//                }
-//            );
-            {#console.log(sitesChecked);#}
-            {#$.ajax(#}
-                    {#'{{ path('geographie_regions_communes_by_sites') }}',#}
-                    {#{#}
-                        {#method: 'POST',#}
-                        {#data: { sites : sitesChecked }#}
-                    {#}#}
-            {#)#}
-            {#.done(function() {#}
-{#//                alert( "success" );#}
-            {#})#}
-            {#.fail(function() {#}
-{#//                alert( "error" );#}
-            {#})#}
-            {#.always(function() {#}
-{#//                alert( "complete" );#}
-            {#});#}
-
-        {#}#}
-        {#$("input[type=checkbox][name^=site]").on("click", test);#}
     </script>
 {% endblock %}
