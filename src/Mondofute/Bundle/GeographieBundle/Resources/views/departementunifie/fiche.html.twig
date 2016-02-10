@@ -51,10 +51,11 @@
             {% for site in sites %}
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
-                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+                contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                     $(this).attr('required', false);
                 });
-                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[region]\']').each(function () {
+                contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                     $(this).attr('required', false);
                 });
             }
@@ -81,10 +82,12 @@
 
                 if (!$(this).is(':checked')) {
 //                    supprime le required des champs libelle des traductions
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+
+                    contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                    contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                         $(this).attr('required', false);
                     });
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[region]\']').each(function () {
+                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                         $(this).attr('required', false);
                     });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
@@ -102,14 +105,17 @@
 
                 } else {
 //                    rend les champs libelle des traductions required
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+
+                    contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
                         $(this).attr('required', true);
                     });
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[region]\']').each(function () {
+                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                         $(this).attr('required', true);
                     });
                     $("#onglet_data_site_{{ site.id }}").show();
                 }
+
             });
             {% endfor %}
 //            selectionne le premier onglet coché
