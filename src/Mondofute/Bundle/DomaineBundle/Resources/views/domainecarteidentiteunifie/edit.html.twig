@@ -1,4 +1,4 @@
-{% extends '@MondofuteGeographie/domainecarteidentiteunifie/fiche.html.twig' %}
+{% extends '@MondofuteDomaine/domainecarteidentiteunifie/fiche.html.twig' %}
 
 {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
@@ -14,6 +14,14 @@
 
 {#  BLOCK CONTENANT LE FORMULAIRE #}
 {% block formulaire %}
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                <p>{{ msg }}</p>
+
+            {% endfor %}
+        </div>
+    {% endif %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
 
@@ -82,7 +90,7 @@
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('geographie_domaineCarteIdentite_index') }}">{{ 'retour à la liste' | capitalize }}</a>
+            <li><a href="{{ path('domaine_domaineCarteIdentite_index') }}">{{ 'retour à la liste' | capitalize }}</a>
             </li>
             <li>{{ form(delete_form) }}</li>
         </ul>

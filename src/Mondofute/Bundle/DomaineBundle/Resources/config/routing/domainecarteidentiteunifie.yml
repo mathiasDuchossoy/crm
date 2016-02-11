@@ -1,0 +1,24 @@
+domaine_domaineCarteIdentite_index:
+    path:     /
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineCarteIdentiteUnifie:index" }
+    methods:  GET
+
+domaine_domaineCarteIdentite_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineCarteIdentiteUnifie:show" }
+    methods:  GET
+
+domaine_domaineCarteIdentite_new:
+    path:     /new
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineCarteIdentiteUnifie:new" }
+    methods:  [GET, POST]
+
+domaine_domaineCarteIdentite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineCarteIdentiteUnifie:edit" }
+    methods:  [GET, POST]
+
+domaine_domaineCarteIdentite_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineCarteIdentiteUnifie:delete" }
+    methods:  DELETE

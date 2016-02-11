@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite:
+Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineCarteIdentiteRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineCarteIdentiteRepository
     id:
         id:
             type: integer
@@ -23,11 +23,11 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         domaineCarteIdentiteUnifie:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
             inversedBy: domaineCarteIdentites
     oneToMany:
         traductions:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction
             mappedBy: domaineCarteIdentite
             cascade:  ['persist' , 'remove']
         domaines:

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Form;
+namespace Mondofute\Bundle\DomaineBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -17,13 +17,12 @@ class DomaineCarteIdentiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('altitudeMini', null, array('required' => false, 'attr' => array('min' => 0)))
-            ->add('altitudeMaxi', null, array('required' => false, 'attr' => array('min' => 0)))
-            ->add('kmPistesSkiAlpin', null, array('required' => false, 'attr' => array('min' => 0)))
-            ->add('kmPistesSkiNordique', null, array('required' => false, 'attr' => array('min' => 0)))
+            ->add('altitudeMini', null, array('attr' => array('min' => 0)))
+            ->add('altitudeMaxi', null, array('attr' => array('min' => 0)))
+            ->add('kmPistesSkiAlpin', null, array('attr' => array('min' => 0)))
+            ->add('kmPistesSkiNordique', null, array('attr' => array('min' => 0)))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => DomaineCarteIdentiteTraductionType::class,
-                'required' => false,
+                'entry_type' => DomaineCarteIdentiteTraductionType::class
             ))
             ->add('site', HiddenType::class, array('mapped' => false));
     }
@@ -34,7 +33,7 @@ class DomaineCarteIdentiteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite'
+            'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite'
         ));
     }
 }

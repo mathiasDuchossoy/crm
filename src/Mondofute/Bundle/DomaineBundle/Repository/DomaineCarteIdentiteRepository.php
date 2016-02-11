@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Repository;
+namespace Mondofute\Bundle\DomaineBundle\Repository;
 
 /**
  * DomaineCarteIdentiteRepository

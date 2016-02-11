@@ -2,10 +2,10 @@
 
 {% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
-    {{ 'visualisation d\'une carte d\identité' | capitalize }}
+    {{ 'visualisation d\'une carte d\'identité' | capitalize }}
 {% endblock %}
 {% block body %}
-    <h1>{{ 'Visualisation d\'une carte d\identité' | capitalize }}</h1>
+    <h1>{{ 'Visualisation d\'une carte d\'identité' | capitalize }}</h1>
     <table class="table table-responsive table-striped">
         <tbody>
         <tr class="row">
@@ -39,11 +39,11 @@
 
         <ul class="list-unstyled">
             <li>
-                <a href="{{ path('geographie_domaineCarteIdentite_index') }}">Back to the list</a>
+                <a href="{{ path('domaine_domaineCarteIdentite_index') }}">Back to the list</a>
             </li>
             <li>
                 <a class="btn btn-default"
-                   href="{{ path('geographie_domaineCarteIdentite_edit', { 'id': domaineCarteIdentiteUnifie.id }) }}">Edit</a>
+                   href="{{ path('domaine_domaineCarteIdentite_edit', { 'id': domaineCarteIdentiteUnifie.id }) }}">Edit</a>
             </li>
             <li>
                 {{ form_start(delete_form) }}

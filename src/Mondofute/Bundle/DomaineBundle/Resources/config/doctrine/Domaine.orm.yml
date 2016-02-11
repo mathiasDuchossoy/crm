@@ -20,7 +20,7 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             inversedBy: sousDomaines
         domaineCarteIdentite:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
             inversedBy: domaines
     oneToMany:
         traductions:
