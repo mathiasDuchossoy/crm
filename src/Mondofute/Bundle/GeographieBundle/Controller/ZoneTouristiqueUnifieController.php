@@ -239,7 +239,7 @@ class ZoneTouristiqueUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->find(ZoneTouristiqueUnifie::class, array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->find(ZoneTouristiqueUnifie::class, $entity->getId())))) {
                     $entitySite = new ZoneTouristiqueUnifie();
                 }
 

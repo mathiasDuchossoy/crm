@@ -233,7 +233,7 @@ class ProfilUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->find(ProfilUnifie::class, array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->find(ProfilUnifie::class, $entity->getId())))) {
                     $entitySite = new ProfilUnifie();
                 }
 
