@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction:
+Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineTraductionRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineTraductionRepository
     id:
         id:
             type: integer
@@ -16,7 +16,7 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction:
             length: 255
     manyToOne:
         domaine:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue

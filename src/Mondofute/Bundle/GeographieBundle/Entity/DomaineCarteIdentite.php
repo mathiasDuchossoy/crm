@@ -273,11 +273,11 @@ class DomaineCarteIdentite
     /**
      * Add domaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine
      *
      * @return DomaineCarteIdentite
      */
-    public function addDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    public function addDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine)
     {
         $this->domaines[] = $domaine->setDomaineCarteIdentite($this);
 
@@ -287,9 +287,9 @@ class DomaineCarteIdentite
     /**
      * Remove domaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine
      */
-    public function removeDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaine)
+    public function removeDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine)
     {
         $this->domaines->removeElement($domaine);
     }

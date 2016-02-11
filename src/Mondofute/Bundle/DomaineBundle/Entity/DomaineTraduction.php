@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\DomaineBundle\Entity;
 
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 

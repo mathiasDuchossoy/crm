@@ -31,6 +31,6 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite:
             mappedBy: domaineCarteIdentite
             cascade:  ['persist' , 'remove']
         domaines:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineCarteIdentite
     lifecycleCallbacks: {  }

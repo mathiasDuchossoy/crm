@@ -1,9 +1,9 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Form;
+namespace Mondofute\Bundle\DomaineBundle\Form;
 
-use Mondofute\Bundle\GeographieBundle\Entity\Domaine;
-use Mondofute\Bundle\GeographieBundle\Repository\DomaineRepository;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -45,7 +45,7 @@ class DomaineType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\Domaine',
+            'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\Domaine',
             'locale' => 'fr_FR',
             'siteDomaineParent' => '',
             'domaineUnifieId' => null

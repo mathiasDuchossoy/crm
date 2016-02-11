@@ -1,13 +1,13 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Controller;
+namespace Mondofute\Bundle\DomaineBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Mondofute\Bundle\GeographieBundle\Entity\Domaine;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie;
-use Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie;
+use Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,8 +27,8 @@ class DomaineUnifieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $domaineUnifies = $em->getRepository('MondofuteGeographieBundle:DomaineUnifie')->findAll();
-        return $this->render('@MondofuteGeographie/domaineunifie/index.html.twig', array(
+        $domaineUnifies = $em->getRepository('MondofuteDomaineBundle:DomaineUnifie')->findAll();
+        return $this->render('@MondofuteDomaine/domaineunifie/index.html.twig', array(
             'domaineUnifies' => $domaineUnifies,
         ));
     }
@@ -50,7 +50,7 @@ class DomaineUnifieController extends Controller
         $this->ajouterDomainesDansForm($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie , array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
@@ -66,19 +66,16 @@ class DomaineUnifieController extends Controller
 
             $this->copieVersSites($domaineUnifie);
 
-            $session = $request->getSession();
-            $session->start();
-
             // add flash messages
-            $session->getFlashBag()->add(
+            $this->addFlash(
                 'success',
                 'Le domaine a bien été créé.'
             );
 
-            return $this->redirectToRoute('geographie_domaine_edit', array('id' => $domaineUnifie->getId()));
+            return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domaineunifie/new.html.twig', array(
+        return $this->render('@MondofuteDomaine/domaineunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
             'entity' => $domaineUnifie,
@@ -249,7 +246,9 @@ class DomaineUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(DomaineUnifie::class)->findOneById(array($entity->getId()))))) {
+//                $em->getRepository(DomaineUnifie::class)->find(array($entity->getId()
+//                    $em->find( DomaineUnifie::class, $entity->getId());
+                if (is_null(($entitySite = $em->find(DomaineUnifie::class, $entity->getId())))) {
                     $entitySite = new DomaineUnifie();
                 }
 
@@ -325,7 +324,7 @@ class DomaineUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
-        return $this->render('@MondofuteGeographie/domaineunifie/show.html.twig', array(
+        return $this->render('@MondofuteDomaine/domaineunifie/show.html.twig', array(
             'domaineUnifie' => $domaineUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -341,7 +340,7 @@ class DomaineUnifieController extends Controller
     private function createDeleteForm(DomaineUnifie $domaineUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('geographie_domaine_delete', array('id' => $domaineUnifie->getId())))
+            ->setAction($this->generateUrl('domaine_domaine_delete', array('id' => $domaineUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -384,7 +383,7 @@ class DomaineUnifieController extends Controller
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
+        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
@@ -415,19 +414,16 @@ class DomaineUnifieController extends Controller
 
             $this->copieVersSites($domaineUnifie);
 
-            $session = $request->getSession();
-            $session->start();
-
             // add flash messages
-            $session->getFlashBag()->add(
+            $this->addFlash(
                 'success',
                 'Le domaine a bien été modifié.'
             );
 
-            return $this->redirectToRoute('geographie_domaine_edit', array('id' => $domaineUnifie->getId()));
+            return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domaineunifie/edit.html.twig', array(
+        return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,
@@ -578,33 +574,28 @@ class DomaineUnifieController extends Controller
             $em->remove($domaineUnifie);
             $em->flush();
 
-            $session = $request->getSession();
-            $session->start();
-
             // add flash messages
-            $session->getFlashBag()->add(
-                'success',
-                'Le domaine a été supprimé avec succès.'
-            );
+            $this->addFlash('success', 'Le domaine a été supprimé avec succès.');
+
         }
 
-        return $this->redirectToRoute('geographie_domaine_index');
+        return $this->redirectToRoute('domaine_domaine_index');
     }
 
-    /**
-     * dispacher les données communes dans chaque stations
-     * @param DomaineUnifie $entity
-     */
-    private function dispacherDonneesCommune(DomaineUnifie $entity)
-    {
-        foreach ($entity->getDomaines() as $domaine) {
-            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
-            if (!empty($firstDomaineParent)) {
-                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
-                    return $element->getSite() == $domaine->getSite();
-                })->first();
-                $domaine->setDomaineParent($domaineParent);
-            }
-        }
-    }
+//    /**
+//     * dispacher les données communes dans chaque stations
+//     * @param DomaineUnifie $entity
+//     */
+//    private function dispacherDonneesCommune(DomaineUnifie $entity)
+//    {
+//        foreach ($entity->getDomaines() as $domaine) {
+//            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
+//            if (!empty($firstDomaineParent)) {
+//                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
+//                    return $element->getSite() == $domaine->getSite();
+//                })->first();
+//                $domaine->setDomaineParent($domaineParent);
+//            }
+//        }
+//    }
 }

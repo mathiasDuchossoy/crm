@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\Domaine:
+Mondofute\Bundle\DomaineBundle\Entity\Domaine:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository
     id:
         id:
             type: integer
@@ -14,20 +14,20 @@ Mondofute\Bundle\GeographieBundle\Entity\Domaine:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         domaineUnifie:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie
             inversedBy: domaines
         domaineParent:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             inversedBy: sousDomaines
         domaineCarteIdentite:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
             inversedBy: domaines
     oneToMany:
         traductions:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineTraduction
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction
             mappedBy: domaine
             cascade:  ['persist' , 'remove']
         sousDomaines:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineParent
     lifecycleCallbacks: {  }
