@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie;
@@ -398,30 +399,43 @@ class DomaineUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            try {
 //            $this->dispacherDonneesCommune($domaineUnifie);
-            $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
-            $this->mettreAJourDomaineCrm($domaineUnifie, $domaineCrm);
-            $em->persist($domaineCrm);
+                $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
+                $this->mettreAJourDomaineCrm($domaineUnifie, $domaineCrm);
+                $em->persist($domaineCrm);
 
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalDomaines as $domaine) {
-                if (!$domaineUnifie->getDomaines()->contains($domaine)) {
+                // Supprimer la relation entre la station et stationUnifie
+                foreach ($originalDomaines as $domaine) {
+                    if (!$domaineUnifie->getDomaines()->contains($domaine)) {
 
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($domaine->getSite()->getLibelle());
-                    $entitySite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
-                    $domaineSite = $entitySite->getDomaines()->first();
-                    $emSite->remove($domaineSite);
-                    $emSite->flush();
-                    $domaine->setDomaineUnifie(null);
-                    $em->remove($domaine);
+                        //  suppression de la station sur le site
+                        $emSite = $this->getDoctrine()->getEntityManager($domaine->getSite()->getLibelle());
+                        $entitySite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
+                        $domaineSite = $entitySite->getDomaines()->first();
+                        $emSite->remove($domaineSite);
+                        $emSite->flush();
+                        $domaine->setDomaineUnifie(null);
+                        $em->remove($domaine);
+                    }
                 }
+                $em->persist($domaineUnifie);
+                $em->flush();
+
+
+                $this->copieVersSites($domaineUnifie);
+            } catch (ForeignKeyConstraintViolationException $except) {
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'impossible de supprimer le domaine, il est utilisé par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreur inconnue');
+                        break;
+                }
+                return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
             }
-            $em->persist($domaineUnifie);
-            $em->flush();
-
-
-            $this->copieVersSites($domaineUnifie);
 
             // add flash messages
             $this->addFlash(
@@ -567,23 +581,38 @@ class DomaineUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            try {
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $domaineUnifieSite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
-                if (!empty($domaineUnifieSite)) {
-                    $emSite->remove($domaineUnifieSite);
-                    $emSite->flush();
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $domaineUnifieSite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
+                    if (!empty($domaineUnifieSite)) {
+                        $emSite->remove($domaineUnifieSite);
+                        $emSite->flush();
+                    }
                 }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($domaineUnifie);
+                $em->flush();
+            } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'impossible de supprimer le domaine, il est utilisé par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreur inconnue');
+                        break;
+                }
+                return $this->redirect($request->headers->get('referer'));
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($domaineUnifie);
-            $em->flush();
 
             // add flash messages
             $this->addFlash('success', 'Le domaine a été supprimé avec succès.');

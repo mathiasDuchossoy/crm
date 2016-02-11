@@ -14,13 +14,7 @@
 
 {#  BLOCK CONTENANT LE FORMULAIRE #}
 {% block formulaire %}
-    {% if app.session.flashBag.has('success') %}
-        <div class="alert alert-success">
-            {% for msg in app.session.flashBag.get('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
+    {% include '::flashbags.html.twig' %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
 
