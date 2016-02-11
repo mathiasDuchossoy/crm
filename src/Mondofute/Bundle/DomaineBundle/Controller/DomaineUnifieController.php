@@ -563,7 +563,6 @@ class DomaineUnifieController extends Controller
      */
     public function deleteAction(Request $request, DomaineUnifie $domaineUnifie)
     {
-//        dump($domaineUnifie);die;
         $form = $this->createDeleteForm($domaineUnifie);
         $form->handleRequest($request);
 
@@ -588,7 +587,6 @@ class DomaineUnifieController extends Controller
 
             // add flash messages
             $this->addFlash('success', 'Le domaine a été supprimé avec succès.');
-
         }
 
         return $this->redirectToRoute('domaine_domaine_index');
