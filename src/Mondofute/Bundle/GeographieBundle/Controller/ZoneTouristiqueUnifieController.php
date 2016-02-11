@@ -52,7 +52,8 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->ajouterZoneTouristiquesDansForm($zoneTouristiqueUnifie);
         $this->zoneTouristiquesSortByAffichage($zoneTouristiqueUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType', $zoneTouristiqueUnifie);
+        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
+            $zoneTouristiqueUnifie);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
@@ -333,7 +334,8 @@ class ZoneTouristiqueUnifieController extends Controller
     private function createDeleteForm(ZoneTouristiqueUnifie $zoneTouristiqueUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('geographie_zonetouristique_delete', array('id' => $zoneTouristiqueUnifie->getId())))
+            ->setAction($this->generateUrl('geographie_zonetouristique_delete',
+                array('id' => $zoneTouristiqueUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -376,7 +378,8 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->zoneTouristiquesSortByAffichage($zoneTouristiqueUnifie);
         $deleteForm = $this->createDeleteForm($zoneTouristiqueUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType', $zoneTouristiqueUnifie)
+        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
+            $zoneTouristiqueUnifie)
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
@@ -410,7 +413,8 @@ class ZoneTouristiqueUnifieController extends Controller
 //            dump($zoneTouristiqueUnifie);
 //            dump($zoneTouristiqueCrm);
 //            die;
-            return $this->redirectToRoute('geographie_zonetouristique_edit', array('id' => $zoneTouristiqueUnifie->getId()));
+            return $this->redirectToRoute('geographie_zonetouristique_edit',
+                array('id' => $zoneTouristiqueUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/zonetouristiqueunifie/edit.html.twig', array(
@@ -449,8 +453,10 @@ class ZoneTouristiqueUnifieController extends Controller
      * @param ZoneTouristique $zoneTouristiqueCrm
      * @return bool
      */
-    private function mettreAJourZoneTouristiqueCrm(ZoneTouristiqueUnifie $zoneTouristiqueUnifie, ZoneTouristique $zoneTouristiqueCrm)
-    {
+    private function mettreAJourZoneTouristiqueCrm(
+        ZoneTouristiqueUnifie $zoneTouristiqueUnifie,
+        ZoneTouristique $zoneTouristiqueCrm
+    ) {
         /** @var ZoneTouristiqueTraduction $zoneTouristiqueTraduc */
         $em = $this->getDoctrine()->getManager();
         $tabClassementSiteReferent = array();
@@ -549,23 +555,38 @@ class ZoneTouristiqueUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            try {
+                $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $zoneTouristiqueUnifieSite = $emSite->find(ZoneTouristiqueUnifie::class, $zoneTouristiqueUnifie->getId());
-                if (!empty($zoneTouristiqueUnifieSite)) {
-                    $emSite->remove($zoneTouristiqueUnifieSite);
-                    $emSite->flush();
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $zoneTouristiqueUnifieSite = $emSite->find(ZoneTouristiqueUnifie::class,
+                        $zoneTouristiqueUnifie->getId());
+                    if (!empty($zoneTouristiqueUnifieSite)) {
+                        $emSite->remove($zoneTouristiqueUnifieSite);
+                        $emSite->flush();
+                    }
                 }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($zoneTouristiqueUnifie);
+                $em->flush();
+            } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'impossible de supprimer la zone touristique, il est utilisé par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreur inconnue');
+                        break;
+                }
+                return $this->redirect($request->headers->get('referer'));
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($zoneTouristiqueUnifie);
-            $em->flush();
         }
         $this->addFlash('success', 'la zone touristique a bien été supprimée');
         return $this->redirectToRoute('geographie_zonetouristique_index');
