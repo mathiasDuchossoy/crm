@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie;
