@@ -2,7 +2,9 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction;
@@ -27,7 +29,7 @@ class DomaineUnifieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $domaineUnifies = $em->getRepository('MondofuteDomaineBundle:DomaineUnifie')->findAll();
+        $domaineUnifies = $em->getRepository(DomaineUnifie::class)->findAll();
         return $this->render('@MondofuteDomaine/domaineunifie/index.html.twig', array(
             'domaineUnifies' => $domaineUnifies,
         ));
@@ -89,6 +91,7 @@ class DomaineUnifieController extends Controller
      */
     private function ajouterDomainesDansForm(DomaineUnifie $entity)
     {
+        /** @var Langue $langue */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -100,7 +103,7 @@ class DomaineUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($domaine->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($domaine->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -137,11 +140,12 @@ class DomaineUnifieController extends Controller
         $domaines = $entity->getDomaines(); // ArrayCollection data.
 
         // Recueillir un itérateur de tableau.
+        /** @var ArrayIterator $iterator */
         $iterator = $domaines->getIterator();
         unset($domaines);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        $iterator->uasort(function (Domaine $a, Domaine $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -159,11 +163,13 @@ class DomaineUnifieController extends Controller
      */
     private function traductionsSortByLangue($domaines)
     {
+        /** @var ArrayIterator $iterator */
+        /** @var Domaine $domaine */
         foreach ($domaines as $domaine) {
             $traductions = $domaine->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (DomaineTraduction $a, DomaineTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -191,7 +197,7 @@ class DomaineUnifieController extends Controller
                 $domaineCrm = clone $domaine;
                 $domaineCrm->setSite($siteCrm);
                 if (!empty($domaine->getDomaineParent())) {
-                    $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                    $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($siteCrm) {
                         return $element->getSite() == $siteCrm;
                     })->first();
                     $domaineCrm->setDomaineParent($domaineParent);
@@ -231,6 +237,7 @@ class DomaineUnifieController extends Controller
      */
     public function copieVersSites(DomaineUnifie $entity)
     {
+        /** @var DomaineTraduction $domaineTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getDomaines() as $domaine) {
             if ($domaine->getSite()->getCrm() == false) {
@@ -297,10 +304,12 @@ class DomaineUnifieController extends Controller
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
      * @param $idUnifie
-     * @param $domaines
+     * @param Collection $domaines
      */
-    public function ajouterDomaineUnifieSiteDistant($idUnifie, $domaines)
+    public function ajouterDomaineUnifieSiteDistant($idUnifie, Collection $domaines)
     {
+        /** @var Site $site */
+        /** @var ArrayCollection $domaines */
         $em = $this->getDoctrine()->getManager();
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
@@ -447,6 +456,7 @@ class DomaineUnifieController extends Controller
                 return $domaine;
             }
         }
+        return false;
     }
 
     /**
@@ -460,6 +470,8 @@ class DomaineUnifieController extends Controller
      */
     private function mettreAJourDomaineCrm(DomaineUnifie $domaineUnifie, Domaine $domaineCrm)
     {
+        /** @var DomaineTraduction $domaineTraducCrm */
+        /** @var DomaineTraduction $domaineTraduc */
         $em = $this->getDoctrine()->getManager();
         $tabClassementSiteReferent = array();
 
@@ -481,7 +493,7 @@ class DomaineUnifieController extends Controller
 
                 $siteCrm = $domaineCrm->getSite();
                 if (!empty($domaine->getDomaineParent())) {
-                    $domaineParentCrm = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($siteCrm) {
+                    $domaineParentCrm = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($siteCrm) {
                         return $element->getSite() == $siteCrm;
                     })->first();
                 } else {
@@ -494,12 +506,12 @@ class DomaineUnifieController extends Controller
                 foreach ($langues as $langue) {
 //                    dump($langue);
 //                    recupere la traduction pour l'entite du site referent
-                    $domaineTraduc = $domaine->getTraductions()->filter(function ($element) use ($langue) {
+                    $domaineTraduc = $domaine->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 
 //                    récupère la traductin dans le crm
-                    $domaineTraducCrm = $domaineCrm->getTraductions()->filter(function ($element) use ($langue) {
+                    $domaineTraducCrm = $domaineCrm->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 //                    dump($domaineTraduc);
@@ -532,7 +544,7 @@ class DomaineUnifieController extends Controller
                 foreach ($langues as $langue) {
 
 //                    recupere la traduction pour la langue $langue
-                    $domaineTraduc = $domaine->getTraductions()->filter(function ($element) use ($langue) {
+                    $domaineTraduc = $domaine->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 

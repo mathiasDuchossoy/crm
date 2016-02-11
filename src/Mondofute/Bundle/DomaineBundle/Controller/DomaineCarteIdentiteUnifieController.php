@@ -309,9 +309,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
 
     /**
-     * Ajoute la reference site unifie dans les sites n'ayant pas de domaineCarteIdentite a enregistrer
      * @param $idUnifie
-     * @param ArrayCollection $domaineCarteIdentites
+     * @param Collection $domaineCarteIdentites
      */
     private function ajouterDomaineCarteIdentiteUnifieSiteDistant($idUnifie, Collection $domaineCarteIdentites)
     {
