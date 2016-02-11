@@ -52,7 +52,7 @@
             {% for site in sites %}
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
-                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                $("[id='data_site_" + {{ site.id }} +"']").find(':required').each(function () {
                     $(this).attr('required', false);
                 });
             }
@@ -78,11 +78,11 @@
 
                 if (!$(this).is(':checked')) {
 
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name$=\'[codePostal]\']').each(function () {
-                        $(this).attr('required', false);
-                    });
+//                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name$=\'[codePostal]\']').each(function () {
+//                        $(this).attr('required', false);
+//                    });
 //                    supprime le required des champs libelle des traductions
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find(':required').each(function () {
                         $(this).attr('required', false);
                     });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
@@ -100,7 +100,11 @@
 
                 } else {
 //                    rend les champs libelle des traductions required
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    var dataSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                    dataSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    dataSite.find('[name*=\'[codePostal]\']').each(function () {
                         $(this).attr('required', true);
                     });
                     $("#onglet_data_site_{{ site.id }}").show();
