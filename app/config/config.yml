@@ -82,6 +82,7 @@ doctrine:
                     MondofuteLangueBundle:  ~
                     MondofuteSiteBundle:  ~
                     MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -91,6 +92,7 @@ doctrine:
                     MondofuteLangueBundle:  ~
                     MondofuteSiteBundle:  ~
                     MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -100,6 +102,7 @@ doctrine:
                     MondofuteLangueBundle:  ~
                     MondofuteSiteBundle:  ~
                     MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

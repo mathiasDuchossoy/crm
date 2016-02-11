@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\DomaineBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,9 +32,13 @@ class Domaine
      */
     private $sousDomaines;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Domaine
      */
     private $domaineParent;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
 
     /**
      * Constructor
@@ -159,11 +163,11 @@ class Domaine
     /**
      * Add sousDomaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine
      *
      * @return Domaine
      */
-    public function addSousDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine)
+    public function addSousDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine)
     {
         $this->sousDomaines[] = $sousDomaine->setDomaineParent($this);
 
@@ -173,9 +177,9 @@ class Domaine
     /**
      * Remove sousDomaine
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine
      */
-    public function removeSousDomaine(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $sousDomaine)
+    public function removeSousDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine)
     {
         $this->sousDomaines->removeElement($sousDomaine);
     }
@@ -193,7 +197,7 @@ class Domaine
     /**
      * Get domaineParent
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Domaine
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Domaine
      */
     public function getDomaineParent()
     {
@@ -203,21 +207,26 @@ class Domaine
     /**
      * Set domaineParent
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaineParent
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaineParent
      *
      * @return Domaine
      */
-    public function setDomaineParent(\Mondofute\Bundle\GeographieBundle\Entity\Domaine $domaineParent = null)
+    public function setDomaineParent(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaineParent = null)
     {
         $this->domaineParent = $domaineParent;
 
         return $this;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
-     */
-    private $domaineCarteIdentite;
 
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
+    }
 
     /**
      * Set domaineCarteIdentite
@@ -231,15 +240,5 @@ class Domaine
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;
-    }
-
-    /**
-     * Get domaineCarteIdentite
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
-     */
-    public function getDomaineCarteIdentite()
-    {
-        return $this->domaineCarteIdentite;
     }
 }

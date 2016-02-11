@@ -1,3 +1,7 @@
 mondofute_domaine_homepage:
     path:     /
     defaults: { _controller: MondofuteDomaineBundle:Default:index }
+
+mondofute_domaine_domaine:
+    resource: "@MondofuteDomaineBundle/Resources/config/routing/domaineunifie.yml"
+    prefix:   /domaine

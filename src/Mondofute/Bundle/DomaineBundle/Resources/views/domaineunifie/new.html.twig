@@ -1,42 +1,28 @@
-{% extends '@MondofuteGeographie/domaineunifie/fiche.html.twig' %}
+{% extends '@MondofuteDomaine/domaineunifie/fiche.html.twig' %}
 
-{% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
-{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
-
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
-    {{ 'modification d\'un domaine ' | capitalize }}
+    {{ 'création d\un domaine' | capitalize }}
 {% endblock %}
 
-{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
 {% block titre %}
-    Modification du domaine
+    Création d'un domaine
 {% endblock %}
 
-{#  BLOCK CONTENANT LE FORMULAIRE #}
 {% block formulaire %}
-    {% if app.session.flashBag.has('success') %}
-        <div class="alert alert-success">
-            {% for msg in app.session.flashBag.get('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
-    {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
-    {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
-
-    {{ form_errors(edit_form) }}
-    {{ form_start(edit_form) }}
+    {{ form_errors(form) }}
+    {{ form_start(form) }}
     {% include '::coches_sites.html.twig' %}
 
-    {% set mesSites = edit_form.domaines %}
+    {% set mesSites = form.domaines %}
     {% include '::onglets_sites.html.twig' %}
 
     <div class="tab-content" style="padding:20px;">
-
         {% set iSite = 0 %}
-        {% for domaine in edit_form.domaines %}
+        {% for domaine in form.domaines %}
             <div id="data_site_{{ domaine.vars.value.site.id }}"
                  class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
+                {#{{ form_row(domaine.enneige) }}#}
                 {{ form_row(domaine.site) }}
                 <ul class="nav nav-tabs">
                     {{ form_row( domaine.domaineParent ) }}
@@ -53,6 +39,7 @@
                                 {% endfor %}
                             </a>
                         </li>
+                        {#{{ form_row(traduction) }}#}
                     {% endfor %}
                 </ul>
                 <div class="tab-content">
@@ -60,7 +47,6 @@
                     {% for traduction in domaine.traductions %}
                         <div id="{{ domaine.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                              class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                            {#{{ form_row(traduction) }}#}
                             {{ form_widget(traduction) }}
                             {{ form_errors(traduction) }}
                         </div>
@@ -69,25 +55,24 @@
             </div>
         {% endfor %}
     </div>
-    {{ form_row(edit_form.submit) }}
-    {{ form_row(edit_form._token) }}
-    {{ form_end(edit_form, {'render_rest': false}) }}
+    {{ form_row(form.submit) }}
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
 
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('geographie_domaine_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
-            <li>{{ form(delete_form) }}</li>
+            <li><a href="{{ path('domaine_domaine_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            {#<li>{{ form(delete_form) }}</li>#}
         </ul>
 
     </div>
-
 {% endblock %}
 
-{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
 {% block javascripts %}
     {{ parent() }}
+
 
 {% endblock %}

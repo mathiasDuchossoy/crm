@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie:
+Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineUnifieRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineUnifieRepository
     id:
         id:
             type: integer
@@ -12,7 +12,7 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineUnifie:
                 unsigned: true
     oneToMany:
         domaines:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Domaine
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineUnifie
             cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

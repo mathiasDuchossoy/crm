@@ -95,10 +95,10 @@
                        aria-expanded="false" href="">Domaine</a>
                     <ul class="dropdown-menu">
                         <li class="{% if 'domaine_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('geographie_domaine_index') }}">{{ 'liste' |capitalize }}</a>
+                            <a href="{{ path('domaine_domaine_index') }}">{{ 'liste' |capitalize }}</a>
                         </li>
                         <li class="{% if 'domaine_new' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('geographie_domaine_new') }}">{{ 'ajouter' | capitalize }}</a>
+                            <a href="{{ path('domaine_domaine_new') }}">{{ 'ajouter' | capitalize }}</a>
                         </li>
                     </ul>
                 </li>

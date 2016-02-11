@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Repository;
+namespace Mondofute\Bundle\DomaineBundle\Repository;
 
 /**
  * DomaineRepository
@@ -19,7 +19,7 @@ class DomaineRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('d , dt ')
-            ->from('MondofuteGeographieBundle:Domaine', 'd')
+            ->from('MondofuteDomaineBundle:Domaine', 'd')
             ->join('d.traductions', 'dt')
             ->join('d.domaineUnifie', 'du')
             ->join('d.site', 's')

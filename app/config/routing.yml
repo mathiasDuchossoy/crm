@@ -1,16 +1,14 @@
+mondofute_accueil:
+    resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_domaine:
     resource: "@MondofuteDomaineBundle/Resources/config/routing.yml"
     prefix:   /
 
-
-
 #mondofute_langue:
 #    resource: "@MondofuteLangueBundle/Resources/config/routing.yml"
 #    prefix:   /
-
-mondofute_accueil:
-    resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
-    prefix:   /
 
 mondofute_geographie:
     resource: "@MondofuteGeographieBundle/Resources/config/routing.yml"
@@ -19,5 +17,3 @@ mondofute_geographie:
 #mondofute_site:
 #    resource: "@MondofuteSiteBundle/Resources/config/routing.yml"
 #    prefix:   /site
-
-
