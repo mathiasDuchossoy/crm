@@ -16,9 +16,13 @@ Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction:
             length: 255
         description:
             type: text
+            options:
+                default: ""
         accueil:
             type: string
             length: 255
+            options:
+                default: ""
     manyToOne:
         profil:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil

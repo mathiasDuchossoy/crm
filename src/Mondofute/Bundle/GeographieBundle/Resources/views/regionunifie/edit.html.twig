@@ -16,16 +16,7 @@
 {% block formulaire %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
-    {% for flash_message in app.session.flashbag.get('error') %}
-        <div class="alert alert-danger">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-    {% for flash_message in app.session.flashbag.get('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+    {% include '::flashbags.html.twig' %}
     {{ form_errors(edit_form) }}
     {{ form_start(edit_form) }}
     {% include '::coches_sites.html.twig' %}

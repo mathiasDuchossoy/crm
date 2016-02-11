@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block formulaire %}
+    {% include '::flashbags.html.twig' %}
 
     {{ form_errors(form) }}
     {{ form_start(form) }}

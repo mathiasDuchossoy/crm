@@ -4,16 +4,7 @@
 {% endblock %}
 {% block body %}
     <h1>{{ 'liste des régions' | capitalize }}</h1>
-    {% for flash_message in app.session.flashbag.get('error') %}
-        <div class="alert alert-danger">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
-    {% for flash_message in app.session.flashbag.get('success') %}
-        <div class="alert alert-success">
-            {{ flash_message }}
-        </div>
-    {% endfor %}
+    {% include '::flashbags.html.twig' %}
     <table class="table-responsive table-striped table">
         <thead>
         <tr>

@@ -5,71 +5,10 @@
     <title>{% block title %}{{ 'CRM Mondofute !' }}{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
     {% block stylesheets %}
-        {% stylesheets 'css/bootstrap.css' %}
+        {% stylesheets 'css/bootstrap.css' '../app/Resources/public/css/menu.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
-    <style>
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu > .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -6px;
-            margin-left: -1px;
-            -webkit-border-radius: 0 6px 6px 6px;
-            -moz-border-radius: 0 6px 6px 6px;
-            border-radius: 0 6px 6px 6px;
-        }
-
-        .dropdown-submenu:hover > .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-submenu > a:after {
-            display: block;
-            content: " ";
-            float: right;
-            width: 0;
-            height: 0;
-            border-color: transparent;
-            border-style: solid;
-            border-width: 5px 0 5px 5px;
-            border-left-color: #cccccc;
-            margin-top: 5px;
-            margin-right: -10px;
-        }
-
-        .dropdown-submenu.pull-left {
-            float: none;
-        }
-
-        .dropdown-submenu.pull-left > .dropdown-menu {
-            left: -100%;
-            margin-left: 10px;
-            -webkit-border-radius: 6px 0 6px 6px;
-            -moz-border-radius: 6px 0 6px 6px;
-            border-radius: 6px 0 6px 6px;
-        }
-
-        .blue {
-            color: #1D38FC
-        }
-
-        .green {
-            color: #0EC929
-        }
-
-        .red {
-            color: #FF0000
-        }
-
-        .orange {
-            color: #ffe100
-        }
-    </style>
 </head>
 <body>
 {% block header %}
@@ -95,39 +34,42 @@
                 var premierElementInvalid = null;
                 var id = '';
                 var retour = true;
+                if (form.find(':invalid').length > 0) {
 //                récupère les éléments valides et met les bord en vert
-                $('form').find(':required').each(function () {
-                    if ($(this).val()) {
-                        $(this).css('border', '1px solid green').focus();
-                    }
-                });
+                    $('form').find(':required').each(function () {
+                        if ($(this).val()) {
+                            $(this).css('border', '1px solid green').focus();
+                        }
+                    });
 //                récupère les éléments invalid met les bord en rouge et met le focus sur le premier element invalid
-                form.find(':invalid').each(function () {
+                    form.find(':invalid').each(function () {
 //                    test si premier element invalid est null dans ce cas on met le focus dessus
-                    if (!premierElementInvalid) {
-                        var obj = $(this).attr('id');
-                        var tab = [];
-                        var element = $(this);
+                        if (!premierElementInvalid) {
+                            var obj = $(this).attr('id');
+                            var tab = [];
+                            var element = $(this);
 //                        met dans tab tous les onglets .tab-pane parents de l'element pour pouvoir afficher les bons onglets
-                        while ((tabTmp = element.closest('.tab-pane').attr('id'))) {
-                            tab.push(element.closest('.tab-pane').attr('id'));
-                            element = $('a[href="#' + tabTmp + '"]');
-                        }
+                            while ((tabTmp = element.closest('.tab-pane').attr('id'))) {
+                                tab.push(element.closest('.tab-pane').attr('id'));
+                                element = $('a[href="#' + tabTmp + '"]');
+                            }
 //                        dépile tab par le bas (systeme First In Last Out) afin d'afficher les bons onglets
-                        while ((id = tab.pop())) {
-                            $('a[href="#' + id + '"]')
-                                    .tab('show')
-                                    .on('shown.bs.tab', function () {
-                                        $('#' + obj + '').focus();
+                            while ((id = tab.pop())) {
+                                $('a[href="#' + id + '"]')
+                                        .tab('show')
+                                        .on('shown.bs.tab', function () {
+                                            $('#' + obj + '').focus();
 //                                        return false;
-                                    });
-                        }
+                                        });
+                            }
 //                        instancie le premier element invalid
-                        premierElementInvalid = $(this);
-                    }
-                    $(this).css('border', '1px solid red').focus();
-                    return retour;
-                });
+                            premierElementInvalid = $(this);
+                        }
+                        $(this).css('border', '1px solid red').focus();
+                        return retour;
+                    });
+
+                }
                 return retour;
             });
         });

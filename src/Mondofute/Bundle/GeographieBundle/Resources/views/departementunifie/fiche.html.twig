@@ -52,12 +52,12 @@
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
                 var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
-                contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                contenuOngletSite.find(':required').each(function () {
                     $(this).attr('required', false);
                 });
-                contenuOngletSite.find('[name*=\'[region]\']').each(function () {
-                    $(this).attr('required', false);
-                });
+//                contenuOngletSite.find('[name*=\'[region]\']').each(function () {
+//                    $(this).attr('required', false);
+//                });
             }
 
             $("#siteAEnregistrer_{{ site.id }}").change(function () {
@@ -84,12 +84,12 @@
 //                    supprime le required des champs libelle des traductions
 
                     contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
-                    contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    contenuOngletSite.find(':required').each(function () {
                         $(this).attr('required', false);
                     });
-                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
-                        $(this).attr('required', false);
-                    });
+//                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
+//                        $(this).attr('required', false);
+//                    });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
                         $("[id^='data_site_']").each(function (value, element) {

@@ -2,7 +2,9 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction;
@@ -64,7 +66,8 @@ class ProfilUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($profilUnifie);
-            return $this->redirectToRoute('geographie_profil_show', array('id' => $profilUnifie->getId()));
+            $this->addFlash('success', 'le profil a bien été créé');
+            return $this->redirectToRoute('geographie_profil_edit', array('id' => $profilUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/profilunifie/new.html.twig', array(
@@ -92,7 +95,7 @@ class ProfilUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($profil->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -124,7 +127,7 @@ class ProfilUnifieController extends Controller
      */
     private function profilsSortByAffichage(ProfilUnifie $entity)
     {
-
+        /** @var ArrayCollection $profils */
         // Trier les stations en fonction de leurs ordre d'affichage
         $profils = $entity->getProfils(); // ArrayCollection data.
 
@@ -133,7 +136,7 @@ class ProfilUnifieController extends Controller
         unset($profils);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        $iterator->uasort(function (Profil $a, Profil $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -149,13 +152,15 @@ class ProfilUnifieController extends Controller
      * Classe les traductions par rapport à leurs id
      * @param $profils
      */
-    private function traductionsSortByLangue($profils)
+    private function traductionsSortByLangue(ArrayCollection $profils)
     {
+        /** @var Profil $profil */
+        /** @var ArrayIterator $iterator */
         foreach ($profils as $profil) {
             $traductions = $profil->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (ProfilTraduction $a, ProfilTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -217,6 +222,7 @@ class ProfilUnifieController extends Controller
      */
     public function copieVersSites(ProfilUnifie $entity)
     {
+        /** @var ProfilTraduction $profilTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getProfils() as $profil) {
             if ($profil->getSite()->getCrm() == false) {
@@ -227,7 +233,7 @@ class ProfilUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(ProfilUnifie::class)->findOneById(array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->find(ProfilUnifie::class, array($entity->getId()))))) {
                     $entitySite = new ProfilUnifie();
                 }
 
@@ -277,10 +283,12 @@ class ProfilUnifieController extends Controller
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
      * @param $idUnifie
-     * @param $profils
+     * @param Collection $profils
      */
-    public function ajouterProfilUnifieSiteDistant($idUnifie, $profils)
+    public function ajouterProfilUnifieSiteDistant($idUnifie, Collection $profils)
     {
+        /** @var Site $site */
+        /** @var ArrayCollection $profils */
         $em = $this->getDoctrine()->getManager();
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
@@ -392,6 +400,7 @@ class ProfilUnifieController extends Controller
 
 
             $this->copieVersSites($profilUnifie);
+            $this->addFlash('success', 'le profil a bien été modifié');
 
 //            dump($profilUnifie);
 //            dump($profilCrm);
@@ -423,6 +432,7 @@ class ProfilUnifieController extends Controller
                 return $profil;
             }
         }
+        return false;
     }
 
     /**
@@ -436,6 +446,7 @@ class ProfilUnifieController extends Controller
      */
     private function mettreAJourProfilCrm(ProfilUnifie $profilUnifie, Profil $profilCrm)
     {
+        /** @var ProfilTraduction $profilTraduc */
         $em = $this->getDoctrine()->getManager();
         $tabClassementSiteReferent = array();
 
@@ -459,12 +470,15 @@ class ProfilUnifieController extends Controller
                 foreach ($langues as $langue) {
 //                    dump($langue);
 //                    recupere la traduction pour l'entite du site referent
-                    $profilTraduc = $profil->getTraductions()->filter(function ($element) use ($langue) {
+                    $profilTraduc = $profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 
 //                    récupère la traductin dans le crm
-                    $profilTraducCrm = $profilCrm->getTraductions()->filter(function ($element) use ($langue) {
+                    $profilTraducCrm = $profilCrm->getTraductions()->filter(function (ProfilTraduction $element) use (
+                        $langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 //                    dump($profilTraduc);
@@ -506,7 +520,8 @@ class ProfilUnifieController extends Controller
                 foreach ($langues as $langue) {
 
 //                    recupere la traduction pour la langue $langue
-                    $profilTraduc = $profil->getTraductions()->filter(function ($element) use ($langue) {
+                    $profilTraduc = $profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 
@@ -554,7 +569,7 @@ class ProfilUnifieController extends Controller
             $em->remove($profilUnifie);
             $em->flush();
         }
-
+        $this->addFlash('success', 'le profil a bien été supprimé');
         return $this->redirectToRoute('geographie_profil_index');
     }
 }
