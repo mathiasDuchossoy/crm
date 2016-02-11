@@ -1,4 +1,4 @@
-{% extends '@MondofuteGeographie/stationunifie/fiche.html.twig' %}
+{% extends '@MondofuteStation/stationunifie/fiche.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block formulaire %}
+    {% include '::flashbags.html.twig' %}
 
     {{ form_errors(form) }}
     {{ form_start(form) }}
@@ -94,7 +95,7 @@
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('geographie_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li><a href="{{ path('station_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
         </ul>
 
     </div>

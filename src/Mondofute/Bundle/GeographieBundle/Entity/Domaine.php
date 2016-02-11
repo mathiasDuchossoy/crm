@@ -35,6 +35,10 @@ class Domaine
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Domaine
      */
     private $domaineParent;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
 
     /**
      * Constructor
@@ -213,11 +217,16 @@ class Domaine
 
         return $this;
     }
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
-     */
-    private $domaineCarteIdentite;
 
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
+    }
 
     /**
      * Set domaineCarteIdentite
@@ -231,15 +240,5 @@ class Domaine
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;
-    }
-
-    /**
-     * Get domaineCarteIdentite
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
-     */
-    public function getDomaineCarteIdentite()
-    {
-        return $this->domaineCarteIdentite;
     }
 }

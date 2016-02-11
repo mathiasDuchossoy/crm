@@ -4,7 +4,7 @@
 {% endblock %}
 {% block body %}
     <h1>{{ 'liste des régions' | capitalize }}</h1>
-
+    {% include '::flashbags.html.twig' %}
     <table class="table-responsive table-striped table">
         <thead>
         <tr>

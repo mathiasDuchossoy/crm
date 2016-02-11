@@ -2,18 +2,19 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie;
 use Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * SecteurUnifie controller.
@@ -67,7 +68,8 @@ class SecteurUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($secteurUnifie);
-            return $this->redirectToRoute('geographie_secteur_show', array('id' => $secteurUnifie->getId()));
+            $this->addFlash('success', 'le secteur a bien été créé');
+            return $this->redirectToRoute('geographie_secteur_edit', array('id' => $secteurUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/secteurunifie/new.html.twig', array(
@@ -84,6 +86,7 @@ class SecteurUnifieController extends Controller
      */
     private function ajouterSecteursDansForm(SecteurUnifie $entity)
     {
+        /** @var Langue $langue */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -95,7 +98,7 @@ class SecteurUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter au secteur
-                        if ($secteur->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($secteur->getTraductions()->filter(function (SecteurTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -127,6 +130,7 @@ class SecteurUnifieController extends Controller
      */
     private function secteursSortByAffichage(SecteurUnifie $entity)
     {
+        /** @var ArrayIterator $iterator */
 
         // Trier les secteurs en fonction de leurs ordre d'affichage
         $secteurs = $entity->getSecteurs(); // ArrayCollection data.
@@ -136,7 +140,7 @@ class SecteurUnifieController extends Controller
         unset($secteurs);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        $iterator->uasort(function (Secteur $a, Secteur $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -154,11 +158,13 @@ class SecteurUnifieController extends Controller
      */
     private function traductionsSortByLangue(ArrayCollection $secteurs)
     {
+        /** @var Secteur $secteur */
+        /** @var ArrayIterator $iterator */
         foreach ($secteurs as $secteur) {
             $traductions = $secteur->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (SecteurTraduction $a, SecteurTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -220,6 +226,7 @@ class SecteurUnifieController extends Controller
      */
     public function copieVersSites(SecteurUnifie $entity)
     {
+        /** @var SecteurTraduction $secteurTraduc */
 //        Boucle sur les secteurs afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getSecteurs() as $secteur) {
             if ($secteur->getSite()->getCrm() == false) {
@@ -230,7 +237,7 @@ class SecteurUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(SecteurUnifie::class)->findOneById(array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->find(SecteurUnifie::class, $entity->getId())))) {
                     $entitySite = new SecteurUnifie();
                 }
 
@@ -278,10 +285,12 @@ class SecteurUnifieController extends Controller
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de secteur a enregistrer
      * @param $idUnifie
-     * @param $secteurs
+     * @param Collection $secteurs
      */
-    public function ajouterSecteurUnifieSiteDistant($idUnifie, $secteurs)
+    public function ajouterSecteurUnifieSiteDistant($idUnifie, Collection $secteurs)
     {
+        /** @var Site $site */
+        /** @var ArrayCollection $secteurs */
         $em = $this->getDoctrine()->getManager();
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
@@ -393,7 +402,7 @@ class SecteurUnifieController extends Controller
 
 
             $this->copieVersSites($secteurUnifie);
-
+            $this->addFlash('success', 'le secteur a bien été modifié');
 //            dump($secteurUnifie);
 //            dump($secteurCrm);
 //            die;
@@ -424,6 +433,7 @@ class SecteurUnifieController extends Controller
                 return $secteur;
             }
         }
+        return false;
     }
 
     /**
@@ -437,6 +447,7 @@ class SecteurUnifieController extends Controller
      */
     private function mettreAJourSecteurCrm(SecteurUnifie $secteurUnifie, Secteur $secteurCrm)
     {
+        /** @var SecteurTraduction $secteurTraduc */
         $em = $this->getDoctrine()->getManager();
         $tabClassementSiteReferent = array();
 
@@ -460,12 +471,17 @@ class SecteurUnifieController extends Controller
                 foreach ($langues as $langue) {
 //                    dump($langue);
 //                    recupere la traduction pour l'entite du site referent
-                    $secteurTraduc = $secteur->getTraductions()->filter(function ($element) use ($langue) {
+                    $secteurTraduc = $secteur->getTraductions()->filter(function (SecteurTraduction $element) use (
+                        $langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 
 //                    récupère la traductin dans le crm
-                    $secteurTraducCrm = $secteurCrm->getTraductions()->filter(function ($element) use ($langue) {
+                    $secteurTraducCrm = $secteurCrm->getTraductions()->filter(function (SecteurTraduction $element) use
+                    (
+                        $langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 //                    dump($secteurTraduc);
@@ -502,7 +518,9 @@ class SecteurUnifieController extends Controller
                 foreach ($langues as $langue) {
 
 //                    recupere la traduction pour la langue $langue
-                    $secteurTraduc = $secteur->getTraductions()->filter(function ($element) use ($langue) {
+                    $secteurTraduc = $secteur->getTraductions()->filter(function (SecteurTraduction $element) use (
+                        $langue
+                    ) {
                         return $element->getLangue() == $langue;
                     })->first();
 
@@ -546,7 +564,7 @@ class SecteurUnifieController extends Controller
             $em->remove($secteurUnifie);
             $em->flush();
         }
-
+        $this->addFlash('success', 'le secteur a bien été supprimé');
         return $this->redirectToRoute('geographie_secteur_index');
     }
 

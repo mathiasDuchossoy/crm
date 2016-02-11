@@ -22,6 +22,6 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique:
             mappedBy: zoneTouristique
             cascade:  ['persist' , 'remove']
         stations:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Station
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: zoneTouristique
     lifecycleCallbacks: {  }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Form;
+namespace Mondofute\Bundle\StationBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -18,7 +18,7 @@ class StationUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stations', CollectionType::class, array('required' => false, 'entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"])))
+            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"])))
         ;
     }
 
@@ -28,7 +28,7 @@ class StationUnifieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\StationUnifie',
+            'data_class' => 'Mondofute\Bundle\StationBundle\Entity\StationUnifie',
             'locale' => 'fr_FR'
         ));
     }

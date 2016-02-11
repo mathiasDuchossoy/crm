@@ -1,0 +1,9 @@
+#mondofute_station_homepage:
+#    path:     /
+#    defaults: { _controller: MondofuteStationBundle:Default:index }
+
+
+
+mondofute_station_station:
+    resource: "@MondofuteStationBundle/Resources/config/routing/stationunifie.yml"
+    prefix:   /station

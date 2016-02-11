@@ -16,7 +16,7 @@
 {% block formulaire %}
     {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
     {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
-
+    {% include '::flashbags.html.twig' %}
     {{ form_errors(edit_form) }}
     {{ form_start(edit_form) }}
     {% include '::coches_sites.html.twig' %}

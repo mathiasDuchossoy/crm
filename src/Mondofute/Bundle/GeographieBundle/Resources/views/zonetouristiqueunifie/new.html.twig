@@ -10,6 +10,8 @@
 {% endblock %}
 
 {% block formulaire %}
+
+    {% include '::flashbags.html.twig' %}
     {{ form_errors(form) }}
     {{ form_start(form) }}
     {% include '::coches_sites.html.twig' %}

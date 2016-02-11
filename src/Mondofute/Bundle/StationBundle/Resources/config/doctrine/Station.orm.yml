@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\Station:
+Mondofute\Bundle\StationBundle\Entity\Station:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\StationRepository
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationRepository
     id:
         id:
             type: integer
@@ -16,15 +16,19 @@ Mondofute\Bundle\GeographieBundle\Entity\Station:
         moisOuverture:
             type: string
             length: '2'
+            nullable: true
         jourOuverture:
             type: string
             length: '2'
+            nullable: true
         moisFermeture:
             type: string
             length: '2'
+            nullable: true
         jourFermeture:
             type: string
             length: '2'
+            nullable: true
         lienMeteo:
             type: string
             length: 255
@@ -33,14 +37,14 @@ Mondofute\Bundle\GeographieBundle\Entity\Station:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         stationUnifie:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationUnifie
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationUnifie
             inversedBy: stations
         zoneTouristique:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
             inversedBy: stations
     oneToMany:
         traductions:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\StationTraduction
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
             mappedBy: station
             cascade:  ['persist' , 'remove']
     lifecycleCallbacks: {  }

@@ -14,15 +14,15 @@ class ProfilTraduction
     /**
      * @var string
      */
-    private $libelle;
+    private $libelle = '';
     /**
      * @var string
      */
-    private $description;
+    private $description = '';
     /**
      * @var string
      */
-    private $accueil;
+    private $accueil = "";
     /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Profil
      */
@@ -31,6 +31,16 @@ class ProfilTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+
+    /**
+     * ProfilTraduction constructor.
+     */
+    public function __construct()
+    {
+        $this->libelle = '';
+        $this->accueil = '';
+        $this->description = '';
+    }
 
     /**
      * Get id
@@ -85,7 +95,7 @@ class ProfilTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }

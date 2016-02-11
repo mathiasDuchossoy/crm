@@ -16,7 +16,7 @@ class ProfilTraductionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle')
+            ->add('libelle', null, array('required' => true))
             ->add('description', null, array('required' => false))
             ->add('accueil')
             ->add('langue', HiddenType::class, array('mapped' => false));
