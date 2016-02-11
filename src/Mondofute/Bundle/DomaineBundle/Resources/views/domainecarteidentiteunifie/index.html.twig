@@ -4,6 +4,13 @@
 {% endblock %}
 {% block body %}
     <h1>{{ 'liste des cartes d\'identités' | capitalize }}</h1>
+    {% if app.session.flashBag.has('success') %}
+        <div class="alert alert-success">
+            {% for msg in app.session.flashBag.get('success') %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <table class="table-responsive table-striped table">
         <thead>
@@ -17,7 +24,7 @@
         {% for domaineCarteIdentiteUnifie in domaineCarteIdentiteUnifies %}
             <tr>
                 <td>
-                    <a href="{{ path('geographie_domaineCarteIdentite_show', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ domaineCarteIdentiteUnifie.id }}</a>
+                    <a href="{{ path('domaine_domaineCarteIdentite_show', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ domaineCarteIdentiteUnifie.id }}</a>
                 </td>
                 <td>
                     {% for domaineCarteIdentite in domaineCarteIdentiteUnifie.domaineCarteIdentites %}
@@ -34,11 +41,11 @@
                     <ul class="list-unstyled">
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('geographie_domaineCarteIdentite_show', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                               href="{{ path('domaine_domaineCarteIdentite_show', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('geographie_domaineCarteIdentite_edit', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
+                               href="{{ path('domaine_domaineCarteIdentite_edit', { 'id': domaineCarteIdentiteUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -50,7 +57,7 @@
         <ul class="list-unstyled">
             <li>
                 <a class="btn btn-default"
-                   href="{{ path('geographie_domaineCarteIdentite_new') }}">{{ 'ajouter' | capitalize }}</a>
+                   href="{{ path('domaine_domaineCarteIdentite_new') }}">{{ 'ajouter' | capitalize }}</a>
             </li>
         </ul>
     </div>

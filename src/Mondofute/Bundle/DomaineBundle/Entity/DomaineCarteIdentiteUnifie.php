@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\DomaineBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -38,11 +38,11 @@ class DomaineCarteIdentiteUnifie
     /**
      * Add domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
      *
      * @return DomaineCarteIdentiteUnifie
      */
-    public function addDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
+    public function addDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
     {
         $this->domaineCarteIdentites[] = $domaineCarteIdentite->setDomaineCarteIdentiteUnifie($this);
 
@@ -52,9 +52,9 @@ class DomaineCarteIdentiteUnifie
     /**
      * Remove domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
      */
-    public function removeDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
+    public function removeDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
     {
         $this->domaineCarteIdentites->removeElement($domaineCarteIdentite);
     }

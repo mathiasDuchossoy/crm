@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Entity;
+namespace Mondofute\Bundle\DomaineBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -42,7 +42,7 @@ class DomaineCarteIdentite
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
      */
     private $domaineCarteIdentiteUnifie;
     /**
@@ -167,11 +167,11 @@ class DomaineCarteIdentite
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction
      *
      * @return DomaineCarteIdentite
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
     {
         $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
 
@@ -181,9 +181,9 @@ class DomaineCarteIdentite
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -215,7 +215,7 @@ class DomaineCarteIdentite
     /**
      * Get domaineCarteIdentiteUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
      */
     public function getDomaineCarteIdentiteUnifie()
     {
@@ -225,11 +225,11 @@ class DomaineCarteIdentite
     /**
      * Set domaineCarteIdentiteUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie
      *
      * @return DomaineCarteIdentite
      */
-    public function setDomaineCarteIdentiteUnifie(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie = null)
+    public function setDomaineCarteIdentiteUnifie(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie = null)
     {
         $this->domaineCarteIdentiteUnifie = $domaineCarteIdentiteUnifie;
 

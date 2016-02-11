@@ -1,4 +1,4 @@
-{% extends '@MondofuteGeographie/profilunifie/fiche.html.twig' %}
+{% extends '@MondofuteDomaine/domaineunifie/fiche.html.twig' %}
 
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
@@ -74,7 +74,7 @@
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('geographie_domaineCarteIdentite_index') }}">{{ 'retour à la liste' | capitalize }}</a>
+            <li><a href="{{ path('domaine_domaineCarteIdentite_index') }}">{{ 'retour à la liste' | capitalize }}</a>
             </li>
             {#<li>{{ form(delete_form) }}</li>#}
         </ul>

@@ -25,7 +25,3 @@ mondofute_geographie_zonetouristique:
 mondofute_geographie_station:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/stationunifie.yml"
     prefix:   /station
-
-mondofute_geographie_domainecarteidentite:
-    resource: "@MondofuteGeographieBundle/Resources/config/routing/domainecarteidentiteunifie.yml"
-    prefix:   /domainecarteidentite

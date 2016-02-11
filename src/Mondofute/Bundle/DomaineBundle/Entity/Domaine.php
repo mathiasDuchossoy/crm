@@ -36,7 +36,7 @@ class Domaine
      */
     private $domaineParent;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
      */
     private $domaineCarteIdentite;
 
@@ -221,7 +221,7 @@ class Domaine
     /**
      * Get domaineCarteIdentite
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
      */
     public function getDomaineCarteIdentite()
     {
@@ -231,11 +231,11 @@ class Domaine
     /**
      * Set domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
      *
      * @return Domaine
      */
-    public function setDomaineCarteIdentite(\Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
     {
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 

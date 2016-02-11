@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction:
+Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DomaineCarteIdentiteTraductionRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineCarteIdentiteTraductionRepository
     id:
         id:
             type: integer
@@ -15,9 +15,11 @@ Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction:
             type: text
         description:
             type: text
+            options:
+                default: ''
     manyToOne:
         domaineCarteIdentite:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
             inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue

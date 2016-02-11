@@ -1,13 +1,13 @@
 <?php
 
-namespace Mondofute\Bundle\GeographieBundle\Controller;
+namespace Mondofute\Bundle\DomaineBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentite;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteTraduction;
-use Mondofute\Bundle\GeographieBundle\Entity\DomaineCarteIdentiteUnifie;
-use Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteUnifieType;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
+use Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,9 +28,9 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $domaineCarteIdentiteUnifies = $em->getRepository('MondofuteGeographieBundle:DomaineCarteIdentiteUnifie')->findAll();
+        $domaineCarteIdentiteUnifies = $em->getRepository('MondofuteDomaineBundle:DomaineCarteIdentiteUnifie')->findAll();
 
-        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/index.html.twig', array(
+        return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/index.html.twig', array(
             'domaineCarteIdentiteUnifies' => $domaineCarteIdentiteUnifies,
         ));
     }
@@ -53,14 +53,14 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
         $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteUnifieType', $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType', $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
             // dispacher les données communes
-            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
+//            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
 
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer)
                 ->ajouterCrm($domaineCarteIdentiteUnifie);
@@ -70,10 +70,17 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $em->flush();
 
             $this->copieVersSites($domaineCarteIdentiteUnifie);
-            return $this->redirectToRoute('geographie_domaineCarteIdentite_show', array('id' => $domaineCarteIdentiteUnifie->getId()));
+
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'Le carte d\'identité du domaine  a bien été créé.'
+            );
+
+            return $this->redirectToRoute('domaine_domaineCarteIdentite_edit', array('id' => $domaineCarteIdentiteUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/new.html.twig', array(
+        return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
             'entity' => $domaineCarteIdentiteUnifie,
@@ -169,27 +176,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
             // passer le tableau trié dans une nouvelle collection
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $domaineCarteIdentite->setTraductions($traductions);
-        }
-    }
-
-    /**
-     * dispacher les données communes dans chaque domaineCarteIdentites
-     * @param DomaineCarteIdentiteUnifie $entity
-     */
-    private function dispacherDonneesCommune(DomaineCarteIdentiteUnifie $entity)
-    {
-        $domaineCarteIdentiteFirst = $entity->getDomaineCarteIdentites()->first();
-        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
-//            $zoneTouristique = $domaineCarteIdentiteFirst->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($domaineCarteIdentite) {
-//                return $element->getSite() == $domaineCarteIdentite->getSite();
-//            })->first();
-//            $domaineCarteIdentite->setZoneTouristique($zoneTouristique);
-//            $domaineCarteIdentite->setCodePostal($domaineCarteIdentiteFirst->getCodePostal());
-////            $domaineCarteIdentite->setMoisOuverture($domaineCarteIdentiteFirst->getMoisOuverture());
-////            $domaineCarteIdentite->setJourOuverture($domaineCarteIdentiteFirst->getJourOuverture());
-////            $domaineCarteIdentite->setMoisFermeture($domaineCarteIdentiteFirst->getMoisFermeture());
-////            $domaineCarteIdentite->setJourFermeture($domaineCarteIdentiteFirst->getJourFermeture());
-//            $domaineCarteIdentite->setLienMeteo($domaineCarteIdentiteFirst->getLienMeteo());
         }
     }
 
@@ -342,7 +328,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 
-        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/show.html.twig', array(
+        return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/show.html.twig', array(
             'domaineCarteIdentiteUnifie' => $domaineCarteIdentiteUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -358,7 +344,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     private function createDeleteForm(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('geographie_domaineCarteIdentite_delete', array('id' => $domaineCarteIdentiteUnifie->getId())))
+            ->setAction($this->generateUrl('domaine_domaineCarteIdentite_delete', array('id' => $domaineCarteIdentiteUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -397,18 +383,18 @@ class DomaineCarteIdentiteUnifieController extends Controller
         }
 
         $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie);
-        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
+//        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
         $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteUnifieType',
+        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType',
             $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Update'));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
+//            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
             $this->mettreAJourDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie, $domaineCarteIdentiteCrm);
             $em->persist($domaineCarteIdentiteCrm);
@@ -434,13 +420,16 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
             $this->copieVersSites($domaineCarteIdentiteUnifie);
 
-//            dump($domaineCarteIdentiteUnifie);
-//            dump($domaineCarteIdentiteCrm);
-//            die;
-            return $this->redirectToRoute('geographie_domaineCarteIdentite_edit', array('id' => $domaineCarteIdentiteUnifie->getId()));
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'La carte d\'identité du domaine a bien été modifié.'
+            );
+
+            return $this->redirectToRoute('domaine_domaineCarteIdentite_edit', array('id' => $domaineCarteIdentiteUnifie->getId()));
         }
 
-        return $this->render('@MondofuteGeographie/domainecarteidentiteunifie/edit.html.twig', array(
+        return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/edit.html.twig', array(
             'entity' => $domaineCarteIdentiteUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,
@@ -597,9 +586,12 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($domaineCarteIdentiteUnifie);
             $em->flush();
+
+            // add flash messages
+            $this->addFlash('success', 'Le carte d\'identité du domaine a été supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('geographie_domaineCarteIdentite_index');
+        return $this->redirectToRoute('domaine_domaineCarteIdentite_index');
     }
 
 }
