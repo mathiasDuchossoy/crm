@@ -386,29 +386,44 @@ class ZoneTouristiqueUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
-            $this->mettreAJourZoneTouristiqueCrm($zoneTouristiqueUnifie, $zoneTouristiqueCrm);
-            $em->persist($zoneTouristiqueCrm);
+            try {
+                $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
+                $this->mettreAJourZoneTouristiqueCrm($zoneTouristiqueUnifie, $zoneTouristiqueCrm);
+                $em->persist($zoneTouristiqueCrm);
 
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalZoneTouristiques as $zoneTouristique) {
-                if (!$zoneTouristiqueUnifie->getZoneTouristiques()->contains($zoneTouristique)) {
+                // Supprimer la relation entre la station et stationUnifie
+                foreach ($originalZoneTouristiques as $zoneTouristique) {
+                    if (!$zoneTouristiqueUnifie->getZoneTouristiques()->contains($zoneTouristique)) {
 
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($zoneTouristique->getSite()->getLibelle());
-                    $entitySite = $emSite->find(ZoneTouristiqueUnifie::class, $zoneTouristiqueUnifie->getId());
-                    $zoneTouristiqueSite = $entitySite->getZoneTouristiques()->first();
-                    $emSite->remove($zoneTouristiqueSite);
-                    $emSite->flush();
-                    $zoneTouristique->setZoneTouristiqueUnifie(null);
-                    $em->remove($zoneTouristique);
+                        //  suppression de la station sur le site
+                        $emSite = $this->getDoctrine()->getEntityManager($zoneTouristique->getSite()->getLibelle());
+                        $entitySite = $emSite->find(ZoneTouristiqueUnifie::class, $zoneTouristiqueUnifie->getId());
+                        $zoneTouristiqueSite = $entitySite->getZoneTouristiques()->first();
+                        $emSite->remove($zoneTouristiqueSite);
+                        $emSite->flush();
+                        $zoneTouristique->setZoneTouristiqueUnifie(null);
+                        $em->remove($zoneTouristique);
+                    }
                 }
+                $em->persist($zoneTouristiqueUnifie);
+                $em->flush();
+
+
+                $this->copieVersSites($zoneTouristiqueUnifie);
+            } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'impossible de supprimer la zone touristique, elle est utilisée par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreur inconnue');
+                        break;
+                }
+                return $this->redirectToRoute('geographie_zonetouristique_edit',
+                    array('id' => $zoneTouristiqueUnifie->getId()));
             }
-            $em->persist($zoneTouristiqueUnifie);
-            $em->flush();
-
-
-            $this->copieVersSites($zoneTouristiqueUnifie);
             $this->addFlash('success', 'la zone touristique a bien été modifiée');
 
 //            dump($zoneTouristiqueUnifie);
