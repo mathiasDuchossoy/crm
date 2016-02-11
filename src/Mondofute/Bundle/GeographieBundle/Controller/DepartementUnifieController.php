@@ -408,6 +408,7 @@ class DepartementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
 //            $this->dispacherDonneesCommune($departementUnifie);
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
             $this->mettreAJourDepartementCrm($departementUnifie, $departementCrm);
@@ -422,6 +423,7 @@ class DepartementUnifieController extends Controller
                     $entitySite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
                     $departementSite = $entitySite->getDepartements()->first();
                     $emSite->remove($departementSite);
+
                     $emSite->flush();
 //                    dump($departement);
                     $departement->setDepartementUnifie(null);

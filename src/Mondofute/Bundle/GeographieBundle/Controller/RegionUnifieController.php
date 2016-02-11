@@ -372,30 +372,30 @@ class RegionUnifieController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             try {
-            $this->supprimerRegions($regionUnifie, $sitesAEnregistrer);
-            $this->mettreAJourRegionCrm($regionUnifie, $regionCrm);
-            $em->persist($regionCrm);
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalRegions as $region) {
-                if (!$regionUnifie->getRegions()->contains($region)) {
+                $this->supprimerRegions($regionUnifie, $sitesAEnregistrer);
+                $this->mettreAJourRegionCrm($regionUnifie, $regionCrm);
+                $em->persist($regionCrm);
+                // Supprimer la relation entre la station et stationUnifie
+                foreach ($originalRegions as $region) {
+                    if (!$regionUnifie->getRegions()->contains($region)) {
 
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($region->getSite()->getLibelle());
-                    $entitySite = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
-                    $regionSite = $entitySite->getRegions()->first();
+                        //  suppression de la station sur le site
+                        $emSite = $this->getDoctrine()->getEntityManager($region->getSite()->getLibelle());
+                        $entitySite = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
+                        $regionSite = $entitySite->getRegions()->first();
 
-                    $emSite->remove($regionSite);
-                    $emSite->flush();
-                    $region->setRegionUnifie(null);
-                    $em->remove($region);
+                        $emSite->remove($regionSite);
+                        $emSite->flush();
+                        $region->setRegionUnifie(null);
+                        $em->remove($region);
 
+                    }
                 }
-            }
-            $em->persist($regionUnifie);
-            $em->flush();
+                $em->persist($regionUnifie);
+                $em->flush();
 
 
-            $this->copieVersSites($regionUnifie);
+                $this->copieVersSites($regionUnifie);
             } catch (ForeignKeyConstraintViolationException $except) {
 //                dump($except);
                 switch ($except->getCode()) {
@@ -584,30 +584,26 @@ class RegionUnifieController extends Controller
     /**
      * @param Request $request
      */
-    public function getRegionsCommunesBySiteAction (Request $request)
+    public function getRegionsCommunesBySiteAction(Request $request)
     {
         $sites = $request->get('sites');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $regionUnifies  = $em->getRepository(RegionUnifie::class)->findAll();
+        $regionUnifies = $em->getRepository(RegionUnifie::class)->findAll();
 //        $regionUnifiesNotEmpty  = new ArrayCollection();
         $regionUnifieCollection = new ArrayCollection();
-        foreach($regionUnifies as $regionUnifie)
-        {
+        foreach ($regionUnifies as $regionUnifie) {
             $regionUnifieCollection->add($regionUnifie);
         }
         dump($regionUnifieCollection);
-        foreach($sites as $site)
-        {
-            $siteEntity    = $em->find(Site::class,$site);
-            foreach($regionUnifieCollection as $regionUnifie)
-            {
+        foreach ($sites as $site) {
+            $siteEntity = $em->find(Site::class, $site);
+            foreach ($regionUnifieCollection as $regionUnifie) {
                 $region = $regionUnifie->getRegions()->filter(function ($element) use ($siteEntity) {
                     return $element->getSite() == $siteEntity;
                 });
                 dump($region);
-                if (!empty($region))
-                {
+                if (!empty($region)) {
 //                    $regionUnifieCollection->add($regionUnifie);
                     $regionUnifieCollection->remove($regionUnifie);
                 }
