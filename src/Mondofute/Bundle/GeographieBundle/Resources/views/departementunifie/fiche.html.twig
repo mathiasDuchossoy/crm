@@ -51,7 +51,11 @@
             {% for site in sites %}
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
-                $("[id='data_site_" + {{ site.id }} +"']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+                contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    $(this).attr('required', false);
+                });
+                contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                     $(this).attr('required', false);
                 });
             }
@@ -78,7 +82,12 @@
 
                 if (!$(this).is(':checked')) {
 //                    supprime le required des champs libelle des traductions
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+
+                    contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                    contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', false);
+                    });
+                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                         $(this).attr('required', false);
                     });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
@@ -96,48 +105,22 @@
 
                 } else {
 //                    rend les champs libelle des traductions required
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+
+                    contenuOngletSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    contenuOngletSite.find('[name*=\'[region]\']').each(function () {
                         $(this).attr('required', true);
                     });
                     $("#onglet_data_site_{{ site.id }}").show();
                 }
+
             });
             {% endfor %}
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
-
-//        function test(){
-//            var sitesChecked = [];
-//            $("input[type=checkbox][name^=site]").each(
-//                function (index , element)
-//                {
-//                    if ($(element).is(':checked'))
-//                    {
-//                        sitesChecked.push(element.value);
-//                    }
-//                }
-//            );
-            {#console.log(sitesChecked);#}
-            {#$.ajax(#}
-                    {#'{{ path('geographie_regions_communes_by_sites') }}',#}
-                    {#{#}
-                        {#method: 'POST',#}
-                        {#data: { sites : sitesChecked }#}
-                    {#}#}
-            {#)#}
-            {#.done(function() {#}
-{#//                alert( "success" );#}
-            {#})#}
-            {#.fail(function() {#}
-{#//                alert( "error" );#}
-            {#})#}
-            {#.always(function() {#}
-{#//                alert( "complete" );#}
-            {#});#}
-
-        {#}#}
-        {#$("input[type=checkbox][name^=site]").on("click", test);#}
     </script>
 {% endblock %}
