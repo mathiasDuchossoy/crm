@@ -30,7 +30,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
@@ -50,10 +49,12 @@
             {% endif %}
 
             {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
-                $("[id='data_site_" + {{ site.id }} +"']").find(':required').each(function () {
+                contenuOngletSite.find(':required').each(function () {
                     $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
                 });
             }
 
@@ -67,7 +68,6 @@
                 });
 
                 if (!checked) {
-//                    alert('impossible');
                     var modal = $("#modal_small");
                     modal.find('.modal-title').text("Attention !!!");
                     modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
@@ -76,14 +76,12 @@
                     return false;
                 }
 
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
                 if (!$(this).is(':checked')) {
-
-//                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find('[name$=\'[codePostal]\']').each(function () {
-//                        $(this).attr('required', false);
-//                    });
 //                    supprime le required des champs libelle des traductions
-                    $("[id='data_site_" + $(this).attr('data-site-id') + "']").find(':required').each(function () {
+                    contenuOngletSite.find(':required').each(function () {
                         $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
                     });
                     if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
 
@@ -96,22 +94,18 @@
 
                         });
                     }
-                    $("#onglet_data_site_{{ site.id }}").hide();
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
 
                 } else {
 //                    rend les champs libelle des traductions required
-                    var dataSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
-                    dataSite.find('[name*=\'[traductions]\'][name$=\'[libelle]\']').each(function () {
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
                         $(this).attr('required', true);
                     });
-                    dataSite.find('[name*=\'[codePostal]\']').each(function () {
-                        $(this).attr('required', true);
-                    });
-                    $("#onglet_data_site_{{ site.id }}").show();
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
                 }
+
             });
             {% endfor %}
-
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
