@@ -1,0 +1,26 @@
+Mondofute\Bundle\UniteBundle\Entity\UniteTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+        libelleCourt:
+            type: string
+            length: '10'
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+        unite:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Unite
+            inversedBy: traductions
+#        site:
+#            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+    lifecycleCallbacks: {  }

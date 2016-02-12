@@ -1,0 +1,17 @@
+Mondofute\Bundle\UniteBundle\Entity\Distance:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\DistanceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        valeur:
+            type: float
+    manyToOne:
+        unite:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+    lifecycleCallbacks: {  }

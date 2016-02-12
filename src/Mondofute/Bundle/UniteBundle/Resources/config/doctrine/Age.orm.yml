@@ -1,0 +1,17 @@
+Mondofute\Bundle\UniteBundle\Entity\Age:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\AgeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        valeur:
+            type: integer
+    manyToOne:
+        unite:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteAge
+    lifecycleCallbacks: {  }
