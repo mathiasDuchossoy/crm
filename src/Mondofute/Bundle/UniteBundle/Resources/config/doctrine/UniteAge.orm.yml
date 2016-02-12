@@ -1,0 +1,11 @@
+Mondofute\Bundle\UniteBundle\Entity\UniteAge:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteAgeRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

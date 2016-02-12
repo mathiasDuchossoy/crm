@@ -1,7 +1,7 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\GeographieBundle\MondofuteGeographieBundle(),
             new SC\DatetimepickerBundle\SCDatetimepickerBundle(),
             new Mondofute\Bundle\StationBundle\MondofuteStationBundle(),
+            new Mondofute\Bundle\UniteBundle\MondofuteUniteBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

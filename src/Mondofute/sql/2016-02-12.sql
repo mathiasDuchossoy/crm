@@ -1,0 +1,60 @@
+CREATE TABLE age (
+  id       INT AUTO_INCREMENT NOT NULL,
+  unite_id INT DEFAULT NULL,
+  valeur   INT                NOT NULL,
+  INDEX IDX_A13010B2EC4A74AB (unite_id),
+  PRIMARY KEY (id)
+)
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_unicode_ci
+  ENGINE = InnoDB;
+CREATE TABLE distance (
+  id       INT AUTO_INCREMENT NOT NULL,
+  unite_id INT DEFAULT NULL,
+  valeur   DOUBLE PRECISION   NOT NULL,
+  INDEX IDX_1C929A81EC4A74AB (unite_id),
+  PRIMARY KEY (id)
+)
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_unicode_ci
+  ENGINE = InnoDB;
+CREATE TABLE tarif (
+  id       INT AUTO_INCREMENT NOT NULL,
+  unite_id INT DEFAULT NULL,
+  valeur   NUMERIC(7, 2)      NOT NULL,
+  INDEX IDX_E7189C9EC4A74AB (unite_id),
+  PRIMARY KEY (id)
+)
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_unicode_ci
+  ENGINE = InnoDB;
+CREATE TABLE unite (
+  id                       INT AUTO_INCREMENT NOT NULL,
+  reference_id             INT DEFAULT NULL,
+  multiplicateur_reference DOUBLE PRECISION   NOT NULL,
+  discr                    INT                NOT NULL,
+  INDEX IDX_1D64C1181645DEA9 (reference_id),
+  PRIMARY KEY (id)
+)
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_unicode_ci
+  ENGINE = InnoDB;
+CREATE TABLE unite_traduction (
+  id            INT AUTO_INCREMENT NOT NULL,
+  langue_id     INT UNSIGNED DEFAULT NULL,
+  unite_id      INT          DEFAULT NULL,
+  libelle       VARCHAR(255)       NOT NULL,
+  libelle_court VARCHAR(10)        NOT NULL,
+  INDEX IDX_C9BE47932AADBACD (langue_id),
+  INDEX IDX_C9BE4793EC4A74AB (unite_id),
+  PRIMARY KEY (id)
+)
+  DEFAULT CHARACTER SET utf8
+  COLLATE utf8_unicode_ci
+  ENGINE = InnoDB;
+ALTER TABLE age ADD CONSTRAINT FK_A13010B2EC4A74AB FOREIGN KEY (unite_id) REFERENCES unite (id);
+ALTER TABLE distance ADD CONSTRAINT FK_1C929A81EC4A74AB FOREIGN KEY (unite_id) REFERENCES unite (id);
+ALTER TABLE tarif ADD CONSTRAINT FK_E7189C9EC4A74AB FOREIGN KEY (unite_id) REFERENCES unite (id);
+ALTER TABLE unite ADD CONSTRAINT FK_1D64C1181645DEA9 FOREIGN KEY (reference_id) REFERENCES unite (id);
+ALTER TABLE unite_traduction ADD CONSTRAINT FK_C9BE47932AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+ALTER TABLE unite_traduction ADD CONSTRAINT FK_C9BE4793EC4A74AB FOREIGN KEY (unite_id) REFERENCES unite (id);

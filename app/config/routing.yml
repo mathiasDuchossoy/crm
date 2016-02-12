@@ -1,3 +1,7 @@
+mondofute_unite:
+    resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_station:
     resource: "@MondofuteStationBundle/Resources/config/routing.yml"
     prefix:   /

@@ -1,0 +1,19 @@
+Mondofute\Bundle\UniteBundle\Entity\Tarif:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\TarifRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        valeur:
+            type: decimal
+            precision: 7
+            scale: 2
+    manyToOne:
+        unite:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteTarif
+    lifecycleCallbacks: {  }

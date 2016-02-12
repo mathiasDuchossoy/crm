@@ -1,0 +1,32 @@
+Mondofute\Bundle\UniteBundle\Entity\Unite:
+    type: entity
+    table: null
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: discr
+        type: integer
+    discriminatorMap:
+        0: Unite
+        1: UniteAge
+        2: UniteTarif
+        3: UniteDistance
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        multiplicateurReference:
+            type: float
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteTraduction
+            mappedBy: unite
+#            cascade: ['persist']
+    manyToOne:
+        reference:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Unite
+#            cascade: ['persist']
+    lifecycleCallbacks: {  }
