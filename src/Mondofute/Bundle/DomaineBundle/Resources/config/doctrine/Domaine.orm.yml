@@ -1,0 +1,33 @@
+Mondofute\Bundle\DomaineBundle\Entity\Domaine:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        domaineUnifie:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie
+            inversedBy: domaines
+        domaineParent:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            inversedBy: sousDomaines
+        domaineCarteIdentite:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+            inversedBy: domaines
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction
+            mappedBy: domaine
+            cascade:  ['persist' , 'remove']
+        sousDomaines:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            mappedBy: domaineParent
+    lifecycleCallbacks: {  }

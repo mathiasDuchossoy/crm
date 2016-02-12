@@ -1,0 +1,24 @@
+domaine_domaine_index:
+    path:     /
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:index" }
+    methods:  GET
+
+domaine_domaine_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:show" }
+    methods:  GET
+
+domaine_domaine_new:
+    path:     /new
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:new" }
+    methods:  [GET, POST]
+
+domaine_domaine_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:edit" }
+    methods:  [GET, POST]
+
+domaine_domaine_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:delete" }
+    methods:  DELETE

@@ -1,0 +1,36 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineCarteIdentiteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        altitudeMini:
+            type: integer
+        altitudeMaxi:
+            type: integer
+        kmPistesSkiAlpin:
+            type: integer
+        kmPistesSkiNordique:
+            type: integer
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        domaineCarteIdentiteUnifie:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
+            inversedBy: domaineCarteIdentites
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction
+            mappedBy: domaineCarteIdentite
+            cascade:  ['persist' , 'remove']
+        domaines:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            mappedBy: domaineCarteIdentite
+    lifecycleCallbacks: {  }

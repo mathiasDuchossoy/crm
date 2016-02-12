@@ -1,0 +1,26 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineCarteIdentiteTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        accroche:
+            type: text
+        description:
+            type: text
+            options:
+                default: ''
+    manyToOne:
+        domaineCarteIdentite:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

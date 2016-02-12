@@ -1,0 +1,18 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineCarteIdentiteUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        domaineCarteIdentites:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+            mappedBy: domaineCarteIdentiteUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
