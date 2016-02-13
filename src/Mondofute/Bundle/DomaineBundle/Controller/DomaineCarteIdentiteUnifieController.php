@@ -9,6 +9,10 @@ use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
+use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
+use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
+use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
 use Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -51,9 +55,12 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
         $domaineCarteIdentiteUnifie = new DomaineCarteIdentiteUnifie();
 
-        $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie)
+            ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
+        $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
+            ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
 //        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
-        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
+//        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType', $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
@@ -88,6 +95,59 @@ class DomaineCarteIdentiteUnifieController extends Controller
             'entity' => $domaineCarteIdentiteUnifie,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Classe les domaineCarteIdentites par classementAffichage
+     * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
+     */
+    private function domaineCarteIdentitesSortByAffichage(DomaineCarteIdentiteUnifie $entity)
+    {
+        /** @var ArrayIterator $iterator */
+
+        // Trier les domaineCarteIdentites en fonction de leurs ordre d'affichage
+        $domaineCarteIdentites = $entity->getDomaineCarteIdentites(); // ArrayCollection data.
+
+        // Recueillir un itérateur de tableau.
+        $iterator = $domaineCarteIdentites->getIterator();
+        unset($domaineCarteIdentites);
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (DomaineCarteIdentite $a, DomaineCarteIdentite $b) {
+            return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        $domaineCarteIdentites = new ArrayCollection(iterator_to_array($iterator));
+        $this->traductionsSortByLangue($domaineCarteIdentites);
+
+        // remplacé les domaineCarteIdentites par ce nouveau tableau (une fonction 'set' a été créé dans DomaineCarteIdentite unifié)
+        $entity->setDomaineCarteIdentites($domaineCarteIdentites);
+
+        return $this;
+    }
+
+    /**
+     * Classe les traductions par rapport à leurs id
+     * @param $domaineCarteIdentites
+     */
+    private function traductionsSortByLangue($domaineCarteIdentites)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        /** @var ArrayIterator $iterator */
+        foreach ($domaineCarteIdentites as $domaineCarteIdentite) {
+            $traductions = $domaineCarteIdentite->getTraductions();
+            $iterator = $traductions->getIterator();
+            // trier la nouvelle itération, en fonction de l'ordre d'affichage
+            $iterator->uasort(function (DomaineCarteIdentiteTraduction $a, DomaineCarteIdentiteTraduction $b) {
+                return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
+            });
+
+            // passer le tableau trié dans une nouvelle collection
+            $traductions = new ArrayCollection(iterator_to_array($iterator));
+            $domaineCarteIdentite->setTraductions($traductions);
+        }
     }
 
     /**
@@ -131,57 +191,63 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 $entity->addDomaineCarteIdentite($domaineCarteIdentite);
             }
         }
+        return $this;
     }
 
-
     /**
-     * Classe les domaineCarteIdentites par classementAffichage
      * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
      */
-    private function domaineCarteIdentitesSortByAffichage(DomaineCarteIdentiteUnifie $entity)
-    {
-        /** @var ArrayIterator $iterator */
-
-        // Trier les domaineCarteIdentites en fonction de leurs ordre d'affichage
-        $domaineCarteIdentites = $entity->getDomaineCarteIdentites(); // ArrayCollection data.
-
-        // Recueillir un itérateur de tableau.
-        $iterator = $domaineCarteIdentites->getIterator();
-        unset($domaineCarteIdentites);
-
-        // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function (DomaineCarteIdentite $a, DomaineCarteIdentite $b) {
-            return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
-        });
-
-        // passer le tableau trié dans une nouvelle collection
-        $domaineCarteIdentites = new ArrayCollection(iterator_to_array($iterator));
-        $this->traductionsSortByLangue($domaineCarteIdentites);
-
-        // remplacé les domaineCarteIdentites par ce nouveau tableau (une fonction 'set' a été créé dans DomaineCarteIdentite unifié)
-        $entity->setDomaineCarteIdentites($domaineCarteIdentites);
-    }
-
-    /**
-     * Classe les traductions par rapport à leurs id
-     * @param $domaineCarteIdentites
-     */
-    private function traductionsSortByLangue($domaineCarteIdentites)
+    private function ajouterHandiskiDansForm(DomaineCarteIdentiteUnifie $entity)
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
-        /** @var ArrayIterator $iterator */
-        foreach ($domaineCarteIdentites as $domaineCarteIdentite) {
-            $traductions = $domaineCarteIdentite->getTraductions();
-            $iterator = $traductions->getIterator();
-            // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function (DomaineCarteIdentiteTraduction $a, DomaineCarteIdentiteTraduction $b) {
-                return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
-            });
-
-            // passer le tableau trié dans une nouvelle collection
-            $traductions = new ArrayCollection(iterator_to_array($iterator));
-            $domaineCarteIdentite->setTraductions($traductions);
+        /** @var DomaineCarteIdentiteTraduction $traduction */
+        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            $handiski = !empty($domaineCarteIdentite->getHandiski()) ? $domaineCarteIdentite->getHandiski() : new Handiski();
+            foreach ($domaineCarteIdentite->getTraductions() as $traduction) {
+                if (!empty($handiski->getTraductions())) {
+                    $langue = $traduction->getLangue();
+                    if (empty($handiski->getTraductions()->filter(function (HandiskiTraduction $element) use ($langue) {
+                        return $element->getLangue() == $langue;
+                    })->first())
+                    ) {
+                        $handiskiTraduction = new HandiskiTraduction();
+                        $handiskiTraduction->setLangue($traduction->getLangue());
+                        $handiski->addTraduction($handiskiTraduction);
+                    }
+                }
+            }
+            $domaineCarteIdentite->setHandiski($handiski);
         }
+        return $this;
+    }
+
+    /**
+     * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
+     */
+    private function ajouterSnowparksDansForm(DomaineCarteIdentiteUnifie $entity)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        /** @var DomaineCarteIdentiteTraduction $traduction */
+        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            $snowpark = !empty($domaineCarteIdentite->getSnowpark()) ? $domaineCarteIdentite->getSnowpark() : new Snowpark();
+            foreach ($domaineCarteIdentite->getTraductions() as $traduction) {
+                if (!empty($snowpark->getTraductions())) {
+                    $langue = $traduction->getLangue();
+                    if (empty($snowpark->getTraductions()->filter(function (SnowparkTraduction $element) use ($langue) {
+                        return $element->getLangue() == $langue;
+                    })->first())
+                    ) {
+                        $snowparkTraduction = new SnowparkTraduction();
+                        $snowparkTraduction->setLangue($traduction->getLangue());
+                        $snowpark->addTraduction($snowparkTraduction);
+                    }
+                }
+            }
+            $domaineCarteIdentite->setSnowpark($snowpark);
+        }
+        return $this;
     }
 
     /**
@@ -242,6 +308,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
      */
     private function copieVersSites(DomaineCarteIdentiteUnifie $entity)
     {
+        /** @var SnowparkTraduction $snowparkTraductionSite */
+        /** @var HandiskiTraduction $handiskiTraductionSite */
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         /** @var DomaineCarteIdentiteTraduction $domaineCarteIdentiteTraduc */
 //        Boucle sur les domaineCarteIdentites afin de savoir sur quel site nous devons l'enregistrer
@@ -267,13 +335,33 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
 
 //            copie des données domaineCarteIdentite
+                $snowparkSite = !empty($domaineCarteIdentiteSite->getSnowpark()) ? $domaineCarteIdentiteSite->getSnowpark() : clone $domaineCarteIdentite->getSnowpark();
+                foreach ($snowparkSite->getTraductions() as $snowparkTraductionSite) {
+                    /** @var SnowparkTraduction $snowparkTraduction */
+                    $snowparkTraduction = $domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($snowparkTraductionSite) {
+                        return $element->getLangue()->getId() == $snowparkTraductionSite->getLangue()->getId();
+                    })->first();
+                    $snowparkTraductionSite->setDescription($snowparkTraduction->getDescription());
+                    $snowparkTraductionSite->setLangue($em->find(Langue::class, $snowparkTraductionSite->getLangue()));
+                }
+                $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
+                foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
+                    /** @var HandiskiTraduction $handiskiTraduction */
+                    $handiskiTraduction = $domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($handiskiTraductionSite) {
+                        return $element->getLangue()->getId() == $handiskiTraductionSite->getLangue()->getId();
+                    })->first();
+                    $handiskiTraductionSite->setDescription($handiskiTraduction->getDescription());
+                    $handiskiTraductionSite->setLangue($em->find(Langue::class, $handiskiTraductionSite->getLangue()));
+                }
                 $domaineCarteIdentiteSite
                     ->setSite($site)
                     ->setDomaineCarteIdentiteUnifie($entitySite)
                     ->setAltitudeMini($domaineCarteIdentite->getAltitudeMini())
                     ->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi())
                     ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
-                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique());
+                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
+                    ->setSnowpark($snowparkSite)
+                    ->setHandiski($handiskiSite);
 
 //            Gestion des traductions
                 foreach ($domaineCarteIdentite->getTraductions() as $domaineCarteIdentiteTraduc) {
@@ -317,7 +405,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
         /** @var Site $site */
         /** @var ArrayCollection $domaineCarteIdentites */
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
@@ -396,9 +483,12 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $originalDomaineCarteIdentites->add($domaineCarteIdentite);
         }
 
-        $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie)
 //        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
-        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
+            ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
+        $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
+            ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
+
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType',
@@ -482,6 +572,10 @@ class DomaineCarteIdentiteUnifieController extends Controller
      */
     private function mettreAJourDomaineCarteIdentiteCrm(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie, DomaineCarteIdentite $domaineCarteIdentiteCrm)
     {
+        /** @var SnowparkTraduction $snowparkTraduction */
+        /** @var SnowparkTraduction $snowparkTraductionCrm */
+        /** @var HandiskiTraduction $handiskiTraduction */
+        /** @var HandiskiTraduction $handiskiTraductionCrm */
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         /** @var DomaineCarteIdentiteTraduction $domaineCarteIdentiteTraduc */
         /** @var DomaineCarteIdentiteTraduction $domaineCarteIdentiteTraducCrm */
@@ -504,6 +598,23 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
             // Si la site de la domaineCarteIdentite est égale au site de référence
             if ($domaineCarteIdentite->getSite() == $siteReferent) {
+
+                $domaineCarteIdentite->getSnowpark();
+                foreach ($domaineCarteIdentite->getSnowpark()->getTraductions() as $snowparkTraduction) {
+                    $langue = $snowparkTraduction->getLangue();
+                    $snowparkTraductionCrm = $domaineCarteIdentiteCrm->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($langue) {
+                        return $element->getLangue() == $langue;
+                    })->first();
+                    $snowparkTraductionCrm->setDescription($snowparkTraduction->getDescription());
+                }
+                $domaineCarteIdentite->getHandiski();
+                foreach ($domaineCarteIdentite->getHandiski()->getTraductions() as $handiskiTraduction) {
+                    $langue = $handiskiTraduction->getLangue();
+                    $handiskiTraductionCrm = $domaineCarteIdentiteCrm->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($langue) {
+                        return $element->getLangue() == $langue;
+                    })->first();
+                    $handiskiTraductionCrm->setDescription($handiskiTraduction->getDescription());
+                }
 //           ajouter les champs "communs"
                 $domaineCarteIdentiteCrm
                     ->setAltitudeMini($domaineCarteIdentite->getAltitudeMini())
