@@ -1,0 +1,11 @@
+Mondofute\Bundle\DomaineBundle\Entity\SnowPark:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\SnowParkRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    lifecycleCallbacks: {  }
