@@ -11,6 +11,7 @@ use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
 use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
 use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
 use Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType;
@@ -356,6 +357,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
                 $remonteeMecaniqueSite = !empty($domaineCarteIdentiteSite->getRemonteeMecanique()) ? $domaineCarteIdentiteSite->getRemonteeMecanique() : clone $domaineCarteIdentite->getRemonteeMecanique();
                 $remonteeMecaniqueSite->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
+
                 $domaineCarteIdentiteSite
                     ->setSite($site)
                     ->setDomaineCarteIdentiteUnifie($entitySite)
@@ -365,7 +367,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
                     ->setSnowpark($snowparkSite)
                     ->setHandiski($handiskiSite)
-                    ->setRemonteeMecanique($remonteeMecaniqueSite);
+                    ->setRemonteeMecanique($remonteeMecaniqueSite)
+                    ->setNiveauSkieur($em->find(NiveauSkieur::class, $domaineCarteIdentite->getNiveauSkieur()->getId()));
 
 //            Gestion des traductions
                 foreach ($domaineCarteIdentite->getTraductions() as $domaineCarteIdentiteTraduc) {
@@ -623,6 +626,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     ->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi())
                     ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
                     ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
+                    ->setNiveauSkieur($domaineCarteIdentite->getNiveauSkieur())
                     ->getRemonteeMecanique()->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
 
                 foreach ($langues as $langue) {

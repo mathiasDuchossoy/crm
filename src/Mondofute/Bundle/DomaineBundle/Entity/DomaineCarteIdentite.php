@@ -392,4 +392,34 @@ class DomaineCarteIdentite
     {
         return $this->domaines;
     }
+
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     */
+    private $niveauSkieur;
+
+
+    /**
+     * Set niveauSkieur
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setNiveauSkieur(\Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur = null)
+    {
+        $this->niveauSkieur = $niveauSkieur;
+
+        return $this;
+    }
+
+    /**
+     * Get niveauSkieur
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     */
+    public function getNiveauSkieur()
+    {
+        return $this->niveauSkieur;
+    }
 }

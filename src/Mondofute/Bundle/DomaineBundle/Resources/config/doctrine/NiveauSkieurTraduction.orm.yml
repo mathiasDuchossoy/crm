@@ -1,0 +1,21 @@
+Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieurTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\NiveauSkieurTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+        niveauSkieur:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+            inversedBy: traductions
+    lifecycleCallbacks: {  }

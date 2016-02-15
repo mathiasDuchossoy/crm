@@ -25,6 +25,9 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         domaineCarteIdentiteUnifie:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
             inversedBy: domaineCarteIdentites
+        niveauSkieur:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+            inversedBy: domaineCarteIdentites
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction
