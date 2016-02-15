@@ -69,13 +69,13 @@
                             {{ form_widget(traduction) }}
                             {{ form_errors(traduction) }}
                             {% set break = false %}
-                            {% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}
-                                {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
-                                    {{ form_row(snowparkTraduction , { 'label' : domaineCarteIdentite.snowpark.vars.name | title }  ) }}
-                                    {{ form_errors(snowparkTraduction) }}
-                                    {% set break = true %}
-                                {% endif %}
-                            {% endfor %}
+                            {#{% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}#}
+                            {#{% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}#}
+                            {#{{ form_row(snowparkTraduction , { 'label' : domaineCarteIdentite.snowpark.vars.name | title }  ) }}#}
+                            {#{{ form_errors(snowparkTraduction) }}#}
+                            {#{% set break = true %}#}
+                            {#{% endif %}#}
+                            {#{% endfor %}#}
                             {% set break = false %}
                             {% for handiskiTraduction in domaineCarteIdentite.handiski.traductions if not break %}
                                 {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
