@@ -21,6 +21,7 @@ class SnowparkType extends AbstractType
             ));
     }
 
+
     /**
      * @param OptionsResolver $resolver
      */
