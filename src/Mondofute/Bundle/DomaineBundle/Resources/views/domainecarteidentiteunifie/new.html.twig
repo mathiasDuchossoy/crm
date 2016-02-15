@@ -60,14 +60,14 @@
                              class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
                             {{ form_widget(traduction) }}
                             {{ form_errors(traduction) }}
-                            {#{% set break = false %}#}
-                            {#{% for snowParkTraduction in domaineCarteIdentite.snowPark.traductions if not break %}#}
-                                {#{% if traduction.vars.value.langue.id == snowParkTraduction.vars.value.langue.id %}#}
-                                    {#{{ form_row(snowParkTraduction , { 'label' : domaineCarteIdentite.snowPark.vars.name | title }  ) }}#}
-                                    {#{{ form_errors(snowParkTraduction) }}#}
-                                    {#{% set break = true %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
+                            {% set break = false %}
+                            {% for snowParkTraduction in domaineCarteIdentite.snowPark.traductions if not break %}
+                                {% if traduction.vars.value.langue.id == snowParkTraduction.vars.value.langue.id %}
+                                    {{ form_row(snowParkTraduction , { 'label' : domaineCarteIdentite.snowPark.vars.name | title }  ) }}
+                                    {{ form_errors(snowParkTraduction) }}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
                             {% set break = false %}
                             {% for handiskiTraduction in domaineCarteIdentite.handiski.traductions if not break %}
                                 {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
