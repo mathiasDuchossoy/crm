@@ -16,9 +16,9 @@ Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction:
             options:
                 default: ''
     manyToOne:
-        snowpark:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-            inversedBy: traductions
+#        snowpark:
+#            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+#            inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }
