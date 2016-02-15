@@ -17,7 +17,7 @@ class SnowparkTraductionType extends AbstractType
     {
         $builder
             ->add('description')
-            ->add('langue', HiddenType::class, array('mapped' => false));;
+            ->add('langue', HiddenType::class, array('mapped' => false));
     }
 
     /**

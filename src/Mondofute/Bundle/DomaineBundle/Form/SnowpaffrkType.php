@@ -19,6 +19,7 @@ class SnowparkType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => SnowparkTraductionType::class
             ));
+
     }
 
 
