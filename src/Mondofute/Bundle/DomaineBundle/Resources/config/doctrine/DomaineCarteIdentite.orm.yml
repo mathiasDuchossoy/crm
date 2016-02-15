@@ -37,7 +37,7 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         handiski:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
             cascade:  ['persist' , 'remove']
-        snowpark:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\SnowPark
-            cascade:  ['persist', 'remove']
+#        snowpark:
+#            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+#            cascade:  ['persist', 'remove']
     lifecycleCallbacks: {  }
