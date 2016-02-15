@@ -16,10 +16,6 @@ class SnowparkTraduction
      */
     private $description = '';
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    private $snowpark;
-    /**
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
@@ -54,30 +50,6 @@ class SnowparkTraduction
     public function setDescription($description)
     {
         $this->description = !empty($description) ? $description : '';
-
-        return $this;
-    }
-
-    /**
-     * Get snowpark
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    public function getSnowpark()
-    {
-        return $this->snowpark;
-    }
-
-    /**
-     * Set snowpark
-     *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
-     *
-     * @return SnowparkTraduction
-     */
-    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
-    {
-        $this->snowpark = $snowpark;
 
         return $this;
     }
