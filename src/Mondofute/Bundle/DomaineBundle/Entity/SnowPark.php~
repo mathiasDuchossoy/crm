@@ -14,18 +14,6 @@ class Snowpark
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     /**
      * @var Collection
      */
@@ -37,6 +25,16 @@ class Snowpark
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -63,16 +61,6 @@ class Snowpark
         $this->traductions->removeElement($traduction);
     }
 
-    /**
-     * Get traductions
-     *
-     * @return Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
     public function __clone()
     {
         /** @var SnowparkTraduction $cloneTraduction */
@@ -88,4 +76,43 @@ class Snowpark
         }
     }
 
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
+
+
+    /**
+     * Set domaineCarteIdentite
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     *
+     * @return Snowpark
+     */
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    {
+        $this->domaineCarteIdentite = $domaineCarteIdentite;
+
+        return $this;
+    }
+
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
+    }
 }

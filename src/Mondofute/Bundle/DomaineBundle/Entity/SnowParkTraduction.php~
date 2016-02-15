@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
 
-use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
@@ -42,6 +41,16 @@ class SnowparkTraduction
     }
 
     /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set description
      *
      * @param string $description
@@ -56,13 +65,13 @@ class SnowparkTraduction
     }
 
     /**
-     * Get description
+     * Get snowpark
      *
-     * @return string
+     * @return Snowpark
      */
-    public function getDescription()
+    public function getSnowpark()
     {
-        return $this->description;
+        return $this->snowpark;
     }
 
     /**
@@ -80,13 +89,13 @@ class SnowparkTraduction
     }
 
     /**
-     * Get snowpark
+     * Get langue
      *
-     * @return Snowpark
+     * @return Langue
      */
-    public function getSnowpark()
+    public function getLangue()
     {
-        return $this->snowpark;
+        return $this->langue;
     }
 
     /**
@@ -101,15 +110,5 @@ class SnowparkTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }

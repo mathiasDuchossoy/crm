@@ -15,8 +15,4 @@ Mondofute\Bundle\DomaineBundle\Entity\Snowpark:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction
             mappedBy: snowpark
             cascade:  ['persist' , 'remove']
-    oneToOne:
-        domaineCarteIdentite:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
-            mappedBy: snowpark
     lifecycleCallbacks: {  }

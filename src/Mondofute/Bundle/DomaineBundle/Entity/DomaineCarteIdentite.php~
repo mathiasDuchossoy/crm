@@ -56,7 +56,7 @@ class DomaineCarteIdentite
      */
     private $snowpark;
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Handiski
+     * @var Handiski
      */
     private $handiski;
 
@@ -309,7 +309,7 @@ class DomaineCarteIdentite
     /**
      * Get handiski
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Handiski
+     * @return Handiski
      */
     public function getHandiski()
     {
@@ -319,11 +319,11 @@ class DomaineCarteIdentite
     /**
      * Set handiski
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Handiski $handiski
+     * @param Handiski $handiski
      *
      * @return DomaineCarteIdentite
      */
-    public function setHandiski(\Mondofute\Bundle\DomaineBundle\Entity\Handiski $handiski = null)
+    public function setHandiski(Handiski $handiski = null)
     {
         $this->handiski = $handiski;
 
