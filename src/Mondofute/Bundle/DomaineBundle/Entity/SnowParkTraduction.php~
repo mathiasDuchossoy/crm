@@ -2,42 +2,54 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
 
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-
 /**
  * SnowparkTraduction
  */
 class SnowparkTraduction
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
     /**
      * @var string
      */
     private $description = '';
 
     /**
-     * @var Snowpark
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
     private $snowpark;
 
     /**
-     * @var Langue
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
 
 
     /**
-     * Get id
+     * Set description
      *
-     * @return integer
+     * @param string $description
+     *
+     * @return SnowparkTraduction
      */
-    public function getId()
+    public function setDescription($description)
     {
-        return $this->id;
+        $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -51,37 +63,13 @@ class SnowparkTraduction
     }
 
     /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return SnowparkTraduction
-     */
-    public function setDescription($description)
-    {
-        $this->description = !empty($description) ? $description : '';
-
-        return $this;
-    }
-
-    /**
-     * Get snowpark
-     *
-     * @return Snowpark
-     */
-    public function getSnowpark()
-    {
-        return $this->snowpark;
-    }
-
-    /**
      * Set snowpark
      *
-     * @param Snowpark $snowpark
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
      *
      * @return SnowparkTraduction
      */
-    public function setSnowpark(Snowpark $snowpark = null)
+    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
     {
         $this->snowpark = $snowpark;
 
@@ -89,26 +77,36 @@ class SnowparkTraduction
     }
 
     /**
-     * Get langue
+     * Get snowpark
      *
-     * @return Langue
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
-    public function getLangue()
+    public function getSnowpark()
     {
-        return $this->langue;
+        return $this->snowpark;
     }
 
     /**
      * Set langue
      *
-     * @param Langue $langue
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
      *
      * @return SnowparkTraduction
      */
-    public function setLangue(Langue $langue = null)
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
         $this->langue = $langue;
 
         return $this;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
     }
 }

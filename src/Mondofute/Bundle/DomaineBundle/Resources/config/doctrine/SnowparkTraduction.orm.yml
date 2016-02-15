@@ -10,4 +10,15 @@ Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        description:
+            type: text
+            options:
+                default: ''
+    manyToOne:
+        snowpark:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }

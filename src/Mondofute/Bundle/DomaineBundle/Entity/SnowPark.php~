@@ -2,30 +2,16 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
 /**
- * Snowpark
+ * SnowPark
  */
-class Snowpark
+class SnowPark
 {
     /**
      * @var int
      */
     private $id;
-    /**
-     * @var Collection
-     */
-    private $traductions;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->traductions = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -36,17 +22,29 @@ class Snowpark
     {
         return $this->id;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Add traduction
      *
-     * @param SnowparkTraduction $traduction
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction
      *
-     * @return Snowpark
+     * @return SnowPark
      */
-    public function addTraduction(SnowparkTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction)
     {
-        $this->traductions[] = $traduction->setSnowpark($this);
+        $this->traductions[] = $traduction;
 
         return $this;
     }
@@ -54,65 +52,20 @@ class Snowpark
     /**
      * Remove traduction
      *
-     * @param SnowparkTraduction $traduction
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction
      */
-    public function removeTraduction(SnowparkTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
-    }
-
-    public function __clone()
-    {
-        /** @var SnowparkTraduction $cloneTraduction */
-        $this->id = null;
-        $traductions = $this->getTraductions();
-        $this->traductions = new ArrayCollection();
-        if (count($traductions) > 0) {
-            foreach ($traductions as $traduction) {
-                $cloneTraduction = clone $traduction;
-                $this->traductions->add($cloneTraduction);
-                $cloneTraduction->setSnowpark($this);
-            }
-        }
     }
 
     /**
      * Get traductions
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTraductions()
     {
         return $this->traductions;
-    }
-
-    /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
-     */
-    private $domaineCarteIdentite;
-
-
-    /**
-     * Set domaineCarteIdentite
-     *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
-     *
-     * @return Snowpark
-     */
-    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
-    {
-        $this->domaineCarteIdentite = $domaineCarteIdentite;
-
-        return $this;
-    }
-
-    /**
-     * Get domaineCarteIdentite
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
-     */
-    public function getDomaineCarteIdentite()
-    {
-        return $this->domaineCarteIdentite;
     }
 }
