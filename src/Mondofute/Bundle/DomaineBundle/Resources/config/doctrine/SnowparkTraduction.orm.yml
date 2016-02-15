@@ -1,7 +1,7 @@
-Mondofute\Bundle\DomaineBundle\Entity\SnowPark:
+Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\SnowParkRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\SnowparkTraductionRepository
     id:
         id:
             type: integer
