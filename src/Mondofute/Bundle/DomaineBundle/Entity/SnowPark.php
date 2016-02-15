@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SnowPark
