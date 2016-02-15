@@ -26,7 +26,8 @@ class DomaineCarteIdentiteType extends AbstractType
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('snowpark', SnowparkType::class, array('required' => false,))
-            ->add('handiski', HandiskiType::class, array('required' => false,));
+            ->add('handiski', HandiskiType::class, array('required' => false,))
+            ->add('remonteeMecanique', RemonteeMecaniqueType::class, array('attr' => array('min' => 0), 'required' => false));
     }
 
     /**

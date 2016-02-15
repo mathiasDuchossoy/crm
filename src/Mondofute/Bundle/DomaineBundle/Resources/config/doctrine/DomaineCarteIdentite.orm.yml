@@ -40,4 +40,8 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         snowpark:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
             cascade:  ['persist', 'remove']
+        remonteeMecanique:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+            cascade: ['remove','persist']
+            onDelete: CASCADE
     lifecycleCallbacks: {  }

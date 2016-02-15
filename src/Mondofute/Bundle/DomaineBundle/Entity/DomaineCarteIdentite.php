@@ -59,6 +59,10 @@ class DomaineCarteIdentite
      * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
     private $snowpark;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+     */
+    private $remonteeMecanique;
 
     /**
      * Constructor
@@ -260,6 +264,7 @@ class DomaineCarteIdentite
         }
         $this->snowpark = clone $this->getSnowpark();
         $this->handiski = clone $this->getHandiski();
+        $this->remonteeMecanique = clone $this->getRemonteeMecanique();
     }
 
     /**
@@ -326,6 +331,30 @@ class DomaineCarteIdentite
     public function setHandiski(Handiski $handiski = null)
     {
         $this->handiski = $handiski;
+
+        return $this;
+    }
+
+    /**
+     * Get remonteeMecanique
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+     */
+    public function getRemonteeMecanique()
+    {
+        return $this->remonteeMecanique;
+    }
+
+    /**
+     * Set remonteeMecanique
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setRemonteeMecanique(\Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique = null)
+    {
+        $this->remonteeMecanique = $remonteeMecanique;
 
         return $this;
     }

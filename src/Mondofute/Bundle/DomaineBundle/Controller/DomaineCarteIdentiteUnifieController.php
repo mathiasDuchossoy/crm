@@ -268,10 +268,11 @@ class DomaineCarteIdentiteUnifieController extends Controller
             if ($i === 0 || $domaineCarteIdentite->getSite()->getClassementReferent() < $classementReferentTmp) {
                 $domaineCarteIdentiteCrm = clone $domaineCarteIdentite;
                 $domaineCarteIdentiteCrm->setSite($siteCrm);
-                $domaineCarteIdentite->setAltitudeMini($domaineCarteIdentite->getAltitudeMini());
-                $domaineCarteIdentite->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi());
-                $domaineCarteIdentite->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin());
-                $domaineCarteIdentite->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique());
+//                $domaineCarteIdentiteCrm->setAltitudeMini($domaineCarteIdentite->getAltitudeMini());
+//                $domaineCarteIdentiteCrm->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi());
+//                $domaineCarteIdentiteCrm->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin());
+//                $domaineCarteIdentiteCrm->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique());
+//                $domaineCarteIdentiteCrm->setRemonteeMecanique($domaineCarteIdentite->getRemonteeMecanique());
                 $classementReferentTmp = $domaineCarteIdentite->getSite()->getClassementReferent();
             }
             $i++;
@@ -353,6 +354,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $handiskiTraductionSite->setDescription($handiskiTraduction->getDescription());
                     $handiskiTraductionSite->setLangue($em->find(Langue::class, $handiskiTraductionSite->getLangue()));
                 }
+                $remonteeMecaniqueSite = !empty($domaineCarteIdentiteSite->getRemonteeMecanique()) ? $domaineCarteIdentiteSite->getRemonteeMecanique() : clone $domaineCarteIdentite->getRemonteeMecanique();
+                $remonteeMecaniqueSite->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
                 $domaineCarteIdentiteSite
                     ->setSite($site)
                     ->setDomaineCarteIdentiteUnifie($entitySite)
@@ -361,7 +364,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
                     ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
                     ->setSnowpark($snowparkSite)
-                    ->setHandiski($handiskiSite);
+                    ->setHandiski($handiskiSite)
+                    ->setRemonteeMecanique($remonteeMecaniqueSite);
 
 //            Gestion des traductions
                 foreach ($domaineCarteIdentite->getTraductions() as $domaineCarteIdentiteTraduc) {
@@ -599,7 +603,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
             // Si la site de la domaineCarteIdentite est égale au site de référence
             if ($domaineCarteIdentite->getSite() == $siteReferent) {
 
-                $domaineCarteIdentite->getSnowpark();
                 foreach ($domaineCarteIdentite->getSnowpark()->getTraductions() as $snowparkTraduction) {
                     $langue = $snowparkTraduction->getLangue();
                     $snowparkTraductionCrm = $domaineCarteIdentiteCrm->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($langue) {
@@ -607,7 +610,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     })->first();
                     $snowparkTraductionCrm->setDescription($snowparkTraduction->getDescription());
                 }
-                $domaineCarteIdentite->getHandiski();
                 foreach ($domaineCarteIdentite->getHandiski()->getTraductions() as $handiskiTraduction) {
                     $langue = $handiskiTraduction->getLangue();
                     $handiskiTraductionCrm = $domaineCarteIdentiteCrm->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($langue) {
@@ -620,7 +622,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     ->setAltitudeMini($domaineCarteIdentite->getAltitudeMini())
                     ->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi())
                     ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
-                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique());
+                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
+                    ->getRemonteeMecanique()->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
 
                 foreach ($langues as $langue) {
 //                    recupere la traduction pour l'entite du site referent
