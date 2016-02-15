@@ -51,10 +51,10 @@ class DomaineCarteIdentite
      * @var Collection
      */
     private $domaines;
-    /**
-     * @var Snowpark
-     */
-    private $snowpark;
+//    /**
+//     * @var Snowpark
+//     */
+//    private $snowpark;
     /**
      * @var Handiski
      */
@@ -258,7 +258,7 @@ class DomaineCarteIdentite
                 $cloneTraduction->setDomaineCarteIdentite($this);
             }
         }
-        $this->snowpark = clone $this->getSnowpark();
+//        $this->snowpark = clone $this->getSnowpark();
         $this->handiski = clone $this->getHandiski();
     }
 
@@ -282,29 +282,29 @@ class DomaineCarteIdentite
         return $this;
     }
 
-    /**
-     * Get snowpark
-     *
-     * @return Snowpark
-     */
-    public function getSnowpark()
-    {
-        return $this->snowpark;
-    }
+//    /**
+//     * Get snowpark
+//     *
+//     * @return Snowpark
+//     */
+//    public function getSnowpark()
+//    {
+//        return $this->snowpark;
+//    }
 
-    /**
-     * Set snowpark
-     *
-     * @param Snowpark $snowpark
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setSnowpark(Snowpark $snowpark = null)
-    {
-        $this->snowpark = $snowpark;
-
-        return $this;
-    }
+//    /**
+//     * Set snowpark
+//     *
+//     * @param Snowpark $snowpark
+//     *
+//     * @return DomaineCarteIdentite
+//     */
+//    public function setSnowpark(Snowpark $snowpark = null)
+//    {
+//        $this->snowpark = $snowpark;
+//
+//        return $this;
+//    }
 
     /**
      * Get handiski
