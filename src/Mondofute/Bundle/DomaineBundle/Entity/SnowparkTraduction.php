@@ -11,7 +11,18 @@ class SnowparkTraduction
      * @var int
      */
     private $id;
-
+    /**
+     * @var string
+     */
+    private $description = '';
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    private $snowpark;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -22,21 +33,16 @@ class SnowparkTraduction
     {
         return $this->id;
     }
-    /**
-     * @var string
-     */
-    private $description = '';
 
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     * Get description
+     *
+     * @return string
      */
-    private $snowpark;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
     /**
      * Set description
@@ -47,19 +53,19 @@ class SnowparkTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
     }
 
     /**
-     * Get description
+     * Get snowpark
      *
-     * @return string
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
-    public function getDescription()
+    public function getSnowpark()
     {
-        return $this->description;
+        return $this->snowpark;
     }
 
     /**
@@ -77,13 +83,13 @@ class SnowparkTraduction
     }
 
     /**
-     * Get snowpark
+     * Get langue
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getSnowpark()
+    public function getLangue()
     {
-        return $this->snowpark;
+        return $this->langue;
     }
 
     /**
@@ -98,15 +104,5 @@ class SnowparkTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }

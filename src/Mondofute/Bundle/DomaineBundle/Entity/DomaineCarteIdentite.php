@@ -59,6 +59,10 @@ class DomaineCarteIdentite
      * @var Handiski
      */
     private $handiski;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    private $snowpark;
 
     /**
      * Constructor
@@ -258,7 +262,7 @@ class DomaineCarteIdentite
                 $cloneTraduction->setDomaineCarteIdentite($this);
             }
         }
-//        $this->snowpark = clone $this->getSnowpark();
+        $this->snowpark = clone $this->getSnowpark();
         $this->handiski = clone $this->getHandiski();
     }
 
@@ -270,16 +274,6 @@ class DomaineCarteIdentite
     public function getTraductions()
     {
         return $this->traductions;
-    }
-
-    /**
-     * @param $traductions
-     * @return DomaineCarteIdentite $this
-     */
-    public function setTraductions($traductions)
-    {
-        $this->traductions = $traductions;
-        return $this;
     }
 
 //    /**
@@ -305,6 +299,40 @@ class DomaineCarteIdentite
 //
 //        return $this;
 //    }
+
+    /**
+     * @param $traductions
+     * @return DomaineCarteIdentite $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->traductions = $traductions;
+        return $this;
+    }
+
+    /**
+     * Get snowpark
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    public function getSnowpark()
+    {
+        return $this->snowpark;
+    }
+
+    /**
+     * Set snowpark
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
+    {
+        $this->snowpark = $snowpark;
+
+        return $this;
+    }
 
     /**
      * Get handiski
@@ -362,34 +390,5 @@ class DomaineCarteIdentite
     public function getDomaines()
     {
         return $this->domaines;
-    }
-    /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    private $snowpark;
-
-
-    /**
-     * Set snowpark
-     *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
-    {
-        $this->snowpark = $snowpark;
-
-        return $this;
-    }
-
-    /**
-     * Get snowpark
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    public function getSnowpark()
-    {
-        return $this->snowpark;
     }
 }

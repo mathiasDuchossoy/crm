@@ -11,17 +11,6 @@ class SnowPark
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -36,6 +25,16 @@ class SnowPark
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Add traduction
      *
      * @param \Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction
@@ -44,7 +43,7 @@ class SnowPark
      */
     public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setSnowpark($this);
 
         return $this;
     }
@@ -57,6 +56,21 @@ class SnowPark
     public function removeTraduction(\Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
+    }
+
+    public function __clone()
+    {
+        /** @var SnowparkTraduction $cloneTraduction */
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setSnowpark($this);
+            }
+        }
     }
 
     /**
