@@ -34,10 +34,10 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineCarteIdentite
     oneToOne:
-#        snowpark:
-#            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-#            cascade:  ['persist' , 'remove']
         handiski:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
             cascade:  ['persist' , 'remove']
+        snowpark:
+            targetEntity: Mondofute\Bundle\DomaineBUndle\Entity\Snowpark
+            cascade:  ['persist', 'remove']
     lifecycleCallbacks: {  }
