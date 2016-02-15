@@ -363,4 +363,33 @@ class DomaineCarteIdentite
     {
         return $this->domaines;
     }
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    private $snowpark;
+
+
+    /**
+     * Set snowpark
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
+    {
+        $this->snowpark = $snowpark;
+
+        return $this;
+    }
+
+    /**
+     * Get snowpark
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    public function getSnowpark()
+    {
+        return $this->snowpark;
+    }
 }
