@@ -38,6 +38,6 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
             cascade:  ['persist' , 'remove']
         snowpark:
-            targetEntity: Mondofute\Bundle\DomaineBUndle\Entity\Snowpark
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\SnowPark
             cascade:  ['persist', 'remove']
     lifecycleCallbacks: {  }
