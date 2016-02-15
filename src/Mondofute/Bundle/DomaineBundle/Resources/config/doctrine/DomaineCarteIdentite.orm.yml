@@ -37,6 +37,7 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         snowpark:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
             cascade:  ['persist' , 'remove']
+            inversedBy: domaineCarteIdentite
         handiski:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
             cascade:  ['persist' , 'remove']

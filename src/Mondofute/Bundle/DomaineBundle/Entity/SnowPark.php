@@ -18,6 +18,10 @@ class Snowpark
      * @var Collection
      */
     private $traductions;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     */
+    private $domaineCarteIdentite;
 
     /**
      * Constructor
@@ -86,4 +90,27 @@ class Snowpark
         return $this->traductions;
     }
 
+    /**
+     * Get domaineCarteIdentite
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     */
+    public function getDomaineCarteIdentite()
+    {
+        return $this->domaineCarteIdentite;
+    }
+
+    /**
+     * Set domaineCarteIdentite
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     *
+     * @return Snowpark
+     */
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    {
+        $this->domaineCarteIdentite = $domaineCarteIdentite;
+
+        return $this;
+    }
 }
