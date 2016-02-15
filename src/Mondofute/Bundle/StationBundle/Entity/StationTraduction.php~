@@ -1,8 +1,8 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
  * StationTraduction
