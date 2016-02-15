@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Snowpark
@@ -44,7 +45,7 @@ class Snowpark
      */
     public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setSnowpark($this);
 
         return $this;
     }
@@ -68,4 +69,21 @@ class Snowpark
     {
         return $this->traductions;
     }
+
+
+    public function __clone()
+    {
+        /** @var SnowparkTraduction $cloneTraduction */
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setSnowpark($this);
+            }
+        }
+    }
+
 }
