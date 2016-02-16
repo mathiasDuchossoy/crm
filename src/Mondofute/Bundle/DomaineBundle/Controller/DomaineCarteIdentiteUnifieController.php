@@ -12,8 +12,10 @@ use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
 use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
+use Mondofute\Bundle\DomaineBundle\Entity\Piste;
 use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
 use Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -60,6 +62,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
         $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
             ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie);
 //        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
 //        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
 
@@ -227,6 +230,40 @@ class DomaineCarteIdentiteUnifieController extends Controller
      * @param DomaineCarteIdentiteUnifie $entity
      * @return $this
      */
+    private function ajouterPistesDansForm(DomaineCarteIdentiteUnifie $entity)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        $em = $this->getDoctrine()->getEntityManager();
+        $typePistes = $em->getRepository( TypePiste::class )->findAll();
+        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            if (!empty($domaineCarteIdentite->getPistes()))
+            {
+                foreach($typePistes as $typePiste) {
+                    if (empty($domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
+                        return $element->getTypePiste() == $typePiste;
+                    })->first())
+                    ) {
+                        $piste = new Piste();
+                        $piste->setTypePiste($typePiste);
+                        $domaineCarteIdentite->addPiste($piste);
+                    }
+                }
+            }
+            else {
+                foreach($typePistes as $typePiste) {
+                    $piste = new Piste();
+                    $piste->setTypePiste($typePiste);
+                    $domaineCarteIdentite->addPiste($piste);
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
+     */
     private function ajouterSnowparksDansForm(DomaineCarteIdentiteUnifie $entity)
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
@@ -337,6 +374,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
 
 //            copie des données domaineCarteIdentite
+                // ***** Snowpark *****
                 $snowparkSite = !empty($domaineCarteIdentiteSite->getSnowpark()) ? $domaineCarteIdentiteSite->getSnowpark() : clone $domaineCarteIdentite->getSnowpark();
                 foreach ($snowparkSite->getTraductions() as $snowparkTraductionSite) {
                     /** @var SnowparkTraduction $snowparkTraduction */
@@ -346,6 +384,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $snowparkTraductionSite->setDescription($snowparkTraduction->getDescription());
                     $snowparkTraductionSite->setLangue($em->find(Langue::class, $snowparkTraductionSite->getLangue()));
                 }
+                // ***** Handiski *****
                 $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
                 foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
                     /** @var HandiskiTraduction $handiskiTraduction */
@@ -355,8 +394,30 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $handiskiTraductionSite->setDescription($handiskiTraduction->getDescription());
                     $handiskiTraductionSite->setLangue($em->find(Langue::class, $handiskiTraductionSite->getLangue()));
                 }
+                // ***** Remontee mecanique *****
                 $remonteeMecaniqueSite = !empty($domaineCarteIdentiteSite->getRemonteeMecanique()) ? $domaineCarteIdentiteSite->getRemonteeMecanique() : clone $domaineCarteIdentite->getRemonteeMecanique();
                 $remonteeMecaniqueSite->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
+                // ***** Pistes *****
+                /** @var Piste $pisteSite */
+
+//                $pisteSites = !empty($domaineCarteIdentiteSite->getPistes()) ? $domaineCarteIdentiteSite->getPistes() : clone $domaineCarteIdentite->getPistes();
+//                foreach($pisteSites as $pisteSite)
+//                {
+//                    /** @var Piste $piste */
+//                    $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($pisteSite) {
+//                        return $element->getTypePiste()->getId() == $pisteSite->getTypePiste()->getId();
+//                    })->first();
+//                    if (!empty($piste))
+//                    {
+//                        $pisteSite->setNombre($piste->getNombre());
+//                    }
+//                    else
+//                    {
+//                        $newPiste   = new Piste();
+//                        $newPiste->setNombre($piste->getNombre());
+//
+//                    }
+//                }
 
                 $domaineCarteIdentiteSite
                     ->setSite($site)
@@ -606,6 +667,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             // Si la site de la domaineCarteIdentite est égale au site de référence
             if ($domaineCarteIdentite->getSite() == $siteReferent) {
 
+                // ***** Snowpark *****
                 foreach ($domaineCarteIdentite->getSnowpark()->getTraductions() as $snowparkTraduction) {
                     $langue = $snowparkTraduction->getLangue();
                     $snowparkTraductionCrm = $domaineCarteIdentiteCrm->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($langue) {
@@ -613,12 +675,22 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     })->first();
                     $snowparkTraductionCrm->setDescription($snowparkTraduction->getDescription());
                 }
+                // ***** Handiski *****
                 foreach ($domaineCarteIdentite->getHandiski()->getTraductions() as $handiskiTraduction) {
                     $langue = $handiskiTraduction->getLangue();
                     $handiskiTraductionCrm = $domaineCarteIdentiteCrm->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
                     $handiskiTraductionCrm->setDescription($handiskiTraduction->getDescription());
+                }
+                /** @var Piste $piste */
+                foreach($domaineCarteIdentite->getPistes() as $piste)
+                {
+                    /** @var Piste $pisteCrm */
+                    $pisteCrm   = $domaineCarteIdentiteCrm->getPistes()->filter(function (Piste $element)use ($piste){
+                        return $element->getTypePiste() == $piste->getTypePiste();
+                    })->first();
+                    $pisteCrm->setNombre($piste->getNombre());
                 }
 //           ajouter les champs "communs"
                 $domaineCarteIdentiteCrm

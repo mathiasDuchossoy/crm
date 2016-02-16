@@ -265,6 +265,15 @@ class DomaineCarteIdentite
         $this->snowpark = clone $this->getSnowpark();
         $this->handiski = clone $this->getHandiski();
         $this->remonteeMecanique = clone $this->getRemonteeMecanique();
+        $pistes = $this->getPistes();
+        $this->pistes = new ArrayCollection();
+        if (count($pistes) > 0) {
+            foreach ($pistes as $piste) {
+                $clonePiste = clone $piste;
+                $this->pistes->add($clonePiste);
+                $clonePiste->setDomaineCarteIdentite($this);
+            }
+        }
     }
 
     /**
@@ -421,5 +430,44 @@ class DomaineCarteIdentite
     public function getNiveauSkieur()
     {
         return $this->niveauSkieur;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $pistes;
+
+
+    /**
+     * Add piste
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addPiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
+    {
+        $this->pistes[] = $piste->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove piste
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
+     */
+    public function removePiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
+    {
+        $this->pistes->removeElement($piste);
+    }
+
+    /**
+     * Get pistes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPistes()
+    {
+        return $this->pistes;
     }
 }

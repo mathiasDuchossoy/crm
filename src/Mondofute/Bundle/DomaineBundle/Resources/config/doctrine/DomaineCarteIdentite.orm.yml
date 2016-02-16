@@ -36,6 +36,10 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         domaines:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineCarteIdentite
+        pistes:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Piste
+            mappedBy: domaineCarteIdentite
+            cascade:  ['persist' , 'remove']
     oneToOne:
         handiski:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski

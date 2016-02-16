@@ -8,6 +8,8 @@ Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieurTraduction

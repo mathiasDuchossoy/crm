@@ -1,7 +1,7 @@
-Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieurTraduction:
+Mondofute\Bundle\DomaineBundle\Entity\TypePisteTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\NiveauSkieurTraductionRepository
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\TypePisteTraductionRepository
     id:
         id:
             type: integer
@@ -17,7 +17,7 @@ Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieurTraduction:
     manyToOne:
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
-        niveauSkieur:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+        typePiste:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\TypePiste
             inversedBy: traductions
     lifecycleCallbacks: {  }

@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\DomaineBundle\Form;
 
 use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
+use Mondofute\Bundle\DomaineBundle\Entity\Piste;
 use Mondofute\Bundle\DomaineBundle\Repository\NiveauSkieurRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -41,6 +42,9 @@ class DomaineCarteIdentiteType extends AbstractType
                     return $rr->getTraductionsByLocale($locale);
                 },
 
+            ))
+            ->add('pistes', CollectionType::class, array(
+                'entry_type' => PisteType::class
             ));
     }
 
