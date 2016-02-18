@@ -16,7 +16,4 @@ Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur:
             mappedBy: niveauSkieur
             cascade: ['remove','persist']
             onDelete: CASCADE
-        domaineCarteIDentite:
-            targetEntity: Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite
-            mappedBy: niveauSkieur
     lifecycleCallbacks: {  }

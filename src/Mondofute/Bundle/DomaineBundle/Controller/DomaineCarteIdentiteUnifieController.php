@@ -233,7 +233,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     private function ajouterPistesDansForm(DomaineCarteIdentiteUnifie $entity)
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $typePistes = $em->getRepository( TypePiste::class )->findAll();
         foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
             if (!empty($domaineCarteIdentite->getPistes()))
@@ -399,25 +399,30 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 $remonteeMecaniqueSite->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
                 // ***** Pistes *****
                 /** @var Piste $pisteSite */
+                /** @var Piste $piste */
 
 //                $pisteSites = !empty($domaineCarteIdentiteSite->getPistes()) ? $domaineCarteIdentiteSite->getPistes() : clone $domaineCarteIdentite->getPistes();
-//                foreach($pisteSites as $pisteSite)
-//                {
-//                    /** @var Piste $piste */
-//                    $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($pisteSite) {
-//                        return $element->getTypePiste()->getId() == $pisteSite->getTypePiste()->getId();
-//                    })->first();
-//                    if (!empty($piste))
-//                    {
-//                        $pisteSite->setNombre($piste->getNombre());
-//                    }
-//                    else
-//                    {
-//                        $newPiste   = new Piste();
-//                        $newPiste->setNombre($piste->getNombre());
-//
-//                    }
-//                }
+//                dump($pisteSites);die;
+                $pisteSitesEmpty = !empty($domaineCarteIdentiteSite->getPistes());
+                // récupérer toutes les pistes
+                foreach ($domaineCarteIdentite->getPistes() as $piste) {
+                    $pisteSite = null;
+                    // tester si elle est présente sur le site
+                    if (!empty($pisteSitesEmpty)) {
+                        $pisteSite = $domaineCarteIdentiteSite->getPistes()->filter(function (Piste $element) use ($piste) {
+                            return $element->getTypePiste()->getId() == $piste->getTypePiste()->getId();
+                        })->first();
+                    }
+                    if (!empty($pisteSite)) {
+                        $pisteSite->setNombre($piste->getNombre());
+                    } else {
+                        $pisteSite = new Piste();
+                        $pisteSite->setNombre($piste->getNombre())
+                            ->setDomaineCarteIdentite($domaineCarteIdentiteSite)
+                            ->setTypePiste($em->find(TypePiste::class, $piste->getTypePiste()));
+                        $domaineCarteIdentiteSite->addPiste($pisteSite);
+                    }
+                }
 
                 $domaineCarteIdentiteSite
                     ->setSite($site)

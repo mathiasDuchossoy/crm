@@ -45,7 +45,13 @@
                     {{ form_row( domaineCarteIdentite.kmPistesSkiNordique ) }}
                     {{ form_row( domaineCarteIdentite.remonteeMecanique ) }}
                     {{ form_row( domaineCarteIdentite.niveauSkieur ) }}
-                    {{ form_row( domaineCarteIdentite.pistes ) }}
+                    {% for piste in domaineCarteIdentite.pistes %}
+                        {% for traductionLangue in  piste.vars.value.typePiste.traductions %}
+                            {% if(traductionLangue.langue.code == app.request.locale) %}
+                                {{ form_row(piste , { 'label' :   (domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle)   }) }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 </div>
                 <ul class="nav nav-tabs">
                     {% set iTraduc = 0 %}
