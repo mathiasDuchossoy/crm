@@ -176,317 +176,14 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
             }
             $emSite->persist($ligne);
             $emSite->flush();
-
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
+            $i++;
 ////            Création de la ligne
 //            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(3);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Ado');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(4);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Etudiant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(5);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Senior');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(6);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('6 jour Adulte');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(7);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('6 jour Enfant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(8);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('6 jour Ado');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(9);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('6 jour Etudiant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-//            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(10);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('6 jour Senior');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
-//            $ligne->setClassement(11);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Forfait Famille');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-//            $idCategorie = 2;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
-//            $ligne->setClassement(1);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Forfait ski gratuit');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
+////            $ligne->setTrancheAge(true);
 //            $ligne->setClassement(2);
 //            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
 //            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Remontées mécaniques gratuites');
+//            $ligneTraduction->setLibelle('1 jour Enfant');
 //            $ligneTraduction->setLangue($langue);
 //            $ligneTraduction->setSite($siteSite);
 //            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
@@ -494,27 +191,46 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 //            $ligne->addTraduction($ligneTraduction);
 //            $emSite->persist($ligne);
 //            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('1 jour Ado');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('1 day ado');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('1 dia ado');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('1 jour ado');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $emSite->flush();
+            $i++;
 ////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
-//            $ligne->setClassement(3);
+//            $ligne = new LigneDescriptionForfaitSkiValeur();
+////            $ligne->setTrancheAge(true);
+//            $ligne->setClassement(2);
 //            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
 //            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Support Mains Libres');
+//            $ligneTraduction->setLibelle('1 jour Enfant');
 //            $ligneTraduction->setLangue($langue);
 //            $ligneTraduction->setSite($siteSite);
 //            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
@@ -522,76 +238,39 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 //            $ligne->addTraduction($ligneTraduction);
 //            $emSite->persist($ligne);
 //            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
-//            $ligne->setClassement(4);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Photo d\'identité');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiBoolean();
-//            $ligne->setTrancheAge(false);
-//            $ligne->setClassement(5);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('Pièce d\'identité');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
-//            $emSite->flush();
-//
-////            if ($site->getCrm() == true) {
-////                $ligneCrm[$i] = $ligne;
-//////                dump($uniteCrm);
-////            } else {
-////                $siteLigne = new SiteLigneDescriptionForfaitSki();
-////                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-////                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-////                $siteLigne->setSite($site);
-////                $em->persist($siteLigne);
-////                $em->flush();
-////            }
-//
-//            $i++;
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('1 jour Ado');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('1 day ado');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('1 dia ado');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('1 jour ado');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $emSite->flush();
+
         }
     }
 }
