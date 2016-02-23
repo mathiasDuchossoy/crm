@@ -1,3 +1,7 @@
+mondofute_fournisseur:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_accueil:
     resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
     prefix:   /
