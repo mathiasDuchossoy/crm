@@ -1,0 +1,4 @@
+mondofute_fournisseur_fournisseur:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing/fournisseur.yml"
+    prefix:   /fournisseur
+
