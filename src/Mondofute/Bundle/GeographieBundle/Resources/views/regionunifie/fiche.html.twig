@@ -84,7 +84,7 @@
     <script type="text/javascript">
         var itemNonPersonalisable = [];
         {% for langue in langues %}
-        {#itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");
         {% endfor %}
     </script>
 
