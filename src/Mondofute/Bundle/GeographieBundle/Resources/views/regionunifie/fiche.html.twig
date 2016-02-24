@@ -9,7 +9,7 @@
     <section>
         {#  BLOCK CONTENANT LE FORMULAIRE #}
         {% block formulaire %}
-
+            {% set personalisable =  true %}
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
@@ -22,7 +22,8 @@
                 {% set iSite = 0 %}
                 {% for region in form.regions %}
                     <div id="data_site_{{ region.vars.value.site.id }}"
-                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ region.vars.value.site.crm | number_format }}">
                         {{ form_row(region.site) }}
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
@@ -46,8 +47,10 @@
                                 <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                                      class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
                                     {#{{ form_row(traduction) }}#}
-                                    {{ form_widget(traduction) }}
-                                    {{ form_errors(traduction) }}
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                        {#{{ dump(element) }}#}
+                                    {% endfor %}
                                 </div>
                             {% endfor %}
                         </div>
@@ -78,7 +81,16 @@
     </div>
 {% endblock %}
 {% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        {% for langue in langues %}
+        {#itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {% endfor %}
+    </script>
+
     {{ parent() }}
+
+
     <script type="text/javascript">
         $(document).ready(function () {
             {% if sitesAEnregistrer is not empty %}
@@ -109,7 +121,7 @@
                 var checked = false;
                 $("[id^='siteAEnregistrer_']").each(function () {
 
-                    if ($(this).is(':checked')) {
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
                         checked = true;
                     }
                 });
