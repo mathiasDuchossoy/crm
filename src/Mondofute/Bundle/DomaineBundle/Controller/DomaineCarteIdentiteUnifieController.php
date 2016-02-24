@@ -230,40 +230,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
      * @param DomaineCarteIdentiteUnifie $entity
      * @return $this
      */
-    private function ajouterPistesDansForm(DomaineCarteIdentiteUnifie $entity)
-    {
-        /** @var DomaineCarteIdentite $domaineCarteIdentite */
-        $em = $this->getDoctrine()->getManager();
-        $typePistes = $em->getRepository( TypePiste::class )->findAll();
-        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
-            if (!empty($domaineCarteIdentite->getPistes()))
-            {
-                foreach($typePistes as $typePiste) {
-                    if (empty($domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
-                        return $element->getTypePiste() == $typePiste;
-                    })->first())
-                    ) {
-                        $piste = new Piste();
-                        $piste->setTypePiste($typePiste);
-                        $domaineCarteIdentite->addPiste($piste);
-                    }
-                }
-            }
-            else {
-                foreach($typePistes as $typePiste) {
-                    $piste = new Piste();
-                    $piste->setTypePiste($typePiste);
-                    $domaineCarteIdentite->addPiste($piste);
-                }
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @param DomaineCarteIdentiteUnifie $entity
-     * @return $this
-     */
     private function ajouterSnowparksDansForm(DomaineCarteIdentiteUnifie $entity)
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
@@ -284,6 +250,38 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             $domaineCarteIdentite->setSnowpark($snowpark);
+        }
+        return $this;
+    }
+
+    /**
+     * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
+     */
+    private function ajouterPistesDansForm(DomaineCarteIdentiteUnifie $entity)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        $em = $this->getDoctrine()->getManager();
+        $typePistes = $em->getRepository(TypePiste::class)->findAll();
+        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            if (!empty($domaineCarteIdentite->getPistes())) {
+                foreach ($typePistes as $typePiste) {
+                    if (empty($domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
+                        return $element->getTypePiste() == $typePiste;
+                    })->first())
+                    ) {
+                        $piste = new Piste();
+                        $piste->setTypePiste($typePiste);
+                        $domaineCarteIdentite->addPiste($piste);
+                    }
+                }
+            } else {
+                foreach ($typePistes as $typePiste) {
+                    $piste = new Piste();
+                    $piste->setTypePiste($typePiste);
+                    $domaineCarteIdentite->addPiste($piste);
+                }
+            }
         }
         return $this;
     }
@@ -561,6 +559,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
         $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
             ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie);
 
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 
