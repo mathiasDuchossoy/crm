@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -94,7 +95,7 @@ class RegionUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($region->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($region->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -131,11 +132,12 @@ class RegionUnifieController extends Controller
         $regions = $entity->getRegions(); // ArrayCollection data.
 
         // Recueillir un itérateur de tableau.
+        /** @var ArrayIterator $iterator */
         $iterator = $regions->getIterator();
         unset($regions);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        $iterator->uasort(function (Region $a, Region $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -153,11 +155,13 @@ class RegionUnifieController extends Controller
      */
     private function traductionsSortByLangue($regions)
     {
+        /** @var ArrayIterator $iterator */
+        /** @var Region $region */
         foreach ($regions as $region) {
             $traductions = $region->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (RegionTraduction $a, RegionTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -219,6 +223,7 @@ class RegionUnifieController extends Controller
      */
     public function copieVersSites(RegionUnifie $entity)
     {
+        /** @var RegionTraduction $regionTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getRegions() as $region) {
             if ($region->getSite()->getCrm() == false) {
@@ -229,7 +234,8 @@ class RegionUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(RegionUnifie::class)->findOneById(array($entity->getId()))))) {
+//                if (is_null(($entitySite = $em->getRepository(RegionUnifie::class)->findOneById(array($entity->getId()))))) {
+                if (is_null($entitySite = $em->find(RegionUnifie::class, $entity->getId()))) {
                     $entitySite = new RegionUnifie();
                 }
 
@@ -282,6 +288,8 @@ class RegionUnifieController extends Controller
      */
     public function ajouterRegionUnifieSiteDistant($idUnifie, $regions)
     {
+        /** @var ArrayCollection $regions */
+        /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
@@ -417,7 +425,7 @@ class RegionUnifieController extends Controller
             'entity' => $regionUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -451,6 +459,7 @@ class RegionUnifieController extends Controller
      */
     private function mettreAJourRegionCrm(RegionUnifie $regionUnifie, Region $regionCrm)
     {
+        /** @var RegionTraduction $regionTraduc */
         $em = $this->getDoctrine()->getManager();
         $tabClassementSiteReferent = array();
 
@@ -474,12 +483,12 @@ class RegionUnifieController extends Controller
                 foreach ($langues as $langue) {
 //                    dump($langue);
 //                    recupere la traduction pour l'entite du site referent
-                    $regionTraduc = $region->getTraductions()->filter(function ($element) use ($langue) {
+                    $regionTraduc = $region->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 
 //                    récupère la traductin dans le crm
-                    $regionTraducCrm = $regionCrm->getTraductions()->filter(function ($element) use ($langue) {
+                    $regionTraducCrm = $regionCrm->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 //                    dump($regionTraduc);
@@ -516,7 +525,7 @@ class RegionUnifieController extends Controller
                 foreach ($langues as $langue) {
 
 //                    recupere la traduction pour la langue $langue
-                    $regionTraduc = $region->getTraductions()->filter(function ($element) use ($langue) {
+                    $regionTraduc = $region->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
                         return $element->getLangue() == $langue;
                     })->first();
 
@@ -599,7 +608,7 @@ class RegionUnifieController extends Controller
         foreach ($sites as $site) {
             $siteEntity = $em->find(Site::class, $site);
             foreach ($regionUnifieCollection as $regionUnifie) {
-                $region = $regionUnifie->getRegions()->filter(function ($element) use ($siteEntity) {
+                $region = $regionUnifie->getRegions()->filter(function (Region $element) use ($siteEntity) {
                     return $element->getSite() == $siteEntity;
                 });
                 dump($region);

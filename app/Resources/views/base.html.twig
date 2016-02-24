@@ -9,6 +9,12 @@
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
+    {% if form is defined %}
+        {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
+    {% if delete_form is defined %}
+        {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
 </head>
 <body>
 {% block header %}
