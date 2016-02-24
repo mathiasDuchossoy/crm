@@ -1,6 +1,9 @@
 <div>
     {% for site in sites %}
-        <label><input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"
-                      value="{{ site.id }}"> {{ site.libelle }}</label>
+        <span style="{% if site.crm == 1 %}display:none; {% endif %}">
+            <label>
+                <input id="siteAEnregistrer_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites[]"
+                       value="{{ site.id }}"/> {{ site.libelle }}</label>
+        </span>
     {% endfor %}
 </div>
