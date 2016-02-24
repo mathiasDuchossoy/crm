@@ -9,6 +9,12 @@
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
+    {% if form is defined %}
+        {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
+    {% if delete_form is defined %}
+        {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
 </head>
 <body>
 {% block header %}
@@ -74,6 +80,42 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+
+        function masqueNonPersonalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 0) {
+                        $(this).parents(".form-group").hide(); // Changer en hide
+                    }
+                });
+            });
+        }
+
+        function copieNonPersonnalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 1) {
+                        source = $(this).val();
+                        $("[data-unique_block_prefix='" + item + "']").each(function () {
+                            parent = $(this).parents("[data-crm]");
+                            if (parent.data('crm') == 0) {
+                                $(this).val(source);
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            masqueNonPersonalisable();
+        });
+    </script>
+
 {% endblock %}
 </body>
 </html>
