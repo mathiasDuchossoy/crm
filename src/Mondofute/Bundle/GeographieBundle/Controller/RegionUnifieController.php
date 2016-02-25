@@ -306,7 +306,7 @@ class RegionUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('geographie_region_delete', array('id' => $regionUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('delete', SubmitType::class, array('label' => 'Supprimer'))
             ->setMethod('DELETE')
             ->getForm();
     }
