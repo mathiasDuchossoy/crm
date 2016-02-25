@@ -13,6 +13,7 @@ use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
 use Mondofute\Bundle\DomaineBundle\Entity\Piste;
+use Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique;
 use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
@@ -62,7 +63,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
             ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
         $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
             ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
-        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie)
+            ->ajouterRemonteeMecanique($domaineCarteIdentiteUnifie);
 //        $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
 //        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
 
@@ -250,6 +252,22 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             $domaineCarteIdentite->setSnowpark($snowpark);
+        }
+        return $this;
+    }
+
+    /**
+     * @param DomaineCarteIdentiteUnifie $entity
+     * @return $this
+     */
+    private function ajouterRemonteeMecanique(DomaineCarteIdentiteUnifie $entity)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            if (empty($domaineCarteIdentite->getRemonteeMecanique())) {
+                $remonteeMecanique = new RemonteeMecanique();
+                $domaineCarteIdentite->setRemonteeMecanique($remonteeMecanique);
+            }
         }
         return $this;
     }
@@ -559,7 +577,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
             ->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
         $this->ajouterSnowparksDansForm($domaineCarteIdentiteUnifie)
             ->ajouterHandiskiDansForm($domaineCarteIdentiteUnifie);
-        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie);
+        $this->ajouterPistesDansForm($domaineCarteIdentiteUnifie)
+            ->ajouterRemonteeMecanique($domaineCarteIdentiteUnifie);
 
         $deleteForm = $this->createDeleteForm($domaineCarteIdentiteUnifie);
 

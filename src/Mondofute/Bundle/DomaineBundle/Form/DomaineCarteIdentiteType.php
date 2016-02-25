@@ -32,11 +32,11 @@ class DomaineCarteIdentiteType extends AbstractType
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('snowpark', SnowparkType::class, array('required' => false,))
             ->add('handiski', HandiskiType::class, array('required' => false,))
-            ->add('remonteeMecanique', RemonteeMecaniqueType::class, array('attr' => array('min' => 0), 'required' => false))
+            ->add('remonteeMecanique', RemonteeMecaniqueType::class, array('attr' => array('min' => 0)))
             ->add('niveauSkieur', EntityType::class, array(
                 'class' => NiveauSkieur::class,
                 'placeholder' => '--- choisir un niveau de skieur ---',
-                'required' => false,
+//                'required' => false,
                 'choice_label' => 'traductions[0].libelle',
                 'query_builder' => function (NiveauSkieurRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
