@@ -62,9 +62,9 @@
                             {% for traduction in domaineCarteIdentite.traductions %}
                                 <div id="{{ domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                                      class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-<<<<<<< HEAD
-                                    {{ form_widget(traduction) }}
-                                    {{ form_errors(traduction) }}
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                    {% endfor %}
                                     {% set break = false %}
                                     {% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}
                                         {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
@@ -83,22 +83,6 @@
                                     {% endfor %}
                                 </div>
                             {% endfor %}
-                            {#{% set iTraduc = 0 %}#}
-                            {#{% for traduction in domaineCarteIdentite.traductions %}#}
-                                {#<div id="{{ domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
-                                     {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
-                                    {#{% for element in traduction.children %}#}
-                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
-                                    {#{% endfor %}#}
-                                {#</div>#}
-                            {#{% endfor %}#}
-=======
-                                    {% for element in traduction.children %}
-                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
-                                    {% endfor %}
-                                </div>
-                            {% endfor %}
->>>>>>> rebase CRM-30 sur CRM-32
                         </div>
                     </div>
                 {% endfor %}
