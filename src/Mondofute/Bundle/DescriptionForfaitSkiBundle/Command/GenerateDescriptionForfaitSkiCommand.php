@@ -4,11 +4,15 @@ namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Command;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UniteBundle\Entity\Age;
+use Mondofute\Bundle\UniteBundle\Entity\Tarif;
+use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,8 +88,23 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 
             $idCategorie = 1;
 //            Création de la ligne
+//            1 JOUR ADULTE
             $ligne = new LigneDescriptionForfaitSki();
-//            $ligne->setTrancheAge(true);
+
+            $ageMin = new Age();
+            $ageMin->setValeur(18);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(59);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(15);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
             $ligne->setClassement($i);
             $ligne->setQuantite(0);
             $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
@@ -108,44 +127,29 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
                 $ligneTraduction->setLangue($langue);
                 $ligneTraduction->setTexteDur('');
                 $ligneTraduction->setDescription('');
-//                $ligneTraduction->setSite($siteSite);
                 $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
                 $emSite->persist($ligneTraduction);
                 $ligne->addTraduction($ligneTraduction);
 
             }
             $emSite->persist($ligne);
-            $emSite->flush();
-
-//            if ($site->getCrm() == true) {
-//                $ligneCrm[$i] = $ligne;
-////                dump($uniteCrm);
-//            } else {
-//                $siteLigne = new SiteLigneDescriptionForfaitSki();
-//                $siteLigne->setLigneDescriptionForfaitSkiCrm($ligneCrm[$i]);
-//                $siteLigne->setLigneDescriptionForfaitSkiSiteId($ligne->getId());
-//                $siteLigne->setSite($site);
-//                $em->persist($siteLigne);
-//                $em->flush();
-//            }
-
-            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-////            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(2);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Enfant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
 //            $emSite->flush();
+            $i++;
+
+//            1 JOUR ENFANT
             $ligne = new LigneDescriptionForfaitSki();
-//            $ligne->setTrancheAge(true);
+
+            $ageMax = new Age();
+            $ageMax->setValeur(12);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(7);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+//            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
             $ligne->setClassement($i);
             $ligne->setQuantite(0);
             $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
@@ -175,24 +179,26 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 
             }
             $emSite->persist($ligne);
-            $emSite->flush();
-            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-////            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(2);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Enfant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
 //            $emSite->flush();
+            $i++;
+
+//            1 JOUR ADO
             $ligne = new LigneDescriptionForfaitSki();
-//            $ligne->setTrancheAge(true);
+
+            $ageMin = new Age();
+            $ageMin->setValeur(13);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(13);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
             $ligne->setClassement($i);
             $ligne->setQuantite(0);
             $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
@@ -222,24 +228,27 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 
             }
             $emSite->persist($ligne);
-            $emSite->flush();
-            $i++;
-////            Création de la ligne
-//            $ligne = new LigneDescriptionForfaitSkiValeur();
-////            $ligne->setTrancheAge(true);
-//            $ligne->setClassement(2);
-//            $ligne->setCategorie($emSite->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSkiCategorie')->findOneById($idCategorie));
-//            $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
-//            $ligneTraduction->setLibelle('1 jour Enfant');
-//            $ligneTraduction->setLangue($langue);
-//            $ligneTraduction->setSite($siteSite);
-//            $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
-//            $emSite->persist($ligneTraduction);
-//            $ligne->addTraduction($ligneTraduction);
-//            $emSite->persist($ligne);
 //            $emSite->flush();
+            $i++;
+
+//            1 JOUR ETUDIANT
             $ligne = new LigneDescriptionForfaitSki();
 //            $ligne->setTrancheAge(true);
+
+            $ageMin = new Age();
+            $ageMin->setValeur(13);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(14);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
             $ligne->setClassement($i);
             $ligne->setQuantite(0);
             $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
@@ -247,16 +256,16 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
                 $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
                 switch ($langue->getCode()) {
                     case 'fr_FR':
-                        $ligneTraduction->setLibelle('1 jour Ado');
+                        $ligneTraduction->setLibelle('1 jour Etudiant');
                         break;
                     case 'en_EN':
-                        $ligneTraduction->setLibelle('1 day ado');
+                        $ligneTraduction->setLibelle('1 day student');
                         break;
                     case 'es_ES':
-                        $ligneTraduction->setLibelle('1 dia ado');
+                        $ligneTraduction->setLibelle('1 dia estudiante');
                         break;
                     default:
-                        $ligneTraduction->setLibelle('1 jour ado');
+                        $ligneTraduction->setLibelle('1 jour etudiant');
                         break;
                 }
                 $ligneTraduction->setLangue($langue);
@@ -269,8 +278,553 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 
             }
             $emSite->persist($ligne);
-            $emSite->flush();
+//            $emSite->flush();
+            $i++;
 
+//            1 JOUR SENIOR
+            $ligne = new LigneDescriptionForfaitSki();
+
+            $ageMin = new Age();
+            $ageMin->setValeur(60);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(13.5);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+
+            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('1 jour senior');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('1 day older');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('1 dia abuelo');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('1 jour senior');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+//            $emSite->flush();
+            $i++;
+
+//            6 JOURS ADULTE
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+            $ageMin = new Age();
+            $ageMin->setValeur(18);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(59);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(85);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+
+            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('6 jours Adulte');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('6 days Adult');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('6 dias mayor');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('6 jours Adulte');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+//            $emSite->flush();
+            $i++;
+
+//            6 JOURS ENFANT
+            $ligne = new LigneDescriptionForfaitSki();
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(12);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(12);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(40);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+//            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('6 jours Enfant');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('6 days children');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('6 dias menor');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('6 jours enfant');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+//            $emSite->flush();
+            $i++;
+
+//            6 JOURS ADO
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+            $ageMin = new Age();
+            $ageMin->setValeur(13);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(75);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+            $ligne->setAgeMin($ageMin);
+            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('6 jour Ado');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('6 day ado');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('6 dia ado');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('6 jour ado');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+//            $emSite->flush();
+            $i++;
+
+//            6 JOURS ETUDIANT
+            $ligne = new LigneDescriptionForfaitSki();
+
+            $ageMin = new Age();
+            $ageMin->setValeur(13);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(82);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('6 jours Etudiant');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('6 days student');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('6 dias estudiante');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('6 jours etudiant');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+//            $emSite->flush();
+            $i++;
+
+//              6 JOURS SENIOR
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+            $ageMin = new Age();
+            $ageMin->setValeur(60);
+            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $ageMax = new Age();
+            $ageMax->setValeur(17);
+            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 2)));
+            $tarif = new Tarif();
+            $tarif->setValeur(77);
+            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id' => 3)));
+
+            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+            $ligne->setPrix($tarif);
+
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('6 jours senior');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('6 days older');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('6 dias abuelo');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('6 jours senior');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $i++;
+
+//              FORFAIT FAMILLE
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(60);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $ageMax = new Age();
+//            $ageMax->setValeur(17);
+//            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $tarif = new Tarif();
+//            $tarif->setValeur(77);
+//            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+//            $ligne->setPrix($tarif);
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('forfait famille');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('family pass');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('forfeto familial');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('forfait famille');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $i++;
+
+
+            $idCategorie = 2;
+//              FORFAIT SKI GRATUIT
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(60);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $ageMax = new Age();
+//            $ageMax->setValeur(17);
+//            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $tarif = new Tarif();
+//            $tarif->setValeur(77);
+//            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+//            $ligne->setPrix($tarif);
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('forfait ski gratuit');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('free ski pass');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('forfeto ski gratis');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('forfait ski gratuit');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $i++;
+
+//              REMONTEES MECANIQUE GRATUITES
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(60);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $ageMax = new Age();
+//            $ageMax->setValeur(17);
+//            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $tarif = new Tarif();
+//            $tarif->setValeur(77);
+//            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+//            $ligne->setPrix($tarif);
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('remontées mécaniques gratuites');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('free RM');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('RM gratis');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('remontées mécaniques gratuites');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $i++;
+
+//              SUPPORT MAINS LIBRES
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(60);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $ageMax = new Age();
+//            $ageMax->setValeur(17);
+//            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $tarif = new Tarif();
+//            $tarif->setValeur(77);
+//            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+//            $ligne->setPrix($tarif);
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('support Mains Libres');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('Free hands support');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('manos libres');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('support Mains Libres');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+            $i++;
+
+//              PIECE D IDENTITE
+            $ligne = new LigneDescriptionForfaitSki();
+//            $ligne->setTrancheAge(true);
+
+//            $ageMin = new Age();
+//            $ageMin->setValeur(60);
+//            $ageMin->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $ageMax = new Age();
+//            $ageMax->setValeur(17);
+//            $ageMax->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>2)));
+//            $tarif = new Tarif();
+//            $tarif->setValeur(77);
+//            $tarif->setUnite($emSite->getRepository(Unite::class)->findOneBy(array('id'=>3)));
+
+//            $ligne->setAgeMin($ageMin);
+//            $ligne->setAgeMax($ageMax);
+//            $ligne->setPrix($tarif);
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('pièce d\'identité');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('identity pieces');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('identidad');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('pièce d\'identité');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+//                $ligneTraduction->setSite($siteSite);
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
+
+            $emSite->flush();
         }
     }
 }

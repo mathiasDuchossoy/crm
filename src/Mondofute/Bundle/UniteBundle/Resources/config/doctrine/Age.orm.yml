@@ -8,9 +8,12 @@ Mondofute\Bundle\UniteBundle\Entity\Age:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         valeur:
             type: integer
+            unsigned: true
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteAge

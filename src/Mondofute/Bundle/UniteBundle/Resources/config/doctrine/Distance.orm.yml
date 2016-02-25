@@ -8,9 +8,13 @@ Mondofute\Bundle\UniteBundle\Entity\Distance:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         valeur:
             type: float
+            options:
+                unsigned: true
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteDistance

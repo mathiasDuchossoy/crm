@@ -13,8 +13,11 @@ Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC:
     fields:
         classement:
             type: integer
+            options:
+                unsigned: true
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNCTraduction
             mappedBy: ouiNonNC
+            cascade: ['persist']
     lifecycleCallbacks: {  }

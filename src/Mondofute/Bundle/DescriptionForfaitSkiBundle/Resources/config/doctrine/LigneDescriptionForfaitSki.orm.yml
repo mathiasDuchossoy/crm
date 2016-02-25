@@ -13,6 +13,8 @@ Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki:
     fields:
         quantite:
             type: float
+            options:
+                unsigned: true
         classement:
             type: smallint
             options:
@@ -25,14 +27,18 @@ Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki:
         categorie:
             targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie
 #            inversedBy: ligneDescriptionForfaitSki
+        present:
+            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+#            cascade: ['persist']
     oneToOne:
         prix:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
+            cascade: ['persist']
         ageMin:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Age
+            cascade: ['persist']
         ageMax:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Age
-        present:
-            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+            cascade: ['persist']
 
     lifecycleCallbacks: {  }
