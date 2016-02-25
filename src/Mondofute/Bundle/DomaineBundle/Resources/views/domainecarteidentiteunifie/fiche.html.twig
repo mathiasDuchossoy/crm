@@ -31,6 +31,15 @@
                             {{ form_row( domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.altitudeMaxi.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiAlpin.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiNordique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiNordique.vars['unique_block_prefix']  }}) }}
+                            {{ form_row( domaineCarteIdentite.remonteeMecanique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.remonteeMecanique.vars['unique_block_prefix']  }}) }}
+                            {{ form_row( domaineCarteIdentite.niveauSkieur , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.niveauSkieur.vars['unique_block_prefix']  }}) }}
+                            {% for piste in domaineCarteIdentite.pistes %}
+                                {% for traductionLangue in  piste.vars.value.typePiste.traductions %}
+                                    {% if(traductionLangue.langue.code == app.request.locale) %}
+                                        {{ form_row(piste , { 'label' :   (domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle)   }) }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
                         </div>
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
@@ -53,11 +62,43 @@
                             {% for traduction in domaineCarteIdentite.traductions %}
                                 <div id="{{ domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                                      class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+<<<<<<< HEAD
+                                    {{ form_widget(traduction) }}
+                                    {{ form_errors(traduction) }}
+                                    {% set break = false %}
+                                    {% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}
+                                        {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
+                                            {{ form_row(snowparkTraduction , { 'label' : domaineCarteIdentite.snowpark.vars.name | title }  ) }}
+                                            {{ form_errors(snowparkTraduction) }}
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% set break = false %}
+                                    {% for handiskiTraduction in domaineCarteIdentite.handiski.traductions if not break %}
+                                        {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
+                                            {{ form_row(handiskiTraduction , { 'label' : domaineCarteIdentite.handiski.vars.name | title }  ) }}
+                                            {{ form_errors(handiskiTraduction) }}
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            {#{% set iTraduc = 0 %}#}
+                            {#{% for traduction in domaineCarteIdentite.traductions %}#}
+                                {#<div id="{{ domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
+                                     {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
+                                    {#{% for element in traduction.children %}#}
+                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
+                                    {#{% endfor %}#}
+                                {#</div>#}
+                            {#{% endfor %}#}
+=======
                                     {% for element in traduction.children %}
                                         {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
                                     {% endfor %}
                                 </div>
                             {% endfor %}
+>>>>>>> rebase CRM-30 sur CRM-32
                         </div>
                     </div>
                 {% endfor %}
