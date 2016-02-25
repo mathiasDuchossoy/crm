@@ -31,12 +31,12 @@
                             {{ form_row( domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.altitudeMaxi.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiAlpin.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiNordique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiNordique.vars['unique_block_prefix']  }}) }}
-                            {{ form_row( domaineCarteIdentite.remonteeMecanique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.remonteeMecanique.vars['unique_block_prefix']  }}) }}
+                            {{ form_row( domaineCarteIdentite.remonteeMecanique.nombre , { 'label' :   domaineCarteIdentite.remonteeMecanique.vars.name | humanize  , 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.remonteeMecanique.nombre.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.niveauSkieur , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.niveauSkieur.vars['unique_block_prefix']  }}) }}
                             {% for piste in domaineCarteIdentite.pistes %}
                                 {% for traductionLangue in  piste.vars.value.typePiste.traductions %}
                                     {% if(traductionLangue.langue.code == app.request.locale) %}
-                                        {{ form_row(piste , { 'label' :   (domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle)   }) }}
+                                        {{ form_row(piste.nombre , { 'label' :   (domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle) ,'attr' : { 'data-unique_block_prefix' : piste.nombre.vars['unique_block_prefix'] ~ '_' ~ piste.vars['value'].typePiste.id  }  }) }}
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
@@ -68,16 +68,20 @@
                                     {% set break = false %}
                                     {% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}
                                         {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
-                                            {{ form_row(snowparkTraduction , { 'label' : domaineCarteIdentite.snowpark.vars.name | title }  ) }}
-                                            {{ form_errors(snowparkTraduction) }}
+
+                                            {#{% for element in snowparkTraduction.children %}#}
+                                            {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
+                                            {#{% endfor %}#}
+                                            {{ form_row(snowparkTraduction.description , { 'label' : domaineCarteIdentite.snowpark.vars.name | humanize , 'attr' : { 'data-unique_block_prefix' : snowparkTraduction.description.vars['unique_block_prefix']~ '_' ~ snowparkTraduction.vars['value'].langue.code}}  ) }}
+                                            {#{{ form_errors(snowparkTraduction) }}#}
                                             {% set break = true %}
                                         {% endif %}
                                     {% endfor %}
                                     {% set break = false %}
                                     {% for handiskiTraduction in domaineCarteIdentite.handiski.traductions if not break %}
                                         {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
-                                            {{ form_row(handiskiTraduction , { 'label' : domaineCarteIdentite.handiski.vars.name | title }  ) }}
-                                            {{ form_errors(handiskiTraduction) }}
+                                            {{ form_row(handiskiTraduction.description , { 'label' : domaineCarteIdentite.handiski.vars.name | humanize , 'attr' : { 'data-unique_block_prefix' : handiskiTraduction.description.vars['unique_block_prefix']~ '_' ~ handiskiTraduction.vars['value'].langue.code}}  ) }}
+                                            {#{{ form_errors(handiskiTraduction) }}#}
                                             {% set break = true %}
                                         {% endif %}
                                     {% endfor %}
@@ -115,10 +119,19 @@
     <script type="text/javascript">
         var itemNonPersonalisable = [];
         itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");
 
-        {#{% for langue in langues %}#}
-        {#itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#{% endfor %}#}
+        {% for langue in langues %}
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");
+        {% endfor %}
     </script>
     {{ parent() }}
     <script type="text/javascript">
