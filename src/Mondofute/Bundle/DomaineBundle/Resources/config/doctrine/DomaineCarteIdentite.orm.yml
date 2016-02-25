@@ -25,6 +25,8 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         domaineCarteIdentiteUnifie:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
             inversedBy: domaineCarteIdentites
+        niveauSkieur:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction
@@ -33,4 +35,19 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
         domaines:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineCarteIdentite
+        pistes:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Piste
+            mappedBy: domaineCarteIdentite
+            cascade:  ['persist' , 'remove']
+    oneToOne:
+        handiski:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
+            cascade:  ['persist' , 'remove']
+        snowpark:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+            cascade:  ['persist', 'remove']
+        remonteeMecanique:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+            cascade: ['remove','persist']
+            onDelete: CASCADE
     lifecycleCallbacks: {  }

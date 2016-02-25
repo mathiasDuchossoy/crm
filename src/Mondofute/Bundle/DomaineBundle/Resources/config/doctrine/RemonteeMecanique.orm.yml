@@ -1,0 +1,18 @@
+Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\RemonteeMecaniqueRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        nombre:
+            type: integer
+            options:
+                unsigned: true
+    lifecycleCallbacks: {  }

@@ -1,0 +1,18 @@
+Mondofute\Bundle\DomaineBundle\Entity\Handiski:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\HandiskiRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction
+            mappedBy: handiski
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }

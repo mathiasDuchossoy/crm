@@ -43,6 +43,15 @@
                     {{ form_row( domaineCarteIdentite.altitudeMaxi ) }}
                     {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin ) }}
                     {{ form_row( domaineCarteIdentite.kmPistesSkiNordique ) }}
+                    {{ form_row( domaineCarteIdentite.remonteeMecanique ) }}
+                    {{ form_row( domaineCarteIdentite.niveauSkieur ) }}
+                    {% for piste in domaineCarteIdentite.pistes %}
+                        {% for traductionLangue in  piste.vars.value.typePiste.traductions %}
+                            {% if(traductionLangue.langue.code == app.request.locale) %}
+                                {{ form_row(piste , { 'label' :   (domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle)   }) }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
                 </div>
                 <ul class="nav nav-tabs">
                     {% set iTraduc = 0 %}
@@ -68,6 +77,22 @@
                             {#{{ form_row(traduction) }}#}
                             {{ form_widget(traduction) }}
                             {{ form_errors(traduction) }}
+                            {% set break = false %}
+                            {% for snowparkTraduction in domaineCarteIdentite.snowpark.traductions if not break %}
+                                {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
+                                    {{ form_row(snowparkTraduction , { 'label' : domaineCarteIdentite.snowpark.vars.name | title }  ) }}
+                                    {{ form_errors(snowparkTraduction) }}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% set break = false %}
+                            {% for handiskiTraduction in domaineCarteIdentite.handiski.traductions if not break %}
+                                {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
+                                    {{ form_row(handiskiTraduction , { 'label' : domaineCarteIdentite.handiski.vars.name | title }  ) }}
+                                    {{ form_errors(handiskiTraduction) }}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     {% endfor %}
                 </div>

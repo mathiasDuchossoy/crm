@@ -153,11 +153,11 @@ class ZoneTouristique
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
      *
      * @return ZoneTouristique
      */
-    public function addStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations[] = $station->setZoneTouristique($this);
 
@@ -167,9 +167,9 @@ class ZoneTouristique
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Station $station
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
      */
-    public function removeStation(\Mondofute\Bundle\GeographieBundle\Entity\Station $station)
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations->removeElement($station);
     }

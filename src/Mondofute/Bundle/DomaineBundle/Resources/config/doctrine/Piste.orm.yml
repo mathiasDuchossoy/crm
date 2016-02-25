@@ -1,0 +1,24 @@
+Mondofute\Bundle\DomaineBundle\Entity\Piste:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\PisteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        nombre:
+            type: integer
+            options:
+                unsigned: true
+    manyToOne:
+        typePiste:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\TypePiste
+        domaineCarteIdentite:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+            inversedBy: pistes
+    lifecycleCallbacks: {  }
