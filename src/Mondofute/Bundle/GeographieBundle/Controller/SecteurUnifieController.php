@@ -45,7 +45,8 @@ class SecteurUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -55,13 +56,12 @@ class SecteurUnifieController extends Controller
         $this->secteursSortByAffichage($secteurUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType', $secteurUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($secteurUnifie);
+            $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
 
 //            $em = $this->getDoctrine()->getManager();
             $em->persist($secteurUnifie);
@@ -75,6 +75,7 @@ class SecteurUnifieController extends Controller
         return $this->render('@MondofuteGeographie/secteurunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $secteurUnifie,
             'form' => $form->createView(),
         ));
@@ -88,7 +89,8 @@ class SecteurUnifieController extends Controller
     {
         /** @var Langue $langue */
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -172,34 +174,6 @@ class SecteurUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $secteur->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param SecteurUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(SecteurUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $secteurCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir tous les secteurs
-        foreach ($entity->getSecteurs() as $secteur) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $secteur->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $secteurCrm = clone $secteur;
-                $secteurCrm->setSite($siteCrm);
-                $classementReferentTmp = $secteur->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($secteurCrm)) {
-            $entity->addSecteur($secteurCrm);
-        }
-        return $this;
     }
 
     /**
@@ -343,7 +317,8 @@ class SecteurUnifieController extends Controller
     public function editAction(Request $request, SecteurUnifie $secteurUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -351,9 +326,7 @@ class SecteurUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($secteurUnifie->getSecteurs() as $secteur) {
-                if (empty($secteur->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $secteur->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $secteur->getSite()->getId());
             }
         } else {
 
@@ -361,7 +334,7 @@ class SecteurUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $secteurCrm = $this->dissocierSecteurCrm($secteurUnifie);
+//        $secteurCrm = $this->dissocierSecteurCrm($secteurUnifie);
         $originalSecteurs = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($secteurUnifie->getSecteurs() as $secteur) {
@@ -374,14 +347,14 @@ class SecteurUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($secteurUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType', $secteurUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
-            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
-            $em->persist($secteurCrm);
+//            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
+//            $em->persist($secteurCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalSecteurs as $secteur) {
@@ -412,128 +385,11 @@ class SecteurUnifieController extends Controller
         return $this->render('@MondofuteGeographie/secteurunifie/edit.html.twig', array(
             'entity' => $secteurUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la secteur crm
-     * @param SecteurUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierSecteurCrm(SecteurUnifie $entity)
-    {
-        foreach ($entity->getSecteurs() as $secteur) {
-            if ($secteur->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeSecteur($secteur);
-                return $secteur;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param SecteurUnifie $secteurUnifie
-     * @param Secteur $secteurCrm
-     * @return bool
-     */
-    private function mettreAJourSecteurCrm(SecteurUnifie $secteurUnifie, Secteur $secteurCrm)
-    {
-        /** @var SecteurTraduction $secteurTraduc */
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($secteurUnifie->getSecteurs() as $secteur) {
-            $tabClassementSiteReferent[] = $secteur->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($secteurUnifie->getSecteurs() as $secteur) {
-
-            // Si la site de la station est égale au site de référence
-            if ($secteur->getSite() == $siteReferent) {
-//                dump($secteur);
-//              ajouter les champs "communs"
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $secteurTraduc = $secteur->getTraductions()->filter(function (SecteurTraduction $element) use (
-                        $langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $secteurTraducCrm = $secteurCrm->getTraductions()->filter(function (SecteurTraduction $element) use
-                    (
-                        $langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($secteurTraduc);
-
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($secteurTraduc->getLibelle())) {
-                        $secteurTraduc->setLibelle('');
-                    }
-                    if (is_null($secteurTraduc->getDescription())) {
-                        $secteurTraduc->setDescription('');
-                    }
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($secteurTraducCrm)) {
-                        $secteurTraducCrm = new SecteurTraduction();
-                        $secteurTraducCrm->setSecteur($secteurCrm);
-                        $secteurTraducCrm->setLangue($langue);
-//                        dump($secteurTraducCrm);
-//                        dump($secteurTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $secteurTraducCrm->setLibelle($secteurTraduc->getLibelle());
-                        $secteurTraducCrm->setDescription($secteurTraduc->getDescription());
-                        $secteurCrm->addTraduction($secteurTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $secteurTraducCrm->setLibelle($secteurTraduc->getLibelle());
-                        $secteurTraducCrm->setDescription($secteurTraduc->getDescription());
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $secteurTraduc = $secteur->getTraductions()->filter(function (SecteurTraduction $element) use (
-                        $langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($secteurTraduc->getLibelle())) {
-                        $secteurTraduc->setLibelle('');
-                    }
-                    if (is_null($secteurTraduc->getDescription())) {
-                        $secteurTraduc->setDescription('');
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -567,6 +423,7 @@ class SecteurUnifieController extends Controller
         $this->addFlash('success', 'le secteur a bien été supprimé');
         return $this->redirectToRoute('geographie_secteur_index');
     }
+
 
 
 }
