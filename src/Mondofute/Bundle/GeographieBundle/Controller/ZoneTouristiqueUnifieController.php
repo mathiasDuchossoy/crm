@@ -352,6 +352,8 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->ajouterZoneTouristiquesDansForm($zoneTouristiqueUnifie);
 //        $this->dispacherDonneesCommune($zoneTouristiqueUnifie);
         $this->zoneTouristiquesSortByAffichage($zoneTouristiqueUnifie);
+        dump($zoneTouristiqueUnifie);
+        die;
         $deleteForm = $this->createDeleteForm($zoneTouristiqueUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
