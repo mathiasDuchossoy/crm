@@ -131,6 +131,9 @@
 
         {% for langue in langues %}
         itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_description_{{ langue.code }}");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_traductions_entry_description_{{ langue.code }}");
+        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");
         {% endfor %}
     </script>
     {{ parent() }}
