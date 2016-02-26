@@ -49,7 +49,6 @@
                                     {#{{ form_row(traduction) }}#}
                                     {% for element in traduction.children %}
                                         {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
-                                        {#{{ dump(element) }}#}
                                     {% endfor %}
                                 </div>
                             {% endfor %}

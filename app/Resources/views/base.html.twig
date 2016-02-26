@@ -23,7 +23,9 @@
     </div>
 {% endblock %}
 <div class="container">
+    <div class="row">
     {% block body %}{% endblock %}
+    </div>
 </div>
 {% block footer %}
 {% endblock %}
@@ -92,6 +94,7 @@
                     if (parent.data('crm') == 0) {
                         $(this).parents(".form-group").show(); // Changer en hide
 //                        $(this).parents(".form-group").hide(); // Changer en hide
+
                     }
                 });
             });
