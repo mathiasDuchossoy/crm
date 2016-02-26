@@ -37,20 +37,6 @@ class SecteurUnifie
     }
 
     /**
-     * Add secteur
-     *
-     * @param Secteur $secteur
-     *
-     * @return SecteurUnifie
-     */
-    public function addSecteur(Secteur $secteur)
-    {
-        $this->secteurs[] = $secteur->setSecteurUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove secteur
      *
      * @param Secteur $secteur
@@ -76,7 +62,25 @@ class SecteurUnifie
      */
     public function setSecteurs(ArrayCollection $secteurs)
     {
-        $this->secteurs = $secteurs;
+        $this->getSecteurs()->clear();
+
+        foreach ($secteurs as $secteur) {
+            $this->addSecteur($secteur);
+        }
+        return $this;
+    }
+
+    /**
+     * Add secteur
+     *
+     * @param Secteur $secteur
+     *
+     * @return SecteurUnifie
+     */
+    public function addSecteur(Secteur $secteur)
+    {
+        $this->secteurs[] = $secteur->setSecteurUnifie($this);
+
         return $this;
     }
 }

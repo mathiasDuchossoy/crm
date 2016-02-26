@@ -36,20 +36,6 @@ class DomaineCarteIdentiteUnifie
     }
 
     /**
-     * Add domaineCarteIdentite
-     *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
-     *
-     * @return DomaineCarteIdentiteUnifie
-     */
-    public function addDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
-    {
-        $this->domaineCarteIdentites[] = $domaineCarteIdentite->setDomaineCarteIdentiteUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove domaineCarteIdentite
      *
      * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
@@ -69,10 +55,27 @@ class DomaineCarteIdentiteUnifie
         return $this->domaineCarteIdentites;
     }
 
-
     public function setDomaineCarteIdentites(ArrayCollection $domaineCarteIdentites)
     {
-        $this->domaineCarteIdentites = $domaineCarteIdentites;
+        $this->getDomaineCarteIdentites()->clear();
+
+        foreach ($domaineCarteIdentites as $domaineCarteIdentite) {
+            $this->addDomaineCarteIdentite($domaineCarteIdentite);
+        }
+        return $this;
+    }
+
+    /**
+     * Add domaineCarteIdentite
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     *
+     * @return DomaineCarteIdentiteUnifie
+     */
+    public function addDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
+    {
+        $this->domaineCarteIdentites[] = $domaineCarteIdentite->setDomaineCarteIdentiteUnifie($this);
+
         return $this;
     }
 }
