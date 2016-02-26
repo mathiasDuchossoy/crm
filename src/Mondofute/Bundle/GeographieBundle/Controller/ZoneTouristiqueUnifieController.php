@@ -144,7 +144,7 @@ class ZoneTouristiqueUnifieController extends Controller
 
         // Recueillir un itérateur de tableau.
         $iterator = $zoneTouristiques->getIterator();
-        unset($zoneTouristiques);
+//        unset($zoneTouristiques);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
         $iterator->uasort(function (ZoneTouristique $a, ZoneTouristique $b) {
@@ -352,14 +352,15 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->ajouterZoneTouristiquesDansForm($zoneTouristiqueUnifie);
 //        $this->dispacherDonneesCommune($zoneTouristiqueUnifie);
         $this->zoneTouristiquesSortByAffichage($zoneTouristiqueUnifie);
+
         $deleteForm = $this->createDeleteForm($zoneTouristiqueUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
             $zoneTouristiqueUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
-
+//        dump($editForm);die();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
                 $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);

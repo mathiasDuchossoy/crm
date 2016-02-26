@@ -37,20 +37,6 @@ class ZoneTouristiqueUnifie
     }
 
     /**
-     * Add zoneTouristique
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
-     *
-     * @return ZoneTouristiqueUnifie
-     */
-    public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
-    {
-        $this->zoneTouristiques[] = $zoneTouristique->setZoneTouristiqueUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove zoneTouristique
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
@@ -76,7 +62,25 @@ class ZoneTouristiqueUnifie
      */
     public function setZoneTouristiques(ArrayCollection $zoneToutistiques)
     {
-        $this->zoneToutistiques = $zoneToutistiques;
+        $this->getZoneTouristiques()->clear();
+
+        foreach ($zoneToutistiques as $zoneToutistique) {
+            $this->addZoneTouristique($zoneToutistique);
+        }
+        return $this;
+    }
+
+    /**
+     * Add zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     *
+     * @return ZoneTouristiqueUnifie
+     */
+    public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    {
+        $this->zoneTouristiques[] = $zoneTouristique->setZoneTouristiqueUnifie($this);
+
         return $this;
     }
 

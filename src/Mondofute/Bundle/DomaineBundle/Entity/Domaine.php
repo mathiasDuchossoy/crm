@@ -59,20 +59,6 @@ class Domaine
     }
 
     /**
-     * Add traduction
-     *
-     * @param DomaineTraduction $traduction
-     *
-     * @return Domaine
-     */
-    public function addTraduction(DomaineTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDomaine($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param DomaineTraduction $traduction
@@ -156,7 +142,25 @@ class Domaine
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param DomaineTraduction $traduction
+     *
+     * @return Domaine
+     */
+    public function addTraduction(DomaineTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDomaine($this);
+
         return $this;
     }
 

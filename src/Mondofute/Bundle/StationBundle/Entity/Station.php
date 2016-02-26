@@ -225,20 +225,6 @@ class Station
     }
 
     /**
-     * Add traduction
-     *
-     * @param StationTraduction $traduction
-     *
-     * @return Station
-     */
-    public function addTraduction(StationTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setStation($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param StationTraduction $traduction
@@ -322,7 +308,25 @@ class Station
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param StationTraduction $traduction
+     *
+     * @return Station
+     */
+    public function addTraduction(StationTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setStation($this);
+
         return $this;
     }
 

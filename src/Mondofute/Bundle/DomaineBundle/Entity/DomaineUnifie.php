@@ -38,20 +38,6 @@ class DomaineUnifie
     }
 
     /**
-     * Add domaine
-     *
-     * @param Domaine $domaine
-     *
-     * @return DomaineUnifie
-     */
-    public function addDomaine(Domaine $domaine)
-    {
-        $this->domaines[] = $domaine->setDomaineUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove domaine
      *
      * @param Domaine $domaine
@@ -77,7 +63,25 @@ class DomaineUnifie
      */
     public function setDomaines($domaines)
     {
-        $this->domaines = $domaines;
+        $this->getDomaines()->clear();
+
+        foreach ($domaines as $domaine) {
+            $this->addDomaine($domaine);
+        }
+        return $this;
+    }
+
+    /**
+     * Add domaine
+     *
+     * @param Domaine $domaine
+     *
+     * @return DomaineUnifie
+     */
+    public function addDomaine(Domaine $domaine)
+    {
+        $this->domaines[] = $domaine->setDomaineUnifie($this);
+
         return $this;
     }
 }

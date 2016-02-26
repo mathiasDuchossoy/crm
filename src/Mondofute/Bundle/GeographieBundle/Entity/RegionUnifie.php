@@ -37,20 +37,6 @@ class RegionUnifie
     }
 
     /**
-     * Add region
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
-     *
-     * @return RegionUnifie
-     */
-    public function addRegion(\Mondofute\Bundle\GeographieBundle\Entity\Region $region)
-    {
-        $this->regions[] = $region->setRegionUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove region
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
@@ -76,7 +62,27 @@ class RegionUnifie
      */
     public function setRegions(ArrayCollection $regions)
     {
-        $this->regions = $regions;
+//        $this->regions = $regions;
+//        return $this;
+        $this->getRegions()->clear();
+
+        foreach ($regions as $region) {
+            $this->addRegion($region);
+        }
+        return $this;
+    }
+
+    /**
+     * Add region
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
+     *
+     * @return RegionUnifie
+     */
+    public function addRegion(\Mondofute\Bundle\GeographieBundle\Entity\Region $region)
+    {
+        $this->regions[] = $region->setRegionUnifie($this);
+
         return $this;
     }
 }

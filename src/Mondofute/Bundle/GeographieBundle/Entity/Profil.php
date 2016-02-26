@@ -45,20 +45,6 @@ class Profil
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
-     *
-     * @return Profil
-     */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setProfil($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
@@ -146,7 +132,25 @@ class Profil
      */
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     *
+     * @return Profil
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setProfil($this);
+
         return $this;
     }
 

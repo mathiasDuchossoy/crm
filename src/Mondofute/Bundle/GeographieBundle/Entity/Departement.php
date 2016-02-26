@@ -49,20 +49,6 @@ class Departement
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
-     *
-     * @return Departement
-     */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDepartement($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
@@ -126,7 +112,25 @@ class Departement
      */
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     *
+     * @return Departement
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDepartement($this);
+
         return $this;
     }
 
