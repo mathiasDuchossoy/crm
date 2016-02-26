@@ -1,6 +1,6 @@
 {% extends '@MondofuteGeographie/regionunifie/fiche.html.twig' %}
 
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{#{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}#}
 {% block title %}
     {{ 'création d\une région' | capitalize }}
 {% endblock %}
@@ -9,73 +9,71 @@
     Création d'une région
 {% endblock %}
 
-{% block formulaire %}
-    {% include '::flashbags.html.twig' %}
-    {{ form_errors(form) }}
-    {{ form_start(form) }}
-    {% include '::coches_sites.html.twig' %}
+{#{% block formulaire %}#}
+    {#{% include '::flashbags.html.twig' %}#}
+    {#{{ form_errors(form) }}#}
+    {#{{ form_start(form) }}#}
+    {#{% include '::coches_sites.html.twig' %}#}
 
-    {% set region = form.regions | first %}
+    {#{% set region = form.regions | first %}#}
     {#<div>#}
     {#{{ form_row( region.nbVache ) }}#}
     {#{{ form_row( region.nbHabitant ) }}#}
     {#</div>#}
-    {% set mesSites = form.regions %}
-    {% include '::onglets_sites.html.twig' %}
+    {#{% set mesSites = form.regions %}#}
+    {#{% include '::onglets_sites.html.twig' %}#}
 
-    <div class="tab-content" style="padding:20px;">
-        {% set iSite = 0 %}
-        {% for region in form.regions %}
-            <div id="data_site_{{ region.vars.value.site.id }}"
-                 class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
+    {#<div class="tab-content" style="padding:20px;">#}
+        {#{% set iSite = 0 %}#}
+        {#{% for region in form.regions %}#}
+            {#<div id="data_site_{{ region.vars.value.site.id }}"#}
+                 {#class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">#}
                 {#{{ form_row(region.enneige) }}#}
-                {{ form_row(region.site) }}
-                <ul class="nav nav-tabs">
-                    {% set iTraduc = 0 %}
-                    {% for traduction in region.traductions %}
-                        <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                            <a data-toggle="tab"
-                               href="#{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                {#{{ form_row(region.site) }}#}
+                {#<ul class="nav nav-tabs">#}
+                    {#{% set iTraduc = 0 %}#}
+                    {#{% for traduction in region.traductions %}#}
+                        {#<li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>#}
+                            {#<a data-toggle="tab"#}
+                               {#href="#{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">#}
                                 {# affiche la langue en fonction de la locale#}
-                                {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                    {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                        {{ traductionLangue.libelle }}
-                                    {% endif %}
-                                {% endfor %}
-                            </a>
-                        </li>
+                                {#{% for traductionLangue in  traduction.vars.value.langue.traductions %}#}
+                                    {#{% if(traductionLangue.langueTraduction.code == app.request.locale) %}#}
+                                        {#{{ traductionLangue.libelle }}#}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                            {#</a>#}
+                        {#</li>#}
                         {#{{ form_row(traduction) }}#}
-                    {% endfor %}
-                </ul>
-                <div class="tab-content">
-                    {% set iTraduc = 0 %}
-                    {% for traduction in region.traductions %}
-                        <div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                             class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                            {{ form_widget(traduction) }}
-                            {{ form_errors(traduction) }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {{ form_row(form.submit) }}
-    {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}
-{% endblock %}
+                    {#{% endfor %}#}
+                {#</ul>#}
+                {#<div class="tab-content">#}
+                    {#{% set iTraduc = 0 %}#}
+                    {#{% for traduction in region.traductions %}#}
+                        {#<div id="{{ region.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
+                             {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
+                            {#{{ form_widget(traduction) }}#}
+                            {#{{ form_errors(traduction) }}#}
+                        {#</div>#}
+                    {#{% endfor %}#}
+                {#</div>#}
+            {#</div>#}
+        {#{% endfor %}#}
+    {#</div>#}
+    {#{{ form_row(form.submit) }}#}
+    {#{{ form_row(form._token) }}#}
+    {#{{ form_end(form, {'render_rest': false}) }}#}
+{#{% endblock %}#}
 
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li><a href="{{ path('geographie_region_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
-            {#<li>{{ form(delete_form) }}</li>#}
         </ul>
-
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-{% endblock %}
+{#{% block javascripts %}#}
+    {#{{ parent() }}#}
+{#{% endblock %}#}

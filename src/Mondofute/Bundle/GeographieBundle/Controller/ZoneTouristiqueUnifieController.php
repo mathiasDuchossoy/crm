@@ -44,7 +44,9 @@ class ZoneTouristiqueUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -55,13 +57,12 @@ class ZoneTouristiqueUnifieController extends Controller
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
             $zoneTouristiqueUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($zoneTouristiqueUnifie);
+            $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
 
 //            $em = $this->getDoctrine()->getManager();
             $em->persist($zoneTouristiqueUnifie);
@@ -76,6 +77,7 @@ class ZoneTouristiqueUnifieController extends Controller
         return $this->render('@MondofuteGeographie/zonetouristiqueunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $zoneTouristiqueUnifie,
             'form' => $form->createView(),
         ));
@@ -89,7 +91,8 @@ class ZoneTouristiqueUnifieController extends Controller
     {
         /** @var Langue $langue */
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -141,7 +144,7 @@ class ZoneTouristiqueUnifieController extends Controller
 
         // Recueillir un itérateur de tableau.
         $iterator = $zoneTouristiques->getIterator();
-        unset($zoneTouristiques);
+//        unset($zoneTouristiques);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
         $iterator->uasort(function (ZoneTouristique $a, ZoneTouristique $b) {
@@ -176,34 +179,6 @@ class ZoneTouristiqueUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $zoneTouristique->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param ZoneTouristiqueUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(ZoneTouristiqueUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $zoneTouristiqueCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les zoneTouristiques
-        foreach ($entity->getZoneTouristiques() as $zoneTouristique) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $zoneTouristique->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $zoneTouristiqueCrm = clone $zoneTouristique;
-                $zoneTouristiqueCrm->setSite($siteCrm);
-                $classementReferentTmp = $zoneTouristique->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($zoneTouristiqueCrm)) {
-            $entity->addZoneTouristique($zoneTouristiqueCrm);
-        }
-        return $this;
     }
 
     /**
@@ -349,7 +324,9 @@ class ZoneTouristiqueUnifieController extends Controller
     public function editAction(Request $request, ZoneTouristiqueUnifie $zoneTouristiqueUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -357,9 +334,7 @@ class ZoneTouristiqueUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
-                if (empty($zoneTouristique->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $zoneTouristique->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $zoneTouristique->getSite()->getId());
             }
         } else {
 
@@ -367,7 +342,7 @@ class ZoneTouristiqueUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $zoneTouristiqueCrm = $this->dissocierZoneTouristiqueCrm($zoneTouristiqueUnifie);
+//        $zoneTouristiqueCrm = $this->dissocierZoneTouristiqueCrm($zoneTouristiqueUnifie);
         $originalZoneTouristiques = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
@@ -377,19 +352,20 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->ajouterZoneTouristiquesDansForm($zoneTouristiqueUnifie);
 //        $this->dispacherDonneesCommune($zoneTouristiqueUnifie);
         $this->zoneTouristiquesSortByAffichage($zoneTouristiqueUnifie);
+
         $deleteForm = $this->createDeleteForm($zoneTouristiqueUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
             $zoneTouristiqueUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
-
+//        dump($editForm);die();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
                 $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
-                $this->mettreAJourZoneTouristiqueCrm($zoneTouristiqueUnifie, $zoneTouristiqueCrm);
-                $em->persist($zoneTouristiqueCrm);
+//                $this->mettreAJourZoneTouristiqueCrm($zoneTouristiqueUnifie, $zoneTouristiqueCrm);
+//                $em->persist($zoneTouristiqueCrm);
 
                 // Supprimer la relation entre la station et stationUnifie
                 foreach ($originalZoneTouristiques as $zoneTouristique) {
@@ -411,7 +387,6 @@ class ZoneTouristiqueUnifieController extends Controller
 
                 $this->copieVersSites($zoneTouristiqueUnifie);
             } catch (ForeignKeyConstraintViolationException $except) {
-//                dump($except);
                 switch ($except->getCode()) {
                     case 0:
                         $this->addFlash('error',
@@ -426,9 +401,6 @@ class ZoneTouristiqueUnifieController extends Controller
             }
             $this->addFlash('success', 'la zone touristique a bien été modifiée');
 
-//            dump($zoneTouristiqueUnifie);
-//            dump($zoneTouristiqueCrm);
-//            die;
             return $this->redirectToRoute('geographie_zonetouristique_edit',
                 array('id' => $zoneTouristiqueUnifie->getId()));
         }
@@ -436,129 +408,11 @@ class ZoneTouristiqueUnifieController extends Controller
         return $this->render('@MondofuteGeographie/zonetouristiqueunifie/edit.html.twig', array(
             'entity' => $zoneTouristiqueUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la zoneTouristique crm
-     * @param ZoneTouristiqueUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierZoneTouristiqueCrm(ZoneTouristiqueUnifie $entity)
-    {
-        foreach ($entity->getZoneTouristiques() as $zoneTouristique) {
-            if ($zoneTouristique->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeZoneTouristique($zoneTouristique);
-                return $zoneTouristique;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param ZoneTouristiqueUnifie $zoneTouristiqueUnifie
-     * @param ZoneTouristique $zoneTouristiqueCrm
-     * @return bool
-     */
-    private function mettreAJourZoneTouristiqueCrm(
-        ZoneTouristiqueUnifie $zoneTouristiqueUnifie,
-        ZoneTouristique $zoneTouristiqueCrm
-    ) {
-        /** @var ZoneTouristiqueTraduction $zoneTouristiqueTraduc */
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
-            $tabClassementSiteReferent[] = $zoneTouristique->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
-
-            // Si la site de la station est égale au site de référence
-            if ($zoneTouristique->getSite() == $siteReferent) {
-//                dump($zoneTouristique);
-//              ajouter les champs "communs"
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $zoneTouristiqueTraduc = $zoneTouristique->getTraductions()->filter(function (
-                        ZoneTouristiqueTraduction $element
-                    ) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $zoneTouristiqueTraducCrm = $zoneTouristiqueCrm->getTraductions()->filter(function (
-                        ZoneTouristiqueTraduction $element
-                    ) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($zoneTouristiqueTraduc);
-
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($zoneTouristiqueTraduc->getLibelle())) {
-                        $zoneTouristiqueTraduc->setLibelle('');
-                    }
-                    if (is_null($zoneTouristiqueTraduc->getDescription())) {
-                        $zoneTouristiqueTraduc->setDescription('');
-                    }
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($zoneTouristiqueTraducCrm)) {
-                        $zoneTouristiqueTraducCrm = new ZoneTouristiqueTraduction();
-                        $zoneTouristiqueTraducCrm->setZoneTouristique($zoneTouristiqueCrm);
-                        $zoneTouristiqueTraducCrm->setLangue($langue);
-//                        dump($zoneTouristiqueTraducCrm);
-//                        dump($zoneTouristiqueTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $zoneTouristiqueTraducCrm->setLibelle($zoneTouristiqueTraduc->getLibelle());
-                        $zoneTouristiqueTraducCrm->setDescription($zoneTouristiqueTraduc->getDescription());
-                        $zoneTouristiqueCrm->addTraduction($zoneTouristiqueTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $zoneTouristiqueTraducCrm->setLibelle($zoneTouristiqueTraduc->getLibelle());
-                        $zoneTouristiqueTraducCrm->setDescription($zoneTouristiqueTraduc->getDescription());
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $zoneTouristiqueTraduc = $zoneTouristique->getTraductions()->filter(function (
-                        ZoneTouristiqueTraduction $element
-                    ) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($zoneTouristiqueTraduc->getLibelle())) {
-                        $zoneTouristiqueTraduc->setLibelle('');
-                    }
-                    if (is_null($zoneTouristiqueTraduc->getDescription())) {
-                        $zoneTouristiqueTraduc->setDescription('');
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -607,6 +461,5 @@ class ZoneTouristiqueUnifieController extends Controller
         $this->addFlash('success', 'la zone touristique a bien été supprimée');
         return $this->redirectToRoute('geographie_zonetouristique_index');
     }
-
 
 }

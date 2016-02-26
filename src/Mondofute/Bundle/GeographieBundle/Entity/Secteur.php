@@ -46,20 +46,6 @@ class Secteur
     }
 
     /**
-     * Add traduction
-     *
-     * @param SecteurTraduction $traduction
-     *
-     * @return Secteur
-     */
-    public function addTraduction(SecteurTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setSecteur($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param SecteurTraduction $traduction
@@ -143,7 +129,25 @@ class Secteur
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param SecteurTraduction $traduction
+     *
+     * @return Secteur
+     */
+    public function addTraduction(SecteurTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setSecteur($this);
+
         return $this;
     }
 

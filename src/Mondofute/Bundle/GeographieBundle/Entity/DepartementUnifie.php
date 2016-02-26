@@ -37,20 +37,6 @@ class DepartementUnifie
     }
 
     /**
-     * Add departement
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
-     *
-     * @return DepartementUnifie
-     */
-    public function addDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
-    {
-        $this->departements[] = $departement->setDepartementUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove departement
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
@@ -76,7 +62,25 @@ class DepartementUnifie
      */
     public function setDepartements(ArrayCollection $departements)
     {
-        $this->departements = $departements;
+        $this->getDepartements()->clear();
+
+        foreach ($departements as $departement) {
+            $this->addDepartement($departement);
+        }
+        return $this;
+    }
+
+    /**
+     * Add departement
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
+     *
+     * @return DepartementUnifie
+     */
+    public function addDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
+    {
+        $this->departements[] = $departement->setDepartementUnifie($this);
+
         return $this;
     }
 }

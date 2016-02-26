@@ -63,6 +63,14 @@ class DomaineCarteIdentite
      * @var \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
      */
     private $remonteeMecanique;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     */
+    private $niveauSkieur;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $pistes;
 
     /**
      * Constructor
@@ -179,20 +187,6 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Add traduction
-     *
-     * @param DomaineCarteIdentiteTraduction $traduction
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function addTraduction(DomaineCarteIdentiteTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param DomaineCarteIdentiteTraduction $traduction
@@ -292,7 +286,11 @@ class DomaineCarteIdentite
      */
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
         return $this;
     }
 
@@ -369,6 +367,30 @@ class DomaineCarteIdentite
     }
 
     /**
+     * Get pistes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPistes()
+    {
+        return $this->pistes;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param DomaineCarteIdentiteTraduction $traduction
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addTraduction(DomaineCarteIdentiteTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
      * Add domaine
      *
      * @param Domaine $domaine
@@ -403,10 +425,14 @@ class DomaineCarteIdentite
     }
 
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     * Get niveauSkieur
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
      */
-    private $niveauSkieur;
-
+    public function getNiveauSkieur()
+    {
+        return $this->niveauSkieur;
+    }
 
     /**
      * Set niveauSkieur
@@ -421,21 +447,6 @@ class DomaineCarteIdentite
 
         return $this;
     }
-
-    /**
-     * Get niveauSkieur
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
-     */
-    public function getNiveauSkieur()
-    {
-        return $this->niveauSkieur;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $pistes;
-
 
     /**
      * Add piste
@@ -459,15 +470,5 @@ class DomaineCarteIdentite
     public function removePiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
     {
         $this->pistes->removeElement($piste);
-    }
-
-    /**
-     * Get pistes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPistes()
-    {
-        return $this->pistes;
     }
 }
