@@ -1,10 +1,10 @@
-Mondofute\Bundle\UniteBundle\Entity\UniteTraduction:
+Mondofute\Bundle\ChoixBundle\Entity\OuiNonNCTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteTraductionRepository
+    repositoryClass: Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCTraductionRepository
     id:
         id:
-            type: integer
+            type: smallint
             id: true
             generator:
                 strategy: AUTO
@@ -14,15 +14,10 @@ Mondofute\Bundle\UniteBundle\Entity\UniteTraduction:
         libelle:
             type: string
             length: 255
-        libelleCourt:
-            type: string
-            length: '10'
     manyToOne:
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
-        unite:
-            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Unite
+        ouiNonNC:
+            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
             inversedBy: traductions
-#        site:
-#            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
     lifecycleCallbacks: {  }

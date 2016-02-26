@@ -1,0 +1,23 @@
+Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorieTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DescriptionForfaitSkiBundle\Repository\LigneDescriptionForfaitSkiCategorieTraductionRepository
+    id:
+        id:
+            type: smallint
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        ligneDescriptionForfaitSkiCategorie:
+            targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

@@ -17,6 +17,8 @@ Mondofute\Bundle\UniteBundle\Entity\Unite:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         multiplicateurReference:
             type: float
