@@ -53,7 +53,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -69,7 +70,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //        $this->domaineCarteIdentitesSortByAffichage($domaineCarteIdentiteUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType', $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
 
@@ -77,8 +78,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             // dispacher les données communes
 //            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
 
-            $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($domaineCarteIdentiteUnifie);
+            $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($domaineCarteIdentiteUnifie);
@@ -98,6 +98,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
         return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $domaineCarteIdentiteUnifie,
             'form' => $form->createView(),
         ));
@@ -163,7 +164,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     private function ajouterDomaineCarteIdentitesDansForm(DomaineCarteIdentiteUnifie $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -300,40 +301,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $domaineCarteIdentite->addPiste($piste);
                 }
             }
-        }
-        return $this;
-    }
-
-    /**
-     * @param DomaineCarteIdentiteUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(DomaineCarteIdentiteUnifie $entity)
-    {
-        /** @var DomaineCarteIdentite $domaineCarteIdentite */
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $domaineCarteIdentiteCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les domaineCarteIdentites
-        foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $domaineCarteIdentite->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $domaineCarteIdentiteCrm = clone $domaineCarteIdentite;
-                $domaineCarteIdentiteCrm->setSite($siteCrm);
-//                $domaineCarteIdentiteCrm->setAltitudeMini($domaineCarteIdentite->getAltitudeMini());
-//                $domaineCarteIdentiteCrm->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi());
-//                $domaineCarteIdentiteCrm->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin());
-//                $domaineCarteIdentiteCrm->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique());
-//                $domaineCarteIdentiteCrm->setRemonteeMecanique($domaineCarteIdentite->getRemonteeMecanique());
-                $classementReferentTmp = $domaineCarteIdentite->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($domaineCarteIdentiteCrm)) {
-            $entity->addDomaineCarteIdentite($domaineCarteIdentiteCrm);
         }
         return $this;
     }
@@ -484,7 +451,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
         $this->ajouterDomaineCarteIdentiteUnifieSiteDistant($entity->getId(), $entity->getDomaineCarteIdentites());
     }
 
-
     /**
      * @param $idUnifie
      * @param Collection $domaineCarteIdentites
@@ -535,7 +501,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('domaine_domaineCarteIdentite_delete', array('id' => $domaineCarteIdentiteUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('delete', SubmitType::class, array('label' => 'Supprimer'))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -547,7 +513,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
     public function editAction(Request $request, DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -555,9 +522,9 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
-                if (empty($domaineCarteIdentite->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $domaineCarteIdentite->getSite()->getId());
-                }
+//                if (empty($domaineCarteIdentite->getSite()->getCrm())) {
+                array_push($sitesAEnregistrer, $domaineCarteIdentite->getSite()->getId());
+//                }
             }
         } else {
 
@@ -565,7 +532,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $domaineCarteIdentiteCrm = $this->dissocierDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie);
+//        $domaineCarteIdentiteCrm = $this->dissocierDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie);
         $originalDomaineCarteIdentites = new ArrayCollection();
 //          Créer un ArrayCollection des objets de domaineCarteIdentites courants dans la base de données
         foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
@@ -584,15 +551,15 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType',
             $domaineCarteIdentiteUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 //            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
-            $this->mettreAJourDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie, $domaineCarteIdentiteCrm);
-            $em->persist($domaineCarteIdentiteCrm);
+//            $this->mettreAJourDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie, $domaineCarteIdentiteCrm);
+//            $em->persist($domaineCarteIdentiteCrm);
 
             // Supprimer la relation entre la domaineCarteIdentite et domaineCarteIdentiteUnifie
             foreach ($originalDomaineCarteIdentites as $domaineCarteIdentite) {
@@ -627,13 +594,15 @@ class DomaineCarteIdentiteUnifieController extends Controller
         return $this->render('@MondofuteDomaine/domainecarteidentiteunifie/edit.html.twig', array(
             'entity' => $domaineCarteIdentiteUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
+<<<<<<< HEAD
      * retirer la domaineCarteIdentite crm
      * @param DomaineCarteIdentiteUnifie $entity
      *
@@ -788,6 +757,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
     }
 
     /**
+=======
+>>>>>>> CRM-32 domaine carte identite
      * Deletes a DomaineCarteIdentiteUnifie entity.
      *
      */
@@ -822,5 +793,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
         return $this->redirectToRoute('domaine_domaineCarteIdentite_index');
     }
+
+
 
 }
