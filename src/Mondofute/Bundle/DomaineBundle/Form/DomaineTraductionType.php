@@ -17,6 +17,7 @@ class DomaineTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
+            ->add('affichageTexte')
             ->add('langue', HiddenType::class, array('mapped' => false));
     }
 
