@@ -14,6 +14,11 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction:
         libelle:
             type: string
             length: 255
+        affichageTexte:
+            type: string
+            length: 255
+            options:
+                default: ""
         description:
             type: text
             nullable: true

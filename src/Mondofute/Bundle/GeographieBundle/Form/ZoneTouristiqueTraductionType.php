@@ -18,6 +18,7 @@ class ZoneTouristiqueTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
+            ->add('affichageTexte')
             ->add('description', TextareaType::class, array('required' => false))
             ->add('langue', HiddenType::class, array('mapped' => false));;
     }
