@@ -25,6 +25,10 @@ class DomaineCarteIdentiteTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $description = '';
 
     /**
      * Get id
@@ -107,11 +111,16 @@ class DomaineCarteIdentiteTraduction
 
         return $this;
     }
-    /**
-     * @var string
-     */
-    private $description = '';
 
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
     /**
      * Set description
@@ -122,18 +131,8 @@ class DomaineCarteIdentiteTraduction
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = !empty($description) ? $description : '';
 
         return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }
