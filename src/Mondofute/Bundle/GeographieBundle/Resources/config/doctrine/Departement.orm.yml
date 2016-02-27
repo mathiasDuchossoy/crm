@@ -24,4 +24,7 @@ Mondofute\Bundle\GeographieBundle\Entity\Departement:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction
             mappedBy: departement
             cascade:  ['persist' , 'remove']
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: departement
     lifecycleCallbacks: {  }

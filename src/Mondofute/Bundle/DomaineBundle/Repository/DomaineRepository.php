@@ -36,5 +36,23 @@ class DomaineRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb;
     }
-    
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('d , dt ')
+            ->from('MondofuteDomaineBundle:Domaine', 'd')
+            ->join('d.traductions', 'dt')
+            ->join('d.domaineUnifie', 'du')
+            ->join('d.site', 's')
+            ->join('dt.langue', 'l')
+            ->where("l.code = '$locale'");
+
+        return $qb;
+    }
 }

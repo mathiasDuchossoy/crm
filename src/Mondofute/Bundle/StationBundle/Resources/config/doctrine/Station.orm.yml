@@ -42,6 +42,15 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         zoneTouristique:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
             inversedBy: stations
+        secteur:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: stations
+        domaine:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            inversedBy: stations
+        departement:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
+            inversedBy: stations
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction

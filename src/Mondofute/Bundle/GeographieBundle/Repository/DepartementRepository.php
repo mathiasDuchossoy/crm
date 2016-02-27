@@ -10,4 +10,24 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
  */
 class DepartementRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('r , rt')
+            ->from('MondofuteGeographieBundle:Departement', 'r')
+            ->join('r.traductions', 'rt')
+            ->join('r.site', 's')
+            ->join('rt.langue', 'l')
+            ->where("l.code = '$locale'");
+//        ->setParameter('code' , $locale)
+        $qb->orderBy('r.id', 'ASC');
+
+        return $qb;
+    }
 }
