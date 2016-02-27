@@ -29,6 +29,10 @@ class RegionTraduction
      * @var string
      */
     private $libelle = '';
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
 
     public function __construct()
     {
@@ -147,5 +151,27 @@ class RegionTraduction
         return $this;
     }
 
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
 
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return RegionTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
+
+        return $this;
+    }
 }
