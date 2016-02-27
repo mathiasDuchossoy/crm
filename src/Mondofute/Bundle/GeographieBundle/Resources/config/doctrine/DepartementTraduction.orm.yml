@@ -16,6 +16,11 @@ Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction:
             length: 255
             options:
                 default: ""
+        affichageTexte:
+            type: string
+            length: 255
+            options:
+                default: ""
         description:
             type: text
             options:

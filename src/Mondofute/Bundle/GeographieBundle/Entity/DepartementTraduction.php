@@ -29,6 +29,10 @@ class DepartementTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
 
     public function __construct()
     {
@@ -143,6 +147,30 @@ class DepartementTraduction
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
+
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return DepartementTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
 
         return $this;
     }
