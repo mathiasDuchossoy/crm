@@ -29,6 +29,10 @@ class ZoneTouristiqueTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
 
     /**
      * Get id
@@ -136,5 +140,27 @@ class ZoneTouristiqueTraduction
         return $this;
     }
 
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
 
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return ZoneTouristiqueTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
+
+        return $this;
+    }
 }
