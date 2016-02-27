@@ -25,6 +25,10 @@ class DomaineTraduction
      * @var string
      */
     private $libelle;
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
 
     /**
      * Get id
@@ -104,6 +108,30 @@ class DomaineTraduction
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
+
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return DomaineTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
 
         return $this;
     }
