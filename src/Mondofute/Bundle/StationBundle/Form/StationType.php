@@ -2,7 +2,13 @@
 
 namespace Mondofute\Bundle\StationBundle\Form;
 
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository;
+use Mondofute\Bundle\GeographieBundle\Entity\Departement;
+use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
+use Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -28,6 +34,33 @@ class StationType extends AbstractType
                 "placeholder" => " --- choisir une zone touristique ---",
                 'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
                     return $rr->getTraductionsZoneTouristiquesByLocale($locale);
+                },
+            ))
+            ->add('secteur', EntityType::class, array(
+                'class' => Secteur::class,
+                'required' => false,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un secteur ---",
+                'query_builder' => function (SecteurRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
+            ))
+            ->add('domaine', EntityType::class, array(
+                'class' => Domaine::class,
+                'required' => false,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un domaine ---",
+                'query_builder' => function (DomaineRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
+            ))
+            ->add('departement', EntityType::class, array(
+                'class' => Departement::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un département ---",
+                'query_builder' => function (DepartementRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
                 },
             ))
             ->add('codePostal', IntegerType::class, array('attr' => array('min' => 0)))

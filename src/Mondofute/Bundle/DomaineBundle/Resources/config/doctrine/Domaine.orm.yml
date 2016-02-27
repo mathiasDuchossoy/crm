@@ -30,4 +30,7 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
         sousDomaines:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             mappedBy: domaineParent
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: domaine
     lifecycleCallbacks: {  }

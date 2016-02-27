@@ -21,4 +21,7 @@ Mondofute\Bundle\GeographieBundle\Entity\Secteur:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction
             mappedBy: secteur
             cascade:  ['persist' , 'remove']
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: secteur
     lifecycleCallbacks: {  }
