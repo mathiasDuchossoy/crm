@@ -46,19 +46,19 @@ class DepartementUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
         $departementUnifie = new DepartementUnifie();
 
         $this->ajouterDepartementsDansForm($departementUnifie);
-//        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie,
             array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
 
@@ -66,8 +66,7 @@ class DepartementUnifieController extends Controller
             // dispacher les données communes
 //            $this->dispacherDonneesCommune($departementUnifie);
 
-            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($departementUnifie);
+            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($departementUnifie);
@@ -81,6 +80,7 @@ class DepartementUnifieController extends Controller
         return $this->render('@MondofuteGeographie/departementunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $departementUnifie,
             'form' => $form->createView(),
         ));
@@ -107,7 +107,7 @@ class DepartementUnifieController extends Controller
     private function ajouterDepartementsDansForm(DepartementUnifie $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -189,40 +189,6 @@ class DepartementUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $departement->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param DepartementUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(DepartementUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $departementCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les departements
-        foreach ($entity->getDepartements() as $departement) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $departement->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $departementCrm = clone $departement;
-                $departementCrm->setSite($siteCrm);
-                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use (
-                    $siteCrm
-                ) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $departementCrm->setRegion($region);
-                $classementReferentTmp = $departement->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($departementCrm)) {
-            $entity->addDepartement($departementCrm);
-        }
-        return $this;
     }
 
     /**
@@ -371,7 +337,8 @@ class DepartementUnifieController extends Controller
     public function editAction(Request $request, DepartementUnifie $departementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -379,9 +346,7 @@ class DepartementUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($departementUnifie->getDepartements() as $departement) {
-                if (empty($departement->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $departement->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $departement->getSite()->getId());
             }
         } else {
 
@@ -389,7 +354,6 @@ class DepartementUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $departementCrm = $this->dissocierDepartementCrm($departementUnifie);
         $originalDepartements = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($departementUnifie->getDepartements() as $departement) {
@@ -403,7 +367,7 @@ class DepartementUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType',
             $departementUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Update', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
 
@@ -411,8 +375,6 @@ class DepartementUnifieController extends Controller
 
 //            $this->dispacherDonneesCommune($departementUnifie);
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
-            $this->mettreAJourDepartementCrm($departementUnifie, $departementCrm);
-            $em->persist($departementCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalDepartements as $departement) {
@@ -443,10 +405,91 @@ class DepartementUnifieController extends Controller
         return $this->render('@MondofuteGeographie/departementunifie/edit.html.twig', array(
             'entity' => $departementUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    /**
+     * Deletes a DepartementUnifie entity.
+     *
+     */
+    public function deleteAction(Request $request, DepartementUnifie $departementUnifie)
+    {
+        try {
+            $form = $this->createDeleteForm($departementUnifie);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
+                    if (!empty($departementUnifieSite)) {
+                        $emSite->remove($departementUnifieSite);
+                        $emSite->flush();
+                    }
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($departementUnifie);
+                $em->flush();
+            }
+        } catch (ForeignKeyConstraintViolationException $except) {
+//                dump($except);
+            switch ($except->getCode()) {
+                case 0:
+                    $this->addFlash('error',
+                        'impossible de supprimer le département, il est utilisé par une autre entité');
+                    break;
+                default:
+                    $this->addFlash('error', 'une erreur inconnue');
+                    break;
+            }
+            return $this->redirect($request->headers->get('referer'));
+        }
+        $this->addFlash('success', 'le département a bien été supprimé');
+        return $this->redirectToRoute('geographie_departement_index');
+    }
+
+    /**
+     * @param DepartementUnifie $entity
+     * @return $this
+     */
+    private function ajouterCrm(DepartementUnifie $entity)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
+        $departementCrm = null;
+        $classementReferentTmp = 0;
+        $i = 0;
+        // parcourir toute les departements
+        foreach ($entity->getDepartements() as $departement) {
+            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
+            if ($i === 0 || $departement->getSite()->getClassementReferent() < $classementReferentTmp) {
+                $departementCrm = clone $departement;
+                $departementCrm->setSite($siteCrm);
+                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use (
+                    $siteCrm
+                ) {
+                    return $element->getSite() == $siteCrm;
+                })->first();
+                $departementCrm->setRegion($region);
+                $classementReferentTmp = $departement->getSite()->getClassementReferent();
+            }
+            $i++;
+        }
+
+        if (!is_null($departementCrm)) {
+            $entity->addDepartement($departementCrm);
+        }
+        return $this;
     }
 
     /**
@@ -499,8 +542,7 @@ class DepartementUnifieController extends Controller
 //                dump($departement);
 //              ajouter les champs "communs"
                 $siteCrm = $departementCrm->getSite();
-                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use
-                (
+                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use (
                     $siteCrm
                 ) {
                     return $element->getSite() == $siteCrm;
@@ -571,52 +613,6 @@ class DepartementUnifieController extends Controller
             }
         }
 //die;
-    }
-
-    /**
-     * Deletes a DepartementUnifie entity.
-     *
-     */
-    public function deleteAction(Request $request, DepartementUnifie $departementUnifie)
-    {
-        try {
-            $form = $this->createDeleteForm($departementUnifie);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-
-                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                // Parcourir les sites non CRM
-                foreach ($sitesDistants as $siteDistant) {
-                    // Récupérer le manager du site.
-                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                    // Récupérer l'entité sur le site distant puis la suprrimer.
-                    $departementUnifieSite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
-                    if (!empty($departementUnifieSite)) {
-                        $emSite->remove($departementUnifieSite);
-                        $emSite->flush();
-                    }
-                }
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($departementUnifie);
-                $em->flush();
-            }
-        } catch (ForeignKeyConstraintViolationException $except) {
-//                dump($except);
-            switch ($except->getCode()) {
-                case 0:
-                    $this->addFlash('error',
-                        'impossible de supprimer le département, il est utilisé par une autre entité');
-                    break;
-                default:
-                    $this->addFlash('error', 'une erreur inconnue');
-                    break;
-            }
-            return $this->redirect($request->headers->get('referer'));
-        }
-        $this->addFlash('success', 'le département a bien été supprimé');
-        return $this->redirectToRoute('geographie_departement_index');
     }
 
 //    /**
