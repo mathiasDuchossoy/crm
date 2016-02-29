@@ -1,64 +1,11 @@
 {% extends '@MondofuteDomaine/domaineunifie/fiche.html.twig' %}
 
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
     {{ 'création d\un domaine' | capitalize }}
 {% endblock %}
 
 {% block titre %}
     Création d'un domaine
-{% endblock %}
-
-{% block formulaire %}
-    {% include '::flashbags.html.twig' %}
-    {{ form_errors(form) }}
-    {{ form_start(form) }}
-    {% include '::coches_sites.html.twig' %}
-
-    {% set mesSites = form.domaines %}
-    {% include '::onglets_sites.html.twig' %}
-
-    <div class="tab-content" style="padding:20px;">
-        {% set iSite = 0 %}
-        {% for domaine in form.domaines %}
-            <div id="data_site_{{ domaine.vars.value.site.id }}"
-                 class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in">
-                {#{{ form_row(domaine.enneige) }}#}
-                {{ form_row(domaine.site) }}
-                <ul class="nav nav-tabs">
-                    {{ form_row( domaine.domaineParent ) }}
-                    {% set iTraduc = 0 %}
-                    {% for traduction in domaine.traductions %}
-                        <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                            <a data-toggle="tab"
-                               href="#{{ domaine.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
-                                {# affiche la langue en fonction de la locale#}
-                                {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                    {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                        {{ traductionLangue.libelle }}
-                                    {% endif %}
-                                {% endfor %}
-                            </a>
-                        </li>
-                        {#{{ form_row(traduction) }}#}
-                    {% endfor %}
-                </ul>
-                <div class="tab-content">
-                    {% set iTraduc = 0 %}
-                    {% for traduction in domaine.traductions %}
-                        <div id="{{ domaine.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                             class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                            {{ form_widget(traduction) }}
-                            {{ form_errors(traduction) }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {{ form_row(form.submit) }}
-    {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
 
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}

@@ -44,7 +44,8 @@ class DomaineUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -54,16 +55,12 @@ class DomaineUnifieController extends Controller
         $this->domainesSortByAffichage($domaineUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $this->dispacherDonneesCommune($domaineUnifie);
+            $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
 
-            $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($domaineUnifie);
-
-//            $em = $this->getDoctrine()->getManager();
             $em->persist($domaineUnifie);
             $em->flush();
 
@@ -81,6 +78,7 @@ class DomaineUnifieController extends Controller
         return $this->render('@MondofuteDomaine/domaineunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $domaineUnifie,
             'form' => $form->createView(),
         ));
@@ -94,7 +92,7 @@ class DomaineUnifieController extends Controller
     {
         /** @var Langue $langue */
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -178,40 +176,6 @@ class DomaineUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $domaine->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param DomaineUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(DomaineUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $domaineCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les domaines
-        foreach ($entity->getDomaines() as $domaine) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $domaine->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $domaineCrm = clone $domaine;
-                $domaineCrm->setSite($siteCrm);
-                if (!empty($domaine->getDomaineParent())) {
-                    $domaineParent = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($siteCrm) {
-                        return $element->getSite() == $siteCrm;
-                    })->first();
-                    $domaineCrm->setDomaineParent($domaineParent);
-                }
-                $classementReferentTmp = $domaine->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($domaineCrm)) {
-            $entity->addDomaine($domaineCrm);
-        }
-        return $this;
     }
 
     /**
@@ -363,7 +327,8 @@ class DomaineUnifieController extends Controller
     public function editAction(Request $request, DomaineUnifie $domaineUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -371,17 +336,13 @@ class DomaineUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($domaineUnifie->getDomaines() as $domaine) {
-                if (empty($domaine->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $domaine->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $domaine->getSite()->getId());
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $domaineCrm = $this->dissocierDomaineCrm($domaineUnifie);
         $originalDomaines = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($domaineUnifie->getDomaines() as $domaine) {
@@ -389,21 +350,17 @@ class DomaineUnifieController extends Controller
         }
 
         $this->ajouterDomainesDansForm($domaineUnifie);
-//        $this->dispacherDonneesCommune($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
-//            $this->dispacherDonneesCommune($domaineUnifie);
                 $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
-                $this->mettreAJourDomaineCrm($domaineUnifie, $domaineCrm);
-                $em->persist($domaineCrm);
 
                 // Supprimer la relation entre la station et stationUnifie
                 foreach ($originalDomaines as $domaine) {
@@ -449,126 +406,11 @@ class DomaineUnifieController extends Controller
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la domaine crm
-     * @param DomaineUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierDomaineCrm(DomaineUnifie $entity)
-    {
-        foreach ($entity->getDomaines() as $domaine) {
-            if ($domaine->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeDomaine($domaine);
-                return $domaine;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param DomaineUnifie $domaineUnifie
-     * @param Domaine $domaineCrm
-     * @return bool
-     */
-    private function mettreAJourDomaineCrm(DomaineUnifie $domaineUnifie, Domaine $domaineCrm)
-    {
-        /** @var DomaineTraduction $domaineTraducCrm */
-        /** @var DomaineTraduction $domaineTraduc */
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($domaineUnifie->getDomaines() as $domaine) {
-            $tabClassementSiteReferent[] = $domaine->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($domaineUnifie->getDomaines() as $domaine) {
-
-            // Si la site de la station est égale au site de référence
-            if ($domaine->getSite() == $siteReferent) {
-
-                $siteCrm = $domaineCrm->getSite();
-                if (!empty($domaine->getDomaineParent())) {
-                    $domaineParentCrm = $domaine->getDomaineParent()->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($siteCrm) {
-                        return $element->getSite() == $siteCrm;
-                    })->first();
-                } else {
-                    $domaineParentCrm = null;
-                }
-                $domaineCrm
-                    ->setDomaineParent($domaineParentCrm);
-//                dump($domaine);
-//              ajouter les champs "communs"
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $domaineTraduc = $domaine->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $domaineTraducCrm = $domaineCrm->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($domaineTraduc);
-
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($domaineTraduc->getLibelle())) {
-                        $domaineTraduc->setLibelle('');
-                    }
-
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($domaineTraducCrm)) {
-                        $domaineTraducCrm = new DomaineTraduction();
-                        $domaineTraducCrm->setDomaine($domaineCrm);
-                        $domaineTraducCrm->setLangue($langue);
-//                        dump($domaineTraducCrm);
-//                        dump($domaineTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $domaineTraducCrm->setLibelle($domaineTraduc->getLibelle());
-                        $domaineCrm->addTraduction($domaineTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $domaineTraducCrm->setLibelle($domaineTraduc->getLibelle());
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $domaineTraduc = $domaine->getTraductions()->filter(function (DomaineTraduction $element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($domaineTraduc->getLibelle())) {
-                        $domaineTraduc->setLibelle('');
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -620,22 +462,5 @@ class DomaineUnifieController extends Controller
 
         return $this->redirectToRoute('domaine_domaine_index');
     }
-
-//    /**
-//     * dispacher les données communes dans chaque stations
-//     * @param DomaineUnifie $entity
-//     */
-//    private function dispacherDonneesCommune(DomaineUnifie $entity)
-//    {
-//        foreach ($entity->getDomaines() as $domaine) {
-//            $firstDomaineParent = $entity->getDomaines()->first()->getDomaineParent();
-//            if (!empty($firstDomaineParent)) {
-//                $domaineParent = $firstDomaineParent->getDomaineUnifie()->getDomaines()->filter(function ($element) use ($domaine) {
-//                    return $element->getSite() == $domaine->getSite();
-//                })->first();
-//                $domaine->setDomaineParent($domaineParent);
-//            }
-//        }
-//    }
 
 }
