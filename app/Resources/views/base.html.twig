@@ -105,6 +105,9 @@
                         source = $(this).val();
                         if ($(this).is('select')) {
                             source = $('#' + this.id + ' option:selected').data('unifie_id');
+                            if (!source) {
+                                source = $(this).val();
+                            }
                         }
                         $("[data-unique_block_prefix='" + item + "']").each(function () {
                             parent = $(this).parents("[data-crm]");
