@@ -1,0 +1,24 @@
+modeledescriptionforfaitski_index:
+    path:     /
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:index" }
+    methods:  GET
+
+modeledescriptionforfaitski_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:show" }
+    methods:  GET
+
+modeledescriptionforfaitski_new:
+    path:     /new
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:new" }
+    methods:  [GET, POST]
+
+modeledescriptionforfaitski_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:edit" }
+    methods:  [GET, POST]
+
+modeledescriptionforfaitski_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:delete" }
+    methods:  DELETE

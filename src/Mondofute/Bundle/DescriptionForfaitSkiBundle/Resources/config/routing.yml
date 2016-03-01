@@ -1,3 +1,7 @@
+mondofute_description_forfait_ski_modeledescriptionforfaitski:
+    resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing/modeledescriptionforfaitski.yml"
+    prefix:   /modeledescriptionforfaitski
+
 mondofute_description_forfait_ski_homepage:
     path:     /
     defaults: { _controller: MondofuteDescriptionForfaitSkiBundle:Default:index }
