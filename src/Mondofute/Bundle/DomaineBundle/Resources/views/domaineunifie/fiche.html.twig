@@ -28,7 +28,7 @@
                         {#{{ form_row(domaine.enneige) }}#}
                         {{ form_row(domaine.site) }}
                         <ul class="nav nav-tabs">
-                            {{ form_row( domaine.domaineParent ) }}
+                            {{ form_row(domaine.domaineParent, { 'attr' : { 'data-unique_block_prefix' : domaine.domaineParent.vars['unique_block_prefix']  }}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in domaine.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
@@ -86,6 +86,7 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
+        itemNonPersonalisable.push("_domaine_unifie_domaines_entry_domaineParent");
         {% for langue in langues %}
         itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");
         {% endfor %}
