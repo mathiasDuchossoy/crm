@@ -43,6 +43,7 @@ class StationUnifieType extends AbstractType
 
             $newChoices = array();
             foreach ($choices as $key => $choice) {
+                $choice->attr = array('data-unifie_id' => $choice->data->getZoneTouristiqueUnifie()->getId());
                 if ($choice->data->getSite()->getId() == $siteId) {
                     $newChoices[$key] = $choice;
                 }
