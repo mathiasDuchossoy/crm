@@ -110,7 +110,9 @@
                             parent = $(this).parents("[data-crm]");
                             if (parent.data('crm') == 0) {
                                 $(this).val(source);
-                                $('#' + this.id + '  option[data-region_unifie_id=' + source + ']').attr('selected', 'selected');
+                                if ($(this).is('select')) {
+                                    $('#' + this.id + '  option[data-unifie_id=' + source + ']').prop('selected', 'selected');
+                                }
                             }
                         });
                     }
