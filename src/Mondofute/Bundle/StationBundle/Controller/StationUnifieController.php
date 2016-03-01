@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\StationBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\StationBundle\Entity\Station;
@@ -45,7 +46,8 @@ class StationUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -55,7 +57,7 @@ class StationUnifieController extends Controller
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
         $form->handleRequest($request);
 
 
@@ -64,8 +66,7 @@ class StationUnifieController extends Controller
             // affilier les entités liés
 //            $this->affilierEntities($stationUnifie);
 
-            $this->supprimerStations($stationUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($stationUnifie);
+            $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationUnifie);
@@ -78,6 +79,7 @@ class StationUnifieController extends Controller
             $session->start();
 
             // add flash messages
+            /** @var Session $session */
             $session->getFlashBag()->add(
                 'success',
                 'La station a bien été créé.'
@@ -89,6 +91,7 @@ class StationUnifieController extends Controller
         return $this->render('@MondofuteStation/stationunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $stationUnifie,
             'form' => $form->createView(),
         ));
@@ -101,7 +104,7 @@ class StationUnifieController extends Controller
     private function ajouterStationsDansForm(StationUnifie $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -111,7 +114,7 @@ class StationUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($station->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($station->getTraductions()->filter(function (StationTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -153,7 +156,8 @@ class StationUnifieController extends Controller
         unset($stations);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        /** @var ArrayIterator $iterator */
+        $iterator->uasort(function (Station $a, Station $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -171,11 +175,13 @@ class StationUnifieController extends Controller
      */
     private function traductionsSortByLangue($stations)
     {
+        /** @var ArrayIterator $iterator */
+        /** @var Station $station */
         foreach ($stations as $station) {
             $traductions = $station->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (StationTraduction $a, StationTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -183,46 +189,6 @@ class StationUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $station->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param StationUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(StationUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $stationCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les stations
-        foreach ($entity->getStations() as $station) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $station->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $stationCrm = clone $station;
-                $stationCrm->setSite($siteCrm);
-                if (!empty($station->getZoneTouristique())) {
-                    $zoneTouristique = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
-                        return $element->getSite() == $siteCrm;
-                    })->first();
-                    $stationCrm->setZoneTouristique($zoneTouristique);
-                }
-                $stationCrm->setCodePostal($station->getCodePostal());
-                $stationCrm->setMoisOuverture($station->getMoisOuverture());
-                $stationCrm->setJourOuverture($station->getJourOuverture());
-                $stationCrm->setMoisFermeture($station->getMoisFermeture());
-                $stationCrm->setJourFermeture($station->getJourFermeture());
-                $stationCrm->setLienMeteo($station->getLienMeteo());
-                $classementReferentTmp = $station->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($stationCrm)) {
-            $entity->addStation($stationCrm);
-        }
-        return $this;
     }
 
     /**
@@ -249,6 +215,7 @@ class StationUnifieController extends Controller
      */
     private function copieVersSites(StationUnifie $entity)
     {
+        /** @var StationTraduction $stationTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getStations() as $station) {
             if ($station->getSite()->getCrm() == false) {
@@ -331,6 +298,8 @@ class StationUnifieController extends Controller
      */
     private function ajouterStationUnifieSiteDistant($idUnifie, $stations)
     {
+        /** @var ArrayCollection $stations */
+        /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         echo $idUnifie;
         //        récupération
@@ -386,7 +355,8 @@ class StationUnifieController extends Controller
     public function editAction(Request $request, StationUnifie $stationUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -394,9 +364,7 @@ class StationUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($stationUnifie->getStations() as $station) {
-                if (empty($station->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $station->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $station->getSite()->getId());
             }
         } else {
 
@@ -404,7 +372,6 @@ class StationUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $stationCrm = $this->dissocierStationCrm($stationUnifie);
         $originalStations = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($stationUnifie->getStations() as $station) {
@@ -419,7 +386,7 @@ class StationUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType',
             $stationUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
 
 //        dump($editForm);die;
 
@@ -427,10 +394,7 @@ class StationUnifieController extends Controller
 //        dump($stationUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $this->affilierEntities($stationUnifie);
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
-            $this->mettreAJourStationCrm($stationUnifie, $stationCrm);
-            $em->persist($stationCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalStations as $station) {
@@ -457,6 +421,7 @@ class StationUnifieController extends Controller
             $session->start();
 
             // add flash messages
+            /** @var Session $session */
             $session->getFlashBag()->add(
                 'success',
                 'La station a bien été modifié.'
@@ -468,169 +433,11 @@ class StationUnifieController extends Controller
         return $this->render('@MondofuteStation/stationunifie/edit.html.twig', array(
             'entity' => $stationUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la station crm
-     * @param StationUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierStationCrm(StationUnifie $entity)
-    {
-        foreach ($entity->getStations() as $station) {
-            if ($station->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeStation($station);
-                return $station;
-            }
-        }
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param StationUnifie $stationUnifie
-     * @param Station $stationCrm
-     * @return bool
-     */
-    private function mettreAJourStationCrm(StationUnifie $stationUnifie, Station $stationCrm)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($stationUnifie->getStations() as $station) {
-            $tabClassementSiteReferent[] = $station->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($stationUnifie->getStations() as $station) {
-
-            // Si la site de la station est égale au site de référence
-            if ($station->getSite() == $siteReferent) {
-//                dump($station);
-//           ajouter les champs "communs"
-                $siteCrm = $stationCrm->getSite();
-                if (!empty($station->getZoneTouristique())) {
-                    $zoneTouristiqueCrm = $station->getZoneTouristique()->getZoneTouristiqueUnifie()->getZoneTouristiques()->filter(function ($element) use ($siteCrm) {
-                        return $element->getSite() == $siteCrm;
-                    })->first();
-                } else {
-                    $zoneTouristiqueCrm = null;
-                }
-
-                $stationCrm
-//                    ->setZoneTouristique($station->getZoneTouristique())
-                    ->setZoneTouristique($zoneTouristiqueCrm)
-                    ->setCodePostal($station->getCodePostal())
-                    ->setMoisOuverture($station->getMoisOuverture())
-                    ->setJourOuverture($station->getJourOuverture())
-                    ->setMoisFermeture($station->getMoisFermeture())
-                    ->setJourFermeture($station->getJourFermeture())
-                    ->setLienMeteo($station->getLienMeteo());
-
-
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $stationTraduc = $station->getTraductions()->filter(function ($element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $stationTraducCrm = $stationCrm->getTraductions()->filter(function ($element) use ($langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($stationTraduc);
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($stationTraduc->getLibelle())) {
-                        $stationTraduc->setLibelle('');
-                    }
-                    if (is_null($stationTraduc->getEnVoiture())) {
-                        $stationTraduc->setEnVoiture('');
-                    }
-                    if (is_null($stationTraduc->getEnTrain())) {
-                        $stationTraduc->setEnTrain('');
-                    }
-                    if (is_null($stationTraduc->getEnAvion())) {
-                        $stationTraduc->setEnAvion('');
-                    }
-                    if (is_null($stationTraduc->getDistancesGrandesVilles())) {
-                        $stationTraduc->setDistancesGrandesVilles('');
-                    }
-
-
-
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($stationTraducCrm)) {
-                        $stationTraducCrm = new StationTraduction();
-                        $stationTraducCrm->setStation($stationCrm);
-                        $stationTraducCrm->setLangue($langue);
-//                        dump($stationTraducCrm);
-//                        dump($stationTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $stationTraducCrm->setLibelle($stationTraduc->getLibelle());
-                        $stationTraducCrm->setEnVoiture($stationTraduc->getEnVoiture());
-                        $stationTraducCrm->setEnTrain($stationTraduc->getEnTrain());
-                        $stationTraducCrm->setEnAvion($stationTraduc->getEnAvion());
-                        $stationTraducCrm->setDistancesGrandesVilles($stationTraduc->getDistancesGrandesVilles());
-                        $stationCrm->addTraduction($stationTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $stationTraducCrm->setLibelle($stationTraduc->getLibelle());
-                        $stationTraducCrm->setEnVoiture($stationTraduc->getEnVoiture());
-                        $stationTraducCrm->setEnTrain($stationTraduc->getEnTrain());
-                        $stationTraducCrm->setEnAvion($stationTraduc->getEnAvion());
-                        $stationTraducCrm->setDistancesGrandesVilles($stationTraduc->getDistancesGrandesVilles());
-
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $stationTraduc = $station->getTraductions()->filter(function ($element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($stationTraduc->getLibelle())) {
-                        $stationTraduc->setLibelle('');
-                    }
-                    if (is_null($stationTraduc->getEnVoiture())) {
-                        $stationTraduc->setEnVoiture('');
-                    }
-                    if (is_null($stationTraduc->getEnTrain())) {
-                        $stationTraduc->setEnTrain('');
-                    }
-                    if (is_null($stationTraduc->getEnAvion())) {
-                        $stationTraduc->setEnAvion('');
-                    }
-                    if (is_null($stationTraduc->getDistancesGrandesVilles())) {
-                        $stationTraduc->setDistancesGrandesVilles('');
-                    }
-
-                }
-            }
-        }
-//die;
     }
 
     /**
@@ -666,6 +473,7 @@ class StationUnifieController extends Controller
             $session->start();
 
             // add flash messages
+            /** @var Session $session */
             $session->getFlashBag()->add(
                 'success',
                 'La station a été supprimé avec succès.'
