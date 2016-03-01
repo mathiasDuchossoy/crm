@@ -51,7 +51,7 @@ class DepartementUnifieType extends AbstractType
             $newChoices = array();
             /** @var ChoiceView $choice */
             foreach ($choices as $key => $choice) {
-                $choice->attr = array('data-region_unifie_id' => $choice->data->getRegionUnifie()->getId());
+                $choice->attr = array('data-unifie_id' => $choice->data->getRegionUnifie()->getId());
                 if ($choice->data->getSite()->getId() == $siteId) {
                     $newChoices[$key] = $choice;
                 }

@@ -106,14 +106,12 @@
                     if (parent.data('crm') == 1) {
                         source = $(this).val();
                         if ($(this).is('select')) {
-//                            console.log($('#' + this.id + ' option:selected').data('region_unifie_id'));
-                            source = $('#' + this.id + ' option:selected').data('region_unifie_id');
+                            source = $('#' + this.id + ' option:selected').data('unifie_id');
                         }
                         $("[data-unique_block_prefix='" + item + "']").each(function () {
                             parent = $(this).parents("[data-crm]");
                             if (parent.data('crm') == 0) {
                                 $(this).val(source);
-//                                $('#monSelect option[value=2]').
                                 $('#' + this.id + '  option[data-region_unifie_id=' + source + ']').attr('selected', 'selected');
                             }
                         });
