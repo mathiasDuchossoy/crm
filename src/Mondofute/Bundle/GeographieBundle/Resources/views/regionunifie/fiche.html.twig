@@ -9,7 +9,7 @@
     <section>
         {#  BLOCK CONTENANT LE FORMULAIRE #}
         {% block formulaire %}
-            {% set personalisable =  true %}
+            {% set personalisable =  false %}
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
@@ -84,6 +84,7 @@
         var itemNonPersonalisable = [];
         {% for langue in langues %}
         itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");
+        itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_description_{{ langue.code }}");
         {% endfor %}
     </script>
 
