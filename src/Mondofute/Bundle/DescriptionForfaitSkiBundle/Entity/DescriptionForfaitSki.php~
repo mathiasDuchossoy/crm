@@ -1,10 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
-<<<<<<< HEAD
-
-=======
->>>>>>> CRM-28
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -129,51 +125,6 @@ class DescriptionForfaitSki
     }
 
     /**
-<<<<<<< HEAD
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function addTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDescriptionForfaitSki($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove traduction
-     *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
-     */
-    public function removeTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
-    {
-        $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get present
-     *
-     * @return \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
-     */
-    public function getPresent()
-    {
-        return $this->present;
-    }
-
-    /**
-     * Set present
-     *
-     * @param \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setPresent(\Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present = null)
-    {
-        $this->present = $present;
-=======
      * Get prix
      *
      * @return \Mondofute\Bundle\UniteBundle\Entity\Tarif
@@ -217,33 +168,11 @@ class DescriptionForfaitSki
     public function setAgeMin(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMin = null)
     {
         $this->ageMin = $ageMin;
->>>>>>> CRM-28
 
         return $this;
     }
 
     /**
-<<<<<<< HEAD
-     * Get ligneDescriptionForfaitSki
-     *
-     * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki
-     */
-    public function getLigneDescriptionForfaitSki()
-    {
-        return $this->ligneDescriptionForfaitSki;
-    }
-
-    /**
-     * Set ligneDescriptionForfaitSki
-     *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setLigneDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki = null)
-    {
-        $this->ligneDescriptionForfaitSki = $ligneDescriptionForfaitSki;
-=======
      * Get ageMax
      *
      * @return \Mondofute\Bundle\UniteBundle\Entity\Age
@@ -263,33 +192,11 @@ class DescriptionForfaitSki
     public function setAgeMax(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMax = null)
     {
         $this->ageMax = $ageMax;
->>>>>>> CRM-28
 
         return $this;
     }
 
     /**
-<<<<<<< HEAD
-     * Get modele
-     *
-     * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
-     */
-    public function getModele()
-    {
-        return $this->modele;
-    }
-
-    /**
-     * Set modele
-     *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki $modele
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setModele(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki $modele = null)
-    {
-        $this->modele = $modele;
-=======
      * Add traduction
      *
      * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
@@ -299,29 +206,10 @@ class DescriptionForfaitSki
     public function addTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
     {
         $this->traductions[] = $traduction->setDescriptionForfaitSki($this);
->>>>>>> CRM-28
 
         return $this;
     }
 
-<<<<<<< HEAD
-    public function __clone()
-    {
-        /** @var DescriptionForfaitSkiTraduction $traduction */
-        $this->id = null;
-        $traductions = $this->getTraductions();
-        $this->traductions = new ArrayCollection();
-        if (count($traductions) > 0) {
-            foreach ($traductions as $traduction) {
-                $cloneTraduction = clone $traduction;
-                $this->traductions->add($cloneTraduction);
-                $cloneTraduction->setDescriptionForfaitSki($this);
-            }
-        }
-        $this->ageMin = clone $this->getAgeMin();
-        $this->ageMax = clone $this->getAgeMax();
-        $this->prix = clone $this->getPrix();
-=======
     /**
      * Remove traduction
      *
@@ -330,7 +218,6 @@ class DescriptionForfaitSki
     public function removeTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
->>>>>>> CRM-28
     }
 
     /**
@@ -344,27 +231,6 @@ class DescriptionForfaitSki
     }
 
     /**
-<<<<<<< HEAD
-     * Get ageMin
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
-     */
-    public function getAgeMin()
-    {
-        return $this->ageMin;
-    }
-
-    /**
-     * Set ageMin
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMin
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setAgeMin(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMin = null)
-    {
-        $this->ageMin = $ageMin;
-=======
      * Get present
      *
      * @return \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
@@ -384,33 +250,11 @@ class DescriptionForfaitSki
     public function setPresent(\Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present = null)
     {
         $this->present = $present;
->>>>>>> CRM-28
 
         return $this;
     }
 
     /**
-<<<<<<< HEAD
-     * Get ageMax
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
-     */
-    public function getAgeMax()
-    {
-        return $this->ageMax;
-    }
-
-    /**
-     * Set ageMax
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMax
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setAgeMax(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMax = null)
-    {
-        $this->ageMax = $ageMax;
-=======
      * Get ligneDescriptionForfaitSki
      *
      * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki
@@ -430,36 +274,11 @@ class DescriptionForfaitSki
     public function setLigneDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki = null)
     {
         $this->ligneDescriptionForfaitSki = $ligneDescriptionForfaitSki;
->>>>>>> CRM-28
 
         return $this;
     }
 
     /**
-<<<<<<< HEAD
-     * Get prix
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Tarif
-     */
-    public function getPrix()
-    {
-        return $this->prix;
-    }
-
-    /**
-     * Set prix
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Tarif $prix
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setPrix(\Mondofute\Bundle\UniteBundle\Entity\Tarif $prix = null)
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
-=======
      * Get modele
      *
      * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
@@ -500,5 +319,4 @@ class DescriptionForfaitSki
         $this->ageMax   = clone $this->getAgeMax();
         $this->prix     = clone $this->getPrix();
     }
->>>>>>> CRM-28
 }
