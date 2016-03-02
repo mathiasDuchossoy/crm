@@ -126,20 +126,6 @@ class DescriptionForfaitSki
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function addTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDescriptionForfaitSki($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
@@ -249,6 +235,16 @@ class DescriptionForfaitSki
         return $this->traductions;
     }
 
+    public function setTraductions($traductions)
+    {
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
     /**
      * Get ageMin
      *
@@ -305,6 +301,20 @@ class DescriptionForfaitSki
     public function getPrix()
     {
         return $this->prix;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
+     *
+     * @return DescriptionForfaitSki
+     */
+    public function addTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDescriptionForfaitSki($this);
+
+        return $this;
     }
 
     /**

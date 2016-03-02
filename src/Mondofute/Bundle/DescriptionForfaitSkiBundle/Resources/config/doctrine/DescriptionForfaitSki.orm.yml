@@ -23,6 +23,7 @@ Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki:
         traductions:
             targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction
             mappedBy: descriptionForfaitSki
+            cascade: ['persist', 'remove']
     manyToOne:
         present:
             targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
@@ -35,12 +36,12 @@ Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki:
     oneToOne:
         prix:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
         ageMin:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Age
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
         ageMax:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Age
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
 
     lifecycleCallbacks: {  }

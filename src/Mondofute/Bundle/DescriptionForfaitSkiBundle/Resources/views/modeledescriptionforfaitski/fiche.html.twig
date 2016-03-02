@@ -12,46 +12,53 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-            <div class="tab-content" style="padding:20px;">
+            {% set iSite = 0 %}
+            {% for descriptionForfaitSki in form.descriptionForfaitSkis %}
 
-                {% set iSite = 0 %}
-                {% for descriptionForfaitSki in form.descriptionForfaitSkis %}
-                    {{ form_row(descriptionForfaitSki.quantite) }}
-                    {{ form_row(descriptionForfaitSki.classement) }}
-                    {{ form_row(descriptionForfaitSki.present) }}
-                    {{ form_row(descriptionForfaitSki.prix) }}
-                    {{ form_row(descriptionForfaitSki.ageMin) }}
-                    {{ form_row(descriptionForfaitSki.ageMax) }}
-                    <ul class="nav nav-tabs">
-                        {% set iTraduc = 0 %}
-                        {% for traduction in descriptionForfaitSki.traductions %}
-                            <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                                <a data-toggle="tab"
-                                   href="#{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}">
-                                    {# affiche la langue en fonction de la locale#}
-                                    {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                        {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                            {{ traductionLangue.libelle }}
-                                        {% endif %}
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">
+                            Fiche
+                        </h3></div>
+                    <div class="panel-body">
+
+
+                        {{ form_row(descriptionForfaitSki.quantite) }}
+                        {{ form_row(descriptionForfaitSki.classement) }}
+                        {{ form_row(descriptionForfaitSki.present) }}
+                        {{ form_row(descriptionForfaitSki.prix) }}
+                        {{ form_row(descriptionForfaitSki.ageMin) }}
+                        {{ form_row(descriptionForfaitSki.ageMax) }}
+                        <ul class="nav nav-tabs">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in descriptionForfaitSki.traductions %}
+                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                    <a data-toggle="tab"
+                                       href="#{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}">
+                                        {# affiche la langue en fonction de la locale#}
+                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                {{ traductionLangue.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in descriptionForfaitSki.traductions %}
+                                <div id="{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}"
+                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                    {#{{ form_row(traduction) }}#}
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element) }}
                                     {% endfor %}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <div class="tab-content">
-                        {% set iTraduc = 0 %}
-                        {% for traduction in descriptionForfaitSki.traductions %}
-                            <div id="{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}"
-                                 class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                                {#{{ form_row(traduction) }}#}
-                                {% for element in traduction.children %}
-                                    {{ form_row(element) }}
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}

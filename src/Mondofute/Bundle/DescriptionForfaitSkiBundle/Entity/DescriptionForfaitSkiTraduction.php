@@ -26,7 +26,14 @@ class DescriptionForfaitSkiTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
-
+    /**
+     * @var string
+     */
+    private $libelle;
+    /**
+     * @var string
+     */
+    private $texteDur;
 
     /**
      * Get id
@@ -106,6 +113,54 @@ class DescriptionForfaitSkiTraduction
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return DescriptionForfaitSkiTraduction
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get texteDur
+     *
+     * @return string
+     */
+    public function getTexteDur()
+    {
+        return $this->texteDur;
+    }
+
+    /**
+     * Set texteDur
+     *
+     * @param string $texteDur
+     *
+     * @return DescriptionForfaitSkiTraduction
+     */
+    public function setTexteDur($texteDur)
+    {
+        $this->texteDur = $texteDur;
 
         return $this;
     }
