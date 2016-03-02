@@ -39,6 +39,16 @@ class NiveauSkieurTraduction
     }
 
     /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
      * Set libelle
      *
      * @param string $libelle
@@ -53,13 +63,13 @@ class NiveauSkieurTraduction
     }
 
     /**
-     * Get libelle
+     * Get langue
      *
-     * @return string
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getLibelle()
+    public function getLangue()
     {
-        return $this->libelle;
+        return $this->langue;
     }
 
     /**
@@ -77,13 +87,13 @@ class NiveauSkieurTraduction
     }
 
     /**
-     * Get langue
+     * Get niveauSkieur
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
      */
-    public function getLangue()
+    public function getNiveauSkieur()
     {
-        return $this->langue;
+        return $this->niveauSkieur;
     }
 
     /**
@@ -98,15 +108,5 @@ class NiveauSkieurTraduction
         $this->niveauSkieur = $niveauSkieur;
 
         return $this;
-    }
-
-    /**
-     * Get niveauSkieur
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
-     */
-    public function getNiveauSkieur()
-    {
-        return $this->niveauSkieur;
     }
 }

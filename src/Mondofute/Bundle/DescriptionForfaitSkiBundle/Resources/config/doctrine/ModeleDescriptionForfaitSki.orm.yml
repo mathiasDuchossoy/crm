@@ -14,4 +14,5 @@ Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki:
         descriptionForfaitSkis:
             targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki
             mappedBy: modele
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

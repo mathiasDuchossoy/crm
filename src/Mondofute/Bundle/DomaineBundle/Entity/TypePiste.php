@@ -41,6 +41,16 @@ class TypePiste
     }
 
     /**
+     * Get classement
+     *
+     * @return integer
+     */
+    public function getClassement()
+    {
+        return $this->classement;
+    }
+
+    /**
      * Set classement
      *
      * @param integer $classement
@@ -52,16 +62,6 @@ class TypePiste
         $this->classement = $classement;
 
         return $this;
-    }
-
-    /**
-     * Get classement
-     *
-     * @return integer
-     */
-    public function getClassement()
-    {
-        return $this->classement;
     }
 
     /**

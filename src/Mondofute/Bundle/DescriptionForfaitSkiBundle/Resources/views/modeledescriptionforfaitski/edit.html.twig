@@ -1,21 +1,24 @@
-{% extends 'base.html.twig' %}
+{% extends 'MondofuteDescriptionForfaitSkiBundle:modeledescriptionforfaitski:fiche.html.twig' %}
 
-{% block body %}
-    <h1>ModeleDescriptionForfaitSki edit</h1>
+{#{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}#}
+{#{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}#}
 
-    {{ form_start(edit_form) }}
-    {{ form_widget(edit_form) }}
-    <input type="submit" value="Edit"/>
-    {{ form_end(edit_form) }}
+{% block title %}
+    {{ 'modification de ModeleDescriptionForfaitSki  ' | capitalize }}
+{% endblock %}
 
-    <ul>
-        <li>
-            <a href="{{ path('modeledescriptionforfaitski_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification de ModeleDescriptionForfaitSki
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('modeledescriptionforfaitski_index') }}">{{ 'retour à la liste' | capitalize }}</a>
+            </li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+    </div>
 {% endblock %}

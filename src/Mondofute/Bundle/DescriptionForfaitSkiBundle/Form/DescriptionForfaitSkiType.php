@@ -4,10 +4,12 @@ namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Form;
 
 use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCRepository;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\UniteBundle\Form\AgeType;
 use Mondofute\Bundle\UniteBundle\Form\TarifType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,9 +26,9 @@ class DescriptionForfaitSkiType extends AbstractType
         $builder
             ->add('quantite')
             ->add('classement')
-            ->add('prix', new TarifType())
-            ->add('ageMin', new AgeType())
-            ->add('ageMax', new AgeType())
+            ->add('prix', new TarifType(), array('required' => false))
+            ->add('ageMin', new AgeType(), array('required' => false))
+            ->add('ageMax', new AgeType(), array('required' => false))
             ->add('present',
                 EntityType::class,
                 array(
@@ -38,6 +40,9 @@ class DescriptionForfaitSkiType extends AbstractType
                     },
                 )
             )
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => DescriptionForfaitSkiTraductionType::class,
+            ))
 //            ->add('present', new OuiNonNCTye())
             ->add('ligneDescriptionForfaitSki', HiddenType::class, array('mapped' => false))//            ->add('modele')
         ;

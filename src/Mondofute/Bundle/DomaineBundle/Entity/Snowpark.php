@@ -12,17 +12,6 @@ class Snowpark
      * @var int
      */
     private $id;
-
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -34,6 +23,16 @@ class Snowpark
     public function __construct()
     {
         $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -60,17 +59,6 @@ class Snowpark
         $this->traductions->removeElement($traduction);
     }
 
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-
     public function __clone()
     {
         /** @var SnowparkTraduction $cloneTraduction */
@@ -84,6 +72,16 @@ class Snowpark
                 $cloneTraduction->setSnowpark($this);
             }
         }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 
 }

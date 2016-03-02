@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * ModeleDescriptionForfaitSki
  */
@@ -57,6 +59,21 @@ class ModeleDescriptionForfaitSki
     public function removeDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki)
     {
         $this->descriptionForfaitSkis->removeElement($descriptionForfaitSki);
+    }
+
+    public function __clone()
+    {
+        /** @var DescriptionForfaitSki $descriptionsForfaitSki */
+        $this->id = null;
+        $descriptionsForfaitSkis = $this->getDescriptionForfaitSkis();
+        $this->descriptionForfaitSkis = new ArrayCollection();
+        if (count($descriptionsForfaitSkis) > 0) {
+            foreach ($descriptionsForfaitSkis as $descriptionsForfaitSki) {
+                $cloneDescriptionForfaitSki = clone $descriptionsForfaitSki;
+                $this->descriptionForfaitSkis->add($cloneDescriptionForfaitSki);
+                $cloneDescriptionForfaitSki->setModele($this);
+            }
+        }
     }
 
     /**

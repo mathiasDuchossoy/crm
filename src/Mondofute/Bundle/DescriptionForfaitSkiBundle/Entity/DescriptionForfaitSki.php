@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * DescriptionForfaitSki
  */
@@ -124,78 +126,6 @@ class DescriptionForfaitSki
     }
 
     /**
-     * Get prix
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Tarif
-     */
-    public function getPrix()
-    {
-        return $this->prix;
-    }
-
-    /**
-     * Set prix
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Tarif $prix
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setPrix(\Mondofute\Bundle\UniteBundle\Entity\Tarif $prix = null)
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
-
-    /**
-     * Get ageMin
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
-     */
-    public function getAgeMin()
-    {
-        return $this->ageMin;
-    }
-
-    /**
-     * Set ageMin
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMin
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setAgeMin(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMin = null)
-    {
-        $this->ageMin = $ageMin;
-
-        return $this;
-    }
-
-    /**
-     * Get ageMax
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
-     */
-    public function getAgeMax()
-    {
-        return $this->ageMax;
-    }
-
-    /**
-     * Set ageMax
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMax
-     *
-     * @return DescriptionForfaitSki
-     */
-    public function setAgeMax(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMax = null)
-    {
-        $this->ageMax = $ageMax;
-
-        return $this;
-    }
-
-    /**
      * Add traduction
      *
      * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
@@ -217,16 +147,6 @@ class DescriptionForfaitSki
     public function removeTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
     }
 
     /**
@@ -297,6 +217,106 @@ class DescriptionForfaitSki
     public function setModele(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki $modele = null)
     {
         $this->modele = $modele;
+
+        return $this;
+    }
+
+    public function __clone()
+    {
+        /** @var DescriptionForfaitSkiTraduction $traduction */
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setDescriptionForfaitSki($this);
+            }
+        }
+        $this->ageMin = clone $this->getAgeMin();
+        $this->ageMax = clone $this->getAgeMax();
+        $this->prix = clone $this->getPrix();
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Get ageMin
+     *
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
+     */
+    public function getAgeMin()
+    {
+        return $this->ageMin;
+    }
+
+    /**
+     * Set ageMin
+     *
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMin
+     *
+     * @return DescriptionForfaitSki
+     */
+    public function setAgeMin(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMin = null)
+    {
+        $this->ageMin = $ageMin;
+
+        return $this;
+    }
+
+    /**
+     * Get ageMax
+     *
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
+     */
+    public function getAgeMax()
+    {
+        return $this->ageMax;
+    }
+
+    /**
+     * Set ageMax
+     *
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMax
+     *
+     * @return DescriptionForfaitSki
+     */
+    public function setAgeMax(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMax = null)
+    {
+        $this->ageMax = $ageMax;
+
+        return $this;
+    }
+
+    /**
+     * Get prix
+     *
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Tarif
+     */
+    public function getPrix()
+    {
+        return $this->prix;
+    }
+
+    /**
+     * Set prix
+     *
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Tarif $prix
+     *
+     * @return DescriptionForfaitSki
+     */
+    public function setPrix(\Mondofute\Bundle\UniteBundle\Entity\Tarif $prix = null)
+    {
+        $this->prix = $prix;
 
         return $this;
     }
