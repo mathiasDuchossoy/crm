@@ -14,6 +14,11 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction:
         libelle:
             type: string
             length: 255
+        affichageTexte:
+            type: string
+            length: 255
+            options:
+                default: ""
     manyToOne:
         domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
