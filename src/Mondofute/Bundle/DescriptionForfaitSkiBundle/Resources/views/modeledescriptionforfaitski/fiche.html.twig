@@ -25,9 +25,9 @@
                         {{ form_row(descriptionForfaitSki.quantite) }}
                         {{ form_row(descriptionForfaitSki.classement) }}
                         {{ form_row(descriptionForfaitSki.present) }}
-                        {{ form_row(descriptionForfaitSki.prix) }}
-                        {{ form_row(descriptionForfaitSki.ageMin) }}
-                        {{ form_row(descriptionForfaitSki.ageMax) }}
+                        {{ form_row(descriptionForfaitSki.prix , {'attr' : { 'class' : 'form-inline'}}) }}
+                        {{ form_row(descriptionForfaitSki.ageMin, {'attr' : { 'class' : 'form-inline'}}) }}
+                        {{ form_row(descriptionForfaitSki.ageMax, {'attr' : { 'class' : 'form-inline'}}) }}
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
                             {% for traduction in descriptionForfaitSki.traductions %}
