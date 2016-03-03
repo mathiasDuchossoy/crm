@@ -57,7 +57,8 @@
     {#{% set service  = form_row(form.interlocuteurs.vars.prototype.children.service) %}#}
     {#{% set fonction = form_row(form.interlocuteurs.vars.prototype.children.fonction) %}#}
 
-    <div id="values-interlocuteurs" style="display: none">
+    {#<div id="values-interlocuteurs" style="display: none">#}
+    <div id="values-interlocuteurs" style="display: block">
 
     </div>
     {{ form_widget(form._token) }}
@@ -169,15 +170,14 @@
 
 //            console.log ( $indexHolder.data('interlocuteur-index'));
 //            $indexHolder.data('interlocuteur-index', $indexHolder.data('interlocuteur-index') + 1);
-
+//console.log(interlocuteur.prenom);
 //            console.log($('#form-interlocuteur').html());
             var $valuesInterlocuteur = $('#values-interlocuteurs');
             $valuesInterlocuteur.append($formInterlocuteur.html());
-            $valuesInterlocuteur.find('[id$="' + $index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
-            $valuesInterlocuteur.find('[id$="' + $index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
-            $valuesInterlocuteur.find('[id$="' + $index + '_interlocuteur_service"]').val(interlocuteur.service);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_prenom"]').val(interlocuteur.prenom);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_fonction"]').val(interlocuteur.fonction);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_service"]').val(interlocuteur.service);
             $formInterlocuteur.data('interlocuteur-index', $index + 1);
-//            console.log($valuesInterlocuteur.find('[id$="'+ $index+ '_prenom"]'));
 //            console.log(interlocuteur.prenom);
         });
 
