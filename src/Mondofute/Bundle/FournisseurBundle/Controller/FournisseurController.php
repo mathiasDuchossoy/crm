@@ -35,7 +35,6 @@ class FournisseurController extends Controller
      */
     public function newAction(Request $request)
     {
-//        dump($_POST);die;
         $em = $this->getDoctrine()->getManager();
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
@@ -43,7 +42,8 @@ class FournisseurController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            dump($fournisseur);die;
+            dump($fournisseur);
+            die;
 
             $em->persist($fournisseur);
             $em->flush();
@@ -70,6 +70,21 @@ class FournisseurController extends Controller
             'fournisseur' => $fournisseur,
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    /**
+     * Creates a form to delete a Fournisseur entity.
+     *
+     * @param Fournisseur $fournisseur The Fournisseur entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Fournisseur $fournisseur)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 
     /**
@@ -116,21 +131,6 @@ class FournisseurController extends Controller
         }
 
         return $this->redirectToRoute('fournisseur_index');
-    }
-
-    /**
-     * Creates a form to delete a Fournisseur entity.
-     *
-     * @param Fournisseur $fournisseur The Fournisseur entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Fournisseur $fournisseur)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 
     public function getFormInterlocuteur()
