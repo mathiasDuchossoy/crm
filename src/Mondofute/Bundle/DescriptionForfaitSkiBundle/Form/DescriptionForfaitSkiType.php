@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Form;
 
 use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCRepository;
-use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\UniteBundle\Form\AgeType;
 use Mondofute\Bundle\UniteBundle\Form\TarifType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,9 +25,9 @@ class DescriptionForfaitSkiType extends AbstractType
         $builder
             ->add('quantite')
             ->add('classement')
-            ->add('prix', new TarifType(), array('required' => false))
-            ->add('ageMin', new AgeType(), array('required' => false))
-            ->add('ageMax', new AgeType(), array('required' => false))
+            ->add('prix', 'Mondofute\Bundle\UniteBundle\Form\TarifType', array('required' => false))
+            ->add('ageMin', 'Mondofute\Bundle\UniteBundle\Form\AgeType', array('required' => false))
+            ->add('ageMax', 'Mondofute\Bundle\UniteBundle\Form\AgeType', array('required' => false))
             ->add('present',
                 EntityType::class,
                 array(
