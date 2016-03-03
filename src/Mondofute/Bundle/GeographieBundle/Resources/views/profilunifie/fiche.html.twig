@@ -81,11 +81,11 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {% for langue in langues %}
-        itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_libelle_{{ langue.code }}");
-        itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_description_{{ langue.code }}");
-        itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_accueil_{{ langue.code }}");
-        {% endfor %}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_description_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_accueil_{{ langue.code }}");#}
+        {#{% endfor %}#}
     </script>
     {{ parent() }}
     <script type="text/javascript">
