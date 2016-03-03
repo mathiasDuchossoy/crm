@@ -126,7 +126,9 @@
         }
 
         $(document).ready(function () {
-            masqueNonPersonalisable();
+            if (typeof itemNonPersonalisable != 'undefined') {
+                masqueNonPersonalisable();
+            }
         });
     </script>
 
