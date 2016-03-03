@@ -254,21 +254,22 @@ class ModeleDescriptionForfaitSkiController extends Controller
                     $descriptionForfaitSkiSite->setClassement($descriptionForfaitSki->getClassement());
                     $descriptionForfaitSkiSite->setQuantite($descriptionForfaitSki->getQuantite());
                     $descriptionForfaitSkiSite->getPrix()->setValeur($descriptionForfaitSki->getPrix()->getValeur());
-                    if (!empty($descriptionForfaitSkiSite->getPrix()->getUnite())) {
+                    if (!empty($descriptionForfaitSki->getPrix()->getUnite())) {
+//                        dump($descriptionForfaitSkiSite->getPrix()->getUnite());die;
                         $descriptionForfaitSkiSite->getPrix()->setUnite($emSite->find('MondofuteUniteBundle:UniteTarif', $descriptionForfaitSki->getPrix()->getUnite()->getId()));
                     }
                     $descriptionForfaitSki->getAgeMin()->setValeur($descriptionForfaitSki->getAgeMin()->getValeur());
-                    if (!empty($descriptionForfaitSkiSite->getAgeMin()->getUnite())) {
+                    if (!empty($descriptionForfaitSki->getAgeMin()->getUnite())) {
                         $descriptionForfaitSkiSite->getAgeMin()->setUnite($emSite->find('MondofuteUniteBundle:UniteAge', $descriptionForfaitSki->getAgeMin()->getUnite()->getId()));
                     }
                     $descriptionForfaitSki->getAgeMax()->setValeur($descriptionForfaitSki->getAgeMax()->getValeur());
-                    if (!empty($descriptionForfaitSkiSite->getAgeMax()->getUnite())) {
+                    if (!empty($descriptionForfaitSki->getAgeMax()->getUnite())) {
                         $descriptionForfaitSkiSite->getAgeMax()->setUnite($emSite->find('MondofuteUniteBundle:UniteAge', $descriptionForfaitSki->getAgeMax()->getUnite()->getId()));
                     }
-                    if (!empty($descriptionForfaitSkiSite->getLigneDescriptionForfaitSki())) {
+                    if (!empty($descriptionForfaitSki->getLigneDescriptionForfaitSki())) {
                         $descriptionForfaitSkiSite->setLigneDescriptionForfaitSki($emSite->find('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSki', $descriptionForfaitSki->getLigneDescriptionForfaitSki()->getId()));
                     }
-                    if (!empty($descriptionForfaitSkiSite->getPresent())) {
+                    if (!empty($descriptionForfaitSki->getPresent())) {
                         $descriptionForfaitSkiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $descriptionForfaitSki->getPresent()->getId()));
                     }
                 }
