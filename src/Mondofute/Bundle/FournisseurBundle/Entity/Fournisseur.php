@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Fournisseur
@@ -46,6 +47,16 @@ class Fournisseur
     }
 
     /**
+     * Get enseigne
+     *
+     * @return string
+     */
+    public function getEnseigne()
+    {
+        return $this->enseigne;
+    }
+
+    /**
      * Set enseigne
      *
      * @param string $enseigne
@@ -60,16 +71,6 @@ class Fournisseur
     }
 
     /**
-     * Get enseigne
-     *
-     * @return string
-     */
-    public function getEnseigne()
-    {
-        return $this->enseigne;
-    }
-
-    /**
      * Add interlocuteur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur
@@ -78,6 +79,7 @@ class Fournisseur
      */
     public function addInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
     {
+        $interlocuteur->setFournisseur($this);
         $this->interlocuteurs[] = $interlocuteur->setFournisseur($this);
 
         return $this;
@@ -104,6 +106,16 @@ class Fournisseur
     }
 
     /**
+     * Get passerelle
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
+     */
+    public function getPasserelle()
+    {
+        return $this->passerelle;
+    }
+
+    /**
      * Set passerelle
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle $passerelle
@@ -117,13 +129,18 @@ class Fournisseur
         return $this;
     }
 
-    /**
-     * Get passerelle
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
-     */
-    public function getPasserelle()
-    {
-        return $this->passerelle;
-    }
+//    function __clone()
+//    {
+//        /** @var Interlocuteur $interlocuteur */
+//        $this->id = null;
+//        $interlocuteurs = $this->getInterlocuteurs();
+//        $this->interlocuteurs = new ArrayCollection();
+//        if (count($interlocuteurs) > 0) {
+//            foreach ($interlocuteurs as $interlocuteur) {
+//                $cloneInterlocuteur = clone $interlocuteur;
+//                $this->interlocuteurs->add($cloneInterlocuteur);
+//                $cloneInterlocuteur->ss($this);
+//            }
+//        }
+//    }
 }

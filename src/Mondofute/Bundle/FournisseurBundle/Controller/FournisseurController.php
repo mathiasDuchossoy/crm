@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -35,15 +38,28 @@ class FournisseurController extends Controller
      */
     public function newAction(Request $request)
     {
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        /** @var Site $site */
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($fournisseur);
-            die;
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                $interlocuteur->setFournisseur($fournisseur);
+            }
+//            $sites  = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//            foreach($sites as $site)
+//            {
+//                $emSite     = $this->getDoctrine()->getManager($site->getLibelle());
+//                $fournisseurSite = clone $fournisseur;
+//            }
+//            dump($fournisseur);
+//            die;
 
             $em->persist($fournisseur);
             $em->flush();
@@ -110,7 +126,7 @@ class FournisseurController extends Controller
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }

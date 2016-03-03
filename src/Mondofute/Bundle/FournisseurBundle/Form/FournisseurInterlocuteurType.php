@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +17,7 @@ class FournisseurInterlocuteurType extends AbstractType
     {
         $builder
 //            ->add('fournisseur')
-            ->add('interlocuteur', new InterlocuteurType());
+            ->add('interlocuteur', 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType');
     }
 
     /**
