@@ -93,20 +93,20 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        itemNonPersonalisable.push("_station_unifie_stations_entry_zoneTouristique");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_codePostal");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_lienMeteo");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_jourOuverture");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_moisOuverture");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_jourFermeture");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_moisFermeture");
-        {% for langue in langues %}
-        itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enVoiture_{{ langue.code }}");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enTrain_{{ langue.code }}");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enAvion_{{ langue.code }}");
-        itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");
-        {% endfor %}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_zoneTouristique");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_codePostal");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_lienMeteo");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_jourOuverture");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_moisOuverture");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_jourFermeture");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_moisFermeture");#}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enVoiture_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enTrain_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enAvion_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");#}
+        {#{% endfor %}#}
     </script>
     {{ parent() }}
     <script type="text/javascript">

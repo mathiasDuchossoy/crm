@@ -86,10 +86,10 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        itemNonPersonalisable.push("_domaine_unifie_domaines_entry_domaineParent");
-        {% for langue in langues %}
-        itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");
-        {% endfor %}
+        {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_domaineParent");#}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#{% endfor %}#}
     </script>
     {{ parent() }}
     <script type="text/javascript">

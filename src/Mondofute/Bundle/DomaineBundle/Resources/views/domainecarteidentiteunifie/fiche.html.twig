@@ -118,23 +118,23 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");#}
 
-        {% for langue in langues %}
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_description_{{ langue.code }}");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_traductions_entry_description_{{ langue.code }}");
-        itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");
-        {% endfor %}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_description_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_traductions_entry_description_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");#}
+        {#{% endfor %}#}
     </script>
     {{ parent() }}
     <script type="text/javascript">

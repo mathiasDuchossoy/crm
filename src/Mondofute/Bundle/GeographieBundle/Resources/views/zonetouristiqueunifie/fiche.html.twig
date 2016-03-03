@@ -82,10 +82,10 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {% for langue in langues %}
-        itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_libelle_{{ langue.code }}");
-        itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_description_{{ langue.code }}");
-        {% endfor %}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_description_{{ langue.code }}");#}
+        {#{% endfor %}#}
     </script>
     {{ parent() }}
     <script type="text/javascript">
