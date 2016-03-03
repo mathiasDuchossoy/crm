@@ -19,7 +19,7 @@ class FournisseurType extends AbstractType
         $builder
             ->add('enseigne')
             ->add('interlocuteurs', CollectionType::class, array(
-                    'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType',
+                    'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\FournisseurInterlocuteurType',
                     'allow_add' => true,
 //                    'entry_options' => array(
 //                        'locale' => $options['locale'] ,
