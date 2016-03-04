@@ -141,7 +141,19 @@ class FournisseurController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var EntityManager $em */
             $em = $this->getDoctrine()->getManager();
+            $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+            foreach ($sites as $site) {
+                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+                // Récupérer l'entité sur le site distant puis la suprrimer.
+                $fournisseurSite = $emSite->find(Fournisseur::class, $fournisseur->getId());
+                if (!empty($fournisseurSite)) {
+                    $emSite->remove($fournisseurSite);
+                    $emSite->flush();
+                }
+            }
+
             $em->remove($fournisseur);
             $em->flush();
         }
