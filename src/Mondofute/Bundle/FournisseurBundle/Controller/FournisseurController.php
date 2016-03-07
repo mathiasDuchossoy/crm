@@ -4,7 +4,9 @@ namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Proxies\__CG__\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -39,6 +41,7 @@ class FournisseurController extends Controller
     public function newAction(Request $request)
     {
         /** @var FournisseurInterlocuteur $interlocuteur */
+        /** @var FournisseurInterlocuteur $interlocuteur */
         /** @var Site $site */
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -52,14 +55,7 @@ class FournisseurController extends Controller
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
-//            $sites  = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
-//            foreach($sites as $site)
-//            {
-//                $emSite     = $this->getDoctrine()->getManager($site->getLibelle());
-//                $fournisseurSite = clone $fournisseur;
-//            }
-//            dump($fournisseur);
-//            die;
+            $this->copieVersSites($fournisseur);
 
             $em->persist($fournisseur);
             $em->flush();
@@ -72,6 +68,35 @@ class FournisseurController extends Controller
             'fournisseur' => $fournisseur,
             'form' => $form->createView(),
         ));
+    }
+
+    public function copieVersSites(Fournisseur $fournisseur)
+    {
+        /** @var Site $site */
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $fournisseurSite = clone $fournisseur;
+
+            foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
+                if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
+                    $interlocuteur->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+//                    $interlocuteur->getInterlocuteur()->setFonction(null);
+//                    dump($interlocuteur->getInterlocuteur()->getFonction());
+                }
+                if (!empty($interlocuteur->getInterlocuteur()->getService())) {
+                    $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+//                    $interlocuteur->getInterlocuteur()->setService(null);
+                }
+            }
+            dump($fournisseurSite);
+//            die;
+            $emSite->persist($fournisseurSite);
+            $emSite->flush();
+        }
     }
 
     /**
@@ -137,17 +162,18 @@ class FournisseurController extends Controller
      */
     public function deleteAction(Request $request, Fournisseur $fournisseur)
     {
+        /** @var EntityManager $em */
+        /** @var Site $site */
         $form = $this->createDeleteForm($fournisseur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var EntityManager $em */
             $em = $this->getDoctrine()->getManager();
             $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
             foreach ($sites as $site) {
                 $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                 // Récupérer l'entité sur le site distant puis la suprrimer.
-                $fournisseurSite = $emSite->find(Fournisseur::class, $fournisseur->getId());
+                $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
                 if (!empty($fournisseurSite)) {
                     $emSite->remove($fournisseurSite);
                     $emSite->flush();
