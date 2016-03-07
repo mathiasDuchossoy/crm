@@ -79,7 +79,6 @@ class Fournisseur
      */
     public function addInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
     {
-        $interlocuteur->setFournisseur($this);
         $this->interlocuteurs[] = $interlocuteur->setFournisseur($this);
 
         return $this;
@@ -93,16 +92,6 @@ class Fournisseur
     public function removeInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
     {
         $this->interlocuteurs->removeElement($interlocuteur);
-    }
-
-    /**
-     * Get interlocuteurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getInterlocuteurs()
-    {
-        return $this->interlocuteurs;
     }
 
     /**
@@ -129,18 +118,30 @@ class Fournisseur
         return $this;
     }
 
-//    function __clone()
-//    {
-//        /** @var Interlocuteur $interlocuteur */
-//        $this->id = null;
-//        $interlocuteurs = $this->getInterlocuteurs();
-//        $this->interlocuteurs = new ArrayCollection();
-//        if (count($interlocuteurs) > 0) {
-//            foreach ($interlocuteurs as $interlocuteur) {
-//                $cloneInterlocuteur = clone $interlocuteur;
-//                $this->interlocuteurs->add($cloneInterlocuteur);
-//                $cloneInterlocuteur->ss($this);
-//            }
-//        }
-//    }
+    function __clone()
+    {
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        $this->id = null;
+        $interlocuteurs = $this->getInterlocuteurs();
+        $this->interlocuteurs = new ArrayCollection();
+        if (count($interlocuteurs) > 0) {
+            foreach ($interlocuteurs as $interlocuteur) {
+                $cloneInterlocuteur = clone $interlocuteur;
+                $this->interlocuteurs->add($cloneInterlocuteur);
+                $cloneInterlocuteur->setFournisseur($this);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get interlocuteurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInterlocuteurs()
+    {
+        return $this->interlocuteurs;
+    }
 }
