@@ -34,6 +34,16 @@ class FournisseurInterlocuteur
     }
 
     /**
+     * Get fournisseur
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
+    }
+
+    /**
      * Set fournisseur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
@@ -47,14 +57,23 @@ class FournisseurInterlocuteur
         return $this;
     }
 
-    /**
-     * Get fournisseur
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
-     */
-    public function getFournisseur()
+    function __clone()
     {
-        return $this->fournisseur;
+        /** @var Interlocuteur $interlocuteur */
+        $this->id = null;
+        $this->interlocuteur = clone $this->getInterlocuteur();
+
+        return $this;
+    }
+
+    /**
+     * Get interlocuteur
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur
+     */
+    public function getInterlocuteur()
+    {
+        return $this->interlocuteur;
     }
 
     /**
@@ -69,15 +88,5 @@ class FournisseurInterlocuteur
         $this->interlocuteur = $interlocuteur;
 
         return $this;
-    }
-
-    /**
-     * Get interlocuteur
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur
-     */
-    public function getInterlocuteur()
-    {
-        return $this->interlocuteur;
     }
 }
