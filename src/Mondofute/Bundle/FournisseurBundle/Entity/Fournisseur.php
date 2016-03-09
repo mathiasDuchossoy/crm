@@ -2,12 +2,34 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
+
+class FournisseurContient
+{
+    const PRODUIT = 1; // 1
+    const FOURNISSEUR = 2; // 10
+
+    public static $libelles = array(
+        FournisseurContient::FOURNISSEUR => 'Fournisseurs',
+        FournisseurContient::PRODUIT => 'Produits'
+    );
+
+    static public function getLibelle($permission)
+    {
+        return self::$libelles[$permission];
+    }
+
+}
 
 /**
  * Fournisseur
  */
 class Fournisseur
 {
+    use FournisseurTrait;
+
+//    const PRODUIT = 1; // 1
+//    const FOURNISSEUR = 2; // 10
     /**
      * @var integer
      */
@@ -27,6 +49,18 @@ class Fournisseur
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
      */
     private $passerelle;
+    /**
+     * @var integer
+     */
+    private $contient;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurEnfants;
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    private $fournisseurParent;
 
     /**
      * Constructor
@@ -143,5 +177,87 @@ class Fournisseur
     public function getInterlocuteurs()
     {
         return $this->interlocuteurs;
+    }
+
+    /**
+     * Get contient
+     *
+     * @return integer
+     */
+    public function getContient()
+    {
+        return $this->contient;
+    }
+
+    /**
+     * Set contient
+     *
+     * @param integer $contient
+     *
+     * @return Fournisseur
+     */
+    public function setContient($contient)
+    {
+        $this->contient = $contient;
+
+        return $this;
+    }
+
+    /**
+     * Add fournisseurEnfant
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant
+     *
+     * @return Fournisseur
+     */
+    public function addFournisseurEnfant(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant)
+    {
+        $this->fournisseurEnfants[] = $fournisseurEnfant;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseurEnfant
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant
+     */
+    public function removeFournisseurEnfant(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant)
+    {
+        $this->fournisseurEnfants->removeElement($fournisseurEnfant);
+    }
+
+    /**
+     * Get fournisseurEnfants
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFournisseurEnfants()
+    {
+        return $this->fournisseurEnfants;
+    }
+
+    /**
+     * Get fournisseurParent
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    public function getFournisseurParent()
+    {
+        return $this->fournisseurParent;
+    }
+
+    /**
+     * Set fournisseurParent
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent
+     *
+     * @return Fournisseur
+     */
+    public function setFournisseurParent(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent = null)
+    {
+        $this->fournisseurParent = $fournisseurParent;
+
+        return $this;
     }
 }

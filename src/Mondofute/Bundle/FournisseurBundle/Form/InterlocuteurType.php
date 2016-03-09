@@ -41,7 +41,9 @@ class InterlocuteurType extends AbstractType
                         return $r->getTraductionsByLocale($locale);
                     },
                 )
-            );
+            )//            ->add('service',  HiddenType::class, array('mapped' => true))
+
+        ;
     }
 
     /**

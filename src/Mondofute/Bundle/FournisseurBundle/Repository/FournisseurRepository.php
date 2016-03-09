@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Repository;
 
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+
 /**
  * FournisseurRepository
  *
@@ -10,4 +12,20 @@ namespace Mondofute\Bundle\FournisseurBundle\Repository;
  */
 class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getFournisseurDeFournisseur($fournisseurId)
+
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fournisseur')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->where("fournisseur.contient = :contient")
+            ->setParameter('contient', FournisseurContient::FOURNISSEUR);
+        if (!empty($fournisseurId)) {
+            $qb->andWhere("fournisseur.id != :id")
+//            ->setParameters(array('contient'=> FournisseurContient::FOURNISSEUR , 'id' => $fournisseurId))
+                ->setParameter('id', $fournisseurId);
+        }
+        $qb->orderBy('fournisseur.id', 'ASC');
+        return $qb;
+    }
 }
