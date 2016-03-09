@@ -46,6 +46,16 @@ class Passerelle
     }
 
     /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
      * Set libelle
      *
      * @param string $libelle
@@ -60,13 +70,13 @@ class Passerelle
     }
 
     /**
-     * Get libelle
+     * Get data
      *
      * @return string
      */
-    public function getLibelle()
+    public function getData()
     {
-        return $this->libelle;
+        return $this->data;
     }
 
     /**
@@ -81,16 +91,6 @@ class Passerelle
         $this->data = $data;
 
         return $this;
-    }
-
-    /**
-     * Get data
-     *
-     * @return string
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 
     /**

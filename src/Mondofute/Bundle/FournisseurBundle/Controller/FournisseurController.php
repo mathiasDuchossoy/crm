@@ -2,11 +2,14 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Proxies\__CG__\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -48,6 +51,7 @@ class FournisseurController extends Controller
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
 
@@ -81,19 +85,16 @@ class FournisseurController extends Controller
 
             $fournisseurSite = clone $fournisseur;
 
+            $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseurSite->getFournisseurParent()->getId()));
+
             foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
                 if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
                     $interlocuteur->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
-//                    $interlocuteur->getInterlocuteur()->setFonction(null);
-//                    dump($interlocuteur->getInterlocuteur()->getFonction());
                 }
                 if (!empty($interlocuteur->getInterlocuteur()->getService())) {
                     $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
-//                    $interlocuteur->getInterlocuteur()->setService(null);
                 }
             }
-            dump($fournisseurSite);
-//            die;
             $emSite->persist($fournisseurSite);
             $emSite->flush();
         }
@@ -124,6 +125,7 @@ class FournisseurController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
+            ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -134,14 +136,40 @@ class FournisseurController extends Controller
      */
     public function editAction(Request $request, Fournisseur $fournisseur)
     {
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        $originalInterlocuteurs = new ArrayCollection();
+
+        // Create an ArrayCollection of the current Tag objects in the database
+        foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+            $originalInterlocuteurs->add($interlocuteur);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $deleteForm = $this->createDeleteForm($fournisseur);
-        $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
+        $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur)
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
+
+            foreach ($originalInterlocuteurs as $interlocuteur) {
+                if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $this->deleteInterlocuteurSites($interlocuteur);
+
+                    $interlocuteur->setFournisseur(null);
+
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($interlocuteur);
+                }
+            }
+
+            $this->mAJSites($fournisseur);
+
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                $interlocuteur->setFournisseur($fournisseur);
+            }
             $em->persist($fournisseur);
             $em->flush();
 
@@ -154,6 +182,88 @@ class FournisseurController extends Controller
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    private function deleteInterlocuteurSites(FournisseurInterlocuteur $interlocuteur)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $interlocuteurSite = $emSite->find('MondofuteFournisseurBundle:FournisseurInterlocuteur', $interlocuteur->getId());
+
+            $interlocuteurSite->setFournisseur(null);
+
+            $emSite->remove($interlocuteurSite);
+        }
+    }
+
+    public function mAJSites(Fournisseur $fournisseur)
+    {
+        /** @var Site $site */
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
+
+            $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
+            $fournisseurSite->setContient($fournisseur->getContient());
+            if (!empty($fournisseur->getFournisseurParent())) {
+                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getFournisseurParent()->getId()));
+            } else {
+                $fournisseurSite->setFournisseurParent(null);
+            }
+
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+
+                $interlocuteurSite = $fournisseurSite->getInterlocuteurs()->filter(function (FournisseurInterlocuteur $element) use ($interlocuteur) {
+                    return $element->getId() == $interlocuteur->getId();
+                })->first();
+
+                if (!empty($interlocuteurSite)) {
+                    $interlocuteurSite->getInterlocuteur()->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
+
+                    if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
+                        $interlocuteurSite->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                    } else {
+                        $interlocuteurSite->getInterlocuteur()->setFonction(null);
+                    }
+                    if (!empty($interlocuteur->getInterlocuteur()->getService())) {
+                        $interlocuteurSite->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+                    } else {
+                        $interlocuteurSite->getInterlocuteur()->setService(null);
+                    }
+
+                } else {
+                    $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
+
+                    $interlocuteurSite = new Interlocuteur();
+
+                    $interlocuteurSite->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
+
+                    if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
+                        $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                    }
+                    if (!empty($interlocuteur->getInterlocuteur()->getService())) {
+                        $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+                    }
+
+                    $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
+                    $fournisseurInterlocuteurSite->setInterlocuteur($interlocuteurSite);
+
+                    $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
+
+                }
+
+            }
+            $emSite->persist($fournisseurSite);
+            $emSite->flush();
+        }
     }
 
     /**
@@ -185,11 +295,6 @@ class FournisseurController extends Controller
         }
 
         return $this->redirectToRoute('fournisseur_index');
-    }
-
-    public function getFormInterlocuteur()
-    {
-
     }
 
 }

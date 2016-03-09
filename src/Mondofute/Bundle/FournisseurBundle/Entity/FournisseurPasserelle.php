@@ -16,7 +16,22 @@ class FournisseurPasserelle
      * @var string
      */
     private $data;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurs;
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Passerelle
+     */
+    private $passerelle;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -26,6 +41,16 @@ class FournisseurPasserelle
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 
     /**
@@ -40,34 +65,6 @@ class FournisseurPasserelle
         $this->data = $data;
 
         return $this;
-    }
-
-    /**
-     * Get data
-     *
-     * @return string
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fournisseurs;
-
-    /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Passerelle
-     */
-    private $passerelle;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -105,6 +102,16 @@ class FournisseurPasserelle
     }
 
     /**
+     * Get passerelle
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Passerelle
+     */
+    public function getPasserelle()
+    {
+        return $this->passerelle;
+    }
+
+    /**
      * Set passerelle
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\Passerelle $passerelle
@@ -116,15 +123,5 @@ class FournisseurPasserelle
         $this->passerelle = $passerelle;
 
         return $this;
-    }
-
-    /**
-     * Get passerelle
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Passerelle
-     */
-    public function getPasserelle()
-    {
-        return $this->passerelle;
     }
 }

@@ -14,13 +14,23 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         enseigne:
             type: string
             length: 255
+        contient:
+            type: integer
+            options:
+                unsigned: true
     oneToMany:
         interlocuteurs:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
             mappedBy: fournisseur
             cascade: ['persist' , 'remove']
+        fournisseurEnfants:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            mappedBy: fournisseurParent
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
             inversedBy: fournisseurs
+        fournisseurParent:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: fournisseurEnfants
     lifecycleCallbacks: {  }

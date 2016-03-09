@@ -21,7 +21,10 @@ class InterlocuteurFonctionTraduction
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
      */
     private $fonction;
-
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -31,6 +34,16 @@ class InterlocuteurFonctionTraduction
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -48,13 +61,13 @@ class InterlocuteurFonctionTraduction
     }
 
     /**
-     * Get libelle
+     * Get fonction
      *
-     * @return string
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
      */
-    public function getLibelle()
+    public function getFonction()
     {
-        return $this->libelle;
+        return $this->fonction;
     }
 
     /**
@@ -72,20 +85,14 @@ class InterlocuteurFonctionTraduction
     }
 
     /**
-     * Get fonction
+     * Get langue
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getFonction()
+    public function getLangue()
     {
-        return $this->fonction;
+        return $this->langue;
     }
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
 
     /**
      * Set langue
@@ -99,15 +106,5 @@ class InterlocuteurFonctionTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }
