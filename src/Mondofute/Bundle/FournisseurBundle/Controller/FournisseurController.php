@@ -85,7 +85,9 @@ class FournisseurController extends Controller
 
             $fournisseurSite = clone $fournisseur;
 
-            $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseurSite->getFournisseurParent()->getId()));
+            if (!empty($fournisseurSite->getFournisseurParent())) {
+                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseurSite->getFournisseurParent()->getId()));
+            }
 
             foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
                 if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
