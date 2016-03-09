@@ -62,12 +62,9 @@
                                     {% endif %}
                                 {% endfor %}
                             </table>
-                            {#<button id="button_service_{{ serviceInterlocuteur.id }}" type="button" class="btn btn-default"#}
                             <button type="button" class="btn btn-default"
-                                    {#data-toggle="modal"#}
                                     data-service-libelle="{% for traduction in  serviceInterlocuteur.traductions %}{% if traduction.langue.code == app.request.locale %}{{ traduction.libelle }}{% endif %}{% endfor %}"
                                     data-service-id="{{ serviceInterlocuteur.id }}"
-                                    {#data-target="#interlocuteurModal"#}
                                     onclick="afficherModalInterlocuteur(this);"
                             >
                                 Ajouter
@@ -80,24 +77,8 @@
 
             {{ form_row(form.submit) }}
 
-            {#<ul>#}
-            {#<li>#}
-            {#<a href="{{ path('fournisseur_index') }}">Revenir à la liste</a>#}
-            {#</li>#}
-            {#</ul>#}
-
-            {#{% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype ) %}#}
             {% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}
-            {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur']) }}#}
-            {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur'].vars) }}#}
-            {#.vars.children.interlocuteur.vars.prototype#}
-            {#{% for  %}#}
-            {#{% set prenom   = form_row(form.interlocuteurs.vars.prototype.children.prenom) %}#}
-            {#{% set service  = form_row(form.interlocuteurs.vars.prototype.children.service) %}#}
-            {#{% set fonction = form_row(form.interlocuteurs.vars.prototype.children.fonction) %}#}
-            {#{% endfor %}#}
 
-            {#<div id="values-interlocuteurs" style="display: none">#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
@@ -140,8 +121,6 @@
                 </div>
             </div>
 
-            {#<span id="interlocuteur-index" data-interlocuteur-index="0"></span>#}
-
         {% endblock %}
     </section>
     <section>
@@ -169,7 +148,6 @@
         function afficherModalInterlocuteur(element) {
             var formInterlocuteur = $('#form-interlocuteur');
             var formProtoype = formInterlocuteur.data('prototype');
-//            console.log(formProtoype);
             var interlocuteurIndex = formInterlocuteur.data('interlocuteur-index');
             var newForm = formProtoype.replace(/__name__/g, interlocuteurIndex);
             formInterlocuteur.html(newForm);
@@ -201,18 +179,14 @@
                 fonction = interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
             }
 
-
             var $formInterlocuteur = $('#form-interlocuteur');
             var $index = $formInterlocuteur.data('interlocuteur-index');
 
-//            var buttonModifie = '<button data-target="#interlocuteurModal" data-toggle="modal" id=\'modifie_interlocuteur_' + $index + '\' data-json=\'' + JSON.stringify(interlocuteur) + '\' type=\'button\' class=\'btn btn-default\'>Modifier<span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
             var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + $index + ');" type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
             var $addInterlocuteur = $('<td>' + interlocuteur.prenom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer($index) + '</td>');
-//            var $newLigne = $('<tr id="row_interlocuteur_' + $index + '" class="success" data-json=\'' + JSON.stringify(interlocuteur) + '\'></tr>').append($addInterlocuteur);
             var $newLigne = $('<tr id="row_interlocuteur_' + $index + '" class="success"></tr>').append($addInterlocuteur);
             $('#service_' + interlocuteur.service).append($newLigne);
-//            attribuerFunctionModificationInterlocuteur($index);
 
             var $valuesInterlocuteur = $('#values-interlocuteurs');
 
@@ -223,63 +197,10 @@
             $formInterlocuteur.data('interlocuteur-index', $index + 1);
         }
 
-        //        function attribuerFunctionAjoutInterlocuteur() {
-        ////            $('#ajout_interlocuteur').on('click', function (event) {
-        //            $('#ajout_interlocuteur').on('click', function () {
-        //                var interlocuteurModal = $('#interlocuteurModal');
-        //                var interlocuteur = {
-        //                    prenom: interlocuteurModal.find('.modal-body [id$="prenom"]').val(),
-        //                    fonction: interlocuteurModal.find('.modal-body [id$="fonction"]').val(),
-        //                    service: interlocuteurModal.find('.modal-body [id$="service"]').val()
-        //                };
-        //                var fonction = '';
-        //                if (interlocuteur.fonction) {
-        //                    fonction = interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
-        //                }
-        //
-        //
-        //                var $formInterlocuteur = $('#form-interlocuteur');
-        //                var $index = $formInterlocuteur.data('interlocuteur-index');
-        //
-        ////                var buttonModifie = '<button data-target="#interlocuteurModal" data-toggle="modal" id=\'modifie_interlocuteur_' + $index + '\' data-json=\'' + JSON.stringify(interlocuteur) + '\' type=\'button\' class=\'btn btn-default\'>Modifier<span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
-        ////                var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + $index + ');" data-target="#interlocuteurModal" data-toggle="modal" id=\'modifie_interlocuteur_' + $index + '\' data-json=\'' + JSON.stringify(interlocuteur) + '\' type=\'button\' class=\'btn btn-default\'>Modifier<span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
-        //                var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + $index + ');" id=\'modifie_interlocuteur_' + $index + '\' type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
-        //
-        //                var $addInterlocuteur = $('<td>' + interlocuteur.prenom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer($index) + '</td>');
-        //                var $newLigne = $('<tr id="row_interlocuteur_' + $index + '" class="success" data-json=\'' + JSON.stringify(interlocuteur) + '\'></tr>').append($addInterlocuteur);
-        //                $('#service_' + interlocuteur.service).append($newLigne);
-        ////                attribuerFunctionModificationInterlocuteur($index);
-        //
-        //                var $valuesInterlocuteur = $('#values-interlocuteurs');
-        //
-        //                $valuesInterlocuteur.append($formInterlocuteur.html());
-        //                $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
-        //                $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
-        //                $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_service"]').val(interlocuteur.service);
-        //                $formInterlocuteur.data('interlocuteur-index', $index + 1);
-        //            });
-        //        }
-        //        attribuerFunctionAjoutInterlocuteur();
-
-        //        function attribuerFunctionModificationInterlocuteur(index) {
-        ////            $('#modifie_interlocuteur_' + index).on('click', function (event) {
-        //            $('#modifie_interlocuteur_' + index).on('click', function () {
-        //                var test = $('#fournisseur_interlocuteurs_' + index+ '_interlocuteur').html();
-        ////                console.log(test);
-        ////                $('#form-interlocuteur').html($('#fournisseur_interlocuteurs_' + index).clone());
-        //                $('#form-interlocuteur').html(test);
-        //                $('#ajout_interlocuteur').replaceWith($('<button id="modifie_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'))
-        //            });
-        //        }
-
         function afficherModalModificationInterlocuteur(index) {
             var modal = $('#interlocuteurModal');
-//            console.log(index);
-//            console.log($('#fournisseur_interlocuteurs_' + index + '_interlocuteur'));
-//            var test = $('#fournisseur_interlocuteurs_' + index + '_interlocuteur').html();
             var $divFournisseurInterlocuteur = $('#fournisseur_interlocuteurs_' + index + '_interlocuteur');
 
-//            fournisseur_interlocuteurs_1_interlocuteur_prenom
             var interlocuteur = {
                 prenom: $divFournisseurInterlocuteur.find('[id$="prenom"]').val(),
                 fonction: $divFournisseurInterlocuteur.find('[id$="fonction"]').val(),
@@ -293,7 +214,6 @@
             }
             modal.find('.modal-title').text('Modifier intelocuteur pour le service ' + service);
 
-            console.log(interlocuteur);
             $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
 
             $('#form-interlocuteur').html($divFournisseurInterlocuteurClone);
@@ -322,34 +242,23 @@
                 fonction = interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
             }
 
-//            var $formInterlocuteur = $('#form-interlocuteur');
-
-//            var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + index + ');" data-target="#interlocuteurModal" data-toggle="modal" id=\'modifie_interlocuteur_' + index + '\' data-json=\'' + JSON.stringify(interlocuteur) + '\' type=\'button\' class=\'btn btn-default\'>Modifier<span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
             var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + index + ');" id=\'modifie_interlocuteur_' + index + '\' \' type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
             var $addInterlocuteur = $('<td>' + interlocuteur.prenom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer(index) + '</td>');
             var $newLigne = $('<tr id="row_interlocuteur_' + index + '" class="success"></tr>').append($addInterlocuteur);
-//            $('#row_interlocuteur_' + index).html($addInterlocuteur);
             $('#row_interlocuteur_' + index).remove();
             $('#service_' + interlocuteur.service).append($newLigne);
-//            attribuerFunctionModificationInterlocuteur(index);
 
             var $valuesInterlocuteur = $('#values-interlocuteurs');
-            console.log(index);
 
-//            var $divInterlocuteur   = $('fournisseur_interlocuteurs_' + index);
-
-//            $valuesInterlocuteur.append($formInterlocuteur.html());
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
-//            attribuerFunctionAjoutInterlocuteur();
         }
 
         function supprimerInterlocuteur(index) {
-            console.log('ici');
             $('#row_interlocuteur_' + index).remove();
             $('#fournisseur_interlocuteurs_' + index + '_interlocuteur').remove();
         }
@@ -375,9 +284,7 @@
                 if (optionVal) {
                     $interlocuteur_panels.hide();
                     $fournisseur_contient.val(1);
-//                    $fournisseur_contient.prop('disabled', 'disabled');
                     $fournisseur_contient.find('option:not(:selected)').prop('disabled', 'disabled');
-//                    $fournisseur_contient.attr('readonly', 'readonly');
                     var $values_interlocuteurs = $('#values-interlocuteurs');
                     $values_interlocuteurs.children().each(function (index, element) {
                         var index = element.id.split('_')[2];
@@ -387,9 +294,7 @@
                 }
                 else {
                     $interlocuteur_panels.show();
-//                    $fournisseur_contient.prop('disabled', false);
                     $fournisseur_contient.find('option:not(:selected)').prop('disabled', false);
-//                    $fournisseur_contient.prop('disabled', false);
                 }
             }
 
