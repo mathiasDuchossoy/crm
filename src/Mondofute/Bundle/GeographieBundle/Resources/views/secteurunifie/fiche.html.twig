@@ -85,8 +85,15 @@
         var itemNonPersonalisable = [];
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_secteur_unifie_secteurs_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_secteur_unifie_secteurs_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_secteur_unifie_secteurs_entry_traductions_entry_description_{{ langue.code }}");#}
         {#{% endfor %}#}
+        var items = [];
+        {% for langue in langues %}
+        items.push("_secteur_unifie_secteurs_entry_traductions_entry_libelle_{{ langue.code }}");
+        items.push("_secteur_unifie_secteurs_entry_traductions_entry_affichageTexte_{{ langue.code }}");
+        items.push("_secteur_unifie_secteurs_entry_traductions_entry_description_{{ langue.code }}");
+        {% endfor %}
     </script>
     {{ parent() }}
     <script type="text/javascript">

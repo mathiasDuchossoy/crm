@@ -86,6 +86,12 @@
         {#itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_description_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_profil_unifie_profils_entry_traductions_entry_accueil_{{ langue.code }}");#}
         {#{% endfor %}#}
+        var items = [];
+        {% for langue in langues %}
+        items.push("_profil_unifie_profils_entry_traductions_entry_libelle_{{ langue.code }}");
+        items.push("_profil_unifie_profils_entry_traductions_entry_description_{{ langue.code }}");
+        items.push("_profil_unifie_profils_entry_traductions_entry_accueil_{{ langue.code }}");
+        {% endfor %}
     </script>
     {{ parent() }}
     <script type="text/javascript">

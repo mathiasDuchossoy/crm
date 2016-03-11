@@ -135,6 +135,24 @@
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_traductions_entry_description_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");#}
         {#{% endfor %}#}
+        var items = [];
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");
+
+        {% for langue in langues %}
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_description_{{ langue.code }}");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_traductions_entry_description_{{ langue.code }}");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");
+        {% endfor %}
     </script>
     {{ parent() }}
     <script type="text/javascript">

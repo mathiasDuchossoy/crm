@@ -84,7 +84,14 @@
         var itemNonPersonalisable = [];
         {% for langue in langues %}
         itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");
+        itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_affichageTexte_{{ langue.code }}");
         itemNonPersonalisable.push("_region_unifie_regions_entry_traductions_entry_description_{{ langue.code }}");
+        {% endfor %}
+        var items = [];
+        {% for langue in langues %}
+        items.push("_region_unifie_regions_entry_traductions_entry_libelle_{{ langue.code }}");
+        items.push("_region_unifie_regions_entry_traductions_entry_affichageTexte_{{ langue.code }}");
+        items.push("_region_unifie_regions_entry_traductions_entry_description_{{ langue.code }}");
         {% endfor %}
     </script>
 

@@ -96,6 +96,13 @@
         itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");
         {#itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
         {% endfor %}
+        var items = [];
+        items.push("_departement_unifie_departements_entry_region");
+        {% for langue in langues %}
+        items.push("_departement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");
+        items.push("_departement_unifie_departements_entry_traductions_entry_affichageTexte_{{ langue.code }}");
+        items.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");
+        {% endfor %}
     </script>
     {{ parent() }}
     <script type="text/javascript">
