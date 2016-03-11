@@ -1,28 +1,42 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation du fournisseur' | capitalize }}
+{% endblock %}
 {% block body %}
-    <h1>Fournisseur</h1>
-
-    <table>
+    <h1>{{ 'Visualisation du fournisseur' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
         <tbody>
-        <tr>
-            <th>Id</th>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
             <td>{{ fournisseur.id }}</td>
+        </tr>
+        <tr class="row">
+            <th>Enseigne</th>
+            <td>
+
+                {{ fournisseur.enseigne }}
+            </td>
         </tr>
         </tbody>
     </table>
+    <div style="text-align: right">
 
-    <ul>
-        <li>
-            <a href="{{ path('fournisseur_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('fournisseur_edit', { 'id': fournisseur.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('fournisseur_index') }}">Retour à la liste</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('fournisseur_edit', { 'id': fournisseur.id }) }}">Modifier</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}
