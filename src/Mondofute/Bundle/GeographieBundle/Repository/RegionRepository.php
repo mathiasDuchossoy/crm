@@ -10,30 +10,52 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
  */
 class RegionRepository extends \Doctrine\ORM\EntityRepository
 {
+//    /**
+//     * @param $locale
+//     * @return \Doctrine\ORM\QueryBuilder
+//     */
+//    // récupérer les traductioin des regions crm qui sont de la langue locale
+//    public function getTraductionsRegionsCRMByLocale($locale, $siteRegion)
+//    {
+//        $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb->select('r , rt ')
+//            ->from('MondofuteGeographieBundle:Region', 'r')
+//            ->join('r.traductions', 'rt')
+//            ->join('r.regionUnifie', 'ru')
+//            ->join('r.site', 's')
+//            ->join('rt.langue', 'l')
+//            ->where("l.code = '$locale'");
+////        ->setParameter('code' , $locale)
+//        if (!empty($siteRegion)) {
+//            $qb->andWhere('s.id = :site')
+//                ->setParameter('site', $siteRegion->getId());
+//        } else {
+//            $qb->andWhere('s.crm = :crm')
+//                ->setParameter('crm', 1);
+//        }
+//        $qb->orderBy('r.id', 'ASC');
+//
+//        return $qb;
+//    }
+
+
     /**
      * @param $locale
      * @return \Doctrine\ORM\QueryBuilder
      */
-    // récupérer les traductioin des regions crm qui sont de la langue locale
-    public function getTraductionsRegionsCRMByLocale($locale, $siteRegion)
+    // récupérer les traductioin crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r , rt ')
-            ->from('MondofuteGeographieBundle:Region', 'r')
-            ->join('r.traductions', 'rt')
-            ->join('r.regionUnifie', 'ru')
-            ->join('r.site', 's')
-            ->join('rt.langue', 'l')
-            ->where("l.code = '$locale'");
-//        ->setParameter('code' , $locale)
-        if (!empty($siteRegion)) {
-            $qb->andWhere('s.id = :site')
-                ->setParameter('site', $siteRegion->getId());
-        } else {
-            $qb->andWhere('s.crm = :crm')
-                ->setParameter('crm', 1);
-        }
-        $qb->orderBy('r.id', 'ASC');
+        $qb->select('region , traductions ')
+            ->from('MondofuteGeographieBundle:Region', 'region')
+            ->join('region.traductions', 'traductions')
+            ->join('region.regionUnifie', 'regionUnifie')
+            ->join('region.site', 'site')
+            ->join('traductions.langue', 'langue')
+            ->where("langue.code = :code")
+            ->setParameter('code', $locale)
+            ->orderBy('region.id', 'ASC');
 
         return $qb;
     }

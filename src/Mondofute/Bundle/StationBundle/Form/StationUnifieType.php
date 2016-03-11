@@ -35,9 +35,11 @@ class StationUnifieType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        /** @var FormView $viewChild */
         $entities = 'stations';
         $entitiesSelect = array();
         $entitiesSelect[] = 'zoneTouristique';
+//        echo ucfirst('zoneTouristique');die;
         $entitiesSelect[] = 'secteur';
         $entitiesSelect[] = 'departement';
         $entitiesSelect[] = 'domaine';
@@ -48,6 +50,7 @@ class StationUnifieType extends AbstractType
 
                 $newChoices = array();
                 foreach ($choices as $key => $choice) {
+                    $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
                     if ($choice->data->getSite()->getId() == $siteId) {
                         $newChoices[$key] = $choice;
                     }

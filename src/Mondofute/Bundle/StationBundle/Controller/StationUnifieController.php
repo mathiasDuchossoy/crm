@@ -57,7 +57,7 @@ class StationUnifieController extends Controller
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
 
@@ -231,7 +231,7 @@ class StationUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(StationUnifie::class)->findOneById(array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->getRepository(StationUnifie::class)->find($entity->getId())))) {
                     $entitySite = new StationUnifie();
                 }
 //                if (is_null(($entitySite = $em->getRepository('MondofuteStationBundle:StationUnifie')->find(array($entity->getId()))))) {
@@ -386,7 +386,7 @@ class StationUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType',
             $stationUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
 //        dump($editForm);die;
 

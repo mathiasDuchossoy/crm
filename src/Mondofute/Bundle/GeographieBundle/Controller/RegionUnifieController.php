@@ -55,7 +55,7 @@ class RegionUnifieController extends Controller
         $this->regionsSortByAffichage($regionUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\RegionUnifieType', $regionUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -351,7 +351,7 @@ class RegionUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($regionUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\RegionUnifieType', $regionUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();')));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
 
