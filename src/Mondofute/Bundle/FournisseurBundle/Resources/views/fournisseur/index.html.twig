@@ -1,27 +1,37 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    {{ 'Liste des fournisseurs' | capitalize }}
+{% endblock %}
 {% block body %}
-    <h1>Fournisseur list</h1>
+    <h1>{{ 'liste des fournisseurs' | capitalize }}</h1>
 
     {% include '::flashbags.html.twig' %}
-    <table>
+    <table class="table-responsive table-striped table">
         <thead>
         <tr>
             <th>Id</th>
+            <th>{{ 'enseigne' | capitalize }}</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for fournisseur in fournisseurs %}
             <tr>
-                <td><a href="{{ path('fournisseur_show', { 'id': fournisseur.id }) }}">{{ fournisseur.id }}</a></td>
                 <td>
-                    <ul>
+                    <a href="{{ path('fournisseur_show', { 'id': fournisseur.id }) }}">{{ fournisseur.id }}</a>
+                </td>
+                <td>
+                    {{ fournisseur.enseigne }}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="{{ path('fournisseur_show', { 'id': fournisseur.id }) }}">show</a>
+                            <a class="btn btn-default"
+                               href="{{ path('fournisseur_show', { 'id': fournisseur.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
-                            <a href="{{ path('fournisseur_edit', { 'id': fournisseur.id }) }}">edit</a>
+                            <a class="btn btn-default"
+                               href="{{ path('fournisseur_edit', { 'id': fournisseur.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -29,10 +39,11 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('fournisseur_new') }}">Create a new entry</a>
-        </li>
-    </ul>
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('fournisseur_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
