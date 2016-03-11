@@ -25,7 +25,7 @@ class InterlocuteurType extends AbstractType
             ->add('fonction', EntityType::class, array(
                     'class' => InterlocuteurFonction::class,
                     'placeholder' => '--- choisir une fonction ---',
-                    'required' => false,
+//                    'required' => false,
                     'choice_label' => 'traductions[0].libelle',
                     'query_builder' => function (InterlocuteurFonctionRepository $r) use ($locale) {
                         return $r->getTraductionsByLocale($locale);
@@ -35,7 +35,7 @@ class InterlocuteurType extends AbstractType
             ->add('service', EntityType::class, array(
                     'class' => ServiceInterlocuteur::class,
                     'placeholder' => '--- choisir un service ---',
-                    'required' => false,
+//                    'required' => false,
                     'choice_label' => 'traductions[0].libelle',
                     'query_builder' => function (ServiceInterlocuteurRepository $r) use ($locale) {
                         return $r->getTraductionsByLocale($locale);
