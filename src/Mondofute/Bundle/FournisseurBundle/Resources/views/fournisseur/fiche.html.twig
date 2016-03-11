@@ -94,9 +94,9 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span
                                         aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                            <h4 class="modal-title" id="exampleModalLabel"></h4>
                         </div>
                         <div class="modal-body">
                             <form id="form-interlocuteur" data-interlocuteur-index="{{ countInterlocuteur }}"
@@ -109,10 +109,11 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                             {#<button onclick="ajouterInterlocuteur();" id="ajout_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">#}
                             <button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button"
-                                    data-dismiss="modal" class="btn btn-primary">
+                                    class="btn btn-primary">
+                                {#data-dismiss="modal" class="btn btn-primary">#}
                                 Ajouter
                                 un interlocuteur
                             </button>
@@ -128,29 +129,53 @@
 
         {% endblock %}
     </section>
-    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">×</span></button>
-                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
-                <div class="modal-body"></div>
-            </div>
-        </div>
-    </div>
+    {#<div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"#}
+    {#aria-labelledby="mySmallModalLabel">#}
+    {#<div class="modal-dialog modal-sm">#}
+    {#<div class="modal-content">#}
+    {#<div class="modal-header">#}
+    {#<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span#}
+    {#aria-hidden="true">×</span></button>#}
+    {#<h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>#}
+    {#<div class="modal-body"></div>#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
+
+        function refuserToucheEntree(event) {
+// Compatibilité IE / Firefox
+            if (!event && window.event) {
+                event = window.event;
+            }
+// IE
+            if (event.keyCode == 13) {
+                event.returnValue = false;
+                event.cancelBubble = true;
+            }
+// DOM
+            if (event.which == 13) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+
         function afficherModalInterlocuteur(element) {
             var formInterlocuteur = $('#form-interlocuteur');
             var formProtoype = formInterlocuteur.data('prototype');
             var interlocuteurIndex = formInterlocuteur.data('interlocuteur-index');
             var newForm = formProtoype.replace(/__name__/g, interlocuteurIndex);
             formInterlocuteur.html(newForm);
+
+            $(formInterlocuteur).find('input').each(function (index, item) {
+                $(item).keypress(function (event) {
+                    refuserToucheEntree(event);
+                });
+            });
 
             var button = $(element); // Button that triggered the modal
 
@@ -160,7 +185,8 @@
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $('#interlocuteurModal');
 
-            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
+            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouterun interlocuteur</button>'));
+//                $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
             modal.find('.modal-title').text('Nouvel intelocuteur pour le service ' + service);
             modal.find('.modal-body [id$="service"]').val(service_id);
             modal.modal().show();
@@ -168,7 +194,12 @@
 
         function ajouterInterlocuteur() {
 
+            if (!testRequired()) {
+                return false;
+            }
+
             var interlocuteurModal = $('#interlocuteurModal');
+            interlocuteurModal.modal('hide');
             var interlocuteur = {
                 prenom: interlocuteurModal.find('.modal-body [id$="prenom"]').val(),
                 fonction: interlocuteurModal.find('.modal-body [id$="fonction"]').val(),
@@ -222,14 +253,17 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
 
-            $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
+            $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
             modal.modal('show');
         }
 
         function modifierInterlocuteur(index) {
+
+            if (!testRequired()) {
+                return false;
+            }
             var interlocuteurModal = $('#interlocuteurModal');
-//            var modal = $('#interlocuteurModal');
             interlocuteurModal.modal('hide');
 
             var interlocuteur = {
@@ -255,7 +289,7 @@
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
 
-            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
+            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouterun interlocuteur</button>'));
         }
 
         function supprimerInterlocuteur(index) {
@@ -268,40 +302,74 @@
             return buttonSupprimer;
         }
 
-        $(document).ready(function () {
 
-            var $fournisseur_fournisseurParent = $('#fournisseur_fournisseurParent');
+        var $fournisseur_fournisseurParent = $('#fournisseur_fournisseurParent');
 
-            $fournisseur_fournisseurParent.on('change', function (event) {
-                var optionVal = $(event.target).find(":selected").val();
-                fournisseurParentSelect(optionVal);
+        $fournisseur_fournisseurParent.on('change', function (event) {
+            var optionVal = $(event.target).find(":selected").val();
+            fournisseurParentSelect(optionVal);
+        });
+
+        function fournisseurParentSelect(optionVal) {
+
+            var $fournisseur_contient = $('#fournisseur_contient');
+            var $interlocuteur_panels = $('#interlocuteur_panels');
+            if (optionVal) {
+                $interlocuteur_panels.hide();
+                $fournisseur_contient.val(1);
+                $fournisseur_contient.find('option:not(:selected)').prop('disabled', 'disabled');
+                var $values_interlocuteurs = $('#values-interlocuteurs');
+                $values_interlocuteurs.children().each(function (index, element) {
+                    var index = element.id.split('_')[2];
+                    $('#row_interlocuteur_' + index).remove();
+                });
+                $values_interlocuteurs.html("");
+            }
+            else {
+                $interlocuteur_panels.show();
+                $fournisseur_contient.find('option:not(:selected)').prop('disabled', false);
+            }
+        }
+
+        var optionVal = $fournisseur_fournisseurParent.find(":selected").val();
+        fournisseurParentSelect(optionVal);
+
+        function testRequired() {
+            fail = false;
+            fail_tab = [];
+            $('#form-interlocuteur').find('select, textarea, input').each(function () {
+                if (!$(this).prop('required')) {
+
+                } else {
+                    if (!$(this).val()) {
+                        fail = true;
+                        fail_tab.push($(this));
+                    }
+                    else {
+                        $(this).attr('style', 'border: 1px solid green;');
+                    }
+                }
             });
 
-            function fournisseurParentSelect(optionVal) {
-
-                var $fournisseur_contient = $('#fournisseur_contient');
-                var $interlocuteur_panels = $('#interlocuteur_panels');
-                if (optionVal) {
-                    $interlocuteur_panels.hide();
-                    $fournisseur_contient.val(1);
-                    $fournisseur_contient.find('option:not(:selected)').prop('disabled', 'disabled');
-                    var $values_interlocuteurs = $('#values-interlocuteurs');
-                    $values_interlocuteurs.children().each(function (index, element) {
-                        var index = element.id.split('_')[2];
-                        $('#row_interlocuteur_' + index).remove();
-                    });
-                    $values_interlocuteurs.html("");
-                }
-                else {
-                    $interlocuteur_panels.show();
-                    $fournisseur_contient.find('option:not(:selected)').prop('disabled', false);
-                }
+            //submit if fail never got set to true
+            if (!fail) {
+                //process form here.
+                return true;
+            } else {
+                var first = true;
+                fail_tab.forEach(function ($item) {
+                    if (first) {
+                        $item.focus();
+                        first = false;
+                    }
+                    // do something with `item`
+                    console.log($item);
+                    $item.attr('style', 'border: 1px solid red;')
+                });
+                return false;
             }
+        }
 
-            var optionVal = $fournisseur_fournisseurParent.find(":selected").val();
-            fournisseurParentSelect(optionVal);
-
-        });
 
     </script>
 {% endblock %}
