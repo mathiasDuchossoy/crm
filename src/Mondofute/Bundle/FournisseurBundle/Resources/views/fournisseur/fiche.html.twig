@@ -9,6 +9,7 @@
     </section>
     <section>
         {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
             {% set countInterlocuteur = 0 %}
 
             {{ form_start(form) }}

@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
@@ -64,6 +65,12 @@ class FournisseurController extends Controller
             $em->persist($fournisseur);
             $em->flush();
 
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'Le fournisseur a bien été créé.'
+            );
+
             return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
@@ -74,7 +81,7 @@ class FournisseurController extends Controller
         ));
     }
 
-    public function copieVersSites(Fournisseur $fournisseur)
+    private function copieVersSites(Fournisseur $fournisseur)
     {
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
@@ -175,6 +182,11 @@ class FournisseurController extends Controller
             $em->persist($fournisseur);
             $em->flush();
 
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'Le fournisseur a bien été modifié.'
+            );
             return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
@@ -202,7 +214,7 @@ class FournisseurController extends Controller
         }
     }
 
-    public function mAJSites(Fournisseur $fournisseur)
+    private function mAJSites(Fournisseur $fournisseur)
     {
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
@@ -280,20 +292,37 @@ class FournisseurController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
-            foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
-                if (!empty($fournisseurSite)) {
-                    $emSite->remove($fournisseurSite);
-                    $emSite->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+                foreach ($sites as $site) {
+                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
+                    if (!empty($fournisseurSite)) {
+                        $emSite->remove($fournisseurSite);
+                        $emSite->flush();
+                    }
                 }
+
+                $em->remove($fournisseur);
+                $em->flush();
+            } catch (ForeignKeyConstraintViolationException $except) {
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'Impossible de supprimer le fournisseur, il est utilisé par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreure inconnue');
+                        break;
+                }
+                return $this->redirect($request->headers->get('referer'));
             }
 
-            $em->remove($fournisseur);
-            $em->flush();
+
+            // add flash messages
+            $this->addFlash('success', 'Le fournisseur a été supprimé avec succès.');
         }
 
         return $this->redirectToRoute('fournisseur_index');
