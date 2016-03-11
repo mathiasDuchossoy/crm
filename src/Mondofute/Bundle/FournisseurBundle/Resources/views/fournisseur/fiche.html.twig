@@ -248,7 +248,14 @@
 
             $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
 
-            $('#form-interlocuteur').html($divFournisseurInterlocuteurClone);
+            $formInterlocuteur = $('#form-interlocuteur');
+            $formInterlocuteur.html($divFournisseurInterlocuteurClone);
+
+            $formInterlocuteur.find('input').each(function (index, item) {
+                $(item).keypress(function (event) {
+                    refuserToucheEntree(event);
+                });
+            });
 
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
