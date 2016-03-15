@@ -251,7 +251,8 @@
             $formInterlocuteur = $('#form-interlocuteur');
             $formInterlocuteur.html($divFournisseurInterlocuteurClone);
 
-            $formInterlocuteur.find('input').each(function (index, item) {
+            $formInterlocuteur.find('input, select').each(function (index, item) {
+                $(item).attr('style', 'border: 1px solid #cccccc;');
                 $(item).keypress(function (event) {
                     refuserToucheEntree(event);
                 });
