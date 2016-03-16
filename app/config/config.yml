@@ -7,9 +7,9 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: fr_FR
-#    locale: en_EN
-    database_name_skifute: skifute2
-    database_name_francefute: francefute2
+##    locale: en_EN
+#    database_name_skifute: skifute2
+#    database_name_francefute: francefute2
 
 framework:
     #esi:             ~
@@ -87,6 +87,12 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+                    moyenCommunicationBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    contactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -101,6 +107,12 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+#                    moyenCommunicationBundle:
+#                        type: yml
+#                        dir: Resources/config/doctrine
+                    contactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -115,6 +127,12 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+#                    moyenCommunicationBundle:
+#                        type: yml
+#                        dir: Resources/config/doctrine
+                    contactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
 
 # Swiftmailer Configuration
 swiftmailer:

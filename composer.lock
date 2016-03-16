@@ -4,9 +4,93 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "12a468829f7855a165fc9cc699d83e45",
-    "content-hash": "2ef089a10c8cd52d7bd7f3b52a83dcae",
+    "hash": "3b02e9023f1f1981e5b0fff96ee0f82f",
+    "content-hash": "d410224b851de86698433fe13778742b",
     "packages": [
+        {
+            "name": "commun/contactbundle",
+            "version": "dev-commun",
+            "source": {
+                "type": "git",
+                "url": "http://labgit.com/symfony-vendors/contactBundle.git",
+                "reference": "a021e1dd9ea57316035c4bf5b87806d8cf7254e4"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.1",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-commun": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "commun\\contactBundle\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Infonova",
+                    "email": "developpement@infonova.fr",
+                    "homepage": "http://www.infonova.fr"
+                }
+            ],
+            "description": "contactBundle",
+            "homepage": "http://www.infonova.fr",
+            "keywords": [
+                "Lanceur"
+            ],
+            "time": "2016-03-15 15:38:22"
+        },
+        {
+            "name": "commun/moyencommunicationbundle",
+            "version": "dev-commun",
+            "source": {
+                "type": "git",
+                "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
+                "reference": "f43895021cc7958efe244e3e71fc0ed136c868b9"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": ">=2.1",
+                "twig/twig": "*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-commun": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "commun\\moyencommunicationBundle\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Infonova",
+                    "email": "developpement@infonova.fr",
+                    "homepage": "http://www.infonova.fr"
+                }
+            ],
+            "description": "MoyenCommBundle",
+            "homepage": "http://www.infonova.fr",
+            "keywords": [
+                "Lanceur"
+            ],
+            "time": "2016-03-15 14:58:56"
+        },
         {
             "name": "components/jquery",
             "version": "2.2.0",
@@ -2460,7 +2544,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/855dc0e829fad123966347612b4183e307338c11",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/9562f8291b98bcd4abd4959ab74f35191d7b34b5",
                 "reference": "855dc0e829fad123966347612b4183e307338c11",
                 "shasum": ""
             },
@@ -2508,7 +2592,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "commun/contactbundle": 20,
+        "commun/moyencommunicationbundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
