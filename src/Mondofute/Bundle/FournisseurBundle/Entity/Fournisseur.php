@@ -1,6 +1,8 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use commun\contactBundle\Entity\Moral;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 
@@ -24,16 +26,16 @@ class FournisseurContient
 /**
  * Fournisseur
  */
-class Fournisseur
+class Fournisseur extends Moral
 {
     use FournisseurTrait;
 
 //    const PRODUIT = 1; // 1
 //    const FOURNISSEUR = 2; // 10
-    /**
-     * @var integer
-     */
-    private $id;
+//    /**
+//     * @var integer
+//     */
+//    private $id;
 
     /**
      * @var string
@@ -67,42 +69,45 @@ class Fournisseur
      */
     public function __construct()
     {
+        $this->setDateCreation(new \Datetime());
+        $this->setDateModification(new \Datetime());
+        $this->setActif(true);
         $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
-    /**
-     * Get enseigne
-     *
-     * @return string
-     */
-    public function getEnseigne()
-    {
-        return $this->enseigne;
-    }
-
-    /**
-     * Set enseigne
-     *
-     * @param string $enseigne
-     *
-     * @return Fournisseur
-     */
-    public function setEnseigne($enseigne)
-    {
-        $this->enseigne = $enseigne;
-
-        return $this;
-    }
+//    /**
+//     * Get enseigne
+//     *
+//     * @return string
+//     */
+//    public function getEnseigne()
+//    {
+//        return $this->enseigne;
+//    }
+//
+//    /**
+//     * Set enseigne
+//     *
+//     * @param string $enseigne
+//     *
+//     * @return Fournisseur
+//     */
+//    public function setEnseigne($enseigne)
+//    {
+//        $this->enseigne = $enseigne;
+//
+//        return $this;
+//    }
 
     /**
      * Add interlocuteur
@@ -155,7 +160,7 @@ class Fournisseur
     function __clone()
     {
         /** @var FournisseurInterlocuteur $interlocuteur */
-        $this->id = null;
+//        $this->id = null;
         $interlocuteurs = $this->getInterlocuteurs();
         $this->interlocuteurs = new ArrayCollection();
         if (count($interlocuteurs) > 0) {
@@ -259,5 +264,35 @@ class Fournisseur
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
+    }
+
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
+     */
+    private $type;
+
+
+    /**
+     * Set type
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     *
+     * @return Fournisseur
+     */
+    public function setType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

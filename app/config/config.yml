@@ -109,9 +109,9 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-#                    moyenCommunicationBundle:
-#                        type: yml
-#                        dir: Resources/config/doctrine
+                    moyenCommunicationBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
                     contactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -130,9 +130,9 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-#                    moyenCommunicationBundle:
-#                        type: yml
-#                        dir: Resources/config/doctrine
+                    moyenCommunicationBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
                     contactBundle:
                         type: yml
                         dir: Resources/config/doctrine
