@@ -2,18 +2,30 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\InterlocuteurRepository
-    id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
-    fields:
-        prenom:
-            type: string
-            length: 255
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    associationOverride:
+        moyenCommunications:
+            joinTable:
+                name: interlocuteur_moyenscomm
+                joinColumns:
+                    interlocuteur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+            cascade: [ persist, merge, detach ]
+            orphanRemoval: true
+#    fields:
+#        prenom:
+#            type: string
+#            length: 255
     oneToMany:
         fournisseurs:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
