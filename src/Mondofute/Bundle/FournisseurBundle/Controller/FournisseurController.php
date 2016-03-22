@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
+use commun\moyencommunicationBundle\Entity\Fixe;
+use commun\moyencommunicationBundle\Entity\Mobile;
+use commun\moyencommunicationBundle\Entity\MoyenCommunication;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
@@ -9,7 +13,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Proxies\__CG__\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,14 +55,26 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
+//        $this->ajouterInterlocuteurMoyenComunnications($fournisseur);
+//        dump($fournisseur);die;
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
+//        dump($form);die;
+//        $moyenCom = new MoyenCommunication('mobile');
+//        $form->add('');
+
+//        $formMoyenComm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType');
+//        $formMoyenComm->add(
+//
+//        )
+//        die;
+//        $formMoyenComm = $this->createForm();
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
+                $interlocuteur->getInterlocuteur()->setDateNaissance(new DateTime());
             }
             $this->copieVersSites($fournisseur);
 
@@ -81,6 +97,17 @@ class FournisseurController extends Controller
         ));
     }
 
+    private function ajouterInterlocuteurMoyenComunnications(Fournisseur $fournisseur)
+    {
+        /** @var FournisseurInterlocuteur $interlocuteur */
+        $interlocuteurs = $fournisseur->getInterlocuteurs();
+        foreach ($interlocuteurs as $interlocuteur) {
+            $interlocuteur->getInterlocuteur()->addMoyenCommunication(new Mobile())
+                ->addMoyenCommunication(new Fixe())
+                ->addMoyenCommunication(new Fixe());
+        }
+    }
+
     private function copieVersSites(Fournisseur $fournisseur)
     {
         /** @var Site $site */
@@ -95,6 +122,8 @@ class FournisseurController extends Controller
             if (!empty($fournisseurSite->getFournisseurParent())) {
                 $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseurSite->getFournisseurParent()->getId()));
             }
+
+            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseurSite->getType()->getId()));
 
             foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
                 if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
@@ -216,6 +245,7 @@ class FournisseurController extends Controller
 
     private function mAJSites(Fournisseur $fournisseur)
     {
+        /** @var FournisseurInterlocuteur $interlocuteurSite */
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
         $em = $this->getDoctrine()->getEntityManager();
@@ -226,7 +256,9 @@ class FournisseurController extends Controller
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
 
             $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
+            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseur->getType()->getId()));
             $fournisseurSite->setContient($fournisseur->getContient());
+            $fournisseurSite->setDateModification(new DateTime());
             if (!empty($fournisseur->getFournisseurParent())) {
                 $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getFournisseurParent()->getId()));
             } else {
@@ -241,6 +273,7 @@ class FournisseurController extends Controller
 
                 if (!empty($interlocuteurSite)) {
                     $interlocuteurSite->getInterlocuteur()->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
+                    $interlocuteurSite->getInterlocuteur()->setNom($interlocuteur->getInterlocuteur()->getNom());
 
                     if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
                         $interlocuteurSite->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
@@ -252,6 +285,7 @@ class FournisseurController extends Controller
                     } else {
                         $interlocuteurSite->getInterlocuteur()->setService(null);
                     }
+                    $interlocuteurSite->getInterlocuteur()->setDateModification(new DateTime());
 
                 } else {
                     $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
@@ -259,6 +293,7 @@ class FournisseurController extends Controller
                     $interlocuteurSite = new Interlocuteur();
 
                     $interlocuteurSite->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
+                    $interlocuteurSite->setNom($interlocuteur->getInterlocuteur()->getNom());
 
                     if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
                         $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
