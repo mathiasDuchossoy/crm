@@ -200,20 +200,6 @@
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
                         {{ form_widget(element) }}
-                        {#{% for child in element.children %}#}
-                        {#{{ dump(child.vars.name) }}#}
-                        {#{%  if child.vars.name == 'moyenComs' %}#}
-                        {#{{ dump(element.moyenComs) }}#}
-                        {#{% for key , moyenCom in element.moyenComs %}#}
-                        {#{{ dump(   moyenCom.vars.value) }}#}
-                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
-                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
-                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
-                        {#{% endfor %}#}
-                        {#{% else %}#}
-                        {#{{ form_row(child) }}#}
-                        {#{% endif %}#}
-                        {#{% endfor %}#}
                     {% endfor %}
                 {% endfor %}
             </div>
@@ -238,7 +224,7 @@
                                   data-prototype_moyen_coms_tel2="{{ moyenComsFixe | e }}"
                                   data-prototype_moyen_coms_mobile="{{ moyenComsMobile | e }}"
                                   class="form-horizontal">
-                                {#{{ interlocuteurs|raw }}#}
+                                {{ interlocuteurs|raw }}
                                 {#{{ prenom|raw }}#}
                                 {#{{ service|raw }}#}
                                 {#{{ fonction|raw }}#}
@@ -727,11 +713,14 @@
                 return false;
             }
 
-            var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
-
-            var interlocuteur = getDataIntelocuteurModal();
-
+            var interlocuteurModal = $('#interlocuteurModal');
+            interlocuteurModal.modal('hide');
+            var interlocuteur = {
+                prenom: interlocuteurModal.find('.modal-body [id$="_prenom"]').val(),
+                nom: interlocuteurModal.find('.modal-body [id$="_nom"]').val(),
+                fonction: interlocuteurModal.find('.modal-body [id$="_fonction"]').val(),
+                service: interlocuteurModal.find('.modal-body [id$="_service"]').val()
+            };
             var fonction = '';
             if (interlocuteur.fonction) {
                 fonction = $interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
@@ -777,6 +766,10 @@
                 longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(),
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val()
+                prenom: $divFournisseurInterlocuteur.find('[id$="_prenom"]').val(),
+                nom: $divFournisseurInterlocuteur.find('[id$="_nom"]').val(),
+                fonction: $divFournisseurInterlocuteur.find('[id$="_fonction"]').val(),
+                service: $divFournisseurInterlocuteur.find('[id$="_service"]').val()
             };
 
 
@@ -966,6 +959,7 @@
                         first = false;
                     }
                     // do something with `item`
+//                    console.log($item);
                     $item.attr('style', 'border: 1px solid red;')
                 });
                 return false;
