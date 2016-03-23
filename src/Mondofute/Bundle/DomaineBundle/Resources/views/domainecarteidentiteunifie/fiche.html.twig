@@ -40,6 +40,7 @@
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
+                            {{ form_row(domaineCarteIdentite.snowpark.present , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.snowpark.present.vars['unique_block_prefix']  }}) }}
                         </div>
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
@@ -128,6 +129,7 @@
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_present");#}
 
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");#}
@@ -146,6 +148,7 @@
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_2");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_3");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_4");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_snowpark_present");
 
         {% for langue in langues %}
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_traductions_entry_accroche_{{ langue.code }}");

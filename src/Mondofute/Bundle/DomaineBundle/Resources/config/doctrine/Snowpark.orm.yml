@@ -10,6 +10,9 @@ Mondofute\Bundle\DomaineBundle\Entity\Snowpark:
                 strategy: AUTO
             options:
                 unsigned: true
+    manyToOne:
+        present:
+            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction
