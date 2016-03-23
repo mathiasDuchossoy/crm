@@ -32,12 +32,6 @@
                             {{ form_row( station.secteur , { 'attr' : { 'data-unique_block_prefix' : station.secteur.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.codePostal, { 'attr' : { 'data-unique_block_prefix' : station.codePostal.vars['unique_block_prefix']}} ) }}
-                            {{ form_row( station.lienMeteo, { 'attr' : { 'data-unique_block_prefix' : station.lienMeteo.vars['unique_block_prefix']}} ) }}
-                            {{ form_row( station.jourOuverture, { 'attr' : { 'data-unique_block_prefix' : station.jourOuverture.vars['unique_block_prefix']}} ) }}
-                            {{ form_row( station.moisOuverture, { 'attr' : { 'data-unique_block_prefix' : station.moisOuverture.vars['unique_block_prefix']}} ) }}
-                            {{ form_row( station.jourFermeture, { 'attr' : { 'data-unique_block_prefix' : station.jourFermeture.vars['unique_block_prefix']}} ) }}
-                            {{ form_row( station.moisFermeture, { 'attr' : { 'data-unique_block_prefix' : station.moisFermeture.vars['unique_block_prefix']}} ) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in station.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
