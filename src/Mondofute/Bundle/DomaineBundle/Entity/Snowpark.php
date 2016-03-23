@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -16,6 +17,10 @@ class Snowpark
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     */
+    private $present;
 
     /**
      * Constructor
@@ -84,4 +89,27 @@ class Snowpark
         return $this->traductions;
     }
 
+    /**
+     * Get present
+     *
+     * @return \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     */
+    public function getPresent()
+    {
+        return $this->present;
+    }
+
+    /**
+     * Set present
+     *
+     * @param \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present
+     *
+     * @return Snowpark
+     */
+    public function setPresent(\Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present = null)
+    {
+        $this->present = $present;
+
+        return $this;
+    }
 }

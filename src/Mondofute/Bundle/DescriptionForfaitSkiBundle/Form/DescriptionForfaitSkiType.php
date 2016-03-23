@@ -33,6 +33,7 @@ class DescriptionForfaitSkiType extends AbstractType
                 array(
                     'class' => OuiNonNC::class,
 //                    'placeholder' => '--- Veuillez choisir une unité ---',
+//                    ''
                     'choice_label' => 'traductions[0].libelle',
                     'query_builder' => function (OuiNonNCRepository $r) use ($locale) {
                         return $r->getTraductionsByLocale($locale);

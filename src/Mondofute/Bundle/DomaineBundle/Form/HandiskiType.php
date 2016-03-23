@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Form;
 
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
+use Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,7 +18,19 @@ class HandiskiType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $locale = $options["locale"];
         $builder
+            ->add('present',
+                EntityType::class,
+                array(
+                    'class' => OuiNonNC::class,
+//                    'placeholder' => '--- Veuillez choisir une unité ---',
+                    'choice_label' => 'traductions[0].libelle',
+                    'query_builder' => function (OuiNonNCRepository $r) use ($locale) {
+                        return $r->getTraductionsByLocale($locale);
+                    },
+                    'label' => 'Présence handiski'
+                ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => HandiskiTraductionType::class
             ));
@@ -27,7 +42,8 @@ class HandiskiType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\Handiski'
+            'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\Handiski',
+            'locale' => 'fr_FR',
         ));
     }
 }
