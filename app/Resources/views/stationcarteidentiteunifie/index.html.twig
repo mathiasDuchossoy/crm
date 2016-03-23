@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>StationCarteIdentiteUnifie list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for stationCarteIdentiteUnifie in stationCarteIdentiteUnifies %}
+            <tr>
+                <td>
+                    <a href="{{ path('stationcarteidentite_show', { 'id': stationCarteIdentiteUnifie.id }) }}">{{ stationCarteIdentiteUnifie.id }}</a>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('stationcarteidentite_show', { 'id': stationCarteIdentiteUnifie.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('stationcarteidentite_edit', { 'id': stationCarteIdentiteUnifie.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('stationcarteidentite_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
