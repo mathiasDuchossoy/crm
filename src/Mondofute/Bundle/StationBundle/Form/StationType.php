@@ -63,12 +63,6 @@ class StationType extends AbstractType
                     return $rr->getTraductionsByLocale($locale);
                 },
             ))
-            ->add('codePostal', IntegerType::class, array('attr' => array('min' => 0)))
-            ->add('jourOuverture')
-            ->add('moisOuverture')
-            ->add('jourFermeture')
-            ->add('moisFermeture')
-            ->add('lienMeteo')
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationTraductionType::class,
             ))

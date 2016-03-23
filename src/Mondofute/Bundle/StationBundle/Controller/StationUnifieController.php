@@ -74,7 +74,6 @@ class StationUnifieController extends Controller
 
             $this->copieVersSites($stationUnifie);
 
-//            $session = new Session();
             $session = $request->getSession();
             $session->start();
 
