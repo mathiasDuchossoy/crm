@@ -5,6 +5,9 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\GeographieBundle\Entity\Departement;
+use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
@@ -216,21 +219,37 @@ class StationUnifieController extends Controller
     {
         /** @var StationTraduction $stationTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
+        /** @var Station $station */
         foreach ($entity->getStations() as $station) {
             if ($station->getSite()->getCrm() == false) {
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $em = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
-                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $station->getSite()->getId()));
+                $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
+                $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $station->getSite()->getId()));
                 if (!empty($station->getZoneTouristique())) {
-                    $zoneTouristique = $em->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
+                    $zoneTouristique = $emSite->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
                 } else {
                     $zoneTouristique = null;
+                }
+                if (!empty($station->getSecteur())) {
+                    $secteur = $emSite->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $station->getSecteur()->getSecteurUnifie()));
+                } else {
+                    $secteur = null;
+                }
+                if (!empty($station->getDomaine())) {
+                    $domaine = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $station->getDomaine()->getDomaineUnifie()));
+                } else {
+                    $domaine = null;
+                }
+                if (!empty($station->getDepartement())) {
+                    $departement = $emSite->getRepository(Departement::class)->findOneBy(array('departementUnifie' => $station->getDepartement()->getDepartementUnifie()));
+                } else {
+                    $departement = null;
                 }
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(StationUnifie::class)->find($entity->getId())))) {
+                if (is_null(($entitySite = $emSite->getRepository(StationUnifie::class)->find($entity->getId())))) {
                     $entitySite = new StationUnifie();
                 }
 //                if (is_null(($entitySite = $em->getRepository('MondofuteStationBundle:StationUnifie')->find(array($entity->getId()))))) {
@@ -239,7 +258,7 @@ class StationUnifieController extends Controller
 
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($stationSite = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $entitySite))))) {
+                if (empty(($stationSite = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $entitySite))))) {
                     $stationSite = new Station();
                 }
 
@@ -247,15 +266,18 @@ class StationUnifieController extends Controller
                 $stationSite
                     ->setSite($site)
                     ->setStationUnifie($entitySite)
-                    ->setZoneTouristique($zoneTouristique);
+                    ->setZoneTouristique($zoneTouristique)
+                    ->setSecteur($secteur)
+                    ->setDomaine($domaine)
+                    ->setDepartement($departement);
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
 //                récupération de la langue sur le site distant
-                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $stationTraduc->getLangue()->getId()));
+                    $langue = $emSite->getRepository(Langue::class)->findOneBy(array('id' => $stationTraduc->getLangue()->getId()));
 
 //                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($stationTraducSite = $em->getRepository(StationTraduction::class)->findOneBy(array(
+                    if (empty(($stationTraducSite = $emSite->getRepository(StationTraduction::class)->findOneBy(array(
                         'station' => $stationSite,
                         'langue' => $langue
                     ))))
@@ -266,6 +288,7 @@ class StationUnifieController extends Controller
 //                copie des données traductions
                     $stationTraducSite->setLangue($langue)
                         ->setLibelle($stationTraduc->getLibelle())
+                        ->setParking($stationTraduc->getParking())
                         ->setStation($stationSite);
 
 //                ajout a la collection de traduction de la station distante
@@ -273,8 +296,8 @@ class StationUnifieController extends Controller
                 }
 
                 $entitySite->addStation($stationSite);
-                $em->persist($entitySite);
-                $em->flush();
+                $emSite->persist($entitySite);
+                $emSite->flush();
             }
         }
         $this->ajouterStationUnifieSiteDistant($entity->getId(), $entity->getStations());

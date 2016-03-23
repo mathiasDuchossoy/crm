@@ -94,18 +94,9 @@
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_secteur");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_departement");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_domaine");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_codePostal");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_lienMeteo");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_jourOuverture");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_moisOuverture");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_jourFermeture");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_moisFermeture");#}
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enVoiture_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enTrain_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_enAvion_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");#}
         {#{% endfor %}#}
 
         var items = [];
@@ -113,18 +104,9 @@
         items.push("_station_unifie_stations_entry_secteur");
         items.push("_station_unifie_stations_entry_departement");
         items.push("_station_unifie_stations_entry_domaine");
-        items.push("_station_unifie_stations_entry_codePostal");
-        items.push("_station_unifie_stations_entry_lienMeteo");
-        items.push("_station_unifie_stations_entry_jourOuverture");
-        items.push("_station_unifie_stations_entry_moisOuverture");
-        items.push("_station_unifie_stations_entry_jourFermeture");
-        items.push("_station_unifie_stations_entry_moisFermeture");
         {% for langue in langues %}
         items.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_traductions_entry_enVoiture_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_traductions_entry_enTrain_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_traductions_entry_enAvion_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");
+        items.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");
         {% endfor %}
 
     </script>
