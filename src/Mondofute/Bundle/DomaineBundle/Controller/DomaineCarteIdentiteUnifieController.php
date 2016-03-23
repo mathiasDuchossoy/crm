@@ -209,8 +209,12 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         /** @var DomaineCarteIdentiteTraduction $traduction */
+        $em = $this->getDoctrine()->getEntityManager();
         foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
             $handiski = !empty($domaineCarteIdentite->getHandiski()) ? $domaineCarteIdentite->getHandiski() : new Handiski();
+            if (empty($handiski->getPresent())) {
+                $handiski->setPresent($em->find('MondofuteChoixBundle:OuiNonNC', 3));
+            }
             foreach ($domaineCarteIdentite->getTraductions() as $traduction) {
                 if (!empty($handiski->getTraductions())) {
                     $langue = $traduction->getLangue();
