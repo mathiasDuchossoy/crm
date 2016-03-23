@@ -10,4 +10,20 @@ namespace Mondofute\Bundle\ChoixBundle\Repository;
  */
 class OuiNonNCRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getTraductionsByLocale($locale)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('ouiNonNc , traductions ')
+            ->from('MondofuteChoixBundle:OuiNonNC', 'ouiNonNc')
+            ->join('ouiNonNc.traductions', 'traductions')
+            ->join('traductions.langue', 'l')
+            ->where("l.code = '$locale'");
+        $qb->orderBy('ouiNonNc.classement', 'ASC');
+
+        return $qb;
+    }
 }

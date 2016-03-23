@@ -19,6 +19,10 @@ class SnowparkTraduction
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
     private $langue;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    private $snowpark;
 
     /**
      * Get id
@@ -77,11 +81,16 @@ class SnowparkTraduction
 
         return $this;
     }
-    /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    private $snowpark;
 
+    /**
+     * Get snowpark
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    public function getSnowpark()
+    {
+        return $this->snowpark;
+    }
 
     /**
      * Set snowpark
@@ -95,15 +104,5 @@ class SnowparkTraduction
         $this->snowpark = $snowpark;
 
         return $this;
-    }
-
-    /**
-     * Get snowpark
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
-     */
-    public function getSnowpark()
-    {
-        return $this->snowpark;
     }
 }

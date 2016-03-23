@@ -1,0 +1,24 @@
+{% extends 'MondofuteDescriptionForfaitSkiBundle:modeledescriptionforfaitski:fiche.html.twig' %}
+
+{#{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}#}
+{#{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}#}
+
+{% block title %}
+    {{ 'modification de ModeleDescriptionForfaitSki  ' | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification de ModeleDescriptionForfaitSki
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('modeledescriptionforfaitski_index') }}">{{ 'retour à la liste' | capitalize }}</a>
+            </li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+    </div>
+{% endblock %}

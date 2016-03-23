@@ -1,0 +1,84 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% set iSite = 0 %}
+            {% for descriptionForfaitSki in form.descriptionForfaitSkis %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">
+                            Fiche
+                        </h3></div>
+                    <div class="panel-body">
+
+
+                        {{ form_row(descriptionForfaitSki.quantite) }}
+                        {{ form_row(descriptionForfaitSki.classement) }}
+                        {{ form_row(descriptionForfaitSki.present) }}
+                        {{ form_row(descriptionForfaitSki.prix , {'attr' : { 'class' : 'form-inline'}}) }}
+                        {{ form_row(descriptionForfaitSki.ageMin, {'attr' : { 'class' : 'form-inline'}}) }}
+                        {{ form_row(descriptionForfaitSki.ageMax, {'attr' : { 'class' : 'form-inline'}}) }}
+                        <ul class="nav nav-tabs">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in descriptionForfaitSki.traductions %}
+                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                    <a data-toggle="tab"
+                                       href="#{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}">
+                                        {# affiche la langue en fonction de la locale#}
+                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                {{ traductionLangue.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in descriptionForfaitSki.traductions %}
+                                <div id="{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}"
+                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                    {#{{ form_row(traduction) }}#}
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element) }}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

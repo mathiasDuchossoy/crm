@@ -1,0 +1,18 @@
+Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DescriptionForfaitSkiBundle\Repository\ModeleDescriptionForfaitSkiRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        descriptionForfaitSkis:
+            targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki
+            mappedBy: modele
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

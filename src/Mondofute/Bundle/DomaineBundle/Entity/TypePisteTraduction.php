@@ -39,6 +39,16 @@ class TypePisteTraduction
     }
 
     /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
      * Set libelle
      *
      * @param string $libelle
@@ -53,13 +63,13 @@ class TypePisteTraduction
     }
 
     /**
-     * Get libelle
+     * Get langue
      *
-     * @return string
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getLibelle()
+    public function getLangue()
     {
-        return $this->libelle;
+        return $this->langue;
     }
 
     /**
@@ -77,13 +87,13 @@ class TypePisteTraduction
     }
 
     /**
-     * Get langue
+     * Get typePiste
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\TypePiste
      */
-    public function getLangue()
+    public function getTypePiste()
     {
-        return $this->langue;
+        return $this->typePiste;
     }
 
     /**
@@ -98,15 +108,5 @@ class TypePisteTraduction
         $this->typePiste = $typePiste;
 
         return $this;
-    }
-
-    /**
-     * Get typePiste
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\TypePiste
-     */
-    public function getTypePiste()
-    {
-        return $this->typePiste;
     }
 }

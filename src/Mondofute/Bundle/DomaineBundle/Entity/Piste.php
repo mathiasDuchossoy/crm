@@ -39,6 +39,16 @@ class Piste
     }
 
     /**
+     * Get nombre
+     *
+     * @return integer
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
      * Set nombre
      *
      * @param integer $nombre
@@ -53,13 +63,13 @@ class Piste
     }
 
     /**
-     * Get nombre
+     * Get typePiste
      *
-     * @return integer
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\TypePiste
      */
-    public function getNombre()
+    public function getTypePiste()
     {
-        return $this->nombre;
+        return $this->typePiste;
     }
 
     /**
@@ -77,13 +87,13 @@ class Piste
     }
 
     /**
-     * Get typePiste
+     * Get domaineCarteIdentite
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\TypePiste
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
      */
-    public function getTypePiste()
+    public function getDomaineCarteIdentite()
     {
-        return $this->typePiste;
+        return $this->domaineCarteIdentite;
     }
 
     /**
@@ -98,15 +108,5 @@ class Piste
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;
-    }
-
-    /**
-     * Get domaineCarteIdentite
-     *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
-     */
-    public function getDomaineCarteIdentite()
-    {
-        return $this->domaineCarteIdentite;
     }
 }

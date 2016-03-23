@@ -8,7 +8,7 @@ namespace Mondofute\Bundle\UniteBundle\Entity;
 class Tarif
 {
     /**
-     * @var int
+     * @var integer
      */
     private $id;
 
@@ -16,15 +16,17 @@ class Tarif
      * @var string
      */
     private $valeur;
+
     /**
      * @var \Mondofute\Bundle\UniteBundle\Entity\UniteTarif
      */
     private $unite;
 
+
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {

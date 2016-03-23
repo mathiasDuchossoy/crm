@@ -15,6 +15,7 @@ Mondofute\Bundle\UniteBundle\Entity\Tarif:
             type: decimal
             precision: 7
             scale: 2
+            nullable: true
             options:
                 unsigned: true
     manyToOne:

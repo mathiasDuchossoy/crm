@@ -10,4 +10,21 @@ namespace Mondofute\Bundle\UniteBundle\Repository;
  */
 class UniteAgeRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des niveau skieur crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('uniteAge , traductions ')
+            ->from('MondofuteUniteBundle:UniteAge', 'uniteAge')
+            ->join('uniteAge.traductions', 'traductions')
+            ->join('traductions.langue', 'l')
+            ->where("l.code = '$locale'");
+//        $qb->orderBy('ns.id', 'ASC');
+
+        return $qb;
+    }
 }
