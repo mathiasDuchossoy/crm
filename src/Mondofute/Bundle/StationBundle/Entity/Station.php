@@ -56,10 +56,6 @@ class Station
      * @var \Mondofute\Bundle\StationBundle\Entity\StationDescription
      */
     private $stationDescription;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $hebergements;
 
     /**
      * Constructor
@@ -351,39 +347,5 @@ class Station
         $this->stationDescription = $stationDescription;
 
         return $this;
-    }
-
-    /**
-     * Add hebergement
-     *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
-     *
-     * @return Station
-     */
-    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
-    {
-        $this->hebergements[] = $hebergement;
-
-        return $this;
-    }
-
-    /**
-     * Remove hebergement
-     *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
-     */
-    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
-    {
-        $this->hebergements->removeElement($hebergement);
-    }
-
-    /**
-     * Get hebergements
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getHebergements()
-    {
-        return $this->hebergements;
     }
 }
