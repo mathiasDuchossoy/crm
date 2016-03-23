@@ -1,0 +1,18 @@
+Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationDescriptionUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        stationDescriptions:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescription
+            mappedBy: stationDescription
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

@@ -1,0 +1,18 @@
+Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCommentVenirUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        stationCommentVenirs:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+            mappedBy: stationCommentVenirUnifie
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

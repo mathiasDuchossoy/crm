@@ -17,35 +17,6 @@ class Station
     private $id;
 
     /**
-     * @var int
-     */
-    private $codePostal;
-
-    /**
-     * @var string
-     */
-    private $moisOuverture;
-
-    /**
-     * @var string
-     */
-    private $jourOuverture;
-
-    /**
-     * @var string
-     */
-    private $moisFermeture;
-
-    /**
-     * @var string
-     */
-    private $jourFermeture;
-
-    /**
-     * @var string
-     */
-    private $lienMeteo;
-    /**
      * @var Collection
      */
     private $traductions;
@@ -73,6 +44,18 @@ class Station
      * @var \Mondofute\Bundle\DomaineBundle\Entity\Domaine
      */
     private $domaine;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite
+     */
+    private $stationCarteIdentite;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+     */
+    private $stationCommentVenir;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\StationDescription
+     */
+    private $stationDescription;
 
     /**
      * Constructor
@@ -90,150 +73,6 @@ class Station
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get codePostal
-     *
-     * @return int
-     */
-    public function getCodePostal()
-    {
-        return $this->codePostal;
-    }
-
-    /**
-     * Set codePostal
-     *
-     * @param integer $codePostal
-     *
-     * @return Station
-     */
-    public function setCodePostal($codePostal)
-    {
-        $this->codePostal = $codePostal;
-
-        return $this;
-    }
-
-    /**
-     * Get moisOuverture
-     *
-     * @return string
-     */
-    public function getMoisOuverture()
-    {
-        return $this->moisOuverture;
-    }
-
-    /**
-     * Set moisOuverture
-     *
-     * @param string $moisOuverture
-     *
-     * @return Station
-     */
-    public function setMoisOuverture($moisOuverture)
-    {
-        $this->moisOuverture = $moisOuverture;
-
-        return $this;
-    }
-
-    /**
-     * Get jourOuverture
-     *
-     * @return string
-     */
-    public function getJourOuverture()
-    {
-        return $this->jourOuverture;
-    }
-
-    /**
-     * Set jourOuverture
-     *
-     * @param string $jourOuverture
-     *
-     * @return Station
-     */
-    public function setJourOuverture($jourOuverture)
-    {
-        $this->jourOuverture = $jourOuverture;
-
-        return $this;
-    }
-
-    /**
-     * Get moisFermeture
-     *
-     * @return string
-     */
-    public function getMoisFermeture()
-    {
-        return $this->moisFermeture;
-    }
-
-    /**
-     * Set moisFermeture
-     *
-     * @param string $moisFermeture
-     *
-     * @return Station
-     */
-    public function setMoisFermeture($moisFermeture)
-    {
-        $this->moisFermeture = $moisFermeture;
-
-        return $this;
-    }
-
-    /**
-     * Get jourFermeture
-     *
-     * @return string
-     */
-    public function getJourFermeture()
-    {
-        return $this->jourFermeture;
-    }
-
-    /**
-     * Set jourFermeture
-     *
-     * @param string $jourFermeture
-     *
-     * @return Station
-     */
-    public function setJourFermeture($jourFermeture)
-    {
-        $this->jourFermeture = $jourFermeture;
-
-        return $this;
-    }
-
-    /**
-     * Get lienMeteo
-     *
-     * @return string
-     */
-    public function getLienMeteo()
-    {
-        return $this->lienMeteo;
-    }
-
-    /**
-     * Set lienMeteo
-     *
-     * @param string $lienMeteo
-     *
-     * @return Station
-     */
-    public function setLienMeteo($lienMeteo)
-    {
-        $this->lienMeteo = $lienMeteo;
-
-        return $this;
     }
 
     /**
@@ -434,6 +273,78 @@ class Station
     public function setDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine = null)
     {
         $this->domaine = $domaine;
+
+        return $this;
+    }
+
+    /**
+     * Get stationCarteIdentite
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite
+     */
+    public function getStationCarteIdentite()
+    {
+        return $this->stationCarteIdentite;
+    }
+
+    /**
+     * Set stationCarteIdentite
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite
+     *
+     * @return Station
+     */
+    public function setStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite = null)
+    {
+        $this->stationCarteIdentite = $stationCarteIdentite;
+
+        return $this;
+    }
+
+    /**
+     * Get stationCommentVenir
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+     */
+    public function getStationCommentVenir()
+    {
+        return $this->stationCommentVenir;
+    }
+
+    /**
+     * Set stationCommentVenir
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
+     *
+     * @return Station
+     */
+    public function setStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir = null)
+    {
+        $this->stationCommentVenir = $stationCommentVenir;
+
+        return $this;
+    }
+
+    /**
+     * Get stationDescription
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\StationDescription
+     */
+    public function getStationDescription()
+    {
+        return $this->stationDescription;
+    }
+
+    /**
+     * Set stationDescription
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
+     *
+     * @return Station
+     */
+    public function setStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription = null)
+    {
+        $this->stationDescription = $stationDescription;
 
         return $this;
     }

@@ -1,0 +1,27 @@
+Mondofute\Bundle\StationBundle\Entity\StationDescription:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationDescriptionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        stationDescriptionUnifie:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie
+            inversedBy: stationDescriptions
+    oneToMany:
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: stationCarteIdentite
+        traductions:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction
+            mappedBy: stationDescription
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }
