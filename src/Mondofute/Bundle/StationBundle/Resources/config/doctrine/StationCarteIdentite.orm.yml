@@ -1,0 +1,53 @@
+Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCarteIdentiteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        codePostal:
+            type: integer
+        moisOuverture:
+            type: string
+            length: '2'
+            nullable: true
+        jourOuverture:
+            type: string
+            length: '2'
+            nullable: true
+        moisFermeture:
+            type: string
+            length: '2'
+            nullable: true
+        jourFermeture:
+            type: string
+            length: '2'
+            nullable: true
+        lienMeteo:
+            type: string
+            length: 255
+            nullable: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        stationCarteIdentiteUnifie:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie
+            inversedBy: stationCarteIdentites
+    oneToMany:
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: stationCarteIdentite
+        traductions:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
+            mappedBy: station
+            cascade:  ['persist' , 'remove']
+    oneToOne:
+        altitudeVillage:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+    lifecycleCallbacks: {  }

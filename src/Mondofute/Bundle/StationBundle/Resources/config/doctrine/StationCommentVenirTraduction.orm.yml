@@ -1,0 +1,32 @@
+Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCommentVenirTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        enVoiture:
+            type: text
+            nullable: true
+        enTrain:
+            type: text
+            nullable: true
+        enAvion:
+            type: text
+            nullable: true
+        distancesGrandesVilles:
+            type: text
+            nullable: true
+    manyToOne:
+        stationCommentVenir:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }
