@@ -26,6 +26,10 @@ class StationTraduction
      * @var Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $parking;
 
     /**
      * Get id
@@ -105,6 +109,30 @@ class StationTraduction
     public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get parking
+     *
+     * @return string
+     */
+    public function getParking()
+    {
+        return $this->parking;
+    }
+
+    /**
+     * Set parking
+     *
+     * @param string $parking
+     *
+     * @return StationTraduction
+     */
+    public function setParking($parking)
+    {
+        $this->parking = $parking;
 
         return $this;
     }

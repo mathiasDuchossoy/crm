@@ -247,13 +247,7 @@ class StationUnifieController extends Controller
                 $stationSite
                     ->setSite($site)
                     ->setStationUnifie($entitySite)
-                    ->setZoneTouristique($zoneTouristique)
-                    ->setCodePostal($station->getCodePostal())
-                    ->setMoisOuverture($station->getMoisOuverture())
-                    ->setJourOuverture($station->getJourOuverture())
-                    ->setMoisFermeture($station->getMoisFermeture())
-                    ->setJourFermeture($station->getJourFermeture())
-                    ->setLienMeteo($station->getLienMeteo());
+                    ->setZoneTouristique($zoneTouristique);
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -272,10 +266,6 @@ class StationUnifieController extends Controller
 //                copie des données traductions
                     $stationTraducSite->setLangue($langue)
                         ->setLibelle($stationTraduc->getLibelle())
-                        ->setEnVoiture($stationTraduc->getEnVoiture())
-                        ->setEnTrain($stationTraduc->getEnTrain())
-                        ->setEnAvion($stationTraduc->getEnAvion())
-                        ->setDistancesGrandesVilles($stationTraduc->getDistancesGrandesVilles())
                         ->setStation($stationSite);
 
 //                ajout a la collection de traduction de la station distante
