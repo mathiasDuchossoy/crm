@@ -105,11 +105,8 @@ class StationUnifieController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationUnifie);
-            try {
-                $em->flush();
-            } catch (\Exception $e) {
-                echo "Exception Found - " . $e->getMessage() . "<br/>";
-            }
+
+            $em->flush();
 
             foreach ($stationUnifie->getStations() as $station) {
                 $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
@@ -721,7 +718,6 @@ class StationUnifieController extends Controller
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la station et stationUnifie
-
             foreach ($originalStations as $station) {
                 if (!$stationUnifie->getStations()->contains($station)) {
 
