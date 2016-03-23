@@ -13,6 +13,9 @@ Mondofute\Bundle\StationBundle\Entity\StationTraduction:
     fields:
         libelle:
             type: string
+        parking:
+            type: text
+            nullable: true
     manyToOne:
         station:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
