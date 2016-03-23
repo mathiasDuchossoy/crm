@@ -19,6 +19,10 @@ class Handiski
      * @var Collection
      */
     private $traductions;
+    /**
+     * @var \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     */
+    private $present;
 
     /**
      * Constructor
@@ -87,4 +91,27 @@ class Handiski
         return $this->traductions;
     }
 
+    /**
+     * Get present
+     *
+     * @return \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     */
+    public function getPresent()
+    {
+        return $this->present;
+    }
+
+    /**
+     * Set present
+     *
+     * @param \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present
+     *
+     * @return Handiski
+     */
+    public function setPresent(\Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present = null)
+    {
+        $this->present = $present;
+
+        return $this;
+    }
 }
