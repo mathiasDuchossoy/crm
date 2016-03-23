@@ -379,6 +379,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
                 // ***** Handiski *****
                 $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
+                $handiskiSite->setPresent($em->find('MondofuteChoixBundle:OuiNonNC', $handiskiSite->getPresent()));
                 foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
                     /** @var HandiskiTraduction $handiskiTraduction */
                     $handiskiTraduction = $domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($handiskiTraductionSite) {
