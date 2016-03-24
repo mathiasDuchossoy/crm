@@ -19,7 +19,7 @@ Mondofute\Bundle\StationBundle\Entity\StationDescription:
     oneToMany:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
-            mappedBy: stationCarteIdentite
+            mappedBy: stationDescription
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction
             mappedBy: stationDescription

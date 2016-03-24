@@ -86,20 +86,6 @@ class StationDescription
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction
-     *
-     * @return StationDescription
-     */
-    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction)
-    {
-        $this->traductions[] = $traduction;
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction
@@ -117,6 +103,34 @@ class StationDescription
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * @param $traductions
+     * @return $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction
+     *
+     * @return StationDescription
+     */
+    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setStationDescription($this);
+
+        return $this;
     }
 
     /**
