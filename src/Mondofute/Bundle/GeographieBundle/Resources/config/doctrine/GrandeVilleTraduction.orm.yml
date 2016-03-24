@@ -1,0 +1,21 @@
+Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\GrandeVilleTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        grandeVille:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\grandeVille
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }
