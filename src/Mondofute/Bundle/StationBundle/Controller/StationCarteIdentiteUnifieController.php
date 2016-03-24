@@ -410,7 +410,7 @@ class StationCarteIdentiteUnifieController extends Controller
             return $this->redirectToRoute('stationcarteidentite_edit', array('id' => $stationCarteIdentiteUnifie->getId()));
         }
 
-        return $this->render('@MondofuteStation/stationCarteIdentiteunifie/edit.html.twig', array(
+        return $this->render('@MondofuteStation/stationcarteidentiteunifie/edit.html.twig', array(
             'entity' => $stationCarteIdentiteUnifie,
             'sites' => $sites,
             'langues' => $langues,
