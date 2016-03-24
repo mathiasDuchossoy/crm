@@ -34,7 +34,7 @@ class StationCarteIdentiteUnifieController extends Controller
         $stationCarteIdentiteUnifies = $em->getRepository('MondofuteStationBundle:StationCarteIdentiteUnifie')->findAll();
 
         return $this->render('@MondofuteStation/stationcarteidentiteunifie/index.html.twig', array(
-            'entities' => $stationCarteIdentiteUnifies,
+            'stationCarteIdentiteUnifies' => $stationCarteIdentiteUnifies,
         ));
     }
 
