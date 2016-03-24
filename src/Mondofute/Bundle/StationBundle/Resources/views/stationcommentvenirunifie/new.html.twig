@@ -1,0 +1,31 @@
+{% extends '@MondofuteStation/stationcommentvenirunifie/fiche.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ form_stylesheet(form) }}
+{% endblock %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'création d\une stationCommentVenir' | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    Création d'une stationCommentVenir
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('stationcommentvenir_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+        </ul>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ form_javascript(form) }}
+{% endblock %}
+
