@@ -1,0 +1,19 @@
+Mondofute\Bundle\GeographieBundle\Entity\GrandeVille:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\GrandeVilleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction
+            mappedBy: GrandeVille
+            cascade:  ['persist' , 'remove']
+    oneToOne:
+        coordonneesGps:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
+    lifecycleCallbacks: {  }
