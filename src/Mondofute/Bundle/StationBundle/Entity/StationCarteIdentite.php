@@ -38,11 +38,6 @@ class StationCarteIdentite
     private $jourFermeture;
 
     /**
-     * @var string
-     */
-    private $lienMeteo;
-
-    /**
      * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeVillage;
@@ -51,11 +46,6 @@ class StationCarteIdentite
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
 
     /**
      * @var \Mondofute\Bundle\SiteBundle\Entity\Site
@@ -73,7 +63,6 @@ class StationCarteIdentite
     public function __construct()
     {
         $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -207,30 +196,6 @@ class StationCarteIdentite
     }
 
     /**
-     * Get lienMeteo
-     *
-     * @return string
-     */
-    public function getLienMeteo()
-    {
-        return $this->lienMeteo;
-    }
-
-    /**
-     * Set lienMeteo
-     *
-     * @param string $lienMeteo
-     *
-     * @return StationCarteIdentite
-     */
-    public function setLienMeteo($lienMeteo)
-    {
-        $this->lienMeteo = $lienMeteo;
-
-        return $this;
-    }
-
-    /**
      * Get altitudeVillage
      *
      * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
@@ -286,40 +251,6 @@ class StationCarteIdentite
     public function getStations()
     {
         return $this->stations;
-    }
-
-    /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationTraduction $traduction
-     *
-     * @return StationCarteIdentite
-     */
-    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationTraduction $traduction)
-    {
-        $this->traductions[] = $traduction;
-
-        return $this;
-    }
-
-    /**
-     * Remove traduction
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationTraduction $traduction
-     */
-    public function removeTraduction(\Mondofute\Bundle\StationBundle\Entity\StationTraduction $traduction)
-    {
-        $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
     }
 
     /**
