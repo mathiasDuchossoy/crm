@@ -1,0 +1,16 @@
+Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\CoordonneesGpsRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        latitude:
+            type: float
+        longitude:
+            type: float
+    lifecycleCallbacks: {  }
