@@ -14,7 +14,7 @@ Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction:
             length: 255
     manyToOne:
         grandeVille:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\grandeVille
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\GrandeVille
             inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
