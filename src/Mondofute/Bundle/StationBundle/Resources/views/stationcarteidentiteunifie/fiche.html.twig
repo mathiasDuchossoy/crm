@@ -1,0 +1,172 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.stationCarteIdentites %}
+            {% include '::onglets_sites.html.twig' %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for stationCarteIdentite in form.stationCarteIdentites %}
+                    <div id="data_site_{{ stationCarteIdentite.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ stationCarteIdentite.vars.value.site.crm | number_format }}">
+                        {{ form_row(stationCarteIdentite.site) }}
+                        <ul class="nav nav-tabs">
+                            {{ form_row( stationCarteIdentite.codePostal, { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.codePostal.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
+                            {#{{ form_label( stationCarteIdentite.altitudeVillage, { 'attr_label' : { 'class' : 'form-inline'}} ) }}#}
+                            {#{% for element in stationCarteIdentite.altitudeVillage %}#}
+                            {#{{ form_row( element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] }}) }}#}
+                            {#{% endfor %}#}
+                        </ul>
+                    </div>
+
+                    {% set index = (index + 1) %}
+                {% endfor %}
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_codePostal");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourOuverture");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisOuverture");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourFermeture");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisFermeture");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_altitudeVillage_valeur");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_altitudeVillage_unite");#}
+
+        var items = [];
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_codePostal");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourOuverture");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisOuverture");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourFermeture");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisFermeture");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_altitudeVillage_valeur");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_altitudeVillage_unite");
+
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+    </script>
+{% endblock %}
