@@ -36,20 +36,6 @@ class StationDescriptionUnifie
     }
 
     /**
-     * Add stationDescription
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
-     *
-     * @return StationDescriptionUnifie
-     */
-    public function addStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription)
-    {
-        $this->stationDescriptions[] = $stationDescription->setStationDescriptionUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove stationDescription
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
@@ -67,5 +53,33 @@ class StationDescriptionUnifie
     public function getStationDescriptions()
     {
         return $this->stationDescriptions;
+    }
+
+    /**
+     * @param $stationDescriptions
+     * @return $this
+     */
+    public function setStationDescriptions($stationDescriptions)
+    {
+        $this->getStationDescriptions()->clear();
+
+        foreach ($stationDescriptions as $stationDescription) {
+            $this->addStationDescription($stationDescription);
+        }
+        return $this;
+    }
+
+    /**
+     * Add stationDescription
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
+     *
+     * @return StationDescriptionUnifie
+     */
+    public function addStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription)
+    {
+        $this->stationDescriptions[] = $stationDescription->setStationDescriptionUnifie($this);
+
+        return $this;
     }
 }

@@ -15,3 +15,7 @@ mondofute_station_stationcarteidentiteunifie:
 mondofute_station_stationcommentvenirunifie:
     resource: "@MondofuteStationBundle/Resources/config/routing/stationcommentvenirunifie.yml"
     prefix:   /stationcommentvenirunifie
+
+mondofute_station_stationdescriptionunifie:
+    resource: "@MondofuteStationBundle/Resources/config/routing/stationdescriptionunifie.yml"
+    prefix:   /stationdescription
