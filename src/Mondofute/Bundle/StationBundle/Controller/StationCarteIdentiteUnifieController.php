@@ -79,12 +79,6 @@ class StationCarteIdentiteUnifieController extends Controller
 
             $this->supprimerStationCarteIdentites($stationCarteIdentiteUnifie, $sitesAEnregistrer);
 
-//            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-//                    $moyenCom->setDateCreation();
-//                }
-//            }
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationCarteIdentiteUnifie);
             $em->flush();

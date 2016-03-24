@@ -2,16 +2,6 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCarteIdentiteRepository
-#    associationOverride:
-#        moyenComs:
-#            joinTable:
-#                name: station_carte_identite_moyenscom
-#                joinColumns:
-#                    station_carte_identite__id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    moyencom_id:
-#                        referencedColumnName: id
     id:
         id:
             type: integer
