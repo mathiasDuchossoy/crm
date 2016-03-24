@@ -1,0 +1,24 @@
+stationcommentvenir_index:
+    path:     /
+    defaults: { _controller: "MondofuteStationBundle:StationCommentVenirUnifie:index" }
+    methods:  GET
+
+stationcommentvenir_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteStationBundle:StationCommentVenirUnifie:show" }
+    methods:  GET
+
+stationcommentvenir_new:
+    path:     /new
+    defaults: { _controller: "MondofuteStationBundle:StationCommentVenirUnifie:new" }
+    methods:  [GET, POST]
+
+stationcommentvenir_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteStationBundle:StationCommentVenirUnifie:edit" }
+    methods:  [GET, POST]
+
+stationcommentvenir_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteStationBundle:StationCommentVenirUnifie:delete" }
+    methods:  DELETE
