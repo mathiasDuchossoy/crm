@@ -44,7 +44,7 @@ class StationDescriptionUnifie
      */
     public function addStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription)
     {
-        $this->stationDescriptions[] = $stationDescription;
+        $this->stationDescriptions[] = $stationDescription->setStationDescriptionUnifie($this);
 
         return $this;
     }

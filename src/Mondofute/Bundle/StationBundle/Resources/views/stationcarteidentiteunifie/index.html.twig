@@ -1,44 +1,32 @@
 {% extends 'base.html.twig' %}
 {% block title %}
-    {{ 'Liste de stations' | capitalize }}
+    {{ 'Liste des cartes d\identités des stations' | capitalize }}
 {% endblock %}
 {% block body %}
-    <h1>{{ 'liste des stations' | capitalize }}</h1>
+    <h1>{{ 'liste des cartes d\identités des stations' | capitalize }}</h1>
     {% include '::flashbags.html.twig' %}
     <table class="table-responsive table-striped table">
         <thead>
         <tr>
             <th>Id</th>
-            <th>{{ 'libelle' | capitalize }}</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        {% for stationUnifie in stationUnifies %}
+        {% for stationCarteIdentiteUnifie in entities %}
             <tr>
                 <td>
-                    <a href="{{ path('station_station_show', { 'id': stationUnifie.id }) }}">{{ stationUnifie.id }}</a>
-                </td>
-                <td>
-                    {% for station in stationUnifie.stations %}
-                        {% if station.site.crm == 1 %}
-                            {% for traduction in station.traductions %}
-                                {% if traduction.langue.code == app.request.locale %}
-                                    {{ traduction.libelle }}
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
+                    <a href="{{ path('stationcarteidentite_show', { 'id': stationCarteIdentiteUnifie.id }) }}">{{ stationCarteIdentiteUnifie.id }}</a>
                 </td>
                 <td>
                     <ul class="list-unstyled">
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('station_station_show', { 'id': stationUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                               href="{{ path('stationcarteidentite_show', { 'id': stationCarteIdentiteUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('station_station_edit', { 'id': stationUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
+                               href="{{ path('stationcarteidentite_edit', { 'id': stationCarteIdentiteUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -49,7 +37,8 @@
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li>
-                <a class="btn btn-default" href="{{ path('station_station_new') }}">{{ 'ajouter' | capitalize }}</a>
+                <a class="btn btn-default"
+                   href="{{ path('stationcarteidentite_new') }}">{{ 'ajouter' | capitalize }}</a>
             </li>
         </ul>
     </div>
