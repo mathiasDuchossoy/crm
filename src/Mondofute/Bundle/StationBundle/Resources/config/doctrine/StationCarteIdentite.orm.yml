@@ -29,10 +29,6 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
             type: string
             length: '2'
             nullable: true
-        lienMeteo:
-            type: string
-            length: 255
-            nullable: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -43,11 +39,8 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationCarteIdentite
-        traductions:
-            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
-            mappedBy: station
-            cascade:  ['persist' , 'remove']
     oneToOne:
         altitudeVillage:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade: ['persist', 'remove']
     lifecycleCallbacks: {  }
