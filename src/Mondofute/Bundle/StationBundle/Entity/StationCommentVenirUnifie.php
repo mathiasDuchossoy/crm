@@ -36,20 +36,6 @@ class StationCommentVenirUnifie
     }
 
     /**
-     * Add stationCommentVenir
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
-     *
-     * @return StationCommentVenirUnifie
-     */
-    public function addStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir)
-    {
-        $this->stationCommentVenirs[] = $stationCommentVenir->setStationCommentVenirUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove stationCommentVenir
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
@@ -67,5 +53,33 @@ class StationCommentVenirUnifie
     public function getStationCommentVenirs()
     {
         return $this->stationCommentVenirs;
+    }
+
+    /**
+     * @param $stationCommentVenirs
+     * @return $this
+     */
+    public function setStationCommentVenirs($stationCommentVenirs)
+    {
+        $this->getStationCommentVenirs()->clear();
+
+        foreach ($stationCommentVenirs as $stationCommentVenir) {
+            $this->addStationCommentVenir($stationCommentVenir);
+        }
+        return $this;
+    }
+
+    /**
+     * Add stationCommentVenir
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
+     *
+     * @return StationCommentVenirUnifie
+     */
+    public function addStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir)
+    {
+        $this->stationCommentVenirs[] = $stationCommentVenir->setStationCommentVenirUnifie($this);
+
+        return $this;
     }
 }
