@@ -57,6 +57,10 @@ class StationUnifie
         return $this->stations;
     }
 
+    /**
+     * @param $stations
+     * @return $this
+     */
     public function setStations($stations)
     {
         $this->getStations()->clear();

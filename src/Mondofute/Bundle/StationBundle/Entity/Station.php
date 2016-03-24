@@ -161,6 +161,10 @@ class Station
         return $this->traductions;
     }
 
+    /**
+     * @param $traductions
+     * @return $this
+     */
     public function setTraductions($traductions)
     {
         $this->getTraductions()->clear();
