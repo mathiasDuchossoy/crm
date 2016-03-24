@@ -1,0 +1,26 @@
+Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\InterlocuteurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        prenom:
+            type: string
+            length: 255
+    oneToMany:
+        fournisseurs:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
+            mappedBy: interlocuteur
+    manyToOne:
+        fonction:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
+        service:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
+    lifecycleCallbacks: {  }

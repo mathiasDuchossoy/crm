@@ -128,6 +128,40 @@
                         </li>
                     </ul>
                 </li>
+                {#<li role="presentation"#}
+                {#class="dropdown-submenu {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">#}
+                {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
+                {#aria-expanded="false" href="">Fournisseur</a>#}
+                {#<ul class="dropdown-menu">#}
+                {#<li class="{% if 'fournisseur_index' in app.request.attributes.get('_route') %} active {% endif %}">#}
+                {#<a href="{{ path('fournisseur_index') }}">{{ 'liste' |capitalize }}</a>#}
+                {#</li>#}
+                {#<li class="{% if 'fournisseur_new' in app.request.attributes.get('_route') %} active {% endif %}">#}
+                {#<a href="{{ path('fournisseur_new') }}">{{ 'ajouter' | capitalize }}</a>#}
+                {#</li>#}
+                {#</ul>#}
+                {#</li>#}
+            </ul>
+        </li>
+        <li role="presentation"
+            class="dropdown {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Fournisseur <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Fournisseur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'fournisseur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('fournisseur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'fournisseur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('fournisseur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>

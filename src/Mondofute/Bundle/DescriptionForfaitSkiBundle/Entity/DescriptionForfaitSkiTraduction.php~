@@ -109,6 +109,7 @@ class DescriptionForfaitSkiTraduction
 
         return $this;
     }
+<<<<<<< HEAD
     /**
      * @var string
      */
@@ -167,4 +168,6 @@ class DescriptionForfaitSkiTraduction
     {
         return $this->texteDur;
     }
+=======
+>>>>>>> CRM-28
 }

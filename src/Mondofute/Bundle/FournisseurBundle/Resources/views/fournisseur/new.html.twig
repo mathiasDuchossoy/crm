@@ -1,0 +1,22 @@
+{% extends '@MondofuteFournisseur/fournisseur/fiche.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'création d\un fournisseur' | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    Création d'un fournisseur
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('fournisseur_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            {#<li>{{ form(delete_form) }}</li>#}
+        </ul>
+
+    </div>
+{% endblock %}
+

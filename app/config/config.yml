@@ -84,6 +84,7 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
@@ -98,6 +99,7 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
@@ -112,6 +114,7 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
