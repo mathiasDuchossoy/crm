@@ -1,19 +1,19 @@
-{% extends '@MondofuteStation/stationunifie/fiche.html.twig' %}
+{% extends '@MondofuteStation/stationcarteidentiteunifie/fiche.html.twig' %}
 
 {% block title %}
-    {{ 'modification de la station ' | capitalize }}
+    {{ 'modification de la carte d\'identité de la station ' | capitalize }}
 {% endblock %}
 
 {#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
 {% block titre %}
-    Modification de la station
+    Modification de la carte d'identité de la station
 {% endblock %}
 
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('station_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li><a href="{{ path('stationcarteidentite_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
             <li>{{ form(delete_form) }}</li>
         </ul>
 

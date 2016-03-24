@@ -34,7 +34,7 @@ class StationCarteIdentiteUnifieController extends Controller
         $stationCarteIdentiteUnifies = $em->getRepository('MondofuteStationBundle:StationCarteIdentiteUnifie')->findAll();
 
         return $this->render('@MondofuteStation/stationcarteidentiteunifie/index.html.twig', array(
-            'stationCarteIdentiteUnifies' => $stationCarteIdentiteUnifies,
+            'entities' => $stationCarteIdentiteUnifies,
         ));
     }
 
@@ -58,6 +58,7 @@ class StationCarteIdentiteUnifieController extends Controller
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType', $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+
         $form->handleRequest($request);
 
 
@@ -105,6 +106,11 @@ class StationCarteIdentiteUnifieController extends Controller
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         foreach ($sites as $site) {
             $siteExiste = false;
+            foreach ($entity->getStationCarteIdentites() as $stationCarteIdentite) {
+                if ($stationCarteIdentite->getSite() == $site) {
+                    $siteExiste = true;
+                }
+            }
             if (!$siteExiste) {
                 $stationCarteIdentite = new StationCarteIdentite();
                 $stationCarteIdentite->setSite($site);
@@ -276,7 +282,6 @@ class StationCarteIdentiteUnifieController extends Controller
         /** @var ArrayCollection $stationCarteIdentites */
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {

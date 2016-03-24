@@ -6,6 +6,7 @@ use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
 use Mondofute\Bundle\UniteBundle\Repository\UniteDistanceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,7 +20,7 @@ class DistanceType extends AbstractType
     {
         $locale = $options["locale"];
         $builder
-            ->add('valeur')
+            ->add('valeur', IntegerType::class)
             ->add('unite',
                 EntityType::class,
                 array(
