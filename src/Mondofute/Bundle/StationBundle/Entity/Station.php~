@@ -62,6 +62,18 @@ class Station
      * @var ZoneTouristique
      */
     private $zoneTouristique;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Secteur
+     */
+    private $secteur;
+    /**
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
+     */
+    private $departement;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Domaine
+     */
+    private $domaine;
 
     /**
      * Constructor
@@ -347,6 +359,78 @@ class Station
     public function setZoneTouristique(ZoneTouristique $zoneTouristique = null)
     {
         $this->zoneTouristique = $zoneTouristique;
+
+        return $this;
+    }
+
+    /**
+     * Get secteur
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Secteur
+     */
+    public function getSecteur()
+    {
+        return $this->secteur;
+    }
+
+    /**
+     * Set secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     *
+     * @return Station
+     */
+    public function setSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur = null)
+    {
+        $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    /**
+     * Get departement
+     *
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\Departement
+     */
+    public function getDepartement()
+    {
+        return $this->departement;
+    }
+
+    /**
+     * Set departement
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
+     *
+     * @return Station
+     */
+    public function setDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement = null)
+    {
+        $this->departement = $departement;
+
+        return $this;
+    }
+
+    /**
+     * Get domaine
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Domaine
+     */
+    public function getDomaine()
+    {
+        return $this->domaine;
+    }
+
+    /**
+     * Set domaine
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine
+     *
+     * @return Station
+     */
+    public function setDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine = null)
+    {
+        $this->domaine = $domaine;
 
         return $this;
     }

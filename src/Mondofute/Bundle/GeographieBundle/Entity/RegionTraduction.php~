@@ -148,4 +148,33 @@ class RegionTraduction
     }
 
 
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
+
+
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return RegionTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
+
+        return $this;
+    }
+
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
 }
