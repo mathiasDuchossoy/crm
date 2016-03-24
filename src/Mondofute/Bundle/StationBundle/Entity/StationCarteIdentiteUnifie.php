@@ -78,7 +78,7 @@ class StationCarteIdentiteUnifie
      */
     public function addStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite)
     {
-        $this->stationCarteIdentites[] = $stationCarteIdentite;
+        $this->stationCarteIdentites[] = $stationCarteIdentite->setStationCarteIdentiteUnifie($this);
 
         return $this;
     }

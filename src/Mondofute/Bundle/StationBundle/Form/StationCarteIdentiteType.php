@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\StationBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -18,11 +19,11 @@ class StationCarteIdentiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('codePostal')
-            ->add('moisOuverture')
-            ->add('jourOuverture')
-            ->add('moisFermeture')
-            ->add('jourFermeture')
+            ->add('codePostal', IntegerType::class)
+            ->add('jourOuverture', IntegerType::class, array('attr' => array('max' => 31)))
+            ->add('moisOuverture', IntegerType::class, array('attr' => array('max' => 12)))
+            ->add('jourFermeture', IntegerType::class, array('attr' => array('max' => 31)))
+            ->add('moisFermeture', IntegerType::class, array('attr' => array('max' => 12)))
             ->add('altitudeVillage', 'Mondofute\Bundle\UniteBundle\Form\DistanceType')
             ->add('site', HiddenType::class, array('mapped' => false))//            ->add('stationCarteIdentiteUnifie')
         ;
