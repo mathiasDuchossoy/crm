@@ -1,0 +1,21 @@
+Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurInterlocuteurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: interlocuteurs
+        interlocuteur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur
+            inversedBy: fournisseurs
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

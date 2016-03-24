@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Form;
 
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +18,7 @@ class DomaineUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Domaine $firstDomaineParent */
         $domaineUnifieId  =$builder->getData()->getId();
         $firstDomaineParent = $builder->getData()->getDomaines()->First()->getDomaineParent();
         $siteDomaineParent = (!empty($firstDomaineParent)) ? $firstDomaineParent->getSite() : null;
@@ -52,12 +54,14 @@ class DomaineUnifieType extends AbstractType
     {
         $entities = 'domaines';
         $entitySelect = 'domaineParent';
+        /** @var FormView $viewChild */
         foreach ($view->children[$entities]->children as $viewChild) {
             $siteId = $viewChild->vars['value']->getSite()->getId();
             $choices = $viewChild->children[$entitySelect]->vars['choices'];
 
             $newChoices = array();
             foreach ($choices as $key => $choice) {
+                $choice->attr = array('data-unifie_id' => $choice->data->getDomaineUnifie()->getId());
                 if ($choice->data->getSite()->getId() == $siteId) {
                     $newChoices[$key] = $choice;
                 }

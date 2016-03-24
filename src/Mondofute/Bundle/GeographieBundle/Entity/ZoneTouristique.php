@@ -49,20 +49,6 @@ class ZoneTouristique
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
-     *
-     * @return ZoneTouristique
-     */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setZoneTouristique($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
@@ -146,7 +132,27 @@ class ZoneTouristique
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+//        $this->traductions = $traductions;
+//        return $this;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
+     *
+     * @return ZoneTouristique
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setZoneTouristique($this);
+
         return $this;
     }
 

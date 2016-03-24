@@ -1,0 +1,23 @@
+Mondofute\Bundle\DomaineBundle\Entity\TypePisteTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\TypePisteTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+        typePiste:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\TypePiste
+            inversedBy: traductions
+    lifecycleCallbacks: {  }

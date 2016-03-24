@@ -30,6 +30,10 @@ class SecteurTraduction
      * @var Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $affichageTexte = '';
 
     /**
      * Get id
@@ -133,6 +137,30 @@ class SecteurTraduction
     public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get affichageTexte
+     *
+     * @return string
+     */
+    public function getAffichageTexte()
+    {
+        return $this->affichageTexte;
+    }
+
+    /**
+     * Set affichageTexte
+     *
+     * @param string $affichageTexte
+     *
+     * @return SecteurTraduction
+     */
+    public function setAffichageTexte($affichageTexte)
+    {
+        $this->affichageTexte = $affichageTexte;
 
         return $this;
     }

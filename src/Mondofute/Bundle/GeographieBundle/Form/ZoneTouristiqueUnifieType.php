@@ -28,4 +28,5 @@ class ZoneTouristiqueUnifieType extends AbstractType
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie'
         ));
     }
+
 }

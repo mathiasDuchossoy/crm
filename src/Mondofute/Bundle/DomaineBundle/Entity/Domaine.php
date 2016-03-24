@@ -39,6 +39,10 @@ class Domaine
      * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
      */
     private $domaineCarteIdentite;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stations;
 
     /**
      * Constructor
@@ -56,20 +60,6 @@ class Domaine
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add traduction
-     *
-     * @param DomaineTraduction $traduction
-     *
-     * @return Domaine
-     */
-    public function addTraduction(DomaineTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDomaine($this);
-
-        return $this;
     }
 
     /**
@@ -156,7 +146,25 @@ class Domaine
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param DomaineTraduction $traduction
+     *
+     * @return Domaine
+     */
+    public function addTraduction(DomaineTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDomaine($this);
+
         return $this;
     }
 
@@ -240,5 +248,39 @@ class Domaine
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;
+    }
+
+    /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Domaine
+     */
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station;
+
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
     }
 }

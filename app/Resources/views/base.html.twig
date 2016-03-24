@@ -9,13 +9,23 @@
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
+    {% if form is defined %}
+        {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
+    {% if delete_form is defined %}
+        {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
 </head>
 <body>
 {% block header %}
-    {% include '::header.html.twig' %}
+    <div class="row">
+        {% include '::header.html.twig' %}
+    </div>
 {% endblock %}
 <div class="container">
+    <div class="row">
     {% block body %}{% endblock %}
+    </div>
 </div>
 {% block footer %}
 {% endblock %}
@@ -26,7 +36,8 @@
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">
-
+        //        var itemNonPersonalisable = [];
+        //                var items = [];
         $(document).ready(function () {
             $(':submit').click(function () {
 //                recupère le form du submit
@@ -74,6 +85,84 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+
+        function masqueNonPersonalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 0) {
+//                        $(this).parents(".form-group").show(); // Changer en hide
+                        $(this).parents(".form-group").hide(); // Changer en hide
+                    }
+                });
+            });
+        }
+
+        function copieNonPersonnalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 1) {
+                        source = $(this).val();
+                        if ($(this).is('select')) {
+                            source = $('#' + this.id + ' option:selected').data('unifie_id');
+                            if (!source) {
+                                source = $(this).val();
+                            }
+                        }
+                        $("[data-unique_block_prefix='" + item + "']").each(function () {
+                            parent = $(this).parents("[data-crm]");
+                            if (parent.data('crm') == 0) {
+                                $(this).val(source);
+                                if ($(this).is('select') && source) {
+                                    $('#' + this.id + '  option[data-unifie_id=' + source + ']').prop('selected', 'selected');
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        function remplirChampsVide() {
+            $.each(items, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 1) {
+                        source = $(this).val();
+                        if ($(this).is('select')) {
+                            source = $('#' + this.id + ' option:selected').data('unifie_id');
+                            if (!source) {
+                                source = $(this).val();
+                            }
+                        }
+                        $("[data-unique_block_prefix='" + item + "']").each(function () {
+                            parent = $(this).parents("[data-crm]");
+                            if (parent.data('crm') == 0) {
+                                if (!$(this).val()) {
+                                    $(this).val(source);
+                                }
+                                if ($(this).is('select') && source) {
+                                    if (!$('#' + this.id + ' option:selected').data('unifie_id')) {
+                                        $('#' + this.id + '  option[data-unifie_id=' + source + ']').prop('selected', 'selected');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            if (typeof itemNonPersonalisable != 'undefined') {
+                masqueNonPersonalisable();
+            }
+        });
+    </script>
+
 {% endblock %}
 </body>
 </html>

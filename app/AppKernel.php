@@ -23,7 +23,10 @@ class AppKernel extends Kernel
             new SC\DatetimepickerBundle\SCDatetimepickerBundle(),
             new Mondofute\Bundle\StationBundle\MondofuteStationBundle(),
             new Mondofute\Bundle\DomaineBundle\MondofuteDomaineBundle(),
+            new Mondofute\Bundle\FournisseurBundle\MondofuteFournisseurBundle(),
             new Mondofute\Bundle\UniteBundle\MondofuteUniteBundle(),
+            new Mondofute\Bundle\DescriptionForfaitSkiBundle\MondofuteDescriptionForfaitSkiBundle(),
+            new Mondofute\Bundle\ChoixBundle\MondofuteChoixBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

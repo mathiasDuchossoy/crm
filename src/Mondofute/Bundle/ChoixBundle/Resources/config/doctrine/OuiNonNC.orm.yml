@@ -1,0 +1,23 @@
+Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCRepository
+    id:
+        id:
+            type: smallint
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        classement:
+            type: integer
+            options:
+                unsigned: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNCTraduction
+            mappedBy: ouiNonNC
+            cascade: ['persist']
+    lifecycleCallbacks: {  }

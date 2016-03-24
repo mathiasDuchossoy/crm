@@ -8,8 +8,8 @@ imports:
 parameters:
     locale: fr_FR
 #    locale: en_EN
-    database_name_skifute: skifute2
-    database_name_francefute: francefute2
+#    database_name_skifute: skifute2
+#    database_name_francefute: francefute2
 
 framework:
     #esi:             ~
@@ -84,7 +84,10 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -96,7 +99,10 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -108,7 +114,10 @@ doctrine:
                     MondofuteAccueilBundle: ~
                     MondofuteDomaineBundle: ~
                     MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
                     MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

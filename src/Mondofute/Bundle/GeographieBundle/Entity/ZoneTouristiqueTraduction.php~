@@ -2,8 +2,6 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * ZoneTouristiqueTraduction
  */

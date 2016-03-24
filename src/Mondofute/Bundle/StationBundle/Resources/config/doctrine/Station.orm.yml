@@ -10,29 +10,6 @@ Mondofute\Bundle\StationBundle\Entity\Station:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        codePostal:
-            type: integer
-        moisOuverture:
-            type: string
-            length: '2'
-            nullable: true
-        jourOuverture:
-            type: string
-            length: '2'
-            nullable: true
-        moisFermeture:
-            type: string
-            length: '2'
-            nullable: true
-        jourFermeture:
-            type: string
-            length: '2'
-            nullable: true
-        lienMeteo:
-            type: string
-            length: 255
-            nullable: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -41,6 +18,24 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             inversedBy: stations
         zoneTouristique:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            inversedBy: stations
+        secteur:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: stations
+        domaine:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            inversedBy: stations
+        departement:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
+            inversedBy: stations
+        stationCarteIdentite:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite
+            inversedBy: stations
+        stationCommentVenir:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+            inversedBy: stations
+        stationDescription:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescription
             inversedBy: stations
     oneToMany:
         traductions:

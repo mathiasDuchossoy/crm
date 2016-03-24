@@ -1,0 +1,30 @@
+Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DescriptionForfaitSkiBundle\Repository\DescriptionForfaitSkiTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        texteDur:
+            type: string
+            length: 255
+            nullable: true
+        description:
+            type: text
+            nullable: true
+    manyToOne:
+        descriptionForfaitSki:
+            targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

@@ -1,3 +1,7 @@
+mondofute_fournisseur:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_accueil:
     resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
     prefix:   /
@@ -23,9 +27,19 @@ mondofute_geographie:
 #    resource: "@MondofuteSiteBundle/Resources/config/routing.yml"
 #    prefix:   /site
 
-mondofute_unite:
-    resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
-    prefix:   /
+#mondofute_unite:
+#    resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
+#    prefix:   /
+#
+#mondofute_choix:
+#    resource: "@MondofuteChoixBundle/Resources/config/routing.yml"
+#    prefix:   /
+#
+#mondofute_description_forfait_ski:
+#    resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
+#    prefix:   /
 
 
-
+mondofute_descriptionforfaitski:
+    resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
+    prefix: /

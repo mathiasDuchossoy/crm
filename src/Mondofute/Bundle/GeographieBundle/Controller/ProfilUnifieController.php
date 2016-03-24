@@ -43,7 +43,8 @@ class ProfilUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -53,15 +54,12 @@ class ProfilUnifieController extends Controller
         $this->profilsSortByAffichage($profilUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ProfilUnifieType', $profilUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->supprimerProfils($profilUnifie, $sitesAEnregistrer);
 
-            $this->supprimerProfils($profilUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($profilUnifie);
-
-//            $em = $this->getDoctrine()->getManager();
             $em->persist($profilUnifie);
             $em->flush();
 
@@ -73,6 +71,7 @@ class ProfilUnifieController extends Controller
         return $this->render('@MondofuteGeographie/profilunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $profilUnifie,
             'form' => $form->createView(),
         ));
@@ -85,7 +84,7 @@ class ProfilUnifieController extends Controller
     private function ajouterProfilsDansForm(ProfilUnifie $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -93,7 +92,6 @@ class ProfilUnifieController extends Controller
                 if ($profil->getSite() == $site) {
                     $siteExiste = true;
                     foreach ($langues as $langue) {
-
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
                         if ($profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
@@ -168,34 +166,6 @@ class ProfilUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $profil->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param ProfilUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(ProfilUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $profilCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les profils
-        foreach ($entity->getProfils() as $profil) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $profil->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $profilCrm = clone $profil;
-                $profilCrm->setSite($siteCrm);
-                $classementReferentTmp = $profil->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($profilCrm)) {
-            $entity->addProfil($profilCrm);
-        }
-        return $this;
     }
 
     /**
@@ -341,25 +311,21 @@ class ProfilUnifieController extends Controller
     public function editAction(Request $request, ProfilUnifie $profilUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
             foreach ($profilUnifie->getProfils() as $profil) {
-                if (empty($profil->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $profil->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $profil->getSite()->getId());
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $profilCrm = $this->dissocierProfilCrm($profilUnifie);
         $originalProfils = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($profilUnifie->getProfils() as $profil) {
@@ -372,19 +338,16 @@ class ProfilUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($profilUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ProfilUnifieType', $profilUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->supprimerProfils($profilUnifie, $sitesAEnregistrer);
-            $this->mettreAJourProfilCrm($profilUnifie, $profilCrm);
-            $em->persist($profilCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalProfils as $profil) {
                 if (!$profilUnifie->getProfils()->contains($profil)) {
-
                     //  suppression de la station sur le site
                     $emSite = $this->getDoctrine()->getEntityManager($profil->getSite()->getLibelle());
                     $entitySite = $emSite->find(ProfilUnifie::class, $profilUnifie->getId());
@@ -398,146 +361,20 @@ class ProfilUnifieController extends Controller
             $em->persist($profilUnifie);
             $em->flush();
 
-
             $this->copieVersSites($profilUnifie);
             $this->addFlash('success', 'le profil a bien été modifié');
 
-//            dump($profilUnifie);
-//            dump($profilCrm);
-//            die;
             return $this->redirectToRoute('geographie_profil_edit', array('id' => $profilUnifie->getId()));
         }
 
         return $this->render('@MondofuteGeographie/profilunifie/edit.html.twig', array(
             'entity' => $profilUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la profil crm
-     * @param ProfilUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierProfilCrm(ProfilUnifie $entity)
-    {
-        foreach ($entity->getProfils() as $profil) {
-            if ($profil->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeProfil($profil);
-                return $profil;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param ProfilUnifie $profilUnifie
-     * @param Profil $profilCrm
-     * @return bool
-     */
-    private function mettreAJourProfilCrm(ProfilUnifie $profilUnifie, Profil $profilCrm)
-    {
-        /** @var ProfilTraduction $profilTraduc */
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($profilUnifie->getProfils() as $profil) {
-            $tabClassementSiteReferent[] = $profil->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($profilUnifie->getProfils() as $profil) {
-
-            // Si la site de la station est égale au site de référence
-            if ($profil->getSite() == $siteReferent) {
-//                dump($profil);
-//              ajouter les champs "communs"
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $profilTraduc = $profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $profilTraducCrm = $profilCrm->getTraductions()->filter(function (ProfilTraduction $element) use (
-                        $langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($profilTraduc);
-
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($profilTraduc->getLibelle())) {
-                        $profilTraduc->setLibelle('');
-                    }
-                    if (is_null($profilTraduc->getDescription())) {
-                        $profilTraduc->setDescription('');
-                    }
-                    if (is_null($profilTraduc->getAccueil())) {
-                        $profilTraduc->setAccueil('');
-                    }
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($profilTraducCrm)) {
-                        $profilTraducCrm = new ProfilTraduction();
-                        $profilTraducCrm->setProfil($profilCrm);
-                        $profilTraducCrm->setLangue($langue);
-//                        dump($profilTraducCrm);
-//                        dump($profilTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $profilTraducCrm->setLibelle($profilTraduc->getLibelle());
-                        $profilTraducCrm->setDescription($profilTraduc->getDescription());
-                        $profilTraducCrm->setAccueil($profilTraduc->getAccueil());
-                        $profilCrm->addTraduction($profilTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $profilTraducCrm->setLibelle($profilTraduc->getLibelle());
-                        $profilTraducCrm->setDescription($profilTraduc->getDescription());
-                        $profilTraducCrm->setAccueil($profilTraduc->getAccueil());
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $profilTraduc = $profil->getTraductions()->filter(function (ProfilTraduction $element) use ($langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($profilTraduc->getLibelle())) {
-                        $profilTraduc->setLibelle('');
-                    }
-                    if (is_null($profilTraduc->getDescription())) {
-                        $profilTraduc->setDescription('');
-                    }
-                    if (is_null($profilTraduc->getAccueil())) {
-                        $profilTraduc->setAccueil('');
-                    }
-                }
-            }
-        }
     }
 
     /**

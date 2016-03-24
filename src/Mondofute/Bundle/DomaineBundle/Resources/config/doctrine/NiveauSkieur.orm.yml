@@ -1,0 +1,19 @@
+Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\NiveauSkieurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieurTraduction
+            mappedBy: niveauSkieur
+            cascade: ['remove','persist']
+            onDelete: CASCADE
+    lifecycleCallbacks: {  }

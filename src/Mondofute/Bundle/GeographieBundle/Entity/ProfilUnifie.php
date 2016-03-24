@@ -38,20 +38,6 @@ class ProfilUnifie
     }
 
     /**
-     * Add profil
-     *
-     * @param Profil $profil
-     *
-     * @return ProfilUnifie
-     */
-    public function addProfil(Profil $profil)
-    {
-        $this->profils[] = $profil->setProfilUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove profil
      *
      * @param Profil $profil
@@ -73,7 +59,26 @@ class ProfilUnifie
 
     public function setProfils(ArrayCollection $profils)
     {
-        $this->profils = $profils;
+        $this->getProfils()->clear();
+
+        foreach ($profils as $profil) {
+            $this->addProfil($profil);
+        }
+        return $this;
+    }
+
+    /**
+     * Add profil
+     *
+     * @param Profil $profil
+     *
+     * @return ProfilUnifie
+     */
+    public function addProfil(Profil $profil)
+    {
+        $this->profils[] = $profil->setProfilUnifie($this);
+
+        return $this;
     }
 
 }

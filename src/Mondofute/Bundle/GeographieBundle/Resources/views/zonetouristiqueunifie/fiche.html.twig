@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
+    {#{{ dump(form) }}#}
     <section>
         <h1>
             {% block titre %}
@@ -9,6 +10,54 @@
     </section>
     <section>
         {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+            {% set mesSites = form.zoneTouristiques %}
+            {% include '::onglets_sites.html.twig' %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% for zoneTouristique in form.zoneTouristiques %}
+                    <div id="data_site_{{ zoneTouristique.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ zoneTouristique.vars.value.site.crm | number_format }}">
+                        {{ form_row(zoneTouristique.site) }}
+                        <ul class="nav nav-tabs">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in zoneTouristique.traductions %}
+                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                    <a data-toggle="tab"
+                                       href="#{{ zoneTouristique.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                        {# affiche la langue en fonction de la locale#}
+                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                {{ traductionLangue.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in zoneTouristique.traductions %}
+                                <div id="{{ zoneTouristique.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
         {% endblock %}
     </section>
     <section>
@@ -31,6 +80,20 @@
     </div>
 {% endblock %}
 {% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_description_{{ langue.code }}");#}
+        {#{% endfor %}#}
+        var items = [];
+        {% for langue in langues %}
+        items.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_libelle_{{ langue.code }}");
+        items.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_affichageTexte_{{ langue.code }}");
+        items.push("_zone_touristique_unifie_zoneTouristiques_entry_traductions_entry_description_{{ langue.code }}");
+        {% endfor %}
+    </script>
     {{ parent() }}
     <script type="text/javascript">
         $(document).ready(function () {
@@ -62,7 +125,7 @@
                 var checked = false;
                 $("[id^='siteAEnregistrer_']").each(function () {
 
-                    if ($(this).is(':checked')) {
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
                         checked = true;
                     }
                 });

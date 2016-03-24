@@ -1,8 +1,10 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+
 
 /**
  * DomaineCarteIdentite
@@ -34,28 +36,48 @@ class DomaineCarteIdentite
      */
     private $kmPistesSkiNordique;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
+     * @var DomaineCarteIdentiteUnifie
      */
     private $domaineCarteIdentiteUnifie;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $domaines;
+    /**
+     * @var Handiski
+     */
+    private $handiski;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    private $snowpark;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+     */
+    private $remonteeMecanique;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     */
+    private $niveauSkieur;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $pistes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -165,25 +187,11 @@ class DomaineCarteIdentite
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction
+     * @param DomaineCarteIdentiteTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction $traduction)
+    public function removeTraduction(DomaineCarteIdentiteTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -191,7 +199,7 @@ class DomaineCarteIdentite
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -201,11 +209,11 @@ class DomaineCarteIdentite
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return DomaineCarteIdentite
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -215,7 +223,7 @@ class DomaineCarteIdentite
     /**
      * Get domaineCarteIdentiteUnifie
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie
+     * @return DomaineCarteIdentiteUnifie
      */
     public function getDomaineCarteIdentiteUnifie()
     {
@@ -225,11 +233,11 @@ class DomaineCarteIdentite
     /**
      * Set domaineCarteIdentiteUnifie
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie
+     * @param DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie
      *
      * @return DomaineCarteIdentite
      */
-    public function setDomaineCarteIdentiteUnifie(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie = null)
+    public function setDomaineCarteIdentiteUnifie(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie = null)
     {
         $this->domaineCarteIdentiteUnifie = $domaineCarteIdentiteUnifie;
 
@@ -248,12 +256,24 @@ class DomaineCarteIdentite
                 $cloneTraduction->setDomaineCarteIdentite($this);
             }
         }
+        $this->snowpark = clone $this->getSnowpark();
+        $this->handiski = clone $this->getHandiski();
+        $this->remonteeMecanique = clone $this->getRemonteeMecanique();
+        $pistes = $this->getPistes();
+        $this->pistes = new ArrayCollection();
+        if (count($pistes) > 0) {
+            foreach ($pistes as $piste) {
+                $clonePiste = clone $piste;
+                $this->pistes->add($clonePiste);
+                $clonePiste->setDomaineCarteIdentite($this);
+            }
+        }
     }
 
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -266,18 +286,118 @@ class DomaineCarteIdentite
      */
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Get snowpark
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
+     */
+    public function getSnowpark()
+    {
+        return $this->snowpark;
+    }
+
+    /**
+     * Set snowpark
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
+    {
+        $this->snowpark = $snowpark;
+
+        return $this;
+    }
+
+    /**
+     * Get handiski
+     *
+     * @return Handiski
+     */
+    public function getHandiski()
+    {
+        return $this->handiski;
+    }
+
+    /**
+     * Set handiski
+     *
+     * @param Handiski $handiski
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setHandiski(Handiski $handiski = null)
+    {
+        $this->handiski = $handiski;
+
+        return $this;
+    }
+
+    /**
+     * Get remonteeMecanique
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
+     */
+    public function getRemonteeMecanique()
+    {
+        return $this->remonteeMecanique;
+    }
+
+    /**
+     * Set remonteeMecanique
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setRemonteeMecanique(\Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique = null)
+    {
+        $this->remonteeMecanique = $remonteeMecanique;
+
+        return $this;
+    }
+
+    /**
+     * Get pistes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPistes()
+    {
+        return $this->pistes;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param DomaineCarteIdentiteTraduction $traduction
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addTraduction(DomaineCarteIdentiteTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setDomaineCarteIdentite($this);
+
         return $this;
     }
 
     /**
      * Add domaine
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine
+     * @param Domaine $domaine
      *
      * @return DomaineCarteIdentite
      */
-    public function addDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine)
+    public function addDomaine(Domaine $domaine)
     {
         $this->domaines[] = $domaine->setDomaineCarteIdentite($this);
 
@@ -287,9 +407,9 @@ class DomaineCarteIdentite
     /**
      * Remove domaine
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine
+     * @param Domaine $domaine
      */
-    public function removeDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaine)
+    public function removeDomaine(Domaine $domaine)
     {
         $this->domaines->removeElement($domaine);
     }
@@ -297,10 +417,58 @@ class DomaineCarteIdentite
     /**
      * Get domaines
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDomaines()
     {
         return $this->domaines;
+    }
+
+    /**
+     * Get niveauSkieur
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
+     */
+    public function getNiveauSkieur()
+    {
+        return $this->niveauSkieur;
+    }
+
+    /**
+     * Set niveauSkieur
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setNiveauSkieur(\Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur = null)
+    {
+        $this->niveauSkieur = $niveauSkieur;
+
+        return $this;
+    }
+
+    /**
+     * Add piste
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addPiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
+    {
+        $this->pistes[] = $piste->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove piste
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
+     */
+    public function removePiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
+    {
+        $this->pistes->removeElement($piste);
     }
 }

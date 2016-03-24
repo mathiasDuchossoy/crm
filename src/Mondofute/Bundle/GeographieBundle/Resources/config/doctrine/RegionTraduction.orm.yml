@@ -16,6 +16,12 @@ Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction:
             length: 255
             options:
                 default: ""
+        affichageTexte:
+            type: string
+            length: 255
+            nullable: false
+            options:
+                default: ""
         description:
             type: text
             options:

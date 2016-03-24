@@ -13,17 +13,7 @@ Mondofute\Bundle\StationBundle\Entity\StationTraduction:
     fields:
         libelle:
             type: string
-            length: 255
-        enVoiture:
-            type: text
-            nullable: true
-        enTrain:
-            type: text
-            nullable: true
-        enAvion:
-            type: text
-            nullable: true
-        distancesGrandesVilles:
+        parking:
             type: text
             nullable: true
     manyToOne:

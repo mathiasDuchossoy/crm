@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\View\ChoiceView;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -48,7 +49,9 @@ class DepartementUnifieType extends AbstractType
             $choices = $viewChild->children[$entitySelect]->vars['choices'];
 
             $newChoices = array();
+            /** @var ChoiceView $choice */
             foreach ($choices as $key => $choice) {
+                $choice->attr = array('data-unifie_id' => $choice->data->getRegionUnifie()->getId());
                 if ($choice->data->getSite()->getId() == $siteId) {
                     $newChoices[$key] = $choice;
                 }

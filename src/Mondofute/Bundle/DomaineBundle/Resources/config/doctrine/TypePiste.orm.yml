@@ -1,0 +1,22 @@
+Mondofute\Bundle\DomaineBundle\Entity\TypePiste:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\TypePisteRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        classement:
+            type: integer
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\TypePisteTraduction
+            mappedBy: typePiste
+            cascade: ['remove','persist']
+            onDelete: CASCADE
+    lifecycleCallbacks: {  }

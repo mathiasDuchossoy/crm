@@ -17,6 +17,7 @@ class RegionTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
+            ->add('affichageTexte')
             ->add('description', null, array('required' => false))
 //            ->add('region')
             ->add('langue', HiddenType::class, array('mapped' => false));

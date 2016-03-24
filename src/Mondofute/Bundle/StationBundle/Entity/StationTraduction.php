@@ -18,26 +18,6 @@ class StationTraduction
      * @var string
      */
     private $libelle;
-
-    /**
-     * @var string
-     */
-    private $enVoiture;
-
-    /**
-     * @var string
-     */
-    private $enTrain;
-
-    /**
-     * @var string
-     */
-    private $enAvion;
-
-    /**
-     * @var string
-     */
-    private $distancesGrandesVilles;
     /**
      * @var Station
      */
@@ -46,6 +26,10 @@ class StationTraduction
      * @var Langue
      */
     private $langue;
+    /**
+     * @var string
+     */
+    private $parking;
 
     /**
      * Get id
@@ -77,102 +61,6 @@ class StationTraduction
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
-     * Get enVoiture
-     *
-     * @return string
-     */
-    public function getEnVoiture()
-    {
-        return $this->enVoiture;
-    }
-
-    /**
-     * Set enVoiture
-     *
-     * @param string $enVoiture
-     *
-     * @return StationTraduction
-     */
-    public function setEnVoiture($enVoiture)
-    {
-        $this->enVoiture = $enVoiture;
-
-        return $this;
-    }
-
-    /**
-     * Get enTrain
-     *
-     * @return string
-     */
-    public function getEnTrain()
-    {
-        return $this->enTrain;
-    }
-
-    /**
-     * Set enTrain
-     *
-     * @param string $enTrain
-     *
-     * @return StationTraduction
-     */
-    public function setEnTrain($enTrain)
-    {
-        $this->enTrain = $enTrain;
-
-        return $this;
-    }
-
-    /**
-     * Get enAvion
-     *
-     * @return string
-     */
-    public function getEnAvion()
-    {
-        return $this->enAvion;
-    }
-
-    /**
-     * Set enAvion
-     *
-     * @param string $enAvion
-     *
-     * @return StationTraduction
-     */
-    public function setEnAvion($enAvion)
-    {
-        $this->enAvion = $enAvion;
-
-        return $this;
-    }
-
-    /**
-     * Get distancesGrandesVilles
-     *
-     * @return string
-     */
-    public function getDistancesGrandesVilles()
-    {
-        return $this->distancesGrandesVilles;
-    }
-
-    /**
-     * Set distancesGrandesVilles
-     *
-     * @param string $distancesGrandesVilles
-     *
-     * @return StationTraduction
-     */
-    public function setDistancesGrandesVilles($distancesGrandesVilles)
-    {
-        $this->distancesGrandesVilles = $distancesGrandesVilles;
 
         return $this;
     }
@@ -221,6 +109,30 @@ class StationTraduction
     public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
+
+        return $this;
+    }
+
+    /**
+     * Get parking
+     *
+     * @return string
+     */
+    public function getParking()
+    {
+        return $this->parking;
+    }
+
+    /**
+     * Set parking
+     *
+     * @param string $parking
+     *
+     * @return StationTraduction
+     */
+    public function setParking($parking)
+    {
+        $this->parking = $parking;
 
         return $this;
     }

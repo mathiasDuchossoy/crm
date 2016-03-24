@@ -1,0 +1,27 @@
+Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCommentVenirnRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        stationCommentVenirUnifie:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie
+            inversedBy: stationCommentVenirs
+    oneToMany:
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: stationCarteIdentite
+        traductions:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction
+            mappedBy: stationCommentVenir
+            cascade:  ['persist' , 'remove']
+    lifecycleCallbacks: {  }

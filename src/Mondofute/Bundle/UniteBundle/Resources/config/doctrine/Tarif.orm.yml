@@ -8,11 +8,16 @@ Mondofute\Bundle\UniteBundle\Entity\Tarif:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         valeur:
             type: decimal
             precision: 7
             scale: 2
+            nullable: true
+            options:
+                unsigned: true
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteTarif

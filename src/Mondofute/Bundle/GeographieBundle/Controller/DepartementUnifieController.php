@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -46,19 +47,19 @@ class DepartementUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
 
         $departementUnifie = new DepartementUnifie();
 
         $this->ajouterDepartementsDansForm($departementUnifie);
-//        $this->dispacherDonneesCommune($departementUnifie);
         $this->departementsSortByAffichage($departementUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie,
             array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
 
@@ -66,8 +67,7 @@ class DepartementUnifieController extends Controller
             // dispacher les données communes
 //            $this->dispacherDonneesCommune($departementUnifie);
 
-            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer)
-                ->ajouterCrm($departementUnifie);
+            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($departementUnifie);
@@ -81,6 +81,7 @@ class DepartementUnifieController extends Controller
         return $this->render('@MondofuteGeographie/departementunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
+            'langues' => $langues,
             'entity' => $departementUnifie,
             'form' => $form->createView(),
         ));
@@ -107,7 +108,7 @@ class DepartementUnifieController extends Controller
     private function ajouterDepartementsDansForm(DepartementUnifie $entity)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
@@ -117,7 +118,7 @@ class DepartementUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($departement->getTraductions()->filter(function ($element) use ($langue) {
+                        if ($departement->getTraductions()->filter(function (DepartementTraduction $element) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -150,6 +151,7 @@ class DepartementUnifieController extends Controller
      */
     private function departementsSortByAffichage(DepartementUnifie $entity)
     {
+        /** @var ArrayIterator $iterator */
 
         // Trier les stations en fonction de leurs ordre d'affichage
         $departements = $entity->getDepartements(); // ArrayCollection data.
@@ -159,7 +161,7 @@ class DepartementUnifieController extends Controller
         unset($departements);
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
-        $iterator->uasort(function ($a, $b) {
+        $iterator->uasort(function (Departement $a, Departement $b) {
             return ($a->getSite()->getClassementAffichage() < $b->getSite()->getClassementAffichage()) ? -1 : 1;
         });
 
@@ -177,11 +179,13 @@ class DepartementUnifieController extends Controller
      */
     private function traductionsSortByLangue($departements)
     {
+        /** @var ArrayIterator $iterator */
+        /** @var Departement $departement */
         foreach ($departements as $departement) {
             $traductions = $departement->getTraductions();
             $iterator = $traductions->getIterator();
             // trier la nouvelle itération, en fonction de l'ordre d'affichage
-            $iterator->uasort(function ($a, $b) {
+            $iterator->uasort(function (DepartementTraduction $a, DepartementTraduction $b) {
                 return ($a->getLangue()->getId() < $b->getLangue()->getId()) ? -1 : 1;
             });
 
@@ -189,40 +193,6 @@ class DepartementUnifieController extends Controller
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $departement->setTraductions($traductions);
         }
-    }
-
-    /**
-     * @param DepartementUnifie $entity
-     * @return $this
-     */
-    private function ajouterCrm(DepartementUnifie $entity)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-        $departementCrm = null;
-        $classementReferentTmp = 0;
-        $i = 0;
-        // parcourir toute les departements
-        foreach ($entity->getDepartements() as $departement) {
-            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-            if ($i === 0 || $departement->getSite()->getClassementReferent() < $classementReferentTmp) {
-                $departementCrm = clone $departement;
-                $departementCrm->setSite($siteCrm);
-                $region = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use (
-                    $siteCrm
-                ) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $departementCrm->setRegion($region);
-                $classementReferentTmp = $departement->getSite()->getClassementReferent();
-            }
-            $i++;
-        }
-
-        if (!is_null($departementCrm)) {
-            $entity->addDepartement($departementCrm);
-        }
-        return $this;
     }
 
     /**
@@ -249,6 +219,7 @@ class DepartementUnifieController extends Controller
      */
     private function copieVersSites(DepartementUnifie $entity)
     {
+        /** @var DepartementTraduction $departementTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getDepartements() as $departement) {
             if ($departement->getSite()->getCrm() == false) {
@@ -262,7 +233,7 @@ class DepartementUnifieController extends Controller
                 // todo: prendre en compte le fait qu'une région n'est pas sur un site (faire un message d'infos dans a page?)
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(DepartementUnifie::class)->findOneById(array($entity->getId()))))) {
+                if (is_null(($entitySite = $em->getRepository(DepartementUnifie::class)->find($entity->getId())))) {
                     $entitySite = new DepartementUnifie();
                 }
 
@@ -316,6 +287,8 @@ class DepartementUnifieController extends Controller
      */
     private function ajouterDepartementUnifieSiteDistant($idUnifie, $departements)
     {
+        /** @var ArrayCollection $departements */
+        /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         echo $idUnifie;
         //        récupération
@@ -371,7 +344,8 @@ class DepartementUnifieController extends Controller
     public function editAction(Request $request, DepartementUnifie $departementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -379,9 +353,7 @@ class DepartementUnifieController extends Controller
 
 //            récupère les sites ayant la région d'enregistrée
             foreach ($departementUnifie->getDepartements() as $departement) {
-                if (empty($departement->getSite()->getCrm())) {
-                    array_push($sitesAEnregistrer, $departement->getSite()->getId());
-                }
+                array_push($sitesAEnregistrer, $departement->getSite()->getId());
             }
         } else {
 
@@ -389,7 +361,6 @@ class DepartementUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $departementCrm = $this->dissocierDepartementCrm($departementUnifie);
         $originalDepartements = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($departementUnifie->getDepartements() as $departement) {
@@ -403,7 +374,7 @@ class DepartementUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType',
             $departementUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update'));
+            ->add('submit', SubmitType::class, array('label' => 'Update', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
 
@@ -411,8 +382,6 @@ class DepartementUnifieController extends Controller
 
 //            $this->dispacherDonneesCommune($departementUnifie);
             $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
-            $this->mettreAJourDepartementCrm($departementUnifie, $departementCrm);
-            $em->persist($departementCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalDepartements as $departement) {
@@ -443,134 +412,11 @@ class DepartementUnifieController extends Controller
         return $this->render('@MondofuteGeographie/departementunifie/edit.html.twig', array(
             'entity' => $departementUnifie,
             'sites' => $sites,
+            'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * retirer la departement crm
-     * @param DepartementUnifie $entity
-     *
-     * @return mixed
-     */
-    private function dissocierDepartementCrm(DepartementUnifie $entity)
-    {
-        foreach ($entity->getDepartements() as $departement) {
-            if ($departement->getSite()->getCrm() == 1) {
-//                $station->setStationUnifie(null);
-                $entity->removeDepartement($departement);
-                return $departement;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-     * Retourne vrai si elle est seulement mise à jours
-     * Retourne faux s'il s'agit d'une nouvelle
-     * @param DepartementUnifie $departementUnifie
-     * @param Departement $departementCrm
-     * @return bool
-     */
-    private function mettreAJourDepartementCrm(DepartementUnifie $departementUnifie, Departement $departementCrm)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $tabClassementSiteReferent = array();
-
-//        récupère les classementReferent pour chaque site dans un tableau
-        foreach ($departementUnifie->getDepartements() as $departement) {
-            $tabClassementSiteReferent[] = $departement->getSite()->getClassementReferent();
-        }
-
-        // Récupèrer le site référent dans la base
-        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-
-        $langues = $em->getRepository(Langue::class)->findAll();
-
-        // Parcourir toutes les stations
-        foreach ($departementUnifie->getDepartements() as $departement) {
-
-            // Si la site de la station est égale au site de référence
-            if ($departement->getSite() == $siteReferent) {
-//                dump($departement);
-//              ajouter les champs "communs"
-                $siteCrm = $departementCrm->getSite();
-                $regionCrm = $departement->getRegion()->getRegionUnifie()->getRegions()->filter(function ($element) use
-                (
-                    $siteCrm
-                ) {
-                    return $element->getSite() == $siteCrm;
-                })->first();
-                $departementCrm
-                    ->setRegion($regionCrm);
-//                    ->setRegion($departement->getRegion());
-
-
-                foreach ($langues as $langue) {
-//                    dump($langue);
-//                    recupere la traduction pour l'entite du site referent
-                    $departementTraduc = $departement->getTraductions()->filter(function ($element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    récupère la traductin dans le crm
-                    $departementTraducCrm = $departementCrm->getTraductions()->filter(function ($element) use ($langue
-                    ) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-//                    dump($departementTraduc);
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($departementTraduc->getLibelle())) {
-                        $departementTraduc->setLibelle('');
-                    }
-                    if (is_null($departementTraduc->getDescription())) {
-                        $departementTraduc->setDescription('');
-                    }
-
-//                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-                    if (empty($departementTraducCrm)) {
-                        $departementTraducCrm = new DepartementTraduction();
-                        $departementTraducCrm->setDepartement($departementCrm);
-                        $departementTraducCrm->setLangue($langue);
-//                        dump($departementTraducCrm);
-//                        dump($departementTraduc);
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $departementTraducCrm->setLibelle($departementTraduc->getLibelle());
-                        $departementTraducCrm->setDescription($departementTraduc->getDescription());
-                        $departementCrm->addTraduction($departementTraducCrm);
-                    } else {
-                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-                        $departementTraducCrm->setLibelle($departementTraduc->getLibelle());
-                        $departementTraducCrm->setDescription($departementTraduc->getDescription());
-                    }
-
-                }
-            } else {
-
-//                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-                foreach ($langues as $langue) {
-
-//                    recupere la traduction pour la langue $langue
-                    $departementTraduc = $departement->getTraductions()->filter(function ($element) use ($langue) {
-                        return $element->getLangue() == $langue;
-                    })->first();
-
-//                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-                    if (is_null($departementTraduc->getLibelle())) {
-                        $departementTraduc->setLibelle('');
-                    }
-                    if (is_null($departementTraduc->getDescription())) {
-                        $departementTraduc->setDescription('');
-                    }
-                }
-            }
-        }
-//die;
     }
 
     /**
@@ -618,21 +464,5 @@ class DepartementUnifieController extends Controller
         $this->addFlash('success', 'le département a bien été supprimé');
         return $this->redirectToRoute('geographie_departement_index');
     }
-
-//    /**
-//     * dispacher les données communes dans chaque stations
-//     * @param DepartementUnifie $entity
-//     */
-//    private function dispacherDonneesCommune(DepartementUnifie $entity)
-//    {
-//        foreach ($entity->getDepartements() as $departement) {
-//            $region = $entity->getDepartements()->first()->getRegion()->getRegionUnifie()->getRegions()->filter(function (
-//                $element
-//            ) use ($departement) {
-//                return $element->getSite() == $departement->getSite();
-//            })->first();
-//            $departement->setRegion($region);
-//        }
-//    }
 
 }

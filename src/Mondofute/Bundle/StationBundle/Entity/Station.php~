@@ -5,7 +5,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 
 /**
  * Station
