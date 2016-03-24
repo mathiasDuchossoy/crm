@@ -7,3 +7,7 @@
 mondofute_station_station:
     resource: "@MondofuteStationBundle/Resources/config/routing/stationunifie.yml"
     prefix:   /station
+
+mondofute_station_stationcarteidentiteunifie:
+    resource: "@MondofuteStationBundle/Resources/config/routing/stationcarteidentiteunifie.yml"
+    prefix:   /stationcarteidentite
