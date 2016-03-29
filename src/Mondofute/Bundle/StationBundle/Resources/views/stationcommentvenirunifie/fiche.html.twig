@@ -28,6 +28,13 @@
                          data-crm="{{ stationCommentVenir.vars.value.site.crm | number_format }}">
                         {{ form_row(stationCommentVenir.site) }}
                         <ul class="nav nav-tabs">
+                            {{ form_row( stationCommentVenir.grandeVilles, { 'attr' : { 'data-unique_block_prefix' : stationCommentVenir.grandeVilles.vars['unique_block_prefix']}}) }}
+                            {#{{ form_label( stationCommentVenir.grandeVilles) }}#}
+                            {#{{ form_widget( stationCommentVenir.grandeVilles) }}#}
+                            {#{% for grandeVille in stationCommentVenir.grandeVilles %}#}
+                            {#, { 'attr' : { 'class' : 'form-inline'}}#}
+                            {#{{ form_widget( grandeVille, { 'attr' : { 'data-unique_block_prefix' : stationCommentVenir.grandeVilles.vars['unique_block_prefix']}}) }}#}
+                            {#{% endfor %}#}
                             {% set iTraduc = 0 %}
                             {% for traduction in stationCommentVenir.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
