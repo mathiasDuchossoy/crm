@@ -33,10 +33,6 @@ class Station
      */
     private $zoneTouristique;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Secteur
-     */
-    private $secteur;
-    /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
     private $departement;
@@ -56,6 +52,10 @@ class Station
      * @var \Mondofute\Bundle\StationBundle\Entity\StationDescription
      */
     private $stationDescription;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $secteurs;
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -214,30 +214,6 @@ class Station
     }
 
     /**
-     * Get secteur
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Secteur
-     */
-    public function getSecteur()
-    {
-        return $this->secteur;
-    }
-
-    /**
-     * Set secteur
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
-     *
-     * @return Station
-     */
-    public function setSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur = null)
-    {
-        $this->secteur = $secteur;
-
-        return $this;
-    }
-
-    /**
      * Get departement
      *
      * @return \Mondofute\Bundle\GeographieBundle\Entity\Departement
@@ -353,6 +329,57 @@ class Station
     public function setStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription = null)
     {
         $this->stationDescription = $stationDescription;
+
+        return $this;
+    }
+
+    /**
+     * Remove secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     */
+    public function removeSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    {
+        $this->secteurs->removeElement($secteur);
+    }
+
+    /**
+     * Get secteurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSecteurs()
+    {
+        return $this->secteurs;
+    }
+
+    /**
+     * @param $secteurs
+     * @return $this
+     */
+    public function setSecteurs($secteurs)
+    {
+        if (!empty($this->getSecteurs())) {
+            $this->getSecteurs()->clear();
+        }
+        if (!empty($secteurs)) {
+            foreach ($secteurs as $secteur) {
+                $this->addSecteur($secteur);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     *
+     * @return Station
+     */
+    public function addSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    {
+        $this->secteurs[] = $secteur->addStation($this);
 
         return $this;
     }
