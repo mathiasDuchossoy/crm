@@ -28,7 +28,7 @@
                          data-crm="{{ station.vars.value.site.crm | number_format }}">
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
-                            {{ form_row( station.zoneTouristique, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristique.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.zoneTouristiques, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristiques.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
@@ -100,7 +100,7 @@
         {#{% endfor %}#}
 
         var items = [];
-        items.push("_station_unifie_stations_entry_zoneTouristique");
+        items.push("_station_unifie_stations_entry_zoneTouristiques");
         items.push("_station_unifie_stations_entry_secteurs");
         items.push("_station_unifie_stations_entry_departement");
         items.push("_station_unifie_stations_entry_domaine");
