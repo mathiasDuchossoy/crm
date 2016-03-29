@@ -19,9 +19,9 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         zoneTouristique:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
             inversedBy: stations
-        secteur:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
-            inversedBy: stations
+#        secteur:
+#            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+#            inversedBy: stations
         domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             inversedBy: stations
@@ -42,4 +42,8 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
             mappedBy: station
             cascade:  ['persist' , 'remove']
+    manyToMany:
+        secteurs:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: stations
     lifecycleCallbacks: {  }

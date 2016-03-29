@@ -40,23 +40,30 @@ class StationUnifieType extends AbstractType
         $entitiesSelect = array();
         $entitiesSelect[] = 'zoneTouristique';
 //        echo ucfirst('zoneTouristique');die;
-        $entitiesSelect[] = 'secteur';
+        $entitiesSelect[] = 'secteurs';
         $entitiesSelect[] = 'departement';
         $entitiesSelect[] = 'domaine';
         foreach ($entitiesSelect as $entitySelect) {
             foreach ($view->children[$entities]->children as $viewChild) {
                 $siteId = $viewChild->vars['value']->getSite()->getId();
+                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
                 $choices = $viewChild->children[$entitySelect]->vars['choices'];
-
+                dump($choices);
                 $newChoices = array();
                 foreach ($choices as $key => $choice) {
+                    if ($entitySelect == 'secteurs') $entitySelect = 'secteur';
                     $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
                     if ($choice->data->getSite()->getId() == $siteId) {
                         $newChoices[$key] = $choice;
                     }
                 }
+
+                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
+                dump($viewChild->children[$entitySelect]->vars['choices']);
                 $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+
             }
         }
+//        die;
     }
 }
