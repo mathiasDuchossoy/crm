@@ -28,6 +28,10 @@ class Profil
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $stations;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $images;
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -163,6 +167,16 @@ class Profil
     }
 
     /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Profil
+     */
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station;
+    /**
      * Add image
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image
@@ -173,6 +187,28 @@ class Profil
     {
         $this->images[] = $image->setProfil($this);
 
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
+    }
         return $this;
     }
 

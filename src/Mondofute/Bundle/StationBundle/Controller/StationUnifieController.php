@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
+use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
@@ -244,6 +245,15 @@ class StationUnifieController extends Controller
                 } else {
                     $secteurs = null;
                 }
+                if (!empty($station->getProfils())) {
+                    $profils = new ArrayCollection();
+                    foreach ($station->getProfils() as $profil) {
+                        $profilSite = $emSite->getRepository(Profil::class)->findOneBy(array('profilUnifie' => $profil->getProfilUnifie()));
+                        $profils->add($profilSite);
+                    }
+                } else {
+                    $profils = null;
+                }
                 if (!empty($station->getDomaine())) {
                     $domaine = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $station->getDomaine()->getDomaineUnifie()));
                 } else {
@@ -276,6 +286,7 @@ class StationUnifieController extends Controller
                     ->setStationUnifie($entitySite)
                     ->setZoneTouristiques($zoneTouristiques)
                     ->setSecteurs($secteurs)
+                    ->setProfils($profils)
                     ->setDomaine($domaine)
                     ->setDepartement($departement);
 

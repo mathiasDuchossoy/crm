@@ -58,6 +58,10 @@ class Station
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $profils;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $hebergements;
 
     /**
@@ -406,6 +410,57 @@ class Station
     public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
     {
         $this->zoneTouristiques[] = $zoneTouristique->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove profil
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     */
+    public function removeProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    {
+        $this->profils->removeElement($profil);
+    }
+
+    /**
+     * Get profils
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProfils()
+    {
+        return $this->profils;
+    }
+
+    /**
+     * @param $profils
+     * @return $this
+     */
+    public function setProfils($profils)
+    {
+        if (!empty($this->getProfils())) {
+            $this->getProfils()->clear();
+        }
+        if (!empty($profils)) {
+            foreach ($profils as $profil) {
+                $this->addProfil($profil);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add profil
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     *
+     * @return Station
+     */
+    public function addProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    {
+        $this->profils[] = $profil->addStation($this);
 
         return $this;
     }
