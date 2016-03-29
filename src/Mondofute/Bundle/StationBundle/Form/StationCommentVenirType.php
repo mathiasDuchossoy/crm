@@ -16,10 +16,19 @@ class StationCommentVenirType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $locale = $options["locale"];
+//        echo $locale = $options["locale"];
+//        die;
         $builder
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => StationCommentVenirTraductionType::class,
+                'entry_type' => StationCommentVenirTraductionType::class
+            ))
+            ->add('grandeVilles', CollectionType::class, array(
+                'entry_type' => StationCommentVenirGrandeVilleType::class,
+                'entry_options' => array('locale' => $locale),
+                'required' => false,
+//                'label_attr' => array('style' => 'display:none')
             ))//            ->add('stationCommentVenirUnifie')
         ;
     }
@@ -30,7 +39,8 @@ class StationCommentVenirType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\StationBundle\Entity\StationCommentVenir'
+            'data_class' => 'Mondofute\Bundle\StationBundle\Entity\StationCommentVenir',
+            'locale' => 'fr_FR'
         ));
     }
 }
