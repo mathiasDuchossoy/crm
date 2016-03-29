@@ -165,7 +165,7 @@ class ZoneTouristique
      */
     public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
-        $this->stations[] = $station->setZoneTouristique($this);
+        $this->stations[] = $station;
 
         return $this;
     }

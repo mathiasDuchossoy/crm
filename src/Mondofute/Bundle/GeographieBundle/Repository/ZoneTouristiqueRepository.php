@@ -20,14 +20,14 @@ class ZoneTouristiqueRepository extends \Doctrine\ORM\EntityRepository
     {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r , rt')
-            ->from('MondofuteGeographieBundle:ZoneTouristique', 'r')
-            ->join('r.traductions', 'rt')
-            ->join('r.site', 's')
-            ->join('rt.langue', 'l')
-            ->where("l.code = '$locale'");
+        $qb->select('zoneTouristique , traductions')
+            ->from('MondofuteGeographieBundle:ZoneTouristique', 'zoneTouristique')
+            ->join('zoneTouristique.traductions', 'traductions')
+            ->join('zoneTouristique.site', 'site')
+            ->join('traductions.langue', 'langue')
+            ->where("langue.code = '$locale'");
 //        ->setParameter('code' , $locale)
-        $qb->orderBy('r.id', 'ASC');
+        $qb->orderBy('zoneTouristique.zoneTouristiqueUnifie', 'ASC');
 
         return $qb;
     }
