@@ -35,7 +35,17 @@ class StationType extends AbstractType
                     return $rr->getTraductionsZoneTouristiquesByLocale($locale);
                 },
             ))
-            ->add('secteur', EntityType::class, array(
+//            ->add('secteur', EntityType::class, array(
+//                'class' => Secteur::class,
+//                'required' => false,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un secteur ---",
+//                'query_builder' => function (SecteurRepository $rr) use ($locale) {
+//                    return $rr->getTraductionsByLocale($locale);
+//                },
+//            ))
+
+            ->add('secteurs', EntityType::class, array(
                 'class' => Secteur::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
@@ -43,6 +53,7 @@ class StationType extends AbstractType
                 'query_builder' => function (SecteurRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },
+                'multiple' => true
             ))
             ->add('domaine', EntityType::class, array(
                 'class' => Domaine::class,
