@@ -5,7 +5,9 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
+use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType;
@@ -53,6 +55,7 @@ class StationCommentVenirUnifieController extends Controller
         $stationCommentVenirUnifie = new StationCommentVenirUnifie();
 
         $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
+        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
         $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
@@ -135,6 +138,21 @@ class StationCommentVenirUnifieController extends Controller
                 $entity->addStationCommentVenir($stationCommentVenir);
             }
         }
+    }
+
+    private function ajouterGrandesVillesDansForm(StationCommentVenirUnifie $entity)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $grandeVilles = $em->getRepository(GrandeVille::class)->findAll();
+        /** @var StationCommentVenir $stationCommentVenir */
+        foreach ($entity->getStationCommentVenirs() as $stationCommentVenir) {
+            foreach ($grandeVilles as $grandeVille) {
+                $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
+                $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
+                $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
+            }
+        }
+
     }
 
 
