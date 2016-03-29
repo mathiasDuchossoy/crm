@@ -29,7 +29,7 @@
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
                             {{ form_row( station.zoneTouristique, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristique.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.secteur , { 'attr' : { 'data-unique_block_prefix' : station.secteur.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
@@ -101,7 +101,7 @@
 
         var items = [];
         items.push("_station_unifie_stations_entry_zoneTouristique");
-        items.push("_station_unifie_stations_entry_secteur");
+        items.push("_station_unifie_stations_entry_secteurs");
         items.push("_station_unifie_stations_entry_departement");
         items.push("_station_unifie_stations_entry_domaine");
         {% for langue in langues %}

@@ -231,10 +231,14 @@ class StationUnifieController extends Controller
                 } else {
                     $zoneTouristique = null;
                 }
-                if (!empty($station->getSecteur())) {
-                    $secteur = $emSite->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $station->getSecteur()->getSecteurUnifie()));
+                if (!empty($station->getSecteurs())) {
+                    $secteurs = new ArrayCollection();
+                    foreach ($station->getSecteurs() as $secteur) {
+                        $secteurSite = $emSite->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $secteur->getSecteurUnifie()));
+                        $secteurs->add($secteurSite);
+                    }
                 } else {
-                    $secteur = null;
+                    $secteurs = null;
                 }
                 if (!empty($station->getDomaine())) {
                     $domaine = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $station->getDomaine()->getDomaineUnifie()));
@@ -267,7 +271,7 @@ class StationUnifieController extends Controller
                     ->setSite($site)
                     ->setStationUnifie($entitySite)
                     ->setZoneTouristique($zoneTouristique)
-                    ->setSecteur($secteur)
+                    ->setSecteurs($secteurs)
                     ->setDomaine($domaine)
                     ->setDepartement($departement);
 

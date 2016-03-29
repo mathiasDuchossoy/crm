@@ -19,14 +19,14 @@ class SecteurRepository extends \Doctrine\ORM\EntityRepository
     {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r , rt')
-            ->from('MondofuteGeographieBundle:Secteur', 'r')
-            ->join('r.traductions', 'rt')
-            ->join('r.site', 's')
-            ->join('rt.langue', 'l')
-            ->where("l.code = '$locale'");
+        $qb->select('secteur , traductions')
+            ->from('MondofuteGeographieBundle:Secteur', 'secteur')
+            ->join('secteur.traductions', 'traductions')
+            ->join('secteur.site', 'site')
+            ->join('traductions.langue', 'langue')
+            ->where("langue.code = '$locale'");
 //        ->setParameter('code' , $locale)
-        $qb->orderBy('r.id', 'ASC');
+        $qb->orderBy('secteur.secteurUnifie', 'ASC');
 
         return $qb;
     }
