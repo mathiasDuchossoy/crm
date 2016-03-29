@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\StationBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -29,10 +28,6 @@ class Station
      */
     private $stationUnifie;
     /**
-     * @var ZoneTouristique
-     */
-    private $zoneTouristique;
-    /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
     private $departement;
@@ -56,6 +51,10 @@ class Station
      * @var \Doctrine\Common\Collections\Collection
      */
     private $secteurs;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $zoneTouristiques;
 
     /**
      * Constructor
@@ -181,30 +180,6 @@ class Station
     public function addTraduction(StationTraduction $traduction)
     {
         $this->traductions[] = $traduction->setStation($this);
-
-        return $this;
-    }
-
-    /**
-     * Get zoneTouristique
-     *
-     * @return ZoneTouristique
-     */
-    public function getZoneTouristique()
-    {
-        return $this->zoneTouristique;
-    }
-
-    /**
-     * Set zoneTouristique
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
-     *
-     * @return Station
-     */
-    public function setZoneTouristique(ZoneTouristique $zoneTouristique = null)
-    {
-        $this->zoneTouristique = $zoneTouristique;
 
         return $this;
     }
@@ -376,6 +351,57 @@ class Station
     public function addSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
     {
         $this->secteurs[] = $secteur->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     */
+    public function removeZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    {
+        $this->zoneTouristiques->removeElement($zoneTouristique);
+    }
+
+    /**
+     * Get zoneTouristiques
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getZoneTouristiques()
+    {
+        return $this->zoneTouristiques;
+    }
+
+    /**
+     * @param $zoneTouristiques
+     * @return $this
+     */
+    public function setZoneTouristiques($zoneTouristiques)
+    {
+        if (!empty($this->getZoneTouristiques())) {
+            $this->getZoneTouristiques()->clear();
+        }
+        if (!empty($zoneTouristiques)) {
+            foreach ($zoneTouristiques as $zoneTouristique) {
+                $this->addZoneTouristique($zoneTouristique);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     *
+     * @return Station
+     */
+    public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    {
+        $this->zoneTouristiques[] = $zoneTouristique->addStation($this);
 
         return $this;
     }

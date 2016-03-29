@@ -27,13 +27,14 @@ class StationType extends AbstractType
     {
         $locale = $options["locale"];
         $builder
-            ->add('zoneTouristique', EntityType::class, array('class' => ZoneTouristique::class,
+            ->add('zoneTouristiques', EntityType::class, array('class' => ZoneTouristique::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir une zone touristique ---",
                 'query_builder' => function (ZoneTouristiqueRepository $rr) use ($locale) {
                     return $rr->getTraductionsZoneTouristiquesByLocale($locale);
                 },
+                'multiple' => true
             ))
 //            ->add('secteur', EntityType::class, array(
 //                'class' => Secteur::class,
