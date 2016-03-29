@@ -94,6 +94,16 @@ class StationType extends AbstractType
                 },
                 'multiple' => true
             ))
+            ->add('profils', EntityType::class, array(
+                'class' => Profil::class,
+                'required' => false,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un secteur ---",
+                'query_builder' => function (ProfilRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
+                'multiple' => true
+            ))
             ->add('departement', EntityType::class, array(
                 'class' => Departement::class,
                 'required' => true,
