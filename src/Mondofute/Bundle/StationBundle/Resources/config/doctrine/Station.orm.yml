@@ -16,12 +16,6 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stationUnifie:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationUnifie
             inversedBy: stations
-        zoneTouristique:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
-            inversedBy: stations
-#        secteur:
-#            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
-#            inversedBy: stations
         domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
             inversedBy: stations
@@ -45,5 +39,8 @@ Mondofute\Bundle\StationBundle\Entity\Station:
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: stations
+        zoneTouristiques:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
             inversedBy: stations
     lifecycleCallbacks: {  }
