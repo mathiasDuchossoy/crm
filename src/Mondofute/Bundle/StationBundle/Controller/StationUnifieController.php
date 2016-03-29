@@ -226,10 +226,14 @@ class StationUnifieController extends Controller
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                 $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $station->getSite()->getId()));
-                if (!empty($station->getZoneTouristique())) {
-                    $zoneTouristique = $emSite->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $station->getZoneTouristique()->getZoneTouristiqueUnifie()));
+                if (!empty($station->getZoneTouristiques())) {
+                    $zoneTouristiques = new ArrayCollection();
+                    foreach ($station->getZoneTouristiques() as $zoneTouristique) {
+                        $zoneTouristiqueSite = $emSite->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $zoneTouristique->getZoneTouristiqueUnifie()));
+                        $zoneTouristiques->add($zoneTouristiqueSite);
+                    }
                 } else {
-                    $zoneTouristique = null;
+                    $zoneTouristiques = null;
                 }
                 if (!empty($station->getSecteurs())) {
                     $secteurs = new ArrayCollection();
@@ -270,7 +274,7 @@ class StationUnifieController extends Controller
                 $stationSite
                     ->setSite($site)
                     ->setStationUnifie($entitySite)
-                    ->setZoneTouristique($zoneTouristique)
+                    ->setZoneTouristiques($zoneTouristiques)
                     ->setSecteurs($secteurs)
                     ->setDomaine($domaine)
                     ->setDepartement($departement);
