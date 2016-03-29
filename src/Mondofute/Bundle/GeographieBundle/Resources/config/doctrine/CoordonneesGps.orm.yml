@@ -8,6 +8,8 @@ Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         latitude:
             type: float
