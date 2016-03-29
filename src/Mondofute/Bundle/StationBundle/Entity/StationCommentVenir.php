@@ -32,6 +32,10 @@ class StationCommentVenir
      * @var \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie
      */
     private $stationCommentVenirUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $grandeVilles;
 
     /**
      * Constructor
@@ -197,4 +201,37 @@ class StationCommentVenir
         return $this;
     }
 
+    /**
+     * Add grandeVille
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     *
+     * @return StationCommentVenir
+     */
+    public function addGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    {
+        $this->grandeVilles[] = $grandeVille->setStationCommentVenir($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove grandeVille
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     */
+    public function removeGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    {
+        $this->grandeVilles->removeElement($grandeVille);
+    }
+
+    /**
+     * Get grandeVilles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGrandeVilles()
+    {
+        return $this->grandeVilles;
+    }
 }
