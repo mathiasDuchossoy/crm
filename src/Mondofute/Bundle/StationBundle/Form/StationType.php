@@ -5,9 +5,11 @@ namespace Mondofute\Bundle\StationBundle\Form;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
+use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
+use Mondofute\Bundle\GeographieBundle\Repository\ProfilRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -64,6 +66,16 @@ class StationType extends AbstractType
                 'query_builder' => function (DomaineRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },
+            ))
+            ->add('profils', EntityType::class, array(
+                'class' => Profil::class,
+                'required' => false,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un secteur ---",
+                'query_builder' => function (ProfilRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
+                'multiple' => true
             ))
             ->add('departement', EntityType::class, array(
                 'class' => Departement::class,

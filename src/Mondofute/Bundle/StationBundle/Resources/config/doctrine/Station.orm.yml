@@ -43,4 +43,7 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         zoneTouristiques:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
             inversedBy: stations
+        profils:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
+            inversedBy: profils
     lifecycleCallbacks: {  }
