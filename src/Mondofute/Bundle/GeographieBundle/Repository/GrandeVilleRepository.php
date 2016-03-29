@@ -10,4 +10,23 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
  */
 class GrandeVilleRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('grandeVille , traductions')
+            ->from('MondofuteGeographieBundle:GrandeVille', 'grandeVille')
+            ->join('grandeVille.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->where("langue.code = '$locale'");
+//        ->setParameter('code' , $locale)
+        $qb->orderBy('grandeVille.id', 'ASC');
+
+        return $qb;
+    }
 }

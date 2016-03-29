@@ -24,4 +24,7 @@ Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction
             mappedBy: stationCommentVenir
             cascade:  ['persist' , 'remove']
+        grandeVilles:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille
+            mappedBy: stationCommentVenir
     lifecycleCallbacks: {  }
