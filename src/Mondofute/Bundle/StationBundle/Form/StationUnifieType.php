@@ -41,6 +41,7 @@ class StationUnifieType extends AbstractType
         $entitiesSelect[] = 'zoneTouristiques';
 //        echo ucfirst('zoneTouristique');die;
         $entitiesSelect[] = 'secteurs';
+        $entitiesSelect[] = 'profils';
         $entitiesSelect[] = 'departement';
         $entitiesSelect[] = 'domaine';
         foreach ($entitiesSelect as $entitySelect) {
@@ -48,12 +49,13 @@ class StationUnifieType extends AbstractType
                 $siteId = $viewChild->vars['value']->getSite()->getId();
                 if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
                 if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
+                if ($entitySelect == 'profil') $entitySelect = 'profils';
                 $choices = $viewChild->children[$entitySelect]->vars['choices'];
-                dump($choices);
                 $newChoices = array();
                 foreach ($choices as $key => $choice) {
                     if ($entitySelect == 'secteurs') $entitySelect = 'secteur';
                     if ($entitySelect == 'zoneTouristiques') $entitySelect = 'zoneTouristique';
+                    if ($entitySelect == 'profils') $entitySelect = 'profil';
                     $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
                     if ($choice->data->getSite()->getId() == $siteId) {
                         $newChoices[$key] = $choice;
@@ -62,7 +64,7 @@ class StationUnifieType extends AbstractType
 
                 if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
                 if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
-                dump($viewChild->children[$entitySelect]->vars['choices']);
+                if ($entitySelect == 'profil') $entitySelect = 'profils';
                 $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
 
             }

@@ -25,6 +25,10 @@ class Profil
      * @var \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
      */
     private $profilUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stations;
 
     /**
      * Constructor
@@ -154,5 +158,37 @@ class Profil
         return $this;
     }
 
+    /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Profil
+     */
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station;
 
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
+    }
 }
