@@ -11,6 +11,8 @@ use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
 use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin;
+use Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique;
 use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
 use Mondofute\Bundle\DomaineBundle\Entity\Piste;
 use Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique;
@@ -393,6 +395,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 // ***** Remontee mecanique *****
                 $remonteeMecaniqueSite = !empty($domaineCarteIdentiteSite->getRemonteeMecanique()) ? $domaineCarteIdentiteSite->getRemonteeMecanique() : clone $domaineCarteIdentite->getRemonteeMecanique();
                 $remonteeMecaniqueSite->setNombre($domaineCarteIdentite->getRemonteeMecanique()->getNombre());
+
                 // ***** Pistes *****
                 /** @var Piste $pisteSite */
                 /** @var Piste $piste */
@@ -450,6 +453,30 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 } else {
                     $domaineCarteIdentiteSite->getAltitudeMaxi()->setValeur($domaineCarteIdentite->getAltitudeMaxi()->getValeur());
                     $domaineCarteIdentiteSite->getAltitudeMaxi()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getAltitudeMaxi()->getUnite()));
+                }
+
+                if (empty($domaineCarteIdentiteSite->getKmPistesSkiAlpin())) {
+                    $kmPistesSkiAlpin = new KmPistesAlpin();
+                    $longueur = new Distance();
+                    $kmPistesSkiAlpin->setLongueur($longueur);
+                    $kmPistesSkiAlpin->getLongueur()->setValeur($domaineCarteIdentite->getKmPistesSkiAlpin()->getLongueur()->getValeur());
+                    $kmPistesSkiAlpin->getLongueur()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getKmPistesSkiAlpin()->getLongueur()->getUnite()));
+                    $domaineCarteIdentiteSite->setKmPistesSkiAlpin($kmPistesSkiAlpin);
+                } else {
+                    $domaineCarteIdentiteSite->getKmPistesSkiAlpin()->getLongueur()->setValeur($domaineCarteIdentite->getKmPistesSkiAlpin()->getLongueur()->getValeur());
+                    $domaineCarteIdentiteSite->getKmPistesSkiAlpin()->getLongueur()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getKmPistesSkiAlpin()->getLongueur()->getUnite()));
+                }
+
+                if (empty($domaineCarteIdentiteSite->getKmPistesSkiNordique())) {
+                    $kmPistesSkiNordique = new KmPistesNordique();
+                    $longueur = new Distance();
+                    $kmPistesSkiNordique->setLongueur($longueur);
+                    $kmPistesSkiNordique->getLongueur()->setValeur($domaineCarteIdentite->getKmPistesSkiNordique()->getLongueur()->getValeur());
+                    $kmPistesSkiNordique->getLongueur()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getKmPistesSkiNordique()->getLongueur()->getUnite()));
+                    $domaineCarteIdentiteSite->setKmPistesSkiNordique($kmPistesSkiNordique);
+                } else {
+                    $domaineCarteIdentiteSite->getKmPistesSkiNordique()->getLongueur()->setValeur($domaineCarteIdentite->getKmPistesSkiNordique()->getLongueur()->getValeur());
+                    $domaineCarteIdentiteSite->getKmPistesSkiNordique()->getLongueur()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getKmPistesSkiNordique()->getLongueur()->getUnite()));
                 }
 
 //            Gestion des traductions

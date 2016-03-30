@@ -1,0 +1,5 @@
+Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\KmPistesAlpinRepository
+    lifecycleCallbacks: {  }

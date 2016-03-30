@@ -15,16 +15,6 @@ class DomaineCarteIdentite
      * @var int
      */
     private $id;
-
-    /**
-     * @var int
-     */
-    private $kmPistesSkiAlpin;
-
-    /**
-     * @var int
-     */
-    private $kmPistesSkiNordique;
     /**
      * @var Collection
      */
@@ -69,6 +59,14 @@ class DomaineCarteIdentite
      * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeMaxi;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin
+     */
+    private $kmPistesSkiAlpin;
+    /**
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
+     */
+    private $kmPistesSkiNordique;
 
     /**
      * Constructor
@@ -86,54 +84,6 @@ class DomaineCarteIdentite
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get kmPistesSkiAlpin
-     *
-     * @return int
-     */
-    public function getKmPistesSkiAlpin()
-    {
-        return $this->kmPistesSkiAlpin;
-    }
-
-    /**
-     * Set kmPistesSkiAlpin
-     *
-     * @param integer $kmPistesSkiAlpin
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setKmPistesSkiAlpin($kmPistesSkiAlpin)
-    {
-        $this->kmPistesSkiAlpin = $kmPistesSkiAlpin;
-
-        return $this;
-    }
-
-    /**
-     * Get kmPistesSkiNordique
-     *
-     * @return int
-     */
-    public function getKmPistesSkiNordique()
-    {
-        return $this->kmPistesSkiNordique;
-    }
-
-    /**
-     * Set kmPistesSkiNordique
-     *
-     * @param integer $kmPistesSkiNordique
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setKmPistesSkiNordique($kmPistesSkiNordique)
-    {
-        $this->kmPistesSkiNordique = $kmPistesSkiNordique;
-
-        return $this;
     }
 
     /**
@@ -470,5 +420,53 @@ class DomaineCarteIdentite
     public function removePiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
     {
         $this->pistes->removeElement($piste);
+    }
+
+    /**
+     * Get kmPistesSkiAlpin
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin
+     */
+    public function getKmPistesSkiAlpin()
+    {
+        return $this->kmPistesSkiAlpin;
+    }
+
+    /**
+     * Set kmPistesSkiAlpin
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin $kmPistesSkiAlpin
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setKmPistesSkiAlpin(\Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin $kmPistesSkiAlpin = null)
+    {
+        $this->kmPistesSkiAlpin = $kmPistesSkiAlpin;
+
+        return $this;
+    }
+
+    /**
+     * Get kmPistesSkiNordique
+     *
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
+     */
+    public function getKmPistesSkiNordique()
+    {
+        return $this->kmPistesSkiNordique;
+    }
+
+    /**
+     * Set kmPistesSkiNordique
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique $kmPistesSkiNordique
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setKmPistesSkiNordique(\Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique $kmPistesSkiNordique = null)
+    {
+        $this->kmPistesSkiNordique = $kmPistesSkiNordique;
+
+        return $this;
     }
 }

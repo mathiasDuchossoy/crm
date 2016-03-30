@@ -29,8 +29,8 @@
                         <div>
                             {{ form_row( domaineCarteIdentite.altitudeMini , { 'attr' : { 'class' : 'form-inline'}}) }}
                             {{ form_row( domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'class' : 'form-inline'}}) }}
-                            {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiAlpin.vars['unique_block_prefix']  }}) }}
-                            {{ form_row( domaineCarteIdentite.kmPistesSkiNordique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiNordique.vars['unique_block_prefix']  }}) }}
+                            {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin.children['longueur'] , { 'label' : domaineCarteIdentite.kmPistesSkiAlpin.vars['name'] | humanize  ,  'attr' : { 'class' : 'form-inline'  }}) }}
+                            {{ form_row( domaineCarteIdentite.kmPistesSkiNordique.children['longueur'] , { 'label' : domaineCarteIdentite.kmPistesSkiNordique.vars['name'] | humanize  ,  'attr' : { 'class' : 'form-inline'  }}) }}
                             {{ form_row( domaineCarteIdentite.remonteeMecanique.nombre , { 'label' :   domaineCarteIdentite.remonteeMecanique.vars.name | humanize  , 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.remonteeMecanique.nombre.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.niveauSkieur , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.niveauSkieur.vars['unique_block_prefix']  }}) }}
                             {% for piste in domaineCarteIdentite.pistes %}
@@ -124,8 +124,10 @@
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_unite");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_valeur");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_unite");#}
-        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");#}
-        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin_longueur_valeur");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin_longueur_unite");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique_longueur_valeur");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique_longueur_unite");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");#}
@@ -146,8 +148,10 @@
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_unite");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_valeur");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_unite");
-        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");
-        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin_longueur_valeur");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin_longueur_unite");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique_longueur_valeur");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique_longueur_unite");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_niveauSkieur");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_pistes_entry_nombre_1");
