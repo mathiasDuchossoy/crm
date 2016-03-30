@@ -28,4 +28,20 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $qb->orderBy('fournisseur.id', 'ASC');
         return $qb;
     }
+
+    public function rechercherTypeHebergement($enseigne = '')
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fournisseur')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->where("fournisseur.contient = :contient")
+            ->setParameter('contient', FournisseurContient::PRODUIT);
+        if (!empty($enseigne)) {
+            $qb->andWhere("fournisseur.enseigne LIKE :enseigne")
+//            ->setParameters(array('contient'=> FournisseurContient::FOURNISSEUR , 'id' => $fournisseurId))
+                ->setParameter('enseigne', '%' . $enseigne . '%');
+        }
+        $qb->orderBy('fournisseur.enseigne', 'ASC');
+        return $qb;
+    }
 }

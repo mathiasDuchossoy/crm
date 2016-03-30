@@ -22,3 +22,8 @@ fournisseur_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:delete" }
     methods:  DELETE
+
+fournisseur_rechercher_type_hebergement:
+    path:     /type_hebergement
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:rechercherTypeHebergement" }
+    methods:  GET

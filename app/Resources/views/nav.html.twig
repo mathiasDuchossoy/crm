@@ -164,6 +164,27 @@
                 </li>
             </ul>
         </li>
+        <li role="presentation"
+            class="dropdown {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Hébergement <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Hebergement</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'hebergement_hebergement_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'hebergement_hebergement_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
     </ul>
 </nav>
 {#</div>#}

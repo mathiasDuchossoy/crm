@@ -1,0 +1,19 @@
+Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\FournisseurHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            inversedBy: fournisseurs
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+    lifecycleCallbacks: {  }

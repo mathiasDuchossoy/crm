@@ -1,0 +1,24 @@
+hebergement_hebergement_index:
+    path:     /
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:index" }
+    methods:  GET
+
+hebergement_hebergement_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:show" }
+    methods:  GET
+
+hebergement_hebergement_new:
+    path:     /new
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:new" }
+    methods:  [GET, POST]
+
+hebergement_hebergement_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:edit" }
+    methods:  [GET, POST]
+
+hebergement_hebergement_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:delete" }
+    methods:  DELETE
