@@ -27,8 +27,8 @@
                          data-crm="{{ domaineCarteIdentite.vars.value.site.crm | number_format }}">
                         {{ form_row(domaineCarteIdentite.site) }}
                         <div>
-                            {{ form_row( domaineCarteIdentite.altitudeMini , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.altitudeMini.vars['unique_block_prefix']  }}) }}
-                            {{ form_row( domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.altitudeMaxi.vars['unique_block_prefix']  }}) }}
+                            {{ form_row( domaineCarteIdentite.altitudeMini , { 'attr' : { 'class' : 'form-inline'}}) }}
+                            {{ form_row( domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'class' : 'form-inline'}}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiAlpin , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiAlpin.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.kmPistesSkiNordique , { 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.kmPistesSkiNordique.vars['unique_block_prefix']  }}) }}
                             {{ form_row( domaineCarteIdentite.remonteeMecanique.nombre , { 'label' :   domaineCarteIdentite.remonteeMecanique.vars.name | humanize  , 'attr' : { 'data-unique_block_prefix' : domaineCarteIdentite.remonteeMecanique.nombre.vars['unique_block_prefix']  }}) }}
@@ -120,8 +120,10 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");#}
-        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_valeur");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_unite");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_valeur");#}
+        {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_unite");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");#}
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");#}
@@ -140,8 +142,10 @@
         {#itemNonPersonalisable.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_handiski_traductions_entry_description_{{ langue.code }}");#}
         {#{% endfor %}#}
         var items = [];
-        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini");
-        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_valeur");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMini_unite");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_valeur");
+        items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_altitudeMaxi_unite");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiAlpin");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_kmPistesSkiNordique");
         items.push("_domaine_carte_identite_unifie_domaineCarteIdentites_entry_remonteeMecanique_nombre");
