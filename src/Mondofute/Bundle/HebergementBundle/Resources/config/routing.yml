@@ -1,0 +1,7 @@
+mondofute_hebergement_hebergement:
+    resource: "@MondofuteHebergementBundle/Resources/config/routing/hebergementunifie.yml"
+    prefix:   /hebergement
+
+mondofute_hebergement_homepage:
+    path:     /
+    defaults: { _controller: MondofuteHebergementBundle:Default:index }

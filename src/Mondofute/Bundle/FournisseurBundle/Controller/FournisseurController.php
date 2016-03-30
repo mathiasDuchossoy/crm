@@ -5,17 +5,16 @@ namespace Mondofute\Bundle\FournisseurBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Proxies\__CG__\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
-use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Fournisseur controller.
@@ -38,6 +37,24 @@ class FournisseurController extends Controller
         ));
     }
 
+    public function rechercherTypeHebergementAction(Request $request)
+    {
+        $enseigne = $request->get('enseigne');
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurs = $em->getRepository('MondofuteFournisseurBundle:Fournisseur')->rechercherTypeHebergement($enseigne)->getQuery()->getArrayResult();
+        if ($request->isXmlHttpRequest()) {
+            $response = new Response();
+
+            $data = json_encode($fournisseurs); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($data);
+
+            return $response;
+        }
+//        dump($fournisseurs);
+        return new Response();
+    }
     /**
      * Creates a new Fournisseur entity.
      *

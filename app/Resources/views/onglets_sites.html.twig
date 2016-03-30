@@ -14,4 +14,9 @@
         {% endif %}
         {#{{ form_row(traduction) }}#}
     {% endfor %}
+    {% if ongletFournisseurs is defined and ongletFournisseurs == 1 %}
+        <li id="onglet_data_fournisseurs">
+            <a data-toggle="tab" href="#data_fournisseurs">Fournisseurs</a>
+        </li>
+    {% endif %}
 </ul>

@@ -1,0 +1,34 @@
+Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+    fields:
+        nom:
+            type: string
+            length: 255
+        avisMondofute:
+            type: text
+            nullable: true
+        restauration:
+            type: text
+        bienEtre:
+            type: text
+        pourLesEnfants:
+            type: text
+        activites:
+            type: text
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }
