@@ -11,6 +11,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DomaineCarteIdentiteType extends AbstractType
@@ -58,5 +60,17 @@ class DomaineCarteIdentiteType extends AbstractType
             'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite',
             'locale' => 'fr_FR',
         ));
+    }
+
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        /** @var FormView $viewChild */
+        $entities = array('altitudeMini', 'altitudeMaxi');
+        foreach ($entities as $entity) {
+            foreach ($view->children[$entity]->children as $child) {
+                $child->vars['attr'] = array('data-unique_block_prefix' => $child->vars['unique_block_prefix']);
+            }
+        }
     }
 }
