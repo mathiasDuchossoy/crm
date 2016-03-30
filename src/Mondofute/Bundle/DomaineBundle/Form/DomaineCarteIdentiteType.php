@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\DomaineBundle\Form;
 use Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur;
 use Mondofute\Bundle\DomaineBundle\Entity\Piste;
 use Mondofute\Bundle\DomaineBundle\Repository\NiveauSkieurRepository;
+use Mondofute\Bundle\UniteBundle\Form\DistanceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -22,8 +23,8 @@ class DomaineCarteIdentiteType extends AbstractType
     {
         $locale = $options['locale'];
         $builder
-            ->add('altitudeMini', null, array('attr' => array('min' => 0)))
-            ->add('altitudeMaxi', null, array('attr' => array('min' => 0)))
+            ->add('altitudeMini', DistanceType::class)
+            ->add('altitudeMaxi', DistanceType::class)
             ->add('kmPistesSkiAlpin', null, array('attr' => array('min' => 0)))
             ->add('kmPistesSkiNordique', null, array('attr' => array('min' => 0)))
             ->add('traductions', CollectionType::class, array(

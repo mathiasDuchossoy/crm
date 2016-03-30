@@ -19,16 +19,6 @@ class DomaineCarteIdentite
     /**
      * @var int
      */
-    private $altitudeMini;
-
-    /**
-     * @var int
-     */
-    private $altitudeMaxi;
-
-    /**
-     * @var int
-     */
     private $kmPistesSkiAlpin;
 
     /**
@@ -71,6 +61,14 @@ class DomaineCarteIdentite
      * @var \Doctrine\Common\Collections\Collection
      */
     private $pistes;
+    /**
+     * @var \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     */
+    private $altitudeMini;
+    /**
+     * @var \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     */
+    private $altitudeMaxi;
 
     /**
      * Constructor
@@ -88,54 +86,6 @@ class DomaineCarteIdentite
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get altitudeMini
-     *
-     * @return int
-     */
-    public function getAltitudeMini()
-    {
-        return $this->altitudeMini;
-    }
-
-    /**
-     * Set altitudeMini
-     *
-     * @param integer $altitudeMini
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setAltitudeMini($altitudeMini)
-    {
-        $this->altitudeMini = $altitudeMini;
-
-        return $this;
-    }
-
-    /**
-     * Get altitudeMaxi
-     *
-     * @return int
-     */
-    public function getAltitudeMaxi()
-    {
-        return $this->altitudeMaxi;
-    }
-
-    /**
-     * Set altitudeMaxi
-     *
-     * @param integer $altitudeMaxi
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function setAltitudeMaxi($altitudeMaxi)
-    {
-        $this->altitudeMaxi = $altitudeMaxi;
-
-        return $this;
     }
 
     /**
@@ -258,6 +208,8 @@ class DomaineCarteIdentite
         }
         $this->snowpark = clone $this->getSnowpark();
         $this->handiski = clone $this->getHandiski();
+        $this->altitudeMini = clone $this->getAltitudeMini();
+        $this->altitudeMaxi = clone $this->getAltitudeMaxi();
         $this->remonteeMecanique = clone $this->getRemonteeMecanique();
         $pistes = $this->getPistes();
         $this->pistes = new ArrayCollection();
@@ -338,6 +290,54 @@ class DomaineCarteIdentite
     public function setHandiski(Handiski $handiski = null)
     {
         $this->handiski = $handiski;
+
+        return $this;
+    }
+
+    /**
+     * Get altitudeMini
+     *
+     * @return \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     */
+    public function getAltitudeMini()
+    {
+        return $this->altitudeMini;
+    }
+
+    /**
+     * Set altitudeMini
+     *
+     * @param \Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMini
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setAltitudeMini(\Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMini = null)
+    {
+        $this->altitudeMini = $altitudeMini;
+
+        return $this;
+    }
+
+    /**
+     * Get altitudeMaxi
+     *
+     * @return \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     */
+    public function getAltitudeMaxi()
+    {
+        return $this->altitudeMaxi;
+    }
+
+    /**
+     * Set altitudeMaxi
+     *
+     * @param \Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMaxi
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function setAltitudeMaxi(\Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMaxi = null)
+    {
+        $this->altitudeMaxi = $altitudeMaxi;
 
         return $this;
     }
