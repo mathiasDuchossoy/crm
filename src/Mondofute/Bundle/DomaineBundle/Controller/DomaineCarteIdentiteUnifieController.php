@@ -20,6 +20,8 @@ use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
 use Mondofute\Bundle\DomaineBundle\Form\DomaineCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UniteBundle\Entity\Distance;
+use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -348,45 +350,45 @@ class DomaineCarteIdentiteUnifieController extends Controller
             if ($domaineCarteIdentite->getSite()->getCrm() == false) {
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $em = $this->getDoctrine()->getManager($domaineCarteIdentite->getSite()->getLibelle());
-                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $domaineCarteIdentite->getSite()->getId()));
+                $emSite = $this->getDoctrine()->getManager($domaineCarteIdentite->getSite()->getLibelle());
+                $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $domaineCarteIdentite->getSite()->getId()));
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-//                if (is_null(($entitySite = $em->getRepository(DomaineCarteIdentiteUnifie::class)->findOneById(array($entity->getId()))))) {
+//                if (is_null(($entitySite = $emSite->getRepository(DomaineCarteIdentiteUnifie::class)->findOneById(array($entity->getId()))))) {
 //                    $entitySite = new DomaineCarteIdentiteUnifie();
 //                }
-                if (is_null(($entitySite = $em->find(DomaineCarteIdentiteUnifie::class, $entity->getId())))) {
+                if (is_null(($entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId())))) {
                     $entitySite = new DomaineCarteIdentiteUnifie();
                 }
 
 //            Récupération de la domaineCarteIdentite sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($domaineCarteIdentiteSite = $em->getRepository(DomaineCarteIdentite::class)->findOneBy(array('domaineCarteIdentiteUnifie' => $entitySite))))) {
+                if (empty(($domaineCarteIdentiteSite = $emSite->getRepository(DomaineCarteIdentite::class)->findOneBy(array('domaineCarteIdentiteUnifie' => $entitySite))))) {
                     $domaineCarteIdentiteSite = new DomaineCarteIdentite();
                 }
 
 //            copie des données domaineCarteIdentite
                 // ***** Snowpark *****
                 $snowparkSite = !empty($domaineCarteIdentiteSite->getSnowpark()) ? $domaineCarteIdentiteSite->getSnowpark() : clone $domaineCarteIdentite->getSnowpark();
-                $snowparkSite->setPresent($em->find('MondofuteChoixBundle:OuiNonNC', $snowparkSite->getPresent()));
+                $snowparkSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $snowparkSite->getPresent()));
                 foreach ($snowparkSite->getTraductions() as $snowparkTraductionSite) {
                     /** @var SnowparkTraduction $snowparkTraduction */
                     $snowparkTraduction = $domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($snowparkTraductionSite) {
                         return $element->getLangue()->getId() == $snowparkTraductionSite->getLangue()->getId();
                     })->first();
                     $snowparkTraductionSite->setDescription($snowparkTraduction->getDescription());
-                    $snowparkTraductionSite->setLangue($em->find(Langue::class, $snowparkTraductionSite->getLangue()));
+                    $snowparkTraductionSite->setLangue($emSite->find(Langue::class, $snowparkTraductionSite->getLangue()));
                 }
                 // ***** Handiski *****
                 $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
-                $handiskiSite->setPresent($em->find('MondofuteChoixBundle:OuiNonNC', $handiskiSite->getPresent()));
+                $handiskiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $handiskiSite->getPresent()));
                 foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
                     /** @var HandiskiTraduction $handiskiTraduction */
                     $handiskiTraduction = $domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($handiskiTraductionSite) {
                         return $element->getLangue()->getId() == $handiskiTraductionSite->getLangue()->getId();
                     })->first();
                     $handiskiTraductionSite->setDescription($handiskiTraduction->getDescription());
-                    $handiskiTraductionSite->setLangue($em->find(Langue::class, $handiskiTraductionSite->getLangue()));
+                    $handiskiTraductionSite->setLangue($emSite->find(Langue::class, $handiskiTraductionSite->getLangue()));
                 }
                 // ***** Remontee mecanique *****
                 $remonteeMecaniqueSite = !empty($domaineCarteIdentiteSite->getRemonteeMecanique()) ? $domaineCarteIdentiteSite->getRemonteeMecanique() : clone $domaineCarteIdentite->getRemonteeMecanique();
@@ -413,7 +415,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                         $pisteSite = new Piste();
                         $pisteSite->setNombre($piste->getNombre())
                             ->setDomaineCarteIdentite($domaineCarteIdentiteSite)
-                            ->setTypePiste($em->find(TypePiste::class, $piste->getTypePiste()));
+                            ->setTypePiste($emSite->find(TypePiste::class, $piste->getTypePiste()));
                         $domaineCarteIdentiteSite->addPiste($pisteSite);
                     }
                 }
@@ -428,15 +430,35 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     ->setSnowpark($snowparkSite)
                     ->setHandiski($handiskiSite)
                     ->setRemonteeMecanique($remonteeMecaniqueSite)
-                    ->setNiveauSkieur($em->find(NiveauSkieur::class, $domaineCarteIdentite->getNiveauSkieur()->getId()));
+                    ->setNiveauSkieur($emSite->find(NiveauSkieur::class, $domaineCarteIdentite->getNiveauSkieur()->getId()));
+
+                if (empty($domaineCarteIdentiteSite->getAltitudeMini())) {
+                    $altitudeMini = new Distance();
+                    $altitudeMini->setValeur($domaineCarteIdentite->getAltitudeMini()->getValeur());
+                    $altitudeMini->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getAltitudeMini()->getUnite()));
+                    $domaineCarteIdentiteSite->setAltitudeMini($altitudeMini);
+                } else {
+                    $domaineCarteIdentiteSite->getAltitudeMini()->setValeur($domaineCarteIdentite->getAltitudeMini()->getValeur());
+                    $domaineCarteIdentiteSite->getAltitudeMini()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getAltitudeMini()->getUnite()));
+                }
+
+                if (empty($domaineCarteIdentiteSite->getAltitudeMaxi())) {
+                    $altitudeMaxi = new Distance();
+                    $altitudeMaxi->setValeur($domaineCarteIdentite->getAltitudeMaxi()->getValeur());
+                    $altitudeMaxi->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getAltitudeMaxi()->getUnite()));
+                    $domaineCarteIdentiteSite->setAltitudeMaxi($altitudeMaxi);
+                } else {
+                    $domaineCarteIdentiteSite->getAltitudeMaxi()->setValeur($domaineCarteIdentite->getAltitudeMaxi()->getValeur());
+                    $domaineCarteIdentiteSite->getAltitudeMaxi()->setUnite($emSite->find(UniteDistance::class, $domaineCarteIdentite->getAltitudeMaxi()->getUnite()));
+                }
 
 //            Gestion des traductions
                 foreach ($domaineCarteIdentite->getTraductions() as $domaineCarteIdentiteTraduc) {
 //                récupération de la langue sur le site distant
-                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $domaineCarteIdentiteTraduc->getLangue()->getId()));
+                    $langue = $emSite->getRepository(Langue::class)->findOneBy(array('id' => $domaineCarteIdentiteTraduc->getLangue()->getId()));
 
 //                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($domaineCarteIdentiteTraducSite = $em->getRepository(DomaineCarteIdentiteTraduction::class)->findOneBy(array(
+                    if (empty(($domaineCarteIdentiteTraducSite = $emSite->getRepository(DomaineCarteIdentiteTraduction::class)->findOneBy(array(
                         'domaineCarteIdentite' => $domaineCarteIdentiteSite,
                         'langue' => $langue
                     ))))
@@ -455,8 +477,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
 
                 $entitySite->addDomaineCarteIdentite($domaineCarteIdentiteSite);
-                $em->persist($entitySite);
-                $em->flush();
+                $emSite->persist($entitySite);
+                $emSite->flush();
             }
         }
         $this->ajouterDomaineCarteIdentiteUnifieSiteDistant($entity->getId(), $entity->getDomaineCarteIdentites());

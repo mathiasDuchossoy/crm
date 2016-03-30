@@ -47,9 +47,9 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
             cascade: ['remove','persist']
             onDelete: CASCADE
         altitudeMini:
-            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
             cascade:  ['persist', 'remove']
         altitudeMaxi:
-            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
             cascade:  ['persist', 'remove']
     lifecycleCallbacks: {  }

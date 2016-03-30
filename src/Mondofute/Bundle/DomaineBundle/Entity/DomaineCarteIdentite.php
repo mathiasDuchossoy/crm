@@ -62,11 +62,11 @@ class DomaineCarteIdentite
      */
     private $pistes;
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeMini;
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeMaxi;
 
@@ -297,7 +297,7 @@ class DomaineCarteIdentite
     /**
      * Get altitudeMini
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     public function getAltitudeMini()
     {
@@ -307,11 +307,11 @@ class DomaineCarteIdentite
     /**
      * Set altitudeMini
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMini
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMini
      *
      * @return DomaineCarteIdentite
      */
-    public function setAltitudeMini(\Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMini = null)
+    public function setAltitudeMini(\Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMini = null)
     {
         $this->altitudeMini = $altitudeMini;
 
@@ -321,7 +321,7 @@ class DomaineCarteIdentite
     /**
      * Get altitudeMaxi
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\UniteDistance
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     public function getAltitudeMaxi()
     {
@@ -331,11 +331,11 @@ class DomaineCarteIdentite
     /**
      * Set altitudeMaxi
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMaxi
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMaxi
      *
      * @return DomaineCarteIdentite
      */
-    public function setAltitudeMaxi(\Mondofute\Bundle\UniteBundle\Entity\UniteDistance $altitudeMaxi = null)
+    public function setAltitudeMaxi(\Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMaxi = null)
     {
         $this->altitudeMaxi = $altitudeMaxi;
 
