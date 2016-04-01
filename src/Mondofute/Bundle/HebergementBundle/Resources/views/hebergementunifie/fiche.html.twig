@@ -170,6 +170,7 @@
     </script>
     {{ parent() }}
     <script type="text/javascript">
+        var fournisseurs = [];
         function afficherModalRechercheFournisseurs() {
 
             var modal = $('#modalRechercherFournisseur');
@@ -210,46 +211,82 @@
             });
         }
         function ajouterLigneTableauRechercheFournisseur(table, value) {
-            //                            création de la ligne de résultat
+//                            création de la ligne de résultat
             var ligne = $('<tr id="resultatRechercheFournisseur' + value.id + '" data-enseigne="' + value.enseigne + '"></tr>');
 //                            création des colonnes de résultat
             var colonneEnseigne = $('<td>' + value.enseigne + '</td>');
-            var colonneAssocier = $('<td><button type="button" onclick="associerFournisseur(' + value.id + ')" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></td>');
+            var colonneAssocier = $('<td><button type="button" onclick="associerFournisseur(' + value.id + ', \'' + value.enseigne + '\')" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></td>');
 //                            ajout des colonnes dans la ligne
             ligne.append(colonneEnseigne);
             ligne.append(colonneAssocier);
 //                            ajout de la ligne dans le tableau
             table.find('tbody').append(ligne);
         }
-        function associerFournisseur(id) {
-            if ($('#fournisseurAssocie' + id).length == 0) {
-                var indiceFournisseur = genererFormulaireFournisseurHebergement();
-                ajouterLigneFournisseursAssocies(id, indiceFournisseur);
+        function associerFournisseur(id, label) {
+            var present = false;
+//            test la presence du fournisseur "id"
+            for (var i = 0; i < fournisseurs.length; i++) {
+                if (fournisseurs[i] == id) {
+                    present = true;
+                }
+            }
+//            si fournisseur id non présent on genere le formulaire et ajoute la ligne au tableau de fournisseurs
+            if (present === false) {
+                genererFormulaireFournisseurHebergement(id, label);
+                ajouterLigneFournisseursAssocies(id);
+                fournisseurs.push(id);
             }
         }
-        function dissocierFournisseur(indice) {
-            alert(indice);
-            var ligne = $('#fournisseurAssocie' + indice);
-            var form = $('#hebergement_unifie_fournisseurs_' + indice);
-            form.remove();
-            ligne.remove();
-//            $('#form_fournisseurs').remove(form);
-//            $('#tabFournisseursAssocies').remove(ligne);
-        }
-        function genererFormulaireFournisseurHebergement() {
-            var $formFournisseurHebergement = $('#form_fournisseurs');
+        /**
+         * retire la ligne du fournisseur id et supprime le formulaire d'association fournisseur/hebergement
+         * @param id
+         */
+        function dissocierFournisseur(id) {
+//            recupere l'element nombre fournisseur
             var $nbFournisseurs = $('#nb_fournisseurs');
-            var formPrototype = $formFournisseurHebergement.data('prototype');
-            var nbFournisseurs = parseInt($nbFournisseurs.attr('data-index'));
-            var newForm = formPrototype.replace(/__name__/g, nbFournisseurs);
-            $formFournisseurHebergement.append(newForm);
-            $nbFournisseurs.attr('data-index', (nbFournisseurs + 1));
-            return nbFournisseurs;
+//            recupère la ligne du fournisseur a dissocier
+            var ligne = $('#fournisseurAssocie' + id);
+//            recupere le form du fournisseur a dissocier
+            var form = $('#fournisseur' + id);
+//            supprime le formulaire de la page
+            form.remove();
+//            supprime la ligne du tableau des fournisseurs associes
+            ligne.remove();
+//            lit le tableau des fournisseurs associés pour supprimer l'element du tableau
+            for (var i = 0; i < fournisseurs.length; i++) {
+                if (fournisseurs[i] == id) {
+                    fournisseurs.splice(i, 1);
+                    break;
+                }
+            }
+//            décrémente le nombre de fournisseurs associés
+            $nbFournisseurs.attr('data-index', ($nbFournisseurs.attr('data-index') - 1));
         }
-        function ajouterLigneFournisseursAssocies(id, indice) {
-            var ligne = $('<tr id="fournisseurAssocie' + indice + '"></tr>');
+        /**
+         * genere le formulaire et incrémente le nombre de fournisseurs associés
+         * @param id
+         * @param label
+         */
+        function genererFormulaireFournisseurHebergement(id, label) {
+//            récupère l'element contenant le prototype de formulaire fournisseur_hebergement
+            var $formFournisseurHebergement = $('#form_fournisseurs');
+//            récupère l'élément contenant le nombre de fournisseurs associés
+            var $nbFournisseurs = $('#nb_fournisseurs');
+//            récupère le prototype du formulaire FournisseurHebergementType
+            var formPrototype = $formFournisseurHebergement.attr('data-prototype');
+//            mise en forme du formulaire
+            var newForm = '<div id="fournisseur' + id + '" class="row"> <div class="row"><p> Fournisseur: ' + label + '</p></div>' + formPrototype.replace(/__name__/g, id) + '</div>';
+//            ajoute le formulaire dans la page
+            $formFournisseurHebergement.append(newForm);
+//            incrémente le nombre de fournisseurs associés
+            $nbFournisseurs.attr('data-index', (parseInt($nbFournisseurs.attr('data-index')) + 1));
+//            donnes la valeur du fournisseur dans le hidden fournisseur
+            $('#hebergement_unifie_fournisseurs_' + id + '_fournisseur').val(id);
+        }
+        function ajouterLigneFournisseursAssocies(id) {
+            var ligne = $('<tr id="fournisseurAssocie' + id + '"></tr>');
             var colonneEnseigne = $('<td>' + $('#resultatRechercheFournisseur' + id).attr('data-enseigne') + '</td>');
-            var colonneDissocier = $('<td><button type="button" class="btn-default btn" onclick="dissocierFournisseur(' + indice + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
+            var colonneDissocier = $('<td><button type="button" class="btn-default btn" onclick="dissocierFournisseur(' + id + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
             ligne.append(colonneEnseigne);
             ligne.append(colonneDissocier);
             $('#tabFournisseursAssocies').append(ligne);

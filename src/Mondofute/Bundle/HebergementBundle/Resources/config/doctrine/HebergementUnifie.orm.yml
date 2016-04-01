@@ -16,7 +16,6 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie:
             mappedBy: hebergementUnifie
             cascade: ['persist' , 'remove']
         fournisseurs:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
             mappedBy: hebergement
-            cascade: ['persist', 'remove']
     lifecycleCallbacks: {  }

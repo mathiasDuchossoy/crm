@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\HebergementBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,7 +16,9 @@ class FournisseurHebergementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hebergement')//            ->add('fournisseur')
+//            ->add('hebergement')
+//            ->add('fournisseur', EntityType::class, array('class' => Fournisseur::class, 'choice_label' => 'enseigne'))
+            ->add('fournisseur', HiddenType::class)
         ;
     }
 
