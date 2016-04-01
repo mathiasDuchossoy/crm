@@ -16,6 +16,9 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         hebergementUnifie:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
             inversedBy: hebergements
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: hebergements
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction

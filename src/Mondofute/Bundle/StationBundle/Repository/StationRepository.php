@@ -10,4 +10,23 @@ namespace Mondofute\Bundle\StationBundle\Repository;
  */
 class StationRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traduction des stations crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('s , st')
+            ->from('MondofuteStationBundle:Station', 's')
+            ->join('s.traductions', 'st')
+            ->join('s.site', 'site')
+            ->join('st.langue', 'l')
+            ->where("l.code = '$locale'");
+//        ->setParameter('code' , $locale)
+        $qb->orderBy('s.id', 'ASC');
+
+        return $qb;
+    }
 }

@@ -25,6 +25,10 @@ class Hebergement
      * @var \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     private $site;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    private $station;
 
     /**
      * Constructor
@@ -151,6 +155,30 @@ class Hebergement
     public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get station
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    public function getStation()
+    {
+        return $this->station;
+    }
+
+    /**
+     * Set station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Hebergement
+     */
+    public function setStation(\Mondofute\Bundle\StationBundle\Entity\Station $station = null)
+    {
+        $this->station = $station;
 
         return $this;
     }
