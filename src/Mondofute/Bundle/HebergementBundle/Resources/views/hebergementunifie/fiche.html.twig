@@ -26,6 +26,8 @@
                     <div id="data_site_{{ hebergement.vars.value.site.id }}"
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ hebergement.vars.value.site.crm | number_format }}">
+                        {{ form_row(hebergement.station, { 'attr' : { 'data-unique_block_prefix' : hebergement.station.vars['unique_block_prefix']  }}) }}
+
                         {#{{ form_row(domaine.enneige) }}#}
                         {{ form_row(hebergement.site) }}
                         <ul class="nav nav-tabs">

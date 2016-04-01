@@ -5,6 +5,8 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HebergementUnifieType extends AbstractType
@@ -15,20 +17,15 @@ class HebergementUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        dump();die;
-//        $firstRegion = $builder->getData()->getDepartements()->First()->getRegion();
-//        $siteRegion = (!empty($firstRegion)) ? $firstRegion->getSite() : null;
         $builder
             ->add('hebergements', CollectionType::class,
-                array('entry_type' => HebergementType::class))
+                array('entry_type' => HebergementType::class, 'entry_options' => array('locale' => $options["locale"])))
             ->add('fournisseurs', CollectionType::class,
                 array(
                     'entry_type' => FournisseurHebergementType::class
                 ,
                     'allow_add' => true
                 ))
-//            ->add('site')
-//            ->add('regionUnifie')
         ;
     }
 
@@ -39,7 +36,27 @@ class HebergementUnifieType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie',
-            'locale' => null,
+            'locale' => 'fr_FR',
         ));
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $entities = 'hebergements';
+        $entitySelect = 'station';
+        foreach ($view->children[$entities]->children as $viewChild) {
+            $siteId = $viewChild->vars['value']->getSite()->getId();
+            $choices = $viewChild->children[$entitySelect]->vars['choices'];
+
+            $newChoices = array();
+            /** @var ChoiceView $choice */
+            foreach ($choices as $key => $choice) {
+                $choice->attr = array('data-unifie_id' => $choice->data->getStationUnifie()->getId());
+                if ($choice->data->getSite()->getId() == $siteId) {
+                    $newChoices[$key] = $choice;
+                }
+            }
+            $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+        }
     }
 }
