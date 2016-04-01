@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-//        $rootNode = $treeBuilder->root('mondofute_hebergement');
+        $rootNode = $treeBuilder->root('mondofute_hebergement');
         $treeBuilder->root('mondofute_hebergement');
 
         // Here you should define the parameters that are allowed to
