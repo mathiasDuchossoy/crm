@@ -26,6 +26,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         fournisseurEnfants:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             mappedBy: fournisseurParent
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            mappedBy: fournisseur
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

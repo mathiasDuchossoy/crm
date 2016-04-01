@@ -61,6 +61,10 @@ class Fournisseur
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseurParent;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
 
     /**
      * Constructor
@@ -259,5 +263,39 @@ class Fournisseur
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
+    }
+
+    /**
+     * Add hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     *
+     * @return Fournisseur
+     */
+    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    {
+        $this->hebergements[] = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     */
+    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement);
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
     }
 }

@@ -16,4 +16,5 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             inversedBy: fournisseurs
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: hebergements
     lifecycleCallbacks: {  }
