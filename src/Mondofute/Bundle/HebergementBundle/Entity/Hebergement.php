@@ -29,6 +29,14 @@ class Hebergement
      * @var \Mondofute\Bundle\StationBundle\Entity\Station
      */
     private $station;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $typesHebergement;
+    /**
+     * @var \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
+     */
+    private $classement;
 
     /**
      * Constructor
@@ -179,6 +187,64 @@ class Hebergement
     public function setStation(\Mondofute\Bundle\StationBundle\Entity\Station $station = null)
     {
         $this->station = $station;
+
+        return $this;
+    }
+
+    /**
+     * Add typesHebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement
+     *
+     * @return Hebergement
+     */
+    public function addTypesHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement)
+    {
+        $this->typesHebergement[] = $typesHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove typesHebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement
+     */
+    public function removeTypesHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement)
+    {
+        $this->typesHebergement->removeElement($typesHebergement);
+    }
+
+    /**
+     * Get typesHebergement
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypesHebergement()
+    {
+        return $this->typesHebergement;
+    }
+
+    /**
+     * Get classement
+     *
+     * @return \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
+     */
+    public function getClassement()
+    {
+        return $this->classement;
+    }
+
+    /**
+     * Set classement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement $classement
+     *
+     * @return Hebergement
+     */
+    public function setClassement(\Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement $classement = null)
+    {
+        $this->classement = $classement;
 
         return $this;
     }

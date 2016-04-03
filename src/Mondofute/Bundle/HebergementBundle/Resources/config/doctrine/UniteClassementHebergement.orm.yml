@@ -1,0 +1,15 @@
+Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\UniteClassementHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergementTraduction
+            mappedBy: uniteClassementHebergement
+    lifecycleCallbacks: {  }

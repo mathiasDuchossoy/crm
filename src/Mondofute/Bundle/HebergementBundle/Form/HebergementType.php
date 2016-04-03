@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
 
+use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,6 +25,7 @@ class HebergementType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => HebergementTraductionType::class,
             ))
+            ->add('typesHebergement', CollectionType::class, array('entry_type' => TypeHebergement::class))
             ->add('station', EntityType::class, array(
                 'class' => Station::class,
                 'placeholder' => '--- Veuillez choisir une station ---',
@@ -32,6 +34,7 @@ class HebergementType extends AbstractType
                     return $st->getTraductionsByLocale($locale);
                 },
             ))
+            ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
             ->add('site', HiddenType::class, array('mapped' => false))
         ;
     }

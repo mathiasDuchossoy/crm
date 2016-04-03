@@ -24,4 +24,11 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction
             mappedBy: hebergement
             cascade:  ['persist' , 'remove']
+    manyToMany:
+        typesHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+            mappedBy: hebergements
+    oneToOne:
+        classement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
     lifecycleCallbacks: {  }

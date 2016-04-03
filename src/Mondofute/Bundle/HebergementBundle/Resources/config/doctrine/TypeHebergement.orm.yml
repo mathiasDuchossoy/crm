@@ -8,4 +8,8 @@ Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement:
             id: true
             generator:
                 strategy: AUTO
+    manyToMany:
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: typesHebergement
     lifecycleCallbacks: {  }
