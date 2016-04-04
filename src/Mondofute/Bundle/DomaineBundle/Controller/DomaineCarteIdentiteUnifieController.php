@@ -213,7 +213,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         /** @var DomaineCarteIdentiteTraduction $traduction */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
             $handiski = !empty($domaineCarteIdentite->getHandiski()) ? $domaineCarteIdentite->getHandiski() : new Handiski();
             if (empty($handiski->getPresent())) {
@@ -245,7 +245,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
     {
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         /** @var DomaineCarteIdentiteTraduction $traduction */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         foreach ($entity->getDomaineCarteIdentites() as $domaineCarteIdentite) {
             $snowpark = !empty($domaineCarteIdentite->getSnowpark()) ? $domaineCarteIdentite->getSnowpark() : new Snowpark();
