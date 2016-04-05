@@ -61,8 +61,14 @@ class HebergementUnifieController extends Controller
             'label' => 'Enregistrer',
             'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
         ));
+//        dump($hebergementUnifie);
+//        dump($hebergementUnifie->getFournisseurs());
+//        dump($request->get('hebergement_unifie'));
+//
+//        die;
         $form->handleRequest($request);
-
+//        dump($hebergementUnifie);
+//        die;
 //    dump($hebergementUnifie);die;
         if ($form->isSubmitted() && $form->isValid()) {
             // dispacher les données communes
