@@ -232,7 +232,7 @@ class HebergementUnifieController extends Controller
                     $entitySite = new HebergementUnifie();
                 }
 
-//            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
+//            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($hebergementSite = $em->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $entitySite))))) {
                     $hebergementSite = new Hebergement();
                 }
@@ -275,15 +275,15 @@ class HebergementUnifieController extends Controller
                 $em->flush();
             }
         }
-        $this->ajouterHebergementUnifieSiteDistant($entity->getId(), $entity->getHebergements());
+        $this->ajouterHebergementUnifieSiteDistant($entity->getId(), $entity);
     }
 
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
      * @param $idUnifie
-     * @param $hebergements
+     * @param $hebergementUnifie
      */
-    private function ajouterHebergementUnifieSiteDistant($idUnifie, $hebergements)
+    private function ajouterHebergementUnifieSiteDistant($idUnifie, $hebergementUnifie)
     {
         /** @var ArrayCollection $hebergements */
         /** @var Site $site */
@@ -295,8 +295,11 @@ class HebergementUnifieController extends Controller
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $criteres = Criteria::create()
                 ->where(Criteria::expr()->eq('site', $site));
-            if (count($hebergements->matching($criteres)) == 0 && (empty($emSite->getRepository(HebergementUnifie::class)->findBy(array('id' => $idUnifie))))) {
+            if (count($hebergementUnifie->getHebergements()->matching($criteres)) == 0 && (empty($emSite->getRepository(HebergementUnifie::class)->findBy(array('id' => $idUnifie))))) {
                 $entity = new HebergementUnifie();
+                foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                    $entity->addFournisseur($fournisseur);
+                }
                 $emSite->persist($entity);
                 $emSite->flush();
                 // todo: signaler si l'id est différent de celui de la base CRM
