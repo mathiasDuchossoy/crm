@@ -11,7 +11,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 #            options:
 #                unsigned: true
     associationOverride:
-        moyenCommunications:
+        moyenComs:
             joinTable:
                 name: fournisseur_moyenscomm
                 joinColumns:

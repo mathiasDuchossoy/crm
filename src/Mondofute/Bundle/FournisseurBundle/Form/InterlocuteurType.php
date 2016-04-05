@@ -21,7 +21,8 @@ class InterlocuteurType extends AbstractType
     {
         $locale = $options['locale'];
         $builder
-            ->add('prenom', null, array('label' => 'prenom', 'translation_domain' => 'messages'))
+            ->add('prenom')
+            ->add('nom')
             ->add('fonction', EntityType::class, array(
                     'class' => InterlocuteurFonction::class,
                     'placeholder' => 'placeholder.choisir.fonction',
@@ -45,6 +46,14 @@ class InterlocuteurType extends AbstractType
                         return $r->getTraductionsByLocale($locale);
                     },
                 )
+            )
+//            ->add('moyenCommunications'
+//                , CollectionType::class
+//                , array(
+//                    'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType',
+//                    'allow_add' => true
+//                )
+//            )
             )//            ->add('service',  HiddenType::class, array('mapped' => true))
 
         ;

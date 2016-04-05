@@ -23,6 +23,12 @@ class FournisseurType extends AbstractType
     {
         $fournisseurId = $builder->getData()->getId();
         $builder
+            ->add('raisonSociale')
+            ->add('type', EntityType::class, array(
+                'choice_label' => 'libelle',
+                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
+                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
+            ))
             ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
             ->add('fournisseurParent', EntityType::class, array(
                 'choice_label' => 'enseigne',
@@ -51,6 +57,17 @@ class FournisseurType extends AbstractType
                     'label' => 'interlocuteurs',
                     'translation_domain' => 'messages',
                 )
+            )
+            ->add('moyenComs',
+                'Infinite\FormBundle\Form\Type\PolyCollectionType',
+//                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
+                array('types' => array(
+                    'coucou'
+                ),
+//                    'allow_add' => true,
+//                    'allow_delete' => true,
+                )
+            );
             )
             ->add('remiseClefs', CollectionType::class, array(
                 'entry_type' => RemiseClefType::class,
