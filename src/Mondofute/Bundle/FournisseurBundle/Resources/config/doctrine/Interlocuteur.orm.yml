@@ -11,7 +11,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
 #            options:
 #                unsigned: true
     associationOverride:
-        moyenCommunications:
+        moyenComs:
             joinTable:
                 name: interlocuteur_moyenscomm
                 joinColumns:
