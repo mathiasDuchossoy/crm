@@ -2,7 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
-use commun\contactBundle\Entity\Physique;
+use Nucleus\ContactBundle\Entity\Physique;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 /**

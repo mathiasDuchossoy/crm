@@ -38,6 +38,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'InfiniteFormBundle::form_theme.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -88,10 +91,10 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    moyenCommunicationBundle:
+                    NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
-                    contactBundle:
+                    NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
             skifute:
@@ -109,10 +112,10 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    moyenCommunicationBundle:
+                    NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
-                    contactBundle:
+                    NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
             francefute:
@@ -130,10 +133,10 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    moyenCommunicationBundle:
+                    NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
-                    contactBundle:
+                    NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
 

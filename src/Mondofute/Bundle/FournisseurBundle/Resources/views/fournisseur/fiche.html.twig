@@ -14,9 +14,11 @@
 
             {{ form_start(form) }}
             {{ form_row(form.enseigne) }}
+            {{ form_row(form.raisonSociale) }}
             {{ form_row(form.type) }}
             {{ form_row(form.fournisseurParent) }}
             {{ form_row(form.contient) }}
+            {{ form_row(form.moyenComs) }}
 
             <div id="interlocuteur_panels">
                 {% for serviceInterlocuteur in serviceInterlocuteurs %}
@@ -80,8 +82,8 @@
 
             {% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}
 
-            {% set interlocuteurMoyenCommunication = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'].children['moyenCommunications'].vars.prototype ) %}
-            {{ dump(interlocuteurMoyenCommunication) }}
+            {#{% set interlocuteurMoyenCommunication = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'].children['moyenCommunications'].vars.prototype ) %}#}
+            {#{{ dump(interlocuteurMoyenCommunication) }}#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}

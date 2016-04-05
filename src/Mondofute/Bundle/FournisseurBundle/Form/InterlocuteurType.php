@@ -46,13 +46,13 @@ class InterlocuteurType extends AbstractType
                     },
                 )
             )
-            ->add('moyenCommunications'
-                , CollectionType::class
-                , array(
-                    'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType',
-                    'allow_add' => true
-                )
-            )
+//            ->add('moyenCommunications'
+//                , CollectionType::class
+//                , array(
+//                    'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType',
+//                    'allow_add' => true
+//                )
+//            )
 
 //            ->add('fixe', 'commun\moyencommunicationBundle\Form\FixeType' , array('label' => true , 'label_attr' => array('style' => 'display:none')))
 //            ->add('telephone1', 'commun\moyencommunicationBundle\Form\FixeType' , array('label' => 'téléphone 1'))
