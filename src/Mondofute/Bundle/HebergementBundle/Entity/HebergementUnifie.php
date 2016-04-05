@@ -89,13 +89,13 @@ class HebergementUnifie
     /**
      * Add fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param FournisseurHebergement $fournisseur
      *
      * @return HebergementUnifie
      */
-    public function addFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur)
+    public function addFournisseur(FournisseurHebergement $fournisseur)
     {
-        $this->fournisseurs[] = $fournisseur;
+        $this->fournisseurs[] = $fournisseur->setHebergement($this);
 
         return $this;
     }
@@ -103,9 +103,9 @@ class HebergementUnifie
     /**
      * Remove fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param FournisseurHebergement $fournisseur
      */
-    public function removeFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur)
+    public function removeFournisseur(FournisseurHebergement $fournisseur)
     {
         $this->fournisseurs->removeElement($fournisseur);
     }

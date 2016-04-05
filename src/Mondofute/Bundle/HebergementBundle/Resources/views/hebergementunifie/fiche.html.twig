@@ -141,7 +141,8 @@
                         <div class="row">
                             <div class="col-lg-2 col-lg-push-9">
 
-                                <button type="button" onclick="rechercherFournisseursHebergement()"
+                                <button type="button"
+                                        onclick="rechercherFournisseursHebergement($('#rechercheFournisseurEnseigne'))"
                                         class="btn btn-default">
                                     Rechercher
                                 </button>
@@ -180,23 +181,23 @@
             var modal = $('#modalRechercherFournisseur');
             modal.modal().show();
         }
-        function rechercherFournisseursHebergement() {
+        function rechercherFournisseursHebergement($rechercheFournisseurEnseigne) {
 
-            var resultatRechercheFournisseur = $('#resultatRechercheFournisseur');
+            var $resultatRechercheFournisseur = $('#resultatRechercheFournisseur');
 //            lance la requête ajax de recherche des fournisseurs de type hébergement
             $.ajax({
                 url: "{{ path('fournisseur_rechercher_type_hebergement') }}",
                 type: 'GET',
-                data: {'enseigne': resultatRechercheFournisseur.val()},
+                data: {'enseigne': $rechercheFournisseurEnseigne.val()},
                 dataType: 'json',
                 success: function (json) { // quand la réponse de la requete arrive
 //                    vide la zone de résultat de recherche
-                    resultatRechercheFournisseur.html('');
+                    $resultatRechercheFournisseur.html('');
 //                    test si il y a au moins un résultat
                     if (json.length > 0) {
-                        ajouterTableauRechercheFournisseur(json, resultatRechercheFournisseur);
+                        ajouterTableauRechercheFournisseur(json, $resultatRechercheFournisseur);
                     } else {
-                        afficheAucunResultat($('#resultatRechercheFournisseur'))
+                        afficheAucunResultat($resultatRechercheFournisseur)
                     }
                 }
             });
