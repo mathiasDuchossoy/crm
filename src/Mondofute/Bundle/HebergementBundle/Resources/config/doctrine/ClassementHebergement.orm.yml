@@ -13,6 +13,8 @@ Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement:
     fields:
         valeur:
             type: integer
+            options:
+                unsigned: true
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement

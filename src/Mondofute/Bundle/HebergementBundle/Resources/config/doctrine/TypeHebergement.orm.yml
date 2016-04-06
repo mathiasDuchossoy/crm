@@ -8,6 +8,8 @@ Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     manyToMany:
         hebergements:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
