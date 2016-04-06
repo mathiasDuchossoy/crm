@@ -1,0 +1,3 @@
+mondofute_catalogue_homepage:
+    path:     /
+    defaults: { _controller: MondofuteCatalogueBundle:Default:index }
