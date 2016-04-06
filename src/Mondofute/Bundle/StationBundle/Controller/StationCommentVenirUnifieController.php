@@ -39,11 +39,7 @@ class StationCommentVenirUnifieController extends Controller
         ));
     }
 
-    /**
-     * Creates a new StationCommentVenirUnifie entity.
-     *
-     */
-    public function newAction(Request $request)
+    public function testnewAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
@@ -88,13 +84,7 @@ class StationCommentVenirUnifieController extends Controller
             return $this->redirectToRoute('stationcommentvenir_edit', array('id' => $stationCommentVenirUnifie->getId()));
         }
 
-        return $this->render('@MondofuteStation/stationcommentvenirunifie/new.html.twig', array(
-            'sitesAEnregistrer' => $sitesAEnregistrer,
-            'sites' => $sites,
-            'langues' => $langues,
-            'entity' => $stationCommentVenirUnifie,
-            'form' => $form->createView(),
-        ));
+        return $this;
     }
 
     /**
@@ -154,7 +144,6 @@ class StationCommentVenirUnifieController extends Controller
         }
 
     }
-
 
     /**
      * Classe les StationCommentVenirs par classementAffichage
@@ -342,6 +331,64 @@ class StationCommentVenirUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
+    }
+
+    /**
+     * Creates a new StationCommentVenirUnifie entity.
+     *
+     */
+    public function newAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+//        Liste les sites dans l'ordre d'affichage
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
+
+        $sitesAEnregistrer = $request->get('sites');
+
+        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
+
+        $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
+        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
+        $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
+
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
+        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // affilier les entités liés
+//            $this->affilierEntities($stationCommentVenirUnifie);
+
+            $this->supprimerStationCommentVenirs($stationCommentVenirUnifie, $sitesAEnregistrer);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($stationCommentVenirUnifie);
+            $em->flush();
+
+            $this->copieVersSites($stationCommentVenirUnifie);
+
+            $session = $request->getSession();
+            $session->start();
+
+            // add flash messages
+            /** @var Session $session */
+            $session->getFlashBag()->add(
+                'success',
+                'La StationCommentVenir a bien été créé.'
+            );
+
+            return $this->redirectToRoute('stationcommentvenir_edit', array('id' => $stationCommentVenirUnifie->getId()));
+        }
+
+        return $this->render('@MondofuteStation/stationcommentvenirunifie/new.html.twig', array(
+            'sitesAEnregistrer' => $sitesAEnregistrer,
+            'sites' => $sites,
+            'langues' => $langues,
+            'entity' => $stationCommentVenirUnifie,
+            'form' => $form->createView(),
+        ));
     }
 
     /**
