@@ -12,6 +12,7 @@ use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -223,7 +224,11 @@ class HebergementUnifieController extends Controller
                 $em = $this->getDoctrine()->getManager($hebergement->getSite()->getLibelle());
                 $site = $em->getRepository(Site::class)->findOneBy(array('id' => $hebergement->getSite()->getId()));
 //                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
-//                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $hebergement->getRegion()->getRegionUnifie()));
+                if (!empty($hebergement->getStation())) {
+                    $station = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $hebergement->getStation()->getStationUnifie()->getId()));
+                } else {
+                    $station = null;
+                }
 //                dump($region);die;
                 // todo: prendre en compte le fait qu'une région n'est pas sur un site (faire un message d'infos dans a page?)
 //            GESTION EntiteUnifie
@@ -240,6 +245,7 @@ class HebergementUnifieController extends Controller
 //            copie des données station
                 $hebergementSite
                     ->setSite($site)
+                    ->setStation($station)
                     ->setHebergementUnifie($entitySite);
 
 //            Gestion des traductions
