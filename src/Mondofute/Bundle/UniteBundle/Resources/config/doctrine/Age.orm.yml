@@ -13,8 +13,9 @@ Mondofute\Bundle\UniteBundle\Entity\Age:
     fields:
         valeur:
             type: integer
-            unsigned: true
             nullable: true
+            options:
+                unsigned: true
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteAge

@@ -30,6 +30,6 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             mappedBy: hebergements
     oneToOne:
         classement:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
             cascade: ['persist','remove']
     lifecycleCallbacks: {  }

@@ -10,6 +10,7 @@ Mondofute\Bundle\UniteBundle\Entity\Unite:
         1: UniteAge
         2: UniteTarif
         3: UniteDistance
+        4: UniteClassementHebergement
     repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteRepository
     id:
         id:

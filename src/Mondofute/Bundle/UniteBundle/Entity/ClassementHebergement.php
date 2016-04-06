@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Entity;
+namespace Mondofute\Bundle\UniteBundle\Entity;
 
 /**
  * ClassementHebergement
@@ -17,7 +17,7 @@ class ClassementHebergement
      */
     private $valeur;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement
+     * @var UniteClassementHebergement
      */
     private $unite;
 
@@ -58,7 +58,7 @@ class ClassementHebergement
     /**
      * Get unite
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement
+     * @return UniteClassementHebergement
      */
     public function getUnite()
     {
@@ -68,11 +68,11 @@ class ClassementHebergement
     /**
      * Set unite
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement $unite
+     * @param UniteClassementHebergement $unite
      *
      * @return ClassementHebergement
      */
-    public function setUnite(\Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement $unite = null)
+    public function setUnite(UniteClassementHebergement $unite = null)
     {
         $this->unite = $unite;
 

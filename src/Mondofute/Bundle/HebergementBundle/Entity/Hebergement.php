@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
 
 /**
  * Hebergement
@@ -34,7 +35,7 @@ class Hebergement
      */
     private $typesHebergement;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
+     * @var ClassementHebergement
      */
     private $classement;
 
@@ -228,7 +229,7 @@ class Hebergement
     /**
      * Get classement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement
+     * @return ClassementHebergement
      */
     public function getClassement()
     {
@@ -238,11 +239,11 @@ class Hebergement
     /**
      * Set classement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement $classement
+     * @param ClassementHebergement $classement
      *
      * @return Hebergement
      */
-    public function setClassement(\Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement $classement = null)
+    public function setClassement(ClassementHebergement $classement = null)
     {
         $this->classement = $classement;
 

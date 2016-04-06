@@ -1,0 +1,13 @@
+Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteClassementHebergementRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    lifecycleCallbacks: {  }

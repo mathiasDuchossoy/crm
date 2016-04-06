@@ -1,21 +1,20 @@
-Mondofute\Bundle\HebergementBundle\Entity\ClassementHebergement:
+Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\ClassementHebergementRepository
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\ClassementHebergementRepository
     id:
         id:
             type: integer
             id: true
-            options:
-                unsigned: true
             generator:
                 strategy: AUTO
     fields:
         valeur:
             type: integer
+            nullable: true
             options:
                 unsigned: true
     manyToOne:
         unite:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement
     lifecycleCallbacks: {  }
