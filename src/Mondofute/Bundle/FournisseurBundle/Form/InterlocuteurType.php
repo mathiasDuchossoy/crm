@@ -46,6 +46,23 @@ class InterlocuteurType extends AbstractType
                     },
                 )
             )
+            ->add('moyenComs',
+                'Infinite\FormBundle\Form\Type\PolyCollectionType',
+//                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
+                array('types' => array(
+//                    'Nucleus\MoyenComBundle\Form\AdresseType'
+                    'nucleus_moyencombundle_adresse',
+                    'nucleus_moyencombundle_email',
+                    'nucleus_moyencombundle_fixe',
+                    'nucleus_moyencombundle_mobile',
+//                    'Nucleus\MoyenComBundle\Form\FixeType'
+                ),
+                    'prototype_name' => '__mycom_name__',
+//                    'prototypes' => true
+                    'allow_add' => true,
+//                    'allow_delete' => true,
+                )
+            )
 //            ->add('moyenCommunications'
 //                , CollectionType::class
 //                , array(

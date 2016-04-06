@@ -1206,7 +1206,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
-                "reference": "29969902307ab6a95d12302d3cdf7ab7a8eeafc8"
+                "reference": "54630603201b7f53551577ea22a2bb75890c4e26"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1226,7 +1226,7 @@
             "keywords": [
                 "MoyenCom"
             ],
-            "time": "2016-03-25 09:25:01"
+            "time": "2016-04-06 09:17:31"
         },
         {
             "name": "oyejorge/less.php",
