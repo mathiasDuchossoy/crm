@@ -7,3 +7,23 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+#    infinite_form.adresse_type:
+#        class: Nucleus\MoyenComBundle\Form\AdresseType
+#        tags:
+#            form_type:
+#                name: form.type
+#                alias: nucleus_moyencombundle_adresse
+#
+#    moyencombundle_adresse_type:
+#        class: Nucleus\MoyenComBundle\Form\AdresseType
+#        tags:
+#            form_type:
+##            - { name: form.type }
+#              name: form.type
+#              alias: nucleus_moyencombundle_adresse
+#    mondofute_fixe2_type:
+#        class: Nucleus\MoyenComBundle\Form\FixeType
+#        tags:
+#            form_type:
+#                name: form.type
+#                alias: nucleus_moyencombundle_fixe2

@@ -22,6 +22,8 @@ class FournisseurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $fournisseurId = $builder->getData()->getId();
+
+
         $builder
             ->add('raisonSociale')
             ->add('type', EntityType::class, array(
@@ -62,9 +64,12 @@ class FournisseurType extends AbstractType
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
 //                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
                 array('types' => array(
-                    'coucou'
+//                    'Nucleus\MoyenComBundle\Form\AdresseType'
+                    'nucleus_moyencombundle_adresse',
+                    'nucleus_moyencombundle_email',
+                    
                 ),
-//                    'allow_add' => true,
+                    'allow_add' => true,
 //                    'allow_delete' => true,
                 )
             );

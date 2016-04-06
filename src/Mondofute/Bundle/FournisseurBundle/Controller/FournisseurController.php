@@ -22,7 +22,10 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
+use Nucleus\MoyenComBundle\Entity\Fixe;
+use Nucleus\MoyenComBundle\Entity\Mobile;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
+use Proxies\__CG__\Nucleus\MoyenComBundle\Entity\Email;
 use ReflectionClass;
 use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -633,15 +636,36 @@ class FournisseurController extends Controller
         return $this->redirectToRoute('fournisseur_index');
     }
 
-    private function ajouterInterlocuteurMoyenComunnications(Fournisseur $fournisseur)
+//    private function ajouterInterlocuteurMoyenComunnications(Fournisseur $fournisseur)
+//    {
+//        /** @var FournisseurInterlocuteur $interlocuteur */
+//        $interlocuteurs = $fournisseur->getInterlocuteurs();
+//        foreach ($interlocuteurs as $interlocuteur) {
+//            $interlocuteur->getInterlocuteur()->addMoyenCommunication(new Mobile())
+//                ->addMoyenCommunication(new Fixe())
+//                ->addMoyenCommunication(new Fixe());
+//        }
+//    }
+
+    public function chargerFormInterlocuteur()
     {
-        /** @var FournisseurInterlocuteur $interlocuteur */
-        $interlocuteurs = $fournisseur->getInterlocuteurs();
-        foreach ($interlocuteurs as $interlocuteur) {
-            $interlocuteur->getInterlocuteur()->addMoyenCommunication(new Mobile())
-                ->addMoyenCommunication(new Fixe())
-                ->addMoyenCommunication(new Fixe());
-        }
+        $interlocuteur = new Interlocuteur();
+        $interlocuteur->getMoyenComs()
+            ->add(new Adresse());
+        $interlocuteur
+            ->addMoyenCom(new Adresse())
+            ->addMoyenCom(new Fixe())
+            ->addMoyenCom(new Fixe())
+            ->addMoyenCom(new Mobile())
+            ->addMoyenCom(new Email());
+
+        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType', $interlocuteur);
+
+        return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
+            'interlocuteur' => $interlocuteur,
+            'form' => $form->createView(),
+        ));
+        
     }
 
 }
