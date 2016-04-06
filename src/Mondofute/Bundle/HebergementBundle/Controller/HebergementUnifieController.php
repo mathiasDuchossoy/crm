@@ -13,6 +13,7 @@ use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -229,6 +230,11 @@ class HebergementUnifieController extends Controller
                 } else {
                     $station = null;
                 }
+                if (!empty($hebergement->getClassement())) {
+                    $classement = $em->getRepository(ClassementHebergement::class)->findOneBy(array('id' => $hebergement->getClassement()->getId()));
+                } else {
+                    $classement = null;
+                }
 //                dump($region);die;
                 // todo: prendre en compte le fait qu'une région n'est pas sur un site (faire un message d'infos dans a page?)
 //            GESTION EntiteUnifie
@@ -246,6 +252,7 @@ class HebergementUnifieController extends Controller
                 $hebergementSite
                     ->setSite($site)
                     ->setStation($station)
+                    ->setClassement($classement)
                     ->setHebergementUnifie($entitySite);
 
 //            Gestion des traductions
