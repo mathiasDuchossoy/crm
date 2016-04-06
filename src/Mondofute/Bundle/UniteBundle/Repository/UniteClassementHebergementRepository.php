@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Repository;
+namespace Mondofute\Bundle\UniteBundle\Repository;
 
 /**
  * UniteClassementHebergementRepository
@@ -19,7 +19,7 @@ class UniteClassementHebergementRepository extends \Doctrine\ORM\EntityRepositor
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('uch , ucht')
-            ->from('MondofuteHebergementBundle:UniteClassementHebergement', 'uch')
+            ->from('MondofuteUniteBundle:UniteClassementHebergement', 'uch')
             ->join('uch.traductions', 'ucht')
             ->join('ucht.langue', 'l')
             ->where("l.code = '$locale'");

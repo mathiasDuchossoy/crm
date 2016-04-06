@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Repository;
+namespace Mondofute\Bundle\UniteBundle\Repository;
 
 /**
  * ClassementHebergementRepository
