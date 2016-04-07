@@ -21,6 +21,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
                     moyenComm_id:
                         referencedColumnName: id
             cascade: [ persist, merge, detach ]
+#            cascade: [ 'persist', 'merge', 'detach' ]
+#            cascade: [ 'persist', 'remove'  ]
+
+
             orphanRemoval: true
 #    fields:
 #        prenom:
