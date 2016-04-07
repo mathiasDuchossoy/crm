@@ -39,10 +39,9 @@ class Interlocuteur extends Physique
      */
     public function __construct()
     {
-        $this->setDateCreation(new \Datetime());
+        $this->setDateCreation();
         $this->setDateModification(new \Datetime());
-        $this->setDateNaissance(null);
-        $this->setActif(true);
+//        $this->setActif(true);
         $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
