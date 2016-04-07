@@ -132,7 +132,7 @@ class StationCommentVenirUnifieController extends Controller
 
     private function ajouterGrandesVillesDansForm(StationCommentVenirUnifie $entity)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $grandeVilles = $em->getRepository(GrandeVille::class)->findAll();
         /** @var StationCommentVenir $stationCommentVenir */
         foreach ($entity->getStationCommentVenirs() as $stationCommentVenir) {
