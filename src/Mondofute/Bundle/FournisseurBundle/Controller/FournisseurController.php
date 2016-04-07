@@ -15,7 +15,6 @@ use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
-use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Fixe;
 use Nucleus\MoyenComBundle\Entity\Mobile;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
@@ -126,7 +125,7 @@ class FournisseurController extends Controller
             if (!empty($moyenComsSite)) {
                 foreach ($moyenComsSite as $key => $moyenComSite) {
                     $moyenComSite->setDateModification(new DateTime());
-                    $moyenComSite->setDateCreation(new DateTime());
+                    $moyenComSite->setDateCreation();
                     $moyenComsSite[$key] = clone $moyenComSite;
                 }
             }
@@ -272,9 +271,9 @@ class FournisseurController extends Controller
             $fournisseurSite->setContient($fournisseur->getContient());
             $fournisseurSite->setDateModification(new DateTime());
 
-            dump($fournisseurSite->getMoyenComs()->first());
+
             foreach ($fournisseur->getMoyenComs() as $key => $moyenCom) {
-                dump($typeComm = (new ReflectionClass($moyenCom))->getShortName());
+                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                 switch ($typeComm) {
                     case "Adresse":
                         $adresse = $fournisseurSite->getMoyenComs()->get($key);
@@ -290,7 +289,6 @@ class FournisseurController extends Controller
                         break;
                 }
             }
-//            die;
 
             if (!empty($fournisseur->getFournisseurParent())) {
                 $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getFournisseurParent()->getId()));
