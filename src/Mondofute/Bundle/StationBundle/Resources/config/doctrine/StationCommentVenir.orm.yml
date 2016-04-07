@@ -19,7 +19,7 @@ Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
     oneToMany:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
-            mappedBy: StationCommentVenir
+            mappedBy: stationCommentVenir
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction
             mappedBy: stationCommentVenir
