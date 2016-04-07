@@ -195,11 +195,25 @@
             {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe , { 'label' : 'Télephone __number__' }) %}
             {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_mobile , { 'label' : 'Mobile' }) %}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
-            <div id="values-interlocuteurs" style="">
-                {#<div id="values-interlocuteurs" style="display: none">#}
+            {#<div id="values-interlocuteurs" style="">#}
+            <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
                         {{ form_widget(element) }}
+                        {#{% for child in element.children %}#}
+                        {#{{ dump(child.vars.name) }}#}
+                        {#{%  if child.vars.name == 'moyenComs' %}#}
+                        {#{{ dump(element.moyenComs) }}#}
+                        {#{% for key , moyenCom in element.moyenComs %}#}
+                        {#{{ dump(   moyenCom.vars.value) }}#}
+                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
+                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
+                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
+                        {#{% endfor %}#}
+                        {#{% else %}#}
+                        {#{{ form_row(child) }}#}
+                        {#{% endif %}#}
+                        {#{% endfor %}#}
                     {% endfor %}
                 {% endfor %}
             </div>

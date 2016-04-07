@@ -25,7 +25,6 @@ use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Fixe;
 use Nucleus\MoyenComBundle\Entity\Mobile;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
-use Proxies\__CG__\Nucleus\MoyenComBundle\Entity\Email;
 use ReflectionClass;
 use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -807,26 +806,26 @@ class FournisseurController extends Controller
 //                ->addMoyenCommunication(new Fixe());
 //        }
 //    }
-
-    public function chargerFormInterlocuteur()
-    {
-        $interlocuteur = new Interlocuteur();
-        $interlocuteur->getMoyenComs()
-            ->add(new Adresse());
-        $interlocuteur
-            ->addMoyenCom(new Adresse())
-            ->addMoyenCom(new Fixe())
-            ->addMoyenCom(new Fixe())
-            ->addMoyenCom(new Mobile())
-            ->addMoyenCom(new Email());
-
-        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType', $interlocuteur);
-
-        return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
-            'interlocuteur' => $interlocuteur,
-            'form' => $form->createView(),
-        ));
-        
-    }
+//
+//    public function chargerFormInterlocuteur()
+//    {
+//        $interlocuteur = new Interlocuteur();
+//        $interlocuteur->getMoyenComs()
+//            ->add(new Adresse());
+//        $interlocuteur
+//            ->addMoyenCom(new Adresse())
+//            ->addMoyenCom(new Fixe())
+//            ->addMoyenCom(new Fixe())
+//            ->addMoyenCom(new Mobile())
+//            ->addMoyenCom(new Email());
+//
+//        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType', $interlocuteur);
+//
+//        return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
+//            'interlocuteur' => $interlocuteur,
+//            'form' => $form->createView(),
+//        ));
+//
+//    }
 
 }
