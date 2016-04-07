@@ -55,6 +55,7 @@ class InterlocuteurType extends AbstractType
                 ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
+                    'by_reference' => false,
                 )
             )
         ;

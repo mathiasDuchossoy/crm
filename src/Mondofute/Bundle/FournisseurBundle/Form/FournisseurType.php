@@ -52,6 +52,7 @@ class FournisseurType extends AbstractType
                     'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\FournisseurInterlocuteurType',
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'by_reference' => false,
                 )
             )
             ->add('moyenComs',
