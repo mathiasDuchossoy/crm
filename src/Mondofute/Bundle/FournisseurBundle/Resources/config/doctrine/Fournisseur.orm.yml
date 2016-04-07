@@ -20,7 +20,8 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
                 inverseJoinColumns:
                     moyenComm_id:
                         referencedColumnName: id
-            cascade: [ persist, merge, detach ]
+            cascade: [ 'persist', 'merge', 'detach'  ]
+#            cascade: [ 'persist', 'remove'  ]
             orphanRemoval: true
     fields:
 #        enseigne:
