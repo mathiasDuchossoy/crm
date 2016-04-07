@@ -218,9 +218,11 @@ class FournisseurController extends Controller
 
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
+
+
                     // if it was a many-to-one relationship, remove the relationship like this
                     $this->deleteInterlocuteurSites($interlocuteur);
-
+                    $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
                     $interlocuteur->setFournisseur(null);
 
                     // if you wanted to delete the Tag entirely, you can also do that
@@ -233,6 +235,7 @@ class FournisseurController extends Controller
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
+
             $em->persist($fournisseur);
             $em->flush();
 
@@ -262,9 +265,38 @@ class FournisseurController extends Controller
 
             $interlocuteurSite = $emSite->find('MondofuteFournisseurBundle:FournisseurInterlocuteur', $interlocuteur->getId());
 
-            $interlocuteurSite->setFournisseur(null);
+            if (!empty($interlocuteurSite)) {
+                $this->deleteMoyenComs($interlocuteurSite->getInterlocuteur());
 
-            $emSite->remove($interlocuteurSite);
+//                $moyenComs = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
+//                if (!empty($moyenComs))
+//                {
+//                    foreach ($moyenComs as $moyenCom)
+//                    {
+//                        $interlocuteurSite->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                    }
+//                }
+
+                $interlocuteurSite->setFournisseur(null);
+
+                $emSite->remove($interlocuteurSite);
+                die;
+            }
+
+
+        }
+    }
+
+    /**
+     * @param $entity
+     */
+    private function deleteMoyenComs($entity)
+    {
+        $moyenComs = $entity->getMoyenComs();
+        if (!empty($moyenComs)) {
+            foreach ($moyenComs as $moyenCom) {
+                $entity->removeMoyenCom($moyenCom);
+            }
         }
     }
 
@@ -332,14 +364,67 @@ class FournisseurController extends Controller
                     }
                     $interlocuteurSite->getInterlocuteur()->setDateModification(new DateTime());
 
-                    $moyenComs = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
-                    if (!empty($moyenComs)) {
+                    $moyenComsSite = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
+                    if (!empty($moyenComsSite)) {
                         // todo : maj les moyens de communications
+                        foreach ($moyenComsSite as $key => $moyenComSite) {
+                            $typeComm = (new ReflectionClass($moyenComSite))->getShortName();
+//                            switch ($typeComm)
+                            $firstFixe = true;
+                            switch ($typeComm) {
+                                case 'Adresse':
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
+                                        return (new ReflectionClass($element))->getShortName() == 'Adresse';
+                                    })->first();
+                                    $moyenComSite->setCodePostal($moyenComCrm->getCodePostal());
+                                    $moyenComSite->setAdresse1($moyenComCrm->getAdresse1());
+                                    $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
+                                    $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
+                                    $moyenComSite->setVille($moyenComCrm->getVille());
+                                    $moyenComSite->setPays($moyenComCrm->getPays());
+                                    $moyenComSite->setPays($moyenComCrm->getPays());
+                                    $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
+                                    $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
+                                    $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
+                                    $moyenComSite->setDateModification(new DateTime());
+                                    break;
+                                case 'Email':
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
+                                        return (new ReflectionClass($element))->getShortName() == 'Email';
+                                    })->first();
+                                    $moyenComSite->setAdresse($moyenComCrm->getAdresse());
+                                    $moyenComSite->setDateModification(new DateTime());
+                                    break;
+                                case 'Mobile':
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
+                                        return (new ReflectionClass($element))->getShortName() == 'Mobile';
+                                    })->first();
+                                    $moyenComSite->setNumero($moyenComCrm->getnumero());
+                                    $moyenComSite->setDateModification(new DateTime());
+                                    break;
+                                case 'Fixe':
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
+                                        return (new ReflectionClass($element))->getShortName() == 'Fixe';
+                                    });
+                                    if ($firstFixe) {
+                                        $moyenComSite->setNumero($moyenComCrm->first()->getNumero());
+                                        $moyenComSite->setDateModification(new DateTime());
+                                        $firstFixe = false;
+                                    } else {
+                                        $moyenComSite->setNumero($moyenComSite->last()->getnumero());
+                                        $moyenComSite->setDateModification(new DateTime());
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
 
                 } else {
                     $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
 
+                    /** @var Interlocuteur $interlocuteurSite */
                     $interlocuteurSite = new Interlocuteur();
 
                     $interlocuteurSite->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
@@ -354,6 +439,13 @@ class FournisseurController extends Controller
 
                     $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
                     $fournisseurInterlocuteurSite->setInterlocuteur($interlocuteurSite);
+
+                    foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+                        $moyenCom->setDateCreation();
+                        $interlocuteurSite->addMoyenCom(clone $moyenCom);
+//                        dump($moyenCom);
+                    }
+
 
                     $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
 
@@ -386,21 +478,23 @@ class FournisseurController extends Controller
                     $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
 
                     // ***** suppression des moyen de communications *****
-                    $moyenComs = $fournisseurSite->getMoyenComs();
-                    if (!empty($moyenComs)) {
-                        foreach ($moyenComs as $moyenCom) {
-                            $fournisseurSite->removeMoyenCom($moyenCom);
-                        }
-                    }
+//                    $moyenComs = $fournisseurSite->getMoyenComs();
+//                    if (!empty($moyenComs)) {
+//                        foreach ($moyenComs as $moyenCom) {
+//                            $fournisseurSite->removeMoyenCom($moyenCom);
+//                        }
+//                    }
+                    $this->deleteMoyenComs($fournisseurSite);
                     $interlocuteurs = $fournisseurSite->getInterlocuteurs();
                     if (!empty($interlocuteurs)) {
                         foreach ($interlocuteurs as $interlocuteur) {
-                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
-                            if (!empty($moyenComs)) {
-                                foreach ($moyenComs as $moyenCom) {
-                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
-                                }
-                            }
+                            $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
+//                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+//                            if (!empty($moyenComs)) {
+//                                foreach ($moyenComs as $moyenCom) {
+//                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                                }
+//                            }
                         }
                     }
                     // ***** fin suppression des moyen de communications *****
@@ -412,21 +506,23 @@ class FournisseurController extends Controller
                 }
 
                 // ***** suppression des moyen de communications *****
-                $moyenComs = $fournisseur->getMoyenComs();
-                if (!empty($moyenComs)) {
-                    foreach ($moyenComs as $moyenCom) {
-                        $fournisseur->removeMoyenCom($moyenCom);
-                    }
-                }
+//                $moyenComs = $fournisseur->getMoyenComs();
+//                if (!empty($moyenComs)) {
+//                    foreach ($moyenComs as $moyenCom) {
+//                        $fournisseur->removeMoyenCom($moyenCom);
+//                    }
+//                }
+                $this->deleteMoyenComs($fournisseur);
                 $interlocuteurs = $fournisseur->getInterlocuteurs();
                 if (!empty($interlocuteurs)) {
                     foreach ($interlocuteurs as $interlocuteur) {
-                        $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
-                        if (!empty($moyenComs)) {
-                            foreach ($moyenComs as $moyenCom) {
-                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
-                            }
-                        }
+//                        $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+//                        if (!empty($moyenComs)) {
+//                            foreach ($moyenComs as $moyenCom) {
+//                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                            }
+//                        }
+                        $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
                     }
                 }
                 // ***** fin suppression des moyen de communications *****
