@@ -200,6 +200,20 @@
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
                         {{ form_widget(element) }}
+                        {#{% for child in element.children %}#}
+                        {#{{ dump(child.vars.name) }}#}
+                        {#{%  if child.vars.name == 'moyenComs' %}#}
+                        {#{{ dump(element.moyenComs) }}#}
+                        {#{% for key , moyenCom in element.moyenComs %}#}
+                        {#{{ dump(   moyenCom.vars.value) }}#}
+                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
+                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
+                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
+                        {#{% endfor %}#}
+                        {#{% else %}#}
+                        {#{{ form_row(child) }}#}
+                        {#{% endif %}#}
+                        {#{% endfor %}#}
                     {% endfor %}
                 {% endfor %}
             </div>
