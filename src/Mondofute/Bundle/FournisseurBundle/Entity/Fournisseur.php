@@ -130,7 +130,7 @@ class Fournisseur extends Moral
      */
     public function __construct()
     {
-//        $this->setDateCreation(new \Datetime());
+        $this->setDateCreation();
         $this->setDateModification(new \Datetime());
 //        $this->setActif(true);
         $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();

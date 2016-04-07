@@ -190,11 +190,13 @@
 
             {% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}
             {% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}
-            {% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email.adresse , { 'label' : 'Email' }) %}
-            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe.numero , { 'label' : 'Télephone __number__' }) %}
-            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_mobile.numero , { 'label' : 'Mobile' }) %}
+            {% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}
+            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
+            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe , { 'label' : 'Télephone __number__' }) %}
+            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_mobile , { 'label' : 'Mobile' }) %}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
-            <div id="values-interlocuteurs" style="display: none">
+            <div id="values-interlocuteurs" style="">
+                {#<div id="values-interlocuteurs" style="display: none">#}
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
                         {{ form_widget(element) }}
@@ -222,7 +224,7 @@
                                   data-prototype_moyen_coms_tel2="{{ moyenComsFixe | e }}"
                                   data-prototype_moyen_coms_mobile="{{ moyenComsMobile | e }}"
                                   class="form-horizontal">
-                                {{ interlocuteurs|raw }}
+                                {#{{ interlocuteurs|raw }}#}
                                 {#{{ prenom|raw }}#}
                                 {#{{ service|raw }}#}
                                 {#{{ fonction|raw }}#}

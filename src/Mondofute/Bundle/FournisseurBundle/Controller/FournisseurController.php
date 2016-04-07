@@ -2,9 +2,9 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
-use commun\moyencommunicationBundle\Entity\Fixe;
-use commun\moyencommunicationBundle\Entity\Mobile;
-use commun\moyencommunicationBundle\Entity\MoyenCommunication;
+//use commun\moyencommunicationBundle\Entity\Fixe;
+//use commun\moyencommunicationBundle\Entity\Mobile;
+//use commun\moyencommunicationBundle\Entity\MoyenCommunication;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -21,6 +21,7 @@ use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Fixe;
 use Nucleus\MoyenComBundle\Entity\Mobile;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
@@ -93,18 +94,38 @@ class FournisseurController extends Controller
 //        $this->ajouterInterlocuteurMoyenComunnications($fournisseur);
 //        dump($fournisseur);die;
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
+//        dump($form);die;
+//        $moyenCom = new MoyenCommunication();
+//        $form->add('');
+
+//        $formMoyenComm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType');
+//        $formMoyenComm->add(
+//
+//        )
+//        die;
+//        $formMoyenComm = $this->createForm();
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
+
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
                 $interlocuteur->getInterlocuteur()
                     //                    ->setDateNaissance(new DateTime())
                 ;
             }
+
+            foreach ($fournisseur->getMoyenComs() as $moyenCom) {
+                $moyenCom->setDateCreation();
+            }
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+                    $moyenCom->setDateCreation();
+                }
+            }
+
             $this->copieVersSites($fournisseur);
 
             $em->persist($fournisseur);
@@ -605,11 +626,52 @@ class FournisseurController extends Controller
                     $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                     // Récupérer l'entité sur le site distant puis la suprrimer.
                     $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
+
+                    // ***** suppression des moyen de communications *****
+                    $moyenComs = $fournisseurSite->getMoyenComs();
+                    if (!empty($moyenComs)) {
+                        foreach ($moyenComs as $moyenCom) {
+                            $fournisseurSite->removeMoyenCom($moyenCom);
+                        }
+                    }
+                    $interlocuteurs = $fournisseurSite->getInterlocuteurs();
+                    if (!empty($interlocuteurs)) {
+                        foreach ($interlocuteurs as $interlocuteur) {
+                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+                            if (!empty($moyenComs)) {
+                                foreach ($moyenComs as $moyenCom) {
+                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+                                }
+                            }
+                        }
+                    }
+                    // ***** fin suppression des moyen de communications *****
+
                     if (!empty($fournisseurSite)) {
                         $emSite->remove($fournisseurSite);
                         $emSite->flush();
                     }
                 }
+
+                // ***** suppression des moyen de communications *****
+                $moyenComs = $fournisseur->getMoyenComs();
+                if (!empty($moyenComs)) {
+                    foreach ($moyenComs as $moyenCom) {
+                        $fournisseur->removeMoyenCom($moyenCom);
+                    }
+                }
+                $interlocuteurs = $fournisseur->getInterlocuteurs();
+                if (!empty($interlocuteurs)) {
+                    foreach ($interlocuteurs as $interlocuteur) {
+                        $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+                        if (!empty($moyenComs)) {
+                            foreach ($moyenComs as $moyenCom) {
+                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+                            }
+                        }
+                    }
+                }
+                // ***** fin suppression des moyen de communications *****
 
                 $em->remove($fournisseur);
                 $em->flush();

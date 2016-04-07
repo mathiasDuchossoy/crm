@@ -58,6 +58,7 @@ class FournisseurType extends AbstractType
                     'allow_delete' => true,
                     'label' => 'interlocuteurs',
                     'translation_domain' => 'messages',
+                    'by_reference' => false,
                 )
             )
             ->add('moyenComs',
