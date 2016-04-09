@@ -25,8 +25,21 @@
         "components/jquery": "^2.1",
         "twitter/bootstrap": "^3.3",
         "oyejorge/less.php": "v1.7.0.10",
-        "stephanecollot/datetimepicker-bundle": "^1.0"
+        "stephanecollot/datetimepicker-bundle": "^1.0",
+        "nucleus/contactbundle": "dev-commun",
+        "nucleus/moyencombundle": "dev-commun",
+        "infinite-networks/form-bundle": "^1.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "http://labgit.com/symfony-vendors/contactBundle.git"
+        },
+        {
+            "type": "vcs",
+            "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git"
+        }
+    ],
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
         "symfony/phpunit-bridge": "~2.7"
@@ -50,7 +63,8 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "secure-http": false
     },
     "extra": {
         "symfony-app-dir": "app",

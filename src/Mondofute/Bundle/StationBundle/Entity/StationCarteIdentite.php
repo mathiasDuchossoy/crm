@@ -2,15 +2,17 @@
 
 namespace Mondofute\Bundle\StationBundle\Entity;
 
+use Nucleus\ContactBundle\Entity\Moral;
+
 /**
  * StationCarteIdentite
  */
-class StationCarteIdentite
+class StationCarteIdentite extends Moral
 {
-    /**
-     * @var integer
-     */
-    private $id;
+//    /**
+//     * @var integer
+//     */
+//    private $id;
 
     /**
      * @var integer
@@ -65,15 +67,15 @@ class StationCarteIdentite
         $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Get codePostal
