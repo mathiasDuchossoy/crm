@@ -20,6 +20,7 @@ Mondofute\Bundle\GeographieBundle\Entity\GrandeVille:
 #            mappedBy: grandeVille
     oneToOne:
         coordonneesGps:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
+            targetEntity: Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+#            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
 
     lifecycleCallbacks: {  }
