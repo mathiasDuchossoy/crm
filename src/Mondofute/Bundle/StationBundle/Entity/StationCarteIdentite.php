@@ -7,17 +7,17 @@ use Nucleus\ContactBundle\Entity\Moral;
 /**
  * StationCarteIdentite
  */
-class StationCarteIdentite
+class StationCarteIdentite extends Moral
 {
-    /**
-     * @var integer
-     */
-    private $id;
-
 //    /**
 //     * @var integer
 //     */
-//    private $codePostal;
+//    private $id;
+
+    /**
+     * @var integer
+     */
+    private $codePostal;
 
     /**
      * @var string
@@ -58,10 +58,6 @@ class StationCarteIdentite
      * @var \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie
      */
     private $stationCarteIdentiteUnifie;
-    /**
-     * @var \Nucleus\MoyenComBundle\Entity\Adresse
-     */
-    private $adresse;
 
     /**
      * Constructor
@@ -72,37 +68,37 @@ class StationCarteIdentite
     }
 
 //    /**
-//     * Get codePostal
+//     * Get id
 //     *
 //     * @return integer
 //     */
-//    public function getCodePostal()
+//    public function getId()
 //    {
-//        return $this->codePostal;
-//    }
-//
-//    /**
-//     * Set codePostal
-//     *
-//     * @param integer $codePostal
-//     *
-//     * @return StationCarteIdentite
-//     */
-//    public function setCodePostal($codePostal)
-//    {
-//        $this->codePostal = $codePostal;
-//
-//        return $this;
+//        return $this->id;
 //    }
 
     /**
-     * Get id
+     * Get codePostal
      *
      * @return integer
      */
-    public function getId()
+    public function getCodePostal()
     {
-        return $this->id;
+        return $this->codePostal;
+    }
+
+    /**
+     * Set codePostal
+     *
+     * @param integer $codePostal
+     *
+     * @return StationCarteIdentite
+     */
+    public function setCodePostal($codePostal)
+    {
+        $this->codePostal = $codePostal;
+
+        return $this;
     }
 
     /**
@@ -303,30 +299,6 @@ class StationCarteIdentite
     public function setStationCarteIdentiteUnifie(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie $stationCarteIdentiteUnifie = null)
     {
         $this->stationCarteIdentiteUnifie = $stationCarteIdentiteUnifie;
-
-        return $this;
-    }
-
-    /**
-     * Get adresse
-     *
-     * @return \Nucleus\MoyenComBundle\Entity\Adresse
-     */
-    public function getAdresse()
-    {
-        return $this->adresse;
-    }
-
-    /**
-     * Set adresse
-     *
-     * @param \Nucleus\MoyenComBundle\Entity\Adresse $adresse
-     *
-     * @return StationCarteIdentite
-     */
-    public function setAdresse(\Nucleus\MoyenComBundle\Entity\Adresse $adresse = null)
-    {
-        $this->adresse = $adresse;
 
         return $this;
     }
