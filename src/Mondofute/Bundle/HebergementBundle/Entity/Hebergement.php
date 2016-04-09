@@ -4,16 +4,13 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
+use Nucleus\ContactBundle\Entity\Moral;
 
 /**
  * Hebergement
  */
-class Hebergement
+class Hebergement extends Moral
 {
-    /**
-     * @var int
-     */
-    private $id;
     /**
      * @var \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
      */
@@ -47,15 +44,6 @@ class Hebergement
         $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Get hebergementUnifie
@@ -84,7 +72,6 @@ class Hebergement
 
     public function __clone()
     {
-        $this->id = null;
         $traductions = $this->getTraductions();
         $this->traductions = new ArrayCollection();
         if (count($traductions) > 0) {

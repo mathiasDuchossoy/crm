@@ -27,8 +27,9 @@
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ hebergement.vars.value.site.crm | number_format }}">
                         {{ form_row(hebergement.station, { 'attr' : { 'data-unique_block_prefix' : hebergement.station.vars['unique_block_prefix']  }}) }}
-                        {{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}
-                        {{ form_row(hebergement.classement, { 'attr' : { 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
+                        {#{{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}#}
+                        {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
+                        {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
 
                         {#{{ form_row(domaine.enneige) }}#}
                         {{ form_row(hebergement.site) }}
@@ -161,12 +162,14 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push('_hebergement_unifie_hebergements_entry_station');
         {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_domaineParent");#}
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
         {#{% endfor %}#}
-        {#var items = [];#}
+        var items = [];
+        //        items.push('_hebergement_unifie_hebergements_entry_station');
         {#items.push("_domaine_unifie_domaines_entry_domaineParent");#}
         {#{% for langue in langues %}#}
         {#items.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}

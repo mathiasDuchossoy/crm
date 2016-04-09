@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "12a468829f7855a165fc9cc699d83e45",
-    "content-hash": "2ef089a10c8cd52d7bd7f3b52a83dcae",
+    "hash": "7a59df207cdca49f566320047620f086",
+    "content-hash": "c1d966865d038927a5d267be07193699",
     "packages": [
         {
             "name": "components/jquery",
@@ -867,6 +867,62 @@
             "time": "2015-11-10 17:04:01"
         },
         {
+            "name": "infinite-networks/form-bundle",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/infinite-networks/InfiniteFormBundle.git",
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/dcf3168890847e40440a577f34f87b95cbb1cca9",
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "~2.3",
+                "php": ">=5.3.2",
+                "symfony/form": "~2.3",
+                "symfony/framework-bundle": "~2.3"
+            },
+            "conflict": {
+                "twig/twig": "<1.12"
+            },
+            "require-dev": {
+                "components/jquery": "*",
+                "components/qunit": "*",
+                "doctrine/doctrine-bundle": "~1.2",
+                "doctrine/orm": "~2.3",
+                "robloach/component-installer": "~0.1.1",
+                "symfony/phpunit-bridge": "^2.7",
+                "symfony/symfony": "^2.3.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Infinite\\FormBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tim Nagel",
+                    "email": "t.nagel@infinite.net.au"
+                }
+            ],
+            "description": "A collection of useful form types and extensions for Symfony2",
+            "time": "2015-11-26 08:17:47"
+        },
+        {
             "name": "ircmaxell/password-compat",
             "version": "v1.0.4",
             "source": {
@@ -1037,16 +1093,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.1",
+            "version": "1.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
-                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/064b38c16790249488e7a8b987acf1c9d7383c09",
+                "reference": "064b38c16790249488e7a8b987acf1c9d7383c09",
                 "shasum": ""
             },
             "require": {
@@ -1061,13 +1117,13 @@
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
                 "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
                 "raven/raven": "^0.13",
                 "ruflin/elastica": ">=0.90 <3.0",
-                "swiftmailer/swiftmailer": "~5.3",
-                "videlalvaro/php-amqplib": "~2.4"
+                "swiftmailer/swiftmailer": "~5.3"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -1076,11 +1132,11 @@
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
-                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-                "videlalvaro/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib"
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
@@ -1111,7 +1167,66 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-13 16:08:35"
+            "time": "2016-04-02 13:12:58"
+        },
+        {
+            "name": "nucleus/contactbundle",
+            "version": "dev-commun",
+            "source": {
+                "type": "git",
+                "url": "http://labgit.com/symfony-vendors/contactBundle.git",
+                "reference": "182841fc8358996e6078ddabaf6cf8db1df7cf3e"
+            },
+            "require": {
+                "nucleus/moyencombundle": "dev-commun"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-commun": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nucleus\\ContactBundle\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "ContactBundle",
+            "keywords": [
+                "Contact"
+            ],
+            "time": "2016-04-04 08:17:35"
+        },
+        {
+            "name": "nucleus/moyencombundle",
+            "version": "dev-commun",
+            "source": {
+                "type": "git",
+                "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
+                "reference": "54630603201b7f53551577ea22a2bb75890c4e26"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-commun": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nucleus\\MoyenComBundle\\": ""
+                }
+            },
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "MoyenComBundle",
+            "keywords": [
+                "MoyenCom"
+            ],
+            "time": "2016-04-06 09:17:31"
         },
         {
             "name": "oyejorge/less.php",
@@ -2571,7 +2686,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nucleus/contactbundle": 20,
+        "nucleus/moyencombundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
