@@ -29,3 +29,9 @@ mondofute_geographie:
 mondofute_descriptionforfaitski:
     resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
     prefix: /
+
+mondofute_unite:
+    resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
+    prefix: /
+
+

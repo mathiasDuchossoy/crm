@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
 
-use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Mondofute\Bundle\UniteBundle\Form\ClassementHebergementType;
@@ -26,7 +25,6 @@ class HebergementType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => HebergementTraductionType::class,
             ))
-            ->add('typesHebergement', CollectionType::class, array('entry_type' => TypeHebergement::class))
             ->add('station', EntityType::class, array(
                 'class' => Station::class,
                 'placeholder' => '--- Veuillez choisir une station ---',
@@ -35,9 +33,22 @@ class HebergementType extends AbstractType
                     return $st->getTraductionsByLocale($locale);
                 },
             ))
+            ->add('moyenComs'
+                , 'Infinite\FormBundle\Form\Type\PolyCollectionType',
+//                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
+                array(
+                    'types' => array(
+//                    'Nucleus\MoyenComBundle\Form\AdresseType'
+//                        AdresseType::class,
+                        'nucleus_moyencombundle_adresse'
+//                    'nucleus_moyencombundle_email',
+
+                    ),
+//                    'allow_add' => true,
+//                    'allow_delete' => true,
+                ))
             ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
-            ->add('site', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('site', HiddenType::class, array('mapped' => false));
     }
 
     /**

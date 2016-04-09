@@ -1,0 +1,11 @@
+Mondofute\Bundle\HebergementBundle\Entity\VillageClub:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\VillageClubRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

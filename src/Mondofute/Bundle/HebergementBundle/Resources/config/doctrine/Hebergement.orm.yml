@@ -1,15 +1,35 @@
 Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
     type: entity
     table: null
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: hebergement_type
+        type: smallint
+    discriminatorMap:
+        0: Hebergement
+        1: Chalet
+        2: Residence
+        3: VillageClub
     repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementRepository
-    id:
-        id:
-            type: integer
-            id: true
-            options:
-                unsigned: true
-            generator:
-                strategy: AUTO
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: hebergement_moyenscom
+                joinColumns:
+                    hebergement_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyencom_id:
+                        referencedColumnName: id
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            options:
+#                unsigned: true
+#            generator:
+#                strategy: AUTO
+
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -24,10 +44,6 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction
             mappedBy: hebergement
             cascade:  ['persist' , 'remove']
-    manyToMany:
-        typesHebergement:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
-            mappedBy: hebergements
     oneToOne:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement

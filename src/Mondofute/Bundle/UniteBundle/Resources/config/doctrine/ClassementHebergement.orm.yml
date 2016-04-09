@@ -17,4 +17,5 @@ Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement:
     manyToOne:
         unite:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement
+            cascade: ['persist','detach']
     lifecycleCallbacks: {  }

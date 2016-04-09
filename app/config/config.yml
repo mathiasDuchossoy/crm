@@ -38,6 +38,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'InfiniteFormBundle::form_theme.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -89,6 +92,12 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -105,6 +114,12 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -121,6 +136,12 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
 
 # Swiftmailer Configuration
 swiftmailer:
