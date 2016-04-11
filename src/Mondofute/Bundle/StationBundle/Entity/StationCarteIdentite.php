@@ -2,20 +2,22 @@
 
 namespace Mondofute\Bundle\StationBundle\Entity;
 
+use Nucleus\ContactBundle\Entity\Moral;
+
 /**
  * StationCarteIdentite
  */
-class StationCarteIdentite
+class StationCarteIdentite extends Moral
 {
-    /**
-     * @var integer
-     */
-    private $id;
+//    /**
+//     * @var integer
+//     */
+//    private $id;
 
-    /**
-     * @var integer
-     */
-    private $codePostal;
+//    /**
+//     * @var integer
+//     */
+//    private $codePostal;
 
     /**
      * @var string
@@ -65,39 +67,39 @@ class StationCarteIdentite
         $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
-    /**
-     * Get codePostal
-     *
-     * @return integer
-     */
-    public function getCodePostal()
-    {
-        return $this->codePostal;
-    }
+//    /**
+//     * Get codePostal
+//     *
+//     * @return integer
+//     */
+//    public function getCodePostal()
+//    {
+//        return $this->codePostal;
+//    }
 
-    /**
-     * Set codePostal
-     *
-     * @param integer $codePostal
-     *
-     * @return StationCarteIdentite
-     */
-    public function setCodePostal($codePostal)
-    {
-        $this->codePostal = $codePostal;
-
-        return $this;
-    }
+//    /**
+//     * Set codePostal
+//     *
+//     * @param integer $codePostal
+//     *
+//     * @return StationCarteIdentite
+//     */
+//    public function setCodePostal($codePostal)
+//    {
+//        $this->codePostal = $codePostal;
+//
+//        return $this;
+//    }
 
     /**
      * Get moisOuverture

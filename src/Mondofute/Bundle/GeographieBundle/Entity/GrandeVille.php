@@ -12,13 +12,13 @@ class GrandeVille
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
-     */
-    private $coordonneesGps;
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+     */
+    private $coordonneesGps;
 
     /**
      * Constructor
@@ -36,30 +36,6 @@ class GrandeVille
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get coordonneesGps
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
-     */
-    public function getCoordonneesGps()
-    {
-        return $this->coordonneesGps;
-    }
-
-    /**
-     * Set coordonneesGps
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps $coordonneesGps
-     *
-     * @return GrandeVille
-     */
-    public function setCoordonneesGps(\Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps $coordonneesGps = null)
-    {
-        $this->coordonneesGps = $coordonneesGps;
-
-        return $this;
     }
 
     /**
@@ -94,5 +70,29 @@ class GrandeVille
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Get coordonneesGps
+     *
+     * @return \Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+     */
+    public function getCoordonneesGps()
+    {
+        return $this->coordonneesGps;
+    }
+
+    /**
+     * Set coordonneesGps
+     *
+     * @param \Nucleus\MoyenComBundle\Entity\CoordonneesGPS $coordonneesGps
+     *
+     * @return GrandeVille
+     */
+    public function setCoordonneesGps(\Nucleus\MoyenComBundle\Entity\CoordonneesGPS $coordonneesGps = null)
+    {
+        $this->coordonneesGps = $coordonneesGps;
+
+        return $this;
     }
 }

@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\StationBundle\Controller;
 
 use ArrayIterator;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
@@ -12,10 +13,13 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
+use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+
 
 /**
  * StationCarteIdentiteUnifie controller.
@@ -44,6 +48,7 @@ class StationCarteIdentiteUnifieController extends Controller
      */
     public function newAction(Request $request)
     {
+        /** @var StationCarteIdentite $stationCarteIdentite */
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -56,6 +61,10 @@ class StationCarteIdentiteUnifieController extends Controller
         $this->ajouterStationCarteIdentitesDansForm($stationCarteIdentiteUnifie);
         $this->stationCarteIdentitesSortByAffichage($stationCarteIdentiteUnifie);
 
+//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+//            $stationCarteIdentite->addMoyenCom(new Adresse());
+//        }
+
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType', $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
@@ -67,6 +76,12 @@ class StationCarteIdentiteUnifieController extends Controller
 //            $this->affilierEntities($stationCarteIdentiteUnifie);
 
             $this->supprimerStationCarteIdentites($stationCarteIdentiteUnifie, $sitesAEnregistrer);
+
+            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+                    $moyenCom->setDateCreation();
+                }
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationCarteIdentiteUnifie);
@@ -114,6 +129,10 @@ class StationCarteIdentiteUnifieController extends Controller
             if (!$siteExiste) {
                 $stationCarteIdentite = new StationCarteIdentite();
                 $stationCarteIdentite->setSite($site);
+                $adresse = new Adresse();
+//                $adresse->setCoordonneeGPS(new CoordonneesGPS());
+                $adresse->setDateCreation();
+                $stationCarteIdentite->addMoyenCom($adresse);
 
                 $entity->addStationCarteIdentite($stationCarteIdentite);
             }
@@ -157,8 +176,12 @@ class StationCarteIdentiteUnifieController extends Controller
      */
     private function supprimerStationCarteIdentites(StationCarteIdentiteUnifie $entity, array $sitesAEnregistrer)
     {
+        /** @var StationCarteIdentite $stationCarteIdentite */
         foreach ($entity->getStationCarteIdentites() as $stationCarteIdentite) {
             if (!in_array($stationCarteIdentite->getSite()->getId(), $sitesAEnregistrer)) {
+                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+                    $stationCarteIdentite->removeMoyenCom($moyenCom);
+                }
                 $stationCarteIdentite->setStationCarteIdentiteUnifie(null);
                 $entity->removeStationCarteIdentite($stationCarteIdentite);
             }
@@ -217,13 +240,39 @@ class StationCarteIdentiteUnifieController extends Controller
                 if (empty(($stationCarteIdentiteSite = $emSite->getRepository(StationCarteIdentite::class)->findOneBy(array('stationCarteIdentiteUnifie' => $entitySite))))) {
                     $stationCarteIdentiteSite = new StationCarteIdentite();
                 }
+                if (!empty($stationCarteIdentiteSite->getMoyenComs())) {
+                    $adresseSite = $stationCarteIdentiteSite->getMoyenComs()->first();
+                    if (empty($adresseSite->getCoordonneeGPS())) {
+                        $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+                    }
+//                    dump($adresseSite);
+//                    die;
+                } else {
+                    $adresseSite = new Adresse();
+                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+                    $adresseSite->setDateCreation();
+                    $stationCarteIdentiteSite->addMoyenCom($adresseSite);
+                }
 
+                $adresse = $stationCarteIdentite->getMoyenComs()->first();
+
+                $adresseSite->setVille($adresse->getVille());
+//                $adresseSite->setAdresse1($adresse->getAdresse1());
+//                $adresseSite->setAdresse2($adresse->getAdresse2());
+//                $adresseSite->setAdresse3($adresse->getAdresse3());
+                $adresseSite->setCodePostal($adresse->getCodePostal());
+//                $adresseSite->setPays($adresse->getPays());
+                $adresseSite->setDateModification(new DateTime());
+//                $adresseSite->getCoordonneeGPS()
+//                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
+//                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
+//                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
 
 //            copie des données stationCarteIdentite
                 $stationCarteIdentiteSite
                     ->setSite($site)
                     ->setStationCarteIdentiteUnifie($entitySite)
-                    ->setCodePostal($stationCarteIdentite->getCodePostal())
+//                    ->setCodePostal($stationCarteIdentite->getCodePostal())
                     ->setJourOuverture($stationCarteIdentite->getJourOuverture())
                     ->setMoisOuverture($stationCarteIdentite->getMoisOuverture())
                     ->setJourFermeture($stationCarteIdentite->getJourFermeture())
@@ -383,12 +432,21 @@ class StationCarteIdentiteUnifieController extends Controller
                     //  suppression de la stationCarteIdentite sur le site
                     $emSite = $this->getDoctrine()->getEntityManager($stationCarteIdentite->getSite()->getLibelle());
                     $entitySite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
+                    /** @var StationCarteIdentite $stationCarteIdentiteSite */
                     $stationCarteIdentiteSite = $entitySite->getStationCarteIdentites()->first();
+                    foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
+                        $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
+                    }
                     $emSite->remove($stationCarteIdentiteSite);
                     $emSite->flush();
 //                    dump($stationCarteIdentite);
                     $stationCarteIdentite->setStationCarteIdentiteUnifie(null);
                     $em->remove($stationCarteIdentite);
+                }
+            }
+            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+                    $moyenCom->setDateModification(new DateTime());
                 }
             }
             $em->persist($stationCarteIdentiteUnifie);
