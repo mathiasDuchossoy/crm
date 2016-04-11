@@ -14,10 +14,10 @@ class StationCarteIdentite extends Moral
 //     */
 //    private $id;
 
-    /**
-     * @var integer
-     */
-    private $codePostal;
+//    /**
+//     * @var integer
+//     */
+//    private $codePostal;
 
     /**
      * @var string
@@ -77,29 +77,29 @@ class StationCarteIdentite extends Moral
 //        return $this->id;
 //    }
 
-    /**
-     * Get codePostal
-     *
-     * @return integer
-     */
-    public function getCodePostal()
-    {
-        return $this->codePostal;
-    }
+//    /**
+//     * Get codePostal
+//     *
+//     * @return integer
+//     */
+//    public function getCodePostal()
+//    {
+//        return $this->codePostal;
+//    }
 
-    /**
-     * Set codePostal
-     *
-     * @param integer $codePostal
-     *
-     * @return StationCarteIdentite
-     */
-    public function setCodePostal($codePostal)
-    {
-        $this->codePostal = $codePostal;
-
-        return $this;
-    }
+//    /**
+//     * Set codePostal
+//     *
+//     * @param integer $codePostal
+//     *
+//     * @return StationCarteIdentite
+//     */
+//    public function setCodePostal($codePostal)
+//    {
+//        $this->codePostal = $codePostal;
+//
+//        return $this;
+//    }
 
     /**
      * Get moisOuverture
