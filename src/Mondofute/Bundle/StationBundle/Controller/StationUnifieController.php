@@ -60,14 +60,14 @@ class StationUnifieController extends Controller
         $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
-//        $commentVenir = new StationCommentVenirUnifieController();
-//        $commentVenir->testnewAction();
-        
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+
+        // Ajouter
+//        $commentVenir = new StationCommentVenirUnifieController();
+//        $form->add($commentVenir->addForm($request));
+        
         $form->handleRequest($request);
-
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             // affilier les entités liés
