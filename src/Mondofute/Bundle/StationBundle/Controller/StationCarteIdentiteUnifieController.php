@@ -61,9 +61,9 @@ class StationCarteIdentiteUnifieController extends Controller
         $this->ajouterStationCarteIdentitesDansForm($stationCarteIdentiteUnifie);
         $this->stationCarteIdentitesSortByAffichage($stationCarteIdentiteUnifie);
 
-        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-            $stationCarteIdentite->addMoyenCom(new Adresse());
-        }
+//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+//            $stationCarteIdentite->addMoyenCom(new Adresse());
+//        }
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType', $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
@@ -257,25 +257,22 @@ class StationCarteIdentiteUnifieController extends Controller
                 $adresse = $stationCarteIdentite->getMoyenComs()->first();
 
                 $adresseSite->setVille($adresse->getVille());
-                $adresseSite->setAdresse1($adresse->getAdresse1());
-                $adresseSite->setAdresse2($adresse->getAdresse2());
-                $adresseSite->setAdresse3($adresse->getAdresse3());
+//                $adresseSite->setAdresse1($adresse->getAdresse1());
+//                $adresseSite->setAdresse2($adresse->getAdresse2());
+//                $adresseSite->setAdresse3($adresse->getAdresse3());
                 $adresseSite->setCodePostal($adresse->getCodePostal());
-                $adresseSite->setPays($adresse->getPays());
+//                $adresseSite->setPays($adresse->getPays());
                 $adresseSite->setDateModification(new DateTime());
-                $adresseSite->getCoordonneeGPS()
-                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
-                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
-                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
-//                dump($adresseSite);die;
-//                if (empty())
-
+//                $adresseSite->getCoordonneeGPS()
+//                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
+//                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
+//                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
 
 //            copie des données stationCarteIdentite
                 $stationCarteIdentiteSite
                     ->setSite($site)
                     ->setStationCarteIdentiteUnifie($entitySite)
-                    ->setCodePostal($stationCarteIdentite->getCodePostal())
+//                    ->setCodePostal($stationCarteIdentite->getCodePostal())
                     ->setJourOuverture($stationCarteIdentite->getJourOuverture())
                     ->setMoisOuverture($stationCarteIdentite->getMoisOuverture())
                     ->setJourFermeture($stationCarteIdentite->getJourFermeture())
