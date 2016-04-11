@@ -6,7 +6,6 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
-use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
@@ -98,13 +97,48 @@ class StationCommentVenirUnifieController extends Controller
         ));
     }
 
+
+//    /**
+//     * Creates a new StationCommentVenirUnifie entity.
+//     *
+//     */
+//    public function addForm(Request $request)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $sitesAEnregistrer = $request->get('sites');
+//
+//        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
+//
+//        $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
+//        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
+//        $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
+//
+//        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
+//        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+//        $form->handleRequest($request);
+//        
+//        if ($form->isSubmitted() && $form->isValid()) {
+//
+//            $this->supprimerStationCommentVenirs($stationCommentVenirUnifie, $sitesAEnregistrer);
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($stationCommentVenirUnifie);
+//            $em->flush();
+//
+//            $this->copieVersSites($stationCommentVenirUnifie);
+//
+//            $session = $request->getSession();
+//            $session->start();
+//        }
+//    }
+
     /**
      * Ajouter les StationCommentVenirs qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
      * @param StationCommentVenirUnifie $entity
      */
     private function ajouterStationCommentVenirsDansForm(StationCommentVenirUnifie $entity)
     {
-
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -229,7 +263,7 @@ class StationCommentVenirUnifieController extends Controller
      * Copie dans la base de données site l'entité StationCommentVenir
      * @param StationCommentVenirUnifie $entity
      */
-    public function copieVersSites(StationCommentVenirUnifie $entity)
+    private function copieVersSites(StationCommentVenirUnifie $entity)
     {
         /** @var StationCommentVenirTraduction $stationCommentVenirTraduc */
 //        Boucle sur les StationCommentVenirs afin de savoir sur quel site nous devons l'enregistrer
@@ -343,64 +377,6 @@ class StationCommentVenirUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
-    }
-
-    /**
-     * Creates a new StationCommentVenirUnifie entity.
-     *
-     */
-    public function newEntity(Station $station)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
-
-        $stationCommentVenirUnifie->addStationCommentVenir($station->getStationCommentVenir());
-        $em->persist($stationCommentVenirUnifie);
-
-        return $stationCommentVenirUnifie;
-    }
-
-    /**
-     * Creates a new StationCommentVenirUnifie entity.
-     *
-     */
-    public function addForm(Request $request)
-    {
-        $sitesAEnregistrer = $request->get('sites');
-
-        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
-
-//        dump($this);
-//        echo 'coucou';
-//        die;
-        $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
-        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
-        $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
-
-//        $form->add('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
-//
-
-
-        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale(), 'auto_initialize' => false,));
-//        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->supprimerStationCommentVenirs($stationCommentVenirUnifie, $sitesAEnregistrer);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($stationCommentVenirUnifie);
-            $em->flush();
-
-            $this->copieVersSites($stationCommentVenirUnifie);
-
-            $session = $request->getSession();
-            $session->start();
-        }
-
-        return $form;
     }
 
     /**
@@ -525,19 +501,6 @@ class StationCommentVenirUnifieController extends Controller
         ));
     }
 
-
-    /**
-     * Displays a form to edit an existing StationCommentVenirUnifie entity.
-     *
-     */
-    public function editEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($stationCommentVenirUnifie);
-//      $em->flush();
-    }
-
     /**
      * Deletes a StationCommentVenirUnifie entity.
      *
@@ -580,31 +543,6 @@ class StationCommentVenirUnifieController extends Controller
         }
 
         return $this->redirectToRoute('stationcommentvenir_index');
-    }
-
-    /**
-     * Deletes a StationCommentVenirUnifie entity.
-     *
-     */
-    public function deleteEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-        // Parcourir les sites non CRM
-        foreach ($sitesDistants as $siteDistant) {
-            // Récupérer le manager du site.
-            $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-            // Récupérer l'entité sur le site distant puis la suprrimer.
-            $stationCommentVenirUnifieSite = $emSite->find(StationCommentVenirUnifie::class, $stationCommentVenirUnifie->getId());
-            if (!empty($stationCommentVenirUnifieSite)) {
-                $emSite->remove($stationCommentVenirUnifieSite);
-                $emSite->flush();
-            }
-        }
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($stationCommentVenirUnifie);
-//        $em->flush();
     }
 
 }
