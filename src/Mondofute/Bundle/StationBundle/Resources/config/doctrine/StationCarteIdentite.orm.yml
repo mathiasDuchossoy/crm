@@ -21,8 +21,8 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
 #            options:
 #                unsigned: true
     fields:
-        codePostal:
-            type: integer
+#        codePostal:
+#            type: integer
         moisOuverture:
             type: string
             length: '2'
