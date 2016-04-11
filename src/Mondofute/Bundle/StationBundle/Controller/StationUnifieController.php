@@ -73,7 +73,7 @@ class StationUnifieController extends Controller
         $this->stationsSortByAffichage($stationUnifie);
 
 //        $commentVenir = new StationCommentVenirUnifieController();
-//        $commentVenir->testnewAction()
+//        $commentVenir->testnewAction();
         
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
