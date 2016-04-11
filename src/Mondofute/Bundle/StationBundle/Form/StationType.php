@@ -92,7 +92,7 @@ class StationType extends AbstractType
 //            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' , 'data_class' => Site::class ));//'mapped' => false ,
 //            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' ));//'mapped' => false ,
             ->add('site', HiddenType::class, array('mapped' => false))
-            ->add('stationCommentVenir', StationCommentVenirType::class);
+//            ->add('stationCommentVenir', StationCommentVenirType::class);
     }
 
     /**

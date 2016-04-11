@@ -75,7 +75,8 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_codePostal");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moyenComs_entry_codePostal");#}
+        {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moyenComs_entry_ville");#}
         {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourOuverture");#}
         {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisOuverture");#}
         {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourFermeture");#}
@@ -84,7 +85,8 @@
         {#itemNonPersonalisable.push("_station_carte_identite_unifie_stationCarteIdentites_entry_altitudeVillage_unite");#}
 
         var items = [];
-        //        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_codePostal");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moyenComs_entry_codePostal");
+        items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moyenComs_entry_ville");
         items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourOuverture");
         items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_moisOuverture");
         items.push("_station_carte_identite_unifie_stationCarteIdentites_entry_jourFermeture");
