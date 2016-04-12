@@ -85,9 +85,15 @@ class StationUnifieType extends AbstractType
             $siteId = $viewChild->vars['value']->getSite()->getId();
             $choices = $viewChild->children[$entitySelect]->vars['choices'];
 
+
             $newChoices = array();
             foreach ($choices as $key => $choice) {
-                $choice->attr = array('data-unifie_id' => $choice->data->getStationUnifie()->getId());
+//                dump($choice->data->getDomaine());
+                $domaineId = !empty($choice->data->getDomaine()) ? $choice->data->getDomaine()->getId() : '';
+                $choice->attr = array(
+                    'data-unifie_id' => $choice->data->getStationUnifie()->getId(),
+                    'data-domaine_id' => $domaineId
+                );
                 if ($choice->data->getSite()->getId() == $siteId) {
                     $newChoices[$key] = $choice;
                 }
