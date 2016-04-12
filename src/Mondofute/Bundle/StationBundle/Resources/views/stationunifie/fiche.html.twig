@@ -28,6 +28,7 @@
                          data-crm="{{ station.vars.value.site.crm | number_format }}">
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
+                            {{ form_row( station.stationMere, { 'attr' : { 'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.zoneTouristiques, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristiques.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
@@ -92,6 +93,7 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_stationMere");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_zoneTouristique");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_secteur");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_departement");#}
@@ -102,6 +104,7 @@
         {#{% endfor %}#}
 
         var items = [];
+        items.push("_station_unifie_stations_entry_stationMere");
         items.push("_station_unifie_stations_entry_zoneTouristiques");
         items.push("_station_unifie_stations_entry_profils");
         items.push("_station_unifie_stations_entry_secteurs");

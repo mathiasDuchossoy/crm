@@ -54,8 +54,8 @@ class StationUnifieController extends Controller
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
-
-        $stationUnifie = new StationUnifie();
+        $stationUnifie
+            = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
@@ -64,8 +64,12 @@ class StationUnifieController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         // Ajouter
+//        dump($this->container);
 //        $commentVenir = new StationCommentVenirUnifieController();
-//        $form->add($commentVenir->addForm($request));
+//        $commentVenir->setContainer($this->container);
+//        dump($commentVenir->addForm($request ));
+//        die;
+//        $form->add($commentVenir->addForm($request));die;
         
         $form->handleRequest($request);
 
@@ -267,6 +271,11 @@ class StationUnifieController extends Controller
                 } else {
                     $departement = null;
                 }
+                if (!empty($station->getStationMere())) {
+                    $stationMere = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $station->getStationMere()->getStationUnifie()));
+                } else {
+                    $stationMere = null;
+                }
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -291,7 +300,8 @@ class StationUnifieController extends Controller
                     ->setSecteurs($secteurs)
                     ->setProfils($profils)
                     ->setDomaine($domaine)
-                    ->setDepartement($departement);
+                    ->setDepartement($departement)
+                    ->setStationMere($stationMere);
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
