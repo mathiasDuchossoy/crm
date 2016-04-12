@@ -31,11 +31,17 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stationDescription:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescription
             inversedBy: stations
+        stationMere:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: stations
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
             mappedBy: station
             cascade:  ['persist' , 'remove']
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: stationMere
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
