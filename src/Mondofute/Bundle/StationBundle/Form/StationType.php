@@ -79,6 +79,9 @@ class StationType extends AbstractType
                 'query_builder' => function (DomaineRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },
+                'attr' => array(
+                    'onchange' => 'javascript:sortStationByDomaine(this);'
+                )
             ))
             ->add('profils', EntityType::class, array(
                 'class' => Profil::class,
