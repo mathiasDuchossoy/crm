@@ -14,7 +14,7 @@ class StationRepository extends \Doctrine\ORM\EntityRepository
      * @param $locale
      * @return \Doctrine\ORM\QueryBuilder
      */
-    // récupérer les traductions des stations crm qui sont de la langue locale
+    // récupérer les traductioin des stations crm qui sont de la langue locale
     public function getTraductionsByLocale($locale, $stationUnifieId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();

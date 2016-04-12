@@ -28,20 +28,11 @@
                          data-crm="{{ station.vars.value.site.crm | number_format }}">
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
-                            {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
-                            {#{{ dump(station) }}#}
-                            {#{{ dump(station.vars.data.stations) }}#}
-                            {#{% if station.vars.data.stations is not empty %}#}
-
-                            {{ form_row( station.stationMere, { 'attr' : {
-                                'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix'] ,
-                                'onchange' : 'displayCheckbox(this ,  "' ~ station.vars.value.site.id ~'")',
-                                'data-site' : station.vars.value.site.id
-                            }}) }}
-                            {#{% endif %}#}
+                            {{ form_row( station.stationMere, { 'attr' : { 'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.zoneTouristiques, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristiques.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.profils , { 'attr' : { 'data-unique_block_prefix' : station.profils.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in station.traductions %}
@@ -68,162 +59,6 @@
                                     {% endfor %}
                                 </div>
                             {% endfor %}
-                        </div>
-                        {#{{ form_row(station.stationCarteIdentite) }}#}
-
-                        {#{% if station.vars.data.stations is not empty %}#}
-                        <label id="cboxStationCI_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationCI_{{ station.vars.value.site.id }}"
-                                    {% if  station.vars.value.stationMere is not empty %}
-                                        {% if station.vars.value.stationMere.stationCarteIdentite.id == station.vars.value.stationCarteIdentite.id %}
-                                            checked
-                                        {% endif %}
-                                    {% endif %}
-                                   onclick="displayStationChild(this , 'stationCarteIdentite_{{ station.vars.value.site.id }}')">
-                            Utiliser la carte d'identité de la
-                            station mère
-                        </label>
-                        <br>
-                        {#{% endif %}#}
-                        <div id="stationCarteIdentite_{{ station.vars.value.site.id }}"
-                                {% if  station.vars.value.stationMere is not empty %}
-                                    {% if station.vars.value.stationMere.stationCarteIdentite.id == station.vars.value.stationCarteIdentite.id %}
-                                        style="display: none"
-                                    {% endif %}
-                                {% endif %}
-                        >
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">
-                                        Carte d'identité
-                                    </h3></div>
-                                <div class="panel-body">
-                                    {{ form_row( station.stationCarteIdentite.adresse.codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.adresse.codePostal.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.adresse.ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.adresse.ville.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
-                                    {{ form_row( station.stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
-                                    {{ form_row( station.stationCarteIdentite.site ) }}
-
-                                </div>
-                            </div>
-                        </div>
-                        <label id="cboxStationCommentVenir_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationCommentVenir_{{ station.vars.value.site.id }}"
-                                    {% if  station.vars.value.stationMere is not empty %}
-                                        {% if station.vars.value.stationMere.stationCommentVenir.id == station.vars.value.stationCommentVenir.id %}
-                                            checked
-                                        {% endif %}
-                                    {% endif %}
-                                   onclick="displayStationChild(this , 'stationCommentVenir_{{ station.vars.value.site.id }}')">
-                            Utiliser le Comment venir de la
-                            station mère
-                        </label>
-                        <br>
-                        {#{% endif %}#}
-                        <div id="stationCommentVenir_{{ station.vars.value.site.id }}"
-                                {% if  station.vars.value.stationMere is not empty %}
-                                    {% if station.vars.value.stationMere.stationCommentVenir.id == station.vars.value.stationCommentVenir.id %}
-                                        style="display: none"
-                                    {% endif %}
-                                {% endif %}
-                        >
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">
-                                        Comment venir
-                                    </h3></div>
-                                <div class="panel-body">
-
-                                    <ul class="nav nav-tabs">
-                                        {{ form_row( station.stationCommentVenir.grandeVilles, { 'attr' : { 'data-unique_block_prefix' : station.stationCommentVenir.grandeVilles.vars['unique_block_prefix']}}) }}
-                                        {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationCommentVenir.traductions %}
-                                            <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                                                <a data-toggle="tab"
-                                                   href="#comment_venir_{{ station.stationCommentVenir.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
-                                                    {# affiche la langue en fonction de la locale#}
-                                                    {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                                        {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                                            {{ traductionLangue.libelle }}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                    <div class="tab-content">
-                                        {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationCommentVenir.traductions %}
-                                            <div id="comment_venir_{{ station.stationCommentVenir.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                                                 class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                                                {% for element in traduction.children %}
-                                                    {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                    {{ form_row( station.stationCommentVenir.site ) }}
-
-                                </div>
-                            </div>
-                        </div>
-                        <label id="cboxStationDescription_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationDescription_{{ station.vars.value.site.id }}"
-                                    {% if  station.vars.value.stationMere is not empty %}
-                                        {% if station.vars.value.stationMere.stationDescription.id == station.vars.value.stationDescription.id %}
-                                            checked
-                                        {% endif %}
-                                    {% endif %}
-                                   onclick="displayStationChild(this , 'stationDescription_{{ station.vars.value.site.id }}')">
-                            Utiliser la description de la
-                            station mère
-                        </label>
-                        <br>
-                        <div id="stationDescription_{{ station.vars.value.site.id }}"
-                                {% if  station.vars.value.stationMere is not empty %}
-                                    {% if station.vars.value.stationMere.stationDescription.id == station.vars.value.stationDescription.id %}
-                                        style="display: none"
-                                    {% endif %}
-                                {% endif %}
-                        >
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><h3 class="panel-title">
-                                        Description
-                                    </h3></div>
-                                <div class="panel-body">
-
-                                    <ul class="nav nav-tabs">
-                                        {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationDescription.traductions %}
-                                            <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                                                <a data-toggle="tab"
-                                                   href="#description_{{ station.stationDescription.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
-                                                    {# affiche la langue en fonction de la locale#}
-                                                    {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                                        {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                                            {{ traductionLangue.libelle }}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                    <div class="tab-content">
-                                        {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationDescription.traductions %}
-                                            <div id="description_{{ station.stationDescription.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
-                                                 class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                                                {% for element in traduction.children %}
-                                                    {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
-                                                {% endfor %}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                    {{ form_row( station.stationDescription.site ) }}
-
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -267,7 +102,6 @@
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");#}
         {#{% endfor %}#}
-        {#itemNonPersonalisable.push("_station_unifie_stations_entry_stationCarteIdentite_moyenComs_entry_ville");#}
 
         var items = [];
         items.push("_station_unifie_stations_entry_stationMere");
@@ -279,27 +113,7 @@
         {% for langue in langues %}
         items.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");
         items.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");
-        //        commentVenir
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enVoiture_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enTrain_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enAvion_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_distancesGrandesVilles_{{ langue.code }}");
-
-        //description
-
-        items.push("_station_unifie_stations_entry_stationDescription_traductions_entry_accroche_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationDescription_traductions_entry_generalite_{{ langue.code }}");
-
-
         {% endfor %}
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_codePostal");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_ville");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_jourOuverture");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_moisOuverture");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_jourFermeture");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_moisFermeture");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_altitudeVillage_valeur");
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_altitudeVillage_unite");
 
     </script>
     {{ parent() }}
@@ -381,112 +195,5 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
-
-        function sortStationByDomaine(element) {
-            $element = $(element);
-            var domaineId = $element.val();
-            $('[data-unique_block_prefix="_station_unifie_stations_entry_stationMere"]').each(function (index, select) {
-                if ($(select).is(":visible")) {
-                    $select = $(select);
-                    $select.val('');
-                    $select.find('option').each(function (index, option) {
-                        $option = $(option);
-                        if ($option.data('domaine_id')) {
-                            if ($option.data('domaine_id') != domaineId) {
-                                $option.hide();
-                            }
-                            else {
-                                $option.show();
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        function displayStationChild(element, div) {
-            $element = $(element);
-            $stationChild = $('#' + div);
-//            console.log(element);
-//            console.log(div);
-//            console.log($element.is(':checked'));
-            if ($element.is(':checked')) {
-//                $('div [id^="' + div + '"]').each(function (index, element) {
-//                    $(element).hide();
-//                });
-                $stationChild.hide();
-                $stationChild.find(':required').each(function (index, element) {
-//                    console.log(element);
-                    $(this).attr('required', false);
-                    $(this).attr("data-required", "true");
-//                    console.log(element);
-                });
-            }
-            else {
-//                $('div [id^="' + div + '"]').each(function (index, element) {
-//                    $(element).show();
-//                });
-                $stationChild.show();
-                $stationChild.find('[data-required=\'true\']').each(function () {
-                    $(this).attr('required', true);
-//                    console.log(this);
-                });
-            }
-        }
-
-        //        $('div [id^="' + div + '"]').each(function (index, element) {
-        //            $(element).hide();
-        //        });
-        //        displayStationChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
-        //            console.log($('#cboxStationCI').find('input')[0]);
-        function displayCheckbox(element, checkbox) {
-            $checkboxCI = $('#cboxStationCI_' + checkbox);
-            $checkboxCV = $('#cboxStationCommentVenir_' + checkbox);
-            $checkboxDescription = $('#cboxStationDescription_' + checkbox);
-//            console.log(checkbox);
-            $element = $(element);
-//            console.log($element.val());
-            if ($element.val()) {
-                // carte identite
-                $checkboxCI.show();
-                $($checkboxCI.find('input')[0]).prop('checked', true);
-                displayStationChild($checkboxCI.find('input')[0], "stationCarteIdentite_" + checkbox);
-//                $('#stationCarteIdentite_' + checkbox).hide();
-                // comment venir
-                $checkboxCV.show();
-                $($checkboxCV.find('input')[0]).prop('checked', true);
-                displayStationChild($checkboxCV.find('input')[0], "stationCommentVenir_" + checkbox);
-//                $('#stationCommentVenir_' + checkbox).hide();
-                $checkboxDescription.show();
-                $($checkboxDescription.find('input')[0]).prop('checked', true);
-                displayStationChild($checkboxDescription.find('input')[0], "stationDescription_" + checkbox);
-            }
-            else {
-                // carte identite
-                $checkboxCI.hide();
-                $($checkboxCI.find('input')[0]).prop('checked', false);
-                $('#stationCarteIdentite_' + checkbox).show();
-                // comment venir
-                $checkboxCV.hide();
-                $($checkboxCV.find('input')[0]).prop('checked', false);
-                $('#stationCommentVenir_' + checkbox).show();
-                $checkboxDescription.hide();
-                $($checkboxDescription.find('input')[0]).prop('checked', false);
-                $('#stationDescription_' + checkbox).show();
-            }
-        }
-        $('[data-unique_block_prefix="_station_unifie_stations_entry_stationMere"]').each(function (index, element) {
-//            console.log($(element));
-            if (!$(element).val()) {
-                $('#cboxStationCI_' + $(element).data('site')).hide();
-            }
-            if (!$(element).val()) {
-                $('#cboxStationCommentVenir_' + $(element).data('site')).hide();
-            }
-            if (!$(element).val()) {
-                $('#cboxStationDescription_' + $(element).data('site')).hide();
-            }
-        });
-
     </script>
 {% endblock %}
