@@ -16,8 +16,12 @@ class StationCommentVenirUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stationCommentVenirs', CollectionType::class, array('entry_type' => StationCommentVenirType::class,
-                'entry_options' => array('locale' => $options["locale"])
+            ->add('stationCommentVenirs', CollectionType::class, array(
+//                'auto_initialize' => false,
+                'entry_type' => StationCommentVenirType::class,
+                'entry_options' => array('locale' => $options["locale"],
+
+                )
             ));
     }
 
