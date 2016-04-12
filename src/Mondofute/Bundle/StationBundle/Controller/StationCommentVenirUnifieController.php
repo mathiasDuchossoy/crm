@@ -97,48 +97,13 @@ class StationCommentVenirUnifieController extends Controller
         ));
     }
 
-
-//    /**
-//     * Creates a new StationCommentVenirUnifie entity.
-//     *
-//     */
-//    public function addForm(Request $request)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $sitesAEnregistrer = $request->get('sites');
-//
-//        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
-//
-//        $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
-//        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
-//        $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
-//
-//        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
-//        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
-//        $form->handleRequest($request);
-//        
-//        if ($form->isSubmitted() && $form->isValid()) {
-//
-//            $this->supprimerStationCommentVenirs($stationCommentVenirUnifie, $sitesAEnregistrer);
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($stationCommentVenirUnifie);
-//            $em->flush();
-//
-//            $this->copieVersSites($stationCommentVenirUnifie);
-//
-//            $session = $request->getSession();
-//            $session->start();
-//        }
-//    }
-
     /**
      * Ajouter les StationCommentVenirs qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
      * @param StationCommentVenirUnifie $entity
      */
     private function ajouterStationCommentVenirsDansForm(StationCommentVenirUnifie $entity)
     {
+
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -377,6 +342,48 @@ class StationCommentVenirUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
+    }
+
+    /**
+     * Creates a new StationCommentVenirUnifie entity.
+     *
+     */
+    public function addForm(Request $request)
+    {
+        $sitesAEnregistrer = $request->get('sites');
+
+        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
+
+//        dump($this);
+//        echo 'coucou';
+//        die;
+        $this->ajouterStationCommentVenirsDansForm($stationCommentVenirUnifie);
+        $this->ajouterGrandesVillesDansForm($stationCommentVenirUnifie);
+        $this->stationCommentVenirsSortByAffichage($stationCommentVenirUnifie);
+
+//        $form->add('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale()));
+//
+
+
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType', $stationCommentVenirUnifie, array('locale' => $request->getLocale(), 'auto_initialize' => false,));
+//        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->supprimerStationCommentVenirs($stationCommentVenirUnifie, $sitesAEnregistrer);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($stationCommentVenirUnifie);
+            $em->flush();
+
+            $this->copieVersSites($stationCommentVenirUnifie);
+
+            $session = $request->getSession();
+            $session->start();
+        }
+
+        return $form;
     }
 
     /**
