@@ -10,12 +10,14 @@ use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Nucleus\MoyenComBundle\Entity\Adresse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,14 +50,14 @@ class StationUnifieController extends Controller
      */
     public function newAction(Request $request)
     {
+        dump($_POST);
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
 
         $sitesAEnregistrer = $request->get('sites');
-        $stationUnifie
-            = new StationUnifie();
+        $stationUnifie = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
@@ -63,21 +65,30 @@ class StationUnifieController extends Controller
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
-        // Ajouter
-//        dump($this->container);
-//        $commentVenir = new StationCommentVenirUnifieController();
-//        $commentVenir->setContainer($this->container);
-//        dump($commentVenir->addForm($request ));
-//        die;
-//        $form->add($commentVenir->addForm($request));die;
-        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // affilier les entités liés
-//            $this->affilierEntities($stationUnifie);
 
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
+            if (!empty($request->get('cboxStationCI'))) {
+                /** @var Station $station */
+                foreach ($stationUnifie->getStations() as $station) {
+                    $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
+                }
+            } else {
+                /** @var Station $station */
+                $stationCarteIdentiteController = new StationCarteIdentiteUnifieController();
+                $stationCarteIdentiteController->setContainer($this->container);
+                $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($stationUnifie);
+
+                foreach ($stationUnifie->getStations() as $station) {
+                    $site = $station->getSite();
+                    $stationCarteIdentite = $stationCarteIdentiteUnifie->getStationCarteIdentites()->filter(function (StationCarteIdentite $element) use ($site) {
+                        return $site == $element->getSite();
+                    })->first();
+                    $station->setStationCarteIdentite($stationCarteIdentite);
+                }
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationUnifie);
@@ -113,6 +124,7 @@ class StationUnifieController extends Controller
      */
     private function ajouterStationsDansForm(StationUnifie $entity)
     {
+        /** @var Station $station */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -120,6 +132,10 @@ class StationUnifieController extends Controller
             $siteExiste = false;
             foreach ($entity->getStations() as $station) {
                 if ($station->getSite() == $site) {
+                    if (empty($station->getStationCarteIdentite()->getMoyenComs())) {
+                        $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
+                    }
+
                     $siteExiste = true;
                     foreach ($langues as $langue) {
 
@@ -137,6 +153,9 @@ class StationUnifieController extends Controller
             }
             if (!$siteExiste) {
                 $station = new Station();
+                $station->setStationCarteIdentite(new StationCarteIdentite());
+                $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
+                $station->getStationCarteIdentite()->setSite($site);
                 $station->setSite($site);
 
                 // ajout des traductions
