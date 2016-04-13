@@ -16,9 +16,15 @@
             {{ form_start(form) }}
             {% include '::coches_sites.html.twig' %}
 
+            <label id="cboxStationCI">
+                <input type="checkbox" name="cboxStationCI"
+                       onclick="displayStationChild(this , 'stationCarteIdentite')"> Utiliser la carte d'identité de la
+                station mère
+            </label>
+            <br>
+
             {% set mesSites = form.stations %}
             {% include '::onglets_sites.html.twig' %}
-
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
                 {% set index = 0 %}
@@ -59,6 +65,17 @@
                                     {% endfor %}
                                 </div>
                             {% endfor %}
+                        </div>
+                        {#{{ form_row(station.stationCarteIdentite) }}#}
+
+                        <div id="stationCarteIdentite_{{ station.vars.value.site.id }}">
+                            {{ form_row( station.stationCarteIdentite.moyenComs[0].codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].codePostal.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.moyenComs[0].ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].ville.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
                         </div>
                     </div>
 
@@ -102,6 +119,7 @@
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");#}
         {#itemNonPersonalisable.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");#}
         {#{% endfor %}#}
+        {#itemNonPersonalisable.push("_station_unifie_stations_entry_stationCarteIdentite_moyenComs_entry_ville");#}
 
         var items = [];
         items.push("_station_unifie_stations_entry_stationMere");
@@ -114,6 +132,14 @@
         items.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");
         items.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");
         {% endfor %}
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_moyenComs_entry_codePostal");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_moyenComs_entry_ville");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_jourOuverture");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_moisOuverture");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_jourFermeture");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_moisFermeture");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_altitudeVillage_valeur");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_altitudeVillage_unite");
 
     </script>
     {{ parent() }}
@@ -205,15 +231,49 @@
                     $select.val('');
                     $select.find('option').each(function (index, option) {
                         $option = $(option);
-                        if ($option.data('domaine_id') != domaineId) {
-                            $option.hide();
-                        }
-                        else {
-                            $option.show();
+                        if ($option.data('domaine_id')) {
+                            if ($option.data('domaine_id') != domaineId) {
+                                $option.hide();
+                            }
+                            else {
+                                $option.show();
+                            }
                         }
                     });
                 }
             });
+        }
+
+        function displayStationChild(element, div) {
+            $element = $(element);
+            $stationChild = $('#' + div);
+            if ($element.is(':checked')) {
+                $('div [id^="' + div + '"]').each(function (index, element) {
+                    $(element).hide();
+                });
+//                $stationChild.hide();
+            }
+            else {
+                $('div [id^="' + div + '"]').each(function (index, element) {
+                    $(element).show();
+                });
+//                $stationChild.show();
+            }
+        }
+        displayStationChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
+        //            console.log($('#cboxStationCI').find('input')[0]);
+        function displayCheckbox(element, checkbox) {
+            $checkbox = $('#' + checkbox);
+//            console.log($checkbox);
+            $element = $(element);
+            console.log($element.val());
+            if ($element.val()) {
+                $checkbox.show();
+            }
+            else {
+                $checkbox.hide();
+                $($checkbox.find('input')[0]).prop('checked', false);
+            }
         }
     </script>
 {% endblock %}
