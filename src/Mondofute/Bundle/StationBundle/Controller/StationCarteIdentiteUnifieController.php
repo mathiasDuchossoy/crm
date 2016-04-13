@@ -6,8 +6,10 @@ use ArrayIterator;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie;
+use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -138,7 +140,6 @@ class StationCarteIdentiteUnifieController extends Controller
             }
         }
     }
-
 
     /**
      * Classe les stationCarteIdentites par classementAffichage
@@ -345,6 +346,32 @@ class StationCarteIdentiteUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
+    }
+
+    public function newEntity(StationUnifie $stationUnifie)
+    {
+        /** @var Station $station */
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
+        $stationCarteIdentiteUnifie = new  StationCarteIdentiteUnifie();
+        foreach ($stationUnifie->getStations() as $station) {
+            $stationCarteIdentite = $station->getStationCarteIdentite();
+            foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+                $moyenCom->setDateCreation();
+            }
+            $stationCarteIdentiteUnifie->addStationCarteIdentite($stationCarteIdentite);
+        }
+
+        $em->persist($stationCarteIdentiteUnifie);
+        $em->flush();
+
+        $this->copieVersSites($stationCarteIdentiteUnifie);
+
+        $em->persist($stationCarteIdentiteUnifie);
+        $em->flush();
+//        dump($stationCarteIdentiteUnifie);
+//        die;
+        return $stationCarteIdentiteUnifie;
     }
 
     /**
