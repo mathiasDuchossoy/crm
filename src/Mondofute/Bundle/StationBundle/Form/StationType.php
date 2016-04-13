@@ -40,7 +40,7 @@ class StationType extends AbstractType
                 'query_builder' => function (StationRepository $r) use ($locale, $stationUnifieId) {
                     return $r->getTraductionsByLocale($locale, $stationUnifieId);
                 },
-
+                'attr' => array('onchange' => 'displayCheckbox(this , "cboxStationCI");')
             ))
             ->add('zoneTouristiques', EntityType::class, array('class' => ZoneTouristique::class,
                 'required' => false,
@@ -118,6 +118,9 @@ class StationType extends AbstractType
             ->add('site', HiddenType::class, array('mapped' => false))
 //            ->add('stationCommentVenirUnifie', StationCommentVenirUnifieType::class , array('auto_initialize' => false))
 //            ->add('stationCommentVenir', StationCommentVenirType::class , array('auto_initialize' => false))
+            ->add('stationCarteIdentite', StationCarteIdentiteType::class, array(
+                'by_reference' => true
+            ))
         ;
     }
 
