@@ -25,8 +25,8 @@ class StationCarteIdentiteType extends AbstractType
             ->add('jourFermeture', IntegerType::class, array('attr' => array('max' => 31)))
             ->add('moisFermeture', IntegerType::class, array('attr' => array('max' => 12)))
             ->add('altitudeVillage', 'Mondofute\Bundle\UniteBundle\Form\DistanceType')
-            ->add('site', HiddenType::class, array('mapped' => false))//            ->add('stationCarteIdentiteUnifie')
-
+            ->add('site', HiddenType::class, array('mapped' => false))
+//            ->add('stationCarteIdentiteUnifie')
             ->add('moyenComs',
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
                 array('types' => array(
