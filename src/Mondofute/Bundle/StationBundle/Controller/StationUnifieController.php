@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
@@ -17,7 +18,9 @@ use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +53,6 @@ class StationUnifieController extends Controller
      */
     public function newAction(Request $request)
     {
-        dump($_POST);
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -70,25 +72,30 @@ class StationUnifieController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
-            if (!empty($request->get('cboxStationCI'))) {
-                /** @var Station $station */
-                foreach ($stationUnifie->getStations() as $station) {
-                    $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
-                }
-            } else {
-                /** @var Station $station */
-                $stationCarteIdentiteController = new StationCarteIdentiteUnifieController();
-                $stationCarteIdentiteController->setContainer($this->container);
-                $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($stationUnifie);
 
-                foreach ($stationUnifie->getStations() as $station) {
+            // ***** Carte d'identité *****
+            /** @var Station $station */
+            foreach ($stationUnifie->getStations() as $station) {
+                if (!empty($request->get('cboxStationCI_' . $station->getSite()->getId()))) {
+//                    foreach ($stationUnifie->getStations() as $station) {
+                    $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
+//                    }
+                } else {
+                    $stationCarteIdentiteController = new StationCarteIdentiteUnifieController();
+                    $stationCarteIdentiteController->setContainer($this->container);
+//                    $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($stationUnifie);
+                    $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($station);
+
+//                    foreach ($stationUnifie->getStations() as $station) {
                     $site = $station->getSite();
                     $stationCarteIdentite = $stationCarteIdentiteUnifie->getStationCarteIdentites()->filter(function (StationCarteIdentite $element) use ($site) {
                         return $site == $element->getSite();
                     })->first();
                     $station->setStationCarteIdentite($stationCarteIdentite);
+//                    }
                 }
             }
+            // ***** Fin Carte d'identité *****
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationUnifie);
@@ -132,6 +139,11 @@ class StationUnifieController extends Controller
             $siteExiste = false;
             foreach ($entity->getStations() as $station) {
                 if ($station->getSite() == $site) {
+                    if (empty($station->getStationCarteIdentite())) {
+                        $stationCarteIdentite = new StationCarteIdentite();
+                        $stationCarteIdentite->setSite($site);
+                        $station->setStationCarteIdentite($stationCarteIdentite);
+                    }
                     if (empty($station->getStationCarteIdentite()->getMoyenComs())) {
                         $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
                     }
@@ -292,8 +304,18 @@ class StationUnifieController extends Controller
                 }
                 if (!empty($station->getStationMere())) {
                     $stationMere = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $station->getStationMere()->getStationUnifie()));
+                    $emSite->refresh($stationMere);
+                    foreach ($stationMere->getStationCarteIdentite()->getMoyenComs() as $moyenCom) {
+                        $emSite->refresh($moyenCom);
+                    }
+                    $emSite->refresh($stationMere->getStationCarteIdentite()->getAltitudeVillage());
                 } else {
                     $stationMere = null;
+                }
+                if (!empty($station->getStationCarteIdentite())) {
+                    $stationCarteIdentite = $emSite->getRepository(StationCarteIdentite::class)->findOneBy(array('stationCarteIdentiteUnifie' => $station->getStationCarteIdentite()->getStationCarteIdentiteUnifie()));
+                } else {
+                    $stationCarteIdentite = null;
                 }
 
 //            GESTION EntiteUnifie
@@ -320,7 +342,8 @@ class StationUnifieController extends Controller
                     ->setProfils($profils)
                     ->setDomaine($domaine)
                     ->setDepartement($departement)
-                    ->setStationMere($stationMere);
+                    ->setStationMere($stationMere)
+                    ->setStationCarteIdentite($stationCarteIdentite);;
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -364,7 +387,7 @@ class StationUnifieController extends Controller
         /** @var ArrayCollection $stations */
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
+//        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
@@ -417,6 +440,7 @@ class StationUnifieController extends Controller
      */
     public function editAction(Request $request, StationUnifie $stationUnifie)
     {
+        /** @var Station $station */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
@@ -451,12 +475,12 @@ class StationUnifieController extends Controller
             $stationUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
-//        dump($editForm);die;
-
         $editForm->handleRequest($request);
-//        dump($stationUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $stationCarteIdentiteController = new StationCarteIdentiteUnifieController();
+            $stationCarteIdentiteController->setContainer($this->container);
+
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la station et stationUnifie
@@ -469,14 +493,81 @@ class StationUnifieController extends Controller
                     $stationSite = $entitySite->getStations()->first();
                     $emSite->remove($stationSite);
                     $emSite->flush();
-//                    dump($station);
                     $station->setStationUnifie(null);
+                    $stationCarteIdentiteUnifie = $station->getStationCarteIdentite()->getStationCarteIdentiteUnifie();
+                    $station->getStationCarteIdentite()->removeStation($station);
+//                    $em->persist($station->getStationCarteIdentite());
+                    $station->setStationCarteIdentite(null);
                     $em->remove($station);
+                    $stationCarteIdentiteController->deleteEntity($stationCarteIdentiteUnifie);
                 }
             }
+
+            // ***** carte d'identité *****
+
+            foreach ($stationUnifie->getStations() as $station) {
+                // si on choisit de lié la carte ID de la mère à la station
+                if (!empty($request->get('cboxStationCI_' . $station->getSite()->getId()))) {
+                    $station->getStationCarteIdentite()->removeStation($station);
+                    $oldCIUnifie = $station->getStationCarteIdentite()->getStationCarteIdentiteUnifie();
+
+                    $em->refresh($station->getStationMere()->getStationCarteIdentite());
+                    $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
+                    if ($station->getStationMere()->getStationCarteIdentite()->getStationCarteIdentiteUnifie() != $oldCIUnifie) {
+                        $this->copieVersSites($station->getStationUnifie());
+                        $stationCarteIdentiteController->deleteEntity($oldCIUnifie);
+                    }
+                } else {
+                    if (!empty($station->getStationMere()) && $station->getStationMere()->getStationCarteIdentite() === $station->getStationCarteIdentite()) {
+                        $cIMere = $station->getStationMere()->getStationCarteIdentite();
+
+                        $newCI = new StationCarteIdentite();
+                        $adresse = new Adresse();
+                        $adresse->setVille($station->getStationCarteIdentite()->getMoyenComs()->first()->getVille())
+                            ->setCodePostal($station->getStationCarteIdentite()->getMoyenComs()->first()->getCodePostal())
+                            ->setDateCreation();
+                        $newGPS = new CoordonneesGPS();
+                        $adresse->setCoordonneeGPS($newGPS);
+                        $newCI->addMoyenCom($adresse);
+                        $altitudeVillage = new Distance();
+                        $altitudeVillage->setUnite($station->getStationCarteIdentite()->getAltitudeVillage()->getUnite())
+                            ->setValeur($station->getStationCarteIdentite()->getAltitudeVillage()->getValeur());
+                        $newCI
+                            ->setJourOuverture($station->getStationCarteIdentite()->getJourOuverture())
+                            ->setMoisOuverture($station->getStationCarteIdentite()->getMoisOuverture())
+                            ->setJourFermeture($station->getStationCarteIdentite()->getJourFermeture())
+                            ->setMoisFermeture($station->getStationCarteIdentite()->getMoisFermeture())
+                            ->setAltitudeVillage($altitudeVillage)
+                            ->setSite($station->getStationCarteIdentite()->getSite());
+                        $em->persist($newCI);
+                        $station->setStationCarteIdentite($newCI);
+
+                        $em->refresh($cIMere);
+                        foreach ($cIMere->getMoyenComs() as $moyenCom) {
+                            $em->refresh($moyenCom);
+                        }
+                        $em->refresh($cIMere->getAltitudeVillage());
+                    }
+                }
+            }
+
+            foreach ($stationUnifie->getStations() as $station) {
+
+                if (!empty($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie())) {
+                    $stationCarteIdentiteUnifie = $stationCarteIdentiteController->editEntity($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                } else {
+
+                    $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($station);
+                }
+
+//                $em->persist($station);
+//                $em->flush();
+            }
+//            die;
+            // ***** fin carte d'identité *****
+
             $em->persist($stationUnifie);
             $em->flush();
-
 
             $this->copieVersSites($stationUnifie);
 
@@ -511,26 +602,77 @@ class StationUnifieController extends Controller
     {
         $form = $this->createDeleteForm($stationUnifie);
         $form->handleRequest($request);
+        $stationCarteIdentiteUnifieController = new StationCarteIdentiteUnifieController();
+        $stationCarteIdentiteUnifieController->setContainer($this->container);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            try {
+                $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
-                if (!empty($stationUnifieSite)) {
-                    $emSite->remove($stationUnifieSite);
-                    $emSite->flush();
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
+
+
+//                    /** @var Station $stationSite */
+//                    foreach ($stationUnifieSite->getStations() as $stationSite)
+//                    {
+//                        $stationSite->getStationCarteIdentite()->removeStation($stationSite);
+//                        $emSite->persist($stationSite);
+//                        $emSite->flush();
+////                        $stationCarteIdentiteUnifieController->deleteEntity($stationSite->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+//                    }
+
+                    if (!empty($stationUnifieSite)) {
+                        $emSite->remove($stationUnifieSite);
+                        $emSite->flush();
+                    }
                 }
-            }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($stationUnifie);
-            $em->flush();
+                $arrayStationCarteIdentiteUnifies = new ArrayCollection();
+                /** @var Station $station */
+                foreach ($stationUnifie->getStations() as $station) {
+                    //                $station->setStationMere(null);
+//                    $em->detach($station->getStationMere());
+//                    $station->getStationCarteIdentite()->removeStation($station);
+//                    $stationCarteIdentiteUnifieController->deleteEntity($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                    $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                }
 
+                $em = $this->getDoctrine()->getManager();
+
+                $em->remove($stationUnifie);
+                $em->flush();
+//                die;
+            } catch (ForeignKeyConstraintViolationException $except) {
+                //                dump($except);
+                switch ($except->getCode()) {
+                    case 0:
+                        $this->addFlash('error',
+                            'impossible de supprimer la station, elle est utilisé par une autre entité');
+                        break;
+                    default:
+                        $this->addFlash('error', 'une erreur inconnue');
+                        break;
+                }
+                return $this->redirect($request->headers->get('referer'));
+            }
+            foreach ($arrayStationCarteIdentiteUnifies as $arrayStationCarteIdentiteUnify) {
+                $stationCarteIdentiteUnifieController->deleteEntity($arrayStationCarteIdentiteUnify);
+            }
+
+//            /** @var Station $station */
+//            foreach ($stationUnifie->getStations() as $station)
+//            {
+//                if (count($station->getStationCarteIdentite()->getStations()) == 1 )
+//                {
+//                    dump($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+//                    $stationCarteIdentiteUnifieController->deleteEntity($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+//                }
+//            }
 
             $session = $request->getSession();
             $session->start();
