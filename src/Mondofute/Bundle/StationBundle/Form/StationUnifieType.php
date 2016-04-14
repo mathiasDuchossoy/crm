@@ -18,6 +18,7 @@ class StationUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $stationUnifieId = $builder->getData()->getId();
+//        dump($builder->getData());die;
         $builder
             ->add('stations', CollectionType::class, array(
                 'entry_type' => StationType::class,

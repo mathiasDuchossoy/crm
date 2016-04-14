@@ -16,13 +16,6 @@
             {{ form_start(form) }}
             {% include '::coches_sites.html.twig' %}
 
-            <label id="cboxStationCI">
-                <input type="checkbox" name="cboxStationCI"
-                       onclick="displayStationChild(this , 'stationCarteIdentite')"> Utiliser la carte d'identité de la
-                station mère
-            </label>
-            <br>
-
             {% set mesSites = form.stations %}
             {% include '::onglets_sites.html.twig' %}
             <div class="tab-content" style="padding:20px;">
@@ -35,7 +28,16 @@
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
                             {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationMere, { 'attr' : { 'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix']}}) }}
+                            {#{{ dump(station) }}#}
+                            {#{{ dump(station.vars.data.stations) }}#}
+                            {#{% if station.vars.data.stations is not empty %}#}
+
+                            {{ form_row( station.stationMere, { 'attr' : {
+                                'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix'] ,
+                                'onchange' : 'displayCheckbox(this ,  "' ~ station.vars.value.site.id ~'")',
+                                'data-site' : station.vars.value.site.id
+                            }}) }}
+                            {#{% endif %}#}
                             {{ form_row( station.zoneTouristiques, { 'attr' : { 'data-unique_block_prefix' : station.zoneTouristiques.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
@@ -68,7 +70,27 @@
                         </div>
                         {#{{ form_row(station.stationCarteIdentite) }}#}
 
-                        <div id="stationCarteIdentite_{{ station.vars.value.site.id }}">
+                        {#{% if station.vars.data.stations is not empty %}#}
+                        <label id="cboxStationCI_{{ station.vars.value.site.id }}">
+                            <input type="checkbox" name="cboxStationCI_{{ station.vars.value.site.id }}"
+                                    {% if  station.vars.value.stationMere is not empty %}
+                                        {% if station.vars.value.stationMere.stationCarteIdentite.id == station.vars.value.stationCarteIdentite.id %}
+                                            checked
+                                        {% endif %}
+                                    {% endif %}
+                                   onclick="displayStationChild(this , 'stationCarteIdentite_{{ station.vars.value.site.id }}')">
+                            Utiliser la carte d'identité de la
+                            station mère
+                        </label>
+                        <br>
+                        {#{% endif %}#}
+                        <div id="stationCarteIdentite_{{ station.vars.value.site.id }}"
+                                {% if  station.vars.value.stationMere is not empty %}
+                                    {% if station.vars.value.stationMere.stationCarteIdentite.id == station.vars.value.stationCarteIdentite.id %}
+                                        style="display: none"
+                                    {% endif %}
+                                {% endif %}
+                        >
                             {{ form_row( station.stationCarteIdentite.moyenComs[0].codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].codePostal.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.stationCarteIdentite.moyenComs[0].ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].ville.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
@@ -76,6 +98,7 @@
                             {{ form_row( station.stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
+                            {{ form_row( station.stationCarteIdentite.site ) }}
                         </div>
                     </div>
 
@@ -248,23 +271,37 @@
             $element = $(element);
             $stationChild = $('#' + div);
             if ($element.is(':checked')) {
-                $('div [id^="' + div + '"]').each(function (index, element) {
-                    $(element).hide();
+//                $('div [id^="' + div + '"]').each(function (index, element) {
+//                    $(element).hide();
+//                });
+                $stationChild.hide();
+                $stationChild.find(':required').each(function (index, element) {
+//                    console.log(element);
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                    console.log(element);
                 });
-//                $stationChild.hide();
             }
             else {
-                $('div [id^="' + div + '"]').each(function (index, element) {
-                    $(element).show();
+//                $('div [id^="' + div + '"]').each(function (index, element) {
+//                    $(element).show();
+//                });
+                $stationChild.show();
+                $stationChild.find('[data-required=\'true\']').each(function () {
+                    $(this).attr('required', true);
+                    console.log(this);
                 });
-//                $stationChild.show();
             }
         }
-        displayStationChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
+
+        //        $('div [id^="' + div + '"]').each(function (index, element) {
+        //            $(element).hide();
+        //        });
+        //        displayStationChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
         //            console.log($('#cboxStationCI').find('input')[0]);
         function displayCheckbox(element, checkbox) {
-            $checkbox = $('#' + checkbox);
-//            console.log($checkbox);
+            $checkbox = $('#cboxStationCI_' + checkbox);
+            console.log(checkbox);
             $element = $(element);
             console.log($element.val());
             if ($element.val()) {
@@ -273,7 +310,15 @@
             else {
                 $checkbox.hide();
                 $($checkbox.find('input')[0]).prop('checked', false);
+                $('#stationCarteIdentite_' + checkbox).show();
             }
         }
+        $('[data-unique_block_prefix="_station_unifie_stations_entry_stationMere"]').each(function (index, element) {
+            console.log($(element));
+            if (!$(element).val()) {
+                $('#cboxStationCI_' + $(element).data('site')).hide();
+            }
+        });
+
     </script>
 {% endblock %}
