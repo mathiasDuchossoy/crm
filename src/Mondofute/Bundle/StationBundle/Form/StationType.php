@@ -31,6 +31,7 @@ class StationType extends AbstractType
     {
         $locale = $options["locale"];
         $stationUnifieId = $options['stationUnifieId'];
+
         $builder
             ->add('stationMere', EntityType::class, array(
                 'class' => Station::class,
@@ -40,7 +41,7 @@ class StationType extends AbstractType
                 'query_builder' => function (StationRepository $r) use ($locale, $stationUnifieId) {
                     return $r->getTraductionsByLocale($locale, $stationUnifieId);
                 },
-                'attr' => array('onchange' => 'displayCheckbox(this , "cboxStationCI");')
+//                'by_reference'  => true
             ))
             ->add('zoneTouristiques', EntityType::class, array('class' => ZoneTouristique::class,
                 'required' => false,
@@ -51,16 +52,6 @@ class StationType extends AbstractType
                 },
                 'multiple' => true
             ))
-//            ->add('secteur', EntityType::class, array(
-//                'class' => Secteur::class,
-//                'required' => false,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un secteur ---",
-//                'query_builder' => function (SecteurRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsByLocale($locale);
-//                },
-//            ))
-
             ->add('secteurs', EntityType::class, array(
                 'class' => Secteur::class,
                 'required' => false,
@@ -119,7 +110,7 @@ class StationType extends AbstractType
 //            ->add('stationCommentVenirUnifie', StationCommentVenirUnifieType::class , array('auto_initialize' => false))
 //            ->add('stationCommentVenir', StationCommentVenirType::class , array('auto_initialize' => false))
             ->add('stationCarteIdentite', StationCarteIdentiteType::class, array(
-                'by_reference' => true
+                'by_reference' => true,
             ))
         ;
     }

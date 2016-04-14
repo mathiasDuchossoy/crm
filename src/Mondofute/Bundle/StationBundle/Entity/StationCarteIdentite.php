@@ -302,4 +302,5 @@ class StationCarteIdentite extends Moral
 
         return $this;
     }
+
 }
