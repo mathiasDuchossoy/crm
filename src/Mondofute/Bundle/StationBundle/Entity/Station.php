@@ -267,7 +267,9 @@ class Station
      */
     public function setStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite = null)
     {
-//        $this->stationCarteIdentite = $stationCarteIdentite->addStation($this);
+//        if($stationCarteIdentite == null){
+//            $this->getStationCarteIdentite()->removeStation($this);
+//        }
         $this->stationCarteIdentite = $stationCarteIdentite;
 
         return $this;
