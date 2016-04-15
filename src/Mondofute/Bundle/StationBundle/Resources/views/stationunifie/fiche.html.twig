@@ -91,14 +91,22 @@
                                     {% endif %}
                                 {% endif %}
                         >
-                            {{ form_row( station.stationCarteIdentite.moyenComs[0].codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].codePostal.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.moyenComs[0].ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].ville.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
-                            {{ form_row( station.stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
-                            {{ form_row( station.stationCarteIdentite.site ) }}
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Carte d'identité
+                                    </h3></div>
+                                <div class="panel-body">
+                                    {{ form_row( station.stationCarteIdentite.moyenComs[0].codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].codePostal.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.moyenComs[0].ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moyenComs[0].ville.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.moisFermeture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisFermeture.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.altitudeVillage , { 'attr' : { 'class' : 'form-inline'}}) }}
+                                    {{ form_row( station.stationCarteIdentite.site ) }}
+
+                                </div>
+                            </div>
                         </div>
                     </div>
 
