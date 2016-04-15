@@ -52,5 +52,5 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
     oneToOne:
         altitudeVillage:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
-            cascade: ['persist', 'remove']
+            cascade: ['persist', 'remove' ]
     lifecycleCallbacks: {  }
