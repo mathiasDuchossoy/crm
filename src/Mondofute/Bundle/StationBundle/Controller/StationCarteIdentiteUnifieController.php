@@ -10,7 +10,6 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie;
-use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -195,7 +194,7 @@ class StationCarteIdentiteUnifieController extends Controller
      * Copie dans la base de données site l'entité stationCarteIdentite
      * @param StationCarteIdentiteUnifie $entity
      */
-    private function copieVersSites(StationCarteIdentiteUnifie $entity)
+    public function copieVersSites(StationCarteIdentiteUnifie $entity)
     {
 //        Boucle sur les stationCarteIdentites afin de savoir sur quel site nous devons l'enregistrer
         /** @var StationCarteIdentite $stationCarteIdentite */
@@ -336,9 +335,9 @@ class StationCarteIdentiteUnifieController extends Controller
         }
         $stationCarteIdentiteUnifie->addStationCarteIdentite($stationCarteIdentite);
         $em->persist($stationCarteIdentiteUnifie);
-        $em->flush();
+//        $em->flush();
 
-        $this->copieVersSites($stationCarteIdentiteUnifie);
+//        $this->copieVersSites($stationCarteIdentiteUnifie);
 
         return $stationCarteIdentiteUnifie;
     }
@@ -485,7 +484,7 @@ class StationCarteIdentiteUnifieController extends Controller
         $em->persist($stationCarteIdentiteUnifie);
 //        $em->flush();
 
-        $this->copieVersSites($stationCarteIdentiteUnifie);
+//        $this->copieVersSites($stationCarteIdentiteUnifie);
 
         return $stationCarteIdentiteUnifie;
     }
@@ -566,8 +565,23 @@ class StationCarteIdentiteUnifieController extends Controller
 
     public function deleteEntity(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
+        /** @var StationCarteIdentite $stationCarteIdentiteSite */
+        /** @var StationCarteIdentite $stationCarteIdentite */
         $delete = true;
         $em = $this->getDoctrine()->getEntityManager();
+
+//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)
+//        {
+//            foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                $stationCarteIdentite->removeMoyenCom($moyenCom);
+//                $em->remove($moyenCom);
+//
+//            }
+//        }
+
+        if ($delete) {
+            $em->remove($stationCarteIdentiteUnifie);
+        }
 
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
@@ -577,39 +591,51 @@ class StationCarteIdentiteUnifieController extends Controller
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
             if (!empty($stationCarteIdentiteUnifieSite)) {
-                /** @var StationCarteIdentite $stationCarteIdentiteSite */
-
                 foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
-                    if (count($stationCarteIdentiteSite->getStations()) == 0) //                    if (empty($stationCarteIdentiteSite->getStations()))
+                    if (count($stationCarteIdentiteSite->getStations()) == 0)
                     {
+//                        dump(count($stationCarteIdentiteSite->getStations()));
                         foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
                             $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
                             $emSite->remove($moyenCom);
                             $emSite->flush();
                         }
+//                        $em->remove($stationCarteIdentite->getAltitudeVillage());
+                        $emSite->remove($stationCarteIdentiteSite);
                     } else $delete = false;
                 }
-                $emSite->remove($stationCarteIdentiteUnifieSite);
-                $emSite->flush();
+                if ($delete) {
+//                    $emSite->remove($stationCarteIdentiteUnifieSite);
+                    $emSite->flush();
+                }
             }
         }
         $em = $this->getDoctrine()->getManager();
-        /** @var StationCarteIdentite $stationCarteIdentite */
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-            if (count($stationCarteIdentite->getStations()) == 0) {
+            if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
+//                dump(count($stationCarteIdentite->getStations()));
                 foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
                     $stationCarteIdentite->removeMoyenCom($moyenCom);
                     $em->remove($moyenCom);
-                    $em->flush();
+//                    $em->flush();
                 }
-            } else $delete = false;
+                $em->remove($stationCarteIdentite);
+            } else {
+                $delete = false;
+            }
         }
+//        $em->clear($stationCarteIdentiteUnifie->getStationCarteIdentites());
+//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)
+//        {
+//            foreach ($stationCarteIdentite->getStations() as $station)
+//            {
+//                $stationCarteIdentite->removeStation($station);
+//            }
+//        }
         if ($delete) {
-            $em->remove($stationCarteIdentiteUnifie);
-            $em->flush();
-
+//            $em->remove($stationCarteIdentiteUnifie);
+//            $em->flush();
         }
-
     }
 
 }
