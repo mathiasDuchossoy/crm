@@ -84,7 +84,7 @@ class HebergementUnifieController extends Controller
             $em->persist($hebergementUnifie);
             $em->flush();
 
-//            $this->copieVersSites($hebergementUnifie);
+            $this->copieVersSites($hebergementUnifie);
             $this->addFlash('success', 'l\'hébergement a bien été créé');
             return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
         }
@@ -212,12 +212,145 @@ class HebergementUnifieController extends Controller
         /** @var Hebergement $hebergement */
         foreach ($entity->getHebergements() as $hebergement) {
             if (!in_array($hebergement->getSite()->getId(), $sitesAEnregistrer)) {
-                $hebergement->setClassement(null);
+//                $hebergement->setClassement(null);
                 $hebergement->setHebergementUnifie(null);
                 $entity->removeHebergement($hebergement);
             }
         }
         return $this;
+    }
+
+    /**
+     * Copie dans la base de données site l'entité station
+     * @param HebergementUnifie $entity
+     */
+    private function copieVersSites(HebergementUnifie $entity)
+    {
+        /** @var HebergementTraduction $hebergementTraduc */
+//        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
+        foreach ($entity->getHebergements() as $hebergement) {
+            if ($hebergement->getSite()->getCrm() == false) {
+
+//            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
+                $em = $this->getDoctrine()->getManager($hebergement->getSite()->getLibelle());
+                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $hebergement->getSite()->getId()));
+//                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
+                if (!empty($hebergement->getStation())) {
+                    $stationSite = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $hebergement->getStation()->getStationUnifie()->getId()));
+                } else {
+                    $stationSite = null;
+                }
+//            GESTION EntiteUnifie
+//            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
+                if (is_null(($entitySite = $em->getRepository(HebergementUnifie::class)->find($entity->getId())))) {
+                    $entitySite = new HebergementUnifie();
+                }
+
+//            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
+                if (empty(($hebergementSite = $em->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $entitySite))))) {
+                    $hebergementSite = new Hebergement();
+                }
+
+                $classementSite = !empty($hebergementSite->getClassement()) ? $hebergementSite->getClassement() : clone $hebergement->getClassement();
+                /** @var Adresse $adresse */
+                /** @var CoordonneesGPS $coordonneesGPSSite */
+                /** @var Adresse $adresseSite */
+                $adresse = $hebergement->getMoyenComs()->first();
+                if (!empty($hebergementSite->getMoyenComs())) {
+                    $adresseSite = $hebergementSite->getMoyenComs()->first();
+                    $adresseSite->setDateModification(new DateTime());
+                } else {
+                    $adresseSite = new Adresse();
+                    $adresseSite->setDateCreation();
+                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+                    $hebergementSite->addMoyenCom($adresseSite);
+                }
+                $adresseSite->setVille($adresse->getVille());
+                $adresseSite->setAdresse1($adresse->getAdresse1());
+                $adresseSite->setAdresse2($adresse->getAdresse2());
+                $adresseSite->setAdresse3($adresse->getAdresse3());
+                $adresseSite->setCodePostal($adresse->getCodePostal());
+                $adresseSite->setPays($adresse->getPays());
+                $adresseSite->getCoordonneeGPS()
+                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
+                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
+                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
+                if (!empty($classementSite->getUnite())) {
+                    $uniteSite = $em->getRepository(Unite::class)->findOneBy(array('id' => $hebergement->getClassement()->getUnite()->getId()));
+                } else {
+                    $uniteSite = null;
+                }
+                $classementSite->setValeur($hebergement->getClassement()->getValeur());
+                $classementSite->setUnite($uniteSite);
+
+//            copie des données hébergement
+                $hebergementSite
+                    ->setSite($site)
+                    ->setStation($stationSite)
+                    ->setClassement($classementSite)
+                    ->setHebergementUnifie($entitySite);
+
+//            Gestion des traductions
+                foreach ($hebergement->getTraductions() as $hebergementTraduc) {
+//                récupération de la langue sur le site distant
+                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $hebergementTraduc->getLangue()->getId()));
+
+//                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
+                    if (empty(($hebergementTraducSite = $em->getRepository(HebergementTraduction::class)->findOneBy(array(
+                        'hebergement' => $hebergementSite,
+                        'langue' => $langue
+                    ))))
+                    ) {
+                        $hebergementTraducSite = new HebergementTraduction();
+                    }
+
+//                copie des données traductions
+                    $hebergementTraducSite->setLangue($langue)
+                        ->setActivites($hebergementTraduc->getActivites())
+                        ->setAvisMondofute($hebergementTraduc->getActivites())
+                        ->setBienEtre($hebergementTraduc->getBienEtre())
+                        ->setNom($hebergementTraduc->getNom())
+                        ->setPourLesEnfants($hebergementTraduc->getPourLesEnfants())
+                        ->setRestauration($hebergementTraduc->getRestauration())
+                        ->setHebergement($hebergementTraduc->getHebergement());
+
+//                ajout a la collection de traduction de la station distante
+                    $hebergementSite->addTraduction($hebergementTraducSite);
+                }
+
+                $entitySite->addHebergement($hebergementSite);
+                $em->persist($entitySite);
+                $em->flush();
+            }
+        }
+        $this->ajouterHebergementUnifieSiteDistant($entity->getId(), $entity);
+    }
+
+    /**
+     * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
+     * @param $idUnifie
+     * @param $hebergementUnifie
+     */
+    private function ajouterHebergementUnifieSiteDistant($idUnifie, HebergementUnifie $hebergementUnifie)
+    {
+        /** @var ArrayCollection $hebergements */
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getManager();
+        //        récupération
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $criteres = Criteria::create()
+                ->where(Criteria::expr()->eq('site', $site));
+            if (count($hebergementUnifie->getHebergements()->matching($criteres)) == 0 && (empty($emSite->getRepository(HebergementUnifie::class)->findBy(array('id' => $idUnifie))))) {
+                $entity = new HebergementUnifie();
+                foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                    $entity->addFournisseur($fournisseur);
+                }
+                $emSite->persist($entity);
+                $emSite->flush();
+            }
+        }
     }
 
     /**
@@ -360,141 +493,6 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-     * Copie dans la base de données site l'entité station
-     * @param HebergementUnifie $entity
-     */
-    private function copieVersSites(HebergementUnifie $entity)
-    {
-        /** @var HebergementTraduction $hebergementTraduc */
-//        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
-        foreach ($entity->getHebergements() as $hebergement) {
-            if ($hebergement->getSite()->getCrm() == false) {
-
-//            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $em = $this->getDoctrine()->getManager($hebergement->getSite()->getLibelle());
-                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $hebergement->getSite()->getId()));
-//                $region = $em->getRepository(Region::class)->findOneBy(array('regionUnifie' => $departement->getRegion()->getRegionUnifie()->getId()));
-                if (!empty($hebergement->getStation())) {
-                    $stationSite = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $hebergement->getStation()->getStationUnifie()->getId()));
-                } else {
-                    $stationSite = null;
-                }
-                // todo: prendre en compte le fait qu'une région n'est pas sur un site (faire un message d'infos dans a page?)
-//            GESTION EntiteUnifie
-//            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(HebergementUnifie::class)->find($entity->getId())))) {
-                    $entitySite = new HebergementUnifie();
-                }
-
-//            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($hebergementSite = $em->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $entitySite))))) {
-                    $hebergementSite = new Hebergement();
-                }
-
-                $classementSite = !empty($hebergementSite->getClassement()) ? $hebergementSite->getClassement() : clone $hebergement->getClassement();
-                /** @var Adresse $adresse */
-                /** @var CoordonneesGPS $coordonneesGPSSite */
-                /** @var Adresse $adresseSite */
-                $adresse = $hebergement->getMoyenComs()->first();
-                if (!empty($hebergementSite->getMoyenComs())) {
-                    $adresseSite = $hebergementSite->getMoyenComs()->first();
-                    $adresseSite->setDateModification(new DateTime());
-                } else {
-                    $adresseSite = new Adresse();
-                    $adresseSite->setDateCreation();
-                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
-                    $hebergementSite->addMoyenCom($adresseSite);
-                }
-                $adresseSite->setVille($adresse->getVille());
-                $adresseSite->setAdresse1($adresse->getAdresse1());
-                $adresseSite->setAdresse2($adresse->getAdresse2());
-                $adresseSite->setAdresse3($adresse->getAdresse3());
-                $adresseSite->setCodePostal($adresse->getCodePostal());
-                $adresseSite->setPays($adresse->getPays());
-                $adresseSite->getCoordonneeGPS()
-                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
-                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
-                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
-                if (!empty($classementSite->getUnite())) {
-                    $uniteSite = $em->getRepository(Unite::class)->findOneBy(array('id' => $hebergement->getClassement()->getUnite()->getId()));
-                } else {
-                    $uniteSite = null;
-                }
-                $classementSite->setValeur($hebergement->getClassement()->getValeur());
-                $classementSite->setUnite($uniteSite);
-
-//            copie des données hébergement
-                $hebergementSite
-                    ->setSite($site)
-                    ->setStation($stationSite)
-                    ->setClassement($classementSite)
-                    ->setHebergementUnifie($entitySite);
-
-//            Gestion des traductions
-                foreach ($hebergement->getTraductions() as $hebergementTraduc) {
-//                récupération de la langue sur le site distant
-                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $hebergementTraduc->getLangue()->getId()));
-
-//                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($hebergementTraducSite = $em->getRepository(HebergementTraduction::class)->findOneBy(array(
-                        'hebergement' => $hebergementSite,
-                        'langue' => $langue
-                    ))))
-                    ) {
-                        $hebergementTraducSite = new HebergementTraduction();
-                    }
-
-//                copie des données traductions
-                    $hebergementTraducSite->setLangue($langue)
-                        ->setActivites($hebergementTraduc->getActivites())
-                        ->setAvisMondofute($hebergementTraduc->getActivites())
-                        ->setBienEtre($hebergementTraduc->getBienEtre())
-                        ->setNom($hebergementTraduc->getNom())
-                        ->setPourLesEnfants($hebergementTraduc->getPourLesEnfants())
-                        ->setRestauration($hebergementTraduc->getRestauration())
-                        ->setHebergement($hebergementTraduc->getHebergement());
-
-//                ajout a la collection de traduction de la station distante
-                    $hebergementSite->addTraduction($hebergementTraducSite);
-                }
-
-                $entitySite->addHebergement($hebergementSite);
-                $em->persist($entitySite);
-                $em->flush();
-            }
-        }
-        $this->ajouterHebergementUnifieSiteDistant($entity->getId(), $entity);
-    }
-
-    /**
-     * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
-     * @param $idUnifie
-     * @param $hebergementUnifie
-     */
-    private function ajouterHebergementUnifieSiteDistant($idUnifie, HebergementUnifie $hebergementUnifie)
-    {
-        /** @var ArrayCollection $hebergements */
-        /** @var Site $site */
-        $em = $this->getDoctrine()->getManager();
-        //        récupération
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
-        foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-            $criteres = Criteria::create()
-                ->where(Criteria::expr()->eq('site', $site));
-            if (count($hebergementUnifie->getHebergements()->matching($criteres)) == 0 && (empty($emSite->getRepository(HebergementUnifie::class)->findBy(array('id' => $idUnifie))))) {
-                $entity = new HebergementUnifie();
-                foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
-                    $entity->addFournisseur($fournisseur);
-                }
-                $emSite->persist($entity);
-                $emSite->flush();
-                // todo: signaler si l'id est différent de celui de la base CRM
-            }
-        }
-    }
-
-    /**
      * Deletes a HebergementUnifie entity.
      *
      */
@@ -518,6 +516,7 @@ class HebergementUnifieController extends Controller
                         if (!empty($hebergementUnifieSite->getHebergements())) {
                             /** @var Hebergement $hebergementSite */
                             foreach ($hebergementUnifieSite->getHebergements() as $hebergementSite) {
+//                                $hebergementSite->setClassement(null);
                                 if (!empty($hebergementSite->getMoyenComs())) {
                                     foreach ($hebergementSite->getMoyenComs() as $moyenComSite) {
                                         $hebergementSite->removeMoyenCom($moyenComSite);
@@ -533,11 +532,11 @@ class HebergementUnifieController extends Controller
                 }
                 if (!empty($hebergementUnifie)) {
                     if (!empty($hebergementUnifie->getHebergements())) {
-                        /** @var Hebergement $hebergementSite */
+                        /** @var Hebergement $hebergement */
                         foreach ($hebergementUnifie->getHebergements() as $hebergement) {
+//                            $hebergement->setClassement(null);
                             if (!empty($hebergement->getMoyenComs())) {
                                 foreach ($hebergement->getMoyenComs() as $moyenCom) {
-                                    echo 'oh oh';
                                     $hebergement->removeMoyenCom($moyenCom);
                                     $em->remove($moyenCom);
                                 }

@@ -4,12 +4,11 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
-use Nucleus\ContactBundle\Entity\Moral;
 
 /**
  * Hebergement
  */
-class Hebergement extends Moral
+class Hebergement
 {
     /**
      * @var \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
@@ -27,14 +26,19 @@ class Hebergement extends Moral
      * @var \Mondofute\Bundle\StationBundle\Entity\Station
      */
     private $station;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $typesHebergement;
+
     /**
      * @var ClassementHebergement
      */
     private $classement;
+    /**
+     * @var integer
+     */
+    private $id;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $moyenComs;
 
     /**
      * Constructor
@@ -43,7 +47,6 @@ class Hebergement extends Moral
     {
         $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
 
     /**
      * Get hebergementUnifie
@@ -179,39 +182,6 @@ class Hebergement extends Moral
         return $this;
     }
 
-    /**
-     * Add typesHebergement
-     *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement
-     *
-     * @return Hebergement
-     */
-    public function addTypesHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement)
-    {
-        $this->typesHebergement[] = $typesHebergement;
-
-        return $this;
-    }
-
-    /**
-     * Remove typesHebergement
-     *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement
-     */
-    public function removeTypesHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typesHebergement)
-    {
-        $this->typesHebergement->removeElement($typesHebergement);
-    }
-
-    /**
-     * Get typesHebergement
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTypesHebergement()
-    {
-        return $this->typesHebergement;
-    }
 
     /**
      * Get classement
@@ -235,5 +205,49 @@ class Hebergement extends Moral
         $this->classement = $classement;
 
         return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add moyenCom
+     *
+     * @param \Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom
+     *
+     * @return Hebergement
+     */
+    public function addMoyenCom(\Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom)
+    {
+        $this->moyenComs[] = $moyenCom;
+
+        return $this;
+    }
+
+    /**
+     * Remove moyenCom
+     *
+     * @param \Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom
+     */
+    public function removeMoyenCom(\Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom)
+    {
+        $this->moyenComs->removeElement($moyenCom);
+    }
+
+    /**
+     * Get moyenComs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getMoyenComs()
+    {
+        return $this->moyenComs;
     }
 }
