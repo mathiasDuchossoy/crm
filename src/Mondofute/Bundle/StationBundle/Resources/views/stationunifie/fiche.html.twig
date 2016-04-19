@@ -343,6 +343,9 @@
         function displayStationChild(element, div) {
             $element = $(element);
             $stationChild = $('#' + div);
+            console.log(element);
+            console.log(div);
+
             if ($element.is(':checked')) {
 //                $('div [id^="' + div + '"]').each(function (index, element) {
 //                    $(element).hide();
@@ -373,23 +376,41 @@
         //        displayStationChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
         //            console.log($('#cboxStationCI').find('input')[0]);
         function displayCheckbox(element, checkbox) {
-            $checkbox = $('#cboxStationCI_' + checkbox);
-            console.log(checkbox);
+            $checkboxCI = $('#cboxStationCI_' + checkbox);
+            $checkboxCV = $('#cboxStationCommentVenir_' + checkbox);
+//            console.log(checkbox);
             $element = $(element);
-            console.log($element.val());
+//            console.log($element.val());
             if ($element.val()) {
-                $checkbox.show();
+                // carte identite
+                $checkboxCI.show();
+//                $($checkboxCI.find('input')[0]).prop('checked', true);
+//                displayStationChild($checkboxCI,"stationCarteIdentite_"+checkbox);
+//                $('#stationCarteIdentite_' + checkbox).hide();
+                // comment venir
+                $checkboxCV.show();
+//                $($checkboxCV.find('input')[0]).prop('checked', true);
+//                displayStationChild($checkboxCV,"stationCommentVenir_"+checkbox);
+//                $('#stationCommentVenir_' + checkbox).hide();
             }
             else {
-                $checkbox.hide();
-                $($checkbox.find('input')[0]).prop('checked', false);
+                // carte identite
+                $checkboxCI.hide();
+                $($checkboxCI.find('input')[0]).prop('checked', false);
                 $('#stationCarteIdentite_' + checkbox).show();
+                // comment venir
+                $checkboxCV.hide();
+                $($checkboxCV.find('input')[0]).prop('checked', false);
+                $('#stationCommentVenir_' + checkbox).show();
             }
         }
         $('[data-unique_block_prefix="_station_unifie_stations_entry_stationMere"]').each(function (index, element) {
-            console.log($(element));
+//            console.log($(element));
             if (!$(element).val()) {
                 $('#cboxStationCI_' + $(element).data('site')).hide();
+            }
+            if (!$(element).val()) {
+                $('#cboxStationCommentVenir_' + $(element).data('site')).hide();
             }
         });
 
