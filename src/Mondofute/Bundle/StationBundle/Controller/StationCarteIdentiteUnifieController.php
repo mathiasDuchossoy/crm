@@ -579,9 +579,9 @@ class StationCarteIdentiteUnifieController extends Controller
 //            }
 //        }
 
-        if ($delete) {
-            $em->remove($stationCarteIdentiteUnifie);
-        }
+//        if ($delete) {
+//            $em->remove($stationCarteIdentiteUnifie);
+//        }
 
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
@@ -610,7 +610,7 @@ class StationCarteIdentiteUnifieController extends Controller
                 }
             }
         }
-        $em = $this->getDoctrine()->getManager();
+//        $em = $this->getDoctrine()->getManager();
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
             if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
 //                dump(count($stationCarteIdentite->getStations()));
