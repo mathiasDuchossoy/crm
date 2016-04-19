@@ -39,6 +39,10 @@ class Hebergement
      * @var \Doctrine\Common\Collections\Collection
      */
     private $moyenComs;
+    /**
+     * @var TypeHebergement
+     */
+    private $typeHebergement;
 
     /**
      * Constructor
@@ -182,7 +186,6 @@ class Hebergement
         return $this;
     }
 
-
     /**
      * Get classement
      *
@@ -249,5 +252,30 @@ class Hebergement
     public function getMoyenComs()
     {
         return $this->moyenComs;
+    }
+
+    /**
+     * Get typeHebergement
+     *
+     * @return TypeHebergement
+     */
+    public function getTypeHebergement()
+    {
+        return $this->typeHebergement;
+    }
+
+    /**
+     * Set typeHebergement
+     *
+     * @param TypeHebergement $typeHebergement
+     *
+     * @return Hebergement
+     */
+    public function setTypeHebergement(
+        TypeHebergement $typeHebergement = null
+    ) {
+        $this->typeHebergement = $typeHebergement;
+
+        return $this;
     }
 }

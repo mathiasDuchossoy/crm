@@ -10,6 +10,7 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -99,7 +100,7 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-     * Ajouter les stations qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
+     * Ajouter les hébergements qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
      * @param HebergementUnifie $entity
      */
     private function ajouterHebergementsDansForm(HebergementUnifie $entity)
@@ -158,7 +159,7 @@ class HebergementUnifieController extends Controller
     {
         /** @var ArrayIterator $iterator */
 
-        // Trier les stations en fonction de leurs ordre d'affichage
+        // Trier les hébergements en fonction de leurs ordre d'affichage
         $hebergements = $entity->getHebergements(); // ArrayCollection data.
 
         // Recueillir un itérateur de tableau.
@@ -174,7 +175,7 @@ class HebergementUnifieController extends Controller
         $hebergements = new ArrayCollection(iterator_to_array($iterator));
         $this->traductionsSortByLangue($hebergements);
 
-        // remplacé les stations par ce nouveau tableau (une fonction 'set' a été créé dans Station unifié)
+        // remplacé les hébergements par ce nouveau tableau (une fonction 'set' a été créé dans Station unifié)
         $entity->setHebergements($hebergements);
     }
 
@@ -221,13 +222,14 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-     * Copie dans la base de données site l'entité station
+     * Copie dans la base de données site l'entité hébergement
      * @param HebergementUnifie $entity
      */
     private function copieVersSites(HebergementUnifie $entity)
     {
         /** @var HebergementTraduction $hebergementTraduc */
-//        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
+//        Boucle sur les hébergements afin de savoir sur quel site nous devons l'enregistrer
+        /** @var Hebergement $hebergement */
         foreach ($entity->getHebergements() as $hebergement) {
             if ($hebergement->getSite()->getCrm() == false) {
 
@@ -239,6 +241,11 @@ class HebergementUnifieController extends Controller
                     $stationSite = $em->getRepository(Station::class)->findOneBy(array('stationUnifie' => $hebergement->getStation()->getStationUnifie()->getId()));
                 } else {
                     $stationSite = null;
+                }
+                if (!empty($hebergement->getTypeHebergement())) {
+                    $typeHebergementSite = $em->getRepository(TypeHebergement::class)->findOneBy(array('typeHebergementUnifie' => $hebergement->getTypeHebergement()->getTypeHebergementUnifie()->getId()));
+                } else {
+                    $typeHebergementSite = null;
                 }
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -287,6 +294,7 @@ class HebergementUnifieController extends Controller
                 $hebergementSite
                     ->setSite($site)
                     ->setStation($stationSite)
+                    ->setTypeHebergement($typeHebergementSite)
                     ->setClassement($classementSite)
                     ->setHebergementUnifie($entitySite);
 
@@ -314,7 +322,7 @@ class HebergementUnifieController extends Controller
                         ->setRestauration($hebergementTraduc->getRestauration())
                         ->setHebergement($hebergementTraduc->getHebergement());
 
-//                ajout a la collection de traduction de la station distante
+//                ajout a la collection de traduction de l'hébergement
                     $hebergementSite->addTraduction($hebergementTraducSite);
                 }
 
@@ -327,7 +335,7 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-     * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
+     * Ajoute la reference site unifie dans les sites n'ayant pas d'hébergement a enregistrer
      * @param $idUnifie
      * @param $hebergementUnifie
      */
@@ -408,7 +416,7 @@ class HebergementUnifieController extends Controller
         }
 
         $originalHebergements = new ArrayCollection();
-//          Créer un ArrayCollection des objets de stations courants dans la base de données
+//          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         foreach ($hebergementUnifie->getHebergements() as $hebergement) {
             $originalHebergements->add($hebergement);
         }
@@ -431,12 +439,12 @@ class HebergementUnifieController extends Controller
 
             $this->supprimerHebergements($hebergementUnifie, $sitesAEnregistrer);
 
-            // Supprimer la relation entre la station et stationUnifie
+            // Supprimer la relation entre l'hébergement et hebergementUnifie
             foreach ($originalHebergements as $hebergement) {
                 /** @var Hebergement $hebergement */
                 /** @var Hebergement $hebergementSite */
                 if (!$hebergementUnifie->getHebergements()->contains($hebergement)) {
-                    //  suppression de la station sur le site
+                    //  suppression de l'hébergement sur le site
                     $emSite = $this->getDoctrine()->getEntityManager($hebergement->getSite()->getLibelle());
                     $entitySite = $emSite->find(HebergementUnifie::class, $hebergementUnifie->getId());
                     if (!empty($entitySite)) {
@@ -498,6 +506,7 @@ class HebergementUnifieController extends Controller
      */
     public function deleteAction(Request $request, HebergementUnifie $hebergementUnifie)
     {
+        /** @var HebergementUnifie $hebergementUnifieSite */
         try {
             $form = $this->createDeleteForm($hebergementUnifie);
             $form->handleRequest($request);
