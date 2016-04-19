@@ -604,7 +604,7 @@ class StationCommentVenirUnifieController extends Controller
         }
         $em = $this->getDoctrine()->getManager();
         $em->remove($stationCommentVenirUnifie);
-        $em->flush();
+//        $em->flush();
     }
 
 }
