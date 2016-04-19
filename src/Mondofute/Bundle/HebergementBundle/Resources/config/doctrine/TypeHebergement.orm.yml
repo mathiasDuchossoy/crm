@@ -1,0 +1,29 @@
+Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\TypeHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        individuel:
+            type: boolean
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        typeHebergementUnifie:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergementUnifie
+            inversedBy: typeHebergements
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergementTraduction
+            mappedBy: typeHebergement
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            mappedBy: typeHebergement
+    lifecycleCallbacks: {  }

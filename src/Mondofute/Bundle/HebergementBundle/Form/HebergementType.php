@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
 
+use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
+use Mondofute\Bundle\HebergementBundle\Repository\TypeHebergementRepository;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Mondofute\Bundle\UniteBundle\Form\ClassementHebergementType;
@@ -30,6 +32,14 @@ class HebergementType extends AbstractType
                 'placeholder' => '--- Veuillez choisir une station ---',
                 'choice_label' => 'traductions[0].libelle',
                 'query_builder' => function (StationRepository $st) use ($locale) {
+                    return $st->getTraductionsByLocale($locale);
+                },
+            ))
+            ->add('typeHebergement', EntityType::class, array(
+                'class' => TypeHebergement::class,
+                'placeholder' => '--- Veuillez choisir un type d\'hébergement ---',
+                'choice_label' => 'traductions[0].libelle',
+                'query_builder' => function (TypeHebergementRepository $st) use ($locale) {
                     return $st->getTraductionsByLocale($locale);
                 },
             ))

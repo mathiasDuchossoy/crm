@@ -43,20 +43,41 @@ class HebergementUnifieType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $entities = 'hebergements';
-        $entitySelect = 'station';
-        foreach ($view->children[$entities]->children as $viewChild) {
-            $siteId = $viewChild->vars['value']->getSite()->getId();
-            $choices = $viewChild->children[$entitySelect]->vars['choices'];
+//        $entitySelect = 'station';
+//        foreach ($view->children[$entities]->children as $viewChild) {
+//            $siteId = $viewChild->vars['value']->getSite()->getId();
+//            $choices = $viewChild->children[$entitySelect]->vars['choices'];
+//
+//            $newChoices = array();
+//            /** @var ChoiceView $choice */
+//            foreach ($choices as $key => $choice) {
+//                $choice->attr = array('data-unifie_id' => $choice->data->getStationUnifie()->getId());
+//                if ($choice->data->getSite()->getId() == $siteId) {
+//                    $newChoices[$key] = $choice;
+//                }
+//            }
+//            $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+//        }
+        $entitiesSelect = array();
+        $entitiesSelect[] = 'station';
+//        echo ucfirst('zoneTouristique');die;
+        $entitiesSelect[] = 'typeHebergement';
+//        $entitiesSelect[] = 'departement';
+//        $entitiesSelect[] = 'domaine';
+        foreach ($entitiesSelect as $entitySelect) {
+            foreach ($view->children[$entities]->children as $viewChild) {
+                $siteId = $viewChild->vars['value']->getSite()->getId();
+                $choices = $viewChild->children[$entitySelect]->vars['choices'];
 
-            $newChoices = array();
-            /** @var ChoiceView $choice */
-            foreach ($choices as $key => $choice) {
-                $choice->attr = array('data-unifie_id' => $choice->data->getStationUnifie()->getId());
-                if ($choice->data->getSite()->getId() == $siteId) {
-                    $newChoices[$key] = $choice;
+                $newChoices = array();
+                foreach ($choices as $key => $choice) {
+                    $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
+                    if ($choice->data->getSite()->getId() == $siteId) {
+                        $newChoices[$key] = $choice;
+                    }
                 }
+                $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
             }
-            $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
         }
     }
 }
