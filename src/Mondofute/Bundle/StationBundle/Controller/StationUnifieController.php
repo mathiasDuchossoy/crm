@@ -858,7 +858,7 @@ class StationUnifieController extends Controller
                 $arrayStationCarteIdentiteUnifies = new ArrayCollection();
                 /** @var Station $station */
                 foreach ($stationUnifie->getStations() as $station) {
-                    if ($station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite()) {
+                    if (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite()) {
                         $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
                     }
                 }
