@@ -27,4 +27,5 @@ Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
         grandeVilles:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille
             mappedBy: stationCommentVenir
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
