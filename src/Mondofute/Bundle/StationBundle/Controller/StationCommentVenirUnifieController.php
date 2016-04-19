@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
@@ -228,7 +229,7 @@ class StationCommentVenirUnifieController extends Controller
      * Copie dans la base de données site l'entité StationCommentVenir
      * @param StationCommentVenirUnifie $entity
      */
-    private function copieVersSites(StationCommentVenirUnifie $entity)
+    public function copieVersSites(StationCommentVenirUnifie $entity)
     {
         /** @var StationCommentVenirTraduction $stationCommentVenirTraduc */
 //        Boucle sur les StationCommentVenirs afin de savoir sur quel site nous devons l'enregistrer
@@ -342,6 +343,22 @@ class StationCommentVenirUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
+    }
+
+    /**
+     * Creates a new StationCommentVenirUnifie entity.
+     *
+     */
+    public function newEntity(Station $station)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $stationCommentVenirUnifie = new StationCommentVenirUnifie();
+
+        $stationCommentVenirUnifie->addStationCommentVenir($station->getStationCommentVenir());
+        $em->persist($stationCommentVenirUnifie);
+
+        return $stationCommentVenirUnifie;
     }
 
     /**
@@ -508,6 +525,19 @@ class StationCommentVenirUnifieController extends Controller
         ));
     }
 
+
+    /**
+     * Displays a form to edit an existing StationCommentVenirUnifie entity.
+     *
+     */
+    public function editEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($stationCommentVenirUnifie);
+//      $em->flush();
+    }
+
     /**
      * Deletes a StationCommentVenirUnifie entity.
      *
@@ -550,6 +580,31 @@ class StationCommentVenirUnifieController extends Controller
         }
 
         return $this->redirectToRoute('stationcommentvenir_index');
+    }
+
+    /**
+     * Deletes a StationCommentVenirUnifie entity.
+     *
+     */
+    public function deleteEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+        // Parcourir les sites non CRM
+        foreach ($sitesDistants as $siteDistant) {
+            // Récupérer le manager du site.
+            $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+            // Récupérer l'entité sur le site distant puis la suprrimer.
+            $stationCommentVenirUnifieSite = $emSite->find(StationCommentVenirUnifie::class, $stationCommentVenirUnifie->getId());
+            if (!empty($stationCommentVenirUnifieSite)) {
+                $emSite->remove($stationCommentVenirUnifieSite);
+                $emSite->flush();
+            }
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($stationCommentVenirUnifie);
+        $em->flush();
     }
 
 }
