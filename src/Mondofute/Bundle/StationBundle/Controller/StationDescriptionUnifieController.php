@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
@@ -137,7 +138,6 @@ class StationDescriptionUnifieController extends Controller
         }
     }
 
-
     /**
      * Classe les stationDescriptions par classementAffichage
      * @param StationDescriptionUnifie $entity
@@ -210,7 +210,7 @@ class StationDescriptionUnifieController extends Controller
      * Copie dans la base de données site l'entité stationDescription
      * @param StationDescriptionUnifie $entity
      */
-    private function copieVersSites(StationDescriptionUnifie $entity)
+    public function copieVersSites(StationDescriptionUnifie $entity)
     {
         /** @var StationDescriptionTraduction $stationDescriptionTraduc */
 //        Boucle sur les stationDescriptions afin de savoir sur quel site nous devons l'enregistrer
@@ -299,6 +299,23 @@ class StationDescriptionUnifieController extends Controller
 //                echo 'ajouter ' . $site->getLibelle();
             }
         }
+    }
+
+    /**
+     * Creates a new StationDescriptionUnifie entity.
+     *
+     */
+    public function newEntity(Station $station)
+    {
+
+        $stationDescriptionUnifie = new StationDescriptionUnifie();
+
+        $em = $this->getDoctrine()->getManager();
+        $stationDescriptionUnifie->addStationDescription($station->getStationDescription());
+
+        $em->persist($stationDescriptionUnifie);
+
+        return $stationDescriptionUnifie;
     }
 
     /**
@@ -429,6 +446,18 @@ class StationDescriptionUnifieController extends Controller
         ));
     }
 
+
+    /**
+     * Displays a form to edit an existing StationDescriptionUnifie entity.
+     *
+     */
+    public function editEntity(StationDescriptionUnifie $stationDescriptionUnifie)
+    {
+        /** @var StationDescription $stationDescription */
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($stationDescriptionUnifie);
+    }
+
     /**
      * Deletes a StationDescriptionUnifie entity.
      *
@@ -471,6 +500,29 @@ class StationDescriptionUnifieController extends Controller
         }
 
         return $this->redirectToRoute('stationdescription_index');
+    }
+
+    /**
+     * Deletes a StationDescriptionUnifie entity.
+     *
+     */
+    public function deleteEntity(StationDescriptionUnifie $stationDescriptionUnifie)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+        // Parcourir les sites non CRM
+        foreach ($sitesDistants as $siteDistant) {
+            // Récupérer le manager du site.
+            $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+            // Récupérer l'entité sur le site distant puis la suprrimer.
+            $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class, $stationDescriptionUnifie->getId());
+            if (!empty($stationDescriptionUnifieSite)) {
+                $emSite->remove($stationDescriptionUnifieSite);
+                $emSite->flush();
+            }
+        }
+        $em->remove($stationDescriptionUnifie);
     }
 
 }
