@@ -135,6 +135,9 @@ class StationType extends AbstractType
             ->add('stationCommentVenir', StationCommentVenirType::class, array(
                 'by_reference' => true,
             ))
+            ->add('stationDescription', StationDescriptionType::class, array(
+                'by_reference' => true,
+            ))
         ;
     }
 
