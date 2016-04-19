@@ -91,8 +91,14 @@
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
-                            {{ form_row(fournisseur) }}
-                            {% set nbFournisseurs = nbFournisseurs + 1 %}
+                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}">
+                                <div class="row">
+                                    <p> Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</p>
+                                </div>
+                                {{ form_widget(fournisseur) }}
+                                {% set nbFournisseurs = nbFournisseurs + 1 %}
+                            </div>
+
                         {% endfor %}
                     </div>
                     <div id="nb_fournisseurs" data-index="{{ nbFournisseurs }}">
@@ -180,6 +186,7 @@
     {{ parent() }}
     <script type="text/javascript">
         var fournisseurs = [];
+
         function afficherModalRechercheFournisseurs() {
 
             var modal = $('#modalRechercherFournisseur');
@@ -292,15 +299,27 @@
 //            donnes la valeur du fournisseur dans le hidden fournisseur
             $('#hebergement_unifie_fournisseurs_' + id + '_fournisseur').val(id);
         }
-        function ajouterLigneFournisseursAssocies(id) {
+        function ajouterLigneFournisseursAssocies(id, enseigne) {
             var ligne = $('<tr id="fournisseurAssocie' + id + '"></tr>');
-            var colonneEnseigne = $('<td>' + $('#resultatRechercheFournisseur' + id).attr('data-enseigne') + '</td>');
+            var colonneEnseigne = null;
+            if (!enseigne) {
+                colonneEnseigne = $('<td>' + $('#resultatRechercheFournisseur' + id).attr('data-enseigne') + '</td>');
+            } else {
+                colonneEnseigne = $('<td>' + enseigne + '</td>');
+            }
             var colonneDissocier = $('<td><button type="button" class="btn-default btn" onclick="dissocierFournisseur(' + id + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
             ligne.append(colonneEnseigne);
             ligne.append(colonneDissocier);
             $('#tabFournisseursAssocies').append(ligne);
         }
         $(document).ready(function () {
+            {% for fournisseur in form.fournisseurs %}
+            {#associerFournisseur({{ fournisseur.vars.value.fournisseur.id }},'{{ fournisseur.vars.value.fournisseur.enseigne }}');#}
+            fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
+            ajouterLigneFournisseursAssocies({{ fournisseur.vars.value.fournisseur.id }}, '{{ fournisseur.vars.value.fournisseur.enseigne }}');
+            {#{{ dump(fournisseur) }}#}
+            {#associerFournisseur({{ fournisseur.vars.value.id }},'');#}
+            {% endfor %}
             {% if sitesAEnregistrer is not empty %}
 
             {% for siteAEnregistrer in sitesAEnregistrer %}

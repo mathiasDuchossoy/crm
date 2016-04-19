@@ -14,9 +14,19 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
             inversedBy: fournisseurs
-            cascade: ['persist','remove']
+            cascade: ['persist']
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: hebergements
+            cascade: ['persist']
+    oneToOne:
+        telFixe:
+            targetEntity: Nucleus\MoyenComBundle\Entity\Fixe
+            cascade: ['persist','remove']
+        telMobile:
+            targetEntity: Nucleus\MoyenComBundle\Entity\Mobile
+            cascade: ['persist','remove']
+        adresse:
+            targetEntity: Nucleus\MoyenComBundle\Entity\Adresse
             cascade: ['persist','remove']
     lifecycleCallbacks: {  }

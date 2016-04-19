@@ -7,6 +7,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
@@ -79,6 +81,12 @@ class HebergementUnifieController extends Controller
                 foreach ($hebergement->getMoyenComs() as $moyenCom) {
                     $moyenCom->setDateCreation();
                 }
+            }
+            /** @var FournisseurHebergement $fournisseur */
+            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                $fournisseur->getTelFixe()->setDateCreation();
+                $fournisseur->getTelMobile()->setDateCreation();
+                $fournisseur->getAdresse()->setDateCreation();
             }
 //            $this->gestionDatesMoyenComs($hebergementUnifie);
             $em = $this->getDoctrine()->getManager();
@@ -252,7 +260,43 @@ class HebergementUnifieController extends Controller
                 if (is_null(($entitySite = $em->getRepository(HebergementUnifie::class)->find($entity->getId())))) {
                     $entitySite = new HebergementUnifie();
                 }
+                /** @var FournisseurHebergement $fournisseur */
+                /** @var FournisseurHebergement $fournisseurSite */
+//                supprime les fournisseurHebergement du site distant
+                foreach ($entitySite->getFournisseurs() as $fournisseurSite) {
+                    $present = false;
+                    foreach ($entity->getFournisseurs() as $fournisseur) {
+                        if ($fournisseurSite->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId() && $fournisseurSite->getHebergement()->getId() == $fournisseur->getHebergement()->getId()) {
+                            $present = true;
+                        }
+                    }
+                    if ($present == false) {
+                        $entitySite->removeFournisseur($fournisseurSite);
+                        $em->remove($fournisseurSite);
+                    }
+                }
+//                balaye les fournisseurHebergement et copie les données
+                foreach ($entity->getFournisseurs() as $fournisseur) {
+                    if (empty($fournisseurSite = $em->getRepository(FournisseurHebergement::class)->findOneBy(array(
+                        'fournisseur' => $fournisseur->getFournisseur(),
+                        'hebergement' => $fournisseur->getHebergement()
+                    )))
+                    ) {
+//                        initialise un objet
+                        $fournisseurSite = new FournisseurHebergement();
 
+                    } else {
+
+                        $fournisseurSite->getAdresse()->setDateModification(new DateTime());
+                        $fournisseurSite->getTelFixe()->setDateModification(new DateTime());
+                        $fournisseurSite->getTelMobile()->setDateModification(new DateTime());
+                    }
+
+                    $this->dupliqueFounisseurHebergement($fournisseur, $fournisseurSite);
+                    $fournisseurSite->setHebergement($entitySite)
+                        ->setFournisseur($em->getRepository(Fournisseur::class)->findOneBy(array('id' => $fournisseur->getFournisseur()->getId())));
+                    $entitySite->addFournisseur($fournisseurSite);
+                }
 //            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($hebergementSite = $em->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $entitySite))))) {
                     $hebergementSite = new Hebergement();
@@ -335,6 +379,44 @@ class HebergementUnifieController extends Controller
     }
 
     /**
+     * @param $fournisseur
+     * @param $fournisseurSite
+     */
+    public function dupliqueFounisseurHebergement(
+        FournisseurHebergement $fournisseur,
+        FournisseurHebergement $fournisseurSite
+    ) {
+//        récupération des données fournisseur
+        $adresseFournisseur = $fournisseur->getAdresse();
+        $telFixeFournisseur = $fournisseur->getTelFixe();
+        $telMobileFournisseur = $fournisseur->getTelMobile();
+        /** @var CoordonneesGPS $coordonneesGPSFournisseur */
+        $coordonneesGPSFournisseur = $fournisseur->getAdresse()->getCoordonneeGPS();
+
+//        récupération des données fournisseurSite
+        $adresseFournisseurSite = $fournisseurSite->getAdresse();
+        $coordonneesGPSFournisseurSite = $fournisseurSite->getAdresse()->getCoordonneeGPS();
+        $telFixeFournisseurSite = $fournisseurSite->getTelFixe();
+        $telMobileFournisseurSite = $fournisseurSite->getTelMobile();
+
+//                    Copie des données du fournisseurHebergement
+        $coordonneesGPSFournisseurSite->setLatitude($coordonneesGPSFournisseur->getLatitude())
+            ->setLongitude($coordonneesGPSFournisseur->getLongitude())
+            ->setPrecis($coordonneesGPSFournisseur->getPrecis());
+        $adresseFournisseurSite->setAdresse1($adresseFournisseur->getAdresse1())
+            ->setAdresse2($adresseFournisseur->getAdresse2())
+            ->setAdresse3($adresseFournisseur->getAdresse3())
+            ->setCodePostal($adresseFournisseur->getCodePostal())
+            ->setVille($adresseFournisseur->getVille())
+            ->setPays($adresseFournisseur->getPays())
+            ->setCoordonneeGPS($coordonneesGPSFournisseurSite);
+        $telFixeFournisseurSite->setNumero($telFixeFournisseur->getNumero());
+        $telMobileFournisseurSite
+            ->setSmsing($telMobileFournisseur->getSmsing())
+            ->setNumero($telMobileFournisseur->getNumero());
+    }
+
+    /**
      * Ajoute la reference site unifie dans les sites n'ayant pas d'hébergement a enregistrer
      * @param $idUnifie
      * @param $hebergementUnifie
@@ -352,9 +434,9 @@ class HebergementUnifieController extends Controller
                 ->where(Criteria::expr()->eq('site', $site));
             if (count($hebergementUnifie->getHebergements()->matching($criteres)) == 0 && (empty($emSite->getRepository(HebergementUnifie::class)->findBy(array('id' => $idUnifie))))) {
                 $entity = new HebergementUnifie();
-                foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
-                    $entity->addFournisseur($fournisseur);
-                }
+//                foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+//                    $entity->addFournisseur($fournisseur);
+//                }
                 $emSite->persist($entity);
                 $emSite->flush();
             }
@@ -436,6 +518,7 @@ class HebergementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            dump($originalFournisseursHebergement);
 
             $this->supprimerHebergements($hebergementUnifie, $sitesAEnregistrer);
 
@@ -447,6 +530,10 @@ class HebergementUnifieController extends Controller
                     //  suppression de l'hébergement sur le site
                     $emSite = $this->getDoctrine()->getEntityManager($hebergement->getSite()->getLibelle());
                     $entitySite = $emSite->find(HebergementUnifie::class, $hebergementUnifie->getId());
+                    foreach ($entitySite->getFournisseurs() as $fournisseurSite) {
+                        $entitySite->removeFournisseur($fournisseurSite);
+                        $emSite->remove($fournisseurSite);
+                    }
                     if (!empty($entitySite)) {
                         if (!empty($entitySite->getHebergements())) {
                             $hebergementSite = $entitySite->getHebergements()->first();
@@ -480,6 +567,32 @@ class HebergementUnifieController extends Controller
                     /** @var MoyenCommunication $moyenCom */
                     foreach ($hebergement->getMoyenComs() as $moyenCom) {
                         $moyenCom->setDateModification(new DateTime());
+                    }
+
+                }
+            }
+            /** @var FournisseurHebergement $fournisseur */
+            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                if (empty($fournisseur->getFournisseur())) {
+//                    supprime le fournisseurHebergement car plus présent
+                    $hebergementUnifie->removeFournisseur($fournisseur);
+                    $em->remove($fournisseur);
+                } else {
+                    $fournisseur->setHebergement($hebergementUnifie);
+                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
+                        $fournisseur->getAdresse()->setDateCreation();
+                    } else {
+                        $fournisseur->getAdresse()->setDateModification(new DateTime());
+                    }
+                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
+                        $fournisseur->getTelFixe()->setDateCreation();
+                    } else {
+                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
+                    }
+                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
+                        $fournisseur->getTelMobile()->setDateCreation();
+                    } else {
+                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
                     }
                 }
             }
