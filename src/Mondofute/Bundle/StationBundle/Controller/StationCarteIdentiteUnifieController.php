@@ -608,8 +608,8 @@ class StationCarteIdentiteUnifieController extends Controller
             $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
             if (!empty($stationCarteIdentiteUnifieSite)) {
                 foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
-                    if (count($stationCarteIdentiteSite->getStations()) == 0)
-                    {
+//                    if (count($stationCarteIdentiteSite->getStations()) == 0)
+//                    {
 //                        dump(count($stationCarteIdentiteSite->getStations()));
 //                        foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
 //                            $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
@@ -618,17 +618,17 @@ class StationCarteIdentiteUnifieController extends Controller
 //                        }
 //                        $em->remove($stationCarteIdentite->getAltitudeVillage());
                         $emSite->remove($stationCarteIdentiteSite);
-                    } else $delete = false;
+//                    } else $delete = false;
                 }
-                if ($delete) {
-//                    $emSite->remove($stationCarteIdentiteUnifieSite);
+//                if ($delete) {
+                $emSite->remove($stationCarteIdentiteUnifieSite);
                     $emSite->flush();
-                }
+//                }
             }
         }
 //        $em = $this->getDoctrine()->getManager();
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-            if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
+//            if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
 //                dump(count($stationCarteIdentite->getStations()));
 //                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
 //                    $stationCarteIdentite->removeMoyenCom($moyenCom);
@@ -636,9 +636,9 @@ class StationCarteIdentiteUnifieController extends Controller
 ////                    $em->flush();
 //                }
                 $em->remove($stationCarteIdentite);
-            } else {
-                $delete = false;
-            }
+//            } else {
+//                $delete = false;
+//            }
         }
 //        $em->clear($stationCarteIdentiteUnifie->getStationCarteIdentites());
 //        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)
@@ -649,7 +649,7 @@ class StationCarteIdentiteUnifieController extends Controller
 //            }
 //        }
         if ($delete) {
-//            $em->remove($stationCarteIdentiteUnifie);
+            $em->remove($stationCarteIdentiteUnifie);
 //            $em->flush();
         }
     }
