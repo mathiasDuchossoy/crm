@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\StationBundle\Form;
 
+use Nucleus\MoyenComBundle\Form\AdresseType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -53,13 +54,14 @@ class StationCarteIdentiteType extends AbstractType
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
 //            ->add('stationCarteIdentiteUnifie')
-            ->add('moyenComs',
-                'Infinite\FormBundle\Form\Type\PolyCollectionType',
-                array('types' => array(
-                    'nucleus_moyencombundle_adresse'
-                )
-                )
-            )
+//            ->add('moyenComs',
+//                'Infinite\FormBundle\Form\Type\PolyCollectionType',
+//                array('types' => array(
+//                    'nucleus_moyencombundle_adresse'
+//                )
+//                )
+//            )
+            ->add('adresse', 'Nucleus\MoyenComBundle\Form\AdresseType')
         ;
     }
 

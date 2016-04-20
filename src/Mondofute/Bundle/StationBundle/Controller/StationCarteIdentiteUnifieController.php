@@ -79,11 +79,11 @@ class StationCarteIdentiteUnifieController extends Controller
 
             $this->supprimerStationCarteIdentites($stationCarteIdentiteUnifie, $sitesAEnregistrer);
 
-            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                    $moyenCom->setDateCreation();
-                }
-            }
+//            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                    $moyenCom->setDateCreation();
+//                }
+//            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationCarteIdentiteUnifie);
@@ -131,10 +131,10 @@ class StationCarteIdentiteUnifieController extends Controller
             if (!$siteExiste) {
                 $stationCarteIdentite = new StationCarteIdentite();
                 $stationCarteIdentite->setSite($site);
-                $adresse = new Adresse();
-//                $adresse->setCoordonneeGPS(new CoordonneesGPS());
-                $adresse->setDateCreation();
-                $stationCarteIdentite->addMoyenCom($adresse);
+//                $adresse = new Adresse();
+////                $adresse->setCoordonneeGPS(new CoordonneesGPS());
+//                $adresse->setDateCreation();
+//                $stationCarteIdentite->addMoyenCom($adresse);
 
                 $entity->addStationCarteIdentite($stationCarteIdentite);
             }
@@ -180,9 +180,9 @@ class StationCarteIdentiteUnifieController extends Controller
         /** @var StationCarteIdentite $stationCarteIdentite */
         foreach ($entity->getStationCarteIdentites() as $stationCarteIdentite) {
             if (!in_array($stationCarteIdentite->getSite()->getId(), $sitesAEnregistrer)) {
-                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                    $stationCarteIdentite->removeMoyenCom($moyenCom);
-                }
+//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                    $stationCarteIdentite->removeMoyenCom($moyenCom);
+//                }
                 $stationCarteIdentite->setStationCarteIdentiteUnifie(null);
                 $entity->removeStationCarteIdentite($stationCarteIdentite);
             }
@@ -222,25 +222,39 @@ class StationCarteIdentiteUnifieController extends Controller
                 if (empty(($stationCarteIdentiteSite = $emSite->getRepository(StationCarteIdentite::class)->findOneBy(array('stationCarteIdentiteUnifie' => $entitySite))))) {
                     $stationCarteIdentiteSite = new StationCarteIdentite();
                 }
-                if (!empty($stationCarteIdentiteSite->getMoyenComs())) {
-                    $adresseSite = $stationCarteIdentiteSite->getMoyenComs()->first();
-                    if (empty($adresseSite->getCoordonneeGPS())) {
-                        $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
-                    }
-//                    dump($adresseSite);
-//                    die;
+
+                // ***** adresse *****
+                if (empty($adresseSite = $stationCarteIdentiteSite->getAdresse())) {
+                    $adresseSite = new  Adresse();
+                    $adresseSite
+                        ->setDateCreation();
+                    $stationCarteIdentiteSite->setAdresse($adresseSite);
                 } else {
-                    $adresseSite = new Adresse();
-                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
-                    $adresseSite->setDateCreation();
-                    $stationCarteIdentiteSite->addMoyenCom($adresseSite);
+                    $adresseSite->setDateModification($stationCarteIdentite->getAdresse()->getDateModification());
                 }
+                $adresseSite
+                    ->setVille($stationCarteIdentite->getAdresse()->getVille())
+                    ->setCodePostal($stationCarteIdentite->getAdresse()->getCodePostal());
+                // ***** fin adresse *****
+//                if (!empty($stationCarteIdentiteSite->getMoyenComs())) {
+//                    $adresseSite = $stationCarteIdentiteSite->getMoyenComs()->first();
+//                    if (empty($adresseSite->getCoordonneeGPS())) {
+//                        $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+//                    }
+////                    dump($adresseSite);
+////                    die;
+//                } else {
+//                    $adresseSite = new Adresse();
+//                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+//                    $adresseSite->setDateCreation();
+//                    $stationCarteIdentiteSite->addMoyenCom($adresseSite);
+//                }
 
-                $adresse = $stationCarteIdentite->getMoyenComs()->first();
-
-                $adresseSite->setVille($adresse->getVille());
-                $adresseSite->setCodePostal($adresse->getCodePostal());
-                $adresseSite->setDateModification(new DateTime());
+//                $adresse = $stationCarteIdentite->getMoyenComs()->first();
+//
+//                $adresseSite->setVille($adresse->getVille());
+//                $adresseSite->setCodePostal($adresse->getCodePostal());
+//                $adresseSite->setDateModification(new DateTime());
 
 //            copie des données stationCarteIdentite
                 $stationCarteIdentiteSite
@@ -329,10 +343,10 @@ class StationCarteIdentiteUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $stationCarteIdentiteUnifie = new  StationCarteIdentiteUnifie();
         $stationCarteIdentite = $station->getStationCarteIdentite();
-
-        foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-            $moyenCom->setDateCreation();
-        }
+        $stationCarteIdentite->getAdresse()->setDateCreation();
+//        foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//            $moyenCom->setDateCreation();
+//        }
         $stationCarteIdentiteUnifie->addStationCarteIdentite($stationCarteIdentite);
         $em->persist($stationCarteIdentiteUnifie);
 //        $em->flush();
@@ -428,9 +442,9 @@ class StationCarteIdentiteUnifieController extends Controller
                     $entitySite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
                     /** @var StationCarteIdentite $stationCarteIdentiteSite */
                     $stationCarteIdentiteSite = $entitySite->getStationCarteIdentites()->first();
-                    foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
-                        $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
-                    }
+//                    foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
+//                        $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
+//                    }
                     $emSite->remove($stationCarteIdentiteSite);
                     $emSite->flush();
 //                    dump($stationCarteIdentite);
@@ -438,11 +452,11 @@ class StationCarteIdentiteUnifieController extends Controller
                     $em->remove($stationCarteIdentite);
                 }
             }
-            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                    $moyenCom->setDateModification(new DateTime());
-                }
-            }
+//            foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                    $moyenCom->setDateModification(new DateTime());
+//                }
+//            }
             $em->persist($stationCarteIdentiteUnifie);
             $em->flush();
 
@@ -474,12 +488,14 @@ class StationCarteIdentiteUnifieController extends Controller
 
     public function editEntity(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
+        /** @var StationCarteIdentite $stationCarteIdentite */
         $em = $this->getDoctrine()->getEntityManager();
 
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-            foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                $moyenCom->setDateModification(new DateTime());
-            }
+            $stationCarteIdentite->getAdresse()->setDateModification(new DateTime());
+//            foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                $moyenCom->setDateModification(new DateTime());
+//            }
         }
         $em->persist($stationCarteIdentiteUnifie);
 //        $em->flush();
@@ -512,11 +528,11 @@ class StationCarteIdentiteUnifieController extends Controller
                     if (!empty($stationCarteIdentiteUnifieSite)) {
                         /** @var StationCarteIdentite $stationCarteIdentiteSite */
                         foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
-                            foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
-                                $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
-                                $emSite->remove($moyenCom);
-                                $emSite->flush();
-                            }
+//                            foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
+//                                $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
+//                                $emSite->remove($moyenCom);
+//                                $emSite->flush();
+//                            }
                         }
                         $emSite->remove($stationCarteIdentiteUnifieSite);
                         $emSite->flush();
@@ -525,11 +541,11 @@ class StationCarteIdentiteUnifieController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 /** @var StationCarteIdentite $stationCarteIdentite */
                 foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-                    foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                        $stationCarteIdentite->removeMoyenCom($moyenCom);
-                        $em->remove($moyenCom);
-                        $em->flush();
-                    }
+//                    foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                        $stationCarteIdentite->removeMoyenCom($moyenCom);
+//                        $em->remove($moyenCom);
+//                        $em->flush();
+//                    }
                 }
                 $em->remove($stationCarteIdentiteUnifie);
                 $em->flush();
@@ -595,11 +611,11 @@ class StationCarteIdentiteUnifieController extends Controller
                     if (count($stationCarteIdentiteSite->getStations()) == 0)
                     {
 //                        dump(count($stationCarteIdentiteSite->getStations()));
-                        foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
-                            $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
-                            $emSite->remove($moyenCom);
-                            $emSite->flush();
-                        }
+//                        foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
+//                            $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
+//                            $emSite->remove($moyenCom);
+//                            $emSite->flush();
+//                        }
 //                        $em->remove($stationCarteIdentite->getAltitudeVillage());
                         $emSite->remove($stationCarteIdentiteSite);
                     } else $delete = false;
@@ -614,11 +630,11 @@ class StationCarteIdentiteUnifieController extends Controller
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
             if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
 //                dump(count($stationCarteIdentite->getStations()));
-                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-                    $stationCarteIdentite->removeMoyenCom($moyenCom);
-                    $em->remove($moyenCom);
-//                    $em->flush();
-                }
+//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
+//                    $stationCarteIdentite->removeMoyenCom($moyenCom);
+//                    $em->remove($moyenCom);
+////                    $em->flush();
+//                }
                 $em->remove($stationCarteIdentite);
             } else {
                 $delete = false;
