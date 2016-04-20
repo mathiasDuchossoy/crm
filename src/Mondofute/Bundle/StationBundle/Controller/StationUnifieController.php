@@ -807,6 +807,7 @@ class StationUnifieController extends Controller
 
     private function carteIdentiteEdit(Request $request, StationUnifie $stationUnifie)
     {
+        /** @var Station $station */
         $stationCarteIdentiteUnifieController = new StationCarteIdentiteUnifieController();
         $stationCarteIdentiteUnifieController->setContainer($this->container);
         $em = $this->getDoctrine()->getEntityManager();
@@ -835,8 +836,8 @@ class StationUnifieController extends Controller
 
                     $newCI = new StationCarteIdentite();
                     $adresse = new Adresse();
-                    $adresse->setVille($station->getStationCarteIdentite()->getMoyenComs()->first()->getVille())
-                        ->setCodePostal($station->getStationCarteIdentite()->getMoyenComs()->first()->getCodePostal())
+                    $adresse->setVille($station->getStationCarteIdentite()->getAdresse()->getVille())
+                        ->setCodePostal($station->getStationCarteIdentite()->getAdresse()->getCodePostal())
                         ->setDateCreation();
                     $newGPS = new CoordonneesGPS();
                     $adresse->setCoordonneeGPS($newGPS);
@@ -1061,20 +1062,32 @@ class StationUnifieController extends Controller
                 $arrayStationDescriptionUnifies = new ArrayCollection();
                 /** @var Station $station */
                 foreach ($stationUnifie->getStations() as $station) {
-                    if (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite()) {
+                    if (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite())) {
                         $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
                     }
-                    if (!empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()) {
+                    if (empty($station->getStationMere()) || !empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()) {
                         $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
                     }
-                    if (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription()) {
+                    if (empty($station->getStationMere()) || !empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription()) {
                         $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
                     }
                 }
 
-                $em = $this->getDoctrine()->getManager();
+
+//                $em = $this->getDoctrine()->getManager();
 
                 $em->remove($stationUnifie);
+
+                foreach ($arrayStationCarteIdentiteUnifies as $stationCarteIdentiteUnify) {
+                    $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
+                }
+                foreach ($arrayStationCommentVenirUnifies as $stationCommentVenirUnify) {
+                    $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
+                }
+                foreach ($arrayStationDescriptionUnifies as $stationDescriptionUnify) {
+                    $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
+                }
+
                 $em->flush();
 
             } catch (ForeignKeyConstraintViolationException $except) {
@@ -1090,17 +1103,7 @@ class StationUnifieController extends Controller
                 }
                 return $this->redirect($request->headers->get('referer'));
             }
-            foreach ($arrayStationCarteIdentiteUnifies as $stationCarteIdentiteUnify) {
-                $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
-            }
-            foreach ($arrayStationCommentVenirUnifies as $stationCommentVenirUnify) {
-                $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
-            }
-            foreach ($arrayStationDescriptionUnifies as $stationDescriptionUnify) {
-                $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
-            }
 
-            $em->flush();
             $session = $request->getSession();
             $session->start();
 
