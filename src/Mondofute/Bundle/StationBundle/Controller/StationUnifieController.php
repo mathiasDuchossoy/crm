@@ -105,7 +105,11 @@ class StationUnifieController extends Controller
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($stationUnifie);
-            $em->flush();
+            try {
+                $em->flush();
+            } catch (\Exception $e) {
+                echo "Exception Found - " . $e->getMessage() . "<br/>";
+            }
 
             foreach ($stationUnifie->getStations() as $station) {
                 $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
@@ -161,9 +165,9 @@ class StationUnifieController extends Controller
                         $stationCarteIdentite->setSite($site);
                         $station->setStationCarteIdentite($stationCarteIdentite);
                     }
-                    if ($station->getStationCarteIdentite()->getMoyenComs()->isEmpty()) {
-                        $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
-                    }
+//                    if ($station->getStationCarteIdentite()->getMoyenComs()->isEmpty()) {
+//                        $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
+//                    }
                     // fin station CI
 
                     // station CV
@@ -241,7 +245,7 @@ class StationUnifieController extends Controller
             if (!$siteExiste) {
                 $station = new Station();
                 $station->setStationCarteIdentite(new StationCarteIdentite());
-                $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
+//                $station->getStationCarteIdentite()->addMoyenCom(new Adresse());
                 $station->getStationCarteIdentite()->setSite($site);
                 $station->setSite($site);
 
@@ -836,7 +840,8 @@ class StationUnifieController extends Controller
                         ->setDateCreation();
                     $newGPS = new CoordonneesGPS();
                     $adresse->setCoordonneeGPS($newGPS);
-                    $newCI->addMoyenCom($adresse);
+//                    $newCI->addMoyenCom($adresse);
+                    $newCI->setAdresse($adresse);
                     $altitudeVillage = new Distance();
                     $altitudeVillage->setUnite($station->getStationCarteIdentite()->getAltitudeVillage()->getUnite())
                         ->setValeur($station->getStationCarteIdentite()->getAltitudeVillage()->getValeur());
@@ -851,9 +856,9 @@ class StationUnifieController extends Controller
                     $station->setStationCarteIdentite($newCI);
 
                     $em->refresh($cIMere);
-                    foreach ($cIMere->getMoyenComs() as $moyenCom) {
-                        $em->refresh($moyenCom);
-                    }
+//                    foreach ($cIMere->getAdresse() as $moyenCom) {
+                    $em->refresh($cIMere->getAdresse());
+//                    }
                     $em->refresh($cIMere->getAltitudeVillage());
                 }
             }
