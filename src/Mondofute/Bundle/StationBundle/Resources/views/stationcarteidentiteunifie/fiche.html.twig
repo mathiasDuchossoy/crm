@@ -28,10 +28,8 @@
                          data-crm="{{ stationCarteIdentite.vars.value.site.crm | number_format }}">
                         {{ form_row(stationCarteIdentite.site) }}
                         <ul class="nav nav-tabs">
-                            {#{{ form_row( stationCarteIdentite.codePostal, { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.codePostal.vars['unique_block_prefix']}}) }}#}
-                            {#{{ dump( stationCarteIdentite.moyenComs) }}#}
-                            {{ form_row( stationCarteIdentite.moyenComs[0].codePostal , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.moyenComs[0].codePostal.vars['unique_block_prefix']}}) }}
-                            {{ form_row( stationCarteIdentite.moyenComs[0].ville , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.moyenComs[0].ville.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.adresse.codePostal , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.adresse.codePostal.vars['unique_block_prefix']}}) }}
+                            {{ form_row( stationCarteIdentite.adresse.ville , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.adresse.ville.vars['unique_block_prefix']}}) }}
                             {{ form_row( stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
                             {{ form_row( stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
                             {{ form_row( stationCarteIdentite.jourFermeture , { 'attr' : { 'data-unique_block_prefix' : stationCarteIdentite.jourFermeture.vars['unique_block_prefix']}}) }}
