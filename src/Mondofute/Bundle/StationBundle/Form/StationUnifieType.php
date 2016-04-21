@@ -17,8 +17,16 @@ class StationUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $stationUnifieId = $builder->getData()->getId();
+//        dump($builder->getData());die;
         $builder
-            ->add('stations', CollectionType::class, array('entry_type' => StationType::class, 'entry_options' => array('locale' => $options["locale"])))
+            ->add('stations', CollectionType::class, array(
+                'entry_type' => StationType::class,
+                'entry_options' => array(
+                    'locale' => $options["locale"],
+                    'stationUnifieId' => $stationUnifieId
+                )
+            ))
         ;
     }
 
@@ -69,6 +77,31 @@ class StationUnifieType extends AbstractType
 
             }
         }
+
+
+        $entities = 'stations';
+        $entitySelect = 'stationMere';
+        /** @var FormView $viewChild */
+        foreach ($view->children[$entities]->children as $viewChild) {
+            $siteId = $viewChild->vars['value']->getSite()->getId();
+            $choices = $viewChild->children[$entitySelect]->vars['choices'];
+
+
+            $newChoices = array();
+            foreach ($choices as $key => $choice) {
+//                dump($choice->data->getDomaine());
+                $domaineId = !empty($choice->data->getDomaine()) ? $choice->data->getDomaine()->getId() : '';
+                $choice->attr = array(
+                    'data-unifie_id' => $choice->data->getStationUnifie()->getId(),
+                    'data-domaine_id' => $domaineId
+                );
+                if ($choice->data->getSite()->getId() == $siteId) {
+                    $newChoices[$key] = $choice;
+                }
+            }
+            $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+        }
+
 //        die;
     }
 }

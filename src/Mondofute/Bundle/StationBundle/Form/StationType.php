@@ -12,6 +12,8 @@ use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ProfilRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -28,7 +30,19 @@ class StationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale = $options["locale"];
+        $stationUnifieId = $options['stationUnifieId'];
+
         $builder
+            ->add('stationMere', EntityType::class, array(
+                'class' => Station::class,
+                'placeholder' => '--- choisir une station mère ---',
+                'required' => false,
+                'choice_label' => 'traductions[0].libelle',
+                'query_builder' => function (StationRepository $r) use ($locale, $stationUnifieId) {
+                    return $r->getTraductionsByLocale($locale, $stationUnifieId);
+                },
+//                'by_reference'  => true
+            ))
             ->add('zoneTouristiques', EntityType::class, array('class' => ZoneTouristique::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
@@ -38,16 +52,6 @@ class StationType extends AbstractType
                 },
                 'multiple' => true
             ))
-//            ->add('secteur', EntityType::class, array(
-//                'class' => Secteur::class,
-//                'required' => false,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un secteur ---",
-//                'query_builder' => function (SecteurRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsByLocale($locale);
-//                },
-//            ))
-
             ->add('secteurs', EntityType::class, array(
                 'class' => Secteur::class,
                 'required' => false,
@@ -66,6 +70,9 @@ class StationType extends AbstractType
                 'query_builder' => function (DomaineRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },
+                'attr' => array(
+                    'onchange' => 'javascript:sortStationByDomaine(this);'
+                )
             ))
             ->add('profils', EntityType::class, array(
                 'class' => Profil::class,
@@ -89,9 +96,18 @@ class StationType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationTraductionType::class,
             ))
-//            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' , 'data_class' => Site::class ));//'mapped' => false ,
-//            ->add('site', HiddenType::class, array( 'property_path' => 'site.id' ));//'mapped' => false ,
-            ->add('site', HiddenType::class, array('mapped' => false))//            ->add('stationCommentVenir', StationCommentVenirType::class)
+            ->add('site', HiddenType::class, array('mapped' => false))
+//            ->add('stationCommentVenirUnifie', StationCommentVenirUnifieType::class , array('auto_initialize' => false))
+//            ->add('stationCommentVenir', StationCommentVenirType::class , array('auto_initialize' => false))
+            ->add('stationCarteIdentite', StationCarteIdentiteType::class, array(
+                'by_reference' => true,
+            ))
+            ->add('stationCommentVenir', StationCommentVenirType::class, array(
+                'by_reference' => true,
+            ))
+            ->add('stationDescription', StationDescriptionType::class, array(
+                'by_reference' => true,
+            ))
         ;
     }
 
@@ -103,6 +119,7 @@ class StationType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\StationBundle\Entity\Station',
             'locale' => 'fr_FR',
+            'stationUnifieId' => null
         ));
     }
 }

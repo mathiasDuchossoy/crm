@@ -59,6 +59,14 @@ class Station
      * @var \Doctrine\Common\Collections\Collection
      */
     private $profils;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stations;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    private $stationMere;
 
     /**
      * Constructor
@@ -255,6 +263,9 @@ class Station
      */
     public function setStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite = null)
     {
+//        if($stationCarteIdentite == null){
+//            $this->getStationCarteIdentite()->removeStation($this);
+//        }
         $this->stationCarteIdentite = $stationCarteIdentite;
 
         return $this;
@@ -457,6 +468,64 @@ class Station
     public function addProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
     {
         $this->profils[] = $profil->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Station
+     */
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station;
+
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
+    }
+
+    /**
+     * Get stationMere
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    public function getStationMere()
+    {
+        return $this->stationMere;
+    }
+
+    /**
+     * Set stationMere
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $stationMere
+     *
+     * @return Station
+     */
+    public function setStationMere(\Mondofute\Bundle\StationBundle\Entity\Station $stationMere = null)
+    {
+        $this->stationMere = $stationMere;
 
         return $this;
     }
