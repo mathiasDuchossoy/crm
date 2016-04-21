@@ -10,15 +10,6 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        altitudeMini:
-            type: integer
-        altitudeMaxi:
-            type: integer
-        kmPistesSkiAlpin:
-            type: integer
-        kmPistesSkiNordique:
-            type: integer
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -50,4 +41,16 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
             cascade: ['remove','persist']
             onDelete: CASCADE
+        altitudeMini:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade:  ['persist', 'remove']
+        altitudeMaxi:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade:  ['persist', 'remove']
+        kmPistesSkiAlpin:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin
+            cascade:  ['persist', 'remove']
+        kmPistesSkiNordique:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
+            cascade:  ['persist', 'remove']
     lifecycleCallbacks: {  }
