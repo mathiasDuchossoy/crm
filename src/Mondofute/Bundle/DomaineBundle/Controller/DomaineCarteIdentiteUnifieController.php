@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction;
@@ -177,7 +178,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($domaineCarteIdentiteUnifie);
             $em->flush();
 
@@ -453,7 +454,9 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //                if (is_null(($entitySite = $emSite->getRepository(DomaineCarteIdentiteUnifie::class)->findOneById(array($entity->getId()))))) {
 //                    $entitySite = new DomaineCarteIdentiteUnifie();
 //                }
-                if (is_null(($entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId())))) {
+
+                $entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId());
+                if (empty($entitySite)) {
                     $entitySite = new DomaineCarteIdentiteUnifie();
                 }
 
@@ -943,6 +946,23 @@ class DomaineCarteIdentiteUnifieController extends Controller
     }
 
     /**
+     * Creates a new DomaineCarteIdentiteUnifie entity.
+     *
+     */
+    public function newEntity(Domaine $domaine)
+    {
+
+        /** @var Domaine $domaine */
+        $em = $this->getDoctrine()->getManager();
+        $domaineCarteIdentiteUnifie = new  DomaineCarteIdentiteUnifie();
+        $domaineCarteIdentite = $domaine->getDomaineCarteIdentite();
+        $domaineCarteIdentiteUnifie->addDomaineCarteIdentite($domaineCarteIdentite);
+        $em->persist($domaineCarteIdentiteUnifie);
+
+        return $domaineCarteIdentiteUnifie;
+    }
+
+    /**
      * Finds and displays a DomaineCarteIdentiteUnifie entity.
      *
      */
@@ -1168,7 +1188,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-            
+
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la domaineCarteIdentite et domaineCarteIdentiteUnifie
@@ -1202,8 +1222,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                         }
                         $emSite->flush();
                     }
-                    
-                    
+
+
                     $emSite->remove($domaineCarteIdentiteSite);
                     $emSite->flush();
                     $domaineCarteIdentite->setDomaineCarteIdentiteUnifie(null);
@@ -1233,8 +1253,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                         $em->flush();
                     }
                     // *** fin suppression des domaineCarteIdentitePhotos de l'domaineCarteIdentite à supprimer ***
-                    
-                    
+
+
                     $em->remove($domaineCarteIdentite);
                 }
             }
@@ -1542,7 +1562,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //                    $emSite->remove($domaineCarteIdentiteUnifieSite);
 //                    $emSite->flush();
             }
-            
+
             $em->remove($domaineCarteIdentiteUnifie);
             $em->flush();
 
@@ -1551,6 +1571,49 @@ class DomaineCarteIdentiteUnifieController extends Controller
         }
 
         return $this->redirectToRoute('domaine_domaineCarteIdentite_index');
+    }
+
+    public function deleteEntity(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        $em = $this->getDoctrine()->getEntityManager();
+        dump($domaineCarteIdentiteUnifie);
+        $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+        // Parcourir les sites non CRM
+        foreach ($sitesDistants as $siteDistant) {
+            // Récupérer le manager du site.
+            $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+            // Récupérer l'entité sur le site distant puis la suprrimer.
+            $domaineCarteIdentiteUnifieSite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
+            dump('ici');
+            if (!empty($domaineCarteIdentiteUnifieSite)) {
+                dump('ici');
+                foreach ($domaineCarteIdentiteUnifieSite->getDomaineCarteIdentites() as $domaineCarteIdentiteSite) {
+                    dump('ici');
+                    $emSite->remove($domaineCarteIdentiteSite);
+                }
+                $emSite->remove($domaineCarteIdentiteUnifieSite);
+                $emSite->flush();
+            }
+        }
+        foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+            $em->remove($domaineCarteIdentite);
+        }
+        $em->remove($domaineCarteIdentiteUnifie);
+    }
+
+
+    /**
+     * Displays a form to edit an existing DomaineCarteIdentiteUnifie entity.
+     *
+     */
+    public function editEntity(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($domaineCarteIdentiteUnifie);
+//      $em->flush();
     }
 
 

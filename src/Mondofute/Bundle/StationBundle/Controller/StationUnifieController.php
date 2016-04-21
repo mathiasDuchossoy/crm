@@ -72,9 +72,6 @@ class StationUnifieController extends Controller
         $this->ajouterStationsDansForm($stationUnifie);
         $this->stationsSortByAffichage($stationUnifie);
 
-//        $commentVenir = new StationCommentVenirUnifieController();
-//        $commentVenir->testnewAction();
-        
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
@@ -1081,15 +1078,6 @@ class StationUnifieController extends Controller
                     $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
 
                     if (!empty($stationUnifieSite)) {
-                        /** @var Station $stationSite */
-//                        foreach ($stationUnifieSite->getStations() as $stationSite)
-//                        {
-//                            $stationSite->setStationCarteIdentite(null);
-//                            $stationSite->setStationCommentVenir(null);
-//                            $stationSite->setStationDescription(null);
-//                            $emSite->remove($stationSite);
-//                            $emSite->flush();
-//                        }
                         $emSite->remove($stationUnifieSite);
                         $emSite->flush();
                     }
