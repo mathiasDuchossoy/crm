@@ -102,6 +102,12 @@ class StationType extends AbstractType
             ->add('stationCarteIdentite', StationCarteIdentiteType::class, array(
                 'by_reference' => true,
             ))
+            ->add('stationCommentVenir', StationCommentVenirType::class, array(
+                'by_reference' => true,
+            ))
+            ->add('stationDescription', StationDescriptionType::class, array(
+                'by_reference' => true,
+            ))
         ;
     }
 

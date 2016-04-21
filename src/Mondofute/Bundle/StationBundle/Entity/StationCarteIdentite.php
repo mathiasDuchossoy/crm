@@ -7,12 +7,12 @@ use Nucleus\ContactBundle\Entity\Moral;
 /**
  * StationCarteIdentite
  */
-class StationCarteIdentite extends Moral
+class StationCarteIdentite
 {
-//    /**
-//     * @var integer
-//     */
-//    private $id;
+    /**
+     * @var integer
+     */
+    private $id;
 
 //    /**
 //     * @var integer
@@ -58,6 +58,10 @@ class StationCarteIdentite extends Moral
      * @var \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie
      */
     private $stationCarteIdentiteUnifie;
+    /**
+     * @var \Nucleus\MoyenComBundle\Entity\Adresse
+     */
+    private $adresse;
 
     /**
      * Constructor
@@ -68,16 +72,6 @@ class StationCarteIdentite extends Moral
     }
 
 //    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-
-//    /**
 //     * Get codePostal
 //     *
 //     * @return integer
@@ -86,7 +80,7 @@ class StationCarteIdentite extends Moral
 //    {
 //        return $this->codePostal;
 //    }
-
+//
 //    /**
 //     * Set codePostal
 //     *
@@ -100,6 +94,16 @@ class StationCarteIdentite extends Moral
 //
 //        return $this;
 //    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Get moisOuverture
@@ -303,4 +307,27 @@ class StationCarteIdentite extends Moral
         return $this;
     }
 
+    /**
+     * Get adresse
+     *
+     * @return \Nucleus\MoyenComBundle\Entity\Adresse
+     */
+    public function getAdresse()
+    {
+        return $this->adresse;
+    }
+
+    /**
+     * Set adresse
+     *
+     * @param \Nucleus\MoyenComBundle\Entity\Adresse $adresse
+     *
+     * @return StationCarteIdentite
+     */
+    public function setAdresse(\Nucleus\MoyenComBundle\Entity\Adresse $adresse = null)
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
 }
