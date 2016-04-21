@@ -109,6 +109,7 @@ class StationUnifieController extends Controller
                 $em->flush();
             } catch (\Exception $e) {
                 echo "Exception Found - " . $e->getMessage() . "<br/>";
+                die;
             }
 
             foreach ($stationUnifie->getStations() as $station) {
