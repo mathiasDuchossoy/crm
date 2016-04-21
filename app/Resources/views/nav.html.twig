@@ -115,40 +115,6 @@
                         </li>
                     </ul>
                 </li>
-            </ul>
-        </li>
-        <li role="presentation"
-            class="dropdown {% if 'station' in app.request.attributes.get('_route') %} active {% endif %}">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                Station <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li role="presentation"
-                    class="dropdown-submenu {% if 'station' in app.request.attributes.get('_route') %} active {% endif %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" href="">Station</a>
-                    <ul class="dropdown-menu">
-                        <li class="{% if 'station_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('station_station_index') }}">{{ 'liste' |capitalize }}</a>
-                        </li>
-                        <li class="{% if 'station_new' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('station_station_new') }}">{{ 'ajouter' | capitalize }}</a>
-                        </li>
-                    </ul>
-                </li>
-                <li role="presentation"
-                    class="dropdown-submenu {% if 'stationcarteidentite' in app.request.attributes.get('_route') %} active {% endif %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" href="">Station - Carte d'identité</a>
-                    <ul class="dropdown-menu">
-                        <li class="{% if 'stationcarteidentite_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('stationcarteidentite_index') }}">{{ 'liste' |capitalize }}</a>
-                        </li>
-                        <li class="{% if 'stationcarteidentite_new' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('stationcarteidentite_new') }}">{{ 'ajouter' | capitalize }}</a>
-                        </li>
-                    </ul>
-                </li>
                 {#<li role="presentation"#}
                 {#class="dropdown-submenu {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">#}
                 {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
@@ -214,6 +180,32 @@
                         </li>
                         <li class="{% if 'stationcarteidentite_new' in app.request.attributes.get('_route') %} active {% endif %}">
                             <a href="{{ path('stationcarteidentite_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'stationcommentvenir' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Station - Comment venir</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'stationcommentvenir_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationcommentvenir_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'stationcommentvenir_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationcommentvenir_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'stationdescription' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Station - Description</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'stationdescription_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationdescription_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'stationdescription_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationdescription_new') }}">{{ 'ajouter' | capitalize }}</a>
                         </li>
                     </ul>
                 </li>
