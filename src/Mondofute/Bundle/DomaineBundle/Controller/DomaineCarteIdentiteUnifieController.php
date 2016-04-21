@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
