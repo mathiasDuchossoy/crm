@@ -36,8 +36,6 @@
     'js/bootstrap-datepicker.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-
     <script type="text/javascript">
         //        var itemNonPersonalisable = [];
         //                var items = [];
@@ -194,6 +192,86 @@
             return pattern.test(emailAddress);
         }
 
+
+
+        function displayChild(element, div) {
+            $element = $(element);
+            $stationChild = $('#' + div);
+//            console.log(element);
+//            console.log(div);
+//            console.log($element.is(':checked'));
+            if ($element.is(':checked')) {
+//                $('div [id^="' + div + '"]').each(function (index, element) {
+//                    $(element).hide();
+//                });
+                $stationChild.hide();
+                $stationChild.find(':required').each(function (index, element) {
+//                    console.log(element);
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+//                    console.log(element);
+                });
+            }
+            else {
+//                $('div [id^="' + div + '"]').each(function (index, element) {
+//                    $(element).show();
+//                });
+                $stationChild.show();
+                $stationChild.find('[data-required=\'true\']').each(function () {
+                    $(this).attr('required', true);
+//                    console.log(this);
+                });
+            }
+        }
+
+        //        $('div [id^="' + div + '"]').each(function (index, element) {
+        //            $(element).hide();
+        //        });
+        //        displayChild($('#cboxStationCI').find('input')[0], "stationCarteIdentite_");
+        //            console.log($('#cboxStationCI').find('input')[0]);
+        function displayCheckbox(element, checkbox) {
+            $checkboxCI = $('#cboxStationCI_' + checkbox);
+            $checkboxCIDomaine = $('#cboxDomaineCarteIdentite_' + checkbox);
+            $checkboxCV = $('#cboxStationCommentVenir_' + checkbox);
+            $checkboxDescription = $('#cboxStationDescription_' + checkbox);
+//            console.log(checkbox);
+            $element = $(element);
+//            console.log($element.val());
+            if ($element.val()) {
+                // carte identite
+                $checkboxCI.show();
+                $($checkboxCI.find('input')[0]).prop('checked', true);
+                displayChild($checkboxCI.find('input')[0], "stationCarteIdentite_" + checkbox);
+//                $('#stationCarteIdentite_' + checkbox).hide();
+                // comment venir
+                $checkboxCV.show();
+                $($checkboxCV.find('input')[0]).prop('checked', true);
+                displayChild($checkboxCV.find('input')[0], "stationCommentVenir_" + checkbox);
+//                $('#stationCommentVenir_' + checkbox).hide();
+                $checkboxDescription.show();
+                $($checkboxDescription.find('input')[0]).prop('checked', true);
+                displayChild($checkboxDescription.find('input')[0], "stationDescription_" + checkbox);
+                $checkboxCIDomaine.show();
+                $($checkboxCIDomaine.find('input')[0]).prop('checked', true);
+                displayChild($checkboxCIDomaine.find('input')[0], "domaineCarteIdentite_" + checkbox);
+            }
+            else {
+                // carte identite
+                $checkboxCI.hide();
+                $($checkboxCI.find('input')[0]).prop('checked', false);
+                $('#stationCarteIdentite_' + checkbox).show();
+                // comment venir
+                $checkboxCV.hide();
+                $($checkboxCV.find('input')[0]).prop('checked', false);
+                $('#stationCommentVenir_' + checkbox).show();
+                $checkboxDescription.hide();
+                $($checkboxDescription.find('input')[0]).prop('checked', false);
+                $('#stationDescription_' + checkbox).show();
+                $checkboxCIDomaine.hide();
+                $($checkboxCIDomaine.find('input')[0]).prop('checked', false);
+                $('#domaineCarteIdentite_' + checkbox).show();
+            }
+        }
     </script>
 
 {% endblock %}

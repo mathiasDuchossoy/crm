@@ -35,7 +35,9 @@ class DomaineType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DomaineTraductionType::class
             ))
-//            ->add('domaineCarteIdentite' , 'Mondofute\Bundle\GeographieBundle\Form\DomaineCarteIdentiteType')
+            ->add('domaineCarteIdentite', DomaineCarteIdentiteType::class, array(
+                'by_reference' => true
+            ))
             ->add('site', HiddenType::class, array('mapped' => false));
     }
 
