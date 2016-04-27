@@ -55,9 +55,9 @@ class FournisseurHebergement
         $this->adresse = new Adresse();
         $this->adresse->setCoordonneeGPS(new CoordonneesGPS());
         $this->adresse->setDateCreation();
-        $this->telFixe = new Fixe();
+        $this->telFixe = new TelFixe();
         $this->telFixe->setDateCreation();
-        $this->telMobile = new Mobile();
+        $this->telMobile = new TelMobile();
         $this->telMobile->setDateCreation();
 
 //        $coordonneesGPSFournisseurSite = new CoordonneesGPS();
@@ -141,10 +141,10 @@ class FournisseurHebergement
     }
 
     /**
-     * @param Fixe|null $telFixe
+     * @param TelFixe|null $telFixe
      * @return $this
      */
-    public function setTelFixe(Fixe $telFixe = null)
+    public function setTelFixe(TelFixe $telFixe = null)
     {
         $this->telFixe = $telFixe;
 
@@ -154,7 +154,7 @@ class FournisseurHebergement
     /**
      * Get telMobile
      *
-     * @return Mobile
+     * @return TelMobile
      */
     public function getTelMobile()
     {
@@ -162,10 +162,10 @@ class FournisseurHebergement
     }
 
     /**
-     * @param Mobile|null $telMobile
+     * @param TelMobile|null $telMobile
      * @return $this
      */
-    public function setTelMobile(Mobile $telMobile = null)
+    public function setTelMobile(TelMobile $telMobile = null)
     {
         $this->telMobile = $telMobile;
 
