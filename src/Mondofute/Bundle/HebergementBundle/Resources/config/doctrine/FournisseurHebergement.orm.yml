@@ -24,10 +24,10 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             inversedBy: fournisseurHebergements
     oneToOne:
         telFixe:
-            targetEntity: Nucleus\MoyenComBundle\Entity\Fixe
+            targetEntity: Nucleus\MoyenComBundle\Entity\TelFixe
             cascade: ['persist','remove']
         telMobile:
-            targetEntity: Nucleus\MoyenComBundle\Entity\Mobile
+            targetEntity: Nucleus\MoyenComBundle\Entity\TelMobile
             cascade: ['persist','remove']
         adresse:
             targetEntity: Nucleus\MoyenComBundle\Entity\Adresse

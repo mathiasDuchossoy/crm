@@ -868,16 +868,16 @@
         },
         {
             "name": "infinite-networks/form-bundle",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinite-networks/InfiniteFormBundle.git",
-                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9"
+                "reference": "5dde53befabbfa14594521593da6801afe8633c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/dcf3168890847e40440a577f34f87b95cbb1cca9",
-                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9",
+                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/5dde53befabbfa14594521593da6801afe8633c9",
+                "reference": "5dde53befabbfa14594521593da6801afe8633c9",
                 "shasum": ""
             },
             "require": {
@@ -920,7 +920,7 @@
                 }
             ],
             "description": "A collection of useful form types and extensions for Symfony2",
-            "time": "2015-11-26 08:17:47"
+            "time": "2016-04-26 05:14:20"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1405,7 +1405,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/contactBundle.git",
-                "reference": "182841fc8358996e6078ddabaf6cf8db1df7cf3e"
+                "reference": "bc68ba15066ad77992841582e6f0dcdbf68f7b50"
             },
             "require": {
                 "nucleus/moyencombundle": "dev-commun"
@@ -1428,7 +1428,7 @@
             "keywords": [
                 "Contact"
             ],
-            "time": "2016-04-04 08:17:35"
+            "time": "2016-04-27 07:18:59"
         },
         {
             "name": "nucleus/moyencombundle",
@@ -1436,7 +1436,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
-                "reference": "54630603201b7f53551577ea22a2bb75890c4e26"
+                "reference": "79c28a491e9bc8c1470a4f05747480b3f245f5e2"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1456,7 +1456,7 @@
             "keywords": [
                 "MoyenCom"
             ],
-            "time": "2016-04-06 09:17:31"
+            "time": "2016-04-27 07:52:31"
         },
         {
             "name": "oyejorge/less.php",
@@ -1708,16 +1708,16 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v5.0.5",
+            "version": "v5.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "3a160355bb1364da55ed9e415c1aa1fa8d457b6f"
+                "reference": "ffe306d09c1f2bad721237f63b2169d1b78253d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/3a160355bb1364da55ed9e415c1aa1fa8d457b6f",
-                "reference": "3a160355bb1364da55ed9e415c1aa1fa8d457b6f",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/ffe306d09c1f2bad721237f63b2169d1b78253d0",
+                "reference": "ffe306d09c1f2bad721237f63b2169d1b78253d0",
                 "shasum": ""
             },
             "require": {
@@ -1756,7 +1756,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2016-03-15 16:21:41"
+            "time": "2016-04-25 20:50:31"
         },
         {
             "name": "sensio/framework-extra-bundle",
