@@ -5,11 +5,11 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Nucleus\MoyenComBundle\Entity\Adresse;
-use Nucleus\MoyenComBundle\Entity\Fixe;
-use Nucleus\MoyenComBundle\Entity\Mobile;
+use Nucleus\MoyenComBundle\Entity\TelFixe;
+use Nucleus\MoyenComBundle\Entity\TelMobile;
 use Nucleus\MoyenComBundle\Form\AdresseType;
-use Nucleus\MoyenComBundle\Form\FixeType;
-use Nucleus\MoyenComBundle\Form\MobileType;
+use Nucleus\MoyenComBundle\Form\TelFixeType;
+use Nucleus\MoyenComBundle\Form\TelMobileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\View\ChoiceView;
@@ -39,8 +39,8 @@ class FournisseurHebergementType extends AbstractType
                 'label_attr' => array('style' => 'display: none')
             ))
 //            ->add('fournisseur', HiddenType::class)
-            ->add('telFixe', FixeType::class, array('data_class' => Fixe::class))
-            ->add('telMobile', MobileType::class, array('data_class' => Mobile::class))
+            ->add('telFixe', TelFixeType::class, array('data_class' => TelFixe::class))
+            ->add('telMobile', TelMobileType::class, array('data_class' => TelMobile::class))
             ->add('adresse', AdresseType::class, array('data_class' => Adresse::class))
 //            ->add('traductions',CollectionType::class,array(
 //                'type' => new FournisseurHebergementTraductionType()
