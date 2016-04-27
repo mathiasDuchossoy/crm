@@ -5,8 +5,8 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
-use Nucleus\MoyenComBundle\Entity\Fixe;
-use Nucleus\MoyenComBundle\Entity\Mobile;
+use Nucleus\MoyenComBundle\Entity\TelFixe;
+use Nucleus\MoyenComBundle\Entity\TelMobile;
 
 
 /**
@@ -27,11 +27,11 @@ class FournisseurHebergement
      */
     private $fournisseur;
     /**
-     * @var Fixe
+     * @var TelFixe
      */
     private $telFixe;
     /**
-     * @var Mobile
+     * @var TelMobile
      */
     private $telMobile;
     /**
@@ -133,7 +133,7 @@ class FournisseurHebergement
     /**
      * Get telFixe
      *
-     * @return Fixe
+     * @return TelFixe
      */
     public function getTelFixe()
     {
@@ -141,11 +141,8 @@ class FournisseurHebergement
     }
 
     /**
-     * Set telFixe
-     *
-     * @param Fixe $telFixe
-     *
-     * @return FournisseurHebergement
+     * @param Fixe|null $telFixe
+     * @return $this
      */
     public function setTelFixe(Fixe $telFixe = null)
     {
@@ -165,11 +162,8 @@ class FournisseurHebergement
     }
 
     /**
-     * Set telMobile
-     *
-     * @param Mobile $telMobile
-     *
-     * @return FournisseurHebergement
+     * @param Mobile|null $telMobile
+     * @return $this
      */
     public function setTelMobile(Mobile $telMobile = null)
     {
