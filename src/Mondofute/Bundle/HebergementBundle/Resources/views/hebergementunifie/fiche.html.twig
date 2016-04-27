@@ -422,6 +422,11 @@
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
 //            ajoute le formulaire dans la page
             $formFournisseurHebergement.append($newForm.html());
+            $('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').change(function () {
+                if ($(this).val() == 'add') {
+                    afficherModaleAjoutRemiseClef($(this).attr('data-fournisseur'));
+                }
+            });
 //            incrémente le nombre de fournisseurs associés
             $nbFournisseurs.attr('data-index', (parseInt($nbFournisseurs.attr('data-index')) + 1));
         }
@@ -558,7 +563,7 @@
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
-            $('[id$="remiseClef"]').change(function () {
+            $('[id$="_remiseClef"]').change(function () {
                 if ($(this).val() == 'add') {
                     afficherModaleAjoutRemiseClef($(this).attr('data-fournisseur'));
                 }
