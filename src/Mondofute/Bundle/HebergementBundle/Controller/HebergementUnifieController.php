@@ -9,12 +9,14 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
@@ -55,7 +57,7 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
-        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -97,13 +99,13 @@ class HebergementUnifieController extends Controller
             $this->addFlash('success', 'l\'hébergement a bien été créé');
             return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
         }
-
+        $formView = $form->createView();
         return $this->render('@MondofuteHebergement/hebergementunifie/new.html.twig', array(
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'sites' => $sites,
             'langues' => $langues,
             'entity' => $hebergementUnifie,
-            'form' => $form->createView(),
+            'form' => $formView,
         ));
     }
 
@@ -263,16 +265,18 @@ class HebergementUnifieController extends Controller
                 /** @var FournisseurHebergement $fournisseur */
                 /** @var FournisseurHebergement $fournisseurSite */
 //                supprime les fournisseurHebergement du site distant
-                foreach ($entitySite->getFournisseurs() as $fournisseurSite) {
-                    $present = false;
-                    foreach ($entity->getFournisseurs() as $fournisseur) {
-                        if ($fournisseurSite->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId() && $fournisseurSite->getHebergement()->getId() == $fournisseur->getHebergement()->getId()) {
-                            $present = true;
+                if (!empty($entitySite->getFournisseurs())) {
+                    foreach ($entitySite->getFournisseurs() as $fournisseurSite) {
+                        $present = false;
+                        foreach ($entity->getFournisseurs() as $fournisseur) {
+                            if ($fournisseurSite->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId() && $fournisseurSite->getHebergement()->getId() == $fournisseur->getHebergement()->getId()) {
+                                $present = true;
+                            }
                         }
-                    }
-                    if ($present == false) {
-                        $entitySite->removeFournisseur($fournisseurSite);
-                        $em->remove($fournisseurSite);
+                        if ($present == false) {
+                            $entitySite->removeFournisseur($fournisseurSite);
+                            $em->remove($fournisseurSite);
+                        }
                     }
                 }
 //                balaye les fournisseurHebergement et copie les données
@@ -284,17 +288,29 @@ class HebergementUnifieController extends Controller
                     ) {
 //                        initialise un objet
                         $fournisseurSite = new FournisseurHebergement();
-
                     } else {
-
                         $fournisseurSite->getAdresse()->setDateModification(new DateTime());
                         $fournisseurSite->getTelFixe()->setDateModification(new DateTime());
                         $fournisseurSite->getTelMobile()->setDateModification(new DateTime());
                     }
-
+                    /** @var FournisseurHebergementTraduction $traduction */
+                    foreach ($fournisseur->getTraductions() as $traduction) {
+                        if (empty($fournisseurHebergementTraduction = $em->getRepository(FournisseurHebergementTraduction::class)->findOneBy(array(
+                            'fournisseurHebergement' => $traduction->getFournisseurHebergement(),
+                            'langue' => $traduction->getLangue()
+                        )))
+                        ) {
+                            $fournisseurHebergementTraduction = new FournisseurHebergementTraduction();
+                            $fournisseurHebergementTraduction->setLangue($em->getRepository(Langue::class)->findOneBy(array('id' => $traduction->getLangue()->getId())));
+                            $fournisseurHebergementTraduction->setFournisseurHebergement($fournisseurSite);
+                        }
+                        $fournisseurHebergementTraduction->setAcces($traduction->getAcces());
+                        $fournisseurSite->addTraduction($fournisseurHebergementTraduction);
+                    }
                     $this->dupliqueFounisseurHebergement($fournisseur, $fournisseurSite);
                     $fournisseurSite->setHebergement($entitySite)
                         ->setFournisseur($em->getRepository(Fournisseur::class)->findOneBy(array('id' => $fournisseur->getFournisseur()->getId())));
+                    $fournisseurSite->setRemiseClef($em->getRepository(RemiseClef::class)->findOneBy(array('id' => $fournisseur->getRemiseClef()->getId())));
                     $entitySite->addFournisseur($fournisseurSite);
                 }
 //            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
@@ -481,8 +497,8 @@ class HebergementUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
-        $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
-
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+        
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {

@@ -1,0 +1,29 @@
+remiseclef_index:
+    path:     /
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:index" }
+    methods:  GET
+
+remiseclef_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:show" }
+    methods:  GET
+
+remiseclef_new:
+    path:     /new
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:new" }
+    methods:  [GET, POST]
+
+remiseclef_new_simple:
+    path:     /new_simple
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:newSimple" }
+    methods:  [GET, POST]
+
+remiseclef_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:edit" }
+    methods:  [GET, POST]
+
+remiseclef_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteRemiseClefBundle:RemiseClef:delete" }
+    methods:  DELETE

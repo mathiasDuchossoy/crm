@@ -65,6 +65,10 @@ class Fournisseur
      * @var \Doctrine\Common\Collections\Collection
      */
     private $hebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $remiseClefs;
 
     /**
      * Constructor
@@ -297,5 +301,39 @@ class Fournisseur
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Add remiseClef
+     *
+     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     *
+     * @return Fournisseur
+     */
+    public function addRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    {
+        $this->remiseClefs[] = $remiseClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove remiseClef
+     *
+     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     */
+    public function removeRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    {
+        $this->remiseClefs->removeElement($remiseClef);
+    }
+
+    /**
+     * Get remiseClefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRemiseClefs()
+    {
+        return $this->remiseClefs;
     }
 }

@@ -1,0 +1,24 @@
+Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\FournisseurHebergementTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        acces:
+            type: string
+            length: 255
+    manyToOne:
+        fournisseurHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            inversedBy: traductions
+            cascade: ['persist', 'remove']
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

@@ -1,0 +1,40 @@
+{% if form is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+{% block body %}
+    {#{{ dump(remiseClef) }}#}
+    {#{{ dump(form) }}#}
+    {{ form_start(form) }}
+    {{ form_row(form.fournisseur) }}
+    {{ form_row(form.libelle) }}
+    {{ form_row(form.heureRemiseClefLongSejour) }}
+    {{ form_row(form.heureRemiseClefCourtSejour) }}
+    {{ form_row(form.heureDepartLongSejour) }}
+    {{ form_row(form.heureDepartCourtSejour) }}
+    {{ form_row(form.heureTardiveLongSejour) }}
+    {{ form_row(form.heureTardiveCourtSejour) }}
+    {{ form_row(form.standard) }}
+    <ul class="nav nav-tabs">
+        {% for langue in langues %}
+            <li><a data-toggle="tab" aria-expanded="true"
+                   href="#remise_clef_traduction_{{ langue.id }}">
+                    {% for traduction in langue.traductions %}
+                        {% if(traduction.langueTraduction.code == app.request.locale) %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </a></li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+        {% for traduction in form.traductions %}
+            <div id="remise_clef_traduction_{{ traduction.langue.vars.value }}" class="tab-pane fade in">
+                {{ form_row(traduction.lieuxRemiseClef) }}
+                {{ form_row(traduction.langue,{'attr':{'style':'display:none'},'label_attr':{'style':'display:none'}}) }}
+            </div>
+        {% endfor %}
+    </div>
+    {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+
+{% endblock %}

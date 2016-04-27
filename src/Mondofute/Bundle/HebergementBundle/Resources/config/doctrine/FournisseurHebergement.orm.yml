@@ -19,6 +19,9 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: hebergements
             cascade: ['persist']
+        remiseClef:
+            targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+            inversedBy: fournisseurHebergements
     oneToOne:
         telFixe:
             targetEntity: Nucleus\MoyenComBundle\Entity\Fixe
@@ -28,5 +31,10 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             cascade: ['persist','remove']
         adresse:
             targetEntity: Nucleus\MoyenComBundle\Entity\Adresse
+            cascade: ['persist','remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction
+            mappedBy: fournisseurHebergement
             cascade: ['persist','remove']
     lifecycleCallbacks: {  }

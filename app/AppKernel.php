@@ -32,6 +32,8 @@ class AppKernel extends Kernel
             new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
             new Nucleus\ContactBundle\NucleusContactBundle(),
             new Infinite\FormBundle\InfiniteFormBundle(),
+            new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new Mondofute\Bundle\RemiseClefBundle\MondofuteRemiseClefBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
