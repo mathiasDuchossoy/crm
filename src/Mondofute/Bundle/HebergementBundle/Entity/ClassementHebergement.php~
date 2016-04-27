@@ -1,32 +1,30 @@
 <?php
 
-namespace Mondofute\Bundle\UniteBundle\Entity;
+namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 /**
- * Tarif
+ * ClassementHebergement
  */
-class Tarif
+class ClassementHebergement
 {
     /**
-     * @var integer
+     * @var int
      */
     private $id;
 
     /**
-     * @var string
+     * @var int
      */
     private $valeur;
-
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\UniteTarif
+     * @var \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement
      */
     private $unite;
-
 
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -36,7 +34,7 @@ class Tarif
     /**
      * Get valeur
      *
-     * @return string
+     * @return int
      */
     public function getValeur()
     {
@@ -46,9 +44,9 @@ class Tarif
     /**
      * Set valeur
      *
-     * @param string $valeur
+     * @param integer $valeur
      *
-     * @return Tarif
+     * @return ClassementHebergement
      */
     public function setValeur($valeur)
     {
@@ -60,7 +58,7 @@ class Tarif
     /**
      * Get unite
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\UniteTarif
+     * @return \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement
      */
     public function getUnite()
     {
@@ -70,11 +68,11 @@ class Tarif
     /**
      * Set unite
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\UniteTarif $unite
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement $unite
      *
-     * @return Tarif
+     * @return ClassementHebergement
      */
-    public function setUnite(\Mondofute\Bundle\UniteBundle\Entity\UniteTarif $unite = null)
+    public function setUnite(\Mondofute\Bundle\HebergementBundle\Entity\UniteClassementHebergement $unite = null)
     {
         $this->unite = $unite;
 

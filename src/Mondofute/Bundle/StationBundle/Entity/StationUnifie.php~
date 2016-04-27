@@ -38,20 +38,6 @@ class StationUnifie
     }
 
     /**
-     * Add station
-     *
-     * @param Station $station
-     *
-     * @return StationUnifie
-     */
-    public function addStation(Station $station)
-    {
-        $this->stations[] = $station->setStationUnifie($this);
-
-        return $this;
-    }
-
-    /**
      * Remove station
      *
      * @param Station $station
@@ -73,7 +59,25 @@ class StationUnifie
 
     public function setStations($stations)
     {
-        $this->stations = $stations;
+        $this->getStations()->clear();
+
+        foreach ($stations as $station) {
+            $this->addStation($station);
+        }
+        return $this;
+    }
+
+    /**
+     * Add station
+     *
+     * @param Station $station
+     *
+     * @return StationUnifie
+     */
+    public function addStation(Station $station)
+    {
+        $this->stations[] = $station->setStationUnifie($this);
+
         return $this;
     }
 }

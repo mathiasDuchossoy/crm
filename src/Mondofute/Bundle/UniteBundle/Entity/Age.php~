@@ -8,23 +8,25 @@ namespace Mondofute\Bundle\UniteBundle\Entity;
 class Age
 {
     /**
-     * @var int
+     * @var integer
      */
     private $id;
 
     /**
-     * @var int
+     * @var integer
      */
     private $valeur;
+
     /**
      * @var \Mondofute\Bundle\UniteBundle\Entity\UniteAge
      */
     private $unite;
 
+
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -34,7 +36,7 @@ class Age
     /**
      * Get valeur
      *
-     * @return int
+     * @return integer
      */
     public function getValeur()
     {
