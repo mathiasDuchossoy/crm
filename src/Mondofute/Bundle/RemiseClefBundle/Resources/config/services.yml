@@ -1,0 +1,4 @@
+services:
+#    mondofute_remise_clef.example:
+#        class: Mondofute\Bundle\RemiseClefBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

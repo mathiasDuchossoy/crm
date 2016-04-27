@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>RemiseClef</h1>
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ remiseClef.id }}</td>
+        </tr>
+        <tr>
+            <th>Libelle</th>
+            <td>{{ remiseClef.libelle }}</td>
+        </tr>
+        <tr>
+            <th>Heureremisecleflongsejour</th>
+            <td>{{ remiseClef.heureRemiseClefLongSejour }}</td>
+        </tr>
+        <tr>
+            <th>Heureremiseclefcourtsejour</th>
+            <td>{{ remiseClef.heureRemiseClefCourtSejour }}</td>
+        </tr>
+        <tr>
+            <th>Heuredepartlongsejour</th>
+            <td>{{ remiseClef.heureDepartLongSejour }}</td>
+        </tr>
+        <tr>
+            <th>Heuredepartcourtsejour</th>
+            <td>{{ remiseClef.heureDepartCourtSejour }}</td>
+        </tr>
+        <tr>
+            <th>Heuretardivelongsejour</th>
+            <td>{{ remiseClef.heureTardiveLongSejour }}</td>
+        </tr>
+        <tr>
+            <th>Heuretardivecourtsejour</th>
+            <td>{{ remiseClef.heureTardiveCourtSejour }}</td>
+        </tr>
+        <tr>
+            <th>Standard</th>
+            <td>{% if remiseClef.standard %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('remiseclef_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('remiseclef_edit', { 'id': remiseClef.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

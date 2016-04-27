@@ -2,10 +2,12 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Fixe;
 use Nucleus\MoyenComBundle\Entity\Mobile;
+
 
 /**
  * FournisseurHebergement
@@ -17,25 +19,33 @@ class FournisseurHebergement
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @var HebergementUnifie
      */
     private $hebergement;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Nucleus\MoyenComBundle\Entity\Fixe
+     * @var Fixe
      */
     private $telFixe;
     /**
-     * @var \Nucleus\MoyenComBundle\Entity\Mobile
+     * @var Mobile
      */
     private $telMobile;
     /**
-     * @var \Nucleus\MoyenComBundle\Entity\Adresse
+     * @var Adresse
      */
     private $adresse;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
+    /**
+     * @var \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+     */
+    private $remiseClef;
 
     /**
      * FournisseurHebergement constructor.
@@ -75,7 +85,7 @@ class FournisseurHebergement
     /**
      * Get hebergement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @return HebergementUnifie
      */
     public function getHebergement()
     {
@@ -85,11 +95,11 @@ class FournisseurHebergement
     /**
      * Set hebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement
+     * @param HebergementUnifie $hebergement
      *
      * @return FournisseurHebergement
      */
-    public function setHebergement(\Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement = null)
+    public function setHebergement(HebergementUnifie $hebergement = null)
     {
         $this->hebergement = $hebergement;
 
@@ -99,7 +109,7 @@ class FournisseurHebergement
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -109,11 +119,11 @@ class FournisseurHebergement
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return FournisseurHebergement
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -123,7 +133,7 @@ class FournisseurHebergement
     /**
      * Get telFixe
      *
-     * @return \Nucleus\MoyenComBundle\Entity\Fixe
+     * @return Fixe
      */
     public function getTelFixe()
     {
@@ -133,11 +143,11 @@ class FournisseurHebergement
     /**
      * Set telFixe
      *
-     * @param \Nucleus\MoyenComBundle\Entity\Fixe $telFixe
+     * @param Fixe $telFixe
      *
      * @return FournisseurHebergement
      */
-    public function setTelFixe(\Nucleus\MoyenComBundle\Entity\Fixe $telFixe = null)
+    public function setTelFixe(Fixe $telFixe = null)
     {
         $this->telFixe = $telFixe;
 
@@ -147,7 +157,7 @@ class FournisseurHebergement
     /**
      * Get telMobile
      *
-     * @return \Nucleus\MoyenComBundle\Entity\Mobile
+     * @return Mobile
      */
     public function getTelMobile()
     {
@@ -157,11 +167,11 @@ class FournisseurHebergement
     /**
      * Set telMobile
      *
-     * @param \Nucleus\MoyenComBundle\Entity\Mobile $telMobile
+     * @param Mobile $telMobile
      *
      * @return FournisseurHebergement
      */
-    public function setTelMobile(\Nucleus\MoyenComBundle\Entity\Mobile $telMobile = null)
+    public function setTelMobile(Mobile $telMobile = null)
     {
         $this->telMobile = $telMobile;
 
@@ -171,7 +181,7 @@ class FournisseurHebergement
     /**
      * Get adresse
      *
-     * @return \Nucleus\MoyenComBundle\Entity\Adresse
+     * @return Adresse
      */
     public function getAdresse()
     {
@@ -181,15 +191,74 @@ class FournisseurHebergement
     /**
      * Set adresse
      *
-     * @param \Nucleus\MoyenComBundle\Entity\Adresse $adresse
+     * @param Adresse $adresse
      *
      * @return FournisseurHebergement
      */
-    public function setAdresse(\Nucleus\MoyenComBundle\Entity\Adresse $adresse = null)
+    public function setAdresse(Adresse $adresse = null)
     {
         $this->adresse = $adresse;
 
         return $this;
     }
 
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction $traduction
+     *
+     * @return FournisseurHebergement
+     */
+    public function addTraduction(
+        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction $traduction
+    ) {
+        $this->traductions[] = $traduction->setFournisseurHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction $traduction
+     */
+    public function removeTraduction(
+        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction $traduction
+    ) {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Get remiseClef
+     *
+     * @return \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+     */
+    public function getRemiseClef()
+    {
+        return $this->remiseClef;
+    }
+
+    /**
+     * Set remiseClef
+     *
+     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     *
+     * @return FournisseurHebergement
+     */
+    public function setRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef = null)
+    {
+        $this->remiseClef = $remiseClef;
+
+        return $this;
+    }
 }

@@ -92,6 +92,7 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -114,6 +115,7 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -136,6 +138,7 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine

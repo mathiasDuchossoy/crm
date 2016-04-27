@@ -1,0 +1,22 @@
+Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\RemiseClefBundle\Repository\RemiseClefTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        lieuxRemiseClef:
+            type: text
+    manyToOne:
+        remiseClef:
+            targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

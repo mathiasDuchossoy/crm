@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Controller;
+namespace Mondofute\Bundle\RemiseClefBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,6 +8,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('MondofuteHebergementBundle:Default:index.html.twig');
+        return $this->render('MondofuteRemiseClefBundle:Default:index.html.twig');
     }
 }

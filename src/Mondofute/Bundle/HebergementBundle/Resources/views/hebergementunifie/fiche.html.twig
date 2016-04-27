@@ -85,18 +85,54 @@
                             </button>
                         </div>
                     </div>
-                    {#{{ dump(form) }}#}
                     {% set nbFournisseurs = 0 %}
                     <div id="form_fournisseurs"
+                         data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
+
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
-                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}">
-                                <div class="row">
-                                    <p> Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</p>
+                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
                                 </div>
-                                {{ form_widget(fournisseur) }}
-                                {% set nbFournisseurs = nbFournisseurs + 1 %}
+                                <div class="panel-body">
+                                    {{ form_row(fournisseur.fournisseur) }}
+                                    {{ form_row(fournisseur.telFixe) }}
+                                    {{ form_row(fournisseur.telMobile) }}
+                                    {{ form_row(fournisseur.adresse) }}
+                                    {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <ul class="nav nav-tabs">
+                                        {#gestion du premier onglet#}
+                                        {% set first = true %}
+                                        {% set idLangue = 0 %}
+                                        {% for langue in langues %}
+                                            <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
+                                                <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
+                                                   data-toggle="tab" aria-expanded="true">
+                                                    {% for traduction in langue.traductions %}
+                                                        {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
+                                                            {{ traduction.libelle }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content">
+                                        {% for traduction in fournisseur.traductions %}
+                                            {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
+                                            <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
+                                                 class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
+
+                                                {{ form_widget(traduction) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% set nbFournisseurs = nbFournisseurs + 1 %}
+                                </div>
                             </div>
 
                         {% endfor %}
@@ -164,6 +200,21 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="modalAjoutRemiseClef" tabindex="-1" role="dialog"
+         aria-labelledby="modalAjoutRemiseClefLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Ajouter une remise de clef</h4>
+                </div>
+                <div class="modal-body">
+                    {{ render(controller("MondofuteRemiseClefBundle:RemiseClef:newSimple")) }}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
 
 {% block javascripts %}
@@ -183,10 +234,18 @@
         {#items.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
         {#{% endfor %}#}
     </script>
+
     {{ parent() }}
     <script type="text/javascript">
-        var fournisseurs = [];
-
+        var _fournisseurs = [];
+        var _codeLangues = [];
+        //        récupération de l'id de la langue locale
+        {% for langue in langues %}
+        {% if(langue.code == app.request.locale ) %}
+        var _locale = {{ langue.id }};
+        {% endif %}
+        {% endfor %}
+        var _langues = {{ langues | serialize('json') | raw }};
         function afficherModalRechercheFournisseurs() {
 
             var modal = $('#modalRechercherFournisseur');
@@ -241,8 +300,8 @@
         function associerFournisseur(id, label) {
             var present = false;
 //            test la presence du fournisseur "id"
-            for (var i = 0; i < fournisseurs.length; i++) {
-                if (fournisseurs[i] == id) {
+            for (var i = 0; i < _fournisseurs.length; i++) {
+                if (_fournisseurs[i] == id) {
                     present = true;
                 }
             }
@@ -250,7 +309,7 @@
             if (present === false) {
                 genererFormulaireFournisseurHebergement(id, label);
                 ajouterLigneFournisseursAssocies(id);
-                fournisseurs.push(id);
+                _fournisseurs.push(id);
             }
         }
         /**
@@ -270,13 +329,75 @@
             ligne.remove();
 //            lit le tableau des fournisseurs associés pour supprimer l'element du tableau
             for (var i = 0; i < fournisseurs.length; i++) {
-                if (fournisseurs[i] == id) {
-                    fournisseurs.splice(i, 1);
+                if (_fournisseurs[i] == id) {
+                    _fournisseurs.splice(i, 1);
                     break;
                 }
             }
 //            décrémente le nombre de fournisseurs associés
             $nbFournisseurs.attr('data-index', ($nbFournisseurs.attr('data-index') - 1));
+        }
+        function traduireLangue(langues, langueATraduire, langueDeTraduction) {
+//            balaye les langues
+            for (var i = 0; i < langues.length; i++) {
+//                vérifie si la langue est la lague que nous souhaitons traduire
+                if (langues[i].id == langueATraduire) {
+//                    balaye les traductions
+                    for (var j = 0; j < langues[i].traductions.length; j++) {
+//                        particularité du serializer json si la langue a traduire = la langue de traduction alors langues[i].traductions[j].langue_traduction n'existe pas
+                        if (!(langues[i].traductions[j].langue_traduction)) {
+                            if (langueDeTraduction == langues[i].id) {
+//                                cas ou la langue a traduire est la langue de traduction
+                                return langues[i].traductions[j].libelle;
+                            }
+                        } else {
+
+                            if (langues[i].traductions[j].langue_traduction.id == langueDeTraduction) {
+                                return langues[i].traductions[j].libelle;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        function genererFormulaireFournisseurHebergementTraductions(idFournisseur, langues) {
+            var formTraductions = '';
+            var ongletActif = '';
+            var menuOnglets = '<div><ul class="nav nav-tabs">';
+            formTraductions += '<div class="tab-content">';
+//            balaye les langues
+            for (var i = 0; i < langues.length; i++) {
+//                défini si c'est la première langue l'onglet a actif pour le sélectionner et et afficher la zone en question
+                if (i == 0) {
+                    ongletActif = 'active';
+                } else {
+                    ongletActif = '';
+                }
+//                ajoute l'onglet de la langue
+                menuOnglets += '<li class="' + ongletActif + '">' +
+                        '<a href="#fournisseur_hebergement_' + idFournisseur + '_langue_' + langues[i].id + '" data-toggle="tab" aria-expanded="true">' + traduireLangue(langues, langues[i].id, _locale) + '</a>' +
+                        '</li>';
+//                récupère la zone de la langue
+                formTraductions += ajouterFormulaireFournisseurHebergementLangue(langues[i], idFournisseur, ongletActif);
+            }
+
+            menuOnglets += "</ul></div>";
+            formTraductions += '</div>';
+//            création des onglets et des formulaires
+            return menuOnglets + formTraductions;
+        }
+        function ajouterFormulaireFournisseurHebergementLangue(langue, idFournisseur, ongletActif) {
+//            récupère l'element contenant le prototype de formulaire fournisseur_hebergement
+            var $formFournisseurHebergement = $('#form_fournisseurs');
+//            gestion du prototype pour les fournisseur_hebergement_traduction
+            var formTraductionPrototype = $formFournisseurHebergement.attr('data-traduction-prototype');
+            var $formTraduction = $(formTraductionPrototype.replace(/__name__/g, idFournisseur).replace(/__tradname__/g, langue.id));
+            $formTraduction.find('#hebergement_unifie_fournisseurs_' + idFournisseur + '_traductions_' + langue.id + '_langue option[value="' + langue.id + '"]').attr('selected', 'selected');
+            var formTraduction = '<div id="fournisseur_hebergement_' + idFournisseur + '_langue_' + langue.id + '" class="tab-pane ' + ongletActif + ' fade in">'
+                    + $formTraduction.html()
+                    + '</div>';
+            return formTraduction;
         }
         /**
          * genere le formulaire et incrémente le nombre de fournisseurs associés
@@ -290,14 +411,19 @@
             var $nbFournisseurs = $('#nb_fournisseurs');
 //            récupère le prototype du formulaire FournisseurHebergementType
             var formPrototype = $formFournisseurHebergement.attr('data-prototype');
+
+            formTraductions = genererFormulaireFournisseurHebergementTraductions(id, _langues);
+
 //            mise en forme du formulaire
-            var newForm = '<div id="fournisseur' + id + '" class="row"> <div class="row"><p> Fournisseur: ' + label + '</p></div>' + formPrototype.replace(/__name__/g, id) + '</div>';
+            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + formTraductions + '</div></div></div>';
+            var $newForm = $(newForm);
+//            donnes la valeur du fournisseur dans le hidden fournisseur
+            $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
+            $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
 //            ajoute le formulaire dans la page
-            $formFournisseurHebergement.append(newForm);
+            $formFournisseurHebergement.append($newForm.html());
 //            incrémente le nombre de fournisseurs associés
             $nbFournisseurs.attr('data-index', (parseInt($nbFournisseurs.attr('data-index')) + 1));
-//            donnes la valeur du fournisseur dans le hidden fournisseur
-            $('#hebergement_unifie_fournisseurs_' + id + '_fournisseur').val(id);
         }
         function ajouterLigneFournisseursAssocies(id, enseigne) {
             var ligne = $('<tr id="fournisseurAssocie' + id + '"></tr>');
@@ -312,13 +438,50 @@
             ligne.append(colonneDissocier);
             $('#tabFournisseursAssocies').append(ligne);
         }
+        function afficherModaleAjoutRemiseClef(idFournisseur) {
+            $('#remise_clef_fournisseur').val(idFournisseur);
+            $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
+            $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
+            $modalAjoutRemiseClef.modal().show();
+        }
+        function ajouterNouvelleRemiseClef($form) {
+            $this = $(this);
+            var values = {};
+            $.each($form.serializeArray(), function (i, field) {
+                values[field.name] = field.value;
+            });
+            $.ajax({
+                type: "POST",
+                url: "{{ path('remiseclef_new_simple') }}",
+                data: $form.serialize(),
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $('#modalAjoutRemiseClef').modal('hide');
+                    ajouterOptionRemiseClef(data.remiseClef.id, data.remiseClef.libelle, $('#remise_clef_fournisseur').val());
+                }
+            });
+        }
+        function ajouterOptionRemiseClef(id, libelle, idFournisseur) {
+            var option = '<option selected="selected" value="' + id + '">' + libelle + '</option>';
+            var $option = $(option);
+            $option.insertBefore('#fournisseur' + idFournisseur + ' [id$="_remiseClef"] [value="add"]');
+            $('#fournisseur' + idFournisseur + ' [id$="_remiseClef"] option:selected').each(function (i, $elem) {
+                $elem.removeAttribute('selected');
+            });
+            $option.attr('selected', 'selected');
+        }
         $(document).ready(function () {
+            $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
+                // do something…
+            });
+            $('[name="remise_clef"]').submit(function (e) {
+                e.preventDefault();
+                ajouterNouvelleRemiseClef($(this));
+            });
             {% for fournisseur in form.fournisseurs %}
-            {#associerFournisseur({{ fournisseur.vars.value.fournisseur.id }},'{{ fournisseur.vars.value.fournisseur.enseigne }}');#}
-            fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
+            _fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
             ajouterLigneFournisseursAssocies({{ fournisseur.vars.value.fournisseur.id }}, '{{ fournisseur.vars.value.fournisseur.enseigne }}');
-            {#{{ dump(fournisseur) }}#}
-            {#associerFournisseur({{ fournisseur.vars.value.id }},'');#}
             {% endfor %}
             {% if sitesAEnregistrer is not empty %}
 
@@ -395,6 +558,11 @@
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+            $('[id$="remiseClef"]').change(function () {
+                if ($(this).val() == 'add') {
+                    afficherModaleAjoutRemiseClef($(this).attr('data-fournisseur'));
+                }
+            });
         });
     </script>
 {% endblock %}
