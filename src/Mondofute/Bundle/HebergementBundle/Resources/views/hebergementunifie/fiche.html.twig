@@ -245,7 +245,10 @@
         var _locale = {{ langue.id }};
         {% endif %}
         {% endfor %}
+        {# recupere les objets langue dans un tableau #}
         var _langues = {{ langues | serialize('json') | raw }};
+
+        //        Affiche la modale recherche fournisseur
         function afficherModalRechercheFournisseurs() {
 
             var modal = $('#modalRechercherFournisseur');
@@ -420,8 +423,11 @@
 //            donnes la valeur du fournisseur dans le hidden fournisseur
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
+            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
 //            ajoute le formulaire dans la page
             $formFournisseurHebergement.append($newForm.html());
+
+//            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'))
 //            incrémente le nombre de fournisseurs associés
             $nbFournisseurs.attr('data-index', (parseInt($nbFournisseurs.attr('data-index')) + 1));
         }
@@ -445,11 +451,11 @@
             $modalAjoutRemiseClef.modal().show();
         }
         function ajouterNouvelleRemiseClef($form) {
-            $this = $(this);
-            var values = {};
-            $.each($form.serializeArray(), function (i, field) {
-                values[field.name] = field.value;
-            });
+//            $this = $(this);
+//            var values = {};
+//            $.each($form.serializeArray(), function (i, field) {
+//                values[field.name] = field.value;
+//            });
             $.ajax({
                 type: "POST",
                 url: "{{ path('remiseclef_new_simple') }}",
@@ -470,6 +476,16 @@
                 $elem.removeAttribute('selected');
             });
             $option.attr('selected', 'selected');
+        }
+        function supprimerRemiseClefParFournisseur($select) {
+            var idFournisseur = $select.attr('data-fournisseur');
+            $select.find('option').each(function () {
+                if ($(this).attr('data-fournisseur')) {
+                    if ($(this).attr('data-fournisseur') != idFournisseur) {
+                        $(this).remove();
+                    }
+                }
+            });
         }
         $(document).ready(function () {
             $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
@@ -562,6 +578,10 @@
                 if ($(this).val() == 'add') {
                     afficherModaleAjoutRemiseClef($(this).attr('data-fournisseur'));
                 }
+            });
+            $('select[id$="_remiseClef"]').each(function (i, select) {
+                supprimerRemiseClefParFournisseur($(select));
+
             });
         });
     </script>

@@ -23,7 +23,6 @@ class HebergementTraductionType extends AbstractType
             ->add('bienEtre', TextType::class, array('required' => false))
             ->add('pourLesEnfants', TextType::class, array('required' => false))
             ->add('activites', TextType::class, array('required' => false))
-//            ->add('hebergement')
             ->add('langue', HiddenType::class, array('mapped' => false));
     }
 

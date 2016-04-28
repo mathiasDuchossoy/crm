@@ -20,7 +20,6 @@ class TypeHebergementType extends AbstractType
         $builder
             ->add('individuel')
             ->add('site', HiddenType::class, array('mapped' => false))
-//            ->add('typeHebergementUnifie')
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => TypeHebergementTraduction::class,
             ));

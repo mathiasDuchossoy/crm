@@ -16,7 +16,6 @@ class TypeHebergementTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
-//            ->add('typeHebergement')
             ->add('langue');
     }
 

@@ -15,17 +15,17 @@ Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef:
             type: string
             length: 255
         heureRemiseClefLongSejour:
-            type: smallint
+            type: time
         heureRemiseClefCourtSejour:
-            type: smallint
+            type: time
         heureDepartLongSejour:
-            type: smallint
+            type: time
         heureDepartCourtSejour:
-            type: smallint
+            type: time
         heureTardiveLongSejour:
-            type: smallint
+            type: time
         heureTardiveCourtSejour:
-            type: smallint
+            type: time
         standard:
             type: boolean
 

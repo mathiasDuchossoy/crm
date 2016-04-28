@@ -45,17 +45,10 @@ class HebergementType extends AbstractType
             ))
             ->add('moyenComs'
                 , 'Infinite\FormBundle\Form\Type\PolyCollectionType',
-//                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
                 array(
                     'types' => array(
-//                    'Nucleus\MoyenComBundle\Form\AdresseType'
-//                        AdresseType::class,
                         'nucleus_moyencombundle_adresse'
-//                    'nucleus_moyencombundle_email',
-
                     ),
-//                    'allow_add' => true,
-//                    'allow_delete' => true,
                 ))
             ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
             ->add('site', HiddenType::class, array('mapped' => false));

@@ -868,16 +868,16 @@
         },
         {
             "name": "infinite-networks/form-bundle",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinite-networks/InfiniteFormBundle.git",
-                "reference": "5dde53befabbfa14594521593da6801afe8633c9"
+                "reference": "12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/5dde53befabbfa14594521593da6801afe8633c9",
-                "reference": "5dde53befabbfa14594521593da6801afe8633c9",
+                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca",
+                "reference": "12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca",
                 "shasum": ""
             },
             "require": {
@@ -920,7 +920,7 @@
                 }
             ],
             "description": "A collection of useful form types and extensions for Symfony2",
-            "time": "2016-04-26 05:14:20"
+            "time": "2016-04-27 22:32:18"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1405,7 +1405,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/contactBundle.git",
-                "reference": "bc68ba15066ad77992841582e6f0dcdbf68f7b50"
+                "reference": "a648eada8d11fca46afbe94475ebbe27921a15b8"
             },
             "require": {
                 "nucleus/moyencombundle": "dev-commun"
@@ -1428,7 +1428,7 @@
             "keywords": [
                 "Contact"
             ],
-            "time": "2016-04-27 07:18:59"
+            "time": "2016-04-27 12:56:55"
         },
         {
             "name": "nucleus/moyencombundle",
@@ -1436,7 +1436,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
-                "reference": "79c28a491e9bc8c1470a4f05747480b3f245f5e2"
+                "reference": "af26f1ddba7133b9a8a901d71ad66007c3fc640b"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1456,7 +1456,7 @@
             "keywords": [
                 "MoyenCom"
             ],
-            "time": "2016-04-27 07:52:31"
+            "time": "2016-04-27 14:04:47"
         },
         {
             "name": "oyejorge/less.php",

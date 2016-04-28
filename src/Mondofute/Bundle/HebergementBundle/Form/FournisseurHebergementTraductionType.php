@@ -21,7 +21,7 @@ class FournisseurHebergementTraductionType extends AbstractType
             ->add('langue', EntityType::class,
                 array(
                     'class' => Langue::class,
-                    'property' => 'id',
+                    'choice_label' => 'id',
                     'attr' => array('style' => 'display:none;'),
                     'label_attr' => array('style' => 'display:none')
                 ));

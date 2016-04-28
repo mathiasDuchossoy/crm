@@ -19,7 +19,7 @@ class RemiseClefTraductionType extends AbstractType
         $builder
             ->add('lieuxRemiseClef')
 //            ->add('remiseClef')
-            ->add('langue', EntityType::class, array('class' => Langue::class, 'property' => 'id'));
+            ->add('langue', EntityType::class, array('class' => Langue::class, 'choice_label' => 'id'));
     }
 
     /**
