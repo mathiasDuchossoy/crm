@@ -92,16 +92,17 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    MondofuteHebergementBundle: ~
-                    MondofuteRemiseClefBundle: ~
-                    MondofuteTrancheHoraireBundle: ~
-                    MondofuteLogementBundle: ~
+                    MondofuteUtilisateurBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -127,6 +128,7 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    MondofuteUtilisateurBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -152,6 +154,7 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    MondofuteUtilisateurBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

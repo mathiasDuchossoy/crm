@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
+
+            {{ form_start(form) }}
+            {{ form_row(form.nom) }}
+            {{ form_row(form.prenom) }}
+            {% for moyenCom in form.moyenComs %}
+                {% set typeMoyenCom = moyenCom.vars.type %}
+                {% if typeMoyenCom == 'Email' %}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                {% else %}
+                    {{ form_row(moyenCom) }}
+                {% endif %}
+            {% endfor %}
+            {{ form_row(form.password) }}
+
+            {{ form_row(form.submit) }}
+
+            {{ form_widget(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
