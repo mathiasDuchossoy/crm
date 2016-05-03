@@ -1,0 +1,4 @@
+services:
+#    mondofute_utilisateur.example:
+#        class: Mondofute\Bundle\UtilisateurBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

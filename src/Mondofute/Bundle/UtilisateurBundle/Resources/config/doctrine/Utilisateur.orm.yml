@@ -1,0 +1,37 @@
+Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurRepository
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: utilisateur_moyenscom
+                joinColumns:
+                    utilisateur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyencom_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+    #    id:
+    #        id:
+    #            type: integer
+    #            id: true
+    #            generator:
+    #                strategy: AUTO
+    #            options:
+    #                unsigned: true
+    fields:
+        login:
+            type: string
+            length: 255
+            unique: true
+        password:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
