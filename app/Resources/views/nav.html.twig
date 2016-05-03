@@ -186,5 +186,52 @@
             </ul>
         </li>
     </ul>
+
+    <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">
+
+
+        <li>
+            {#<a class="dropdown-toggle" href="#" data-toggle="dropdown" id="navLogin">Login</a>#}
+            {#<a href="{{ path('fos_user_security_login') }}" >Login</a>#}
+
+            {#<div>#}
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <li>
+            {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+            <a href="{{ path('fos_user_security_logout') }}">
+                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+            </a>
+        </li>
+        {% else %}
+            <li><a href="{{ path('utilisateur_user_register') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+            </li>
+            {#<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>#}
+            <li><a href="{{ path('fos_user_security_login') }}"><span
+                            class="glyphicon glyphicon-log-in"></span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                </a></li>
+        {% endif %}
+        {#</div>#}
+        {#<div class="dropdown-menu" style="padding:17px;">#}
+        {#<div class="dropdown-menu" >#}
+        {#<form class="form" id="formLogin">#}
+        {#<form class="form" id="formLogin" action="{{ path('fos_user_security_login') }}" method="post">#}
+        {#<input name="_username" id="username" placeholder="Username" type="text">#}
+        {#<input name="_password" id="password" placeholder="Password" type="password"><br>#}
+        {#<input id="remember_me" type="checkbox" value="on" name="_remember_me">#}
+        {#<button type="button" id="btnLogin" class="btn">Login</button>#}
+        {#</form>#}
+        {#<form method="post" action="{{ path('fos_user_security_login') }}">#}
+        {#<input type="hidden" value="-joYPF2CEjo9zdtE3axRnjKLRzeMwkGfBgvs58GuIqA" name="_csrf_token">#}
+        {#<label for="username">security.login.username</label>#}
+        {#<input id="username" type="text" required="required" value="" name="_username"><br>#}
+        {#<label for="password">security.login.password</label>#}
+        {#<input id="password" type="password" required="required" name="_password"><br>#}
+        {#<input id="remember_me" type="checkbox" value="on" name="_remember_me">#}
+        {#<label for="remember_me">security.login.remember_me</label><br>#}
+        {#<input id="_submit" type="submit" value="security.login.submit" name="_submit">#}
+        {#</form>#}
+        {#</div>#}
+        </li>
+    </ul>
 </nav>
 {#</div>#}

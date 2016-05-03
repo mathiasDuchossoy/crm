@@ -31,6 +31,8 @@ class AppKernel extends Kernel
             new Infinite\FormBundle\InfiniteFormBundle(),
             new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
             new Nucleus\ContactBundle\NucleusContactBundle(),
+            new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

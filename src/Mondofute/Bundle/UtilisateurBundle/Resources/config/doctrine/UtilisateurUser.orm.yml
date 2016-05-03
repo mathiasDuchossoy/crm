@@ -1,0 +1,53 @@
+Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser:
+    type: entity
+    table: utilisateur_user
+    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurUserRepository
+#    uniqueConstraints:
+#        uniqueEntity:
+#            fields: username
+#            targetClass: Mondofute\Bundle\UtilisateurBundle\Entity\User
+#            message: fos_user.username.already_used
+#        uniqueEntity:
+#            fields: email
+#            targetClass: Mondofute\Bundle\UtilisateurBundle\Entity\User
+#            message: fos_user.email.already_used
+#    uniqueConstraints:
+#        PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#            columns: username
+##            fields: username
+#            targetClass: Mondofute\Bundle\UtilisateurBundle\Entity\User
+#            message: fos_user.username.already_used
+#        PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#            columns: email
+#            targetClass: Mondofute\Bundle\UtilisateurBundle\Entity\User
+#            message: fos_user.email.already_used
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+#                    /**
+#                     * @ORM\Column(type="string", length=255)
+#                     *
+#                     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
+#                     * @Assert\Length(
+#                     *     min=3,
+#                     *     max=255,
+#                     *     minMessage="The name is too short.",
+#                     *     maxMessage="The name is too long.",
+#                     *     groups={"Registration", "Profile"}
+#                     * )
+#                     */
+#                    protected $name;
+#    fields:
+#        name:
+#            type: string
+#            length: 255
+    oneToOne:
+        utilisateur:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+
+    lifecycleCallbacks: {  }
