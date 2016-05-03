@@ -38,6 +38,8 @@ mondofute_descriptionforfaitski:
     resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
     prefix: /
 
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 mondofute_unite:
     resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
     prefix: /
