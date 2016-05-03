@@ -17,6 +17,7 @@ class UtilisateurUser extends User
      * @var string
      */
     protected $name;
+    
     /**
      * @var \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
      */
