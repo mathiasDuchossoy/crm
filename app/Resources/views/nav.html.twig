@@ -164,6 +164,27 @@
                 </li>
             </ul>
         </li>
+        <li role="presentation"
+            class="dropdown {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Utilisateur <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Utilisateur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'utilisateur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'utilisateur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
     </ul>
 </nav>
 {#</div>#}

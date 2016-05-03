@@ -1,0 +1,21 @@
+{% extends '@MondofuteUtilisateur/utilisateur/fiche.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'création d\un utilisateur' | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    Création d'un utilisateur
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('utilisateur_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+        </ul>
+
+    </div>
+{% endblock %}
+

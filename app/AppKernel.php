@@ -27,6 +27,10 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\UniteBundle\MondofuteUniteBundle(),
             new Mondofute\Bundle\DescriptionForfaitSkiBundle\MondofuteDescriptionForfaitSkiBundle(),
             new Mondofute\Bundle\ChoixBundle\MondofuteChoixBundle(),
+            new Mondofute\Bundle\UtilisateurBundle\MondofuteUtilisateurBundle(),
+            new Infinite\FormBundle\InfiniteFormBundle(),
+            new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
+            new Nucleus\ContactBundle\NucleusContactBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
