@@ -31,6 +31,8 @@ class AppKernel extends Kernel
             new Infinite\FormBundle\InfiniteFormBundle(),
             new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
             new Nucleus\ContactBundle\NucleusContactBundle(),
+            new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
             new Mondofute\Bundle\CatalogueBundle\MondofuteCatalogueBundle(),
             new Mondofute\Bundle\HebergementBundle\MondofuteHebergementBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
