@@ -59,6 +59,7 @@ class Hebergement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->emplacements = new ArrayCollection();
     }
 
     /**
