@@ -50,6 +50,10 @@ class HebergementType extends AbstractType
                         'nucleus_moyencombundle_adresse'
                     ),
                 ))
+            ->add('emplacements', CollectionType::class,
+                array(
+                    'entry_type' => EmplacementHebergementType::class,
+                ))
             ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
             ->add('site', HiddenType::class, array('mapped' => false));
     }

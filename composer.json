@@ -29,7 +29,8 @@
     "nucleus/contactbundle": "dev-commun",
     "nucleus/moyencombundle": "dev-commun",
     "infinite-networks/form-bundle": "^1.0",
-    "jms/serializer-bundle": "1.1.0"
+    "jms/serializer-bundle": "1.1.0",
+    "symfony/translation": "3.0.x-dev"
   },
   "repositories": [
     {

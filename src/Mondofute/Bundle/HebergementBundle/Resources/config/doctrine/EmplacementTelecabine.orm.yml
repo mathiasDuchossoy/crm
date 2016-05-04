@@ -1,0 +1,11 @@
+Mondofute\Bundle\HebergementBundle\Entity\EmplacementTelecabine:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementTelecabineRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

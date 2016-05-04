@@ -1,0 +1,4 @@
+services:
+#    mondofute_tranche_horaire.example:
+#        class: Mondofute\Bundle\TrancheHoraireBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]

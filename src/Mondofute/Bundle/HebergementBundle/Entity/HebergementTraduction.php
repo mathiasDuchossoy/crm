@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+
 /**
  * HebergementTraduction
  */
@@ -42,11 +44,11 @@ class HebergementTraduction
      */
     private $activites = '';
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+     * @var Hebergement
      */
     private $hebergement;
     /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @var Langue
      */
     private $langue;
 
@@ -221,7 +223,7 @@ class HebergementTraduction
     /**
      * Get hebergement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+     * @return Hebergement
      */
     public function getHebergement()
     {
@@ -231,11 +233,11 @@ class HebergementTraduction
     /**
      * Set hebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
+     * @param Hebergement $hebergement
      *
      * @return HebergementTraduction
      */
-    public function setHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement = null)
+    public function setHebergement(Hebergement $hebergement = null)
     {
         $this->hebergement = $hebergement;
 
@@ -245,7 +247,7 @@ class HebergementTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
@@ -255,11 +257,11 @@ class HebergementTraduction
     /**
      * Set langue
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Langue $langue
      *
      * @return HebergementTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
 

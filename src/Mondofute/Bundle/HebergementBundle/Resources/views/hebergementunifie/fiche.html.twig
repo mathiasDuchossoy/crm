@@ -23,6 +23,7 @@
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
                 {% for hebergement in form.hebergements %}
+
                     <div id="data_site_{{ hebergement.vars.value.site.id }}"
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ hebergement.vars.value.site.crm | number_format }}">
@@ -31,6 +32,75 @@
                         {#{{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}#}
                         {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Emplacements</label>
+                            <div class="row">
+                                <div class="col-sm-10 col-lg-push-2">
+                                    {% for emplacement in hebergement.emplacements %}
+                                        {#{{ dump(app.request.locale) }}#}
+                                        {#{{ 'EmplacementCommerces' | trans }}#}
+                                        {% set labelCheckbox = ((emplacement.vars.value.typeEmplacement~'Libelle') | trans) | capitalize %}
+                                        {#{% set labelCheckbox = labelCheckbox | capitalize  %}#}
+                                        {% if(emplacement.distance1.vars.value) %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'checked': 'checked','onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~loop.index0~');'}} %}
+                                            {% set requiredAttr = {'attr':{'required':'required'}} %}
+                                        {% else %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~loop.index0~');'}} %}
+                                            {% set requiredAttr = {} %}
+                                        {% endif %}
+                                        <div class="form-group">
+                                            {{ form_widget(emplacement.checkbox, attrCheckbox) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Distance 1</label>
+                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label"
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1_valeur">Valeur</label>
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(emplacement.distance1.valeur, requiredAttr) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label"
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1_unite">Unité</label>
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(emplacement.distance1.unite, requiredAttr) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Distance 2</label>
+                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label"
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2_valeur">Valeur</label>
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(emplacement.distance2.valeur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label"
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2_unite">Unité</label>
+                                                    <div class="col-sm-10">
+                                                        {{ form_widget(emplacement.distance2.unite) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#<div class="form-group">#}
+                                        {#<label>Distance 2</label>#}
+                                        {#{{ form_widget(emplacement.distance2) }}#}
+                                        {#</div>#}
+                                        <div class="form-group">
+                                            {{ form_widget(emplacement.typeEmplacement, {'attr': {'disabled':'true','style':'display:none;'}}) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {#{{ form_row(hebergement.emplacements, {'label' : 'Emplacements', 'attr' : { 'data-unique_block_prefix' : hebergement.emplacements.vars['unique_block_prefix']  }}) }}#}
+                        </div>
 
                         {#{{ form_row(domaine.enneige) }}#}
                         {{ form_row(hebergement.site) }}
@@ -89,7 +159,6 @@
                     <div id="form_fournisseurs"
                          data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
-
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
                             <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
@@ -104,6 +173,31 @@
                                     {{ form_row(fournisseur.telMobile) }}
                                     {{ form_row(fournisseur.adresse) }}
                                     {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label required">Receptions</label>
+                                        <div class="col-sm-10">
+                                            <div id="hebergement_unifie_fournisseurs_0_receptions"
+                                                 data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
+                                                {% for reception in fournisseur.receptions.vars.choices %}
+                                                    {#Gestion du libelle à afficher#}
+                                                    {#traduction du jour#}
+                                                    {% set libelle = ('Jour'~reception.data.jour~'Libelle') | trans %}
+                                                    {#traduction de la tranche1#}
+                                                    {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
+                                                    {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
+                                                    {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
+                                                    {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
+                                                        {#traduction de la tranche2#}
+                                                        {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
+                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
+                                                    {% endif %}
+                                                    {#affichage de la donnée#}
+                                                    {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
                                     <ul class="nav nav-tabs">
                                         {#gestion du premier onglet#}
                                         {% set first = true %}
@@ -215,6 +309,22 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAjoutReception" tabindex="-1" role="dialog"
+         aria-labelledby="modalAjoutReception" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Ajouter une réception</h4>
+                </div>
+                <div class="modal-body">
+                    {{ render(controller("MondofuteHebergementBundle:Reception:newSimple")) }}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}
 
 {% block javascripts %}
@@ -253,6 +363,19 @@
 
             var modal = $('#modalRechercherFournisseur');
             modal.modal().show();
+        }
+        function gestionEmplacementRequired(indexHebergement, indexEmplacement) {
+            $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
+            $valeur = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_valeur');
+            $unite = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_unite');
+//            alert($checkbox.is(':checked'));
+            if ($checkbox.is(':checked')) {
+                $valeur.attr('required', 'required');
+                $unite.attr('required', 'required');
+            } else {
+                $valeur.removeAttr('required');
+                $unite.removeAttr('required');
+            }
         }
         function rechercherFournisseursHebergement($rechercheFournisseurEnseigne) {
 
@@ -423,7 +546,10 @@
 //            donnes la valeur du fournisseur dans le hidden fournisseur
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
+            $newForm.find('#hebergement_unifie_fournisseurs_' + id + '_receptions').attr('data-fournisseur', id);
+            $newForm.find('.addReception').attr('data-fournisseur', id);
             supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
+            supprimerReceptionParFournisseur($newForm.find('[id$="_receptions"]'));
 //            ajoute le formulaire dans la page
             $formFournisseurHebergement.append($newForm.html());
 
@@ -450,6 +576,12 @@
             $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
             $modalAjoutRemiseClef.modal().show();
         }
+        function afficherModaleAjoutReception(idFournisseur) {
+            $('#reception_fournisseur').val(idFournisseur);
+            $modalAjoutReception = $('#modalAjoutReception');
+            $modalAjoutReception.find('.nav-tabs li:first a').tab('show');
+            $modalAjoutReception.modal().show();
+        }
         function ajouterNouvelleRemiseClef($form) {
 //            $this = $(this);
 //            var values = {};
@@ -457,14 +589,30 @@
 //                values[field.name] = field.value;
 //            });
             $.ajax({
-                type: "POST",
-                url: "{{ path('remiseclef_new_simple') }}",
+                type: $form.attr('method'),
+                url: $form.attr('action'),
                 data: $form.serialize(),
                 cache: false,
                 dataType: 'json',
                 success: function (data) {
                     $('#modalAjoutRemiseClef').modal('hide');
                     ajouterOptionRemiseClef(data.remiseClef.id, data.remiseClef.libelle, $('#remise_clef_fournisseur').val());
+                }
+            });
+        }
+        function ajouterNouvelleReception($form) {
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $('#modalAjoutReception').modal('hide');
+                    for (var i = 0; i < data.receptions.length; i++) {
+                        console.log(data.receptions[i]);
+                        ajouterCheckboxReception(data.receptions[i]);
+                    }
                 }
             });
         }
@@ -477,6 +625,18 @@
             });
             $option.attr('selected', 'selected');
         }
+        function ajouterCheckboxReception(reception) {
+            var indice = $('#fournisseur' + reception.idFournisseur + ' [id$="_receptions"]').attr('id');
+            indice = indice.substring(32);
+            indice = indice.substring(0, (indice.length - 11));
+            var data = '<div class="checkbox">' +
+                    '<label class="">' +
+                    '<input type="checkbox" name="hebergement_unifie[fournisseurs][' + indice + '][receptions][]" checked="checked" value="' + reception.id + '" data-fournisseur="' + reception.idFournisseur + '" id="hebergement_unifie_fournisseurs_' + indice + '_receptions_' + reception.id + '">' + reception.libelle +
+                    '</label>' +
+                    '</div>';
+//            console.log($("#hebergement_unifie_fournisseurs_"+reception.idFournisseur));
+            $('#fournisseur' + reception.idFournisseur + ' [id$="_receptions"]').append($(data));
+        }
         function supprimerRemiseClefParFournisseur($select) {
             var idFournisseur = $select.attr('data-fournisseur');
             $select.find('option').each(function () {
@@ -487,6 +647,16 @@
                 }
             });
         }
+        function supprimerReceptionParFournisseur($receptions) {
+            var idFournisseur = $receptions.attr('data-fournisseur');
+            var $checkbox = null;
+            $receptions.find('.checkbox').each(function () {
+                $checkbox = $(this);
+                if ($checkbox.find('input').attr('data-fournisseur') != idFournisseur) {
+                    $checkbox.remove();
+                }
+            });
+        }
         $(document).ready(function () {
             $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
                 // do something…
@@ -494,6 +664,10 @@
             $('[name="remise_clef"]').submit(function (e) {
                 e.preventDefault();
                 ajouterNouvelleRemiseClef($(this));
+            });
+            $('[name="reception"]').submit(function (e) {
+                e.preventDefault();
+                ajouterNouvelleReception($(this));
             });
             {% for fournisseur in form.fournisseurs %}
             _fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
@@ -582,6 +756,12 @@
             $('select[id$="_remiseClef"]').each(function (i, select) {
                 supprimerRemiseClefParFournisseur($(select));
 
+            });
+            $('[id$="_receptions"]').each(function (i, receptions) {
+                supprimerReceptionParFournisseur($(receptions));
+            });
+            $(document).on('click', 'button.addReception', function () {
+                afficherModaleAjoutReception($(this).attr('data-fournisseur'));
             });
         });
     </script>

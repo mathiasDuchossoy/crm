@@ -74,7 +74,8 @@ class RemiseClefController extends Controller
             $remiseClefTraduction->setLangue($langue);
             $remiseClef->addTraduction($remiseClefTraduction);
         }
-        $form = $this->createForm('Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType', $remiseClef)
+        $form = $this->createForm('Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType', $remiseClef,
+            array('action' => $this->generateUrl('remiseclef_new_simple'), 'method' => 'POST'))
             ->add('submit', SubmitType::class, array('label' => 'Create'));
         $form->handleRequest($request);
 

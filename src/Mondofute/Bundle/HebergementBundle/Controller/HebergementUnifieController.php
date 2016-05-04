@@ -8,17 +8,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
+use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
@@ -119,6 +123,7 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
+        $emplacements = $em->getRepository(Emplacement::class)->findAll();
         foreach ($sites as $site) {
             $siteExiste = false;
             foreach ($entity->getHebergements() as $hebergement) {
@@ -138,6 +143,21 @@ class HebergementUnifieController extends Controller
                             $hebergement->addTraduction($traduction);
                         }
                     }
+                    /** @var Emplacement $emplacement */
+                    foreach ($emplacements as $emplacement) {
+                        if ($hebergement->getEmplacements()->filter(function (EmplacementHebergement $element) use (
+                            $emplacement
+                        ) {
+                            return $element->getTypeEmplacement() == $emplacement;
+                        })->isEmpty()
+                        ) {
+                            $emplacementHebergement = new EmplacementHebergement();
+                            $emplacementHebergement->setTypeEmplacement($emplacement);
+                            $hebergement->addEmplacement($emplacementHebergement);
+                        }
+
+                    }
+                    $hebergement->triEmplacements($this->get('translator'));
                 }
             }
             if (!$siteExiste) {
@@ -156,6 +176,12 @@ class HebergementUnifieController extends Controller
                     $traduction->setLangue($langue);
                     $hebergement->addTraduction($traduction);
                 }
+                foreach ($emplacements as $emplacement) {
+                    $emplacementHebergement = new EmplacementHebergement();
+                    $emplacementHebergement->setTypeEmplacement($emplacement);
+                    $hebergement->addEmplacement($emplacementHebergement);
+                }
+                $hebergement->triEmplacements($this->get('translator'));
                 $entity->addHebergement($hebergement);
             }
         }
@@ -293,6 +319,16 @@ class HebergementUnifieController extends Controller
                         $fournisseurSite->getTelFixe()->setDateModification(new DateTime());
                         $fournisseurSite->getTelMobile()->setDateModification(new DateTime());
                     }
+                    foreach ($fournisseurSite->getReceptions() as $receptionSite) {
+                        $fournisseurSite->removeReception($receptionSite);
+                    }
+                    foreach ($fournisseur->getReceptions() as $reception) {
+                        if (empty($receptionSite = $em->getRepository(Reception::class)->find($reception))) {
+
+                        } else {
+                            $fournisseurSite->addReception($receptionSite);
+                        }
+                    }
                     /** @var FournisseurHebergementTraduction $traduction */
                     foreach ($fournisseur->getTraductions() as $traduction) {
                         if (empty($fournisseurHebergementTraduction = $em->getRepository(FournisseurHebergementTraduction::class)->findOneBy(array(
@@ -357,6 +393,8 @@ class HebergementUnifieController extends Controller
                     ->setTypeHebergement($typeHebergementSite)
                     ->setClassement($classementSite)
                     ->setHebergementUnifie($entitySite);
+//                GESTION DES EMPLACEMENTS
+                $this->gestionEmplacementsSiteDistant($site, $hebergement, $hebergementSite);
 
 //            Gestion des traductions
                 foreach ($hebergement->getTraductions() as $hebergementTraduc) {
@@ -432,6 +470,91 @@ class HebergementUnifieController extends Controller
             ->setNumero($telMobileFournisseur->getNumero());
     }
 
+    public function gestionEmplacementsSiteDistant(Site $site, Hebergement $hebergement, Hebergement $hebergementSite)
+    {
+        /** @var EmplacementHebergement $emplacement */
+        /** @var EmplacementHebergement $emplacementSite */
+//        Suppression des emplacements qui ne sont plus présents
+        $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+        $emplacementsSite = $emSite->getRepository(EmplacementHebergement::class)->findAll();
+        foreach ($emplacementsSite as $emplacementSite) {
+            $present = 0;
+            foreach ($hebergement->getEmplacements() as $emplacement) {
+                if ($emplacementSite->getTypeEmplacement()->getId() == $emplacement->getTypeEmplacement()->getId()) {
+                    $present = 1;
+                }
+            }
+            if ($present == 0) {
+                $emSite->remove($emplacementSite);
+            }
+        }
+
+        foreach ($hebergement->getEmplacements() as $emplacement) {
+            if (!empty(($distance1 = $emplacement->getDistance1()))) {
+                $uniteSite1 = $emSite->getRepository(Unite::class)->find($distance1->getUnite());
+            } else {
+                $uniteSite1 = null;
+            }
+            if (!empty(($distance2 = $emplacement->getDistance2()))) {
+                $uniteSite2 = $emSite->getRepository(Unite::class)->find($distance2->getUnite());
+            } else {
+                $uniteSite2 = null;
+            }
+            $typeEmplacementSite = $emSite->getRepository(Emplacement::class)->find($emplacement->getTypeEmplacement());
+            if (empty(($emplacementSite = $emSite->getRepository(EmplacementHebergement::class)->findOneBy(array(
+                'typeEmplacement' => $typeEmplacementSite,
+                'hebergement' => $hebergementSite
+            ))))
+            ) {
+                $emplacementSite = new EmplacementHebergement();
+                if (!empty($distance1)) {
+                    $distanceSite1 = new Distance();
+                }
+                if (!empty($distance2)) {
+                    $distanceSite2 = new Distance();
+                }
+            } else {
+                if (!empty($distance1)) {
+                    if (empty(($distanceSite1 = $emplacementSite->getDistance1()))) {
+                        $distanceSite1 = new Distance();
+                    }
+                } else {
+                    if (!empty(($distanceSite1 = $emplacementSite->getDistance1()))) {
+                        $emSite->remove($distanceSite1);
+                        $distanceSite1 = null;
+                    }
+                }
+                if (!empty($distance2)) {
+                    if (empty(($distanceSite2 = $emplacementSite->getDistance2()))) {
+                        $distanceSite2 = new Distance();
+                    }
+                } else {
+                    if (!empty(($distanceSite2 = $emplacementSite->getDistance2()))) {
+                        $emSite->remove($distanceSite2);
+                        $distanceSite2 = null;
+                    }
+                }
+            }
+            if (!empty($distance1)) {
+                $distanceSite1->setValeur($distance1->getValeur());
+                $distanceSite1->setUnite($uniteSite1);
+                $emplacementSite->setDistance1($distanceSite1);
+            }
+            if (!empty($distance2)) {
+                $distanceSite2->setValeur($distance2->getValeur());
+                $distanceSite2->setUnite($uniteSite2);
+                $emplacementSite->setDistance2($distanceSite2);
+            }
+
+            $emplacementSite->setTypeEmplacement($typeEmplacementSite)
+                ->setDistance1($distanceSite1)
+                ->setTypeEmplacement($typeEmplacementSite)
+                ->setDistance2($distanceSite2);
+            $hebergementSite->addEmplacement($emplacementSite);
+        }
+        $emSite->flush();
+    }
+
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas d'hébergement a enregistrer
      * @param $idUnifie
@@ -495,10 +618,11 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $hebergementUnifie)
     {
+
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-        
+
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
@@ -536,6 +660,22 @@ class HebergementUnifieController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 //            dump($originalFournisseursHebergement);
 
+            /** @var Hebergement $hebergement */
+            foreach ($hebergementUnifie->getHebergements() as $keyHebergement => $hebergement) {
+                foreach ($hebergement->getEmplacements() as $keyEmplacement => $emplacement) {
+                    if (empty($request->request->get('hebergement_unifie')['hebergements'][$keyHebergement]['emplacements'][$keyEmplacement]['checkbox'])) {
+                        $hebergement->removeEmplacement($emplacement);
+                        $em->remove($emplacement);
+                    } else {
+                        if (!empty($emplacement->getDistance2())) {
+                            if (empty($emplacement->getDistance2()->getUnite())) {
+                                $em->remove($emplacement->getDistance2());
+                                $emplacement->setDistance2(null);
+                            }
+                        }
+                    }
+                }
+            }
             $this->supprimerHebergements($hebergementUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre l'hébergement et hebergementUnifie

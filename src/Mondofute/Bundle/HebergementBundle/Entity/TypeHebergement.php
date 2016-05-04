@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * TypeHebergement
@@ -31,7 +32,7 @@ class TypeHebergement
      */
     private $typeHebergementUnifie;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
 
@@ -174,7 +175,7 @@ class TypeHebergement
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -184,11 +185,11 @@ class TypeHebergement
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return TypeHebergement
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 

@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new Infinite\FormBundle\InfiniteFormBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new Mondofute\Bundle\RemiseClefBundle\MondofuteRemiseClefBundle(),
+            new Mondofute\Bundle\TrancheHoraireBundle\MondofuteTrancheHoraireBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

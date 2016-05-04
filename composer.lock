@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9f5f3ed4079605ad6f2613a66bb67fa1",
-    "content-hash": "fc2779b2015718de80d008f64df8398b",
+    "hash": "528f95e6851fc38def90f4d5dd6464f4",
+    "content-hash": "06d913bd61723bfcfcdd63971a59ad3f",
     "packages": [
         {
             "name": "components/jquery",
@@ -1405,7 +1405,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/contactBundle.git",
-                "reference": "a648eada8d11fca46afbe94475ebbe27921a15b8"
+                "reference": "f613f0bc2958dd58b9248630077fd82c4b2d0352"
             },
             "require": {
                 "nucleus/moyencombundle": "dev-commun"
@@ -1428,7 +1428,7 @@
             "keywords": [
                 "Contact"
             ],
-            "time": "2016-04-27 12:56:55"
+            "time": "2016-04-29 10:00:52"
         },
         {
             "name": "nucleus/moyencombundle",
@@ -1436,7 +1436,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
-                "reference": "af26f1ddba7133b9a8a901d71ad66007c3fc640b"
+                "reference": "d9823a815fc4c79a078df55d3dd9f4393d061210"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1456,7 +1456,7 @@
             "keywords": [
                 "MoyenCom"
             ],
-            "time": "2016-04-27 14:04:47"
+            "time": "2016-04-29 08:24:38"
         },
         {
             "name": "oyejorge/less.php",
@@ -2664,16 +2664,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.4",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "9e14f9f4869c19188a376eab61d9a1c1f1fee347"
+                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/9e14f9f4869c19188a376eab61d9a1c1f1fee347",
-                "reference": "9e14f9f4869c19188a376eab61d9a1c1f1fee347",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
+                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
                 "shasum": ""
             },
             "require": {
@@ -2688,7 +2688,7 @@
                 "symfony/polyfill-php56": "~1.0",
                 "symfony/polyfill-php70": "~1.0",
                 "symfony/polyfill-util": "~1.0",
-                "symfony/security-acl": "~2.7",
+                "symfony/security-acl": "~2.7|~3.0.0",
                 "twig/twig": "~1.23|~2.0"
             },
             "conflict": {
@@ -2760,7 +2760,11 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Bridge\\": "src/Symfony/Bridge/",
+                    "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
+                    "Symfony\\Bridge\\Monolog\\": "src/Symfony/Bridge/Monolog/",
+                    "Symfony\\Bridge\\ProxyManager\\": "src/Symfony/Bridge/ProxyManager/",
+                    "Symfony\\Bridge\\Swiftmailer\\": "src/Symfony/Bridge/Swiftmailer/",
+                    "Symfony\\Bridge\\Twig\\": "src/Symfony/Bridge/Twig/",
                     "Symfony\\Bundle\\": "src/Symfony/Bundle/",
                     "Symfony\\Component\\": "src/Symfony/Component/"
                 },
@@ -2790,7 +2794,71 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-03-27 12:57:53"
+            "time": "2016-04-29 15:34:08"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "3.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/f7a07af51ea067745a521dab1e3152044a2fb1f2",
+                "reference": "f7a07af51ea067745a521dab1e3152044a2fb1f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/config": "<2.8"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~2.8|~3.0",
+                "symfony/intl": "~2.8|~3.0",
+                "symfony/yaml": "~2.8|~3.0"
+            },
+            "suggest": {
+                "psr/log": "To use logging capability in translator",
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Translation Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-03-25 01:41:20"
         },
         {
             "name": "twig/twig",
@@ -3018,7 +3086,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "nucleus/contactbundle": 20,
-        "nucleus/moyencombundle": 20
+        "nucleus/moyencombundle": 20,
+        "symfony/translation": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+
 /**
  * FournisseurHebergementTraduction
  */
@@ -17,11 +19,11 @@ class FournisseurHebergementTraduction
      */
     private $acces;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+     * @var FournisseurHebergement
      */
     private $fournisseurHebergement;
     /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @var Langue
      */
     private $langue;
 
@@ -62,7 +64,7 @@ class FournisseurHebergementTraduction
     /**
      * Get fournisseurHebergement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+     * @return FournisseurHebergement
      */
     public function getFournisseurHebergement()
     {
@@ -72,12 +74,12 @@ class FournisseurHebergementTraduction
     /**
      * Set fournisseurHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
+     * @param FournisseurHebergement $fournisseurHebergement
      *
      * @return FournisseurHebergementTraduction
      */
     public function setFournisseurHebergement(
-        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement = null
+        FournisseurHebergement $fournisseurHebergement = null
     ) {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
@@ -87,7 +89,7 @@ class FournisseurHebergementTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
@@ -97,11 +99,11 @@ class FournisseurHebergementTraduction
     /**
      * Set langue
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Langue $langue
      *
      * @return FournisseurHebergementTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
 

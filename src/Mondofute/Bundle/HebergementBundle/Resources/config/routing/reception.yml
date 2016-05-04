@@ -1,0 +1,29 @@
+reception_index:
+    path:     /
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:index" }
+    methods:  GET
+
+reception_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:show" }
+    methods:  GET
+
+reception_new:
+    path:     /new
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:new" }
+    methods:  [GET, POST]
+
+reception_new_simple:
+    path:     /new_simple
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:newSimple" }
+    methods:  [GET, POST]
+
+reception_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:edit" }
+    methods:  [GET, POST]
+
+reception_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteHebergementBundle:Reception:delete" }
+    methods:  DELETE

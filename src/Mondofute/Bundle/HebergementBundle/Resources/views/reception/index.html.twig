@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Reception list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Jour</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reception in receptions %}
+            <tr>
+                <td><a href="{{ path('reception_show', { 'id': reception.id }) }}">{{ reception.id }}</a></td>
+                <td>{{ reception.jour }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('reception_show', { 'id': reception.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('reception_edit', { 'id': reception.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('reception_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

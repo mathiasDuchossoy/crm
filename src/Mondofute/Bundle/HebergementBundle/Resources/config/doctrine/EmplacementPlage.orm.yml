@@ -1,0 +1,11 @@
+Mondofute\Bundle\HebergementBundle\Entity\EmplacementPlage:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementPlageRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

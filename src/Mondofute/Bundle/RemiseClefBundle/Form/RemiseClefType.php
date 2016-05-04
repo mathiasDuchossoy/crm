@@ -18,11 +18,13 @@ class RemiseClefType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $optionsHoraires = array(
-            'widget' => 'choice',
-            'hours' => array(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
-            'minutes' => array(0, 30)
-        );
+        $hours = array(8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        $minutes = array(0, 30);
+//        $optionsHoraires = array(
+//            'widget' => 'choice',
+//            'hours' => ,
+//            'minutes' => ,
+//        );
         $builder
             ->add('fournisseur', EntityType::class, array(
                 'class' => Fournisseur::class,
@@ -31,12 +33,36 @@ class RemiseClefType extends AbstractType
                 'label_attr' => array('style' => 'display: none')
             ))
             ->add('libelle')
-            ->add('heureRemiseClefLongSejour', TimeType::class, $optionsHoraires)
-            ->add('heureRemiseClefCourtSejour', TimeType::class, $optionsHoraires)
-            ->add('heureDepartLongSejour', TimeType::class, $optionsHoraires)
-            ->add('heureDepartCourtSejour', TimeType::class, $optionsHoraires)
-            ->add('heureTardiveLongSejour', TimeType::class, $optionsHoraires)
-            ->add('heureTardiveCourtSejour', TimeType::class, $optionsHoraires)
+            ->add('heureRemiseClefLongSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
+            ->add('heureRemiseClefCourtSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
+            ->add('heureDepartLongSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
+            ->add('heureDepartCourtSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
+            ->add('heureTardiveLongSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
+            ->add('heureTardiveCourtSejour', TimeType::class, array(
+                'widget' => 'choice',
+                'hours' => $hours,
+                'minutes' => $minutes,
+            ))
             ->add('standard')
             ->add('traductions', CollectionType::class, array('entry_type' => RemiseClefTraductionType::class));
     }

@@ -1,0 +1,18 @@
+{% if form is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+{% block body %}
+    {{ form_start(form) }}
+    <div class="form-group">
+        <label class="col-sm-2 control-label required">Jours</label>
+        <div class="col-sm-10">
+            <div id="reception_jour">
+                {% for jour in form.children.jour.children %}
+                    {{ form_widget(jour,{'label': ('Jour'~jour.vars.value~'Libelle' | trans)}) }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {{ form_row(form.fournisseur, { 'label_attr' : { 'style':'display:none'},'attr' : { 'style' : 'display:none'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

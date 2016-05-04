@@ -1,0 +1,26 @@
+Mondofute\Bundle\HebergementBundle\Entity\Reception:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\ReceptionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        jour:
+            type: smallint
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+    oneToOne:
+        tranche1:
+            targetEntity: Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire
+            cascade: ['persist','remove']
+        tranche2:
+            targetEntity: Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

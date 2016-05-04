@@ -3,7 +3,12 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
+use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
+use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Hebergement
@@ -11,7 +16,7 @@ use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
 class Hebergement
 {
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @var HebergementUnifie
      */
     private $hebergementUnifie;
     /**
@@ -19,11 +24,11 @@ class Hebergement
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     * @var Station
      */
     private $station;
 
@@ -43,19 +48,23 @@ class Hebergement
      * @var TypeHebergement
      */
     private $typeHebergement;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $emplacements;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
      * Get hebergementUnifie
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @return HebergementUnifie
      */
     public function getHebergementUnifie()
     {
@@ -65,12 +74,12 @@ class Hebergement
     /**
      * Set hebergementUnifie
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergementUnifie
+     * @param HebergementUnifie $hebergementUnifie
      *
      * @return Hebergement
      */
     public function setHebergementUnifie(
-        \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergementUnifie = null
+        HebergementUnifie $hebergementUnifie = null
     ) {
         $this->hebergementUnifie = $hebergementUnifie;
 
@@ -117,11 +126,11 @@ class Hebergement
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction $traduction
+     * @param HebergementTraduction $traduction
      *
      * @return Hebergement
      */
-    public function addTraduction(\Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction $traduction)
+    public function addTraduction(HebergementTraduction $traduction)
     {
         $this->traductions[] = $traduction->setHebergement($this);
 
@@ -131,9 +140,9 @@ class Hebergement
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction $traduction
+     * @param HebergementTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction $traduction)
+    public function removeTraduction(HebergementTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -141,7 +150,7 @@ class Hebergement
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -151,11 +160,11 @@ class Hebergement
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return Hebergement
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -165,7 +174,7 @@ class Hebergement
     /**
      * Get station
      *
-     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     * @return Station
      */
     public function getStation()
     {
@@ -175,11 +184,11 @@ class Hebergement
     /**
      * Set station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return Hebergement
      */
-    public function setStation(\Mondofute\Bundle\StationBundle\Entity\Station $station = null)
+    public function setStation(Station $station = null)
     {
         $this->station = $station;
 
@@ -223,11 +232,11 @@ class Hebergement
     /**
      * Add moyenCom
      *
-     * @param \Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom
+     * @param MoyenCommunication $moyenCom
      *
      * @return Hebergement
      */
-    public function addMoyenCom(\Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom)
+    public function addMoyenCom(MoyenCommunication $moyenCom)
     {
         $this->moyenComs[] = $moyenCom;
 
@@ -237,9 +246,9 @@ class Hebergement
     /**
      * Remove moyenCom
      *
-     * @param \Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom
+     * @param MoyenCommunication $moyenCom
      */
-    public function removeMoyenCom(\Nucleus\MoyenComBundle\Entity\MoyenCommunication $moyenCom)
+    public function removeMoyenCom(MoyenCommunication $moyenCom)
     {
         $this->moyenComs->removeElement($moyenCom);
     }
@@ -277,5 +286,64 @@ class Hebergement
         $this->typeHebergement = $typeHebergement;
 
         return $this;
+    }
+
+    /**
+     * Add emplacement
+     *
+     * @param EmplacementHebergement $emplacement
+     *
+     * @return Hebergement
+     */
+    public function addEmplacement(EmplacementHebergement $emplacement)
+    {
+        $this->emplacements[] = $emplacement->setHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * tri la collection d'emplacements en fonction de leur valeur traduite grace à l'objet $translator passé en parametre)
+     * @param DataCollectorTranslator $translator
+     * @return $this
+     */
+    public function triEmplacements(DataCollectorTranslator $translator)
+    {
+        // Trier les emplacements en fonction de leurs ordre d'affichage
+        $emplacements = $this->getEmplacements(); // ArrayCollection data.
+
+        // Recueillir un itérateur de tableau.
+        $iterator = $emplacements->getIterator();
+        unset($emplacements);
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (EmplacementHebergement $a, EmplacementHebergement $b) use ($translator) {
+            $libelle1 = $translator->trans(((string)$a->getTypeEmplacement()) . 'Libelle');
+            $libelle2 = $translator->trans(((string)$b->getTypeEmplacement()) . 'Libelle');
+            return strcmp($libelle1, $libelle2);
+        });
+        // passer le tableau trié dans une nouvelle collection
+        $this->emplacements = new ArrayCollection(iterator_to_array($iterator));
+        return $this;
+    }
+
+    /**
+     * Get emplacements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEmplacements()
+    {
+        return $this->emplacements;
+    }
+
+    /**
+     * Remove emplacement
+     *
+     * @param EmplacementHebergement $emplacement
+     */
+    public function removeEmplacement(EmplacementHebergement $emplacement)
+    {
+        $this->emplacements->removeElement($emplacement);
     }
 }

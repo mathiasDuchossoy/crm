@@ -1,0 +1,18 @@
+Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\TrancheHoraireBundle\Repository\TrancheHoraireRepository
+    id:
+        id:
+            type: bigint
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        debut:
+            type: time
+        fin:
+            type: time
+    lifecycleCallbacks: {  }

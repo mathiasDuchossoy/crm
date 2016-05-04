@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * TypeHebergementUnifie
  */
@@ -21,7 +23,7 @@ class TypeHebergementUnifie
      */
     public function __construct()
     {
-        $this->typeHebergements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->typeHebergements = new ArrayCollection();
     }
 
     /**
@@ -37,11 +39,11 @@ class TypeHebergementUnifie
     /**
      * Add typeHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typeHebergement
+     * @param TypeHebergement $typeHebergement
      *
      * @return TypeHebergementUnifie
      */
-    public function addTypeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typeHebergement)
+    public function addTypeHebergement(TypeHebergement $typeHebergement)
     {
         $this->typeHebergements[] = $typeHebergement->setTypeHebergementUnifie($this);
 
@@ -51,9 +53,9 @@ class TypeHebergementUnifie
     /**
      * Remove typeHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typeHebergement
+     * @param TypeHebergement $typeHebergement
      */
-    public function removeTypeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $typeHebergement)
+    public function removeTypeHebergement(TypeHebergement $typeHebergement)
     {
         $this->typeHebergements->removeElement($typeHebergement);
     }
