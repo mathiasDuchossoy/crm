@@ -308,7 +308,7 @@ class Hebergement
      * @param DataCollectorTranslator $translator
      * @return $this
      */
-    public function triEmplacements(DataCollectorTranslator $translator)
+    public function triEmplacements($translator)
     {
         // Trier les emplacements en fonction de leurs ordre d'affichage
         $emplacements = $this->getEmplacements(); // ArrayCollection data.
