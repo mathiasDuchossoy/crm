@@ -1,4 +1,4 @@
-Mondofute\Bundle\UtilisateurBundle\Entity\User:
+Mondofute\Bundle\CoreBundle\Entity\User:
     type: entity
     table: user
     inheritanceType: JOINED
@@ -6,9 +6,10 @@ Mondofute\Bundle\UtilisateurBundle\Entity\User:
         name: type
         type: string
     discriminatorMap:
-        utilisateur_user: UtilisateurUser
+#        utilisateur_user: UtilisateurUser
+        utilisateur_user: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
 #        client_user: ClientUser
-    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UserRepository
+    repositoryClass: Mondofute\Bundle\CoreBundle\Repository\UserRepository
     id:
         id:
             type: integer

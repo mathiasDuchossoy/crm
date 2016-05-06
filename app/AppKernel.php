@@ -33,6 +33,7 @@ class AppKernel extends Kernel
             new Nucleus\ContactBundle\NucleusContactBundle(),
             new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
