@@ -20,8 +20,6 @@ class UtilisateurType extends AbstractType
         $builder
             ->add('prenom')
             ->add('nom')
-            ->add('login')
-            ->add('password')
             ->add('moyenComs', 'infinite_form_polycollection', array(
                 'types' => array(
                     'nucleus_moyencombundle_email',

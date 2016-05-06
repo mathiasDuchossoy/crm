@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\UtilisateurBundle\Entity;
+namespace Mondofute\Bundle\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;

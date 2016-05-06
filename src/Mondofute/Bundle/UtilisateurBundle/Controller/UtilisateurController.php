@@ -2,8 +2,8 @@
 
 namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
-use DateTime;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
 use ReflectionClass;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
-use Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurType;
 
 /**
  * Utilisateur controller.
@@ -27,7 +26,7 @@ class UtilisateurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $utilisateurs = $em->getRepository('MondofuteUtilisateurBundle:Utilisateur')->findAll();
+        $utilisateurs = $em->getRepository('MondofuteUtilisateurBundle:UtilisateurUser')->findAll();
 
         return $this->render('@MondofuteUtilisateur/utilisateur/index.html.twig', array(
             'utilisateurs' => $utilisateurs,
@@ -40,10 +39,16 @@ class UtilisateurController extends Controller
      */
     public function newAction(Request $request)
     {
+
+
         /** @var Site $site */
+        $utilisateurUser = new UtilisateurUser();
+
         $utilisateur = new Utilisateur();
+
+        $utilisateurUser->setUtilisateur($utilisateur);
         $this->addMoyenComs($utilisateur);
-        $form = $this->createForm('Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurType', $utilisateur);
+        $form = $this->createForm('Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType', $utilisateurUser);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
@@ -58,41 +63,50 @@ class UtilisateurController extends Controller
 
                 if ($typeComm == 'Email' && empty($login)) {
                     $login = $moyenCom->getAdresse();
-                    $utilisateur->setLogin($login);
+                    $utilisateurUser
+                        ->setUsername($login)
+                        ->setEmail($login);
                 }
             }
             $utilisateur->setDateCreation();
 
-            if (!$this->loginExist($utilisateur)) {
-                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                foreach ($sites as $site) {
-                    $utilisateurClone = clone $utilisateur;
-                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-
-                    $this->dupliquerMoyenComs($utilisateur);
-
-                    $emSite->persist($utilisateurClone);
-
-                    $emSite->flush();
-                }
+            if (!$this->loginExist($utilisateurUser)) {
+//                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+//                foreach ($sites as $site) {
+//                    $utilisateurClone = clone $utilisateur;
+//                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+//
+//                    $this->dupliquerMoyenComs($utilisateur);
+//
+//                    $emSite->persist($utilisateurClone);
+//
+//                    $emSite->flush();
+//                }
 
                 $em->persist($utilisateur);
+                $em->persist($utilisateurUser);
 
                 $em->flush();
 
                 // add flash messages
                 $this->addFlash(
                     'success',
-                    'Le utilisateur ' . $utilisateur->getLogin() . ' a bien été créé.'
+                    'L\'utilisateur ' . $utilisateurUser->getUsername() . ' a bien été créé.'
                 );
 
-                return $this->redirectToRoute('utilisateur_edit', array('id' => $utilisateur->getId()));
+                return $this->redirectToRoute('utilisateur_edit', array('id' => $utilisateurUser->getId()));
             }
 
         }
 
+
+//        return $this->container
+//            ->get('pugx_multi_user.registration_manager')
+//            ->register('Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser')
+//            ;
+
         return $this->render('@MondofuteUtilisateur/utilisateur/new.html.twig', array(
-            'utilisateur' => $utilisateur,
+            'utilisateur' => $utilisateurUser,
             'form' => $form->createView(),
         ));
     }
@@ -106,20 +120,155 @@ class UtilisateurController extends Controller
             ->addMoyenCom(new Email());
     }
 
-    private function loginExist(Utilisateur $utilisateur)
+    private function loginExist(UtilisateurUser $utilisateurUser)
     {
 
         $em = $this->getDoctrine()->getEntityManager();
-        $utilisateurSite = $em->getRepository(Utilisateur::class)->findOneBy(array('login' => $utilisateur->getLogin()));
-        if (!empty($utilisateurSite) && $utilisateur != $utilisateurSite) {
+        $utilisateurUserSite = $em->getRepository(UtilisateurUser::class)->findOneBy(array('username' => $utilisateurUser->getUsername()));
+        if (!empty($utilisateurUserSite) && $utilisateurUser != $utilisateurUserSite) {
             $this->addFlash(
                 'error',
-                'Le Login/Email ' . $utilisateur->getLogin() . ' éxiste déjà.'
+                'Le Login/Email ' . $utilisateurUser->getUsername() . ' éxiste déjà.'
             );
-
+//die;
             return true;
         }
         return false;
+    }
+
+    /**
+     * Finds and displays a Utilisateur entity.
+     *
+     */
+    public function showAction(UtilisateurUser $utilisateurUser)
+    {
+        $deleteForm = $this->createDeleteForm($utilisateurUser);
+
+        return $this->render('@MondofuteUtilisateur/utilisateur/show.html.twig', array(
+            'utilisateur' => $utilisateurUser,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Creates a form to delete a Utilisateur entity.
+     *
+     * @param Utilisateur $utilisateur The Utilisateur entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(UtilisateurUser $utilisateurUser)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('utilisateur_delete', array('id' => $utilisateurUser->getId())))
+            ->add('Supprimer', SubmitType::class)
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
+     * Displays a form to edit an existing Utilisateur entity.
+     *
+     */
+    public function editAction(Request $request, UtilisateurUser $utilisateurUser)
+    {
+        $utilisateur = $utilisateurUser->getUtilisateur();
+        $deleteForm = $this->createDeleteForm($utilisateurUser);
+        $editForm = $this->createForm('Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType', $utilisateurUser)
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+//            $dateModification = new DateTime();
+
+//            $utilisateur->setDateModification($dateModification);
+            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
+//                $moyenCom->setDateModification($dateModification);
+                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+
+                if ($typeComm == 'Email' && empty($login)) {
+                    $login = $moyenCom->getAdresse();
+                    $utilisateurUser
+                        ->setUsername($login)
+                        ->setEmail($login);
+                }
+            }
+
+            if (!$this->loginExist($utilisateurUser)) {
+
+                $em = $this->getDoctrine()->getManager();
+
+//                $this->majSites($utilisateur);
+
+                $em->persist($utilisateurUser);
+                $em->persist($utilisateur);
+                $em->flush();
+
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le utilisateur ' . $utilisateurUser->getUsername() . ' a bien été modifié.'
+                );
+
+                return $this->redirectToRoute('utilisateur_edit', array('id' => $utilisateurUser->getId()));
+            }
+        }
+
+        return $this->render('@MondofuteUtilisateur/utilisateur/edit.html.twig', array(
+            'utilisateur' => $utilisateurUser,
+            'form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a Utilisateur entity.
+     *
+     */
+    public function deleteAction(Request $request, UtilisateurUser $utilisateurUser)
+    {
+        $utilisateur = $utilisateurUser->getUtilisateur();
+        $form = $this->createDeleteForm($utilisateurUser);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+            foreach ($sites as $site) {
+                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser->getId());
+//                die;
+                if (!empty($utilisateurUserSite)) {
+                    $utilisateurSite = $utilisateurUser->getUtilisateur();
+                    foreach ($utilisateurSite->getMoyenComs() as $moyenComSite) {
+                        $utilisateurSite->removeMoyenCom($moyenComSite);
+                        $emSite->remove($moyenComSite);
+                    }
+
+                    $emSite->flush();
+
+                    $emSite->remove($utilisateurUserSite);
+                    $emSite->remove($utilisateurSite);
+                    $emSite->flush();
+                }
+
+            }
+
+            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
+                $utilisateur->removeMoyenCom($moyenCom);
+                $em->remove($moyenCom);
+            }
+
+            $em->flush();
+
+            $em->remove($utilisateur);
+            $em->remove($utilisateurUser);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('utilisateur_index');
     }
 
     private function dupliquerMoyenComs(Utilisateur $utilisateur)
@@ -145,88 +294,6 @@ class UtilisateurController extends Controller
         }
     }
 
-    /**
-     * Finds and displays a Utilisateur entity.
-     *
-     */
-    public function showAction(Utilisateur $utilisateur)
-    {
-        $deleteForm = $this->createDeleteForm($utilisateur);
-
-        return $this->render('@MondofuteUtilisateur/utilisateur/show.html.twig', array(
-            'utilisateur' => $utilisateur,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Creates a form to delete a Utilisateur entity.
-     *
-     * @param Utilisateur $utilisateur The Utilisateur entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Utilisateur $utilisateur)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('utilisateur_delete', array('id' => $utilisateur->getId())))
-            ->add('Supprimer', SubmitType::class)
-            ->setMethod('DELETE')
-            ->getForm();
-    }
-
-    /**
-     * Displays a form to edit an existing Utilisateur entity.
-     *
-     */
-    public function editAction(Request $request, Utilisateur $utilisateur)
-    {
-        $deleteForm = $this->createDeleteForm($utilisateur);
-        $editForm = $this->createForm('Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurType', $utilisateur)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            $dateModification = new DateTime();
-
-            $utilisateur->setDateModification($dateModification);
-            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
-                $moyenCom->setDateModification($dateModification);
-                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-
-                if ($typeComm == 'Email' && empty($login)) {
-                    $login = $moyenCom->getAdresse();
-                    $utilisateur->setLogin($login);
-                }
-            }
-
-            if (!$this->loginExist($utilisateur)) {
-
-                $em = $this->getDoctrine()->getManager();
-
-                $this->majSites($utilisateur);
-
-                $em->persist($utilisateur);
-                $em->flush();
-
-                // add flash messages
-                $this->addFlash(
-                    'success',
-                    'Le utilisateur ' . $utilisateur->getLogin() . ' a bien été modifié.'
-                );
-
-                return $this->redirectToRoute('utilisateur_edit', array('id' => $utilisateur->getId()));
-            }
-        }
-
-        return $this->render('@MondofuteUtilisateur/utilisateur/edit.html.twig', array(
-            'utilisateur' => $utilisateur,
-            'form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
     private function majSites(Utilisateur $utilisateur)
     {
         /** @var Site $site */
@@ -236,11 +303,11 @@ class UtilisateurController extends Controller
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
             $utilisateurSite = $emSite->find(Utilisateur::class, $utilisateur);
             $utilisateurSite
-                ->setPassword($utilisateur->getPassword())
-                ->setLogin($utilisateur->getPassword())
+//                ->setPassword($utilisateur->getPassword())
+//                ->setLogin($utilisateur->getPassword())
                 ->setNom($utilisateur->getNom())
                 ->setPrenom($utilisateur->getPrenom());
-            $utilisateurSite->setDateModification($utilisateur->getDateModification());
+//            $utilisateurSite->setDateModification($utilisateur->getDateModification());
 
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -254,8 +321,8 @@ class UtilisateurController extends Controller
                         /** @var Email $email */
                         foreach ($moyenComSite as $key => $email) {
                             $moyenComSite->get($key)
-                                ->setAdresse($moyenCom->getAdresse())
-                                ->setDateModification($moyenCom->getDateModification());
+                                ->setAdresse($moyenCom->getAdresse())//                                ->setDateModification($moyenCom->getDateModification())
+                            ;
                         }
                         break;
                     default:
@@ -266,47 +333,5 @@ class UtilisateurController extends Controller
             $emSite->persist($utilisateurSite);
             $emSite->flush();
         }
-    }
-
-    /**
-     * Deletes a Utilisateur entity.
-     *
-     */
-    public function deleteAction(Request $request, Utilisateur $utilisateur)
-    {
-        $form = $this->createDeleteForm($utilisateur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-                $utilisateurSite = $emSite->find(Utilisateur::class, $utilisateur);
-
-                foreach ($utilisateurSite->getMoyenComs() as $moyenComSite) {
-                    $utilisateurSite->removeMoyenCom($moyenComSite);
-                    $emSite->remove($moyenComSite);
-                }
-
-                $emSite->flush();
-
-                $emSite->remove($utilisateurSite);
-                $emSite->flush();
-            }
-
-            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
-                $utilisateur->removeMoyenCom($moyenCom);
-                $em->remove($moyenCom);
-            }
-
-            $em->flush();
-
-            $em->remove($utilisateur);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('utilisateur_index');
     }
 }

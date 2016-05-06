@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mondofute\Bundle\CoreBundle\Entity\User as User;
 
 /**
  * UtilisateurUser

@@ -10,7 +10,8 @@ pugx_multi_user:
                     type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
                     name: fos_user_registration_form
                     validation_groups:  [Registration, Default]
-                template: MondofuteUtilisateurBundle:Registration:utilisateur_user.html.twig
+#                template: MondofuteUtilisateurBundle:Registration:utilisateur_user.html.twig
+                template: MondofuteUtilisateurBundle:utilisateur:fiche.html.twig
             profile:
                 form:
 #                    type: Mondofute\Bundle\UtilisateurBundle\Form\Type\ProfileUtilisateurUserFormType
