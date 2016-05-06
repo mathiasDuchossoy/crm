@@ -33,6 +33,7 @@ class AppKernel extends Kernel
             new Nucleus\ContactBundle\NucleusContactBundle(),
             new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
             new Mondofute\Bundle\CatalogueBundle\MondofuteCatalogueBundle(),
             new Mondofute\Bundle\HebergementBundle\MondofuteHebergementBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),

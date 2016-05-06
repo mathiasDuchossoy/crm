@@ -10,10 +10,6 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>Login</th>
-            <th>Password</th>
-            <th>Vip</th>
-            <th>Datenaissance</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -21,8 +17,8 @@
         {% for utilisateur in utilisateurs %}
             <tr>
                 <td><a href="{{ path('utilisateur_show', { 'id': utilisateur.id }) }}">{{ utilisateur.id }}</a></td>
-                <td>{{ utilisateur.login }}</td>
-                <td>{{ utilisateur.password }}</td>
+                {#<td>{{ utilisateur.login }}</td>#}
+                {#<td>{{ utilisateur.password }}</td>#}
                 <td>
                     <ul class="list-unstyled">
                         <li>

@@ -1,3 +1,7 @@
+mondofute_core:
+    resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_utilisateur:
     resource: "@MondofuteUtilisateurBundle/Resources/config/routing.yml"
     prefix:   /

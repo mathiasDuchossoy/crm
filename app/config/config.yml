@@ -169,7 +169,7 @@ swiftmailer:
 assetic:
     debug:  true
     use_controller: false
-    bundles: []
+#    bundles: ['FOSUserBundle']
     filters:
         cssrewrite: ~
         lessphp:
@@ -234,7 +234,7 @@ sc_datetimepicker:
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\User
+    user_class: Mondofute\Bundle\CoreBundle\Entity\User
     service:
         user_manager: pugx_user_manager
     registration:

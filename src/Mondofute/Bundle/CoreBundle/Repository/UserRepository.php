@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\UtilisateurBundle\Repository;
+namespace Mondofute\Bundle\CoreBundle\Repository;
 
 /**
  * UserRepository

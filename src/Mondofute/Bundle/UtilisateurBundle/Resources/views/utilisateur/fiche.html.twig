@@ -12,9 +12,9 @@
             {% include '::flashbags.html.twig' %}
 
             {{ form_start(form) }}
-            {{ form_row(form.nom) }}
-            {{ form_row(form.prenom) }}
-            {% for moyenCom in form.moyenComs %}
+            {{ form_row(form.utilisateur.prenom) }}
+            {{ form_row(form.utilisateur.nom) }}
+            {% for moyenCom in form.utilisateur.moyenComs %}
                 {% set typeMoyenCom = moyenCom.vars.type %}
                 {% if typeMoyenCom == 'Email' %}
                     {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
@@ -22,12 +22,16 @@
                     {{ form_row(moyenCom) }}
                 {% endif %}
             {% endfor %}
-            {{ form_row(form.password) }}
+            {#{{ form_row(form.email) }}#}
+            {#{{ form_row(form.username) }}#}
+            {{ form_row(form.plainPassword) }}
+            {{ form_row(form.enabled) }}
 
             {{ form_row(form.submit) }}
 
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
+            {#{{ form_end(form) }}#}
 
         {% endblock %}
     </section>
