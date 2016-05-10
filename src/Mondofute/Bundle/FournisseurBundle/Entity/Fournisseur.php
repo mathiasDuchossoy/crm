@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 
@@ -131,8 +132,9 @@ class Fournisseur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur
      */
-    public function removeInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
-    {
+    public function removeInterlocuteur(
+        \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur
+    ) {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
 
@@ -262,8 +264,9 @@ class Fournisseur
      *
      * @return Fournisseur
      */
-    public function setFournisseurParent(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent = null)
-    {
+    public function setFournisseurParent(
+        \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent = null
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;

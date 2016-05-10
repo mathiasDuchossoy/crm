@@ -64,7 +64,11 @@ class RemiseClefType extends AbstractType
                 'minutes' => $minutes,
             ))
             ->add('standard')
-            ->add('traductions', CollectionType::class, array('entry_type' => RemiseClefTraductionType::class));
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => RemiseClefTraductionType::class,
+                'allow_add' => true,
+                'prototype_name' => '__tradname__'
+            ));
     }
 
     /**

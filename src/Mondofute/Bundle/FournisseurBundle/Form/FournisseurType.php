@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Form;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,7 +45,13 @@ class FournisseurType extends AbstractType
                     'allow_add' => true,
                     'allow_delete' => true,
                 )
-            );
+            )
+            ->add('remiseClefs', CollectionType::class, array(
+                'entry_type' => RemiseClefType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ));
     }
 
     /**
