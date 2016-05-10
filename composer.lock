@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c3b9c1e842214550b419f7967ee6b8a0",
-    "content-hash": "faeaf9aa31aaa6ef280d482fcd0b1b75",
+    "hash": "b3978cda0c794142976421f63077d183",
+    "content-hash": "f6d835d259d305896ad5f8d0394014a4",
     "packages": [
         {
             "name": "components/jquery",
@@ -868,16 +868,16 @@
         },
         {
             "name": "infinite-networks/form-bundle",
-            "version": "1.0.6",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinite-networks/InfiniteFormBundle.git",
-                "reference": "98fe48bbfe634d0ec7ba2b1534b1902ca9a169c1"
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/98fe48bbfe634d0ec7ba2b1534b1902ca9a169c1",
-                "reference": "98fe48bbfe634d0ec7ba2b1534b1902ca9a169c1",
+                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/dcf3168890847e40440a577f34f87b95cbb1cca9",
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9",
                 "shasum": ""
             },
             "require": {
@@ -920,7 +920,7 @@
                 }
             ],
             "description": "A collection of useful form types and extensions for Symfony2",
-            "time": "2016-05-05 00:30:30"
+            "time": "2015-11-26 08:17:47"
         },
         {
             "name": "ircmaxell/password-compat",
