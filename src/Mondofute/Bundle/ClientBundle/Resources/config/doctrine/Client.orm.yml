@@ -1,13 +1,13 @@
-Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
+Mondofute\Bundle\ClientBundle\Entity\Client:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurRepository
+    repositoryClass: Mondofute\Bundle\ClientBundle\Repository\ClientRepository
     associationOverride:
         moyenComs:
             joinTable:
-                name: utilisateur_moyenscom
+                name: client_moyenscom
                 joinColumns:
-                    utilisateur_id:
+                    client_id:
                         referencedColumnName: id
                 inverseJoinColumns:
                     moyencom_id:
@@ -18,15 +18,29 @@ Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
             cascade: [ "persist", "remove" ]
             onDelete: CASCADE
             orphanRemoval: true
+#    manyToMany:
         nationalites:
             nullable: true
             targetEntity: Nationalite
             joinTable:
-                name: utilisateur_nationalite
+                name: client_nationalite
                 joinColumns:
                     physique_id:
                         referencedColumnName: id
                 inverseJoinColumns:
                     nationalite_id:
                         referencedColumnName: id
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    fields:
+        vip:
+            type: boolean
+        dateNaissance:
+            type: date
     lifecycleCallbacks: {  }
