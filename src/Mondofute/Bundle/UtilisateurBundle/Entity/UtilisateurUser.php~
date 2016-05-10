@@ -1,0 +1,59 @@
+<?php
+
+namespace Mondofute\Bundle\UtilisateurBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UtilisateurUser
+ */
+class UtilisateurUser extends User
+{
+    /**
+     * @var int
+     */
+    protected $id;
+    /**
+     * @var string
+     */
+    protected $name;
+    /**
+     * @var \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+     */
+    private $utlisateur;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return UtilisateurUser
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+}
