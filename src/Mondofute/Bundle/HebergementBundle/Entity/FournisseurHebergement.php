@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Nucleus\MoyenComBundle\Entity\Adresse;
@@ -64,6 +65,7 @@ class FournisseurHebergement
         $this->telFixe->setDateCreation();
         $this->telMobile = new TelMobile();
         $this->telMobile->setDateCreation();
+        $this->receptions = new ArrayCollection();
     }
 
     /**

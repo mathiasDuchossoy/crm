@@ -1,0 +1,91 @@
+<div class="form-group row">
+    <div class="col-sm-12">
+        {#{{ dump(remiseClef) }}#}
+        {{ form_label(form.fournisseur) }}
+        {{ form_widget(form.fournisseur) }}
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.libelle,null,{ 'label': form.libelle.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.libelle) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureRemiseClefLongSejour,null,{ 'label': form.heureRemiseClefLongSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureRemiseClefLongSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureRemiseClefCourtSejour,null,{ 'label': form.heureRemiseClefCourtSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureRemiseClefCourtSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureDepartLongSejour,null,{ 'label': form.heureDepartLongSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureDepartLongSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureDepartCourtSejour,null,{ 'label': form.heureDepartCourtSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureDepartCourtSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureTardiveLongSejour,null,{ 'label': form.heureTardiveLongSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureTardiveLongSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                {{ form_label(form.heureTardiveCourtSejour,null,{ 'label': form.heureTardiveCourtSejour.vars['name'] | trans, 'attr':{'class':'col-sm-2'}}) }}
+                <div class="col-sm-9">
+                    {{ form_widget(form.heureTardiveCourtSejour) }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {{ form_row(form.standard) }}
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs" role="tablist">
+                {% for langue in langues %}
+                    <li role="tab" class="{% if loop.index0 == 0 %}active{% endif %}"><a data-toggle="tab"
+                                                                                         aria-expanded="true"
+                                                                                         href="#{{ form.vars['id'] }}_traduction_{{ loop.index0 }}">
+                            {% for traduction in langue.traductions %}
+                                {% if(traduction.langueTraduction.code == app.request.locale) %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </a></li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content" id="{{ form.vars['id'] }}_traductions">
+                {% for traduction in form.traductions %}
+                    {% if(loop.index0 == 0) %}
+                        {% set active = 'active' %}
+                    {% else %}
+                        {% set active = '' %}
+                    {% endif %}
+                    {% include '@MondofuteRemiseClef/remiseclef/prototype_traduction.html.twig' with {'idRemiseClef': form.vars['id'], 'form' : traduction, 'active': active, 'indexLangue' : loop.index0} %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,8 +16,60 @@
             {{ form_row(form.enseigne) }}
             {{ form_row(form.fournisseurParent) }}
             {{ form_row(form.contient) }}
-
-
+            {#{{ form_row(form.remiseClefs) }}#}
+            <div class="form-group ">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-sm-11"
+                                 onclick="var $remiseClefs = $('#remiseClefs');($remiseClefs.is(':visible'))?$remiseClefs.hide():$remiseClefs.show()">
+                                {{ form_label(form.remiseClefs) }}
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="btn btn-default" type="button"
+                                        onclick="afficherModaleAjouterRemiseClef()">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
+                    <div class="panel-body" id="remiseClefs" data-nb-remise-clef="{{ form.remiseClefs|length }}"
+                         data-prototype-traduction="
+                         {% filter escape %}
+        {% include '@MondofuteRemiseClef/remiseclef/prototype_traduction.html.twig' with { 'form': form.remiseClefs.vars['prototype'].traductions.vars['prototype'], 'idRemiseClef': '__idRemiseClef__', 'active':'__active__', 'indexLangue' : '__indexLangue__'} %}
+    {% endfilter %}
+                         "
+                         data-prototype="
+                    {% filter escape %}
+        {% include '@MondofuteRemiseClef/remiseclef/prototype.html.twig' with { 'form': form.remiseClefs.vars['prototype'] } %}
+    {% endfilter %}
+                    ">
+                        {% for remiseClef in form.remiseClefs %}
+                            <div class="row" id="contenuRemiseClef_{{ remiseClef.vars.name }}">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-10"
+                                         id="remiseClef_{{ remiseClef.vars.name }}_libelle">{{ remiseClef.vars.value.libelle }}</div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-default" type="button"
+                                                onclick="afficherModaleModifierRemiseClef({{ remiseClef.vars.name }});">
+                                            modifier
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-default" type="button"
+                                                onclick="supprimerRemiseClef({{ remiseClef.vars.name }});">supprimer
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="formRemiseClef_{{ remiseClef.vars.name }}" style="display:none;">
+                                    {% include '@MondofuteRemiseClef/remiseclef/prototype.html.twig' with { 'form': remiseClef } %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
             <div id="interlocuteur_panels">
                 {% for serviceInterlocuteur in serviceInterlocuteurs %}
                     <div class="panel panel-primary">
@@ -122,7 +174,34 @@
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="remiseClefModal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel"></h4>
+                        </div>
+                        <div class="modal-body" id="contenuAjoutRemiseClef">
 
+                        </div>
+                        <div class="modal-body" id="modal-remise-clef-error"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            {#<button onclick="ajouterInterlocuteur();" id="ajout_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">#}
+                            <button onclick="ajouterRemiseClef();" data-index="" id="ajouterRemiseClef" type="button"
+                                    class="btn btn-primary">
+                                {{ 'ajouter' | trans }}
+                            </button>
+                            <button onclick="modifierRemiseClef();" data-index="" id="modifierRemiseClef" type="button"
+                                    class="btn btn-primary">
+                                {{ 'modifier' | trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endblock %}
     </section>
     <section>
@@ -147,7 +226,117 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        var _langues = {{ langues | serialize('json') | raw }};
+        function supprimerRemiseClef(index) {
+            $('#contenuRemiseClef_' + index).remove();
+        }
+        function modifierRemiseClef() {
+            var index = $('#modifierRemiseClef').attr('data-index');
+            var $formRemiseClef = $('#formRemiseClef_' + index);
+            var $remiseClefModal = $('#remiseClefModal');
+            $formRemiseClef.html('');
+            $formRemiseClef.append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
+            $('#remiseClef_' + index + '_libelle').html($('#fournisseur_remiseClefs_' + index + '_libelle').val());
+            $remiseClefModal.modal('hide');
+        }
+        function cloneFormulaire($form) {
+            var prefixe = '_deepcloned';
+//            copy jquery de l'element
+            $dest = $form.clone();
+//            duplique les select
+            $selects = $form.find('select');
+            $selects.each(function () {
+                $dest.find('#' + $(this).attr('id')).val($(this).val());
+            });
+//            duplique les textareas
+            $textareas = $form.find('textarea');
+            $textareas.each(function () {
+                $dest.find('#' + $(this).attr('id')).val($(this).val());
+            });
+//            gestion des onglets pour ne pas avoir de rédondance d'id et assurer le bon fonctionnement des onglets
+            $tabs = $dest.find('.tab-pane');
+            $tabs.each(function () {
+                $dest.find('li [href="#' + $(this).attr('id') + '"]').attr('href', '#' + $(this).attr('id') + prefixe);
+                $(this).attr('id', $(this).attr('id') + prefixe);
+            });
+//            fin gestion des onglets
+            return $dest;
+        }
+        function afficherModaleModifierRemiseClef(index) {
+            var $remiseClefModal = $('#remiseClefModal');
+            $form = $('#formRemiseClef_' + index + ' div:first');
+            $copy = cloneFormulaire($form);
+            $('#modal-remise-clef-error').html('');
+            $remiseClefModal.find('#contenuAjoutRemiseClef').html('');
+            $('#contenuAjoutRemiseClef').append($copy);
+            $('#ajouterRemiseClef').css('display', 'none');
+            $('#modifierRemiseClef').attr('data-index', index).css('display', '');
+            $remiseClefModal.find('.modal-title').html('{{ 'modifier.remise.clef' | trans }}');
+            $remiseClefModal.modal('show');
 
+        }
+        function afficherModaleAjouterRemiseClef() {
+            var i = 0;
+            var active = '';
+            var traduction = '';
+            var $remiseClefs = $('#remiseClefs');
+            var $remiseClefModal = $('#remiseClefModal');
+            var index = $remiseClefs.attr('data-nb-remise-clef');
+            var prototype = $remiseClefs.attr('data-prototype');
+            var prototypeTraduction = $remiseClefs.attr('data-prototype-traduction');
+            $('#modal-remise-clef-error').html('');
+//            gestion des langues et création du formulaire à partir du prototype
+            prototype = prototype.replace(/__name__/g, index);
+
+//            mise en forme de la traduction
+            for (i = 0; i < _langues.length; i++) {
+                if (i == 0) {
+                    active = 'active';
+                } else {
+                    active = '';
+                }
+                traduction += prototypeTraduction.replace(/__idRemiseClef__/g, 'fournisseur_remiseClefs_' + index).replace(/__indexLangue__/g, i).replace(/__name__/g, index).replace(/__tradname__/g, i).replace(/__active__/g, active);
+            }
+            $remiseClefModal.find('#contenuAjoutRemiseClef').html(prototype);
+            $('#fournisseur_remiseClefs_' + index + '_fournisseur option[value="{{ form.vars.value.id }}"]').attr('selected', 'selected');
+            $('#fournisseur_remiseClefs_' + index + '_traductions').append(traduction);
+
+//            selection de la langue
+            for (i = 0; i < _langues.length; i++) {
+                $('#fournisseur_remiseClefs_' + index + '_traductions').find('#fournisseur_remiseClefs_' + index + '_traductions_' + i + '_langue option[value="' + _langues[i].id + '"]').attr('selected', 'selected');
+            }
+            $('#ajouterRemiseClef').attr('data-index', index).css('display', '');
+            $('#modifierRemiseClef').css('display', 'none');
+            $remiseClefModal.find('.modal-title').html('{{ 'ajouter.remise.clef' | trans }}');
+            $remiseClefModal.modal().show();
+        }
+        function ajouterRemiseClef() {
+
+            if (remiseClefValidation() == true) {
+                var index = $('#ajouterRemiseClef').attr('data-index');
+//                var $remiseClef = $('#fournisseur_remiseClefs_' + index);
+                var $remiseClef = $('#remiseClefs');
+                var $remiseClefModal = $('#remiseClefModal');
+                var contenuRemiseClef =
+                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');">modifier</button></div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');">supprimer</button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
+                $remiseClef.append($(contenuRemiseClef));
+                $('#formRemiseClef_' + index).append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
+                $remiseClef.attr('data-nb-remise-clef', (parseInt(index) + 1));
+                $remiseClefModal.modal('hide');
+            } else {
+                $('#modal-remise-clef-error').html('<div class="alert alert-danger">renseigner les champs obligatoires</div>');
+            }
+        }
+        function remiseClefValidation() {
+            var valide = true;
+            $('#remiseClefModal').find('[required="required"]').each(function () {
+                if ($(this).val() == '') {
+                    $(this).attr('style', 'border: 1px solid red;');
+                    valide = false;
+                }
+            });
+            return valide;
+        }
         function refuserToucheEntree(event) {
 // Compatibilité IE / Firefox
             if (!event && window.event) {
