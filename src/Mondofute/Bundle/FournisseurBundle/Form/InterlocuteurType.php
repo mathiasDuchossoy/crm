@@ -6,10 +6,13 @@ use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Repository\InterlocuteurFonctionRepository;
 use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository;
+use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InterlocuteurType extends AbstractType
@@ -75,6 +78,28 @@ class InterlocuteurType extends AbstractType
             'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur',
             'locale' => 'fr_FR'
         ));
+    }
+
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $cViewComm = [];
+        foreach ($view->children['moyenComs']->children as $viewMoyenComs) {
+            $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
+            $viewMoyenComs->vars['type'] = $typeComm;
+            $viewMoyenComs->vars['label'] = $typeComm;
+            if (empty($cViewComm[$typeComm])) {
+                $cViewComm[$typeComm] = [];
+            }
+            array_push($cViewComm[$typeComm], $viewMoyenComs);
+        }
+        foreach ($cViewComm as $viewCom) {
+            foreach ($viewCom as $key => $com) {
+                if ($key > 0) {
+                    $com->vars['label'] = $com->vars['label'] . ' ' . ($key + 1);
+                }
+            }
+        }
     }
 
 //    public function finishView(FormView $view, FormInterface $form, array $options)
