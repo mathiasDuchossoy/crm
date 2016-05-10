@@ -192,8 +192,8 @@
             {% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}
             {% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
-            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe , { 'label' : 'Télephone __number__' }) %}
-            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_mobile , { 'label' : 'Mobile' }) %}
+            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , { 'label' : 'Télephone __number__' }) %}
+            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile , { 'label' : 'Mobile' }) %}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
             {#<div id="values-interlocuteurs" style="">#}
             <div id="values-interlocuteurs" style="display: none">
@@ -727,14 +727,12 @@
                 return false;
             }
 
-            var interlocuteurModal = $('#interlocuteurModal');
-            interlocuteurModal.modal('hide');
-            var interlocuteur = {
-                prenom: interlocuteurModal.find('.modal-body [id$="_prenom"]').val(),
-                nom: interlocuteurModal.find('.modal-body [id$="_nom"]').val(),
-                fonction: interlocuteurModal.find('.modal-body [id$="_fonction"]').val(),
-                service: interlocuteurModal.find('.modal-body [id$="_service"]').val()
-            };
+            var $interlocuteurModal = $('#interlocuteurModal');
+            $interlocuteurModal.modal('hide');
+
+            var interlocuteur = getDataIntelocuteurModal();
+            console.log(interlocuteur);
+
             var fonction = '';
             if (interlocuteur.fonction) {
                 fonction = $interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
@@ -776,14 +774,11 @@
                 adresse3: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_adresse3"]').val(),
                 ville: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_ville"]').val(),
                 pays: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_pays"]').val(),
-                latitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(),
-                longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(),
-                precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(),
-                mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val()
-                prenom: $divFournisseurInterlocuteur.find('[id$="_prenom"]').val(),
-                nom: $divFournisseurInterlocuteur.find('[id$="_nom"]').val(),
-                fonction: $divFournisseurInterlocuteur.find('[id$="_fonction"]').val(),
-                service: $divFournisseurInterlocuteur.find('[id$="_service"]').val()
+                latitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_latitude"]').val(),
+                longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
+                precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
+                mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
+                smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val()
             };
 
 
@@ -791,7 +786,7 @@
             if (interlocuteur.service) {
                 service = $divFournisseurInterlocuteur.find('[id$="service"] option[value=\'' + interlocuteur.service + '\']').text();
             }
-            $interlocuteurModal.find('.modal-title').text('Modifier intelocuteur pour le service ' + service);
+            $interlocuteurModal.find('.modal-title').text('Modifier interlocuteur pour le service ' + service);
 
             $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
 
@@ -818,10 +813,11 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse3"]').val(interlocuteur.adresse3);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_ville"]').val(interlocuteur.ville);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_pays"]').val(interlocuteur.pays);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(interlocuteur.latitude);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(interlocuteur.longitude);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(interlocuteur.precis);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_latitude"]').val(interlocuteur.latitude);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(interlocuteur.longitude);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
@@ -881,10 +877,11 @@
                 adresse3: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_adresse3"]').val(),
                 ville: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_ville"]').val(),
                 pays: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_pays"]').val(),
-                latitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(),
-                longitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(),
-                precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(),
-                mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val()
+                latitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_latitude"]').val(),
+                longitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
+                precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
+                mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
+                smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val()
             };
 
             return interlocuteur;
@@ -906,10 +903,11 @@
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse3"]').val(interlocuteur.adresse3);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_ville"]').val(interlocuteur.ville);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_pays"]').val(interlocuteur.pays);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(interlocuteur.latitude);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(interlocuteur.longitude);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(interlocuteur.precis);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_latitude"]').val(interlocuteur.latitude);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(interlocuteur.longitude);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
         }
 
 

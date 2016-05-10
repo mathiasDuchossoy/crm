@@ -10,8 +10,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InterlocuteurType extends AbstractType
@@ -51,8 +49,8 @@ class InterlocuteurType extends AbstractType
                 )
             )
             ->add('moyenComs',
+//                'infinite_form_polycollection',
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
-//                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
                 array('types' => array(
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
                     'nucleus_moyencombundle_adresse',
@@ -62,7 +60,7 @@ class InterlocuteurType extends AbstractType
                 ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
-                    'by_reference' => false,
+//                    'by_reference' => false,
                 )
             )
         ;

@@ -41,10 +41,10 @@ class Fournisseur extends Moral
 //     */
 //    private $id;
 
-    /**
-     * @var string
-     */
-    private $enseigne;
+//    /**
+//     * @var string
+//     */
+//    private $enseigne;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -130,11 +130,14 @@ class Fournisseur extends Moral
      */
     public function __construct()
     {
-        $this->setDateCreation();
-        $this->setDateModification(new \Datetime());
+
+        parent::__construct();
+//        $this->setDateCreation();
+//        $this->setDateModification(new \Datetime());
 //        $this->setActif(true);
         $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
 
     /**
      * Add interlocuteur

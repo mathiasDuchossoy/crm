@@ -23,6 +23,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Fixe;
 use Nucleus\MoyenComBundle\Entity\Mobile;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use ReflectionClass;
 use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
@@ -105,7 +106,7 @@ class FournisseurController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
-
+//        echo 'coucou';die;
         if ($form->isSubmitted() && $form->isValid()) {
 
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
@@ -161,8 +162,8 @@ class FournisseurController extends Controller
             $moyenComsSite = $fournisseurSite->getMoyenComs();
             if (!empty($moyenComsSite)) {
                 foreach ($moyenComsSite as $key => $moyenComSite) {
-                    $moyenComSite->setDateModification(new DateTime());
-                    $moyenComSite->setDateCreation();
+//                    $moyenComSite->setDateModification(new DateTime());
+//                    $moyenComSite->setDateCreation();
                     $moyenComsSite[$key] = clone $moyenComSite;
                 }
             }
@@ -267,7 +268,7 @@ class FournisseurController extends Controller
 
                     // if it was a many-to-one relationship, remove the relationship like this
                     $this->deleteInterlocuteurSites($interlocuteur);
-                    $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
+                    $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
                     $interlocuteur->setFournisseur(null);
 
                     // if you wanted to delete the Tag entirely, you can also do that
@@ -327,7 +328,7 @@ class FournisseurController extends Controller
                 $interlocuteur->getId());
 
             if (!empty($interlocuteurSite)) {
-                $this->deleteMoyenComs($interlocuteurSite->getInterlocuteur());
+                $this->deleteMoyenComs($interlocuteurSite->getInterlocuteur(), $emSite);
 
 //                $moyenComs = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
 //                if (!empty($moyenComs))
@@ -341,6 +342,7 @@ class FournisseurController extends Controller
                 $interlocuteurSite->setFournisseur(null);
 
                 $emSite->remove($interlocuteurSite);
+//                die;
                 
             }
 
@@ -350,13 +352,15 @@ class FournisseurController extends Controller
 
     /**
      * @param $entity
+     * @param EntityManager $em
      */
-    private function deleteMoyenComs($entity)
+    private function deleteMoyenComs($entity, EntityManager $em)
     {
         $moyenComs = $entity->getMoyenComs();
         if (!empty($moyenComs)) {
             foreach ($moyenComs as $moyenCom) {
                 $entity->removeMoyenCom($moyenCom);
+                $em->remove($moyenCom);
             }
         }
     }
@@ -417,7 +421,7 @@ class FournisseurController extends Controller
             $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
             $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseur->getType()->getId()));
             $fournisseurSite->setContient($fournisseur->getContient());
-            $fournisseurSite->setDateModification(new DateTime());
+//            $fournisseurSite->setDateModification(new DateTime());
 
 
             foreach ($fournisseur->getMoyenComs() as $key => $moyenCom) {
@@ -464,7 +468,7 @@ class FournisseurController extends Controller
                     } else {
                         $interlocuteurSite->getInterlocuteur()->setService(null);
                     }
-                    $interlocuteurSite->getInterlocuteur()->setDateModification(new DateTime());
+//                    $interlocuteurSite->getInterlocuteur()->setDateModification(new DateTime());
 
                     $moyenComsSite = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
                     if (!empty($moyenComsSite)) {
@@ -729,22 +733,30 @@ class FournisseurController extends Controller
 //                            $fournisseurSite->removeMoyenCom($moyenCom);
 //                        }
 //                    }
-                    $this->deleteMoyenComs($fournisseurSite);
-                    $interlocuteurs = $fournisseurSite->getInterlocuteurs();
-                    if (!empty($interlocuteurs)) {
-                        foreach ($interlocuteurs as $interlocuteur) {
-                            $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
-//                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
-//                            if (!empty($moyenComs)) {
-//                                foreach ($moyenComs as $moyenCom) {
-//                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
-//                                }
-//                            }
-                        }
-                    }
-                    // ***** fin suppression des moyen de communications *****
-
                     if (!empty($fournisseurSite)) {
+                        $this->deleteMoyenComs($fournisseurSite, $emSite);
+
+
+                        $emSite->flush();
+                        $interlocuteurs = $fournisseurSite->getInterlocuteurs();
+                        if (!empty($interlocuteurs)) {
+                            foreach ($interlocuteurs as $interlocuteur) {
+                                $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $emSite);
+                                //                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+                                //                            if (!empty($moyenComs)) {
+                                //                                foreach ($moyenComs as $moyenCom) {
+                                //                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+                                //                                }
+                                //                            }
+
+
+                                $emSite->flush();
+                                $emSite->remove($interlocuteur);
+                            }
+                        }
+                        // ***** fin suppression des moyen de communications *****
+
+                        //                    if (!empty($fournisseurSite)) {
                         $emSite->remove($fournisseurSite);
                         $emSite->flush();
                     }
@@ -757,7 +769,9 @@ class FournisseurController extends Controller
 //                        $fournisseur->removeMoyenCom($moyenCom);
 //                    }
 //                }
-                $this->deleteMoyenComs($fournisseur);
+                $this->deleteMoyenComs($fournisseur, $em);
+
+                $em->flush();
                 $interlocuteurs = $fournisseur->getInterlocuteurs();
                 if (!empty($interlocuteurs)) {
                     foreach ($interlocuteurs as $interlocuteur) {
@@ -767,7 +781,10 @@ class FournisseurController extends Controller
 //                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
 //                            }
 //                        }
-                        $this->deleteMoyenComs($interlocuteur->getInterlocuteur());
+                        $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
+
+                        $em->flush();
+                        $em->remove($interlocuteur);
                     }
                 }
                 // ***** fin suppression des moyen de communications *****
@@ -775,6 +792,9 @@ class FournisseurController extends Controller
                 $em->remove($fournisseur);
                 $em->flush();
             } catch (ForeignKeyConstraintViolationException $except) {
+
+//                dump($except);
+//                die;
                 switch ($except->getCode()) {
                     case 0:
                         $this->addFlash('error',
