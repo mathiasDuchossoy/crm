@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\RemiseClefBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * RemiseClef
  */
@@ -68,8 +70,8 @@ class RemiseClef
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->fournisseurHebergements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
+        $this->fournisseurHebergements = new ArrayCollection();
     }
 
     /**
