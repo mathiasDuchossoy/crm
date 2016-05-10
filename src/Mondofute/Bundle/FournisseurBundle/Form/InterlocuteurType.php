@@ -52,8 +52,8 @@ class InterlocuteurType extends AbstractType
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
                     'nucleus_moyencombundle_adresse',
                     'nucleus_moyencombundle_email',
-                    'nucleus_moyencombundle_fixe',
-                    'nucleus_moyencombundle_mobile',
+                    'nucleus_moyencombundle_telfixe',
+                    'nucleus_moyencombundle_telmobile',
                 ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
