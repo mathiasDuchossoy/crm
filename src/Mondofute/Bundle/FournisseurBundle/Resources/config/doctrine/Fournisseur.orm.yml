@@ -32,6 +32,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         remiseClefs:
             targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
             mappedBy: fournisseur
+            cascade: ['persist' , 'remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
