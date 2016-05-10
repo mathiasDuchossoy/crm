@@ -26,6 +26,16 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
 
 
             orphanRemoval: true
+
+        nationalites:
+            joinTable:
+                name: intelocuteur_nationalite
+                joinColumns:
+                    interlocuteur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    nationalite_id:
+                        referencedColumnName: id
 #    fields:
 #        prenom:
 #            type: string
