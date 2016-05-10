@@ -27,10 +27,3 @@ services:
 #            form_type:
 #                name: form.type
 #                alias: nucleus_moyencombundle_fixe2
-    infinite_form.polycollection_type:
-#        class: Infinite\Helper\Form\Type\PolyCollectionType
-        class: Infinite\FormBundle\Form\Type\PolyCollectionType
-        tags:
-            form_type:
-                name: form.type
-                alias: polycollection
