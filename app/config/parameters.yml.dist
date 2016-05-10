@@ -5,6 +5,8 @@ parameters:
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     crm
+    database_name_skifute: skifute2
+    database_name_francefute: francefute2
     database_user:     mondofutedev.com
     database_password: mondofute2015
     # You should uncomment this if you want use pdo_sqlite

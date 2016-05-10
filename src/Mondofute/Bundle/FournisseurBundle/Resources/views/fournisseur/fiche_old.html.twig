@@ -18,7 +18,7 @@
             {{ form_row(form.type) }}
             {{ form_row(form.fournisseurParent) }}
             {{ form_row(form.contient) }}
-            {{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}
+            {{ form_row(form.moyenComs) }}
 
             <div id="interlocuteur_panels">
                 {% for serviceInterlocuteur in serviceInterlocuteurs %}
@@ -81,31 +81,17 @@
             {{ form_row(form.submit) }}
 
             {% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}
-            {% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}
-            {% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
-            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe , { 'label' : 'Télephone __number__' }) %}
-            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_mobile , { 'label' : 'Mobile' }) %}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
-            {#<div id="values-interlocuteurs" style="">#}
+            {% set moyenComsAdresse     = form_widget(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse) %}
+            {% set moyenComsMail        = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email.adresse , { 'label' : 'Email' }) %}
+            {% set moyenComsFixe1        = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_fixe.numero , { 'label' : 'Télephone 1' }) %}
+            {#{% set moyenComsFixe2        = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes['Nucleus\\MoyenComBundle\\Form\\FixeType'].numero , { 'label' : 'Télephone 2' }) %}#}
+            {{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}
+            {#{% set interlocuteurMoyenCommunication = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'].children['moyenCommunications'].vars.prototype ) %}#}
+            {#{{ dump(interlocuteurMoyenCommunication) }}#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% for element in interlocuteur.children %}
                         {{ form_widget(element) }}
-                        {#{% for child in element.children %}#}
-                        {#{{ dump(child.vars.name) }}#}
-                        {#{%  if child.vars.name == 'moyenComs' %}#}
-                        {#{{ dump(element.moyenComs) }}#}
-                        {#{% for key , moyenCom in element.moyenComs %}#}
-                        {#{{ dump(   moyenCom.vars.value) }}#}
-                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
-                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
-                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
-                        {#{% endfor %}#}
-                        {#{% else %}#}
-                        {#{{ form_row(child) }}#}
-                        {#{% endif %}#}
-                        {#{% endfor %}#}
                     {% endfor %}
                 {% endfor %}
             </div>
@@ -126,11 +112,10 @@
                                   data-prototype="{{ interlocuteurs | e }}"
                                   data-prototype_moyen_coms_adresse="{{ moyenComsAdresse | e }}"
                                   data-prototype_moyen_coms_mail="{{ moyenComsMail | e }}"
-                                  data-prototype_moyen_coms_tel1="{{ moyenComsFixe | e }}"
-                                  data-prototype_moyen_coms_tel2="{{ moyenComsFixe | e }}"
-                                  data-prototype_moyen_coms_mobile="{{ moyenComsMobile | e }}"
+                                  data-prototype_moyen_coms_tel1="{{ moyenComsFixe1 | e }}"
+                                    {#data-prototype_moyen_coms_tel2="{{ moyenComsFixe2 | e}}"#}
                                   class="form-horizontal">
-                                {#{{ interlocuteurs|raw }}#}
+                                {{ interlocuteurs|raw }}
                                 {#{{ prenom|raw }}#}
                                 {#{{ service|raw }}#}
                                 {#{{ fonction|raw }}#}
@@ -176,16 +161,16 @@
     <script>
 
         function refuserToucheEntree(event) {
-            // Compatibilité IE / Firefox
+// Compatibilité IE / Firefox
             if (!event && window.event) {
                 event = window.event;
             }
-            // IE
+// IE
             if (event.keyCode == 13) {
                 event.returnValue = false;
                 event.cancelBubble = true;
             }
-            // DOM
+// DOM
             if (event.which == 13) {
                 event.preventDefault();
                 event.stopPropagation();
@@ -193,46 +178,36 @@
         }
 
         function afficherModalInterlocuteur(element) {
-            var $formInterlocuteur = $('#form-interlocuteur');
-            var formProtoype = $formInterlocuteur.data('prototype');
-            var interlocuteurIndex = $formInterlocuteur.data('interlocuteur-index');
+            var formInterlocuteur = $('#form-interlocuteur');
+            var formProtoype = formInterlocuteur.data('prototype');
+            var interlocuteurIndex = formInterlocuteur.data('interlocuteur-index');
             var newForm = formProtoype.replace(/__name__/g, interlocuteurIndex);
-            $formInterlocuteur.html(newForm);
+            formInterlocuteur.html(newForm);
 
-            var $moyenComsInterlocuteur = $('#fournisseur_interlocuteurs_' + interlocuteurIndex + '_interlocuteur_moyenComs');
 
-            var formMoyenComAdressePrototype = $formInterlocuteur.data('prototype_moyen_coms_adresse');
-            var newformMoyenComAdresse = formMoyenComAdressePrototype.replace(/__name__/g, interlocuteurIndex);
-            newformMoyenComAdresse = newformMoyenComAdresse.replace(/__mycom_name__/g, 0);
-            $moyenComsInterlocuteur.html(newformMoyenComAdresse);
+            var formMoyenComAdresseProtoype = formInterlocuteur.data('prototype_moyen_coms_adresse');
+            var newformMoyenComAdresse = formMoyenComAdresseProtoype.replace(/__name__/g, interlocuteurIndex);
+            $('#fournisseur_interlocuteurs_' + interlocuteurIndex + '_interlocuteur_moyenComs').html(newformMoyenComAdresse);
 
-            var formMoyenComMailPrototype = $formInterlocuteur.data('prototype_moyen_coms_mail');
-            var newformMoyenComMail = formMoyenComMailPrototype.replace(/__name__/g, interlocuteurIndex);
-            newformMoyenComMail = newformMoyenComMail.replace(/__mycom_name__/g, 1);
-            $moyenComsInterlocuteur.append(newformMoyenComMail);
+            var formMoyenComMailProtoype = formInterlocuteur.data('prototype_moyen_coms_mail');
+            var newformMoyenComMail = formMoyenComMailProtoype.replace(/__name__/g, interlocuteurIndex);
+            $('#fournisseur_interlocuteurs_' + interlocuteurIndex + '_interlocuteur_moyenComs').append(newformMoyenComMail);
 
-            var formMoyenComTel1Prototype = $formInterlocuteur.data('prototype_moyen_coms_tel1');
-            var newformMoyenComTel1 = formMoyenComTel1Prototype.replace(/__name__/g, interlocuteurIndex);
-            newformMoyenComTel1 = newformMoyenComTel1.replace(/__mycom_name__/g, 2);
-            newformMoyenComTel1 = newformMoyenComTel1.replace(/__number__/g, 1);
-            $moyenComsInterlocuteur.append(newformMoyenComTel1);
+            var formMoyenComTel1Protoype = formInterlocuteur.data('prototype_moyen_coms_tel1');
+            var newformMoyenComTel1 = formMoyenComTel1Protoype.replace(/__name__/g, interlocuteurIndex);
+            $('#fournisseur_interlocuteurs_' + interlocuteurIndex + '_interlocuteur_moyenComs').append(newformMoyenComTel1);
 
-            var formMoyenComTel2Prototype = $formInterlocuteur.data('prototype_moyen_coms_tel2');
-            var newformmoyenComsFixe2 = formMoyenComTel2Prototype.replace(/__name__/g, interlocuteurIndex);
-            newformmoyenComsFixe2 = newformmoyenComsFixe2.replace(/__mycom_name__/g, 3);
-            newformmoyenComsFixe2 = newformmoyenComsFixe2.replace(/__number__/g, 2);
-            $moyenComsInterlocuteur.append(newformmoyenComsFixe2);
+//            var formMoyenComTel2Protoype = formInterlocuteur.data('prototype_moyen_coms_tel2');
+//            var newformMoyenComTel2 = formMoyenComTel2Protoype.replace(/__name__/g, interlocuteurIndex);
+//            $('#fournisseur_interlocuteurs_'+interlocuteurIndex+'_interlocuteur_moyenComs').append(newformMoyenComTel2);
 
-            var formMoyenComMobilePrototype = $formInterlocuteur.data('prototype_moyen_coms_mobile');
-            var newformmoyenComsMobile = formMoyenComMobilePrototype.replace(/__name__/g, interlocuteurIndex);
-            newformmoyenComsMobile = newformmoyenComsMobile.replace(/__mycom_name__/g, 4);
-            $moyenComsInterlocuteur.append(newformmoyenComsMobile);
-
-            $formInterlocuteur.find('input').each(function (index, item) {
+            $(formInterlocuteur).find('input').each(function (index, item) {
                 $(item).keypress(function (event) {
                     refuserToucheEntree(event);
                 });
             });
+
+//            console.log($(formInterlocuteur).find('[id$="_date_naissance"]'));
 
             var button = $(element); // Button that triggered the modal
 
@@ -255,56 +230,47 @@
                 return false;
             }
 
-            var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
-
-            var interlocuteur = getDataIntelocuteurModal();
-
+            var interlocuteurModal = $('#interlocuteurModal');
+            interlocuteurModal.modal('hide');
+            var interlocuteur = {
+                prenom: interlocuteurModal.find('.modal-body [id$="_prenom"]').val(),
+                nom: interlocuteurModal.find('.modal-body [id$="_nom"]').val(),
+                fonction: interlocuteurModal.find('.modal-body [id$="_fonction"]').val(),
+                service: interlocuteurModal.find('.modal-body [id$="_service"]').val()
+            };
             var fonction = '';
             if (interlocuteur.fonction) {
-                fonction = $interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
+                fonction = interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
             }
 
             var $formInterlocuteur = $('#form-interlocuteur');
-            var index = $formInterlocuteur.data('interlocuteur-index');
+            var $index = $formInterlocuteur.data('interlocuteur-index');
 
-            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
+            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + $index + ');" type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
-            var $addInterlocuteur = $('<td>' + interlocuteur.prenom + ' ' + interlocuteur.nom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer(index) + '</td>');
-            var $newLigne = $('<tr id="row_interlocuteur_' + index + '" class="success"></tr>').append($addInterlocuteur);
+            var $addInterlocuteur = $('<td>' + interlocuteur.prenom + ' ' + interlocuteur.nom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer($index) + '</td>');
+            var $newLigne = $('<tr id="row_interlocuteur_' + $index + '" class="success"></tr>').append($addInterlocuteur);
             $('#service_' + interlocuteur.service).append($newLigne);
 
             var $valuesInterlocuteur = $('#values-interlocuteurs');
 
             $valuesInterlocuteur.append($formInterlocuteur.html());
-
-            setValuesInterlocuteur(interlocuteur, index);
-
-            $formInterlocuteur.data('interlocuteur-index', index + 1);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_nom"]').val(interlocuteur.nom);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + $index + '_interlocuteur_service"]').val(interlocuteur.service);
+            $formInterlocuteur.data('interlocuteur-index', $index + 1);
         }
 
         function afficherModalModificationInterlocuteur(index) {
-            var $interlocuteurModal = $('#interlocuteurModal');
+            var modal = $('#interlocuteurModal');
             var $divFournisseurInterlocuteur = $('#fournisseur_interlocuteurs_' + index + '_interlocuteur');
 
             var interlocuteur = {
                 prenom: $divFournisseurInterlocuteur.find('[id$="_prenom"]').val(),
                 nom: $divFournisseurInterlocuteur.find('[id$="_nom"]').val(),
                 fonction: $divFournisseurInterlocuteur.find('[id$="_fonction"]').val(),
-                service: $divFournisseurInterlocuteur.find('[id$="_service"]').val(),
-                email: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_1_adresse"]').val(),
-                tel1: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_2_numero"]').val(),
-                tel2: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_3_numero"]').val(),
-                codePostal: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_codePostal"]').val(),
-                adresse1: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_adresse1"]').val(),
-                adresse2: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_adresse2"]').val(),
-                adresse3: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_adresse3"]').val(),
-                ville: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_ville"]').val(),
-                pays: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_pays"]').val(),
-                latitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(),
-                longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(),
-                precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(),
-                mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val()
+                service: $divFournisseurInterlocuteur.find('[id$="_service"]').val()
             };
 
 
@@ -312,7 +278,7 @@
             if (interlocuteur.service) {
                 service = $divFournisseurInterlocuteur.find('[id$="service"] option[value=\'' + interlocuteur.service + '\']').text();
             }
-            $interlocuteurModal.find('.modal-title').text('Modifier intelocuteur pour le service ' + service);
+            modal.find('.modal-title').text('Modifier intelocuteur pour le service ' + service);
 
             $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
 
@@ -330,23 +296,10 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_nom"]').val(interlocuteur.nom);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_1_adresse"]').val(interlocuteur.email);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_2_numero"]').val(interlocuteur.tel1);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_3_numero"]').val(interlocuteur.tel2);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_codePostal"]').val(interlocuteur.codePostal);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse1"]').val(interlocuteur.adresse1);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse2"]').val(interlocuteur.adresse2);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse3"]').val(interlocuteur.adresse3);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_ville"]').val(interlocuteur.ville);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_pays"]').val(interlocuteur.pays);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(interlocuteur.latitude);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(interlocuteur.longitude);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(interlocuteur.precis);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
-            $interlocuteurModal.modal('show');
+            modal.modal('show');
         }
 
         function modifierInterlocuteur(index) {
@@ -354,14 +307,19 @@
             if (!testRequired()) {
                 return false;
             }
-            var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
+            var interlocuteurModal = $('#interlocuteurModal');
+            interlocuteurModal.modal('hide');
 
-            var interlocuteur = getDataIntelocuteurModal();
 
+            var interlocuteur = {
+                prenom: interlocuteurModal.find('.modal-body [id$="_prenom"]').val(),
+                nom: interlocuteurModal.find('.modal-body [id$="_nom"]').val(),
+                fonction: interlocuteurModal.find('.modal-body [id$="_fonction"]').val(),
+                service: interlocuteurModal.find('.modal-body [id$="_service"]').val()
+            };
             var fonction = '';
             if (interlocuteur.fonction) {
-                fonction = $interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
+                fonction = interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
             }
 
             var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + index + ');" id=\'modifie_interlocuteur_' + index + '\' \' type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
@@ -371,7 +329,12 @@
             $('#row_interlocuteur_' + index).remove();
             $('#service_' + interlocuteur.service).append($newLigne);
 
-            setValuesInterlocuteur(interlocuteur, index);
+            var $valuesInterlocuteur = $('#values-interlocuteurs');
+
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_nom"]').val(interlocuteur.nom);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouterun interlocuteur</button>'));
         }
@@ -382,55 +345,8 @@
         }
 
         function getButtonSupprimer(index) {
-            return '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'> Supprimer <span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
-        }
-
-        function getDataIntelocuteurModal() {
-            var $interlocuteurModal = $('#interlocuteurModal');
-
-            var interlocuteur = {
-                prenom: $interlocuteurModal.find('.modal-body [id$="_prenom"]').val(),
-                nom: $interlocuteurModal.find('.modal-body [id$="_nom"]').val(),
-                fonction: $interlocuteurModal.find('.modal-body [id$="_fonction"]').val(),
-                service: $interlocuteurModal.find('.modal-body [id$="_service"]').val(),
-                email: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_1_adresse"]').val(),
-                tel1: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_2_numero"]').val(),
-                tel2: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_3_numero"]').val(),
-                codePostal: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_codePostal"]').val(),
-                adresse1: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_adresse1"]').val(),
-                adresse2: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_adresse2"]').val(),
-                adresse3: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_adresse3"]').val(),
-                ville: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_ville"]').val(),
-                pays: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_pays"]').val(),
-                latitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(),
-                longitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(),
-                precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(),
-                mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val()
-            };
-
-            return interlocuteur;
-        }
-
-        function setValuesInterlocuteur(interlocuteur, index) {
-            var $valuesInterlocuteur = $('#values-interlocuteurs');
-
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_prenom"]').val(interlocuteur.prenom);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_nom"]').val(interlocuteur.nom);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_fonction"]').val(interlocuteur.fonction);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_service"]').val(interlocuteur.service);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_1_adresse"]').val(interlocuteur.email);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_2_numero"]').val(interlocuteur.tel1);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_3_numero"]').val(interlocuteur.tel2);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_codePostal"]').val(interlocuteur.codePostal);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse1"]').val(interlocuteur.adresse1);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse2"]').val(interlocuteur.adresse2);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_adresse3"]').val(interlocuteur.adresse3);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_ville"]').val(interlocuteur.ville);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_pays"]').val(interlocuteur.pays);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_latitude"]').val(interlocuteur.latitude);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_longitude"]').val(interlocuteur.longitude);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonneeGPS_precis"]').val(interlocuteur.precis);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
+            var buttonSupprimer = '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'> Supprimer <span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
+            return buttonSupprimer;
         }
 
 

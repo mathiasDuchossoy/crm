@@ -1,0 +1,143 @@
+<?php
+
+namespace Mondofute\Bundle\ClientBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Nucleus\ContactBundle\Entity\Physique;
+
+/**
+ * Client
+ */
+class Client extends Physique
+{
+//    /**
+//     * @var int
+//     */
+//    private $id;
+
+    /**
+     * @var string
+     */
+    private $login;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+
+//    /**
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
+    /**
+     * @var boolean
+     */
+    private $vip;
+    /**
+     * @var \DateTime
+     */
+    private $dateNaissance;
+
+    /**
+     * Get login
+     *
+     * @return string
+     */
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    /**
+     * Set login
+     *
+     * @param string $login
+     *
+     * @return Client
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Client
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get vip
+     *
+     * @return boolean
+     */
+    public function getVip()
+    {
+        return $this->vip;
+    }
+
+    /**
+     * Set vip
+     *
+     * @param boolean $vip
+     *
+     * @return Client
+     */
+    public function setVip($vip)
+    {
+        $this->vip = $vip;
+
+        return $this;
+    }
+
+    /**
+     * Get dateNaissance
+     *
+     * @return \DateTime
+     */
+    public function getDateNaissance()
+    {
+        return $this->dateNaissance;
+    }
+
+    /**
+     * Set dateNaissance
+     *
+     * @param \DateTime $dateNaissance
+     *
+     * @return Client
+     */
+    public function setDateNaissance($dateNaissance)
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+    
+}

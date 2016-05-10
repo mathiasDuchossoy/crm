@@ -1,10 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
-
+use commun\contactBundle\Entity\Moral;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
-use Nucleus\ContactBundle\Entity\Moral;
 
 class FournisseurContient
 {
@@ -63,10 +62,14 @@ class Fournisseur extends Moral
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseurParent;
+
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
+     * Constructor
      */
-    private $type;
+    public function __construct()
+    {
+        $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
 //    /**
 //     * Get id
@@ -101,17 +104,6 @@ class Fournisseur extends Moral
 //
 //        return $this;
 //    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->setDateCreation();
-        $this->setDateModification(new \Datetime());
-//        $this->setActif(true);
-        $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add interlocuteur
@@ -266,30 +258,6 @@ class Fournisseur extends Moral
     public function setFournisseurParent(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent = null)
     {
         $this->fournisseurParent = $fournisseurParent;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
-     *
-     * @return Fournisseur
-     */
-    public function setType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type = null)
-    {
-        $this->type = $type;
 
         return $this;
     }
