@@ -3,24 +3,28 @@ pugx_multi_user:
         utilisateur_user:
             entity:
                 class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+      #          factory:
             registration:
                 form:
-                    type: Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType
+#                    type: Mondofute\Bundle\UtilisateurBundle\Form\Type\RegistrationUtilisateurUserFormType
+                    type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
                     name: fos_user_registration_form
                     validation_groups:  [Registration, Default]
-                template: UtilisateurBundle:utilisateur:new.html.twig
+#                template: MondofuteUtilisateurBundle:Registration:utilisateur_user.html.twig
+                template: MondofuteUtilisateurBundle:utilisateur:fiche.html.twig
             profile:
                 form:
-                    type: Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType
+#                    type: Mondofute\Bundle\UtilisateurBundle\Form\Type\ProfileUtilisateurUserFormType
+                    type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
                     name: fos_user_profile_form
                     validation_groups:  [Profile, Default]
         client_user:
             entity:
                 class: Mondofute\Bundle\ClientBundle\Entity\ClientUser
-            registration:
-                form:
-                    type: Mondofute\Bundle\ClientBundle\Form\ClientUserType
-                template: ClientBundle:client:new.html.twig
-            profile:
-                form:
-                    type: Mondofute\Bundle\ClientBundle\Form\ClientUserType
+#            registration:
+#                form:
+#                    type: Acme\UserBundle\Form\Type\RegistrationUserTwoFormType
+#                template: AcmeUserBundle:Registration:user_two.form.html.twig
+#            profile:
+#                form:
+#                    type: Acme\UserBundle\Form\Type\ProfileUserTwoFormType
