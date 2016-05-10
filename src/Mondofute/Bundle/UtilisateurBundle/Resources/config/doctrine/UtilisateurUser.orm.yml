@@ -21,10 +21,10 @@ Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser:
 #            columns: email
 #            targetClass: Mondofute\Bundle\UtilisateurBundle\Entity\User
 #            message: fos_user.email.already_used
-    id:
-        id:
-            type: integer
-            id: true
+#    id:
+#        id:
+#            type: integer
+#            id: true
 #            generator:
 #                strategy: AUTO
 #            options:

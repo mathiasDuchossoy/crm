@@ -1,14 +1,14 @@
 <?php
 
-namespace Mondofute\Bundle\UtilisateurBundle\Form;
+namespace Mondofute\Bundle\ClientBundle\Form;
 
 use FOS\UserBundle\Util\LegacyFormHelper;
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UtilisateurUserType extends AbstractType
+class ClientUserType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -17,8 +17,8 @@ class UtilisateurUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('utilisateur', UtilisateurType::class, array(
-                'data_class' => Utilisateur::class
+            ->add('client', ClientType::class, array(
+                'data_class' => Client::class
             ))
 //            ->add('email', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\EmailType'), array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
 //            ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
@@ -39,7 +39,7 @@ class UtilisateurUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser'
+            'data_class' => 'Mondofute\Bundle\ClientBundle\Entity\ClientUser'
         ));
     }
 }

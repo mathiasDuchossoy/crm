@@ -2,7 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: @MondofuteUtilisateurBundle/Resources/config/config.yml }
+    - { resource: @MondofuteCoreBundle/Resources/config/config.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -94,6 +94,8 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -116,6 +118,8 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -138,6 +142,8 @@ doctrine:
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
                     MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -221,6 +227,6 @@ fos_user:
     user_class: Mondofute\Bundle\CoreBundle\Entity\User
     service:
         user_manager: pugx_user_manager
-    registration:
-        form:
-            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+#    registration:
+#        form:
+#            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType

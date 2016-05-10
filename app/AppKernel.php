@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
+            new \Mondofute\Bundle\ClientBundle\MondofuteClientBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
