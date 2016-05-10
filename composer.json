@@ -26,7 +26,7 @@
         "twitter/bootstrap": "^3.3",
         "oyejorge/less.php": "v1.7.0.10",
         "stephanecollot/datetimepicker-bundle": "^1.0",
-        "infinite-networks/form-bundle": "^1.0",
+        "infinite-networks/form-bundle": "1.0.3",
         "nucleus/contactbundle": "dev-commun",
         "nucleus/moyencombundle": "dev-commun",
         "jms/serializer-bundle": "^1.1",
