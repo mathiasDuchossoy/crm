@@ -1,0 +1,15 @@
+Mondofute\Bundle\ClientBundle\Entity\ClientUser:
+    type: entity
+    table: client_user
+    repositoryClass: Mondofute\Bundle\ClientBundle\Repository\ClientUserRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    oneToOne:
+        client:
+            targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
+            persist: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
+
+use Mondofute\Bundle\CoreBundle\Entity\User;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
@@ -40,7 +42,6 @@ class UtilisateurController extends Controller
     public function newAction(Request $request)
     {
 
-
         /** @var Site $site */
         $utilisateurUser = new UtilisateurUser();
 
@@ -53,6 +54,7 @@ class UtilisateurController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $utilisateurUser->setEnabled(true);
 
             $em = $this->getDoctrine()->getEntityManager();
 
@@ -71,17 +73,21 @@ class UtilisateurController extends Controller
             $utilisateur->setDateCreation();
 
             if (!$this->loginExist($utilisateurUser)) {
-//                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-//                foreach ($sites as $site) {
-//                    $utilisateurClone = clone $utilisateur;
-//                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-//
-//                    $this->dupliquerMoyenComs($utilisateur);
-//
-//                    $emSite->persist($utilisateurClone);
-//
-//                    $emSite->flush();
-//                }
+                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                foreach ($sites as $site) {
+                    $utilisateurUserClone = clone $utilisateurUser;
+                    $utilisateurClone = clone $utilisateur;
+                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+                    $this->dupliquerMoyenComs($utilisateur);
+
+                    $utilisateurUserClone->setUtilisateur($utilisateurClone);
+
+                    $emSite->persist($utilisateurClone);
+                    $emSite->persist($utilisateurUserClone);
+
+                    $emSite->flush();
+                }
 
                 $em->persist($utilisateur);
                 $em->persist($utilisateurUser);
@@ -124,8 +130,12 @@ class UtilisateurController extends Controller
     {
 
         $em = $this->getDoctrine()->getEntityManager();
-        $utilisateurUserSite = $em->getRepository(UtilisateurUser::class)->findOneBy(array('username' => $utilisateurUser->getUsername()));
-        if (!empty($utilisateurUserSite) && $utilisateurUser != $utilisateurUserSite) {
+        $utilisateurUserByUsername = $em->getRepository(UtilisateurUser::class)->findOneBy(array('username' => $utilisateurUser->getUsername()));
+        $utilisateurUserByMail = $em->getRepository(UtilisateurUser::class)->findOneBy(array('email' => $utilisateurUser->getEmail()));
+        if ((!empty($utilisateurUserByUsername) && $utilisateurUser != $utilisateurUserByUsername)
+            ||
+            (!empty($utilisateurUserByMail) && $utilisateurUser != $utilisateurUserByMail)
+        ) {
             $this->addFlash(
                 'error',
                 'Le Login/Email ' . $utilisateurUser->getUsername() . ' éxiste déjà.'
@@ -134,6 +144,29 @@ class UtilisateurController extends Controller
             return true;
         }
         return false;
+    }
+
+    private function dupliquerMoyenComs(Utilisateur $utilisateur)
+    {
+        foreach ($utilisateur->getMoyenComs() as $moyenCom) {
+            $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+            switch ($typeComm) {
+                case 'Email':
+                    /** @var Email $moyenCom */
+                    $newMoyenCom = new Email();
+                    $newMoyenCom
+                        ->setAdresse($moyenCom->getAdresse());
+                    break;
+                default:
+                    break;
+            }
+            if (!empty($newMoyenCom)) {
+//                $newMoyenCom->setDateCreation($moyenCom->getDateCreation());
+//                $newMoyenCom->setDateCreation();
+                $utilisateur->removeMoyenCom($moyenCom);
+                $utilisateur->addMoyenCom($newMoyenCom);
+            }
+        }
     }
 
     /**
@@ -199,7 +232,7 @@ class UtilisateurController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
-//                $this->majSites($utilisateur);
+                $this->majSites($utilisateur);
 
                 $em->persist($utilisateurUser);
                 $em->persist($utilisateur);
@@ -220,78 +253,6 @@ class UtilisateurController extends Controller
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
-    }
-
-    /**
-     * Deletes a Utilisateur entity.
-     *
-     */
-    public function deleteAction(Request $request, UtilisateurUser $utilisateurUser)
-    {
-        $utilisateur = $utilisateurUser->getUtilisateur();
-        $form = $this->createDeleteForm($utilisateurUser);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-                $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser->getId());
-//                die;
-                if (!empty($utilisateurUserSite)) {
-                    $utilisateurSite = $utilisateurUser->getUtilisateur();
-                    foreach ($utilisateurSite->getMoyenComs() as $moyenComSite) {
-                        $utilisateurSite->removeMoyenCom($moyenComSite);
-                        $emSite->remove($moyenComSite);
-                    }
-
-                    $emSite->flush();
-
-                    $emSite->remove($utilisateurUserSite);
-                    $emSite->remove($utilisateurSite);
-                    $emSite->flush();
-                }
-
-            }
-
-            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
-                $utilisateur->removeMoyenCom($moyenCom);
-                $em->remove($moyenCom);
-            }
-
-            $em->flush();
-
-            $em->remove($utilisateur);
-            $em->remove($utilisateurUser);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('utilisateur_index');
-    }
-
-    private function dupliquerMoyenComs(Utilisateur $utilisateur)
-    {
-        foreach ($utilisateur->getMoyenComs() as $moyenCom) {
-            $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-            switch ($typeComm) {
-                case 'Email':
-                    /** @var Email $moyenCom */
-                    $newMoyenCom = new Email();
-                    $newMoyenCom
-                        ->setAdresse($moyenCom->getAdresse());
-                    break;
-                default:
-                    break;
-            }
-            if (!empty($newMoyenCom)) {
-//                $newMoyenCom->setDateCreation($moyenCom->getDateCreation());
-                $newMoyenCom->setDateCreation();
-                $utilisateur->removeMoyenCom($moyenCom);
-                $utilisateur->addMoyenCom($newMoyenCom);
-            }
-        }
     }
 
     private function majSites(Utilisateur $utilisateur)
@@ -333,5 +294,57 @@ class UtilisateurController extends Controller
             $emSite->persist($utilisateurSite);
             $emSite->flush();
         }
+    }
+
+    /**
+     * Deletes a Utilisateur entity.
+     *
+     */
+    public function deleteAction(Request $request, UtilisateurUser $utilisateurUser)
+    {
+        $utilisateur = $utilisateurUser->getUtilisateur();
+        $form = $this->createDeleteForm($utilisateurUser);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+            foreach ($sites as $site) {
+                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+//                dump($utilisateurUser->getId());
+//                die();
+//                $utilisateurUserSite = $emSite->find(User::class, $utilisateurUser);
+                $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
+
+                if (!empty($utilisateurUserSite)) {
+                    $utilisateurSite = $utilisateurUserSite->getUtilisateur();
+                    foreach ($utilisateurSite->getMoyenComs() as $moyenComSite) {
+                        $utilisateurSite->removeMoyenCom($moyenComSite);
+                        $emSite->remove($moyenComSite);
+                    }
+
+                    $emSite->flush();
+
+                    $emSite->remove($utilisateurSite);
+                    $emSite->remove($utilisateurUserSite);
+                    $emSite->flush();
+                }
+
+            }
+
+            foreach ($utilisateur->getMoyenComs() as $moyenCom) {
+                $utilisateur->removeMoyenCom($moyenCom);
+                $em->remove($moyenCom);
+            }
+
+            $em->flush();
+
+            $em->remove($utilisateur);
+            $em->remove($utilisateurUser);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('utilisateur_index');
     }
 }

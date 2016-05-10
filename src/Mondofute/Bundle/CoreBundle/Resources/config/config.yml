@@ -18,9 +18,9 @@ pugx_multi_user:
                     type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
                     name: fos_user_profile_form
                     validation_groups:  [Profile, Default]
-#        user_two:
-#            entity:
-#                class: Acme\UserBundle\Entity\UserTwo
+        client_user:
+            entity:
+                class: Mondofute\Bundle\ClientBundle\Entity\ClientUser
 #            registration:
 #                form:
 #                    type: Acme\UserBundle\Form\Type\RegistrationUserTwoFormType

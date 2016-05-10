@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste des clients' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des clients' | capitalize }}</h1>
+
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Vip</th>
+            <th>Datenaissance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td><a href="{{ path('client_show', { 'id': client.id }) }}">{{ client.id }}</a></td>
+                <td>{% if client.vip %}Yes{% else %}No{% endif %}</td>
+                <td>{% if client.dateNaissance %}{{ client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('client_show', { 'id': client.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('client_edit', { 'id': client.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('client_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

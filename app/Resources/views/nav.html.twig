@@ -186,6 +186,27 @@
             </ul>
         </li>
         <li role="presentation"
+            class="dropdown {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Client <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Client</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'client_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'client_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li role="presentation"
             class="dropdown {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 Hébergement <span class="caret"></span>
