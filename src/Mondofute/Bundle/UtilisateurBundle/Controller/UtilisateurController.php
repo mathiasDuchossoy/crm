@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 
+use FOS\UserBundle\Model\UserInterface;
 use Mondofute\Bundle\CoreBundle\Entity\User;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
@@ -41,6 +42,11 @@ class UtilisateurController extends Controller
      */
     public function newAction(Request $request)
     {
+//        $this->container->parameters['session.storage.options']['domain'];
+//        dump($this->container->getParameter("fos_user.model_manager_name"));
+//        dump($this->container->getParameter("fos_user.model_manager_name"));
+//        $this->container->setParameter("fos_user.model_manager_name" ,  "skifute");
+//        die;
 
         /** @var Site $site */
         $utilisateurUser = new UtilisateurUser();
@@ -55,12 +61,12 @@ class UtilisateurController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $utilisateurUser->setEnabled(true);
+            $utilisateurUser->setRoles(array(UserInterface::ROLE_SUPER_ADMIN));
 
             $em = $this->getDoctrine()->getEntityManager();
-
-
+            
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
-                $moyenCom->setDateCreation();
+//                $moyenCom->setDateCreation();
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
 
                 if ($typeComm == 'Email' && empty($login)) {
@@ -70,7 +76,7 @@ class UtilisateurController extends Controller
                         ->setEmail($login);
                 }
             }
-            $utilisateur->setDateCreation();
+//            $utilisateur->setDateCreation();
 
             if (!$this->loginExist($utilisateurUser)) {
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
@@ -232,7 +238,7 @@ class UtilisateurController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
-                $this->majSites($utilisateur);
+                $this->majSites($utilisateurUser);
 
                 $em->persist($utilisateurUser);
                 $em->persist($utilisateur);
@@ -255,20 +261,24 @@ class UtilisateurController extends Controller
         ));
     }
 
-    private function majSites(Utilisateur $utilisateur)
+    private function majSites(UtilisateurUser $utilisateurUser)
     {
+        $utilisateur = $utilisateurUser->getUtilisateur();
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-            $utilisateurSite = $emSite->find(Utilisateur::class, $utilisateur);
+            $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
+            $utilisateurSite = $utilisateurUserSite->getUtilisateur();
             $utilisateurSite
 //                ->setPassword($utilisateur->getPassword())
 //                ->setLogin($utilisateur->getPassword())
                 ->setNom($utilisateur->getNom())
                 ->setPrenom($utilisateur->getPrenom());
 //            $utilisateurSite->setDateModification($utilisateur->getDateModification());
+            $utilisateurUserSite->setPassword($utilisateurUser->getPassword());
+            $utilisateurUserSite->setEnabled($utilisateurUser->isEnabled());
 
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -284,7 +294,20 @@ class UtilisateurController extends Controller
                             $moyenComSite->get($key)
                                 ->setAdresse($moyenCom->getAdresse())//                                ->setDateModification($moyenCom->getDateModification())
                             ;
+
+                            $utilisateurUserSite
+                                ->setUsername($moyenCom->getAdresse())
+                                ->setEmail($moyenCom->getAdresse());
                         }
+
+//                        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+//
+//                        if ($typeComm == 'Email' && empty($login)) {
+//                            $login = $moyenCom->getAdresse();
+//                            $utilisateurUser
+//                                ->setUsername($login)
+//                                ->setEmail($login);
+//                        }
                         break;
                     default:
                         break;
@@ -292,6 +315,7 @@ class UtilisateurController extends Controller
             }
 
             $emSite->persist($utilisateurSite);
+            $emSite->persist($utilisateurUserSite);
             $emSite->flush();
         }
     }

@@ -3,12 +3,14 @@
 namespace Mondofute\Bundle\ClientBundle\Controller;
 
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CoreBundle\Entity\User;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
+use Nucleus\MoyenComBundle\Entity\Pays;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
@@ -33,10 +35,10 @@ class ClientController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $clients = $em->getRepository('MondofuteClientBundle:Client')->findAll();
+        $clients = $em->getRepository('MondofuteClientBundle:ClientUser')->findAll();
 
         return $this->render('@MondofuteClient/client/index.html.twig', array(
-            'clients' => $clients,
+            'clientUsers' => $clients,
         ));
     }
 
@@ -59,6 +61,7 @@ class ClientController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $clientUser->setEnabled(true);
 
             $em = $this->getDoctrine()->getEntityManager();
 
@@ -85,7 +88,7 @@ class ClientController extends Controller
                     $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
                     $clientClone->setCivilite($emSite->find(Civilite::class, $client->getCivilite()->getId()));
-                    $this->dupliquerMoyenComs($client);
+                    $this->dupliquerMoyenComs($client, $emSite);
 
                     $clientUserClone->setClient($clientClone);
 
@@ -94,7 +97,8 @@ class ClientController extends Controller
 
                     $emSite->flush();
                 }
-
+                $this->dupliquerMoyenComs($client, $em);
+//        dump($client->getMoyenComs());die;
                 $em->persist($client);
                 $em->persist($clientUser);
 
@@ -151,7 +155,7 @@ class ClientController extends Controller
         return false;
     }
 
-    private function dupliquerMoyenComs(Client $client)
+    private function dupliquerMoyenComs(Client $client, EntityManager $emSite)
     {
         foreach ($client->getMoyenComs() as $moyenCom) {
             $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -165,7 +169,9 @@ class ClientController extends Controller
                         ->setAdresse2($moyenCom->getAdresse2())
                         ->setAdresse3($moyenCom->getAdresse3())
                         ->setVille($moyenCom->getVille())
-                        ->setPays($moyenCom->getPays());
+//                        ->setPays($moyenCom->getPays())
+                        ->setPays($emSite->find(Pays::class, $moyenCom->getPays()->getId()));
+//                    dump($emSite->find(Pays::class , $moyenCom->getPays()->getId()));die;
                     break;
                 case 'TelFixe':
                     /** @var TelFixe $moyenCom */
@@ -207,7 +213,7 @@ class ClientController extends Controller
         $deleteForm = $this->createDeleteForm($clientUser);
 
         return $this->render('@MondofuteClient/client/show.html.twig', array(
-            'client' => $clientUser,
+            'clientUser' => $clientUser,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -261,7 +267,7 @@ class ClientController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
-                $this->majSites($client);
+                $this->majSites($clientUser);
 
                 $em->persist($clientUser);
                 $em->persist($client);
@@ -284,14 +290,16 @@ class ClientController extends Controller
         ));
     }
 
-    private function majSites(Client $client)
+    private function majSites(ClientUser $clientUser)
     {
         /** @var Site $site */
+        $client = $clientUser->getClient();
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-            $clientSite = $emSite->find(Client::class, $client);
+            $clientUserSite = $emSite->find(ClientUser::class, $clientUser);
+            $clientSite = $clientUserSite->getClient();
             $clientSite
                 ->setDateNaissance($client->getDateNaissance())
                 ->setVip($client->getVip())
@@ -299,6 +307,9 @@ class ClientController extends Controller
                 ->setPrenom($client->getPrenom())
                 ->setCivilite($emSite->find(Civilite::class, $client->getCivilite()));
 //            $clientSite->setDateModification($client->getDateModification());
+
+            $clientUserSite->setPassword($clientUser->getPassword());
+            $clientUserSite->setEnabled($clientUser->isEnabled());
 
             foreach ($client->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -316,28 +327,35 @@ class ClientController extends Controller
                             ->setAdresse2($moyenCom->getAdresse2())
                             ->setAdresse3($moyenCom->getAdresse3())
                             ->setVille($moyenCom->getVille())
-                            ->setPays($moyenCom->getPays())
-                            ->setDateModification($moyenCom->getDateModification());
+                            ->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+//                            ->setDateModification($moyenCom->getDateModification());
                         break;
                     case 'TelFixe':
                         /** @var TelFixe $moyenCom */
                         $moyenComSite->first()
-                            ->setNumero($moyenCom->getNumero())
-                            ->setDateModification($moyenCom->getDateModification());
+                            ->setNumero($moyenCom->getNumero());
+//                            ->setDateModification($moyenCom->getDateModification());
                         break;
                     case 'TelMobile':
                         /** @var TelMobile $moyenCom */
                         $moyenComSite->first()
 //                            ->setSmsing($moyenCom->getSmsing())
-                            ->setNumero($moyenCom->getNumero())
-                            ->setDateModification($moyenCom->getDateModification());
+                            ->setNumero($moyenCom->getNumero());
+//                            ->setDateModification($moyenCom->getDateModification());
                         break;
                     case 'Email':
                         /** @var Email $email */
                         foreach ($moyenComSite as $key => $email) {
                             $moyenComSite->get($key)
-                                ->setAdresse($moyenCom->getAdresse())
-                                ->setDateModification($moyenCom->getDateModification());
+                                ->setAdresse($moyenCom->getAdresse());
+//                                ->setDateModification($moyenCom->getDateModification());
+                            if (empty($login)) {
+                                $login = $moyenCom->getAdresse();
+                                $clientUserSite
+                                    ->setUsername($login)
+                                    ->setEmail($login);
+                            }
+//                            dump($clientUserSite);
                         }
                         break;
                     default:
@@ -346,7 +364,9 @@ class ClientController extends Controller
             }
 
             $emSite->persist($clientSite);
+            $emSite->persist($clientUserSite);
             $emSite->flush();
+            unset($login);
         }
     }
 

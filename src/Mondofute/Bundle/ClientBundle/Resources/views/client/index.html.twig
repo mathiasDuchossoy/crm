@@ -16,20 +16,20 @@
         </tr>
         </thead>
         <tbody>
-        {% for client in clients %}
+        {% for clientUser in clientUsers %}
             <tr>
-                <td><a href="{{ path('client_show', { 'id': client.id }) }}">{{ client.id }}</a></td>
-                <td>{% if client.vip %}Yes{% else %}No{% endif %}</td>
-                <td>{% if client.dateNaissance %}{{ client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
+                <td><a href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ clientUser.id }}</a></td>
+                <td>{% if clientUser.client.vip %}Yes{% else %}No{% endif %}</td>
+                <td>{% if clientUser.client.dateNaissance %}{{ clientUser.client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
                 <td>
                     <ul class="list-unstyled">
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('client_show', { 'id': client.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                               href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('client_edit', { 'id': client.id }) }}">{{ 'modifier' | capitalize }}</a>
+                               href="{{ path('client_edit', { 'id': clientUser.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
