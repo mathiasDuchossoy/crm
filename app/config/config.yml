@@ -126,6 +126,14 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Model'
+#                        D:\projets\v2\crm\www\vendor\friendsofsymfony\user-bundle\Resources\config\doctrine-mapping
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/FOS/UserBundle/Resources/config/doctrine/model'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -150,6 +158,11 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -222,9 +235,11 @@ sc_datetimepicker:
     picker: ~
 
 fos_user:
+    model_manager_name: ~
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: Mondofute\Bundle\CoreBundle\Entity\User
+#    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
     service:
         user_manager: pugx_user_manager
 #    registration:

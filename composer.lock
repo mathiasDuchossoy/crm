@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "905a24e9e7d7e9ff0e8f92ee8fe8e35e",
-    "content-hash": "c386b26efaac8bbee805b1601d919b1e",
+    "hash": "e4c718b7c473e42e6372fcc7825d8323",
+    "content-hash": "12c47a0db9e0283c84cccf3e8a545e84",
     "packages": [
         {
             "name": "components/jquery",
@@ -821,12 +821,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "def27463609e24af410b2606f0062de46fab5662"
+                "reference": "c85b5d9e48c0f2918ac6161e268d6f981a24c875"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/def27463609e24af410b2606f0062de46fab5662",
-                "reference": "def27463609e24af410b2606f0062de46fab5662",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/c85b5d9e48c0f2918ac6161e268d6f981a24c875",
+                "reference": "c85b5d9e48c0f2918ac6161e268d6f981a24c875",
                 "shasum": ""
             },
             "require": {
@@ -882,7 +882,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-04-28 10:51:07"
+            "time": "2016-05-10 08:29:38"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -937,16 +937,16 @@
         },
         {
             "name": "infinite-networks/form-bundle",
-            "version": "1.0.5",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/infinite-networks/InfiniteFormBundle.git",
-                "reference": "12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca"
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca",
-                "reference": "12f8953e9db271b3ecbcf8bbf95ceca0fdcbb3ca",
+                "url": "https://api.github.com/repos/infinite-networks/InfiniteFormBundle/zipball/dcf3168890847e40440a577f34f87b95cbb1cca9",
+                "reference": "dcf3168890847e40440a577f34f87b95cbb1cca9",
                 "shasum": ""
             },
             "require": {
@@ -989,7 +989,7 @@
                 }
             ],
             "description": "A collection of useful form types and extensions for Symfony2",
-            "time": "2016-04-27 22:32:18"
+            "time": "2015-11-26 08:17:47"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1474,7 +1474,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/contactBundle.git",
-                "reference": "17365da928e45dd3d08a50c723cda42a25725f2a"
+                "reference": "624e75b3d06133f17ff15a4a93da2a4291850664"
             },
             "require": {
                 "nucleus/moyencombundle": "dev-commun"
@@ -1497,7 +1497,7 @@
             "keywords": [
                 "Contact"
             ],
-            "time": "2016-05-02 14:08:01"
+            "time": "2016-05-09 10:24:58"
         },
         {
             "name": "nucleus/moyencombundle",
@@ -1505,7 +1505,7 @@
             "source": {
                 "type": "git",
                 "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git",
-                "reference": "7b1f2158d541620ce28f626969e1cf718d755bb4"
+                "reference": "4bf1a32a7d8a876827fdc95927fc90bf5af3be8a"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -1525,7 +1525,7 @@
             "keywords": [
                 "MoyenCom"
             ],
-            "time": "2016-05-02 08:53:36"
+            "time": "2016-05-11 06:54:17"
         },
         {
             "name": "oyejorge/less.php",
@@ -2789,16 +2789,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.5",
+            "version": "v2.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2"
+                "reference": "8408816780215fae055599d100b5385d9a247151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
-                "reference": "39ddd2383f4113cf67f8b28cde2c9d3fa340c3c2",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/8408816780215fae055599d100b5385d9a247151",
+                "reference": "8408816780215fae055599d100b5385d9a247151",
                 "shasum": ""
             },
             "require": {
@@ -2919,7 +2919,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-04-29 15:34:08"
+            "time": "2016-05-09 21:45:54"
         },
         {
             "name": "twig/twig",
@@ -3089,7 +3089,7 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v2.8.5",
+            "version": "v2.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",

@@ -64,9 +64,9 @@ class ClientType extends AbstractType
         }
         foreach ($cViewComm as $viewCom) {
             foreach ($viewCom as $key => $com) {
-                if ($key > 0) {
-                    $com->vars['label'] = $com->vars['label'] . ' ' . $key;
-                }
+//                if ($key > 0) {
+                $com->vars['label'] = $com->vars['label'] . ' ' . ($key + 1);
+//                }
             }
         }
     }
