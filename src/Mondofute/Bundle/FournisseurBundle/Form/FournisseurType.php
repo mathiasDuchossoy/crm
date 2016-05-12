@@ -23,12 +23,14 @@ class FournisseurType extends AbstractType
     {
         $fournisseurId = $builder->getData()->getId();
         $builder
-            ->add('enseigne')
+            ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
             ->add('fournisseurParent', EntityType::class, array(
                 'choice_label' => 'enseigne',
                 'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
-                'placeholder' => ' ----- Choisir un fournisseur parent ----- ',
+                'placeholder' => 'placeholder.choisir.fournisseur.parent',
                 'required' => false,
+                'label' => 'fournisseur.parent',
+                'translation_domain' => 'messages',
                 'query_builder' => function (FournisseurRepository $r) use ($fournisseurId) {
                     return $r->getFournisseurDeFournisseur($fournisseurId);
                 },
@@ -38,12 +40,16 @@ class FournisseurType extends AbstractType
                     FournisseurContient::getLibelle(FournisseurContient::FOURNISSEUR) => FournisseurContient::FOURNISSEUR,
                     FournisseurContient::getLibelle(FournisseurContient::PRODUIT) => FournisseurContient::PRODUIT
                 ),
-                'choices_as_values' => true
+                'choices_as_values' => true,
+                'label' => 'contient',
+                'translation_domain' => 'messages',
             ))
             ->add('interlocuteurs', CollectionType::class, array(
                     'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\FournisseurInterlocuteurType',
                     'allow_add' => true,
                     'allow_delete' => true,
+                    'label' => 'interlocuteurs',
+                    'translation_domain' => 'messages',
                 )
             )
             ->add('remiseClefs', CollectionType::class, array(
@@ -51,6 +57,25 @@ class FournisseurType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'label' => 'remise.clef',
+                'translation_domain' => 'messages',
+            ))
+            ->add('receptions', CollectionType::class, array(
+                'entry_type' => ReceptionType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'receptions',
+                'translation_domain' => 'messages'
+            ))
+            ->add('reception', CollectionType::class, array(
+                'entry_type' => ReceptionType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'receptions',
+                'translation_domain' => 'messages',
+                'mapped' => false,
             ));
     }
 

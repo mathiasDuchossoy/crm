@@ -10,6 +10,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
+use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
@@ -55,7 +56,6 @@ class FournisseurController extends Controller
 
             return $response;
         }
-//        dump($fournisseurs);
         return new Response();
     }
 
@@ -70,10 +70,12 @@ class FournisseurController extends Controller
         /** @var Site $site */
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+
         $form->handleRequest($request);
 
 
@@ -99,6 +101,7 @@ class FournisseurController extends Controller
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
             'form' => $form->createView(),
+            'langues' => $langues,
         ));
     }
 
@@ -126,6 +129,13 @@ class FournisseurController extends Controller
                 if (!empty($interlocuteur->getInterlocuteur()->getService())) {
                     $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
                         $interlocuteur->getInterlocuteur()->getService()->getId()));
+                }
+            }
+            /** @var RemiseClef $remiseClef */
+            foreach ($fournisseurSite->getRemiseClefs() as $remiseClef) {
+                /** @var RemiseClefTraduction $traduction */
+                foreach ($remiseClef->getTraductions() as $traduction) {
+                    $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                 }
             }
             $emSite->persist($fournisseurSite);
@@ -158,7 +168,7 @@ class FournisseurController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
-            ->add('Supprimer', SubmitType::class)
+            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -172,6 +182,7 @@ class FournisseurController extends Controller
         /** @var FournisseurInterlocuteur $interlocuteur */
         $originalInterlocuteurs = new ArrayCollection();
         $originalRemiseClefs = new ArrayCollection();
+        $originalReceptions = new ArrayCollection();
 
         // Create an ArrayCollection of the current Tag objects in the database
         foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
@@ -181,13 +192,18 @@ class FournisseurController extends Controller
         foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
             $originalRemiseClefs->add($remiseClef);
         }
+        foreach ($fournisseur->getReceptions() as $reception) {
+            $originalReceptions->add($reception);
+        }
 
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $deleteForm = $this->createDeleteForm($fournisseur);
+        $fournisseur->triReceptions();
+        $fournisseur->triRemiseClefs();
         $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
+            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -208,6 +224,13 @@ class FournisseurController extends Controller
                     $fournisseur->getRemiseClefs()->removeElement($remiseClef);
                     $this->deleteRemiseClefSites($remiseClef);
                     $em->remove($remiseClef);
+                }
+            }
+            foreach ($originalReceptions as $reception) {
+                if (false === $fournisseur->getReceptions()->contains($reception)) {
+                    $fournisseur->getReceptions()->removeElement($reception);
+                    $this->deleteReceptionSites($reception);
+                    $em->remove($reception);
                 }
             }
 
@@ -266,6 +289,22 @@ class FournisseurController extends Controller
             $remiseClefSite->setFournisseur(null);
 
             $emSite->remove($remiseClefSite);
+        }
+    }
+
+    private function deleteReceptionSites(Reception $reception)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $receptionSite = $emSite->find(Reception::class, $reception->getId());
+
+            $receptionSite->setFournisseur(null);
+
+            $emSite->remove($receptionSite);
         }
     }
 
@@ -424,6 +463,27 @@ class FournisseurController extends Controller
 //                    }
                 }
                 $fournisseurSite->addRemiseClef($remiseClefSite);
+            }
+            /** @var Reception $reception */
+            foreach ($fournisseur->getReceptions() as $reception) {
+                $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
+                    $reception
+                ) {
+                    return $element->getId() == $reception->getId();
+                })->first();
+                if (empty($receptionSite)) {
+                    $receptionSite = new Reception();
+                }
+                if (!empty($reception->getTranche1())) {
+                    $receptionSite->setTranche1($reception->getTranche1());
+                }
+                if (!empty($reception->getTranche2())) {
+                    $receptionSite->setTranche2($reception->getTranche2());
+                }
+                if (!empty($reception->getJour())) {
+                    $receptionSite->setJour($reception->getJour());
+                }
+                $fournisseurSite->addReception($receptionSite);
             }
             $emSite->persist($fournisseurSite);
             $emSite->flush();
