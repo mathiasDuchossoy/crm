@@ -1,1 +1,48 @@
+ajouter.reception: 'ajouter une réception'
+modifier.reception: 'modifier une réception'
+receptions: réceptions
+jour.0.libelle: dimanche
+jour.1.libelle: lundi
+jour.2.libelle: mardi
+jour.3.libelle: mercredi
+jour.4.libelle: jeudi
+jour.5.libelle: vendredi
+jour.6.libelle: samedi
+tranche1: 'tranche 1'
+tranche2: 'tranche 2'
+de: deeee
+à: ààààà
+et.de: 'et de'
+debut: début
+fin: fin
+jour: jour
+jours: jours
+enseigne: enseigne
+placeholder:
+    choisir:
+        fournisseur.parent: '----- Choisir un fournisseur parent -----'
+        fonction: '--- choisir une fonction ---'
+        service: '--- choisir un service ---'
+contient: Contient
+Fournisseurs: Fournisseurs
+Produits: Produits
+fournisseur.parent: 'fournisseur parent'
+reception.ajouter: 'ajouter une réception'
+reception.modifier: 'modifier une réception'
+ajouter: ajouter
+modifier: modifier
+remise.clef:
+    modifier: 'modifier la remise de clef'
+    ajouter: 'ajouter la remise de clef'
+remise.clef: 'remise de clef'
+prenom: prénom
+service: service
+fonction: fonction
+receptions: réceptions
+mettre.a.jour: 'mettre à jour'
+standard: standard
+supprimer: delete
+fournisseur:
+    edition: "édition d'un fournisseur"
+    creation: "création d'un fournisseur"
 
