@@ -16,6 +16,7 @@ Mondofute\Bundle\HebergementBundle\Entity\Reception:
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: receptions
     oneToOne:
         tranche1:
             targetEntity: Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire

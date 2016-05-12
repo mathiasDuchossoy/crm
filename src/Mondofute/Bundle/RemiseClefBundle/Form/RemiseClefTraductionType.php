@@ -17,9 +17,13 @@ class RemiseClefTraductionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('lieuxRemiseClef')
+            ->add('lieuxRemiseClef', null, array(
+                'label' => 'lieux.remise.clef',
+                'translation_domain' => 'messages'
+            ))
 //            ->add('remiseClef')
-            ->add('langue', EntityType::class, array('class' => Langue::class, 'choice_label' => 'id'));
+            ->add('langue', EntityType::class,
+                array('class' => Langue::class, 'choice_label' => 'id', 'label' => 'langue'));
     }
 
     /**

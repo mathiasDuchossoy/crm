@@ -33,6 +33,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
             mappedBy: fournisseur
             cascade: ['persist' , 'remove']
+        receptions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
+            mappedBy: fournisseur
+            cascade: ['persist','remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

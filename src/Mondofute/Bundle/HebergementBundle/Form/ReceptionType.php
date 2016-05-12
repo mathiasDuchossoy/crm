@@ -30,12 +30,22 @@ class ReceptionType extends AbstractType
             '0' => 'dimanche'
         );
         $builder
-            ->add('jour', ChoiceType::class, array('choices' => $optionsJour, 'multiple' => true, 'expanded' => true))
-            ->add('tranche1', TrancheHoraireType::class)
-            ->add('tranche2', TrancheHoraireType::class)
+            ->add('jour', ChoiceType::class, array(
+                'choices' => $optionsJour,
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'jours',
+                'translation_domain' => 'messages'
+            ))
+            ->add('tranche1', TrancheHoraireType::class,
+                array('label' => 'tranche1', 'translation_domain' => 'messages'))
+            ->add('tranche2', TrancheHoraireType::class,
+                array('label' => 'tranche2', 'translation_domain' => 'messages'))
             ->add('fournisseur', EntityType::class, array(
                 'class' => Fournisseur::class,
-                'choice_label' => 'id'
+                'choice_label' => 'id',
+                'label' => 'fournisseur',
+                'translation_domain' => 'messages',
             ));
     }
 
@@ -51,7 +61,7 @@ class ReceptionType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        $i = 3;
+//        $i = 3;
 //        foreach ($view->children['remiseClef']->vars['choices'] as $choice) {
 //            $choice->attr['data-fournisseur'] = $choice->data->getFournisseur()->getId();
 //        }
