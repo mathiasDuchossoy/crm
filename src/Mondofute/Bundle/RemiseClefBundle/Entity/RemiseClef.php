@@ -277,16 +277,6 @@ class RemiseClef
     }
 
     /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
      * Add fournisseurHebergement
      *
      * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
@@ -368,5 +358,31 @@ class RemiseClef
         $this->standard = $standard;
 
         return $this;
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        // TODO: Implement __clone() method.
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                /** @var RemiseClefTraduction $cloneTraduction */
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setRemiseClef($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }

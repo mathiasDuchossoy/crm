@@ -41,4 +41,5 @@ Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: remiseClefs
+            cascade: ['persist']
     lifecycleCallbacks: {  }

@@ -16,8 +16,8 @@ class TrancheHoraireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('debut', TimeType::class)
-            ->add('fin', TimeType::class);
+            ->add('debut', TimeType::class, array('label' => 'debut', 'translation_domain' => 'messages'))
+            ->add('fin', TimeType::class, array('label' => 'fin', 'translation_domain' => 'messages'));
     }
 
     /**
