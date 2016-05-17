@@ -20,6 +20,7 @@ Mondofute\Bundle\LogementBundle\Entity\LogementTraduction:
     manyToOne:
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }
