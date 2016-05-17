@@ -30,8 +30,8 @@ class ClientType extends AbstractType
             ->add('vip')
             ->add('dateNaissance', 'date', array(
                 'years' => range(1900, date_format($today, 'Y')),
-                'model_timezone' => 'Europe/Moscow',
-                'view_timezone' => 'Europe/Moscow'
+                'model_timezone' => 'Europe/Paris',
+                'view_timezone' => 'Europe/Paris'
             ))// todo: mettre le datepicker
             ->add('moyenComs', 'infinite_form_polycollection', array(
                 'types' => array(
