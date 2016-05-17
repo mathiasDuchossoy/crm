@@ -1,0 +1,18 @@
+Mondofute\Bundle\LogementBundle\Entity\LogementUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\LogementUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        logements:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            mappedBy: logementUnifie
+
+    lifecycleCallbacks: {  }

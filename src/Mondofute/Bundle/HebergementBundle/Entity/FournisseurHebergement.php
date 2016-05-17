@@ -52,6 +52,10 @@ class FournisseurHebergement
      * @var \Doctrine\Common\Collections\Collection
      */
     private $receptions;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $logements;
 
     /**
      * FournisseurHebergement constructor.
@@ -284,5 +288,39 @@ class FournisseurHebergement
     public function getReceptions()
     {
         return $this->receptions;
+    }
+
+    /**
+     * Add logement
+     *
+     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     *
+     * @return FournisseurHebergement
+     */
+    public function addLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    {
+        $this->logements[] = $logement;
+
+        return $this;
+    }
+
+    /**
+     * Remove logement
+     *
+     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     */
+    public function removeLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    {
+        $this->logements->removeElement($logement);
+    }
+
+    /**
+     * Get logements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLogements()
+    {
+        return $this->logements;
     }
 }
