@@ -23,7 +23,7 @@ class LogementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('actif')
+            ->add('actif', null, array('label' => 'actif', 'translation_domain' => 'messages'))
             ->add('accesPMR')
             ->add('capacite')
             ->add('nbChambre')
