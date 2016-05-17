@@ -65,7 +65,7 @@ class LogementUnifieController extends Controller
             $em->persist($logementUnifie);
             $em->flush();
 
-            return $this->redirectToRoute('logement_logement_show', array('id' => $logementUnifie->getId()));
+            return $this->redirectToRoute('logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
 
         return $this->render('@MondofuteLogement/logementunifie/new.html.twig', array(
@@ -98,7 +98,7 @@ class LogementUnifieController extends Controller
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
-                            $traduction = new DepartementTraduction();
+                            $traduction = new LogementsTraduction();
                             $traduction->setLangue($langue);
                             $logement->addTraduction($traduction);
                         }
@@ -155,7 +155,7 @@ class LogementUnifieController extends Controller
     private function traductionsSortByLangue($logements)
     {
         /** @var ArrayIterator $iterator */
-        /** @var Departement $departement */
+        /** @var Logement $logement */
         foreach ($logements as $logement) {
             $traductions = $logement->getTraductions();
             $iterator = $traductions->getIterator();
@@ -205,12 +205,49 @@ class LogementUnifieController extends Controller
      */
     public function editAction(Request $request, LogementUnifie $logementUnifie)
     {
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+
+        //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
+        $sitesAEnregistrer = array();
+        if (empty($request->get('sites'))) {
+
+//            récupère les sites ayant la région d'enregistrée
+            foreach ($logementUnifie->getLogements() as $logement) {
+                array_push($sitesAEnregistrer, $logement->getSite()->getId());
+            }
+        } else {
+
+//            récupère les sites cochés
+            $sitesAEnregistrer = $request->get('sites');
+        }
+        $originalLogements = new ArrayCollection();
+//          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
+        foreach ($logementUnifie->getLogements() as $logement) {
+            $originalLogements->add($logement);
+        }
+        $this->ajouterLogementsDansForm($logementUnifie);
+        $this->logementsSortByAffichage($logementUnifie);
+
         $deleteForm = $this->createDeleteForm($logementUnifie);
-        $editForm = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie);
+        $editForm = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
+            array('locale' => $request->getLocale()))
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Update',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            foreach ($originalLogements as $logement) {
+                if (false === $logementUnifie->getLogements()->contains($logement)) {
+                    $logementUnifie->getLogements()->removeElement($logement);
+//                    $this->deleteRemiseClefSites($remiseClef);
+                    $em->remove($logement);
+                }
+            }
             $em->persist($logementUnifie);
             $em->flush();
 
@@ -219,8 +256,11 @@ class LogementUnifieController extends Controller
 
         return $this->render('@MondofuteLogement/logementunifie/edit.html.twig', array(
             'logementUnifie' => $logementUnifie,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'sitesAEnregistrer' => $sitesAEnregistrer,
+            'sites' => $sites,
+            'langues' => $langues,
         ));
     }
 

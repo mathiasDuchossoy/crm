@@ -37,11 +37,12 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
         logementUnifie:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementUnifie
             inversedBy: logements
-        hebergement:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
-            inversedBy: logements
+#        hebergement:
+#            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+#            inversedBy: logements
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementTraduction
             mappedBy: logement
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
