@@ -11,6 +11,8 @@
         <tr>
             <th>Id</th>
             <th>Vip</th>
+            <th>Login</th>
+            <th>Prenom / Nom</th>
             <th>Datenaissance</th>
             <th>Actions</th>
         </tr>
@@ -20,6 +22,8 @@
             <tr>
                 <td><a href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ clientUser.id }}</a></td>
                 <td>{% if clientUser.client.vip %}Yes{% else %}No{% endif %}</td>
+                <td>{{ clientUser.username }}</td>
+                <td>{{ clientUser.client.prenom ~ " / " ~ clientUser.client.nom }}</td>
                 <td>{% if clientUser.client.dateNaissance %}{{ clientUser.client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
                 <td>
                     <ul class="list-unstyled">
