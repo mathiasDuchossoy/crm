@@ -285,10 +285,11 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $remiseClefSite = $emSite->find('MondofuteRemiseClefBundle:RemiseClef', $remiseClef->getId());
+            if (!empty($remiseClefSite)) {
+                $remiseClefSite->setFournisseur(null);
 
-            $remiseClefSite->setFournisseur(null);
-
-            $emSite->remove($remiseClefSite);
+                $emSite->remove($remiseClefSite);
+            }
         }
     }
 
@@ -301,10 +302,10 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $receptionSite = $emSite->find(Reception::class, $reception->getId());
-
-            $receptionSite->setFournisseur(null);
-
-            $emSite->remove($receptionSite);
+            if (!empty($receptionSite)) {
+                $receptionSite->setFournisseur(null);
+                $emSite->remove($receptionSite);
+            }
         }
     }
 
