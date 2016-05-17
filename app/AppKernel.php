@@ -35,6 +35,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
             new \Mondofute\Bundle\ClientBundle\MondofuteClientBundle(),
+            new Sonata\IntlBundle\SonataIntlBundle(),
             new Mondofute\Bundle\CatalogueBundle\MondofuteCatalogueBundle(),
             new Mondofute\Bundle\HebergementBundle\MondofuteHebergementBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
