@@ -31,7 +31,7 @@ class ClientType extends AbstractType
             ->add('prenom')
             ->add('nom')
             ->add('vip')
-            ->add('dateNaissance', DateType::class, array(
+            ->add('dateNaissance', 'birthday', array(
 //                'locale' => 'fr_FR'
 //                'months' => 'fr'
 //                'years' => range(1900, date_format($today, 'Y')),
@@ -64,7 +64,12 @@ class ClientType extends AbstractType
         $cViewComm = [];
         foreach ($view->children['moyenComs']->children as $viewMoyenComs) {
             $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
-//            dump($viewMoyenComs);
+
+            if (empty($login) && $typeComm == "Email") {
+                $login = true;
+                $viewMoyenComs->children['adresse']->vars['required'] = true;
+//                dump($viewMoyenComs);
+            }
             $viewMoyenComs->vars['type'] = $typeComm;
             $viewMoyenComs->vars['label'] = $typeComm;
             if (empty($cViewComm[$typeComm])) {
@@ -72,6 +77,7 @@ class ClientType extends AbstractType
             }
             array_push($cViewComm[$typeComm], $viewMoyenComs);
         }
+//        dump($cViewComm);die;
         foreach ($cViewComm as $viewCom) {
             foreach ($viewCom as $key => $com) {
 //                if ($key > 0) {
@@ -79,6 +85,7 @@ class ClientType extends AbstractType
 //                }
             }
         }
+//        die;
     }
 
 }
