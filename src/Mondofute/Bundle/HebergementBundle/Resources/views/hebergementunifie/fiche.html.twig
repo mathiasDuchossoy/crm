@@ -42,10 +42,10 @@
                                         {% set labelCheckbox = ((emplacement.vars.value.typeEmplacement~'Libelle') | trans) | capitalize %}
                                         {#{% set labelCheckbox = labelCheckbox | capitalize  %}#}
                                         {% if(emplacement.distance1.vars.value) %}
-                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'checked': 'checked','onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~loop.index0~');'}} %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'checked': 'checked','onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~emplacement.vars.name~');'}} %}
                                             {% set requiredAttr = {'attr':{'required':'required'}} %}
                                         {% else %}
-                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~loop.index0~');'}} %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~emplacement.vars.name~');'}} %}
                                             {% set requiredAttr = {} %}
                                         {% endif %}
                                         <div class="form-group">
@@ -53,17 +53,17 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Distance 1</label>
-                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1">
+                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1">
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"
-                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1_valeur">Valeur</label>
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1_valeur">Valeur</label>
                                                     <div class="col-sm-10">
                                                         {{ form_widget(emplacement.distance1.valeur, requiredAttr) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"
-                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance1_unite">Unité</label>
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1_unite">Unité</label>
                                                     <div class="col-sm-10">
                                                         {{ form_widget(emplacement.distance1.unite, requiredAttr) }}
                                                     </div>
@@ -72,17 +72,17 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Distance 2</label>
-                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2">
+                                            <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2">
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"
-                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2_valeur">Valeur</label>
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2_valeur">Valeur</label>
                                                     <div class="col-sm-10">
                                                         {{ form_widget(emplacement.distance2.valeur) }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label"
-                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ loop.index0 }}_distance2_unite">Unité</label>
+                                                           for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2_unite">Unité</label>
                                                     <div class="col-sm-10">
                                                         {{ form_widget(emplacement.distance2.unite) }}
                                                     </div>
@@ -365,6 +365,7 @@
             modal.modal().show();
         }
         function gestionEmplacementRequired(indexHebergement, indexEmplacement) {
+            alert(indexHebergement + '_' + indexEmplacement + '_' + $(this).attr('id'));
             $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
             $valeur = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_valeur');
             $unite = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_unite');
