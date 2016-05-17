@@ -38,5 +38,6 @@ mondofute_remise_clef:
     resource: "@MondofuteRemiseClefBundle/Resources/config/routing.yml"
     prefix:   /
 
-
-
+mondofute_logement:
+    resource: "@MondofuteLogementBundle/Resources/config/routing.yml"
+    prefix:   /

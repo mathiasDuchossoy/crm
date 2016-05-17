@@ -37,6 +37,9 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction
             mappedBy: fournisseurHebergement
             cascade: ['persist','remove']
+        logements:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            mappedBy: hebergement
     manyToMany:
         receptions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
