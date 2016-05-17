@@ -6,6 +6,7 @@ use Nucleus\ContactBundle\Entity\Civilite;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -19,8 +20,8 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        phpinfo();
-        die;
+//        phpinfo();
+//        die;
 //        $today = new \DateTime();
         $builder
             ->add('civilite', EntityType::class, array(
@@ -30,7 +31,8 @@ class ClientType extends AbstractType
             ->add('prenom')
             ->add('nom')
             ->add('vip')
-            ->add('dateNaissance', 'birthday', array(
+            ->add('dateNaissance', DateType::class, array(
+//                'locale' => 'fr_FR'
 //                'months' => 'fr'
 //                'years' => range(1900, date_format($today, 'Y')),
 //                'model_timezone' => 'Europe/Paris',
