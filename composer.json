@@ -29,9 +29,10 @@
         "infinite-networks/form-bundle": "1.0.3",
         "nucleus/contactbundle": "dev-commun",
         "nucleus/moyencombundle": "dev-commun",
-        "jms/serializer": "^1.1"
+        "jms/serializer-bundle": "^1.1",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "pugx/multi-user-bundle": "3.0.*@dev",
+        "sonata-project/intl-bundle": "^2.2",
         "symfony/translation": "3.0.x-dev"
     },
     "repositories": [

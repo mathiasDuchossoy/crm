@@ -261,3 +261,9 @@ fos_user:
 #    registration:
 #        form:
 #            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+
+sonata_intl:
+    timezone:
+        locales:
+            fr_FR: Europe/Paris
+            en_UK: Europe/London
