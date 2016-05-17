@@ -1,0 +1,25 @@
+Mondofute\Bundle\LogementBundle\Entity\LogementTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\LogementTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        nom:
+            type: string
+            length: 255
+        descriptif:
+            type: text
+
+    manyToOne:
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }
