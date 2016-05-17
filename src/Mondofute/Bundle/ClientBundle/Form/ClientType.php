@@ -19,7 +19,9 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $today = new \DateTime();
+        phpinfo();
+        die;
+//        $today = new \DateTime();
         $builder
             ->add('civilite', EntityType::class, array(
                 'class' => Civilite::class,
@@ -29,6 +31,7 @@ class ClientType extends AbstractType
             ->add('nom')
             ->add('vip')
             ->add('dateNaissance', 'birthday', array(
+//                'months' => 'fr'
 //                'years' => range(1900, date_format($today, 'Y')),
 //                'model_timezone' => 'Europe/Paris',
 //                'view_timezone' => 'Europe/Paris'
