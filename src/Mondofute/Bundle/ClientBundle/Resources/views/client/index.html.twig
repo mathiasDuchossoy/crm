@@ -21,7 +21,7 @@
         {% for clientUser in clientUsers %}
             <tr>
                 <td><a href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ clientUser.id }}</a></td>
-                <td>{% if clientUser.client.vip %}Yes{% else %}No{% endif %}</td>
+                <td>{% if clientUser.client.vip %}{{ "oui" | trans |capitalize }}{% else %}{{ "non" | trans |capitalize }}{% endif %}</td>
                 <td>{{ clientUser.username }}</td>
                 <td>{{ clientUser.client.prenom ~ " / " ~ clientUser.client.nom }}</td>
                 <td>{% if clientUser.client.dateNaissance %}{{ clientUser.client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
