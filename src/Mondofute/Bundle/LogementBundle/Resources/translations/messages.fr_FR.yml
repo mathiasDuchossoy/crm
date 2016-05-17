@@ -1,1 +1,6 @@
-logements.liste: __logements.liste
+logements.liste: "liste des logements"
+logement.modification: "modification du logement"
+nom: nom
+logement.creation: "création d'un logement"
+retour.liste: "retour à la liste"
+actif: actouf
