@@ -19,6 +19,7 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $today = new \DateTime();
         $builder
             ->add('civilite', EntityType::class, array(
                 'class' => Civilite::class,
@@ -27,7 +28,10 @@ class ClientType extends AbstractType
             ->add('prenom')
             ->add('nom')
             ->add('vip')
-            ->add('dateNaissance', 'date')// todo: mettre le datepicker
+            ->add('dateNaissance', 'date', array(
+                'years' => range(1900, date_format($today, 'Y')),
+                'choice_translation_domain' => null
+            ))// todo: mettre le datepicker
             ->add('moyenComs', 'infinite_form_polycollection', array(
                 'types' => array(
                     'nucleus_moyencombundle_adresse',
