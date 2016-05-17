@@ -11,6 +11,7 @@
         {% block formulaire %}
             {% include '::flashbags.html.twig' %}
 
+            {{ dump(app.request.locale) }}
             {{ form_start(form) }}
             {{ form_row(form.client.civilite) }}
             {{ form_row(form.client.nom) }}
