@@ -19,6 +19,10 @@
                 {{ clientUser.username }}
             </td>
         </tr>
+        <tr class="row">
+            <th class="col-sm-1">Prenom / Nom</th>
+            <td>{{ clientUser.client.prenom ~ " / " ~ clientUser.client.nom }}</td>
+        </tr>
         </tbody>
     </table>
     <div style="text-align: right">

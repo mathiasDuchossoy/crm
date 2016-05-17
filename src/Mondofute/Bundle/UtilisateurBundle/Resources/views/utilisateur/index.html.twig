@@ -10,6 +10,8 @@
         <thead>
         <tr>
             <th>Id</th>
+            <th>Login</th>
+            <th>Prenom / Nom</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -17,8 +19,13 @@
         {% for utilisateur in utilisateurs %}
             <tr>
                 <td><a href="{{ path('utilisateur_show', { 'id': utilisateur.id }) }}">{{ utilisateur.id }}</a></td>
-                {#<td>{{ utilisateur.login }}</td>#}
-                {#<td>{{ utilisateur.password }}</td>#}
+                <td>{{ utilisateur.username }}</td>
+                <td>
+                    {% if utilisateur.utilisateur is not empty %}
+                        {{ utilisateur.utilisateur.prenom ~ " / " ~ utilisateur.utilisateur.nom }}
+                    {% endif %}
+                </td>
+                {#<td>{{ dump(utilisateur.client) }}/td>#}
                 <td>
                     <ul class="list-unstyled">
                         <li>
