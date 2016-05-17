@@ -12,31 +12,61 @@
             {% include '::flashbags.html.twig' %}
 
             {#{{ app.request.locale }}#}
-            {{ date_time_object | format_datetime }}
             {{ form_start(form) }}
             {{ form_row(form.client.civilite) }}
             {{ form_row(form.client.nom) }}
             {{ form_row(form.client.prenom) }}
             {{ form_row(form.client.dateNaissance) }}
+
+            {% set formAdresse   =  '' %}
+            {% set formTelFixe   =  '' %}
+            {% set formTelMobile =  '' %}
+
             {% for moyenCom in form.client.moyenComs %}
                 {% set typeMoyenCom = moyenCom.vars.type %}
                 {% if typeMoyenCom == 'Adresse' %}
-                    {{ form_row(moyenCom.adresse1) }}
-                    {{ form_row(moyenCom.adresse2) }}
-                    {{ form_row(moyenCom.adresse3) }}
-                    {{ form_row(moyenCom.codePostal) }}
-                    {{ form_row(moyenCom.ville) }}
-                    {{ form_row(moyenCom.pays) }}
+                    {% set formAdresse =  moyenCom %}
                 {% elseif typeMoyenCom == 'TelFixe' %}
-                    {{ form_row(moyenCom.numero , { 'label' : 'téléphone' | title  }) }}
+                    {% set formTelFixe =  moyenCom %}
                 {% elseif typeMoyenCom == 'TelMobile' %}
-                    {{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}
+                    {% set formTelMobile =  moyenCom %}
                 {% elseif typeMoyenCom == 'Email' %}
-                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
-                {% else %}
-                    {{ form_row(moyenCom) }}
+                    {#{{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}#}
                 {% endif %}
             {% endfor %}
+
+            {{ form_row(formAdresse.adresse1) }}
+            {{ form_row(formAdresse.adresse2) }}
+            {{ form_row(formAdresse.adresse3) }}
+            {{ form_row(formAdresse.codePostal) }}
+            {{ form_row(formAdresse.ville) }}
+            {{ form_row(formAdresse.pays) }}
+
+            {{ form_row(formTelFixe.numero , { 'label' : 'téléphone' | title  }) }}
+
+            {{ form_row(formTelMobile.numero , { 'label' : 'mobile' | title  }) }}
+
+            {% for moyenCom in form.client.moyenComs %}
+                {% set typeMoyenCom = moyenCom.vars.type %}
+                {#{% if typeMoyenCom == 'Adresse' %}#}
+                {#{{ form_row(moyenCom.adresse1) }}#}
+                {#{{ form_row(moyenCom.adresse2) }}#}
+                {#{{ form_row(moyenCom.adresse3) }}#}
+                {#{{ form_row(moyenCom.codePostal) }}#}
+                {#{{ form_row(moyenCom.ville) }}#}
+                {#{{ form_row(moyenCom.pays) }}#}
+                {#{% elseif typeMoyenCom == 'TelFixe' %}#}
+                {#{{ form_row(moyenCom.numero , { 'label' : 'téléphone' | title  }) }}#}
+                {#{% elseif typeMoyenCom == 'TelMobile' %}#}
+                {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
+                {#{% elseif typeMoyenCom == 'Email' %}#}
+                {% if typeMoyenCom == 'Email' %}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                {% else %}
+                    {#{{ form_row(moyenCom) }}#}
+                {% endif %}
+            {% endfor %}
+
             {{ form_row(form.plainPassword) }}
             {{ form_row(form.client.vip) }}
 

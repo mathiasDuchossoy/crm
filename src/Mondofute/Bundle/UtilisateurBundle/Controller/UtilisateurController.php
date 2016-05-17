@@ -336,9 +336,7 @@ class UtilisateurController extends Controller
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             foreach ($sites as $site) {
                 $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-//                dump($utilisateurUser->getId());
-//                die();
-//                $utilisateurUserSite = $emSite->find(User::class, $utilisateurUser);
+
                 $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
 
                 if (!empty($utilisateurUserSite)) {
