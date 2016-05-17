@@ -296,7 +296,8 @@ class HebergementUnifieController extends Controller
                     $stationSite = null;
                 }
                 if (!empty($hebergement->getTypeHebergement())) {
-                    $typeHebergementSite = $em->getRepository(TypeHebergement::class)->findOneBy(array('typeHebergementUnifie' => $hebergement->getTypeHebergement()->getTypeHebergementUnifie()->getId()));
+//                    $typeHebergementSite = $em->getRepository(TypeHebergement::class)->findOneBy(array('typeHebergementUnifie' => $hebergement->getTypeHebergement()->getTypeHebergementUnifie()->getId()));
+                    $typeHebergementSite = $em->getRepository(TypeHebergement::class)->findOneBy(array('typeHebergementUnifie' => $hebergement->getTypeHebergement()->getTypeHebergementUnifie()));
                 } else {
                     $typeHebergementSite = null;
                 }
@@ -495,11 +496,11 @@ class HebergementUnifieController extends Controller
         /** @var EmplacementHebergement $emplacementSite */
 //        Suppression des emplacements qui ne sont plus présents
         $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-        $emplacementsSite = $emSite->getRepository(EmplacementHebergement::class)->findAll();
+        $emplacementsSite = $emSite->getRepository(EmplacementHebergement::class)->findBy(array('hebergement' => $hebergementSite));
         foreach ($emplacementsSite as $emplacementSite) {
             $present = 0;
             foreach ($hebergement->getEmplacements() as $emplacement) {
-                if ($emplacementSite->getTypeEmplacement()->getId() == $emplacement->getTypeEmplacement()->getId()) {
+                if ($emplacementSite->getTypeEmplacement() == $emplacement->getTypeEmplacement()) {
                     $present = 1;
                 }
             }
