@@ -28,6 +28,8 @@ class HebergementUnifie
     public function __construct()
     {
         $this->hebergements = new ArrayCollection();
+        $this->fournisseurs = new ArrayCollection();
+
     }
 
     /**

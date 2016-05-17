@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\HebergementBundle\Controller;
 
 use ArrayIterator;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -26,10 +25,12 @@ use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
-use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
+use Nucleus\MoyenComBundle\Entity\Pays;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+
+//use DateTime;
 
 /**
  * HebergementUnifie controller.
@@ -78,22 +79,38 @@ class HebergementUnifieController extends Controller
         ));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Hebergement $hebergement */
+            foreach ($hebergementUnifie->getHebergements() as $keyHebergement => $hebergement) {
+                foreach ($hebergement->getEmplacements() as $keyEmplacement => $emplacement) {
+                    if (empty($request->request->get('hebergement_unifie')['hebergements'][$keyHebergement]['emplacements'][$keyEmplacement]['checkbox'])) {
+                        $hebergement->removeEmplacement($emplacement);
+//                        $em->remove($emplacement);
+                    } else {
+                        if (!empty($emplacement->getDistance2())) {
+                            if (empty($emplacement->getDistance2()->getUnite())) {
+//                                $em->remove($emplacement->getDistance2());
+                                $emplacement->setDistance2(null);
+                            }
+                        }
+                    }
+                }
+            }
             // dispacher les données communes
 //            $this->dispacherDonneesCommune($hebergementUnifie);
 
             $this->supprimerHebergements($hebergementUnifie, $sitesAEnregistrer);
-            foreach ($hebergementUnifie->getHebergements() as $hebergement) {
-                /** @var MoyenCommunication $moyenCom */
-                foreach ($hebergement->getMoyenComs() as $moyenCom) {
-                    $moyenCom->setDateCreation();
-                }
-            }
+//            foreach ($hebergementUnifie->getHebergements() as $hebergement) {
+//                /** @var MoyenCommunication $moyenCom */
+//                foreach ($hebergement->getMoyenComs() as $moyenCom) {
+//                    $moyenCom->setDateCreation();
+//                }
+//            }
             /** @var FournisseurHebergement $fournisseur */
-            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
-                $fournisseur->getTelFixe()->setDateCreation();
-                $fournisseur->getTelMobile()->setDateCreation();
-                $fournisseur->getAdresse()->setDateCreation();
-            }
+//            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+//                $fournisseur->getTelFixe()->setDateCreation();
+//                $fournisseur->getTelMobile()->setDateCreation();
+//                $fournisseur->getAdresse()->setDateCreation();
+//            }
 //            $this->gestionDatesMoyenComs($hebergementUnifie);
             $em = $this->getDoctrine()->getManager();
             $em->persist($hebergementUnifie);
@@ -165,7 +182,7 @@ class HebergementUnifieController extends Controller
                 $hebergement = new Hebergement();
 //                création d'une adresse
                 $adresse = new Adresse();
-                $adresse->setDateCreation();
+//                $adresse->setDateCreation();
                 $hebergement->addMoyenCom($adresse);
 
                 $hebergement->setSite($site);
@@ -314,11 +331,12 @@ class HebergementUnifieController extends Controller
                     ) {
 //                        initialise un objet
                         $fournisseurSite = new FournisseurHebergement();
-                    } else {
-                        $fournisseurSite->getAdresse()->setDateModification(new DateTime());
-                        $fournisseurSite->getTelFixe()->setDateModification(new DateTime());
-                        $fournisseurSite->getTelMobile()->setDateModification(new DateTime());
                     }
+//                    else {
+//                        $fournisseurSite->getAdresse()->setDateModification(new DateTime());
+//                        $fournisseurSite->getTelFixe()->setDateModification(new DateTime());
+//                        $fournisseurSite->getTelMobile()->setDateModification(new DateTime());
+//                    }
                     foreach ($fournisseurSite->getReceptions() as $receptionSite) {
                         $fournisseurSite->removeReception($receptionSite);
                     }
@@ -343,7 +361,7 @@ class HebergementUnifieController extends Controller
                         $fournisseurHebergementTraduction->setAcces($traduction->getAcces());
                         $fournisseurSite->addTraduction($fournisseurHebergementTraduction);
                     }
-                    $this->dupliqueFounisseurHebergement($fournisseur, $fournisseurSite);
+                    $this->dupliqueFounisseurHebergement($fournisseur, $fournisseurSite, $em);
                     $fournisseurSite->setHebergement($entitySite)
                         ->setFournisseur($em->getRepository(Fournisseur::class)->findOneBy(array('id' => $fournisseur->getFournisseur()->getId())));
                     $fournisseurSite->setRemiseClef($em->getRepository(RemiseClef::class)->findOneBy(array('id' => $fournisseur->getRemiseClef()->getId())));
@@ -361,11 +379,11 @@ class HebergementUnifieController extends Controller
                 $adresse = $hebergement->getMoyenComs()->first();
                 if (!empty($hebergementSite->getMoyenComs())) {
                     $adresseSite = $hebergementSite->getMoyenComs()->first();
-                    $adresseSite->setDateModification(new DateTime());
+//                    $adresseSite->setDateModification(new DateTime());
                 } else {
                     $adresseSite = new Adresse();
-                    $adresseSite->setDateCreation();
-                    $adresseSite->setCoordonneeGPS(new CoordonneesGPS());
+//                    $adresseSite->setDateCreation();
+                    $adresseSite->setCoordonneeGps(new CoordonneesGPS());
                     $hebergementSite->addMoyenCom($adresseSite);
                 }
                 $adresseSite->setVille($adresse->getVille());
@@ -373,11 +391,11 @@ class HebergementUnifieController extends Controller
                 $adresseSite->setAdresse2($adresse->getAdresse2());
                 $adresseSite->setAdresse3($adresse->getAdresse3());
                 $adresseSite->setCodePostal($adresse->getCodePostal());
-                $adresseSite->setPays($adresse->getPays());
-                $adresseSite->getCoordonneeGPS()
-                    ->setLatitude($adresse->getCoordonneeGPS()->getLatitude())
-                    ->setLongitude($adresse->getCoordonneeGPS()->getLongitude())
-                    ->setPrecis($adresse->getCoordonneeGPS()->getPrecis());
+                $adresseSite->setPays($em->find(Pays::class, $adresse->getPays()));
+                $adresseSite->getCoordonneeGps()
+                    ->setLatitude($adresse->getCoordonneeGps()->getLatitude())
+                    ->setLongitude($adresse->getCoordonneeGps()->getLongitude())
+                    ->setPrecis($adresse->getCoordonneeGps()->getPrecis());
                 if (!empty($classementSite->getUnite())) {
                     $uniteSite = $em->getRepository(Unite::class)->findOneBy(array('id' => $hebergement->getClassement()->getUnite()->getId()));
                 } else {
@@ -438,18 +456,19 @@ class HebergementUnifieController extends Controller
      */
     public function dupliqueFounisseurHebergement(
         FournisseurHebergement $fournisseur,
-        FournisseurHebergement $fournisseurSite
+        FournisseurHebergement $fournisseurSite,
+        $emSite
     ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
         $telMobileFournisseur = $fournisseur->getTelMobile();
         /** @var CoordonneesGPS $coordonneesGPSFournisseur */
-        $coordonneesGPSFournisseur = $fournisseur->getAdresse()->getCoordonneeGPS();
+        $coordonneesGPSFournisseur = $fournisseur->getAdresse()->getCoordonneeGps();
 
 //        récupération des données fournisseurSite
         $adresseFournisseurSite = $fournisseurSite->getAdresse();
-        $coordonneesGPSFournisseurSite = $fournisseurSite->getAdresse()->getCoordonneeGPS();
+        $coordonneesGPSFournisseurSite = $fournisseurSite->getAdresse()->getCoordonneeGps();
         $telFixeFournisseurSite = $fournisseurSite->getTelFixe();
         $telMobileFournisseurSite = $fournisseurSite->getTelMobile();
 
@@ -462,8 +481,8 @@ class HebergementUnifieController extends Controller
             ->setAdresse3($adresseFournisseur->getAdresse3())
             ->setCodePostal($adresseFournisseur->getCodePostal())
             ->setVille($adresseFournisseur->getVille())
-            ->setPays($adresseFournisseur->getPays())
-            ->setCoordonneeGPS($coordonneesGPSFournisseurSite);
+            ->setPays($emSite->find(Pays::class, $adresseFournisseur->getPays()))
+            ->setCoordonneeGps($coordonneesGPSFournisseurSite);
         $telFixeFournisseurSite->setNumero($telFixeFournisseur->getNumero());
         $telMobileFournisseurSite
             ->setSmsing($telMobileFournisseur->getSmsing())
@@ -719,13 +738,14 @@ class HebergementUnifieController extends Controller
                     $em->flush();
                     $hebergement->setHebergementUnifie(null);
                     $em->remove($hebergement);
-                } else {
-                    /** @var MoyenCommunication $moyenCom */
-                    foreach ($hebergement->getMoyenComs() as $moyenCom) {
-                        $moyenCom->setDateModification(new DateTime());
-                    }
-
                 }
+//                else {
+//                    /** @var MoyenCommunication $moyenCom */
+//                    foreach ($hebergement->getMoyenComs() as $moyenCom) {
+//                        $moyenCom->setDateModification(new DateTime());
+//                    }
+//
+//                }
             }
             /** @var FournisseurHebergement $fournisseur */
             foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
@@ -735,21 +755,21 @@ class HebergementUnifieController extends Controller
                     $em->remove($fournisseur);
                 } else {
                     $fournisseur->setHebergement($hebergementUnifie);
-                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
-                        $fournisseur->getAdresse()->setDateCreation();
-                    } else {
-                        $fournisseur->getAdresse()->setDateModification(new DateTime());
-                    }
-                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
-                        $fournisseur->getTelFixe()->setDateCreation();
-                    } else {
-                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
-                    }
-                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
-                        $fournisseur->getTelMobile()->setDateCreation();
-                    } else {
-                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
-                    }
+//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
+//                        $fournisseur->getAdresse()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
+//                        $fournisseur->getTelFixe()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
+//                        $fournisseur->getTelMobile()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
+//                    }
                 }
             }
             $em->persist($hebergementUnifie);
