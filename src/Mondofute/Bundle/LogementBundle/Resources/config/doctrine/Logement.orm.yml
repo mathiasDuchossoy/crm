@@ -1,0 +1,47 @@
+Mondofute\Bundle\LogementBundle\Entity\Logement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\LogementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+        accesPMR:
+            type: boolean
+        capacite:
+            type: integer
+            options:
+                unsigned: true
+        nbChambre:
+            type: smallint
+            options:
+                unsigned: true
+        superficieMin:
+            type: smallint
+            options:
+                unsigned: true
+        superficieMax:
+            type: smallint
+            options:
+                unsigned: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        logementUnifie:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementUnifie
+            inversedBy: logements
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            inversedBy: logements
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementTraduction
+            mappedBy: logement
+    lifecycleCallbacks: {  }

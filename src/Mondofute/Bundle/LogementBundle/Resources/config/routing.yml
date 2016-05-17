@@ -1,0 +1,7 @@
+mondofute_logement_logement:
+    resource: "@MondofuteLogementBundle/Resources/config/routing/logementunifie.yml"
+    prefix:   /logement
+
+mondofute_logement_homepage:
+    path:     /
+    defaults: { _controller: MondofuteLogementBundle:Default:index }

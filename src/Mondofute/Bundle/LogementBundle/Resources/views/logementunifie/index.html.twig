@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'logements.liste' | trans }}</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'nom' | trans | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for logementUnifie in logementUnifies %}
+            <tr>
+                <td>
+                    <a href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">{{ logementUnifie.id }}</a>
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('logement_logement_edit', { 'id': logementUnifie.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('logement_logement_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
