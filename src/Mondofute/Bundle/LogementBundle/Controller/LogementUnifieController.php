@@ -241,10 +241,20 @@ class LogementUnifieController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
+            // Supprimer la relation entre la station et stationUnifie
             foreach ($originalLogements as $logement) {
-                if (false === $logementUnifie->getLogements()->contains($logement)) {
-                    $logementUnifie->getLogements()->removeElement($logement);
-//                    $this->deleteRemiseClefSites($remiseClef);
+                if (!$logementUnifie->getLogements()->contains($logement)) {
+
+//                    //  suppression de la station sur le site
+//                    $emSite = $this->getDoctrine()->getEntityManager($logement->getSite()->getLibelle());
+//                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
+//                    $departementSite = $entitySite->getDepartements()->first();
+//                    $emSite->remove($departementSite);
+//
+//                    $emSite->flush();
+////                    dump($departement);
+//                    $departement->setDepartementUnifie(null);
                     $em->remove($logement);
                 }
             }
@@ -262,6 +272,24 @@ class LogementUnifieController extends Controller
             'sites' => $sites,
             'langues' => $langues,
         ));
+    }
+
+    /**
+     * retirer de l'entité les departements qui ne doivent pas être enregistrer
+     * @param LogementUnifie $entity
+     * @param array $sitesAEnregistrer
+     *
+     * @return $this
+     */
+    private function supprimerLogements(LogementUnifie $entity, array $sitesAEnregistrer)
+    {
+        /** @var Logement $logement */
+        foreach ($entity->getLogements() as $logement) {
+            if (!in_array($logement->getSite()->getId(), $sitesAEnregistrer)) {
+                $entity->removeLogement($logement);
+            }
+        }
+        return $this;
     }
 
     /**

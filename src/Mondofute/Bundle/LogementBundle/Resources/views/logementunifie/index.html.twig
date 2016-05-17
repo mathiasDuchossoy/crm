@@ -3,7 +3,7 @@
 {% block body %}
     <h1>{{ 'logements.liste' | trans }}</h1>
 
-    <table>
+    <table class="table-responsive table-striped table">
         <thead>
         <tr>
             <th>Id</th>
@@ -18,12 +18,25 @@
                     <a href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">{{ logementUnifie.id }}</a>
                 </td>
                 <td>
-                    <ul>
+                    {% for logement in logementUnifie.logements %}
+                        {% if logement.site.crm == 1 %}
+                            {% for traduction in logement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">show</a>
+                            <a class="btn btn-default"
+                               href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">{{ 'voir' | trans }}</a>
                         </li>
                         <li>
-                            <a href="{{ path('logement_logement_edit', { 'id': logementUnifie.id }) }}">edit</a>
+                            <a class="btn btn-default"
+                               href="{{ path('logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
                         </li>
                     </ul>
                 </td>
@@ -32,9 +45,9 @@
         </tbody>
     </table>
 
-    <ul>
+    <ul class="list-unstyled">
         <li>
-            <a href="{{ path('logement_logement_new') }}">Create a new entry</a>
+            <a class="btn btn-default" href="{{ path('logement_logement_new') }}">{{ 'ajouter' | trans }}</a>
         </li>
     </ul>
 {% endblock %}
