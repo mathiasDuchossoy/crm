@@ -14,5 +14,6 @@ Mondofute\Bundle\LogementBundle\Entity\LogementUnifie:
         logements:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
             mappedBy: logementUnifie
+            cascade: ['persist','remove']
 
     lifecycleCallbacks: {  }

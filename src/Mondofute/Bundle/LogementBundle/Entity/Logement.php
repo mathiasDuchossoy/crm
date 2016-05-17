@@ -224,6 +224,7 @@ class Logement
     public function removeTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
+        $traduction->setLogement(null);
     }
 
     /**
@@ -259,7 +260,7 @@ class Logement
      */
     public function addTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setLogement($this);
 
         return $this;
     }

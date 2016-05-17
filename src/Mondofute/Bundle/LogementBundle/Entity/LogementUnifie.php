@@ -44,6 +44,7 @@ class LogementUnifie
     public function removeLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
     {
         $this->logements->removeElement($logement);
+        $logement->setLogementUnifie(null);
     }
 
     /**
@@ -57,7 +58,7 @@ class LogementUnifie
     }
 
     /**
-     * @param ArrayCollection $departements
+     * @param ArrayCollection $logements
      * @return LogementUnifie $this
      */
     public function setLogements(ArrayCollection $logements)
@@ -79,7 +80,7 @@ class LogementUnifie
      */
     public function addLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
     {
-        $this->logements[] = $logement;
+        $this->logements[] = $logement->setLogementUnifie($this);
 
         return $this;
     }

@@ -1,5 +1,4 @@
 {% extends '::base.html.twig' %}
-
 {% block body %}
     <section>
         <h1>
@@ -32,9 +31,9 @@
                         {#{{ form_label(choix) }}#}
                         {#{% endfor %}#}
                         {{ form_row(logement.actif) }}
-                        {{ form_row(logement.hebergement) }}
-                        {{ form_row(logement.hebergements) }}
-                        {{ form_row(logement.fournisseur) }}
+                        {#{{ form_row(logement.hebergement) }}#}
+                        {#{{ form_row(logement.hebergements) }}#}
+                        {#{{ form_row(logement.fournisseur) }}#}
                         {{ form_row(logement.nbChambre) }}
                         {{ form_row(logement.capacite) }}
                         {{ form_row(logement.superficieMin) }}

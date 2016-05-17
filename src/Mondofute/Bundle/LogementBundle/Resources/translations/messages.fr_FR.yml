@@ -1,6 +1,17 @@
-logements.liste: "liste des logements"
-logement.modification: "modification du logement"
+logements.liste: 'liste des logements'
+logement.modification: 'modification du logement'
 nom: nom
-logement.creation: "création d'un logement"
-retour.liste: "retour à la liste"
-actif: actouf
+logement.creation: 'création d''un logement'
+retour.liste: 'retour à la liste'
+Actif: Actif
+Hebergement: Hébergement
+Hebergements: Hébergements
+Fournisseur: Fournisseur
+Nb.Chambre: 'Nb Chambre'
+Capacite: Capacité
+'Superficie min': 'Superficie min'
+'Superficie max': 'Superficie max'
+Acces.PMR: 'Accès PMR'
+Nom: Nom
+Descriptif: Descriptif
+Enregistrer: Enregistrer
