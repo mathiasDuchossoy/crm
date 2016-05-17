@@ -571,7 +571,13 @@
             $('#tabFournisseursAssocies').append(ligne);
         }
         function afficherModaleAjoutRemiseClef(idFournisseur) {
-            $('#remise_clef_fournisseur').val(idFournisseur);
+            $('#remise_clef_fournisseur option').each(function () {
+                if (parseInt($(this).attr('value')) == parseInt(idFournisseur)) {
+                    $(this).attr('selected', 'selected');
+                } else {
+                    $(this).removeAttr('selected');
+                }
+            });
             $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
             $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
             $modalAjoutRemiseClef.modal().show();
@@ -583,11 +589,6 @@
             $modalAjoutReception.modal().show();
         }
         function ajouterNouvelleRemiseClef($form) {
-//            $this = $(this);
-//            var values = {};
-//            $.each($form.serializeArray(), function (i, field) {
-//                values[field.name] = field.value;
-//            });
             $.ajax({
                 type: $form.attr('method'),
                 url: $form.attr('action'),
