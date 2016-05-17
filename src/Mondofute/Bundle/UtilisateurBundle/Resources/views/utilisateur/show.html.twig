@@ -13,6 +13,14 @@
             <th class="col-sm-1">Id</th>
             <td>{{ utilisateur.id }}</td>
         </tr>
+        <tr class="row">
+            <th class="col-sm-1">Login</th>
+            <td>{{ utilisateur.username }}</td>
+        </tr>
+        <tr class="row">
+            <th class="col-sm-1">Prenom / Nom</th>
+            <td>{{ utilisateur.utilisateur.prenom ~ " / " ~ utilisateur.utilisateur.nom }}</td>
+        </tr>
         {#<tr class="row">#}
         {#<th>Login</th>#}
         {#<td>#}

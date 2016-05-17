@@ -217,7 +217,8 @@
 
         {#<div>#}
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-            <li>
+            <li style="color: white; margin-top: 15px;">
+                {#{{ dump(app.user) }}#}
                 {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
             </li>
             <li>
