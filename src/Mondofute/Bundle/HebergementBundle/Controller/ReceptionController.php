@@ -105,8 +105,8 @@ class ReceptionController extends Controller
                 $tabReception = array();
                 $id = $reception->getId();
                 $idFournisseur = $reception->getFournisseur()->getId();
-                $libelle = $this->container->get('translator')->trans('Jour' . intval($reception->getJour(),
-                            10) . 'Libelle') . ' ' . $this->container->get('translator')->trans('de') . ' ' . $reception->getTranche1()->getDebut()->format('H:i') . ' ' . $this->container->get('translator')->trans('à') . ' ' . $reception->getTranche1()->getFin()->format('H:i');
+                $libelle = $this->container->get('translator')->trans('Jour.' . intval($reception->getJour(),
+                            10) . '.Libelle') . ' ' . $this->container->get('translator')->trans('de') . ' ' . $reception->getTranche1()->getDebut()->format('H:i') . ' ' . $this->container->get('translator')->trans('à') . ' ' . $reception->getTranche1()->getFin()->format('H:i');
                 if (!empty($reception->getTranche2())) {
                     if ($reception->getTranche2()->getDebut() != $reception->getTranche2()->getFin()) {
                         $libelle .= ' ' . $this->container->get('translator')->trans('et') . ' ' . $this->container->get('translator')->trans('de') . ' ' . $reception->getTranche2()->getDebut()->format('H:i') . ' ' . $this->container->get('translator')->trans('à') . ' ' . $reception->getTranche2()->getFin()->format('H:i');
