@@ -1,0 +1,18 @@
+libelle: libellé
+heure.remise.clef:
+    long.sejour: 'heure remise clef long séjour'
+    court.sejour: 'heure remise clef court séjour'
+heure.depart:
+    long.sejour: 'heure départ long séjour'
+    court.sejour: 'heure départ court séjour'
+heure.tardive:
+    long.sejour: 'heure tardive long séjour'
+    court.sejour: 'heure tardive court séjour'
+remise.clef: 'remise de clef'
+ajouter: ajouter
+modifier: modifier
+supprimer: supprimer
+lieux.remise.clef: 'lieux remise de clef'
+langue: langue
+fournisseur: fournisseur
+

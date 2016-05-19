@@ -10,7 +10,12 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
+use Mondofute\Bundle\HebergementBundle\Entity\Reception;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,9 +57,9 @@ class FournisseurController extends Controller
 
             return $response;
         }
-//        dump($fournisseurs);
         return new Response();
     }
+
     /**
      * Creates a new Fournisseur entity.
      *
@@ -66,10 +71,12 @@ class FournisseurController extends Controller
         /** @var Site $site */
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
+
         $form->handleRequest($request);
 
 
@@ -95,6 +102,7 @@ class FournisseurController extends Controller
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
             'form' => $form->createView(),
+            'langues' => $langues,
         ));
     }
 
@@ -110,15 +118,25 @@ class FournisseurController extends Controller
             $fournisseurSite = clone $fournisseur;
 
             if (!empty($fournisseurSite->getFournisseurParent())) {
-                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseurSite->getFournisseurParent()->getId()));
+                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                    $fournisseurSite->getFournisseurParent()->getId()));
             }
 
             foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
                 if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                    $interlocuteur->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                    $interlocuteur->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                        $interlocuteur->getInterlocuteur()->getFonction()->getId()));
                 }
                 if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                    $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+                    $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                        $interlocuteur->getInterlocuteur()->getService()->getId()));
+                }
+            }
+            /** @var RemiseClef $remiseClef */
+            foreach ($fournisseurSite->getRemiseClefs() as $remiseClef) {
+                /** @var RemiseClefTraduction $traduction */
+                foreach ($remiseClef->getTraductions() as $traduction) {
+                    $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                 }
             }
             $emSite->persist($fournisseurSite);
@@ -151,7 +169,7 @@ class FournisseurController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
-            ->add('Supprimer', SubmitType::class)
+            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -164,17 +182,29 @@ class FournisseurController extends Controller
     {
         /** @var FournisseurInterlocuteur $interlocuteur */
         $originalInterlocuteurs = new ArrayCollection();
+        $originalRemiseClefs = new ArrayCollection();
+        $originalReceptions = new ArrayCollection();
 
         // Create an ArrayCollection of the current Tag objects in the database
         foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
             $originalInterlocuteurs->add($interlocuteur);
         }
 
+        foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
+            $originalRemiseClefs->add($remiseClef);
+        }
+        foreach ($fournisseur->getReceptions() as $reception) {
+            $originalReceptions->add($reception);
+        }
+
         $em = $this->getDoctrine()->getManager();
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $deleteForm = $this->createDeleteForm($fournisseur);
+        $fournisseur->triReceptions();
+        $fournisseur->triRemiseClefs();
         $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
+            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -188,6 +218,20 @@ class FournisseurController extends Controller
 
                     // if you wanted to delete the Tag entirely, you can also do that
                     $em->remove($interlocuteur);
+                }
+            }
+            foreach ($originalRemiseClefs as $remiseClef) {
+                if (false === $fournisseur->getRemiseClefs()->contains($remiseClef)) {
+                    $fournisseur->getRemiseClefs()->removeElement($remiseClef);
+                    $this->deleteRemiseClefSites($remiseClef);
+                    $em->remove($remiseClef);
+                }
+            }
+            foreach ($originalReceptions as $reception) {
+                if (false === $fournisseur->getReceptions()->contains($reception)) {
+                    $fournisseur->getReceptions()->removeElement($reception);
+                    $this->deleteReceptionSites($reception);
+                    $em->remove($reception);
                 }
             }
 
@@ -211,6 +255,7 @@ class FournisseurController extends Controller
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
             'form' => $editForm->createView(),
+            'langues' => $langues,
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -223,11 +268,53 @@ class FournisseurController extends Controller
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
-            $interlocuteurSite = $emSite->find('MondofuteFournisseurBundle:FournisseurInterlocuteur', $interlocuteur->getId());
+            $interlocuteurSite = $emSite->find('MondofuteFournisseurBundle:FournisseurInterlocuteur',
+                $interlocuteur->getId());
 
             $interlocuteurSite->setFournisseur(null);
 
             $emSite->remove($interlocuteurSite);
+        }
+    }
+
+    private function deleteRemiseClefSites(RemiseClef $remiseClef)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $remiseClefSite = $emSite->find('MondofuteRemiseClefBundle:RemiseClef', $remiseClef->getId());
+            if (!empty($remiseClefSite)) {
+                $remiseClefSite->setFournisseur(null);
+
+                $emSite->remove($remiseClefSite);
+            }
+        }
+    }
+
+    private function deleteReceptionSites(Reception $reception)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $receptionSite = $emSite->find(Reception::class, $reception->getId());
+            if (!empty($receptionSite)) {
+                $receptionSite->setFournisseur(null);
+                if ($receptionSite->getTranche1() !== null) {
+                    $emSite->remove($receptionSite->getTranche1());
+                }
+                if ($receptionSite->getTranche2() !== null) {
+                    $emSite->remove($receptionSite->getTranche2());
+                }
+                $receptionSite->setTranche1(null);
+                $receptionSite->setTranche2(null);
+                $emSite->remove($receptionSite);
+            }
         }
     }
 
@@ -245,14 +332,17 @@ class FournisseurController extends Controller
             $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
             $fournisseurSite->setContient($fournisseur->getContient());
             if (!empty($fournisseur->getFournisseurParent())) {
-                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getFournisseurParent()->getId()));
+                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                    $fournisseur->getFournisseurParent()->getId()));
             } else {
                 $fournisseurSite->setFournisseurParent(null);
             }
 
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
 
-                $interlocuteurSite = $fournisseurSite->getInterlocuteurs()->filter(function (FournisseurInterlocuteur $element) use ($interlocuteur) {
+                $interlocuteurSite = $fournisseurSite->getInterlocuteurs()->filter(function (
+                    FournisseurInterlocuteur $element
+                ) use ($interlocuteur) {
                     return $element->getId() == $interlocuteur->getId();
                 })->first();
 
@@ -260,12 +350,14 @@ class FournisseurController extends Controller
                     $interlocuteurSite->getInterlocuteur()->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
 
                     if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                        $interlocuteurSite->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                        $interlocuteurSite->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                            $interlocuteur->getInterlocuteur()->getFonction()->getId()));
                     } else {
                         $interlocuteurSite->getInterlocuteur()->setFonction(null);
                     }
                     if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                        $interlocuteurSite->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+                        $interlocuteurSite->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                            $interlocuteur->getInterlocuteur()->getService()->getId()));
                     } else {
                         $interlocuteurSite->getInterlocuteur()->setService(null);
                     }
@@ -278,10 +370,12 @@ class FournisseurController extends Controller
                     $interlocuteurSite->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
 
                     if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                        $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction', $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                        $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                            $interlocuteur->getInterlocuteur()->getFonction()->getId()));
                     }
                     if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                        $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur', $interlocuteur->getInterlocuteur()->getService()->getId()));
+                        $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                            $interlocuteur->getInterlocuteur()->getService()->getId()));
                     }
 
                     $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
@@ -291,6 +385,149 @@ class FournisseurController extends Controller
 
                 }
 
+            }
+            /** @var RemiseClef $remiseClef */
+            foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
+                if (!empty($remiseClef->getId())) {
+                    $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
+                        $remiseClef
+                    ) {
+                        return $element->getId() == $remiseClef->getId();
+                    })->first();
+                } else {
+                    $remiseClefSite = null;
+                }
+                if (empty($remiseClefSite)) {
+                    $remiseClefSite = new RemiseClef();
+                }
+                $remiseClefSite->setLibelle($remiseClef->getLibelle());
+                if (!empty($remiseClef->getHeureDepartCourtSejour())) {
+                    $remiseClefSite->setHeureDepartCourtSejour($remiseClef->getHeureDepartCourtSejour());
+                } else {
+                    $remiseClefSite->setHeureDepartCourtSejour(null);
+                }
+                if (!empty($remiseClef->getHeureTardiveCourtSejour())) {
+                    $remiseClefSite->setHeureTardiveCourtSejour($remiseClef->getHeureTardiveCourtSejour());
+                } else {
+                    $remiseClefSite->setHeureTardiveCourtSejour(null);
+                }
+                if (!empty($remiseClef->getFournisseur())) {
+                    $remiseClefSite->setFournisseur($emSite->find(Fournisseur::class,
+                        $remiseClef->getFournisseur()->getId()));
+                } else {
+                    $remiseClefSite->setFournisseur(null);
+                }
+                if (!empty($remiseClef->getHeureDepartLongSejour())) {
+                    $remiseClefSite->setHeureDepartLongSejour($remiseClef->getHeureDepartLongSejour());
+                } else {
+                    $remiseClefSite->setHeureDepartLongSejour(null);
+                }
+                if (!empty($remiseClef->getHeureRemiseClefCourtSejour())) {
+                    $remiseClefSite->setHeureRemiseClefCourtSejour($remiseClef->getHeureRemiseClefCourtSejour());
+                } else {
+                    $remiseClefSite->setHeureRemiseClefCourtSejour(null);
+                }
+                if (!empty($remiseClef->getHeureRemiseClefLongSejour())) {
+                    $remiseClefSite->setHeureRemiseClefLongSejour($remiseClef->getHeureRemiseClefLongSejour());
+                } else {
+                    $remiseClefSite->setHeureRemiseClefLongSejour(null);
+                }
+                if (!empty($remiseClef->getHeureTardiveLongSejour())) {
+                    $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
+                } else {
+                    $remiseClefSite->setHeureTardiveLongSejour(null);
+                }
+                if (!empty($remiseClef->getStandard())) {
+                    $remiseClefSite->setStandard($remiseClef->getStandard());
+                } else {
+                    $remiseClefSite->setStandard(false);
+                }
+                if (!empty($remiseClef->getHeureTardiveLongSejour())) {
+                    $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
+                } else {
+                    $remiseClefSite->setHeureTardiveLongSejour(null);
+                }
+                /** @var RemiseClefTraduction $remiseClefTraduction */
+                foreach ($remiseClef->getTraductions() as $remiseClefTraduction) {
+                    if (!empty($remiseClefTraduction->getId())) {
+                        $remiseClefTraductionSite = $remiseClefSite->getTraductions()->filter(function (
+                            RemiseClefTraduction $element
+                        ) use (
+                            $remiseClefTraduction
+                        ) {
+                            return ($element->getLangue()->getId() == $remiseClefTraduction->getLangue()->getId()) && ($element->getRemiseClef()->getId() == $remiseClefTraduction->getRemiseClef()->getId());
+                        })->first();
+                    } else {
+                        $remiseClefTraductionSite = null;
+                    }
+                    if (empty($remiseClefTraductionSite)) {
+                        $remiseClefTraductionSite = new RemiseClefTraduction();
+                    }
+                    if (!empty($remiseClefTraduction->getLangue())) {
+                        $remiseClefTraductionSite->setLangue($emSite->find(Langue::class,
+                            $remiseClefTraduction->getLangue()->getId()));
+                    }
+                    if (!empty($remiseClefTraduction->getLieuxRemiseClef())) {
+                        $remiseClefTraductionSite->setLieuxRemiseClef($remiseClefTraduction->getLieuxRemiseClef());
+                    } else {
+                        $remiseClefTraductionSite->setLieuxRemiseClef('');
+                    }
+                    $remiseClefSite->addTraduction($remiseClefTraductionSite);
+//                    if(!empty($remiseClefTraduction->getRemiseClef())){
+//                        $remiseClefTraductionSite->setRemiseClef($emSite->find(RemiseClef::class,$remiseClefTraduction->getRemiseClef()->getId()));
+//                    }else{
+//                        $remiseClefTraductionSite->setRemiseClef(null);
+//                    }
+                }
+                $fournisseurSite->addRemiseClef($remiseClefSite);
+            }
+            /** @var Reception $reception */
+            foreach ($fournisseur->getReceptions() as $reception) {
+                if (!empty($reception->getId())) {
+                    $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
+                        $reception
+                    ) {
+                        return $element->getId() == $reception->getId();
+                    })->first();
+                } else {
+                    $receptionSite = null;
+                }
+//                if(empty($receptionSite = $emSite->getRepository(Reception::class)->find($reception->getId()))){
+//
+////                }
+                if (empty($receptionSite)) {
+                    $receptionSite = new Reception();
+                    $fournisseurSite->addReception($receptionSite);
+                }
+                if (!empty($reception->getTranche1())) {
+//                    if(empty($tranche1Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche1()))){
+                    if (empty($receptionSite->getTranche1())) {
+                        $tranche1Site = new TrancheHoraire();
+                    } else {
+                        $tranche1Site = $receptionSite->getTranche1();
+                    }
+                    $tranche1Site->setDebut($reception->getTranche1()->getDebut())
+                        ->setFin($reception->getTranche1()->getFin());
+                    $receptionSite->setTranche1($tranche1Site);
+                }
+                if (!empty($reception->getTranche2())) {
+//                    if(empty($tranche2Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche2()))){
+                    if (empty($receptionSite->getTranche2())) {
+                        $tranche2Site = new TrancheHoraire();
+                    } else {
+                        $tranche2Site = $receptionSite->getTranche2();
+                    }
+                    $tranche2Site->setDebut($reception->getTranche2()->getDebut())
+                        ->setFin($reception->getTranche2()->getFin());
+                    $receptionSite->setTranche2($tranche2Site);
+                }
+//                if (!empty($reception->getTranche2())) {
+//                    $receptionSite->setTranche2($reception->getTranche2());
+//                }
+                if (!empty($reception->getJour())) {
+                    $receptionSite->setJour($reception->getJour());
+                }
+//                $fournisseurSite->addReception($receptionSite);
             }
             $emSite->persist($fournisseurSite);
             $emSite->flush();

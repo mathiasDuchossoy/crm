@@ -1,8 +1,12 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\Reception;
+use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 
 class FournisseurContient
 {
@@ -46,7 +50,7 @@ class Fournisseur
     private $interlocuteurs;
 
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
+     * @var FournisseurPasserelle
      */
     private $passerelle;
     /**
@@ -69,13 +73,19 @@ class Fournisseur
      * @var \Doctrine\Common\Collections\Collection
      */
     private $remiseClefs;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $receptions;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->interlocuteurs = new ArrayCollection();
+        $this->remiseClefs = new ArrayCollection();
+        $this->receptions = new ArrayCollection();
     }
 
     /**
@@ -115,11 +125,11 @@ class Fournisseur
     /**
      * Add interlocuteur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur
+     * @param FournisseurInterlocuteur $interlocuteur
      *
      * @return Fournisseur
      */
-    public function addInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
+    public function addInterlocuteur(FournisseurInterlocuteur $interlocuteur)
     {
         $this->interlocuteurs[] = $interlocuteur->setFournisseur($this);
 
@@ -129,17 +139,18 @@ class Fournisseur
     /**
      * Remove interlocuteur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur
+     * @param FournisseurInterlocuteur $interlocuteur
      */
-    public function removeInterlocuteur(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur $interlocuteur)
-    {
+    public function removeInterlocuteur(
+        FournisseurInterlocuteur $interlocuteur
+    ) {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
 
     /**
      * Get passerelle
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
+     * @return FournisseurPasserelle
      */
     public function getPasserelle()
     {
@@ -149,11 +160,11 @@ class Fournisseur
     /**
      * Set passerelle
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle $passerelle
+     * @param FournisseurPasserelle $passerelle
      *
      * @return Fournisseur
      */
-    public function setPasserelle(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle $passerelle = null)
+    public function setPasserelle(FournisseurPasserelle $passerelle = null)
     {
         $this->passerelle = $passerelle;
 
@@ -173,6 +184,25 @@ class Fournisseur
                 $cloneInterlocuteur->setFournisseur($this);
             }
         }
+        $remiseClefs = $this->getRemiseClefs();
+        $this->remiseClefs = new ArrayCollection();
+        if (count($remiseClefs) > 0) {
+            foreach ($remiseClefs as $remiseClef) {
+                $cloneRemiseClef = clone $remiseClef;
+                $this->remiseClefs->add($cloneRemiseClef);
+                $cloneRemiseClef->setFournisseur($this);
+            }
+        }
+        $receptions = $this->getReceptions();
+        $this->receptions = new ArrayCollection();
+        if (count($receptions) > 0) {
+            /** @var Reception $reception */
+            foreach ($receptions as $reception) {
+                $cloneReception = clone $reception;
+                $this->receptions->add($cloneReception);
+                $cloneReception->setFournisseur($this);
+            }
+        }
 
         return $this;
     }
@@ -185,6 +215,76 @@ class Fournisseur
     public function getInterlocuteurs()
     {
         return $this->interlocuteurs;
+    }
+
+    /**
+     * Get remiseClefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRemiseClefs()
+    {
+        return $this->remiseClefs;
+    }
+
+    /**
+     * Get receptions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReceptions()
+    {
+        return $this->receptions;
+    }
+
+    public function triRemiseClefs()
+    {
+        // Trier les emplacements en fonction de leurs ordre d'affichage
+        $remiseClefs = $this->getRemiseClefs(); // ArrayCollection data.
+
+        // Recueillir un itérateur de tableau.
+        $iterator = $remiseClefs->getIterator();
+        unset($remiseClefs);
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (RemiseClef $a, RemiseClef $b) {
+            return strcmp($a->getLibelle(), $b->getLibelle());
+        });
+        // passer le tableau trié dans une nouvelle collection
+        $this->remiseClefs = new ArrayCollection(iterator_to_array($iterator));
+        return $this;
+    }
+
+    public function triReceptions()
+    {
+        // Trier les emplacements en fonction de leurs ordre d'affichage
+        $receptions = $this->getReceptions(); // ArrayCollection data.
+        if ($receptions->count() > 0) {
+
+            // Recueillir un itérateur de tableau.
+            $iterator = $receptions->getIterator();
+            unset($receptions);
+
+            // trier la nouvelle itération, en fonction de l'ordre d'affichage
+            $iterator->uasort(function (Reception $a, Reception $b) {
+                if (!empty($a->getTranche2())) {
+                    $complement1 = $a->getTranche2()->getDebut()->format('Hi') . $a->getTranche2()->getFin()->format('Hi');
+                } else {
+                    $complement1 = '';
+                }
+                if (!empty($b->getTranche2())) {
+                    $complement2 = $b->getTranche2()->getDebut()->format('Hi') . $b->getTranche2()->getFin()->format('Hi');
+                } else {
+                    $complement2 = '';
+                }
+                $libelle1 = (($a->getJour() == 0) ? 7 : $a->getJour()) . $a->getTranche1()->getDebut()->format('Hi') . $a->getTranche1()->getFin()->format('Hi') . $complement1;
+                $libelle2 = (($b->getJour() == 0) ? 7 : $b->getJour()) . $b->getTranche1()->getDebut()->format('Hi') . $b->getTranche1()->getFin()->format('Hi') . $complement2;
+                return strcmp($libelle1, $libelle2);
+            });
+            // passer le tableau trié dans une nouvelle collection
+            $this->receptions = new ArrayCollection(iterator_to_array($iterator));
+        }
+        return $this;
     }
 
     /**
@@ -218,7 +318,7 @@ class Fournisseur
      *
      * @return Fournisseur
      */
-    public function addFournisseurEnfant(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant)
+    public function addFournisseurEnfant(Fournisseur $fournisseurEnfant)
     {
         $this->fournisseurEnfants[] = $fournisseurEnfant;
 
@@ -230,7 +330,7 @@ class Fournisseur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant
      */
-    public function removeFournisseurEnfant(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant)
+    public function removeFournisseurEnfant(Fournisseur $fournisseurEnfant)
     {
         $this->fournisseurEnfants->removeElement($fournisseurEnfant);
     }
@@ -262,8 +362,9 @@ class Fournisseur
      *
      * @return Fournisseur
      */
-    public function setFournisseurParent(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent = null)
-    {
+    public function setFournisseurParent(
+        Fournisseur $fournisseurParent = null
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -272,11 +373,11 @@ class Fournisseur
     /**
      * Add hebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     * @param FournisseurHebergement $hebergement
      *
      * @return Fournisseur
      */
-    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    public function addHebergement(FournisseurHebergement $hebergement)
     {
         $this->hebergements[] = $hebergement;
 
@@ -286,9 +387,9 @@ class Fournisseur
     /**
      * Remove hebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     * @param FournisseurHebergement $hebergement
      */
-    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    public function removeHebergement(FournisseurHebergement $hebergement)
     {
         $this->hebergements->removeElement($hebergement);
     }
@@ -306,34 +407,47 @@ class Fournisseur
     /**
      * Add remiseClef
      *
-     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     * @param RemiseClef $remiseClef
      *
      * @return Fournisseur
      */
-    public function addRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    public function addRemiseClef(RemiseClef $remiseClef)
     {
-        $this->remiseClefs[] = $remiseClef;
-
+        $this->remiseClefs[] = $remiseClef->setFournisseur($this);
         return $this;
     }
 
     /**
      * Remove remiseClef
      *
-     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     * @param RemiseClef $remiseClef
      */
-    public function removeRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    public function removeRemiseClef(RemiseClef $remiseClef)
     {
         $this->remiseClefs->removeElement($remiseClef);
     }
 
     /**
-     * Get remiseClefs
+     * Add reception
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @param Reception $reception
+     *
+     * @return Fournisseur
      */
-    public function getRemiseClefs()
+    public function addReception(Reception $reception)
     {
-        return $this->remiseClefs;
+        $this->receptions[] = $reception->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove reception
+     *
+     * @param Reception $reception
+     */
+    public function removeReception(Reception $reception)
+    {
+        $this->receptions->removeElement($reception);
     }
 }
