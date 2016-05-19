@@ -485,7 +485,7 @@
             var libelle = formatLibelleReception(reception);
             prototype = prototype.replace(/__name__/g, index);
             var $prototype = $(prototype);
-            $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-1"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"><span class="glyphicon glyphicon-edit"></span> </button></div><div class="col-sm-1"><button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
+            $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-2"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"><span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
             $form.find('#formReception_' + index).append($prototype);
             $receptions.append($form);
             chargerReceptionDansForm($prototype, reception, index);
@@ -599,7 +599,7 @@
                 var $remiseClef = $('#remiseClefs');
                 var $remiseClefModal = $('#remiseClefModal');
                 var contenuRemiseClef =
-                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button></div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
+                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-2"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button> <button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
                 $remiseClef.append($(contenuRemiseClef));
                 $('#formRemiseClef_' + index).append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
                 $remiseClef.attr('data-nb-remise-clef', (parseInt(index) + 1));
