@@ -1,7 +1,7 @@
 <?php
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
@@ -27,6 +27,14 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\UniteBundle\MondofuteUniteBundle(),
             new Mondofute\Bundle\DescriptionForfaitSkiBundle\MondofuteDescriptionForfaitSkiBundle(),
             new Mondofute\Bundle\ChoixBundle\MondofuteChoixBundle(),
+            new Mondofute\Bundle\CatalogueBundle\MondofuteCatalogueBundle(),
+            new Mondofute\Bundle\HebergementBundle\MondofuteHebergementBundle(),
+            new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
+            new Nucleus\ContactBundle\NucleusContactBundle(),
+            new Infinite\FormBundle\InfiniteFormBundle(),
+            new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new Mondofute\Bundle\RemiseClefBundle\MondofuteRemiseClefBundle(),
+            new Mondofute\Bundle\TrancheHoraireBundle\MondofuteTrancheHoraireBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

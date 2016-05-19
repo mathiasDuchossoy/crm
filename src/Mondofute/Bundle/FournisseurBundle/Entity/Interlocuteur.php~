@@ -26,6 +26,10 @@ class Interlocuteur
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
      */
     private $service;
+    /**
+     * @var string
+     */
+    private $prenom;
 
     /**
      * Constructor
@@ -80,6 +84,16 @@ class Interlocuteur
     }
 
     /**
+     * Get fonction
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
+     */
+    public function getFonction()
+    {
+        return $this->fonction;
+    }
+
+    /**
      * Set fonction
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction $fonction
@@ -94,13 +108,13 @@ class Interlocuteur
     }
 
     /**
-     * Get fonction
+     * Get service
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
      */
-    public function getFonction()
+    public function getService()
     {
-        return $this->fonction;
+        return $this->service;
     }
 
     /**
@@ -118,20 +132,14 @@ class Interlocuteur
     }
 
     /**
-     * Get service
+     * Get prenom
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
+     * @return string
      */
-    public function getService()
+    public function getPrenom()
     {
-        return $this->service;
+        return $this->prenom;
     }
-
-    /**
-     * @var string
-     */
-    private $prenom;
-
 
     /**
      * Set prenom
@@ -145,15 +153,5 @@ class Interlocuteur
         $this->prenom = $prenom;
 
         return $this;
-    }
-
-    /**
-     * Get prenom
-     *
-     * @return string
-     */
-    public function getPrenom()
-    {
-        return $this->prenom;
     }
 }

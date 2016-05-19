@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>RemiseClef list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Libelle</th>
+            <th>Heureremisecleflongsejour</th>
+            <th>Heureremiseclefcourtsejour</th>
+            <th>Heuredepartlongsejour</th>
+            <th>Heuredepartcourtsejour</th>
+            <th>Heuretardivelongsejour</th>
+            <th>Heuretardivecourtsejour</th>
+            <th>Standard</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for remiseClef in remiseClefs %}
+            <tr>
+                <td><a href="{{ path('remiseclef_show', { 'id': remiseClef.id }) }}">{{ remiseClef.id }}</a></td>
+                <td>{{ remiseClef.libelle }}</td>
+                <td>{{ remiseClef.heureRemiseClefLongSejour }}</td>
+                <td>{{ remiseClef.heureRemiseClefCourtSejour }}</td>
+                <td>{{ remiseClef.heureDepartLongSejour }}</td>
+                <td>{{ remiseClef.heureDepartCourtSejour }}</td>
+                <td>{{ remiseClef.heureTardiveLongSejour }}</td>
+                <td>{{ remiseClef.heureTardiveCourtSejour }}</td>
+                <td>{% if remiseClef.standard %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('remiseclef_show', { 'id': remiseClef.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('remiseclef_edit', { 'id': remiseClef.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('remiseclef_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

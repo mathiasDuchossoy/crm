@@ -1,0 +1,64 @@
+Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
+    type: entity
+    table: null
+#    inheritanceType: SINGLE_TABLE
+#    discriminatorColumn:
+#        name: hebergement_type
+#        type: smallint
+#    discriminatorMap:
+#        0: Hebergement
+#        1: Chalet
+#        2: Residence
+#        3: VillageClub
+#    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementRepository
+#    associationOverride:
+#        moyenComs:
+#            cascade: ['persist','remove']
+#            mappedBy: moyenComs
+#            joinTable:
+#                name: hebergement_moyenscom
+#                joinColumns:
+#                    hebergement_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyencom_id:
+#                        referencedColumnName: id
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        hebergementUnifie:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            inversedBy: hebergements
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: hebergements
+        typeHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+            inversedBy: hebergements
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction
+            mappedBy: hebergement
+            cascade:  ['persist' , 'remove']
+        emplacements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement
+            mappedBy: hebergement
+            cascade: ['persist','remove']
+    oneToOne:
+        classement:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
+            cascade: ['persist','remove']
+    manyToMany:
+        moyenComs:
+            targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
+            cascade: ['persist']
+    lifecycleCallbacks: {  }

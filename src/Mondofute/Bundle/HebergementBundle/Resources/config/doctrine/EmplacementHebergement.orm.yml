@@ -1,0 +1,24 @@
+Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        typeEmplacement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Emplacement
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: emplacements
+    oneToOne:
+        distance1:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade: ['persist','remove']
+        distance2:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

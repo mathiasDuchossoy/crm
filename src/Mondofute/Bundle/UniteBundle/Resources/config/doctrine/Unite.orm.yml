@@ -10,6 +10,7 @@ Mondofute\Bundle\UniteBundle\Entity\Unite:
         1: UniteAge
         2: UniteTarif
         3: UniteDistance
+        4: UniteClassementHebergement
     repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteRepository
     id:
         id:
@@ -26,7 +27,7 @@ Mondofute\Bundle\UniteBundle\Entity\Unite:
         traductions:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteTraduction
             mappedBy: unite
-#            cascade: ['persist']
+            cascade: ['persist']
     manyToOne:
         reference:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Unite

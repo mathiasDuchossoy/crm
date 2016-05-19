@@ -1,0 +1,27 @@
+<?php
+
+namespace Mondofute\Bundle\HebergementBundle\Entity;
+
+/**
+ * TypeHebergementUnifie
+ */
+class TypeHebergementUnifie
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

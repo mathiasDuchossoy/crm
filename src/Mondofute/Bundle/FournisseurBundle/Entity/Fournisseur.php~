@@ -4,16 +4,18 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 
-class FournisseurContient {
+class FournisseurContient
+{
     const PRODUIT = 1; // 1
     const FOURNISSEUR = 2; // 10
 
     public static $libelles = array(
-        FournisseurContient::FOURNISSEUR    =>  'Fournisseurs',
-        FournisseurContient::PRODUIT        =>  'Produits'
+        FournisseurContient::FOURNISSEUR => 'Fournisseurs',
+        FournisseurContient::PRODUIT => 'Produits'
     );
 
-    static public function getLibelle($permission){
+    static public function getLibelle($permission)
+    {
         return self::$libelles[$permission];
     }
 
@@ -51,6 +53,18 @@ class Fournisseur
      * @var integer
      */
     private $contient;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurEnfants;
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    private $fournisseurParent;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
 
     /**
      * Constructor
@@ -192,16 +206,6 @@ class Fournisseur
 
         return $this;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fournisseurEnfants;
-
-    /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
-     */
-    private $fournisseurParent;
-
 
     /**
      * Add fournisseurEnfant
@@ -238,6 +242,16 @@ class Fournisseur
     }
 
     /**
+     * Get fournisseurParent
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    public function getFournisseurParent()
+    {
+        return $this->fournisseurParent;
+    }
+
+    /**
      * Set fournisseurParent
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent
@@ -252,12 +266,36 @@ class Fournisseur
     }
 
     /**
-     * Get fournisseurParent
+     * Add hebergement
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     *
+     * @return Fournisseur
      */
-    public function getFournisseurParent()
+    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
     {
-        return $this->fournisseurParent;
+        $this->hebergements[] = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     */
+    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement);
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
     }
 }

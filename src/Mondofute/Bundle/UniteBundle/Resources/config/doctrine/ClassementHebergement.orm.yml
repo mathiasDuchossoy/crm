@@ -1,0 +1,21 @@
+Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\ClassementHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        valeur:
+            type: integer
+            nullable: true
+            options:
+                unsigned: true
+    manyToOne:
+        unite:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement
+            cascade: ['persist','detach']
+    lifecycleCallbacks: {  }

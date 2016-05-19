@@ -1,0 +1,18 @@
+Mondofute\Bundle\HebergementBundle\Entity\TypeHebergementUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\TypeHebergementUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+    oneToMany:
+        typeHebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+            mappedBy: typeHebergementUnifie
+    lifecycleCallbacks: {  }

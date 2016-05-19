@@ -61,6 +61,14 @@ class Fournisseur
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseurParent;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $remiseClefs;
 
     /**
      * Constructor
@@ -259,5 +267,73 @@ class Fournisseur
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
+    }
+
+    /**
+     * Add hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     *
+     * @return Fournisseur
+     */
+    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    {
+        $this->hebergements[] = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
+     */
+    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement);
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
+    }
+
+    /**
+     * Add remiseClef
+     *
+     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     *
+     * @return Fournisseur
+     */
+    public function addRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    {
+        $this->remiseClefs[] = $remiseClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove remiseClef
+     *
+     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef
+     */
+    public function removeRemiseClef(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef $remiseClef)
+    {
+        $this->remiseClefs->removeElement($remiseClef);
+    }
+
+    /**
+     * Get remiseClefs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRemiseClefs()
+    {
+        return $this->remiseClefs;
     }
 }

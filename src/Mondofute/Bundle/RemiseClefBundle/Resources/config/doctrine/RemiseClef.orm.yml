@@ -1,0 +1,44 @@
+Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\RemiseClefBundle\Repository\RemiseClefRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        heureRemiseClefLongSejour:
+            type: time
+        heureRemiseClefCourtSejour:
+            type: time
+        heureDepartLongSejour:
+            type: time
+        heureDepartCourtSejour:
+            type: time
+        heureTardiveLongSejour:
+            type: time
+        heureTardiveCourtSejour:
+            type: time
+        standard:
+            type: boolean
+
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction
+            mappedBy: remiseClef
+            cascade: ['persist','remove']
+        fournisseurHebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            mappedBy: remiseClef
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: remiseClefs
+    lifecycleCallbacks: {  }

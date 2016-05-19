@@ -1,0 +1,44 @@
+Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\FournisseurHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            inversedBy: fournisseurs
+            cascade: ['persist']
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: hebergements
+            cascade: ['persist']
+        remiseClef:
+            targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+            inversedBy: fournisseurHebergements
+    oneToOne:
+        telFixe:
+            targetEntity: Nucleus\MoyenComBundle\Entity\TelFixe
+            cascade: ['persist','remove']
+        telMobile:
+            targetEntity: Nucleus\MoyenComBundle\Entity\TelMobile
+            cascade: ['persist','remove']
+        adresse:
+            targetEntity: Nucleus\MoyenComBundle\Entity\Adresse
+            cascade: ['persist','remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction
+            mappedBy: fournisseurHebergement
+            cascade: ['persist','remove']
+    manyToMany:
+        receptions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
+
+    lifecycleCallbacks: {  }

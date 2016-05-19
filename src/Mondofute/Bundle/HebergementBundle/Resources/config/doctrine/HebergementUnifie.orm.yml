@@ -1,0 +1,22 @@
+Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+    oneToMany:
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            mappedBy: hebergementUnifie
+            cascade: ['persist' , 'remove']
+        fournisseurs:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            mappedBy: hebergement
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

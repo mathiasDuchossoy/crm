@@ -1,0 +1,26 @@
+Mondofute\Bundle\HebergementBundle\Entity\Emplacement:
+    type: entity
+    table: null
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: typeEmplacement
+        type: smallint
+    discriminatorMap:
+        1: EmplacementBordDeMer
+        2: EmplacementCentreDeStation
+        3: EmplacementCommerces
+        4: EmplacementFrontDeMer
+        5: EmplacementPisteDeSki
+        6: EmplacementPlage
+        7: EmplacementRemonteesMecaniques
+        8: EmplacementTelecabine
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    lifecycleCallbacks: {  }

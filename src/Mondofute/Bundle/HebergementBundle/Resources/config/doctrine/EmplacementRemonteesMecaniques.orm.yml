@@ -1,0 +1,11 @@
+Mondofute\Bundle\HebergementBundle\Entity\EmplacementRemonteesMecaniques:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementRemonteesMecaniquesRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

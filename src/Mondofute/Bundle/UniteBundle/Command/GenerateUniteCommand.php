@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateUniteCommand extends ContainerAwareCommand
 {
+    
     /**
      *
      */

@@ -1,0 +1,11 @@
+Mondofute\Bundle\HebergementBundle\Entity\EmplacementPisteDeSki:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\EmplacementPisteDeSkiRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }
