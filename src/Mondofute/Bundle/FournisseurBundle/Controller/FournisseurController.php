@@ -15,6 +15,7 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -304,6 +305,14 @@ class FournisseurController extends Controller
             $receptionSite = $emSite->find(Reception::class, $reception->getId());
             if (!empty($receptionSite)) {
                 $receptionSite->setFournisseur(null);
+                if ($receptionSite->getTranche1() !== null) {
+                    $emSite->remove($receptionSite->getTranche1());
+                }
+                if ($receptionSite->getTranche2() !== null) {
+                    $emSite->remove($receptionSite->getTranche2());
+                }
+                $receptionSite->setTranche1(null);
+                $receptionSite->setTranche2(null);
                 $emSite->remove($receptionSite);
             }
         }
@@ -379,11 +388,15 @@ class FournisseurController extends Controller
             }
             /** @var RemiseClef $remiseClef */
             foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
-                $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
-                    $remiseClef
-                ) {
-                    return $element->getId() == $remiseClef->getId();
-                })->first();
+                if (!empty($remiseClef->getId())) {
+                    $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
+                        $remiseClef
+                    ) {
+                        return $element->getId() == $remiseClef->getId();
+                    })->first();
+                } else {
+                    $remiseClefSite = null;
+                }
                 if (empty($remiseClefSite)) {
                     $remiseClefSite = new RemiseClef();
                 }
@@ -436,14 +449,17 @@ class FournisseurController extends Controller
                 }
                 /** @var RemiseClefTraduction $remiseClefTraduction */
                 foreach ($remiseClef->getTraductions() as $remiseClefTraduction) {
-                    $remiseClefTraductionSite = $remiseClefSite->getTraductions()->filter(function (
-                        RemiseClefTraduction $element
-                    ) use (
-                        $remiseClefTraduction
-                    ) {
-
-                        return $element->getLangue()->getId() == $remiseClefTraduction->getLangue()->getId();
-                    })->first();
+                    if (!empty($remiseClefTraduction->getId())) {
+                        $remiseClefTraductionSite = $remiseClefSite->getTraductions()->filter(function (
+                            RemiseClefTraduction $element
+                        ) use (
+                            $remiseClefTraduction
+                        ) {
+                            return ($element->getLangue()->getId() == $remiseClefTraduction->getLangue()->getId()) && ($element->getRemiseClef()->getId() == $remiseClefTraduction->getRemiseClef()->getId());
+                        })->first();
+                    } else {
+                        $remiseClefTraductionSite = null;
+                    }
                     if (empty($remiseClefTraductionSite)) {
                         $remiseClefTraductionSite = new RemiseClefTraduction();
                     }
@@ -467,24 +483,51 @@ class FournisseurController extends Controller
             }
             /** @var Reception $reception */
             foreach ($fournisseur->getReceptions() as $reception) {
-                $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
-                    $reception
-                ) {
-                    return $element->getId() == $reception->getId();
-                })->first();
+                if (!empty($reception->getId())) {
+                    $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
+                        $reception
+                    ) {
+                        return $element->getId() == $reception->getId();
+                    })->first();
+                } else {
+                    $receptionSite = null;
+                }
+//                if(empty($receptionSite = $emSite->getRepository(Reception::class)->find($reception->getId()))){
+//
+////                }
                 if (empty($receptionSite)) {
                     $receptionSite = new Reception();
+                    $fournisseurSite->addReception($receptionSite);
                 }
                 if (!empty($reception->getTranche1())) {
-                    $receptionSite->setTranche1($reception->getTranche1());
+//                    if(empty($tranche1Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche1()))){
+                    if (empty($receptionSite->getTranche1())) {
+                        $tranche1Site = new TrancheHoraire();
+                    } else {
+                        $tranche1Site = $receptionSite->getTranche1();
+                    }
+                    $tranche1Site->setDebut($reception->getTranche1()->getDebut())
+                        ->setFin($reception->getTranche1()->getFin());
+                    $receptionSite->setTranche1($tranche1Site);
                 }
                 if (!empty($reception->getTranche2())) {
-                    $receptionSite->setTranche2($reception->getTranche2());
+//                    if(empty($tranche2Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche2()))){
+                    if (empty($receptionSite->getTranche2())) {
+                        $tranche2Site = new TrancheHoraire();
+                    } else {
+                        $tranche2Site = $receptionSite->getTranche2();
+                    }
+                    $tranche2Site->setDebut($reception->getTranche2()->getDebut())
+                        ->setFin($reception->getTranche2()->getFin());
+                    $receptionSite->setTranche2($tranche2Site);
                 }
+//                if (!empty($reception->getTranche2())) {
+//                    $receptionSite->setTranche2($reception->getTranche2());
+//                }
                 if (!empty($reception->getJour())) {
                     $receptionSite->setJour($reception->getJour());
                 }
-                $fournisseurSite->addReception($receptionSite);
+//                $fournisseurSite->addReception($receptionSite);
             }
             $emSite->persist($fournisseurSite);
             $emSite->flush();

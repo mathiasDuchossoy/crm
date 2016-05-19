@@ -18,15 +18,15 @@
             {{ form_row(form.contient) }}
             {#{{ form_row(form.remiseClefs) }}#}
             <div class="form-group ">
-                <div class="panel panel-default">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-sm-11"
                                  onclick="var $remiseClefs = $('#remiseClefs');($remiseClefs.is(':visible'))?$remiseClefs.hide():$remiseClefs.show()">
-                                {{ form_label(form.remiseClefs) }}
+                                <h3 class="panel-title">{{ form.remiseClefs.vars['label'] | trans | capitalize }}</h3>
                             </div>
                             <div class="col-sm-1">
-                                <button class="btn btn-default" type="button"
+                                <button class="btn btn-default btn-xs" type="button"
                                         onclick="afficherModaleAjouterRemiseClef()">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </button>
@@ -50,15 +50,14 @@
                                 <div class="col-sm-12">
                                     <div class="col-sm-10"
                                          id="remiseClef_{{ remiseClef.vars.name }}_libelle">{{ remiseClef.vars.value.libelle }}</div>
-                                    <div class="col-sm-1">
+                                    <div class="col-sm-2">
                                         <button class="btn btn-default" type="button"
                                                 onclick="afficherModaleModifierRemiseClef({{ remiseClef.vars.name }});">
-                                            {{ 'modifier' | trans }}
+                                            <span class="glyphicon glyphicon-edit"></span>
                                         </button>
-                                    </div>
-                                    <div class="col-sm-1">
                                         <button class="btn btn-default" type="button"
-                                                onclick="supprimerRemiseClef({{ remiseClef.vars.name }});">{{ 'supprimer' | trans }}
+                                                onclick="supprimerRemiseClef({{ remiseClef.vars.name }});">
+                                            <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -71,15 +70,16 @@
                 </div>
             </div>
             <div class="form-group ">
-                <div class="panel panel-default">
+                <div class="panel  panel-primary">
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-sm-11"
                                  onclick="var $receptions = $('#receptions');($receptions.is(':visible'))?$receptions.hide():$receptions.show()">
-                                {{ form_label(form.receptions) }}
+                                {#{{ form_label(form.receptions) }}#}
+                                <h3 class="panel-title">{{ form.receptions.vars['label'] | trans | capitalize }}</h3>
                             </div>
                             <div class="col-sm-1">
-                                <button class="btn btn-default" type="button"
+                                <button class="btn btn-default btn-xs" type="button"
                                         onclick="afficherModaleReception('add')">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </button>
@@ -105,15 +105,14 @@
                                     {% endif %}
                                     <div class="col-sm-10"
                                          id="reception_{{ reception.vars.name }}_libelle">{{ ('jour.'~reception.jour.vars.value~'.libelle') | trans }} {{ libelleReception }}</div>
-                                    <div class="col-sm-1">
+                                    <div class="col-sm-2">
                                         <button class="btn btn-default" type="button"
                                                 onclick="afficherModaleReception('edit',{{ reception.vars.name }});">
-                                            {{ 'modifier' | trans }}
+                                            <span class="glyphicon glyphicon-edit"></span>
                                         </button>
-                                    </div>
-                                    <div class="col-sm-1">
                                         <button class="btn btn-default" type="button"
-                                                onclick="supprimerReception({{ reception.vars.name }});">{{ 'supprimer' | trans }}
+                                                onclick="supprimerReception({{ reception.vars.name }});">
+                                            <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </div>
                                 </div>
@@ -157,11 +156,11 @@
                                             </td>
                                             <td>
                                                 <button onclick="afficherModalModificationInterlocuteur( {{ key }} )"
-                                                        type='button' class='btn btn-default'> Modifier <span
+                                                        type='button' class='btn btn-default'><span
                                                             class='glyphicon glyphicon-edit' aria-hidden='true'></span>
                                                 </button>
                                                 <button onclick="supprimerInterlocuteur( {{ key }} )"
-                                                        type='button' class='btn btn-default'> Supprimer <span
+                                                        type='button' class='btn btn-default'><span
                                                             class='glyphicon glyphicon-trash' aria-hidden='true'></span>
                                                 </button>
                                             </td>
@@ -339,7 +338,7 @@
             var $contenuModal = $('#contenuReceptionModal');
 //            initialise les jours
             $contenuModal.find('[name="fournisseur[reception][jour][]"]').each(function () {
-                $(this).removeAttr('checked');
+                $(this).prop('checked', false);
             });
 //            initialise la tranche 1
             $contenuModal.find('#fournisseur_reception___name___tranche1_debut_hour option').each(function () {
@@ -387,12 +386,11 @@
 //            charge le jour
             $contenuModal.find('[name="fournisseur[reception][jour][]"]').each(function () {
                 if ($(this).val() == jour) {
-                    $(this).attr('checked', 'checked');
+                    $(this).prop('checked', true);
                 } else {
-                    $(this).removeAttr('checked');
+                    $(this).prop('checked', false);
                 }
             });
-//            console.log($contenuModal.find('fournisseur_reception___name___tranche1_debut_hour option[value="' + tranche1DebutHeures + '"]'));
 //            charge la tranche 1
             $contenuModal.find('#fournisseur_reception___name___tranche1_debut_hour option[value="' + tranche1DebutHeures + '"]').prop('selected', true);
             $contenuModal.find('#fournisseur_reception___name___tranche1_debut_minute option[value="' + tranche1DebutMinutes + '"]').prop('selected', true);
@@ -428,6 +426,19 @@
 //            }
             $modal.modal('hide');
         }
+        function Horaire() {
+            this.heure = "";
+            this.minute = "";
+        }
+        function TrancheHoraire() {
+            this.debut = new Horaire();
+            this.fin = new Horaire();
+        }
+        function Reception() {
+            this.jour = 0;
+            this.tranche1 = new TrancheHoraire();
+            this.tranche2 = new TrancheHoraire();
+        }
         function recupReceptionModal() {
             var $contenuModal = $('#contenuReceptionModal');
             var $jours = $contenuModal.find('[name="fournisseur[reception][jour][]"]:checked');
@@ -442,20 +453,14 @@
             var receptions = [];
             var reception = null;
             $jours.each(function () {
-                reception = new Object();
+                reception = new Reception();
                 reception.jour = $(this).val();
-                reception.tranche1 = new Object();
-                reception.tranche1.debut = new Object();
                 reception.tranche1.debut.heure = tranche1DebutHeures;
                 reception.tranche1.debut.minute = tranche1DebutMinutes;
-                reception.tranche1.fin = new Object();
                 reception.tranche1.fin.heure = tranche1FinHeures;
                 reception.tranche1.fin.minute = tranche1FinMinutes;
-                reception.tranche2 = new Object();
-                reception.tranche2.debut = new Object();
                 reception.tranche2.debut.heure = tranche2DebutHeures;
                 reception.tranche2.debut.minute = tranche2DebutMinutes;
-                reception.tranche2.fin = new Object();
                 reception.tranche2.fin.heure = tranche2FinHeures;
                 reception.tranche2.fin.minute = tranche2FinMinutes;
                 receptions.push(reception);
@@ -468,19 +473,19 @@
             if (reception.tranche2.debut.heure != 0 || reception.tranche2.debut.minute != 0 || reception.tranche2.fin.heure != 0 || reception.tranche2.fin.minute != 0) {
                 libelleTranche2 = ' {{ 'et.de' | trans }} ' + ((reception.tranche2.debut.heure.length == 1) ? '0' + reception.tranche2.debut.heure : reception.tranche2.debut.heure) + '{{ 'h'|trans }}' + ((reception.tranche2.debut.minute.length == 1) ? '0' + reception.tranche2.debut.minute : reception.tranche2.debut.minute) + ' {{ 'à'|trans }} ' + ((reception.tranche2.fin.heure.length == 1) ? '0' + reception.tranche2.fin.heure : reception.tranche2.fin.heure) + '{{ 'h'|trans }}' + ((reception.tranche2.fin.minute.length == 1) ? '0' + reception.tranche2.fin.minute : reception.tranche2.fin.minute);
             }
-            var libelle = _libelleJour[parseInt(reception.jour)] + libelleTranche1 + libelleTranche2;
-            return libelle;
+//            var libelle = ;
+            return _libelleJour[parseInt(reception.jour)] + libelleTranche1 + libelleTranche2;
         }
         //        ajoute la ligne dans la fiche fournisseur
         function ajouterLigneReception(reception) {
             var $receptions = $('#receptions');
             var index = $receptions.attr('data-nb-receptions');
             var prototype = $receptions.attr('data-prototype');
-            var $prototype = null;
+//            var $prototype = null;
             var libelle = formatLibelleReception(reception);
             prototype = prototype.replace(/__name__/g, index);
-            $prototype = $(prototype);
-            $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-1"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"> {{ 'modifier' | trans }} </button></div><div class="col-sm-1"><button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button">{{ 'supprimer' | trans }}</button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
+            var $prototype = $(prototype);
+            $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-1"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"><span class="glyphicon glyphicon-edit"></span> </button></div><div class="col-sm-1"><button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
             $form.find('#formReception_' + index).append($prototype);
             $receptions.append($form);
             chargerReceptionDansForm($prototype, reception, index);
@@ -551,7 +556,7 @@
 
         }
         function afficherModaleAjouterRemiseClef() {
-            var i = 0;
+//            var i = 0;
             var active = '';
             var traduction = '';
             var $remiseClefs = $('#remiseClefs');
@@ -573,7 +578,8 @@
                 traduction += prototypeTraduction.replace(/__idRemiseClef__/g, 'fournisseur_remiseClefs_' + index).replace(/__indexLangue__/g, i).replace(/__name__/g, index).replace(/__tradname__/g, i).replace(/__active__/g, active);
             }
             $remiseClefModal.find('#contenuAjoutRemiseClef').html(prototype);
-            $('#fournisseur_remiseClefs_' + index + '_fournisseur option[value="{{ form.vars.value.id }}"]').attr('selected', 'selected');
+            {#$('#fournisseur_remiseClefs_' + index + '_fournisseur option[value="{{ form.vars.value.id }}"]').attr('selected', 'selected');#}
+            $('#fournisseur_remiseClefs_' + index + '_fournisseur option[value="{{ form.vars.value.id }}"]').prop('selected', true);
             $('#fournisseur_remiseClefs_' + index + '_traductions').append(traduction);
 
 //            selection de la langue
@@ -593,7 +599,7 @@
                 var $remiseClef = $('#remiseClefs');
                 var $remiseClefModal = $('#remiseClefModal');
                 var contenuRemiseClef =
-                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');">{{ 'modifier' | trans }}</button></div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');">{{ 'supprimer' | trans }}</button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
+                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button></div><div class="col-sm-1"><button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
                 $remiseClef.append($(contenuRemiseClef));
                 $('#formRemiseClef_' + index).append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
                 $remiseClef.attr('data-nb-remise-clef', (parseInt(index) + 1));
@@ -678,7 +684,7 @@
             var $formInterlocuteur = $('#form-interlocuteur');
             var $index = $formInterlocuteur.data('interlocuteur-index');
 
-            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + $index + ');" type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
+            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + $index + ');" type=\'button\' class=\'btn btn-default\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
             var $addInterlocuteur = $('<td>' + interlocuteur.prenom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer($index) + '</td>');
             var $newLigne = $('<tr id="row_interlocuteur_' + $index + '" class="success"></tr>').append($addInterlocuteur);
@@ -772,8 +778,8 @@
         }
 
         function getButtonSupprimer(index) {
-            var buttonSupprimer = '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'> {{ 'supprimer' | trans }} <span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
-            return buttonSupprimer;
+            {#var buttonSupprimer = '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'> {{ 'supprimer' | trans }} <span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';#}
+            return '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'><span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
         }
 
 
@@ -837,7 +843,6 @@
                         first = false;
                     }
                     // do something with `item`
-//                    console.log($item);
                     $item.attr('style', 'border: 1px solid red;')
                 });
                 return false;
