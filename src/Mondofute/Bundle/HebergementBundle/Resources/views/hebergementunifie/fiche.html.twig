@@ -181,7 +181,7 @@
                                                 {% for reception in fournisseur.receptions.vars.choices %}
                                                     {#Gestion du libelle à afficher#}
                                                     {#traduction du jour#}
-                                                    {% set libelle = ('Jour'~reception.data.jour~'Libelle') | trans %}
+                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
                                                     {#traduction de la tranche1#}
                                                     {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
                                                     {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
