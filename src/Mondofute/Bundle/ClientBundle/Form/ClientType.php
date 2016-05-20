@@ -45,8 +45,8 @@ class ClientType extends AbstractType
 //                'locale' => 'fr_FR'
 //                'months' => 'fr'
 //                'years' => range(1900, date_format($today, 'Y')),
-                'model_timezone' => 'Europe/Paris',
-                'view_timezone' => 'Europe/Paris'
+//                'model_timezone' => 'Europe/Paris',
+//                'view_timezone' => 'Europe/Paris'
             ))
             ->add('moyenComs', 'infinite_form_polycollection', array(
                 'types' => array(
