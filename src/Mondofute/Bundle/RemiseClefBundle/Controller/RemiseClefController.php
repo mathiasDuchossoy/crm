@@ -81,6 +81,9 @@ class RemiseClefController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+//            $idFournisseur = $request->request->get('remise_clef')['fournisseur'];
+            $remiseClef->setFournisseur($em->getRepository(Fournisseur::class)->find(intval($request->request->get('remise_clef')['fournisseur'],
+                10)));
             $em->persist($remiseClef);
             $em->flush();
             $this->copieVersSites($sites, $remiseClef);
