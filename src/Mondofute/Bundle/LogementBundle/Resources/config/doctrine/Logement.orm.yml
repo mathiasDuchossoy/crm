@@ -37,7 +37,7 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
         logementUnifie:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementUnifie
             inversedBy: logements
-        hebergement:
+        fournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
             inversedBy: logements
     oneToMany:
