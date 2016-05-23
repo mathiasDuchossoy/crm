@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\LogementBundle\Form;
 
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -29,6 +31,8 @@ class LogementType extends AbstractType
                 'entry_type' => LogementTraductionType::class,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('fournisseurHebergement', EntityType::class,
+                array('class' => FournisseurHebergement::class, 'choice_label' => 'id'))
 //            ->add('logementUnifie')
 //            ->add('hebergement', EntityType::class,
 //                array('class' => FournisseurHebergement::class, 'choice_label' => 'id'))

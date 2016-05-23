@@ -52,7 +52,7 @@ class Logement
     /**
      * @var \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
      */
-    private $hebergement;
+    private $fournisseurHebergement;
 
     /**
      * Constructor
@@ -333,6 +333,31 @@ class Logement
     public function setHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement = null
     ) {
         $this->hebergement = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Get fournisseurHebergement
+     *
+     * @return \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+     */
+    public function getFournisseurHebergement()
+    {
+        return $this->fournisseurHebergement;
+    }
+
+    /**
+     * Set fournisseurHebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
+     *
+     * @return Logement
+     */
+    public function setFournisseurHebergement(
+        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement = null
+    ) {
+        $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
     }

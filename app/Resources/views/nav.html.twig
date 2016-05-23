@@ -185,27 +185,27 @@
                 </li>
             </ul>
         </li>
-        <li role="presentation"
-            class="dropdown {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                Logement <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li role="presentation"
-                    class="dropdown-submenu {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" href="">Logement</a>
-                    <ul class="dropdown-menu">
-                        <li class="{% if 'logement_logement_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('logement_logement_index') }}">{{ 'liste' |capitalize }}</a>
-                        </li>
-                        <li class="{% if 'logement_logement_new' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('logement_logement_new') }}">{{ 'ajouter' | capitalize }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
+        {#<li role="presentation"#}
+        {#class="dropdown {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+        {#Logement <span class="caret"></span>#}
+        {#</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li role="presentation"#}
+        {#class="dropdown-submenu {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
+        {#aria-expanded="false" href="">Logement</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li class="{% if 'logement_logement_index' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_index') }}">{{ 'liste' |capitalize }}</a>#}
+        {#</li>#}
+        {#<li class="{% if 'logement_logement_new' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_new') }}">{{ 'ajouter' | capitalize }}</a>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
     </ul>
 </nav>
 {#</div>#}

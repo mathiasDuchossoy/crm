@@ -1,0 +1,54 @@
+{% extends '::base_popup.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'logements.liste' | trans }}</h1>
+
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'nom' | trans | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for logementUnifie in logementUnifies %}
+            <tr>
+                <td>
+                    <a href="{{ path('logement_logement_show', { 'id': logementUnifie.id }) }}">{{ logementUnifie.id }}</a>
+                </td>
+                <td>
+                    {% for logement in logementUnifie.logements %}
+                        {% if logement.site.crm == 1 %}
+                            {% for traduction in logement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('popup_logement_logement_show', { 'id': logementUnifie.id }) }}">{{ 'voir' | trans }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('popup_logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="list-unstyled">
+        <li>
+            <a class="btn btn-default"
+               href="{{ path('popup_logement_logement_new',{'idFournisseurHebergement': fournisseurHebergement.id}) }}">{{ 'ajouter' | trans }}</a>
+        </li>
+    </ul>
+{% endblock %}

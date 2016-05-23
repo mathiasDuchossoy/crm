@@ -627,7 +627,7 @@ class HebergementUnifieController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('hebergement_hebergement_delete',
                 array('id' => $hebergementUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('delete', SubmitType::class, array('label' => 'supprimer'))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -671,7 +671,7 @@ class HebergementUnifieController extends Controller
         $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
             $hebergementUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array(
-                'label' => 'Update',
+                'label' => 'mettre.a.jour',
                 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
             ));
 

@@ -1,0 +1,31 @@
+{% extends '@MondofuteLogement/logementunifie/fiche_popup.html.twig' %}
+
+
+{% block title %}
+    {{ 'logement.modification' | trans | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    {{ 'logement.modification' | trans | capitalize }}
+{% endblock %}
+
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('popup_logement_logement_index', {'idFournisseurHebergement':fournisseurHebergement.id}) }}">{{ ('retour.liste' | trans) | capitalize }}</a>
+            </li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+
+{% endblock %}
+
+{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
+{% block javascript_page %}
+    {{ parent() }}
+{% endblock %}

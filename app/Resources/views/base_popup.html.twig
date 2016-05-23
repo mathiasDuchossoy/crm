@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}{{ 'CRM Mondofute !' }}{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
+    {% block stylesheets %}
+        {% stylesheets 'css/bootstrap.css' '../app/Resources/public/css/menu.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+        {% endstylesheets %}
+    {% endblock %}
+    {% if form is defined %}
+        {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
+    {% if delete_form is defined %}
+        {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
+    {% endif %}
+</head>
+<body>
+{% block header %}
+    {#<div class="row">#}
+    {#{% include '::header.html.twig' %}#}
+    {#</div>#}
+{% endblock %}
+<div class="container">
+    <div class="row">
+        {% block body %}{% endblock %}
+    </div>
+</div>
+{% block footer %}
+{% endblock %}
+{% block javascripts %}
+    {% javascripts
+    'js/jquery.min.js'
+    'js/bootstrap.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        //        var itemNonPersonalisable = [];
+        //                var items = [];
+        $(document).ready(function () {
+            $(':submit').click(function () {
+//                recupère le form du submit
+                var form = $(this).closest('form');
+                var premierElementInvalid = null;
+                var id = '';
+                var retour = true;
+                if (form.find(':invalid').length > 0) {
+//                récupère les éléments valides et met les bord en vert
+                    $('form').find(':required').each(function () {
+                        if ($(this).val()) {
+                            $(this).css('border', '1px solid green').focus();
+                        }
+                    });
+//                récupère les éléments invalid met les bord en rouge et met le focus sur le premier element invalid
+                    form.find(':invalid').each(function () {
+//                    test si premier element invalid est null dans ce cas on met le focus dessus
+                        if (!premierElementInvalid) {
+                            var obj = $(this).attr('id');
+                            var tab = [];
+                            var element = $(this);
+//                        met dans tab tous les onglets .tab-pane parents de l'element pour pouvoir afficher les bons onglets
+                            while ((tabTmp = element.closest('.tab-pane').attr('id'))) {
+                                tab.push(element.closest('.tab-pane').attr('id'));
+                                element = $('a[href="#' + tabTmp + '"]');
+                            }
+//                        dépile tab par le bas (systeme First In Last Out) afin d'afficher les bons onglets
+                            while ((id = tab.pop())) {
+                                $('a[href="#' + id + '"]')
+                                        .tab('show')
+                                        .on('shown.bs.tab', function () {
+                                            $('#' + obj + '').focus();
+//                                        return false;
+                                        });
+                            }
+//                        instancie le premier element invalid
+                            premierElementInvalid = $(this);
+                        }
+                        $(this).css('border', '1px solid red').focus();
+                        return retour;
+                    });
+
+                }
+                return retour;
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        function masqueNonPersonalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 0) {
+//                        $(this).parents(".form-group").show(); // Changer en hide
+                        $(this).parents(".form-group").hide(); // Changer en hide
+                    }
+                });
+            });
+        }
+
+        function copieNonPersonnalisable() {
+            $.each(itemNonPersonalisable, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 1) {
+                        source = $(this).val();
+                        if ($(this).is('select')) {
+                            source = $('#' + this.id + ' option:selected').data('unifie_id');
+                            if (!source) {
+                                source = $(this).val();
+                            }
+                        }
+                        $("[data-unique_block_prefix='" + item + "']").each(function () {
+                            parent = $(this).parents("[data-crm]");
+                            if (parent.data('crm') == 0) {
+                                $(this).val(source);
+                                if ($(this).is('select') && source) {
+                                    $('#' + this.id + '  option[data-unifie_id=' + source + ']').prop('selected', 'selected');
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        function remplirChampsVide() {
+            $.each(items, function (index, item) {
+                $("[data-unique_block_prefix='" + item + "']").each(function () {
+                    parent = $(this).parents("[data-crm]");
+                    if (parent.data('crm') == 1) {
+                        source = $(this).val();
+                        if ($(this).is('select')) {
+                            source = $('#' + this.id + ' option:selected').data('unifie_id');
+                            if (!source) {
+                                source = $(this).val();
+                            }
+                        }
+                        $("[data-unique_block_prefix='" + item + "']").each(function () {
+                            parent = $(this).parents("[data-crm]");
+                            if (parent.data('crm') == 0) {
+                                if (!$(this).val()) {
+                                    $(this).val(source);
+                                }
+                                if ($(this).is('select') && source) {
+                                    if (!$('#' + this.id + ' option:selected').data('unifie_id')) {
+                                        $('#' + this.id + '  option[data-unifie_id=' + source + ']').prop('selected', 'selected');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            if (typeof itemNonPersonalisable != 'undefined') {
+                masqueNonPersonalisable();
+            }
+        });
+    </script>
+
+{% endblock %}
+</body>
+</html>

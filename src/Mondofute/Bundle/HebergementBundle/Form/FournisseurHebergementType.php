@@ -88,7 +88,10 @@ class FournisseurHebergementType extends AbstractType
                 }
             ))
             ->add('button', ButtonType::class,
-                array('label' => 'ajouter', 'attr' => array('class' => 'btn btn-default addReception')));
+                array(
+                    'label' => 'ajouter',
+                    'attr' => array('class' => 'btn btn-default addReception', 'title' => 'ajouter.reception')
+                ));
 
     }
 

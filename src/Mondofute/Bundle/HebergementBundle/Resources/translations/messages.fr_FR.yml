@@ -14,8 +14,13 @@ Jour.4.Libelle: jeudi
 Jour.5.Libelle: vendredi
 Jour.6.Libelle: samedi
 de: de
-à: à
+'à': 'à'
 et.de: 'et de'
 h: h
 et: et
 Libelle: libellé
+associer.fournisseur: 'associer un fournisseur'
+liste.logements: 'liste des logements'
+logements: logements
+rechercher.fournisseur: 'rechercher un fournisseur'
+dissocier.fournisseur: 'dissocier le fournisseur'
