@@ -70,13 +70,13 @@ class FournisseurType extends AbstractType
                 array('types' => array(
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
                     'nucleus_moyencombundle_adresse',
-                    'nucleus_moyencombundle_email',
+//                    'nucleus_moyencombundle_email',
                     
                 ),
                     'allow_add' => true,
 //                    'allow_delete' => true,
+                    'by_reference' => false,
                 )
-            );
             )
             ->add('remiseClefs', CollectionType::class, array(
                 'entry_type' => RemiseClefType::class,

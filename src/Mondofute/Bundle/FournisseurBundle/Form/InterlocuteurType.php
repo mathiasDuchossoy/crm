@@ -9,7 +9,6 @@ use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -63,7 +62,7 @@ class InterlocuteurType extends AbstractType
                 ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
-//                    'by_reference' => false,
+                    'by_reference' => false,
                 )
             )
         ;

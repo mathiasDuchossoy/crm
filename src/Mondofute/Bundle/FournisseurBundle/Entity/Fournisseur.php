@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
-use commun\contactBundle\Entity\Moral;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Nucleus\ContactBundle\Entity\Moral;
@@ -84,8 +83,13 @@ class Fournisseur extends Moral
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
      */
     private $type;
+
+    /**
+     * Fournisseur constructor.
+     */
     public function __construct()
     {
+        parent::__construct();
         $this->interlocuteurs = new ArrayCollection();
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
@@ -125,18 +129,6 @@ class Fournisseur extends Moral
 //        return $this;
 //    }
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-
-        parent::__construct();
-//        $this->setDateCreation();
-//        $this->setDateModification(new \Datetime());
-//        $this->setActif(true);
-        $this->interlocuteurs = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
 
     /**
@@ -395,6 +387,20 @@ class Fournisseur extends Moral
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     *
+     * @return Fournisseur
+     */
+    public function setType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
     /**
