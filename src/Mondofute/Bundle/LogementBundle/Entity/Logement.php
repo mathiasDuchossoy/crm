@@ -313,29 +313,6 @@ class Logement
         return $this;
     }
 
-    /**
-     * Get hebergement
-     *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
-     */
-    public function getHebergement()
-    {
-        return $this->hebergement;
-    }
-
-    /**
-     * Set hebergement
-     *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement
-     *
-     * @return Logement
-     */
-    public function setHebergement(\Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $hebergement = null
-    ) {
-        $this->hebergement = $hebergement;
-
-        return $this;
-    }
 
     /**
      * Get fournisseurHebergement

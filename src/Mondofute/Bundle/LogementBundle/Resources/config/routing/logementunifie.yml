@@ -38,6 +38,11 @@ popup_logement_logement_new:
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:newPopup" }
     methods:  [GET, POST]
 
+popup_logement_logement_clone:
+    path:     /{id}/duplique_popup
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:dupliquePopup" }
+    methods:  [GET, POST]
+
 popup_logement_logement_edit:
     path:     /{id}/edit_popup
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:editPopup" }

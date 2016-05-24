@@ -115,7 +115,7 @@ class LogementUnifieController extends Controller
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
-                            $traduction = new LogementsTraduction();
+                            $traduction = new LogementTraduction();
                             $traduction->setLangue($langue);
                             $logement->addTraduction($traduction);
                         }
@@ -222,6 +222,7 @@ class LogementUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
             $em = $this->getDoctrine()->getManager();
             $this->copieVersSites($logementUnifie);
             $em->persist($logementUnifie);
@@ -238,6 +239,24 @@ class LogementUnifieController extends Controller
             'form' => $form->createView(),
             'fournisseurHebergement' => $fournisseurHebergement,
         ));
+    }
+
+    /**
+     * retirer de l'entité les departements qui ne doivent pas être enregistrer
+     * @param LogementUnifie $entity
+     * @param array $sitesAEnregistrer
+     *
+     * @return $this
+     */
+    private function supprimerLogements(LogementUnifie $entity, array $sitesAEnregistrer)
+    {
+        /** @var Logement $logement */
+        foreach ($entity->getLogements() as $logement) {
+            if (!in_array($logement->getSite()->getId(), $sitesAEnregistrer)) {
+                $entity->removeLogement($logement);
+            }
+        }
+        return $this;
     }
 
     /**
@@ -294,6 +313,129 @@ class LogementUnifieController extends Controller
                 }
                 $emSite->persist($entitySite);
                 $emSite->flush();
+            }
+        }
+    }
+
+    /**
+     * Duplique a new LogementUnifie entity.
+     *
+     */
+    public function dupliquePopupAction(Request $request, LogementUnifie $logementUnifieRef)
+    {
+        $em = $this->getDoctrine()->getManager();
+//        Liste les sites dans l'ordre d'affichage
+        $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
+
+        $fournisseurHebergement = $logementUnifieRef->getLogements()->first()->getFournisseurHebergement();
+//        $L = $em->getRepository(LogementUnifie::class)->rechercherParFournisseurHebergement($fournisseurHebergement);
+
+        $sitesAEnregistrer = array();
+        if (empty($request->get('sites'))) {
+
+//            récupère les sites ayant la région d'enregistrée
+            foreach ($logementUnifieRef->getLogements() as $logementRef) {
+                array_push($sitesAEnregistrer, $logementRef->getSite()->getId());
+            }
+        } else {
+
+//            récupère les sites cochés
+            $sitesAEnregistrer = $request->get('sites');
+        }
+        $logementUnifie = new LogementUnifie();
+
+        $this->ajouterLogementsDansForm($logementUnifie);
+        $this->logementsSortByAffichage($logementUnifie);
+        $this->duplique($logementUnifieRef, $logementUnifie);
+
+        /** @var Logement $logementRef */
+
+        $form = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
+            array(
+                'locale' => $request->getLocale(),
+                'action' => $this->generateUrl('popup_logement_logement_new',
+                    array('idFournisseurHebergement' => $fournisseurHebergement->getId()))
+            ));
+        $form->add('submit', SubmitType::class, array(
+            'label' => $this->get('translator')->trans('Enregistrer'),
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $this->copieVersSites($logementUnifie);
+            $em->persist($logementUnifie);
+            $em->flush();
+
+            return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
+        }
+
+        return $this->render('@MondofuteLogement/logementunifie/new_popup.html.twig', array(
+            'sitesAEnregistrer' => $sitesAEnregistrer,
+            'sites' => $sites,
+            'langues' => $langues,
+            'logementUnifie' => $logementUnifie,
+            'form' => $form->createView(),
+            'fournisseurHebergement' => $fournisseurHebergement,
+        ));
+    }
+
+    /**
+     * @param LogementUnifie $logementUnifieRef
+     * @param LogementUnifie $logementUnifie
+     */
+    public function duplique($logementUnifieRef, $logementUnifie)
+    {
+        /** @var Logement $logementRef */
+        foreach ($logementUnifieRef->getLogements() as $logementRef) {
+//            if(!$logementUnifie->getLogements()->contains($logementRef)){
+//                $logement = new Logement();
+//                $logementUnifie->addLogement($logement);
+//            }else{
+            $trouve = false;
+            /** @var Logement $l */
+            foreach ($logementUnifie->getLogements() as $l) {
+                if ($l->getSite() == $logementRef->getSite()) {
+                    $logement = $l;
+                    $trouve = true;
+                    break;
+                }
+            }
+            if ($trouve == false) {
+                $logement = new Logement();
+                $logementUnifie->addLogement($logement);
+            }
+//            }
+            $logement->setFournisseurHebergement($logementRef->getFournisseurHebergement())
+                ->setLogementUnifie($logementUnifie)
+                ->setAccesPMR($logementRef->getAccesPMR())
+                ->setActif($logementRef->getActif())
+                ->setCapacite($logementRef->getCapacite())
+                ->setNbChambre($logementRef->getNbChambre())
+                ->setSite($logementRef->getSite())
+                ->setSuperficieMax($logementRef->getSuperficieMax())
+                ->setSuperficieMin($logementRef->getSuperficieMin());
+            /** @var LogementTraduction $traductionRef */
+            foreach ($logementRef->getTraductions() as $traductionRef) {
+                $trouve = false;
+                /** @var LogementTraduction $t */
+                foreach ($logement->getTraductions() as $t) {
+                    if ($t->getLangue() == $traductionRef->getLangue()) {
+                        $traduction = $t;
+                        $trouve = true;
+                        break;
+                    }
+                }
+                if ($trouve == false) {
+                    $traduction = new LogementTraduction();
+                    $logement->addTraduction($traduction);
+                }
+                $traduction->setDescriptif($traductionRef->getDescriptif())
+                    ->setLangue($traductionRef->getLangue())
+                    ->setLogement($logement)
+                    ->setNom($traductionRef->getNom());
             }
         }
     }
@@ -432,24 +574,6 @@ class LogementUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les departements qui ne doivent pas être enregistrer
-     * @param LogementUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerLogements(LogementUnifie $entity, array $sitesAEnregistrer)
-    {
-        /** @var Logement $logement */
-        foreach ($entity->getLogements() as $logement) {
-            if (!in_array($logement->getSite()->getId(), $sitesAEnregistrer)) {
-                $entity->removeLogement($logement);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Displays a form to edit an existing LogementUnifie entity.
      * @param Request $request
      * @param LogementUnifie $logementUnifie
@@ -578,7 +702,7 @@ class LogementUnifieController extends Controller
                 // Récupérer le manager du site.
                 $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
                 // Récupérer l'entité sur le site distant puis la suprrimer.
-                $logementUnifieSite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
+                $logementUnifieSite = $emSite->find(LogementUnifie::class, $logementUnifie->getId());
                 if (!empty($logementUnifieSite)) {
                     $emSite->remove($logementUnifieSite);
                     $emSite->flush();
