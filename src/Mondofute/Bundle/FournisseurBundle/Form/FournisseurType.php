@@ -131,7 +131,7 @@ class FournisseurType extends AbstractType
 //            $cViewComm = [];
             foreach ($interlocuteur->children['interlocuteur']->children['moyenComs']->children as $viewMoyenComs) {
                 $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
-                dump($typeComm);
+//                dump($typeComm);
                 $viewMoyenComs->vars['type'] = $typeComm;
                 $viewMoyenComs->vars['label'] = $typeComm;
                 if (empty($cViewComm[$typeComm])) {

@@ -18,6 +18,7 @@ use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
@@ -305,6 +306,8 @@ class FournisseurController extends Controller
                     // if it was a many-to-one relationship, remove the relationship like this
                     $this->deleteInterlocuteurSites($interlocuteur);
                     $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
+
+                    $em->flush();
                     $interlocuteur->setFournisseur(null);
 
                     // if you wanted to delete the Tag entirely, you can also do that
@@ -450,6 +453,7 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
+            $firstFixe = true;
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
@@ -527,21 +531,22 @@ class FournisseurController extends Controller
                                     $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
                                     $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
                                     $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
-                                    $moyenComSite->setDateModification(new DateTime());
+//                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Email':
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
+//                                    dump($interlocuteur->getInterlocuteur()->getMoyenComs());
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (Email $element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Email';
                                     })->first();
                                     $moyenComSite->setAdresse($moyenComCrm->getAdresse());
-                                    $moyenComSite->setDateModification(new DateTime());
+//                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Mobile':
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Mobile';
                                     })->first();
                                     $moyenComSite->setNumero($moyenComCrm->getnumero());
-                                    $moyenComSite->setDateModification(new DateTime());
+//                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Fixe':
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
@@ -816,9 +821,10 @@ class FournisseurController extends Controller
 //                        $fournisseur->removeMoyenCom($moyenCom);
 //                    }
 //                }
-                $this->deleteMoyenComs($fournisseur, $em);
 
+                $this->deleteMoyenComs($fournisseur, $em);
                 $em->flush();
+
                 $interlocuteurs = $fournisseur->getInterlocuteurs();
                 if (!empty($interlocuteurs)) {
                     foreach ($interlocuteurs as $interlocuteur) {
@@ -826,18 +832,39 @@ class FournisseurController extends Controller
 //                        if (!empty($moyenComs)) {
 //                            foreach ($moyenComs as $moyenCom) {
 //                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                                $em->remove($moyenCom);
 //                            }
 //                        }
                         $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
 
+//                        $interlocuteur->getInterlocuteur()->getMoyenComs()->clear();
+//                        die;
                         $em->flush();
+//                        die;
                         $em->remove($interlocuteur);
                     }
                 }
+
+//                $this->deleteMoyenComs($fournisseur, $em);
+
+//                $em->flush();
+
+//                $utilisateurSite = $utilisateurUserSite->getUtilisateur();
+//                foreach ($utilisateurSite->getMoyenComs() as $moyenComSite) {
+//                    $utilisateurSite->removeMoyenCom($moyenComSite);
+//                    $emSite->remove($moyenComSite);
+//                }
+//
+//                $emSite->flush();
+//
+//                $emSite->remove($utilisateurSite);
+//                $emSite->remove($utilisateurUserSite);
+//                $emSite->flush();
                 // ***** fin suppression des moyen de communications *****
 
                 $em->remove($fournisseur);
                 $em->flush();
+
             } catch (ForeignKeyConstraintViolationException $except) {
 
 //                dump($except);
