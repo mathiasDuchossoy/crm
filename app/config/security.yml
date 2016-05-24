@@ -42,12 +42,21 @@ security:
                 csrf_token_generator: security.csrf.token_manager
                 # if you are using Symfony < 2.8, use the following config instead:
                 # csrf_provider: form.csrf_provider
+                remember_me: true
 
             logout:       true
+#            logout:
+#                path:        /logout
+#                target:      /
             anonymous:    true
+#            anonymous: ~
+#        access_denied_url: /logout
+
+    access_denied_url: /logout
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, role: ROLE_ADMIN }
 #        - { path: ^/, role: ROLE_USER }
 #        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
