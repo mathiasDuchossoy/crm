@@ -10,7 +10,15 @@
     {{ 'logement.modification' | trans | capitalize }}
 {% endblock %}
 
+{% block formulaire %}
+    <ul class="list-unstyled">
+        <li><a class="btn btn-default"
+               href="{{ path('popup_logement_logement_clone',{'id': form.vars.value.id}) }}">{{ 'dupliquer' | trans }}</a>
+        </li>
+    </ul>
 
+    {{ parent() }}
+{% endblock %}
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
 {% block actions %}
     <div style="text-align: right">

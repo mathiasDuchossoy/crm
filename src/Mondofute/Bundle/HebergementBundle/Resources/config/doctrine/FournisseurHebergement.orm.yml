@@ -39,7 +39,7 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
             cascade: ['persist','remove']
         logements:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
-            mappedBy: hebergement
+            mappedBy: fournisseurHebergement
     manyToMany:
         receptions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
