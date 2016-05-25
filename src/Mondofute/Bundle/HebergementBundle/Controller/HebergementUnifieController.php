@@ -387,6 +387,8 @@ class HebergementUnifieController extends Controller
                     $adresseSite->setCoordonneeGps(new CoordonneesGPS());
                     $hebergementSite->addMoyenCom($adresseSite);
                 }
+                dump($adresseSite);
+                die;
                 $adresseSite->setVille($adresse->getVille());
                 $adresseSite->setAdresse1($adresse->getAdresse1());
                 $adresseSite->setAdresse2($adresse->getAdresse2());
