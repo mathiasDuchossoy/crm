@@ -2,15 +2,18 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
+use Nucleus\ContactBundle\Entity\Physique;
+use Symfony\Component\Validator\Constraints\DateTime;
+
 /**
  * Interlocuteur
  */
-class Interlocuteur
+class Interlocuteur extends Physique
 {
-    /**
-     * @var integer
-     */
-    private $id;
+//    /**
+//     * @var integer
+//     */
+//    private $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -26,28 +29,32 @@ class Interlocuteur
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
      */
     private $service;
-    /**
-     * @var string
-     */
-    private $prenom;
+//    /**
+//     * @var string
+//     */
+//    private $prenom;
 
     /**
      * Constructor
      */
     public function __construct()
     {
+        parent::__construct();
+//        $this->setDateCreation();
+//        $this->setDateModification(new \Datetime());
+//        $this->setActif(true);
         $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Add fournisseur
@@ -131,27 +138,29 @@ class Interlocuteur
         return $this;
     }
 
-    /**
-     * Get prenom
-     *
-     * @return string
-     */
-    public function getPrenom()
-    {
-        return $this->prenom;
-    }
+//    /**
+//     * Get prenom
+//     *
+//     * @return string
+//     */
+//    public function getPrenom()
+//    {
+//        return $this->prenom;
+//    }
 
-    /**
-     * Set prenom
-     *
-     * @param string $prenom
-     *
-     * @return Interlocuteur
-     */
-    public function setPrenom($prenom)
-    {
-        $this->prenom = $prenom;
+//    /**
+//     * Set prenom
+//     *
+//     * @param string $prenom
+//     *
+//     * @return Interlocuteur
+//     */
+//    public function setPrenom($prenom)
+//    {
+//        $this->prenom = $prenom;
+//
+//        return $this;
+//    }
 
-        return $this;
-    }
+
 }

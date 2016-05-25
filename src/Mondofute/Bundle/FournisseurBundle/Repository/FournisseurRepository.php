@@ -12,8 +12,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
  */
 class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getFournisseurDeFournisseur($fournisseurId)
-
+    public function getFournisseurDeFournisseur($fournisseurId = null)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('fournisseur')

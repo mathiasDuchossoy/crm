@@ -1,10 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
-<<<<<<< HEAD
-
-=======
->>>>>>> CRM-28
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -64,8 +60,6 @@ class ModeleDescriptionForfaitSki
         $this->descriptionForfaitSkis->removeElement($descriptionForfaitSki);
     }
 
-<<<<<<< HEAD
-=======
     /**
      * Get descriptionForfaitSkis
      *
@@ -76,41 +70,20 @@ class ModeleDescriptionForfaitSki
         return $this->descriptionForfaitSkis;
     }
 
->>>>>>> CRM-28
     public function __clone()
     {
         /** @var DescriptionForfaitSki $descriptionsForfaitSki */
         $this->id = null;
-<<<<<<< HEAD
-        $descriptionsForfaitSkis = $this->getDescriptionForfaitSkis();
-        $this->descriptionForfaitSkis = new ArrayCollection();
-        if (count($descriptionsForfaitSkis) > 0) {
-            foreach ($descriptionsForfaitSkis as $descriptionsForfaitSki) {
-=======
         $descriptionsForfaitSkis    = $this->getDescriptionForfaitSkis();
         $this->descriptionForfaitSkis   = new ArrayCollection();
         if (count($descriptionsForfaitSkis) > 0)
         {
             foreach($descriptionsForfaitSkis as $descriptionsForfaitSki)
             {
->>>>>>> CRM-28
                 $cloneDescriptionForfaitSki = clone $descriptionsForfaitSki;
                 $this->descriptionForfaitSkis->add($cloneDescriptionForfaitSki);
                 $cloneDescriptionForfaitSki->setModele($this);
             }
         }
     }
-<<<<<<< HEAD
-
-    /**
-     * Get descriptionForfaitSkis
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDescriptionForfaitSkis()
-    {
-        return $this->descriptionForfaitSkis;
-    }
-=======
->>>>>>> CRM-28
 }
