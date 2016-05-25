@@ -18,7 +18,6 @@ use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Nucleus\MoyenComBundle\Entity\Adresse;
-use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
@@ -453,7 +452,6 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $firstFixe = true;
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
@@ -527,7 +525,7 @@ class FournisseurController extends Controller
                                     $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
                                     $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
                                     $moyenComSite->setVille($moyenComCrm->getVille());
-                                    $moyenComSite->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+                                    $moyenComSite->setPays($emSite->find(Pays::class, $moyenComCrm->getPays()));
                                     $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
                                     $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
                                     $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
@@ -535,7 +533,7 @@ class FournisseurController extends Controller
                                     break;
                                 case 'Email':
 //                                    dump($interlocuteur->getInterlocuteur()->getMoyenComs());
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (Email $element) {
+                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Email';
                                     })->first();
                                     $moyenComSite->setAdresse($moyenComCrm->getAdresse());
