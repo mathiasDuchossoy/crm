@@ -87,7 +87,7 @@ class FournisseurController extends Controller
 //        dump($fournisseur->getMoyenComs());die;
 //        $this->ajouterInterlocuteurMoyenComunnications($fournisseur);
 //        dump($fournisseur);die;
-        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur);
+        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur, array('locale' => $request->getLocale()));
 //        dump($form);die;
 //        $moyenCom = new MoyenCommunication();
 //        $form->add('');
@@ -292,7 +292,7 @@ class FournisseurController extends Controller
         $deleteForm = $this->createDeleteForm($fournisseur);
         $fournisseur->triReceptions();
         $fournisseur->triRemiseClefs();
-        $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur)
+        $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 

@@ -10,11 +10,11 @@ Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        libelle:
-            type: string
-            length: 255
     oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction
+            mappedBy: typeFournisseur
+            cascade:  ['persist' , 'remove']
         fournisseurs:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             mappedBy: type

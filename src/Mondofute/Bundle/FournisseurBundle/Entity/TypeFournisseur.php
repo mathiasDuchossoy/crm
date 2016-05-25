@@ -11,12 +11,22 @@ class TypeFournisseur
      * @var int
      */
     private $id;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurs;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
 
     /**
-     * @var string
+     * Constructor
      */
-    private $libelle;
-
+    public function __construct()
+    {
+        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -26,43 +36,6 @@ class TypeFournisseur
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return TypeFournisseur
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fournisseurs;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -97,5 +70,39 @@ class TypeFournisseur
     public function getFournisseurs()
     {
         return $this->fournisseurs;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction $traduction
+     *
+     * @return TypeFournisseur
+     */
+    public function addTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setTypeFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }

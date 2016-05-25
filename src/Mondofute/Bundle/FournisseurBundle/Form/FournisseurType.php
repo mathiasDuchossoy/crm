@@ -4,7 +4,9 @@ namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\FournisseurBundle\Repository\TypeFournisseurRepository;
 use ReflectionClass;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -25,14 +27,23 @@ class FournisseurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $fournisseurId = $builder->getData()->getId();
-
+        $locale = $options["locale"];
 
         $builder
             ->add('raisonSociale')
+//            ->add('type', EntityType::class, array(
+//                'choice_label' => 'libelle',
+//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
+//                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
+//            ))
             ->add('type', EntityType::class, array(
-                'choice_label' => 'libelle',
                 'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type de fournisseur ---",
+                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
             ))
             ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
             ->add('fournisseurParent', EntityType::class, array(
@@ -111,7 +122,8 @@ class FournisseurType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur'
+            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
+            'locale' => 'fr_FR',
         ));
     }
 

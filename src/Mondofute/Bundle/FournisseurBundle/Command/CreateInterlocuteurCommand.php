@@ -9,9 +9,6 @@
 namespace Mondofute\Bundle\FournisseurBundle\Command;
 
 
-use commun\moyencommunicationBundle\Entity\Fixe;
-use commun\moyencommunicationBundle\Entity\Mobile;
-use commun\moyencommunicationBundle\moyenCommunicationBundle;
 use DateTime;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
