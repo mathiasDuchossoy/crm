@@ -149,7 +149,7 @@
                             </table>
                         </div>
                         <div class="col-lg-1 col-lg-push-11">
-                            <button type="button" class="btn btn-default"
+                            <button title="{{ 'associer.fournisseur' | trans }}" type="button" class="btn btn-default"
                                     onclick="afficherModalRechercheFournisseurs()">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
@@ -161,6 +161,7 @@
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
+
                             <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
                                  class="panel panel-default">
                                 <div class="panel-heading">
@@ -168,6 +169,16 @@
                                         Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
                                 </div>
                                 <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12">
+                                            <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
+                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
+                                                    class="btn btn-default"
+                                                    type="button"><span
+                                                        class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
+                                            </button>
+                                        </div>
+                                    </div>
                                     {{ form_row(fournisseur.fournisseur) }}
                                     {{ form_row(fournisseur.telFixe) }}
                                     {{ form_row(fournisseur.telMobile) }}
@@ -181,7 +192,7 @@
                                                 {% for reception in fournisseur.receptions.vars.choices %}
                                                     {#Gestion du libelle à afficher#}
                                                     {#traduction du jour#}
-                                                    {% set libelle = ('Jour'~reception.data.jour~'Libelle') | trans %}
+                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
                                                     {#traduction de la tranche1#}
                                                     {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
                                                     {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
@@ -279,7 +290,7 @@
                         <div class="row">
                             <div class="col-lg-2 col-lg-push-9">
 
-                                <button type="button"
+                                <button title="{{ 'rechercher.fournisseur' | trans }}" type="button"
                                         onclick="rechercherFournisseursHebergement($('#rechercheFournisseurEnseigne'))"
                                         class="btn btn-default">
                                     Rechercher
@@ -325,6 +336,25 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <div class="modal fade" id="modalListeLogements" tabindex="-1" role="dialog" aria-labelledby="modalListeLogements"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  ">
+            <div class="modal-content" style="  height: auto;
+  min-height: 100vh;">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ 'liste.logements'|trans }}</h4>
+                </div>
+                <div class="modal-body" style="height: 95vh;">
+                    <iframe src="" frameborder="0" id="iframeListeLogements" style="width: 100%;height:100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -363,6 +393,16 @@
 
             var modal = $('#modalRechercherFournisseur');
             modal.modal().show();
+        }
+        function afficherModalListeLogements(idFournisseurHebergement) {
+            var url = '{{ path('popup_logement_logement_index',{'idFournisseurHebergement': '__idFournisseurHebergement__'}) }}';
+            url = url.replace(/__idFournisseurHebergement__/g, idFournisseurHebergement);
+            $('#iframeListeLogements').attr('src', url);
+            $('#iframeListeLogements').css('display', 'none');
+            $('#iframeListeLogements').on('load', function () {
+                $('#iframeListeLogements').css('display', '');
+            });
+            $('#modalListeLogements').modal('show');
         }
         function gestionEmplacementRequired(indexHebergement, indexEmplacement) {
             $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
@@ -416,7 +456,7 @@
             var ligne = $('<tr id="resultatRechercheFournisseur' + value.id + '" data-enseigne="' + value.enseigne + '"></tr>');
 //                            création des colonnes de résultat
             var colonneEnseigne = $('<td>' + value.enseigne + '</td>');
-            var colonneAssocier = $('<td><button type="button" onclick="associerFournisseur(' + value.id + ', \'' + value.enseigne + '\')" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></td>');
+            var colonneAssocier = $('<td><button title="{{ 'associer.fournisseur' | trans }}" type="button" onclick="associerFournisseur(' + value.id + ', \'' + value.enseigne + '\')" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></td>');
 //                            ajout des colonnes dans la ligne
             ligne.append(colonneEnseigne);
             ligne.append(colonneAssocier);
@@ -565,7 +605,7 @@
             } else {
                 colonneEnseigne = $('<td>' + enseigne + '</td>');
             }
-            var colonneDissocier = $('<td><button type="button" class="btn-default btn" onclick="dissocierFournisseur(' + id + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
+            var colonneDissocier = $('<td><button title="{{ 'dissocier.fournisseur' | trans }}" type="button" class="btn-default btn" onclick="dissocierFournisseur(' + id + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
             ligne.append(colonneEnseigne);
             ligne.append(colonneDissocier);
             $('#tabFournisseursAssocies').append(ligne);
@@ -660,6 +700,11 @@
         }
         $(document).ready(function () {
             $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
+                $('[id$="_remiseClef"] option:selected').each(function () {
+                    if ($(this).val() == 'add') {
+                        $(this).prop('selected', false);
+                    }
+                });
                 // do something…
             });
             $('[name="remise_clef"]').submit(function (e) {
@@ -763,6 +808,9 @@
             });
             $(document).on('click', 'button.addReception', function () {
                 afficherModaleAjoutReception($(this).attr('data-fournisseur'));
+            });
+            $(document).on('click', 'button[name="liste_logements"]', function () {
+                afficherModalListeLogements(parseInt($(this).attr('data-fournisseur-hebergement')));
             });
         });
     </script>

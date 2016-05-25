@@ -1,0 +1,27 @@
+{% extends '@MondofuteLogement/logementunifie/fiche.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'logement.creation' | trans | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    {{ 'logement.creation' | trans | capitalize }}
+{% endblock %}
+
+
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('logement_logement_index') }}">{{ ('retour.liste' | trans) | capitalize }}</a></li>
+            {#<li>{{ form(delete_form) }}</li>#}
+        </ul>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

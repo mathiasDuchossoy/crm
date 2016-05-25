@@ -1,0 +1,28 @@
+{% extends '::base_popup.html.twig' %}
+
+{% block body %}
+    <h1>LogementUnifie</h1>
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ logementUnifie.id }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('popup_logement_logement_index',{'idFournisseurHebergement':fournisseurHebergement.id}) }}">{{ 'retour.liste' | trans }}</a>
+        </li>
+        <li>
+            <a href="{{ path('popup_logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

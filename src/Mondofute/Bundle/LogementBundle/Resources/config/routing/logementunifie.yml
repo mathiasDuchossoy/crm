@@ -1,0 +1,54 @@
+logement_logement_index:
+    path:     /
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:index" }
+    methods:  GET
+
+logement_logement_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:show" }
+    methods:  GET
+
+logement_logement_new:
+    path:     /new
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:new" }
+    methods:  [GET, POST]
+
+logement_logement_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:edit" }
+    methods:  [GET, POST]
+
+logement_logement_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:delete" }
+    methods:  DELETE
+
+popup_logement_logement_index:
+    path:     /popup/{idFournisseurHebergement}
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:indexPopup" }
+    methods:  GET
+
+popup_logement_logement_show:
+    path:     /{id}/show_popup
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:showPopup" }
+    methods:  GET
+
+popup_logement_logement_new:
+    path:     /new_popup/{idFournisseurHebergement}
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:newPopup" }
+    methods:  [GET, POST]
+
+popup_logement_logement_clone:
+    path:     /{id}/duplique_popup
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:dupliquePopup" }
+    methods:  [GET, POST]
+
+popup_logement_logement_edit:
+    path:     /{id}/edit_popup
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:editPopup" }
+    methods:  [GET, POST]
+
+popup_logement_logement_delete:
+    path:     /{id}/delete_popup
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:deletePopup" }
+    methods:  DELETE

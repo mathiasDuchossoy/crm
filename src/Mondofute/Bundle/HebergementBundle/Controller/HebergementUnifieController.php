@@ -112,6 +112,31 @@ class HebergementUnifieController extends Controller
 //                $fournisseur->getAdresse()->setDateCreation();
 //            }
 //            $this->gestionDatesMoyenComs($hebergementUnifie);
+            /** @var FournisseurHebergement $fournisseur */
+            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                if (empty($fournisseur->getFournisseur())) {
+//                    supprime le fournisseurHebergement car plus présent
+                    $hebergementUnifie->removeFournisseur($fournisseur);
+                    $em->remove($fournisseur);
+                } else {
+                    $fournisseur->setHebergement($hebergementUnifie);
+//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
+//                        $fournisseur->getAdresse()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
+//                        $fournisseur->getTelFixe()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
+//                        $fournisseur->getTelMobile()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
+//                    }
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($hebergementUnifie);
             $em->flush();
@@ -627,7 +652,7 @@ class HebergementUnifieController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('hebergement_hebergement_delete',
                 array('id' => $hebergementUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('delete', SubmitType::class, array('label' => 'supprimer'))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -671,7 +696,7 @@ class HebergementUnifieController extends Controller
         $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
             $hebergementUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array(
-                'label' => 'Update',
+                'label' => 'mettre.a.jour',
                 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
             ));
 

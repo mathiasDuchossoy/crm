@@ -6,16 +6,21 @@ EmplacementPisteDeSkiLibelle: 'piste de ski'
 EmplacementPlageLibelle: plage
 EmplacementRemonteesMecaniquesLibelle: 'remontées mécaniques'
 EmplacementTelecabineLibelle: télécabine
-Jour0Libelle: dimanche
-Jour1Libelle: lundi
-Jour2Libelle: mardi
-Jour3Libelle: mercredi
-Jour4Libelle: jeudi
-Jour5Libelle: vendredi
-Jour6Libelle: samedi
+Jour.0.Libelle: dimanche
+Jour.1.Libelle: lundi
+Jour.2.Libelle: mardi
+Jour.3.Libelle: mercredi
+Jour.4.Libelle: jeudi
+Jour.5.Libelle: vendredi
+Jour.6.Libelle: samedi
 de: de
-à: à
+'à': 'à'
 et.de: 'et de'
 h: h
 et: et
 Libelle: libellé
+associer.fournisseur: 'associer un fournisseur'
+liste.logements: 'liste des logements'
+logements: logements
+rechercher.fournisseur: 'rechercher un fournisseur'
+dissocier.fournisseur: 'dissocier le fournisseur'
