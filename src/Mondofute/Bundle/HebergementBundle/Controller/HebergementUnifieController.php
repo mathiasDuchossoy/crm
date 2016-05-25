@@ -112,6 +112,31 @@ class HebergementUnifieController extends Controller
 //                $fournisseur->getAdresse()->setDateCreation();
 //            }
 //            $this->gestionDatesMoyenComs($hebergementUnifie);
+            /** @var FournisseurHebergement $fournisseur */
+            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
+                if (empty($fournisseur->getFournisseur())) {
+//                    supprime le fournisseurHebergement car plus présent
+                    $hebergementUnifie->removeFournisseur($fournisseur);
+                    $em->remove($fournisseur);
+                } else {
+                    $fournisseur->setHebergement($hebergementUnifie);
+//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
+//                        $fournisseur->getAdresse()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
+//                        $fournisseur->getTelFixe()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
+//                    }
+//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
+//                        $fournisseur->getTelMobile()->setDateCreation();
+//                    } else {
+//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
+//                    }
+                }
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($hebergementUnifie);
             $em->flush();
