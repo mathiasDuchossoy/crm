@@ -15,10 +15,20 @@
             {{ form_start(form) }}
             {{ form_row(form.enseigne) }}
             {{ form_row(form.raisonSociale) }}
-            {{ form_row(form.type) }}
+            {#{{ form_row(form.type) }}#}
+            {{ form_row(form.typeFournisseurs) }}
+            {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
             {{ form_row(form.fournisseurParent) }}
             {{ form_row(form.contient) }}
-            {{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}
+            {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
+            {#{{ form_label(form.moyenComs[0]) }}#}
+            {#{{ dump(form.moyenComs[0]) }}#}
+            {{ form_row(form.moyenComs[0].codePostal) }}
+            {{ form_row(form.moyenComs[0].adresse1) }}
+            {{ form_row(form.moyenComs[0].adresse2) }}
+            {{ form_row(form.moyenComs[0].adresse3) }}
+            {{ form_row(form.moyenComs[0].ville) }}
+            {{ form_row(form.moyenComs[0].pays) }}
 
             {#{{ form_row(form.remiseClefs) }}#}
             <div class="form-group ">

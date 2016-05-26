@@ -7,16 +7,48 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
  */
 class TypeFournisseur
 {
+
+    const Hebergement = 1; // 1
+    const RemonteesMecaniques = 2; // 10
+    const LocationMaterielDeSki = 3; // 10
+    const ESF = 4; // 10
+    const Assurance = 5; // 10
+
+    public static $libelles = array(
+        TypeFournisseur::Hebergement => 'Hébergement',
+        TypeFournisseur::RemonteesMecaniques => 'Remontées Mécaniques',
+        TypeFournisseur::LocationMaterielDeSki => 'Location Matériel de Ski',
+        TypeFournisseur::ESF => 'ESF',
+        TypeFournisseur::Assurance => 'Assurance'
+    );
     /**
      * @var int
      */
     private $id;
+    /**
+     * @var integer
+     */
+    private $typeFournisseur;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    private $fournisseur;
 
     /**
-     * @var string
+     * Constructor
      */
-    private $libelle;
+    public function __construct()
+    {
+        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
+    static public function getLibelle($permission)
+    {
+        return self::$libelles[$permission];
+    }
 
     /**
      * Get id
@@ -29,73 +61,50 @@ class TypeFournisseur
     }
 
     /**
-     * Set libelle
+     * Get typeFournisseur
      *
-     * @param string $libelle
+     * @return integer
+     */
+    public function getTypeFournisseur()
+    {
+        return $this->typeFournisseur;
+    }
+
+    /**
+     * Set typeFournisseur
+     *
+     * @param integer $typeFournisseur
      *
      * @return TypeFournisseur
      */
-    public function setLibelle($libelle)
+    public function setTypeFournisseur($typeFournisseur)
     {
-        $this->libelle = $libelle;
+        $this->typeFournisseur = $typeFournisseur;
 
         return $this;
     }
 
     /**
-     * Get libelle
+     * Get fournisseur
      *
-     * @return string
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
-    public function getLibelle()
+    public function getFournisseur()
     {
-        return $this->libelle;
+        return $this->fournisseur;
     }
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $fournisseurs;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add fournisseur
+     * Set fournisseur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
      *
      * @return TypeFournisseur
      */
-    public function addFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur)
+    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
     {
-        $this->fournisseurs[] = $fournisseur;
+        $this->fournisseur = $fournisseur;
 
         return $this;
-    }
-
-    /**
-     * Remove fournisseur
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
-     */
-    public function removeFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur)
-    {
-        $this->fournisseurs->removeElement($fournisseur);
-    }
-
-    /**
-     * Get fournisseurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFournisseurs()
-    {
-        return $this->fournisseurs;
     }
 }

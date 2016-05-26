@@ -11,11 +11,11 @@ Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur:
             options:
                 unsigned: true
     fields:
-        libelle:
-            type: string
-            length: 255
-    oneToMany:
-        fournisseurs:
+        typeFournisseur:
+            type: integer
+
+    manyToOne:
+        fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
-            mappedBy: type
+            inversedBy: types
     lifecycleCallbacks: {  }

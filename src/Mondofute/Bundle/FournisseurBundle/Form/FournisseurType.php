@@ -2,9 +2,12 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\FournisseurBundle\Repository\TypeFournisseurRepository;
 use ReflectionClass;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -25,14 +28,50 @@ class FournisseurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $fournisseurId = $builder->getData()->getId();
-
+        $locale = $options["locale"];
 
         $builder
             ->add('raisonSociale')
-            ->add('type', EntityType::class, array(
-                'choice_label' => 'libelle',
-                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
+//            ->add('type', EntityType::class, array(
+//                'choice_label' => 'libelle',
+//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
+//                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
+//            ))
+//            ->add('type', EntityType::class, array(
+//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
+//                'required' => true,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un type de fournisseur ---",
+//                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
+//                    return $rr->getTraductionsByLocale($locale);
+//                },
+//            ))
+//            ->add('types', CollectionType::class, array(
+//                'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\TypeFournisseurType',
+////                'required' => true,
+////                "choice_label" => "traductions[0].libelle",
+////                "placeholder" => " --- choisir un type de fournisseur ---",
+////                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
+////                    return $rr->getTraductionsByLocale($locale);
+////                },
+////                'expanded'  => true,
+////                'multiple'  => true
+//            ))
+            ->add('types', CollectionType::class, array('mapped' => false))
+            ->add('typeFournisseurs', ChoiceType::class, array(
+                'choices' => array(
+                    TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
+                    TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
+                    TypeFournisseur::getLibelle(TypeFournisseur::LocationMaterielDeSki) => TypeFournisseur::LocationMaterielDeSki,
+                    TypeFournisseur::getLibelle(TypeFournisseur::ESF) => TypeFournisseur::ESF,
+                    TypeFournisseur::getLibelle(TypeFournisseur::Assurance) => TypeFournisseur::Assurance,
+                ),
+                'choices_as_values' => true,
+                'label' => 'types',
+                'translation_domain' => 'messages',
+                'mapped' => false,
+                'expanded' => true,
+                'multiple' => true
             ))
             ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
             ->add('fournisseurParent', EntityType::class, array(
@@ -111,13 +150,25 @@ class FournisseurType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur'
+            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
+            'locale' => 'fr_FR',
         ));
     }
 
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        $arrayType = new ArrayCollection();
+        foreach ($view->vars['value']->getTypes() as $type) {
+            $arrayType->add($type->getTypeFournisseur());
+        }
+
+        foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+            if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+                $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+            }
+        }
+
 //        dump($view->children['interlocuteurs']->children[0]->children['interlocuteur']->children['moyenComs']->children);
         // ordre d'affichage: Adresse , Email, Téléphone 1, Téléphone 2, Mobile
         $interlocuteurs = $view->children['interlocuteurs']->children;
