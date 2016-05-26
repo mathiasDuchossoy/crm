@@ -576,15 +576,17 @@ class FournisseurController extends Controller
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Adresse';
                                     })->first();
-                                    $moyenComSite->setCodePostal($moyenComCrm->getCodePostal());
-                                    $moyenComSite->setAdresse1($moyenComCrm->getAdresse1());
-                                    $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
-                                    $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
-                                    $moyenComSite->setVille($moyenComCrm->getVille());
-                                    $moyenComSite->setPays($emSite->find(Pays::class, $moyenComCrm->getPays()));
-                                    $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
-                                    $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
-                                    $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
+                                    if ($moyenComCrm) {
+                                        $moyenComSite->setCodePostal($moyenComCrm->getCodePostal());
+                                        $moyenComSite->setAdresse1($moyenComCrm->getAdresse1());
+                                        $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
+                                        $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
+                                        $moyenComSite->setVille($moyenComCrm->getVille());
+                                        $moyenComSite->setPays($emSite->find(Pays::class, $moyenComCrm->getPays()));
+                                        $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
+                                        $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
+                                        $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
+                                    }
 //                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Email':
