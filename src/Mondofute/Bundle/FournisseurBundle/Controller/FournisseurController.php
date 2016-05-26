@@ -8,7 +8,6 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurTypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
@@ -593,27 +592,33 @@ class FournisseurController extends Controller
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Email';
                                     })->first();
-                                    $moyenComSite->setAdresse($moyenComCrm->getAdresse());
+                                    if ($moyenComCrm) {
+                                        $moyenComSite->setAdresse($moyenComCrm->getAdresse());
+                                    }
 //                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Mobile':
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Mobile';
                                     })->first();
-                                    $moyenComSite->setNumero($moyenComCrm->getnumero());
+                                    if ($moyenComCrm) {
+                                        $moyenComSite->setNumero($moyenComCrm->getnumero());
+                                    }
 //                                    $moyenComSite->setDateModification(new DateTime());
                                     break;
                                 case 'Fixe':
                                     $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function ($element) {
                                         return (new ReflectionClass($element))->getShortName() == 'Fixe';
                                     });
-                                    if ($firstFixe) {
-                                        $moyenComSite->setNumero($moyenComCrm->first()->getNumero());
+                                    if ($moyenComCrm) {
+                                        if ($firstFixe) {
+                                            $moyenComSite->setNumero($moyenComCrm->first()->getNumero());
 //                                        $moyenComSite->setDateModification(new DateTime());
-                                        $firstFixe = false;
-                                    } else {
-                                        $moyenComSite->setNumero($moyenComSite->last()->getnumero());
+                                            $firstFixe = false;
+                                        } else {
+                                            $moyenComSite->setNumero($moyenComSite->last()->getnumero());
 //                                        $moyenComSite->setDateModification(new DateTime());
+                                        }
                                     }
                                     break;
                                 default:
