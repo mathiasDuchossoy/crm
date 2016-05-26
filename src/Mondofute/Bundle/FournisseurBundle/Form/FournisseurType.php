@@ -36,14 +36,40 @@ class FournisseurType extends AbstractType
 //                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
 //                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
 //            ))
-            ->add('type', EntityType::class, array(
-                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-                'required' => true,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un type de fournisseur ---",
-                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
+//            ->add('type', EntityType::class, array(
+//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
+//                'required' => true,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un type de fournisseur ---",
+//                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
+//                    return $rr->getTraductionsByLocale($locale);
+//                },
+//            ))
+//            ->add('types', CollectionType::class, array(
+//                'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\TypeFournisseurType',
+////                'required' => true,
+////                "choice_label" => "traductions[0].libelle",
+////                "placeholder" => " --- choisir un type de fournisseur ---",
+////                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
+////                    return $rr->getTraductionsByLocale($locale);
+////                },
+////                'expanded'  => true,
+////                'multiple'  => true
+//            ))
+            ->add('typeFournisseurs', ChoiceType::class, array(
+                'choices' => array(
+                    TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
+                    TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
+                    TypeFournisseur::getLibelle(TypeFournisseur::LocationMaterielDeSki) => TypeFournisseur::LocationMaterielDeSki,
+                    TypeFournisseur::getLibelle(TypeFournisseur::ESF) => TypeFournisseur::ESF,
+                    TypeFournisseur::getLibelle(TypeFournisseur::Assurance) => TypeFournisseur::Assurance,
+                ),
+                'choices_as_values' => true,
+                'label' => 'types',
+                'translation_domain' => 'messages',
+                'mapped' => false,
+                'expanded' => true,
+                'multiple' => true
             ))
             ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
             ->add('fournisseurParent', EntityType::class, array(

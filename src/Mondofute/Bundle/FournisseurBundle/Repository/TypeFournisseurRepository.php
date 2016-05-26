@@ -10,23 +10,4 @@ namespace Mondofute\Bundle\FournisseurBundle\Repository;
  */
 class TypeFournisseurRepository extends \Doctrine\ORM\EntityRepository
 {
-    /**
-     * @param $locale
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    // récupérer les traductioin des départements crm qui sont de la langue locale
-    public function getTraductionsByLocale($locale)
-    {
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('typeFournisseur, traductions')
-            ->from('MondofuteFournisseurBundle:TypeFournisseur', 'typeFournisseur')
-            ->join('typeFournisseur.traductions', 'traductions')
-            ->join('traductions.langue', 'langue')
-            ->where("langue.code = '$locale'");
-//        ->setParameter('code' , $locale)
-        $qb->orderBy('typeFournisseur.id', 'ASC');
-
-        return $qb;
-    }
 }

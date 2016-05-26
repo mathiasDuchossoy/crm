@@ -53,6 +53,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
             mappedBy: fournisseur
             cascade: ['persist','remove']
+        types:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
+            mappedBy: fournisseur
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
@@ -60,7 +63,4 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         fournisseurParent:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: fournisseurEnfants
-        type:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
-            inversedBy: fournisseurs
     lifecycleCallbacks: {  }

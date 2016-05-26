@@ -8,8 +8,10 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurTypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -80,9 +82,21 @@ class FournisseurController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $fournisseur = new Fournisseur();
+
+        // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
         $adresse = new Adresse();
-//        $adresse->setCoordonneeGPS(new CoordonneesGPS());
         $fournisseur->addMoyenCom($adresse);
+
+        // FournisseurTypeFournisseur
+//        $typeFournisseurs  = $em->getRepository(TypeFournisseur::class)->findAll();
+//        foreach ($typeFournisseurs as $typeFournisseur){
+//            $fournisseurTypeFournisseur = new FournisseurTypeFournisseur();
+//            $fournisseurTypeFournisseur->setType($typeFournisseur);
+//            $fournisseur->addType($fournisseurTypeFournisseur);
+//        }
+        // Fin FournisseurTypeFournisseur
+
+//        $adresse->setCoordonneeGPS(new CoordonneesGPS());
 //        $fournisseur->addMoyenCom(ne)
 //        dump($fournisseur->getMoyenComs());die;
 //        $this->ajouterInterlocuteurMoyenComunnications($fournisseur);
@@ -103,6 +117,17 @@ class FournisseurController extends Controller
         $form->handleRequest($request);
 //        echo 'coucou';die;
         if ($form->isSubmitted() && $form->isValid()) {
+
+            dump($request->get('fournisseur')['typeFournisseurs']);
+
+            foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
+                $typeFournisseur = new TypeFournisseur();
+                $typeFournisseur->setTypeFournisseur($type);
+                $fournisseur->addType($typeFournisseur);
+            }
+
+            dump($fournisseur);
+            die;
 
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
@@ -137,7 +162,6 @@ class FournisseurController extends Controller
                     }
                 }
             }
-
 
             $em->persist($fournisseur);
             $em->flush();
@@ -564,7 +588,6 @@ class FournisseurController extends Controller
                             }
                         }
                     }
-
                 } else {
                     $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
 
@@ -600,7 +623,6 @@ class FournisseurController extends Controller
                         }
 //                        dump($moyenCom);
                     }
-
 
                     $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
 

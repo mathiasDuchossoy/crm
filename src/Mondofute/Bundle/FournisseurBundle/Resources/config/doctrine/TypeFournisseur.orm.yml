@@ -10,12 +10,12 @@ Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur:
                 strategy: AUTO
             options:
                 unsigned: true
-    oneToMany:
-        traductions:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseurTraduction
-            mappedBy: typeFournisseur
-            cascade:  ['persist' , 'remove']
-        fournisseurs:
+    fields:
+        typeFournisseur:
+            type: integer
+
+    manyToOne:
+        fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
-            mappedBy: type
+            inversedBy: types
     lifecycleCallbacks: {  }

@@ -15,7 +15,9 @@
             {{ form_start(form) }}
             {{ form_row(form.enseigne) }}
             {{ form_row(form.raisonSociale) }}
-            {{ form_row(form.type) }}
+            {#{{ form_row(form.type) }}#}
+            {{ form_row(form.typeFournisseurs) }}
+            {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
             {{ form_row(form.fournisseurParent) }}
             {{ form_row(form.contient) }}
             {{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}

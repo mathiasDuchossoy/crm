@@ -80,9 +80,9 @@ class Fournisseur extends Moral
     private $receptions;
 
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
+     * @var \Doctrine\Common\Collections\Collection
      */
-    private $type;
+    private $types;
 
     /**
      * Fournisseur constructor.
@@ -94,42 +94,6 @@ class Fournisseur extends Moral
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
     }
-
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-
-//    /**
-//     * Get enseigne
-//     *
-//     * @return string
-//     */
-//    public function getEnseigne()
-//    {
-//        return $this->enseigne;
-//    }
-//
-//    /**
-//     * Set enseigne
-//     *
-//     * @param string $enseigne
-//     *
-//     * @return Fournisseur
-//     */
-//    public function setEnseigne($enseigne)
-//    {
-//        $this->enseigne = $enseigne;
-//
-//        return $this;
-//    }
-
-
 
     /**
      * Add interlocuteur
@@ -152,7 +116,8 @@ class Fournisseur extends Moral
      */
     public function removeInterlocuteur(
         FournisseurInterlocuteur $interlocuteur
-    ) {
+    )
+    {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
 
@@ -373,38 +338,14 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    ) {
+    )
+    {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
     }
 
     /**
-     * Get type
-     *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
-     *
-     * @return Fournisseur
-     */
-    public function setType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type = null)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Set type
      * Add hebergement
      *
      * @param FournisseurHebergement $hebergement
@@ -483,5 +424,39 @@ class Fournisseur extends Moral
     public function removeReception(Reception $reception)
     {
         $this->receptions->removeElement($reception);
+    }
+
+    /**
+     * Add type
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     *
+     * @return Fournisseur
+     */
+    public function addType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
+    {
+        $this->types[] = $type->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove type
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     */
+    public function removeType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
+    {
+        $this->types->removeElement($type);
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 }
