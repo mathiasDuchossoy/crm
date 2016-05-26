@@ -6,6 +6,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TypeFournisseurType extends AbstractType
@@ -19,7 +21,7 @@ class TypeFournisseurType extends AbstractType
         $builder
 //            ->add('typeFournisseur')
             ->add('fournisseur')
-            ->add('typeFournisseurs', ChoiceType::class, array(
+            ->add('typeFournisseur', ChoiceType::class, array(
                 'choices' => array(
                     TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
                     TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
@@ -42,4 +44,5 @@ class TypeFournisseurType extends AbstractType
             'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur'
         ));
     }
+
 }

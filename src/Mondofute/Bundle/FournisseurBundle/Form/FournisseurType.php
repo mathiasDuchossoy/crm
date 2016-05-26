@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
@@ -56,6 +57,7 @@ class FournisseurType extends AbstractType
 ////                'expanded'  => true,
 ////                'multiple'  => true
 //            ))
+            ->add('types', CollectionType::class, array('mapped' => false))
             ->add('typeFournisseurs', ChoiceType::class, array(
                 'choices' => array(
                     TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
@@ -156,6 +158,17 @@ class FournisseurType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        $arrayType = new ArrayCollection();
+        foreach ($view->vars['value']->getTypes() as $type) {
+            $arrayType->add($type->getTypeFournisseur());
+        }
+
+        foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+            if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+                $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+            }
+        }
+
 //        dump($view->children['interlocuteurs']->children[0]->children['interlocuteur']->children['moyenComs']->children);
         // ordre d'affichage: Adresse , Email, Téléphone 1, Téléphone 2, Mobile
         $interlocuteurs = $view->children['interlocuteurs']->children;

@@ -177,6 +177,16 @@ class Fournisseur extends Moral
                 $cloneReception->setFournisseur($this);
             }
         }
+        $types = $this->getTypes();
+        $this->types = new ArrayCollection();
+        if (count($types) > 0) {
+            /** @var TypeFournisseur $type */
+            foreach ($types as $type) {
+                $cloneType = clone $type;
+                $this->types->add($cloneType);
+                $cloneType->setFournisseur($this);
+            }
+        }
 
         return $this;
     }
@@ -209,6 +219,16 @@ class Fournisseur extends Moral
     public function getReceptions()
     {
         return $this->receptions;
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypes()
+    {
+        return $this->types;
     }
 
     public function triRemiseClefs()
@@ -448,15 +468,5 @@ class Fournisseur extends Moral
     public function removeType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
     {
         $this->types->removeElement($type);
-    }
-
-    /**
-     * Get types
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTypes()
-    {
-        return $this->types;
     }
 }

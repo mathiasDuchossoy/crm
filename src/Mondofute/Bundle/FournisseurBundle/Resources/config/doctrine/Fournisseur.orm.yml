@@ -56,6 +56,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         types:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
             mappedBy: fournisseur
+            cascade: ['persist','remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

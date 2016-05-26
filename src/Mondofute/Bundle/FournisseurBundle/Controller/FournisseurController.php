@@ -87,38 +87,13 @@ class FournisseurController extends Controller
         $adresse = new Adresse();
         $fournisseur->addMoyenCom($adresse);
 
-        // FournisseurTypeFournisseur
-//        $typeFournisseurs  = $em->getRepository(TypeFournisseur::class)->findAll();
-//        foreach ($typeFournisseurs as $typeFournisseur){
-//            $fournisseurTypeFournisseur = new FournisseurTypeFournisseur();
-//            $fournisseurTypeFournisseur->setType($typeFournisseur);
-//            $fournisseur->addType($fournisseurTypeFournisseur);
-//        }
-        // Fin FournisseurTypeFournisseur
-
-//        $adresse->setCoordonneeGPS(new CoordonneesGPS());
-//        $fournisseur->addMoyenCom(ne)
-//        dump($fournisseur->getMoyenComs());die;
-//        $this->ajouterInterlocuteurMoyenComunnications($fournisseur);
-//        dump($fournisseur);die;
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur, array('locale' => $request->getLocale()));
-//        dump($form);die;
-//        $moyenCom = new MoyenCommunication();
-//        $form->add('');
 
-//        $formMoyenComm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurMoyenCommunicationType');
-//        $formMoyenComm->add(
-//
-//        )
-//        die;
-//        $formMoyenComm = $this->createForm();
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
 //        echo 'coucou';die;
         if ($form->isSubmitted() && $form->isValid()) {
-
-            dump($request->get('fournisseur')['typeFournisseurs']);
 
             foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                 $typeFournisseur = new TypeFournisseur();
@@ -126,22 +101,17 @@ class FournisseurController extends Controller
                 $fournisseur->addType($typeFournisseur);
             }
 
-            dump($fournisseur);
-            die;
-
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
 
             $this->copieVersSites($fournisseur);
 
-
             foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                 switch ($typeComm) {
                     case "Adresse":
                         /** @var Adresse $moyenComSite */
-//                            dump($moyenComsSite[$key]);
                         $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
                         break;
                     default:
@@ -218,7 +188,7 @@ class FournisseurController extends Controller
                     $fournisseurSite->getFournisseurParent()->getId()));
             }
 
-            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseurSite->getType()->getId()));
+//            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseurSite->getType()->getId()));
 
             foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
 
@@ -297,6 +267,7 @@ class FournisseurController extends Controller
         $originalInterlocuteurs = new ArrayCollection();
         $originalRemiseClefs = new ArrayCollection();
         $originalReceptions = new ArrayCollection();
+        $originalTypes = new ArrayCollection();
 
         // Create an ArrayCollection of the current Tag objects in the database
         foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
@@ -308,6 +279,9 @@ class FournisseurController extends Controller
         }
         foreach ($fournisseur->getReceptions() as $reception) {
             $originalReceptions->add($reception);
+        }
+        foreach ($fournisseur->getTypes() as $type) {
+            $originalTypes->add($type);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -321,6 +295,36 @@ class FournisseurController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            // type de fournisseur
+            $arrayTypeFournisseur = new ArrayCollection();
+
+            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
+                $arrayTypeFournisseur->add(intval($type));
+            }
+
+            /** @var TypeFournisseur $type */
+            foreach ($originalTypes as $type) {
+                if (!$arrayTypeFournisseur->contains($type->getTypeFournisseur())) {
+
+                    $fournisseur->getTypes()->removeElement($type);
+                    $this->deleteTypeFournisseurSites($type);
+                    $em->remove($type);
+                }
+            }
+
+            foreach ($arrayTypeFournisseur as $type) {
+                if (!$originalTypes->filter(function (TypeFournisseur $element) use ($type) {
+                    return $element->getTypeFournisseur() == $type;
+                })->first()
+                ) {
+                    $typeFournisseur = new TypeFournisseur();
+                    $typeFournisseur->setTypeFournisseur($type);
+                    $fournisseur->addType($typeFournisseur);
+                }
+            }
+
+            // *****
 
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
@@ -376,6 +380,24 @@ class FournisseurController extends Controller
             'langues' => $langues,
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+
+            $typeFournisseurSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array('fournisseur' => $typeFournisseur->getFournisseur(), 'typeFournisseur' => $typeFournisseur->getTypeFournisseur()));
+
+            if (!empty($typeFournisseurSite)) {
+                $typeFournisseurSite->setFournisseur(null);
+                $emSite->remove($typeFournisseurSite);
+            }
+            $emSite->flush();
+        }
     }
 
     private function deleteInterlocuteurSites(FournisseurInterlocuteur $interlocuteur)
@@ -470,6 +492,7 @@ class FournisseurController extends Controller
 
     private function mAJSites(Fournisseur $fournisseur)
     {
+        /** @var TypeFournisseur $type */
         /** @var FournisseurInterlocuteur $interlocuteurSite */
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
@@ -481,7 +504,17 @@ class FournisseurController extends Controller
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
 
             $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
-            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseur->getType()->getId()));
+//            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseur->getType()->getId()));
+
+            foreach ($fournisseur->getTypes() as $type) {
+                $typeSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array('fournisseur' => $fournisseurSite, "typeFournisseur" => $type->getTypeFournisseur()));
+                if (empty($typeSite)) {
+                    $typeFournisseur = new TypeFournisseur();
+                    $typeFournisseur->setTypeFournisseur($type->getTypeFournisseur());
+                    $fournisseurSite->addType($typeFournisseur);
+                }
+            }
+
             $fournisseurSite->setContient($fournisseur->getContient());
 //            $fournisseurSite->setDateModification(new DateTime());
 
@@ -497,7 +530,7 @@ class FournisseurController extends Controller
                         $adresse->setAdresse3($moyenCom->getAdresse3());
                         $adresse->setVille($moyenCom->getVille());
                         $adresse->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
-                        $adresse->setDateModification(new DateTime());
+//                        $adresse->setDateModification(new DateTime());
                         break;
                     default:
                         break;
