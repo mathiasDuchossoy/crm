@@ -10,10 +10,10 @@ use Mondofute\Bundle\CoreBundle\Entity\User as User;
  */
 class UtilisateurUser extends User
 {
-    /**
-     * @var int
-     */
-    protected $id;
+//    /**
+//     * @var int
+//     */
+//    protected $id;
     /**
      * @var string
      */
@@ -48,15 +48,15 @@ class UtilisateurUser extends User
 //        return $this;
 //    }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Get utilisateur

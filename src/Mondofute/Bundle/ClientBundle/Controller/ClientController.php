@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\ClientBundle\Controller;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
-use Mondofute\Bundle\CoreBundle\Entity\User;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\ClientBundle\Form\ClientType;
 
 /**
  * Client controller.
@@ -376,6 +374,7 @@ class ClientController extends Controller
      */
     public function deleteAction(Request $request, ClientUser $clientUser)
     {
+        /** @var Site $site */
         $client = $clientUser->getClient();
         $form = $this->createDeleteForm($clientUser);
         $form->handleRequest($request);
@@ -386,17 +385,16 @@ class ClientController extends Controller
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             foreach ($sites as $site) {
                 $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-                $clientUserSite = $emSite->find(ClientUser::class, $clientUser);
-
+                $clientUserSite = $emSite->find(ClientUser::class, $clientUser->getId());
+                
                 if (!empty($clientUserSite)) {
-                    $clientSite = $clientUser->getClient();
+                    $clientSite = $clientUserSite->getClient();
                     foreach ($clientSite->getMoyenComs() as $moyenComSite) {
                         $clientSite->removeMoyenCom($moyenComSite);
                         $emSite->remove($moyenComSite);
                     }
 
                     $emSite->flush();
-
                     $emSite->remove($clientSite);
                     $emSite->remove($clientUserSite);
                     $emSite->flush();
@@ -406,6 +404,7 @@ class ClientController extends Controller
 
             foreach ($client->getMoyenComs() as $moyenCom) {
                 $client->removeMoyenCom($moyenCom);
+                $em->merge($moyenCom);
                 $em->remove($moyenCom);
             }
 
