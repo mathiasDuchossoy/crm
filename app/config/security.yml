@@ -32,7 +32,10 @@ security:
 
     providers:
         fos_userbundle:
-            id: fos_user.user_provider.username
+#            id: fos_user.user_provider.username
+            entity:
+                class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+                property: username
 
     firewalls:
         main:
@@ -52,7 +55,8 @@ security:
 #            anonymous: ~
 #        access_denied_url: /logout
 
-    access_denied_url: /logout
+
+    access_denied_url: /login
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

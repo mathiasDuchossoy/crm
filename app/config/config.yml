@@ -251,7 +251,7 @@ sc_datetimepicker:
     picker: ~
 
 fos_user:
-    model_manager_name: ~
+#    model_manager_name: ~
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
 #    user_class: Mondofute\Bundle\CoreBundle\Entity\User
