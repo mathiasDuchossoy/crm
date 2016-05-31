@@ -42,14 +42,6 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\RemiseClefBundle\MondofuteRemiseClefBundle(),
             new Mondofute\Bundle\TrancheHoraireBundle\MondofuteTrancheHoraireBundle(),
             new Mondofute\Bundle\LogementBundle\MondofuteLogementBundle(),
-            new Mondofute\Bundle\UtilisateurBundle\MondofuteUtilisateurBundle(),
-            new Infinite\FormBundle\InfiniteFormBundle(),
-            new Nucleus\MoyenComBundle\NucleusMoyenComBundle(),
-            new Nucleus\ContactBundle\NucleusContactBundle(),
-            new PUGX\MultiUserBundle\PUGXMultiUserBundle(),
-            new FOS\UserBundle\FOSUserBundle(),
-            new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
-            new \Mondofute\Bundle\ClientBundle\MondofuteClientBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
