@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mondofute\Bundle\CoreBundle\Entity\User as User;
 
 /**
  * UtilisateurUser
@@ -17,10 +18,35 @@ class UtilisateurUser extends User
      * @var string
      */
     protected $name;
+    
     /**
      * @var \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
      */
-    private $utlisateur;
+    private $utilisateur;
+
+//    /**
+//     * Get name
+//     *
+//     * @return string
+//     */
+//    public function getName()
+//    {
+//        return $this->name;
+//    }
+//
+//    /**
+//     * Set name
+//     *
+//     * @param string $name
+//     *
+//     * @return UtilisateurUser
+//     */
+//    public function setName($name)
+//    {
+//        $this->name = $name;
+//
+//        return $this;
+//    }
 
     /**
      * Get id
@@ -33,27 +59,26 @@ class UtilisateurUser extends User
     }
 
     /**
-     * Get name
+     * Get utilisateur
      *
-     * @return string
+     * @return \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
      */
-    public function getName()
+    public function getUtilisateur()
     {
-        return $this->name;
+        return $this->utilisateur;
     }
 
     /**
-     * Set name
+     * Set utilisateur
      *
-     * @param string $name
+     * @param \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur $utilisateur
      *
      * @return UtilisateurUser
      */
-    public function setName($name)
+    public function setUtilisateur(\Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur $utilisateur = null)
     {
-        $this->name = $name;
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }
-
 }
