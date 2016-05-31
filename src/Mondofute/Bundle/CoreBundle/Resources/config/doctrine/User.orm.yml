@@ -1,32 +1,32 @@
 Mondofute\Bundle\CoreBundle\Entity\User:
-    type: entity
+    type: mappedSuperclass
     table: user
-    inheritanceType: JOINED
-    discriminatorColumn:
-        name: type
-        type: string
-    discriminatorMap:
-#        utilisateur_user: UtilisateurUser
-        utilisateur_user: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
-        client_user: Mondofute\Bundle\ClientBundle\Entity\ClientUser
+#    inheritanceType: JOINED
+#    discriminatorColumn:
+#        name: type
+#        type: string
+#    discriminatorMap:
+##        utilisateur_user: UtilisateurUser
+#        utilisateur_user: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+#        client_user: Mondofute\Bundle\ClientBundle\Entity\ClientUser
     repositoryClass: Mondofute\Bundle\CoreBundle\Repository\UserRepository
-    constraints:
-        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
-              fields: username
-              targetClass: Mondofute\ClientBundle\Entity\ClientUser
-              message: fos_user.username.already_used
-        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
-              fields: email
-              targetClass: Mondofute\ClientBundle\Entity\ClientUser
-              message: fos_user.email.already_used
-        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
-              fields: username
-              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
-              message: fos_user.username.already_used
-        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
-              fields: email
-              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
-              message: fos_user.email.already_used
+#    constraints:
+#        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#              fields: username
+#              targetClass: Mondofute\ClientBundle\Entity\ClientUser
+#              message: fos_user.username.already_used
+#        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#              fields: email
+#              targetClass: Mondofute\ClientBundle\Entity\ClientUser
+#              message: fos_user.email.already_used
+#        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#              fields: username
+#              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
+#              message: fos_user.username.already_used
+#        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+#              fields: email
+#              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
+#              message: fos_user.email.already_used
     id:
         id:
             type: integer

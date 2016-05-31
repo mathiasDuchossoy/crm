@@ -9,10 +9,10 @@ use Mondofute\Bundle\CoreBundle\Entity\User;
  */
 class ClientUser extends User
 {
-    /**
-     * @var int
-     */
-    protected $id;
+//    /**
+//     * @var int
+//     */
+//    protected $id;
     /**
      * @var \Mondofute\Bundle\ClientBundle\Entity\Client
      */

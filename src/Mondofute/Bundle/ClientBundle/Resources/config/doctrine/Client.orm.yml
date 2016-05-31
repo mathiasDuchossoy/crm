@@ -30,6 +30,12 @@ Mondofute\Bundle\ClientBundle\Entity\Client:
                 inverseJoinColumns:
                     nationalite_id:
                         referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
 #    id:
 #        id:
 #            type: integer
