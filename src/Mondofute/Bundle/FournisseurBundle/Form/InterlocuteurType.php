@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Repository\InterlocuteurFonctionRepository;
 use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository;
@@ -65,6 +66,9 @@ class InterlocuteurType extends AbstractType
                     'by_reference' => false,
                 )
             )
+            ->add('user', InterlocuteurUserType::class, array(
+                'data_class' => InterlocuteurUser::class
+            ))
         ;
     }
 
