@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 
 use FOS\UserBundle\Model\UserInterface;
-use Mondofute\Bundle\CoreBundle\Entity\User;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
@@ -238,6 +237,9 @@ class UtilisateurController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updatePassword($utilisateurUser);
+
                 $this->majSites($utilisateurUser);
 
                 $em->persist($utilisateurUser);
@@ -247,7 +249,7 @@ class UtilisateurController extends Controller
                 // add flash messages
                 $this->addFlash(
                     'success',
-                    'Le utilisateur ' . $utilisateurUser->getUsername() . ' a bien été modifié.'
+                    'L\'utilisateur ' . $utilisateurUser->getUsername() . ' a bien été modifié.'
                 );
 
                 return $this->redirectToRoute('utilisateur_edit', array('id' => $utilisateurUser->getId()));

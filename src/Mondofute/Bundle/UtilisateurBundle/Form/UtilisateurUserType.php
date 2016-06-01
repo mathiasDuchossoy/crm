@@ -42,4 +42,11 @@ class UtilisateurUserType extends AbstractType
             'data_class' => 'Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser'
         ));
     }
+
+    public function getName()
+    {
+        return 'mondofute_utilisateur_user';
+    }
+
+
 }

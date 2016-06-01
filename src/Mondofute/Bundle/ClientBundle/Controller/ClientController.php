@@ -265,6 +265,9 @@ class ClientController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updatePassword($clientUser);
+
                 $this->majSites($clientUser);
 
                 $em->persist($clientUser);

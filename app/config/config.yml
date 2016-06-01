@@ -258,6 +258,10 @@ fos_user:
     user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
     service:
         user_manager: pugx_user_manager
-#    registration:
+    registration:
+        form:
+            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+#    change_password:
 #        form:
-#            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+#            type: mondofute_utilisateur_user
+#            name: mondofute_utilisateur_user
