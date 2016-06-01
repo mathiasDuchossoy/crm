@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Nucleus\ContactBundle\Entity\Physique;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Interlocuteur
@@ -33,6 +32,20 @@ class Interlocuteur extends Physique
 //     * @var string
 //     */
 //    private $prenom;
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser
+     */
+    private $user;
+
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Constructor
@@ -45,16 +58,6 @@ class Interlocuteur extends Physique
 //        $this->setActif(true);
         $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
 
     /**
      * Add fournisseur
@@ -124,20 +127,6 @@ class Interlocuteur extends Physique
         return $this->service;
     }
 
-    /**
-     * Set service
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service
-     *
-     * @return Interlocuteur
-     */
-    public function setService(\Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service = null)
-    {
-        $this->service = $service;
-
-        return $this;
-    }
-
 //    /**
 //     * Get prenom
 //     *
@@ -162,5 +151,41 @@ class Interlocuteur extends Physique
 //        return $this;
 //    }
 
+    /**
+     * Set service
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service
+     *
+     * @return Interlocuteur
+     */
+    public function setService(\Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service = null)
+    {
+        $this->service = $service;
 
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser $user
+     *
+     * @return Interlocuteur
+     */
+    public function setUser(\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
