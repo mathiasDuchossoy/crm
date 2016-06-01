@@ -197,11 +197,21 @@ class UtilisateurController extends Controller
      */
     private function createDeleteForm(UtilisateurUser $utilisateurUser)
     {
-        return $this->createFormBuilder()
+        $deleteForm = $this->createFormBuilder()
             ->setAction($this->generateUrl('utilisateur_delete', array('id' => $utilisateurUser->getId())))
-            ->add('Supprimer', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
+
+        if ($this->getUser() != $utilisateurUser) {
+            $deleteForm->add('Supprimer', SubmitType::class);
+        }
+
+        return $deleteForm;
+//        return $this->createFormBuilder()
+//            ->setAction($this->generateUrl('utilisateur_delete', array('id' => $utilisateurUser->getId())))
+////            ->add('Supprimer', SubmitType::class)
+//            ->setMethod('DELETE')
+//            ->getForm();
     }
 
     /**
@@ -333,6 +343,11 @@ class UtilisateurController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->getUser() == $utilisateurUser) {
+                $this->addFlash('error', 'Vous ne pouvez pas vous supprimer');
+                return $this->redirect($request->headers->get('referer'));
+            }
+
             $em = $this->getDoctrine()->getManager();
 
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
@@ -367,6 +382,8 @@ class UtilisateurController extends Controller
             $em->remove($utilisateur);
             $em->remove($utilisateurUser);
             $em->flush();
+
+            $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
         }
 
         return $this->redirectToRoute('utilisateur_index');
