@@ -101,6 +101,7 @@ doctrine:
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -130,6 +131,7 @@ doctrine:
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
