@@ -254,8 +254,8 @@ fos_user:
 #    model_manager_name: ~
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-#    user_class: Mondofute\Bundle\CoreBundle\Entity\User
-    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+    user_class: Mondofute\Bundle\CoreBundle\Entity\User
+#    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
     service:
         user_manager: pugx_user_manager
 #    registration:

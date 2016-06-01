@@ -159,13 +159,16 @@ class FournisseurType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $arrayType = new ArrayCollection();
-        foreach ($view->vars['value']->getTypes() as $type) {
-            $arrayType->add($type->getTypeFournisseur());
-        }
 
-        foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
-            if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
-                $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+        if (!empty($view->vars['value']->getTypes())) {
+            foreach ($view->vars['value']->getTypes() as $type) {
+                $arrayType->add($type->getTypeFournisseur());
+            }
+
+            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+                }
             }
         }
 
