@@ -1,0 +1,15 @@
+Mondofute\Bundle\ServiceBundle\Entity\CategorieService:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\CategorieServiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToMany:
+        sousCategories:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService
+            mappedBy: categorieParent
+    lifecycleCallbacks: {  }

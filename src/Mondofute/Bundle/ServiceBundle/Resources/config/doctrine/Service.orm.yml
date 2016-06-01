@@ -1,0 +1,28 @@
+Mondofute\Bundle\ServiceBundle\Entity\Service:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\ServiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        defaut:
+            type: boolean
+    manyToOne:
+        listeService:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ListeService
+            inversedBy: services
+        categorieService:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\CategorieService
+        sousCategorieService:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService
+        type:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+    oneToMany:
+        tarifs:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TarifService
+            mappedBy: service
+    lifecycleCallbacks: {  }

@@ -93,6 +93,11 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
+                    MondofuteServiceBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
@@ -102,10 +107,6 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
-                    MondofuteHebergementBundle: ~
-                    MondofuteRemiseClefBundle: ~
-                    MondofuteTrancheHoraireBundle: ~
-                    MondofuteLogementBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -125,6 +126,7 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    MondofuteServiceBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
@@ -164,6 +166,7 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    MondofuteServiceBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine

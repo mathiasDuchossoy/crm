@@ -1,13 +1,13 @@
-{% extends '@MondofuteHebergement/hebergementunifie/fiche.html.twig' %}
+{% extends '@MondofuteService/typeservice/fiche.html.twig' %}
 
 
 {% block title %}
-    {{ 'modification de l\'hébergement ' | capitalize }}
+    {{ 'type_service.modification' | trans | capitalize }}
 {% endblock %}
 
 {#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
 {% block titre %}
-    Modification de l'hébergement
+    {{ 'type_service.modification' | trans | capitalize }}
 {% endblock %}
 
 
@@ -15,7 +15,7 @@
 {% block actions %}
     <div style="text-align: right">
         <ul class="list-unstyled">
-            <li><a href="{{ path('hebergement_hebergement_index') }}">{{ 'retour.liste' | trans | capitalize }}</a></li>
+            <li><a href="{{ path('type_service_index') }}">{{ ('retour.liste' | trans) | capitalize }}</a></li>
             <li>{{ form(delete_form) }}</li>
         </ul>
 

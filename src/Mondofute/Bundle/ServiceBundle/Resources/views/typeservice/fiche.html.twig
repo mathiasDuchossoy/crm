@@ -1,0 +1,88 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            <ul class="nav nav-tabs">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                        <a data-toggle="tab"
+                           href="#{{ typeService.id }}_{{ traduction.vars.value.langue.id }}">
+                            {# affiche la langue en fonction de la locale#}
+                            {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                    {{ traductionLangue.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </a>
+                    </li>
+                    {#{{ form_row(traduction) }}#}
+                {% endfor %}
+            </ul>
+            <div class="tab-content">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <div id="{{ typeService.id }}_{{ traduction.vars.value.langue.id }}"
+                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {% for element in traduction.children %}
+                            {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_departement_unifie_departements_entry_region");
+        {% for langue in langues %}
+        {#itemNonPersonalisable.push("_logement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
+        {% endfor %}
+        var items = [];
+        //        items.push("_departement_unifie_departements_entry_region");
+        {% for langue in langues %}
+        {#items.push("_departement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#items.push("_departement_unifie_departements_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
+        {#items.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
+        {% endfor %}
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+    </script>
+{% endblock %}
