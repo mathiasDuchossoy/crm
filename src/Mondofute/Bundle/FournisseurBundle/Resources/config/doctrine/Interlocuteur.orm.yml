@@ -10,38 +10,38 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
 #                strategy: AUTO
 #            options:
 #                unsigned: true
-#    associationOverride:
-#        moyenComs:
-#            joinTable:
-#                name: interlocuteur_moyenscomm
-#                joinColumns:
-#                    interlocuteur_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    moyenComm_id:
-#                        referencedColumnName: id
-#                orphanRemoval: true
-#                onDelete: CASCADE
-#                cascade: [ "persist", "remove" ]
-#            cascade: [ "persist", "remove" ]
-#            onDelete: CASCADE
-#            orphanRemoval: true
-#
-#        nationalites:
-#            joinTable:
-#                name: intelocuteur_nationalite
-#                joinColumns:
-#                    interlocuteur_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    nationalite_id:
-#                        referencedColumnName: id
-#                orphanRemoval: true
-#                onDelete: CASCADE
-#                cascade: [ "persist", "remove" ]
-#            cascade: [ "persist", "remove" ]
-#            onDelete: CASCADE
-#            orphanRemoval: true
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: interlocuteur_moyenscomm
+                joinColumns:
+                    interlocuteur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+
+        nationalites:
+            joinTable:
+                name: intelocuteur_nationalite
+                joinColumns:
+                    interlocuteur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    nationalite_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
     oneToMany:
         fournisseurs:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
