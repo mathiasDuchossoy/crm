@@ -64,6 +64,7 @@ class InterlocuteurType extends AbstractType
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
                     'by_reference' => false,
+                    'required' => true
                 )
             )
             ->add('user', InterlocuteurUserType::class, array(
@@ -86,6 +87,7 @@ class InterlocuteurType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        parent::finishView($view, $form, $options);
         $cViewComm = [];
         foreach ($view->children['moyenComs']->children as $viewMoyenComs) {
             $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
@@ -103,7 +105,17 @@ class InterlocuteurType extends AbstractType
                 }
             }
         }
+
+//        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+//
+//        if ($typeComm == 'Email' && empty($login)) {
+//            $login = $moyenCom->getAdresse();
+//            $utilisateurUser
+//                ->setUsername($login)
+//                ->setEmail($login);
+//        }
     }
+
 
 //    public function finishView(FormView $view, FormInterface $form, array $options)
 //    {

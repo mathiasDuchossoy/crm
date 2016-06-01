@@ -22,5 +22,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser:
     oneToOne:
         interlocuteur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur
-            inversedBy: user
+#            inversedBy: user
+            mappedBy: user
     lifecycleCallbacks: {  }

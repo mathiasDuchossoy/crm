@@ -54,6 +54,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur:
     oneToOne:
         user:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser
-            mappedBy: interlocuteur
-            persist: ['persist' , 'remove']
+#            mappedBy: interlocuteur
+            inversedBy: interlocuteur
+            cascade: [ "persist", "remove" ]
     lifecycleCallbacks: {  }

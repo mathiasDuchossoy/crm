@@ -724,24 +724,31 @@
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $('#interlocuteurModal');
 
-            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouterun interlocuteur</button>'));
+            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouter un interlocuteur</button>'));
 //                $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
             modal.find('.modal-title').text('Nouvel intelocuteur pour le service ' + service);
             modal.find('.modal-body [id$="service"]').val(service_id);
             modal.modal().show();
         }
 
+        function testPassword(interlocuteur) {
+            if (interlocuteur.plainPasswordFirst != interlocuteur.plainPasswordSecond) {
+                alert("Password and Confirm Password don't match");
+                return false;
+            }
+        }
+
         function ajouterInterlocuteur() {
 
-            if (!testRequired()) {
+            var interlocuteur = getDataIntelocuteurModal();
+
+            if (!testRequired() || !testPassword(interlocuteur)) {
                 return false;
             }
 
             var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
 
-            var interlocuteur = getDataIntelocuteurModal();
-            console.log(interlocuteur);
+            $interlocuteurModal.modal('hide');
 
             var fonction = '';
             if (interlocuteur.fonction) {
@@ -788,7 +795,9 @@
                 longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
-                smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val()
+                smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val(),
+                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
             };
 
 
@@ -828,6 +837,8 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
@@ -835,14 +846,14 @@
         }
 
         function modifierInterlocuteur(index) {
+            var interlocuteur = getDataIntelocuteurModal();
 
-            if (!testRequired()) {
+            if (!testRequired() || !testPassword(interlocuteur)) {
                 return false;
             }
             var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
 
-            var interlocuteur = getDataIntelocuteurModal();
+            $interlocuteurModal.modal('hide');
 
             var fonction = '';
             if (interlocuteur.fonction) {
@@ -891,7 +902,9 @@
                 longitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
                 precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
-                smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val()
+                smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val(),
+                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
             };
 
             return interlocuteur;
@@ -918,6 +931,8 @@
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
         }
 
 

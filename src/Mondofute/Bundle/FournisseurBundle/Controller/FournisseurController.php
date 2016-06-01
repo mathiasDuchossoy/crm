@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
@@ -91,8 +90,11 @@ class FournisseurController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
-//        echo 'coucou';die;
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
 
             foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                 $typeFournisseur = new TypeFournisseur();
@@ -312,6 +314,7 @@ class FournisseurController extends Controller
                 }
             }
 
+            /** @var integer $type */
             foreach ($arrayTypeFournisseur as $type) {
                 if (!$originalTypes->filter(function (TypeFournisseur $element) use ($type) {
                     return $element->getTypeFournisseur() == $type;
