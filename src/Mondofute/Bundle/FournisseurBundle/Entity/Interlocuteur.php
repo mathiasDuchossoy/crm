@@ -9,10 +9,10 @@ use Nucleus\ContactBundle\Entity\Physique;
  */
 class Interlocuteur extends Physique
 {
-//    /**
-//     * @var integer
-//     */
-//    private $id;
+    /**
+     * @var integer
+     */
+    protected $id;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -37,16 +37,6 @@ class Interlocuteur extends Physique
      */
     private $user;
 
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-
     /**
      * Constructor
      */
@@ -57,6 +47,16 @@ class Interlocuteur extends Physique
 //        $this->setDateModification(new \Datetime());
 //        $this->setActif(true);
         $this->fournisseurs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
