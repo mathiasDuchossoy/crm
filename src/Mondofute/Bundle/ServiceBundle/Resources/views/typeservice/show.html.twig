@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>TypeService</h1>
+
+    <table>
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ typeService.id }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <ul class="list-unstyled">
+        <li>
+            <a class="btn btn-default"
+               href="{{ path('type_service_index') }}">{{ 'retour.liste' | trans | capitalize }}</a>
+        </li>
+        <li>
+            <a class="btn btn-default"
+               href="{{ path('type_service_edit', { 'id': typeService.id }) }}">{{ 'modifier' | trans }}</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+            <input class="btn btn-default" type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

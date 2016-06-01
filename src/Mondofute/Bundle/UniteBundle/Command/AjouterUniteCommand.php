@@ -10,6 +10,7 @@ use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteAge;
 use Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
+use Mondofute\Bundle\UniteBundle\Entity\UnitePeriode;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTraduction;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -57,6 +58,9 @@ class AjouterUniteCommand extends ContainerAwareCommand
         $discriminators[4] = new \stdClass();
         $discriminators[4]->classe = UniteClassementHebergement::class;
         $discriminators[4]->choix = '4: Unité de classement d\'hébergement';
+        $discriminators[5] = new \stdClass();
+        $discriminators[5]->classe = UnitePeriode::class;
+        $discriminators[5]->choix = '5: Unité de période';
 
         /** @var QuestionHelper $dialog */
         $dialog = $this->getHelper('question');

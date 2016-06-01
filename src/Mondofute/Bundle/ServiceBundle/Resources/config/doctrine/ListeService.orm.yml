@@ -1,0 +1,24 @@
+Mondofute\Bundle\ServiceBundle\Entity\ListeService:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\ListeServiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: listeServices
+    oneToMany:
+        services:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+            mappedBy: listeService
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

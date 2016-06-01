@@ -1,0 +1,24 @@
+type_service_index:
+    path:     /
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:index" }
+    methods:  GET
+
+type_service_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:show" }
+    methods:  GET
+
+type_service_new:
+    path:     /new
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:new" }
+    methods:  [GET, POST]
+
+type_service_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:edit" }
+    methods:  [GET, POST]
+
+type_service_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:delete" }
+    methods:  DELETE

@@ -185,6 +185,27 @@
                 </li>
             </ul>
         </li>
+        <li role="presentation"
+            class="dropdown {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                {{ 'parametrages' | trans |capitalize }} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'type.service' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'type_service_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'type_service_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
         {#<li role="presentation"#}
         {#class="dropdown {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
         {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}

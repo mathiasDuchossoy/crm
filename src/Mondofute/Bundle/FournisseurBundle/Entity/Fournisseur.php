@@ -4,10 +4,10 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
-use Nucleus\ContactBundle\Entity\Moral;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Nucleus\ContactBundle\Entity\Moral;
 
 class FournisseurContient
 {
@@ -83,17 +83,10 @@ class Fournisseur extends Moral
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur
      */
     private $type;
-
     /**
-     * Fournisseur constructor.
+     * @var \Doctrine\Common\Collections\Collection
      */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->interlocuteurs = new ArrayCollection();
-        $this->remiseClefs = new ArrayCollection();
-        $this->receptions = new ArrayCollection();
-    }
+    private $listeServices;
 
 //    /**
 //     * Get id
@@ -129,7 +122,16 @@ class Fournisseur extends Moral
 //        return $this;
 //    }
 
-
+    /**
+     * Fournisseur constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->interlocuteurs = new ArrayCollection();
+        $this->remiseClefs = new ArrayCollection();
+        $this->receptions = new ArrayCollection();
+    }
 
     /**
      * Add interlocuteur
@@ -483,5 +485,39 @@ class Fournisseur extends Moral
     public function removeReception(Reception $reception)
     {
         $this->receptions->removeElement($reception);
+    }
+
+    /**
+     * Add listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     *
+     * @return Fournisseur
+     */
+    public function addListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    {
+        $this->listeServices[] = $listeService;
+
+        return $this;
+    }
+
+    /**
+     * Remove listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     */
+    public function removeListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    {
+        $this->listeServices->removeElement($listeService);
+    }
+
+    /**
+     * Get listeServices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getListeServices()
+    {
+        return $this->listeServices;
     }
 }
