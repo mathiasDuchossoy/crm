@@ -1,0 +1,16 @@
+Mondofute\Bundle\ServiceBundle\Entity\TypeService:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\TypeServiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TypeServiceTraduction
+            mappedBy: typeService
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

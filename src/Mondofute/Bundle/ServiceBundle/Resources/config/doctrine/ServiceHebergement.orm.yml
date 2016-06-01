@@ -1,0 +1,21 @@
+Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\ServiceHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        hebergementUnifie:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+        service:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+
+    oneToMany:
+        tarifs:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif
+            mappedBy: service
+    lifecycleCallbacks: {  }

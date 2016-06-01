@@ -1,0 +1,20 @@
+Mondofute\Bundle\ServiceBundle\Entity\TarifService:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\TarifServiceRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToOne:
+        tarif:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
+    manyToOne:
+        unitePeriode:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
+        service:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+            inversedBy: tarifs
+    lifecycleCallbacks: {  }
