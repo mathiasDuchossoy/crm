@@ -143,9 +143,9 @@ class UtilisateurController extends Controller
         ) {
             $this->addFlash(
                 'error',
-                'Le Login/Email ' . $utilisateurUser->getUsername() . ' éxiste déjà.'
+                'Le Login/Email ' . $utilisateurUser->getUsername() . ' existe déjà.'
             );
-//die;
+
             return true;
         }
         return false;

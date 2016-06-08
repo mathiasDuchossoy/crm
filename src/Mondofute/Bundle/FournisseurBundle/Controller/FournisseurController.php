@@ -96,32 +96,23 @@ class FournisseurController extends Controller
             $interlocuteurController->setContainer($this->container);
             $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
 
-            foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $typeFournisseur = new TypeFournisseur();
-                $typeFournisseur->setTypeFournisseur($type);
-                $fournisseur->addType($typeFournisseur);
+            if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
+                foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
+                    $typeFournisseur = new TypeFournisseur();
+                    $typeFournisseur->setTypeFournisseur($type);
+                    $fournisseur->addType($typeFournisseur);
+                }
             }
 
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
 
-            $this->copieVersSites($fournisseur);
+            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-            foreach ($fournisseur->getMoyenComs() as $moyenCom) {
-                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-                switch ($typeComm) {
-                    case "Adresse":
-                        /** @var Adresse $moyenComSite */
-                        $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
-                        break;
-                    default:
-                        break;
-                }
-            }
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+                $this->copieVersSites($fournisseur);
 
+                foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                     switch ($typeComm) {
                         case "Adresse":
@@ -132,18 +123,33 @@ class FournisseurController extends Controller
                             break;
                     }
                 }
+
+                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                    foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+
+                        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+                        switch ($typeComm) {
+                            case "Adresse":
+                                /** @var Adresse $moyenComSite */
+                                $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                $em->persist($fournisseur);
+                $em->flush();
+
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été créé.'
+                );
+
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
-
-            $em->persist($fournisseur);
-            $em->flush();
-
-            // add flash messages
-            $this->addFlash(
-                'success',
-                'Le fournisseur a bien été créé.'
-            );
-
-            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(

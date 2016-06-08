@@ -736,6 +736,7 @@
                 alert("Password and Confirm Password don't match");
                 return false;
             }
+            return true;
         }
 
         function ajouterInterlocuteur() {
@@ -968,9 +969,11 @@
         fournisseurParentSelect(optionVal);
 
         function testRequired() {
+
             fail = false;
             fail_tab = [];
-            $('#form-interlocuteur').find('select, textarea, input').each(function () {
+
+            $('#form-interlocuteur').find('select, textarea, input, [type="email"]').each(function () {
                 if (!$(this).prop('required')) {
 
                 } else {
@@ -983,6 +986,16 @@
                     }
                 }
             });
+            // test email qui deviendra l'username de l'interlocuteur
+            var $email = $('#form-interlocuteur').find('[type="email"]');
+            console.log(isValidEmailAddress($email.val()));
+            if (!$email.val() || !isValidEmailAddress($email.val())) {
+                fail = true;
+                fail_tab.push($email);
+            }
+            else {
+                $email.attr('style', 'border: 1px solid green;');
+            }
 
             //submit if fail never got set to true
             if (!fail) {
