@@ -16,10 +16,6 @@ class TarifService
      */
     private $tarif;
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
-     */
-    private $unitePeriode;
-    /**
      * @var \Mondofute\Bundle\ServiceBundle\Entity\Service
      */
     private $service;
@@ -62,29 +58,6 @@ class TarifService
         return $this;
     }
 
-    /**
-     * Get unitePeriode
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
-     */
-    public function getUnitePeriode()
-    {
-        return $this->unitePeriode;
-    }
-
-    /**
-     * Set unitePeriode
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode $unitePeriode
-     *
-     * @return TarifService
-     */
-    public function setUnitePeriode(\Mondofute\Bundle\UniteBundle\Entity\UnitePeriode $unitePeriode = null)
-    {
-        $this->unitePeriode = $unitePeriode;
-
-        return $this;
-    }
 
     /**
      * Get service
