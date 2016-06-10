@@ -293,19 +293,19 @@ class FournisseurController extends Controller
                     if (empty($tarifServiceSite->getTarif())) {
                         $tarifSite = new Tarif();
                         $tarifServiceSite->setTarif($tarifSite);
-                        $emSite->persist($tarifSite);
+//                        $emSite->persist($tarifSite);
                     }
                     $tarifServiceSite->getTarif()
                         ->setUnite($emSite->getRepository(UniteTarif::class)->find($tarifService->getTarif()->getUnite()->getId()))
                         ->setValeur($tarifService->getTarif()->getValeur());
                     $tarifServiceSite->setService($serviceSite)
                         ->setTypePeriode($emSite->getRepository(TypePeriode::class)->find($tarifService->getTypePeriode()->getId()));
-                    $emSite->persist($tarifService);
+//                    $emSite->persist($tarifService);
                 }
-                $emSite->persist($serviceSite);
+//                $emSite->persist($serviceSite);
             }
             $fournisseurSite->addListeService($listeServiceSite);
-            $emSite->persist($listeServiceSite);
+//            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
 //        $emSite->flush();
