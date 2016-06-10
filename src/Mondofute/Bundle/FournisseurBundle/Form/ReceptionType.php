@@ -35,4 +35,9 @@ class ReceptionType extends AbstractType
     {
         return 'mondofute_fournisseur_bundle_reception_type';
     }
+
+    public function getBlockPrefix()
+    {
+        return 'mondofute_fournisseur_bundle_reception_type';
+    }
 }

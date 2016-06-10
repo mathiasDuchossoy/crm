@@ -25,16 +25,6 @@ class CategorieService
     }
 
     /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Add sousCategory
      *
      * @param \Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService $sousCategory
@@ -66,5 +56,21 @@ class CategorieService
     public function getSousCategories()
     {
         return $this->sousCategories;
+    }
+
+    public function __toString()
+    {
+        // TODO: Implement __toString() method.
+        return 'categorieservice' . $this->getId();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

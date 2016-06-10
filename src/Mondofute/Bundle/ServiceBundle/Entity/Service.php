@@ -33,7 +33,7 @@ class Service
      */
     private $sousCategorieService;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+     * @var TypeService
      */
     private $type;
 
@@ -88,7 +88,7 @@ class Service
      */
     public function addTarif(\Mondofute\Bundle\ServiceBundle\Entity\TarifService $tarif)
     {
-        $this->tarifs[] = $tarif;
+        $this->tarifs[] = $tarif->setService($this);
 
         return $this;
     }
@@ -189,7 +189,7 @@ class Service
     /**
      * Get type
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+     * @return TypeService
      */
     public function getType()
     {
@@ -199,14 +199,20 @@ class Service
     /**
      * Set type
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $type
+     * @param TypeService $type
      *
      * @return Service
      */
-    public function setType(\Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement $type = null)
+    public function setType(TypeService $type = null)
     {
         $this->type = $type;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        // TODO: Implement __toString() method.
+        return 'a';
     }
 }

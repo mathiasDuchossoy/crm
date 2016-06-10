@@ -43,6 +43,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\TrancheHoraireBundle\MondofuteTrancheHoraireBundle(),
             new Mondofute\Bundle\LogementBundle\MondofuteLogementBundle(),
             new Mondofute\Bundle\ServiceBundle\MondofuteServiceBundle(),
+            new Mondofute\Bundle\PeriodeBundle\MondofutePeriodeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

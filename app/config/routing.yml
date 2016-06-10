@@ -62,5 +62,9 @@ mondofute_service:
     resource: "@MondofuteServiceBundle/Resources/config/routing.yml"
     prefix:   /
 
+mondofute_periode:
+    resource: "@MondofutePeriodeBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"

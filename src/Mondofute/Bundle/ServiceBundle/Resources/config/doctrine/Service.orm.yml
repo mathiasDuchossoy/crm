@@ -20,9 +20,10 @@ Mondofute\Bundle\ServiceBundle\Entity\Service:
         sousCategorieService:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService
         type:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TypeService
     oneToMany:
         tarifs:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TarifService
             mappedBy: service
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

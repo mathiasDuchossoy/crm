@@ -17,16 +17,6 @@ class SousCategorieService
     private $categorieParent;
 
     /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Get categorieParent
      *
      * @return \Mondofute\Bundle\ServiceBundle\Entity\CategorieService
@@ -48,5 +38,21 @@ class SousCategorieService
         $this->categorieParent = $categorieParent;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        // TODO: Implement __toString() method.
+        return 'souscategorieservice' . $this->getId();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 }

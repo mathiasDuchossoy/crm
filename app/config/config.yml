@@ -97,11 +97,11 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
-                    MondofuteServiceBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
                     MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -127,7 +127,7 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
-                    MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
@@ -169,6 +169,7 @@ doctrine:
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
                     MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine

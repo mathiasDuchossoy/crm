@@ -11,7 +11,6 @@ Mondofute\Bundle\UniteBundle\Entity\Unite:
         2: UniteTarif
         3: UniteDistance
         4: UniteClassementHebergement
-        5: UnitePeriode
     repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UniteRepository
     id:
         id:

@@ -23,6 +23,10 @@ class TarifService
      * @var \Mondofute\Bundle\ServiceBundle\Entity\Service
      */
     private $service;
+    /**
+     * @var \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+     */
+    private $typePeriode;
 
     /**
      * Get id
@@ -102,6 +106,30 @@ class TarifService
     public function setService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service = null)
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    /**
+     * Get typePeriode
+     *
+     * @return \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+     */
+    public function getTypePeriode()
+    {
+        return $this->typePeriode;
+    }
+
+    /**
+     * Set typePeriode
+     *
+     * @param \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode $typePeriode
+     *
+     * @return TarifService
+     */
+    public function setTypePeriode(\Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode $typePeriode = null)
+    {
+        $this->typePeriode = $typePeriode;
 
         return $this;
     }

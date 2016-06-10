@@ -11,9 +11,11 @@ Mondofute\Bundle\ServiceBundle\Entity\TarifService:
     oneToOne:
         tarif:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
+            cascade: ['persist','remove']
     manyToOne:
-        unitePeriode:
-            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
+        typePeriode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+            cascade: ['persist']
         service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
             inversedBy: tarifs
