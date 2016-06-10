@@ -20,7 +20,7 @@ class FournisseurInterlocuteurType extends AbstractType
         
         $builder
 //            ->add('fournisseur')
-            ->add('interlocuteur', 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType');
+            ->add('interlocuteur', 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType', array());
     }
 
     /**

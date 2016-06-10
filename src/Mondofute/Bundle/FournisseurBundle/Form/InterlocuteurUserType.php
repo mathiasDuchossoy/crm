@@ -17,8 +17,7 @@ class InterlocuteurUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('plainPassword', TextType::class, array(
-                'mapped' => false
+            ->add('plainPassword', TextType::class, array(//                'mapped' => false
             ))
 //            ->add('plainPassword', LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\RepeatedType'), array(
 //                'type' => LegacyFormHelper::getType('Symfony\Component\Form\Extension\Core\Type\PasswordType'),

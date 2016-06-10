@@ -91,8 +91,6 @@ class FournisseurController extends Controller
 
         $form->handleRequest($request);
 
-//        dump($fournisseur);die;
-
         if ($form->isSubmitted() && $form->isValid()) {
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);

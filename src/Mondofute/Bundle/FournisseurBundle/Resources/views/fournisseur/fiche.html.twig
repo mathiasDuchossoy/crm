@@ -743,7 +743,7 @@
 
             var interlocuteur = getDataIntelocuteurModal();
 
-            if (!testRequired() || !testPassword(interlocuteur)) {
+            if (!testRequired()) {
                 return false;
             }
 
@@ -851,7 +851,7 @@
         function modifierInterlocuteur(index) {
             var interlocuteur = getDataIntelocuteurModal();
 
-            if (!testRequired() || !testPassword(interlocuteur)) {
+            if (!testRequired()) {
                 return false;
             }
             var $interlocuteurModal = $('#interlocuteurModal');
@@ -992,7 +992,7 @@
             });
             // test email qui deviendra l'username de l'interlocuteur
             var $email = $('#form-interlocuteur').find('[type="email"]');
-            console.log(isValidEmailAddress($email.val()));
+
             if (!$email.val() || !isValidEmailAddress($email.val())) {
                 fail = true;
                 fail_tab.push($email);
