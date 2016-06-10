@@ -1,4 +1,3 @@
-
 mondofute_accueil:
     resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
     prefix:   /

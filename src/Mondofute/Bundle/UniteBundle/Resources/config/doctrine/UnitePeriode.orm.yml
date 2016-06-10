@@ -1,0 +1,11 @@
+Mondofute\Bundle\UniteBundle\Entity\UnitePeriode:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UniteBundle\Repository\UnitePeriodeRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    lifecycleCallbacks: {  }

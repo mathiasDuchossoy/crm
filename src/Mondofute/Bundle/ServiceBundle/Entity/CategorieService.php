@@ -23,7 +23,7 @@ class CategorieService
     {
         $this->sousCategories = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Add sousCategory
      *
