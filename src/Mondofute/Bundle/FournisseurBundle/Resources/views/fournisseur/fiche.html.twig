@@ -23,7 +23,7 @@
             {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
             {#{{ form_label(form.moyenComs[0]) }}#}
             {#{{ dump(form.moyenComs[0]) }}#}
-            {{ form_row(form.moyenComs[0].codePostal) }}
+            {{ form_row(form.moyenComs[0].code_postal) }}
             {{ form_row(form.moyenComs[0].adresse1) }}
             {{ form_row(form.moyenComs[0].adresse2) }}
             {{ form_row(form.moyenComs[0].adresse3) }}
@@ -797,8 +797,9 @@
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
-                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
+                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+//                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+//                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
             };
 
 
@@ -838,8 +839,9 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
-            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword"]').val(interlocuteur.plainPasswordFirst);
+//            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+//            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
@@ -904,8 +906,9 @@
                 precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
-                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
+                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+//                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+//                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
             };
 
             return interlocuteur;
@@ -932,8 +935,9 @@
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
-            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword"]').val(interlocuteur.plainPasswordFirst);
+//            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+//            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
         }
 
 

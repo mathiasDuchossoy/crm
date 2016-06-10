@@ -15,6 +15,9 @@ class FournisseurInterlocuteurType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $fournisseurId = $options['fournisseurId'];
+        
         $builder
 //            ->add('fournisseur')
             ->add('interlocuteur', 'Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType');
@@ -26,7 +29,8 @@ class FournisseurInterlocuteurType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur'
+            'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur',
+            'fournisseurId' => null,
         ));
     }
 }

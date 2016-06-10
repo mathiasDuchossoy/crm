@@ -91,6 +91,8 @@ class FournisseurController extends Controller
 
         $form->handleRequest($request);
 
+//        dump($fournisseur);die;
+
         if ($form->isSubmitted() && $form->isValid()) {
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);
@@ -151,6 +153,16 @@ class FournisseurController extends Controller
                 return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
         }
+//
+        dump($fournisseur);
+//
+//        /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
+//        foreach ($fournisseur->getInterlocuteurs() as $fournisseurInterlocuteur)
+//        {
+//            $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
+//            $user = $interlocuteur->getUser();
+//            dump($user);
+//        }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
             'serviceInterlocuteurs' => $serviceInterlocuteurs,

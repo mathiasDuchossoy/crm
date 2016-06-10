@@ -107,6 +107,9 @@ class FournisseurType extends AbstractType
                     'label' => 'interlocuteurs',
                     'translation_domain' => 'messages',
                     'by_reference' => false,
+                    'entry_options' => array(
+                        'fournisseurId' => $fournisseurId,
+                    )
                 )
             )
             ->add('moyenComs',
