@@ -97,6 +97,7 @@ doctrine:
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
                     MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -123,6 +124,7 @@ doctrine:
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
                     MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -149,6 +151,7 @@ doctrine:
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
                     MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine

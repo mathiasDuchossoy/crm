@@ -1,3 +1,4 @@
+
 mondofute_accueil:
     resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
     prefix:   /
@@ -44,4 +45,8 @@ mondofute_logement:
 
 mondofute_service:
     resource: "@MondofuteServiceBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_periode:
+    resource: "@MondofutePeriodeBundle/Resources/config/routing.yml"
     prefix:   /

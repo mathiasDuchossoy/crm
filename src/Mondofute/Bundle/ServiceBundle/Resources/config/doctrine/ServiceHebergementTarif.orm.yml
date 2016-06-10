@@ -12,8 +12,8 @@ Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif:
         tarif:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
     manyToOne:
-        unitePeriode:
-            targetEntity: Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
+        typePeriode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
         service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement
             inversedBy: tarifs

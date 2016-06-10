@@ -75,7 +75,7 @@ class ListeService
      */
     public function addService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service)
     {
-        $this->services[] = $service;
+        $this->services[] = $service->setListeService($this);
 
         return $this;
     }

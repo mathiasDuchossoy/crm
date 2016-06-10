@@ -1,0 +1,18 @@
+Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PeriodeBundle\Repository\TypePeriodeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        nbJourDefaut:
+            type: integer
+            options:
+                unsigned: true
+        court:
+            type: boolean
+    lifecycleCallbacks: {  }

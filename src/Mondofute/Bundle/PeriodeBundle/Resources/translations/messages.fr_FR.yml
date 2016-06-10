@@ -1,0 +1,5 @@
+type_periode:
+    1: week-end
+    2: semaine
+    3: '2 semaines'
+    4: '3 semaines'

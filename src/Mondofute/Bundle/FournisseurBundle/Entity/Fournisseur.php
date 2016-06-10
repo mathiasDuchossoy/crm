@@ -7,6 +7,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
 
 class FournisseurContient
@@ -511,13 +512,13 @@ class Fournisseur extends Moral
     /**
      * Add listeService
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     * @param ListeService $listeService
      *
      * @return Fournisseur
      */
-    public function addListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    public function addListeService(ListeService $listeService)
     {
-        $this->listeServices[] = $listeService;
+        $this->listeServices[] = $listeService->setFournisseur($this);
 
         return $this;
     }
@@ -525,9 +526,9 @@ class Fournisseur extends Moral
     /**
      * Remove listeService
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     * @param ListeService $listeService
      */
-    public function removeListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    public function removeListeService(ListeService $listeService)
     {
         $this->listeServices->removeElement($listeService);
     }

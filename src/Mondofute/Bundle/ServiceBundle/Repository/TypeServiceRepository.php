@@ -10,4 +10,24 @@ namespace Mondofute\Bundle\ServiceBundle\Repository;
  */
 class TypeServiceRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('ts , tst')
+            ->from('MondofuteServiceBundle:TypeService', 'ts')
+            ->join('ts.traductions', 'tst')
+//            ->join('r.site', 's')
+            ->join('tst.langue', 'l')
+            ->where("l.code = '$locale'");
+//        ->setParameter('code' , $locale)
+        $qb->orderBy('ts.id', 'ASC');
+
+        return $qb;
+    }
 }
