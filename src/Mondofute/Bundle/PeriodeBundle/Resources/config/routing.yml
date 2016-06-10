@@ -1,0 +1,3 @@
+mondofute_periode_homepage:
+    path:     /
+    defaults: { _controller: MondofutePeriodeBundle:Default:index }

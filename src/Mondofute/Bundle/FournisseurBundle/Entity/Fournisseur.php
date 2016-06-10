@@ -133,6 +133,7 @@ class Fournisseur extends Moral
         $this->interlocuteurs = new ArrayCollection();
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
+        $this->listeServices = new ArrayCollection();
     }
 
     /**
@@ -186,6 +187,7 @@ class Fournisseur extends Moral
 
     function __clone()
     {
+        $this->getListeServices()->clear();
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
         $interlocuteurs = $this->getInterlocuteurs();
@@ -228,6 +230,16 @@ class Fournisseur extends Moral
         }
 
         return $this;
+    }
+
+    /**
+     * Get listeServices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getListeServices()
+    {
+        return $this->listeServices;
     }
 
     /**
@@ -531,15 +543,5 @@ class Fournisseur extends Moral
     public function removeListeService(ListeService $listeService)
     {
         $this->listeServices->removeElement($listeService);
-    }
-
-    /**
-     * Get listeServices
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getListeServices()
-    {
-        return $this->listeServices;
     }
 }
