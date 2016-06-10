@@ -16,11 +16,7 @@ class ServiceHebergementTarif
      */
     private $tarif;
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
-     */
-    private $unitePeriode;
-    /**
-     * @var \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement
+     * @var Service
      */
     private $service;
     /**
@@ -58,30 +54,6 @@ class ServiceHebergementTarif
     public function setTarif(\Mondofute\Bundle\UniteBundle\Entity\Tarif $tarif = null)
     {
         $this->tarif = $tarif;
-
-        return $this;
-    }
-
-    /**
-     * Get unitePeriode
-     *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode
-     */
-    public function getUnitePeriode()
-    {
-        return $this->unitePeriode;
-    }
-
-    /**
-     * Set unitePeriode
-     *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\UnitePeriode $unitePeriode
-     *
-     * @return ServiceHebergementTarif
-     */
-    public function setUnitePeriode(\Mondofute\Bundle\UniteBundle\Entity\UnitePeriode $unitePeriode = null)
-    {
-        $this->unitePeriode = $unitePeriode;
 
         return $this;
     }
