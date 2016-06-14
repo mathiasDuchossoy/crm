@@ -61,16 +61,20 @@
             {{ form_row(formAdresse.code_postal) }}
             {{ form_row(formAdresse.ville) }}
             {{ form_row(formAdresse.pays) }}
+            {{ form_row(formAdresse._type) }}
         {% endif %}
         {% if  formTelFixe != '' %}
             {#{{ form_row(formTelFixe.numero) }}#}
             {{ form_row(formTelFixe.numero , { 'label' : 'téléphone 1' | title  }) }}
+            {{ form_row(formTelFixe._type) }}
         {% endif %}
         {% if  formTelFixe2 != '' %}
             {{ form_row(formTelFixe2.numero , { 'label' : 'téléphone 2' | title  }) }}
+            {{ form_row(formTelFixe2._type) }}
         {% endif %}
         {% if  formTelMobile != '' %}
             {{ form_row(formTelMobile.numero , { 'label' : 'mobile' | title  }) }}
+            {{ form_row(formTelMobile._type) }}
         {% endif %}
         {#{% if  formAdresse != '' %}#}
 
@@ -90,13 +94,14 @@
             {#{% elseif typeMoyenCom == 'Email' %}#}
             {% if typeMoyenCom == 'Email' %}
                 {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                {{ form_row(moyenCom._type) }}
             {% else %}
                 {#{{ form_row(moyenCom) }}#}
             {% endif %}
         {% endfor %}
     </div>
-    {% if form.passwordChange is defined %}
-        {{ form_row(form.passwordChange) }}
-    {% endif %}
+    {#{% if form.passwordChange is defined %}#}
+    {#{{ form_row(form.passwordChange) }}#}
+    {#{% endif %}#}
     {{ form_row(form.user.plainPassword) }}
 </div>

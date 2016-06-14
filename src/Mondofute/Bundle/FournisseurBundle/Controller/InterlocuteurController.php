@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
+use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,6 +34,12 @@ class InterlocuteurController extends Controller
             $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
             $interlocuteurUser = $interlocuteur->getUser();
             $interlocuteurUser->setEnabled(true);
+
+
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updatePassword($interlocuteurUser);
+
+//            dump($interlocuteurUser);
 
             foreach ($interlocuteur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -89,6 +96,11 @@ class InterlocuteurController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function deleteInterlocuteur(Interlocuteur $interlocuteur)
+    {
+
     }
 
 }

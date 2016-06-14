@@ -346,9 +346,11 @@ class FournisseurController extends Controller
 
             // *****
 
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
-
 
                     // if it was a many-to-one relationship, remove the relationship like this
                     $this->deleteInterlocuteurSites($interlocuteur);
@@ -362,9 +364,9 @@ class FournisseurController extends Controller
                 }
             }
 
-            $interlocuteurController = new InterlocuteurController();
-            $interlocuteurController->setContainer($this->container);
+
             $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+
 
             foreach ($originalRemiseClefs as $remiseClef) {
                 if (false === $fournisseur->getRemiseClefs()->contains($remiseClef)) {
@@ -450,9 +452,11 @@ class FournisseurController extends Controller
 //                    }
 //                }
 
+                $emSite->flush();
                 $interlocuteurSite->setFournisseur(null);
 
                 $emSite->remove($interlocuteurSite);
+
 //                die;
                 
             }

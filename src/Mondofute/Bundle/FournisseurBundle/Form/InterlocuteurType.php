@@ -10,11 +10,7 @@ use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,22 +26,22 @@ class InterlocuteurType extends AbstractType
 //        $fournisseurId = $options['fournisseurId'];
 //        $test = $builder->getData();
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $interlocuteur = $event->getData();
-            $form = $event->getForm();
-
-//            dump($event);
-            // vérifie si l'objet Product est "nouveau"
-            // Si aucune donnée n'est passée au formulaire, la donnée est "null".
-            // Ce doit être considéré comme un nouveau "Product"
-            if ($interlocuteur && null !== $interlocuteur->getId()) {
-                $form->add('passwordChange', CheckboxType::class, array(
-                    'label' => 'Changer de mot de passe?',
-                    'required' => false,
-                    'mapped' => false,
-                ));
-            }
-        });
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $interlocuteur = $event->getData();
+//            $form = $event->getForm();
+//
+////            dump($event);
+//            // vérifie si l'objet Product est "nouveau"
+//            // Si aucune donnée n'est passée au formulaire, la donnée est "null".
+//            // Ce doit être considéré comme un nouveau "Product"
+//            if ($interlocuteur && null !== $interlocuteur->getId()) {
+//                $form->add('passwordChange', CheckboxType::class, array(
+//                    'label' => 'Changer de mot de passe?',
+//                    'required' => false,
+//                    'mapped' => false,
+//                ));
+//            }
+//        });
 //        dump($test);
         $locale = $options['locale'];
         $builder
