@@ -316,8 +316,10 @@ class FournisseurController extends Controller
             // type de fournisseur
             $arrayTypeFournisseur = new ArrayCollection();
 
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
+            if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+                foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
+                    $arrayTypeFournisseur->add(intval($type));
+                }
             }
 
             /** @var TypeFournisseur $type */
@@ -359,6 +361,11 @@ class FournisseurController extends Controller
                     $em->remove($interlocuteur);
                 }
             }
+
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+
             foreach ($originalRemiseClefs as $remiseClef) {
                 if (false === $fournisseur->getRemiseClefs()->contains($remiseClef)) {
                     $fournisseur->getRemiseClefs()->removeElement($remiseClef);
@@ -373,22 +380,24 @@ class FournisseurController extends Controller
                     $em->remove($reception);
                 }
             }
+            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-            $this->mAJSites($fournisseur);
+                $this->mAJSites($fournisseur);
 
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                $interlocuteur->setFournisseur($fournisseur);
+                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                    $interlocuteur->setFournisseur($fournisseur);
+                }
+
+                $em->persist($fournisseur);
+                $em->flush();
+
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été modifié.'
+                );
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
-
-            $em->persist($fournisseur);
-            $em->flush();
-
-            // add flash messages
-            $this->addFlash(
-                'success',
-                'Le fournisseur a bien été modifié.'
-            );
-            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(

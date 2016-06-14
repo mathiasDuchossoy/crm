@@ -10,6 +10,7 @@ use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -26,20 +27,24 @@ class InterlocuteurType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fournisseurId = $options['fournisseurId'];
-        $test = $builder->getData();
+//        $fournisseurId = $options['fournisseurId'];
+//        $test = $builder->getData();
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $product = $event->getData();
+            $interlocuteur = $event->getData();
             $form = $event->getForm();
 
-            dump($product);
+//            dump($event);
             // vérifie si l'objet Product est "nouveau"
             // Si aucune donnée n'est passée au formulaire, la donnée est "null".
             // Ce doit être considéré comme un nouveau "Product"
-//            if (!$product || null === $product->getId()) {
-//                $form->add('name', 'text');
-//            }
+            if ($interlocuteur && null !== $interlocuteur->getId()) {
+                $form->add('passwordChange', CheckboxType::class, array(
+                    'label' => 'Changer de mot de passe?',
+                    'required' => false,
+                    'mapped' => false,
+                ));
+            }
         });
 //        dump($test);
         $locale = $options['locale'];
