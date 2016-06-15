@@ -28,6 +28,7 @@ use Mondofute\Bundle\TrancheHoraireBundle\Entity\TrancheHoraire;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
 use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
@@ -92,6 +93,7 @@ class FournisseurController extends Controller
 
         // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
         $adresse = new Adresse();
+        $adresse->setCoordonneeGps(new CoordonneesGPS());
         $fournisseur->addMoyenCom($adresse);
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
@@ -108,8 +110,16 @@ class FournisseurController extends Controller
                 $typeFournisseur->setTypeFournisseur($type);
                 $fournisseur->addType($typeFournisseur);
             }
+
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                $interlocuteur->setFournisseur($fournisseur);
+            }
+
+            $this->copieVersSites($fournisseur);
+            /** @var ListeService $listeService */
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
+                /** @var Service $service */
                 foreach ($listeService->getServices() as $service) {
                     $service->setListeService($listeService);
                     /** @var TarifService $tarifService */
@@ -118,12 +128,6 @@ class FournisseurController extends Controller
                     }
                 }
             }
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                $interlocuteur->setFournisseur($fournisseur);
-            }
-
-            $this->copieVersSites($fournisseur);
-
             foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                 switch ($typeComm) {
@@ -149,9 +153,9 @@ class FournisseurController extends Controller
                     }
                 }
             }
-
             $em->persist($fournisseur);
             $em->flush();
+//            dump($fournisseur);die;
 
             // add flash messages
             $this->addFlash(
@@ -181,7 +185,11 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $fournisseurSite = clone $fournisseur;
+//            $fournisseurSite = new Fournisseur();
+            $fournisseurSite->getListeServices()->clear();
             $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
+//            dump($fournisseur);
+//            dump($fournisseurSite);die;
             $moyenComsSite = $fournisseurSite->getMoyenComs();
             if (!empty($moyenComsSite)) {
                 foreach ($moyenComsSite as $key => $moyenComSite) {
@@ -192,6 +200,7 @@ class FournisseurController extends Controller
                         case "Adresse":
                             /** @var Adresse $moyenComSite */
                             $moyenComSite->setPays($emSite->find(Pays::class, $moyenComSite->getPays()));
+                            $moyenComSite->setCoordonneeGps(new CoordonneesGPS());
                             $moyenComsSite[$key]->setPays($emSite->find(Pays::class, $moyenComSite->getPays()));
                             break;
                         default:
@@ -255,6 +264,7 @@ class FournisseurController extends Controller
         $listeServices,
         EntityManager $emSite
     ) {
+//        $fournisseurSite->getListeServices()->clear();
         /** @var ListeService $listeService */
         foreach ($listeServices as $listeService) {
             if (empty($listeService->getId()) || empty($listeServiceSite = $emSite->getRepository(ListeService::class)->find($listeService->getId()))) {
@@ -295,7 +305,7 @@ class FournisseurController extends Controller
                 }
 //                $emSite->persist($serviceSite);
             }
-            $fournisseurSite->addListeService($listeServiceSite);
+//            $fournisseurSite->addListeService($listeServiceSite);
 //            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
