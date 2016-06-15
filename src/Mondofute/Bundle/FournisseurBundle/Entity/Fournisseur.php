@@ -187,7 +187,7 @@ class Fournisseur extends Moral
 
     function __clone()
     {
-        $this->getListeServices()->clear();
+//        $this->getListeServices()->clear();
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
         $interlocuteurs = $this->getInterlocuteurs();
@@ -228,18 +228,17 @@ class Fournisseur extends Moral
                 $cloneType->setFournisseur($this);
             }
         }
-
+        $listeServices = $this->getListeServices();
+        $this->listeServices = new ArrayCollection();
+        if (count($listeServices) > 0) {
+            /** @var ListeService $listeService */
+            foreach ($listeServices as $listeService) {
+                $cloneListeService = $listeService;
+                $this->listeServices->add($cloneListeService);
+                $cloneListeService->setFournisseur($this);
+            }
+        }
         return $this;
-    }
-
-    /**
-     * Get listeServices
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getListeServices()
-    {
-        return $this->listeServices;
     }
 
     /**
@@ -280,6 +279,16 @@ class Fournisseur extends Moral
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Get listeServices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getListeServices()
+    {
+        return $this->listeServices;
     }
 
     public function triRemiseClefs()
