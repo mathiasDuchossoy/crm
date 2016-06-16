@@ -1,0 +1,107 @@
+{#{{ dump(form) }}#}
+{#{{ form_widget(form.prenom) }}#}
+{#{{ form_widget(form.nom) }}#}
+{#{{ form_widget(form.fonction) }}#}
+{#{{ form_widget(form.service) }}#}
+{#{{ form_widget(form.user) }}#}
+
+    {#{{ dump(form) }}#}
+{#{{ form_start(form) }}#}
+    {#{{ form_widget(form.prenom) }}#}
+{#{{ form_end(form) }}#}
+
+{#{% for element in form %}#}
+    {#{{ dump(element) }}#}
+    {#{{ form_widget(element) }}#}
+
+    {#{{ form_widget(element.prenom) }}#}
+    {#{{ form_widget(element.nom) }}#}
+    {#{{ form_widget(element.fonction) }}#}
+    {#{{ form_widget(element.service) }}#}
+    {#{{ form_widget(element.user) }}#}
+{#{% endfor %}#}
+
+{#{{ dump(form) }}#}
+<div id="{{ form.vars.id }}">
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.fonction) }}
+    {{ form_row(form.service) }}
+
+    {% set formAdresse   =  '' %}
+    {% set formTelFixe   =  '' %}
+    {% set formTelFixe2  =  '' %}
+    {% set formTelMobile =  '' %}
+    {% set firstTelFixe  = true %}
+
+    {#{{ dump(form.moyenComs) }}#}
+    <div id="{{ form.moyenComs.vars.id }}">
+        {% for moyenCom in form.moyenComs %}
+            {% set typeMoyenCom = moyenCom.vars.type %}
+            {% if typeMoyenCom == 'Adresse' %}
+                {% set formAdresse =  moyenCom %}
+            {% elseif typeMoyenCom == 'TelFixe' %}
+                {% if firstTelFixe == true %}
+                    {% set formTelFixe =  moyenCom %}
+                    {% set firstTelFixe = false %}
+                {% else %}
+                    {% set formTelFixe2 =  moyenCom %}
+                {% endif %}
+            {% elseif typeMoyenCom == 'TelMobile' %}
+                {% set formTelMobile =  moyenCom %}
+            {% elseif typeMoyenCom == 'Email' %}
+                {#{{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}#}
+            {% endif %}
+        {% endfor %}
+
+        {% if  formAdresse != '' %}
+            {{ form_row(formAdresse.adresse1) }}
+            {{ form_row(formAdresse.adresse2) }}
+            {{ form_row(formAdresse.adresse3) }}
+            {{ form_row(formAdresse.code_postal) }}
+            {{ form_row(formAdresse.ville) }}
+            {{ form_row(formAdresse.pays) }}
+            {{ form_row(formAdresse._type) }}
+        {% endif %}
+        {% if  formTelFixe != '' %}
+            {#{{ form_row(formTelFixe.numero) }}#}
+            {{ form_row(formTelFixe.numero , { 'label' : 'téléphone 1' | title  }) }}
+            {{ form_row(formTelFixe._type) }}
+        {% endif %}
+        {% if  formTelFixe2 != '' %}
+            {{ form_row(formTelFixe2.numero , { 'label' : 'téléphone 2' | title  }) }}
+            {{ form_row(formTelFixe2._type) }}
+        {% endif %}
+        {% if  formTelMobile != '' %}
+            {{ form_row(formTelMobile.numero , { 'label' : 'mobile' | title  }) }}
+            {{ form_row(formTelMobile._type) }}
+        {% endif %}
+        {#{% if  formAdresse != '' %}#}
+
+        {% for moyenCom in form.moyenComs %}
+            {% set typeMoyenCom = moyenCom.vars.type %}
+            {#{% if typeMoyenCom == 'Adresse' %}#}
+            {#{{ form_row(moyenCom.adresse1) }}#}
+            {#{{ form_row(moyenCom.adresse2) }}#}
+            {#{{ form_row(moyenCom.adresse3) }}#}
+            {#{{ form_row(moyenCom.codePostal) }}#}
+            {#{{ form_row(moyenCom.ville) }}#}
+            {#{{ form_row(moyenCom.pays) }}#}
+            {#{% elseif typeMoyenCom == 'TelFixe' %}#}
+            {#{{ form_row(moyenCom.numero , { 'label' : 'téléphone' | title  }) }}#}
+            {#{% elseif typeMoyenCom == 'TelMobile' %}#}
+            {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
+            {#{% elseif typeMoyenCom == 'Email' %}#}
+            {% if typeMoyenCom == 'Email' %}
+                {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                {{ form_row(moyenCom._type) }}
+            {% else %}
+                {#{{ form_row(moyenCom) }}#}
+            {% endif %}
+        {% endfor %}
+    </div>
+    {#{% if form.passwordChange is defined %}#}
+    {#{{ form_row(form.passwordChange) }}#}
+    {#{% endif %}#}
+    {{ form_row(form.user.plainPassword) }}
+</div>

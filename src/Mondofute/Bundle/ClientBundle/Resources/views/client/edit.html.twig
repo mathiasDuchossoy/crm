@@ -1,0 +1,22 @@
+{% extends '@MondofuteClient/client/fiche.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'Edition d\un client' | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    Edition d'un client
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('client_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+
+{% endblock %}

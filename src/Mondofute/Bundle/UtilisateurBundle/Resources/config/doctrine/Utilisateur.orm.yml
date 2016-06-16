@@ -1,0 +1,32 @@
+Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurRepository
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: utilisateur_moyenscom
+                joinColumns:
+                    utilisateur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyencom_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+        nationalites:
+            nullable: true
+            targetEntity: Nationalite
+            joinTable:
+                name: utilisateur_nationalite
+                joinColumns:
+                    physique_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    nationalite_id:
+                        referencedColumnName: id
+    lifecycleCallbacks: {  }

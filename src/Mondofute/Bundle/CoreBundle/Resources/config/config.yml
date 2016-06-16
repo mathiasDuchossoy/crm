@@ -1,0 +1,26 @@
+pugx_multi_user:
+    users:
+        utilisateur_user:
+            entity:
+                class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+            registration:
+                form:
+                    type: Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType
+                    name: fos_user_registration_form
+                    validation_groups:  [Registration, Default]
+                template: UtilisateurBundle:utilisateur:new.html.twig
+            profile:
+                form:
+                    type: Mondofute\Bundle\UtilisateurBundle\Form\UtilisateurUserType
+                    name: fos_user_profile_form
+                    validation_groups:  [Profile, Default]
+        client_user:
+            entity:
+                class: Mondofute\Bundle\ClientBundle\Entity\ClientUser
+            registration:
+                form:
+                    type: Mondofute\Bundle\ClientBundle\Form\ClientUserType
+                template: ClientBundle:client:new.html.twig
+            profile:
+                form:
+                    type: Mondofute\Bundle\ClientBundle\Form\ClientUserType

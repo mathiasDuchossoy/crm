@@ -1,3 +1,19 @@
+mondofute_core:
+    resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_client:
+    resource: "@MondofuteClientBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_utilisateur:
+    resource: "@MondofuteUtilisateurBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_fournisseur:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_accueil:
     resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
     prefix:   /
@@ -30,6 +46,8 @@ mondofute_descriptionforfaitski:
     resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
     prefix: /
 
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 mondofute_unite:
     resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
     prefix: /
@@ -41,3 +59,6 @@ mondofute_remise_clef:
 mondofute_logement:
     resource: "@MondofuteLogementBundle/Resources/config/routing.yml"
     prefix:   /
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"

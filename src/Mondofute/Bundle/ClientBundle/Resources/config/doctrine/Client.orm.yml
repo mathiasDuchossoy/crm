@@ -1,0 +1,52 @@
+Mondofute\Bundle\ClientBundle\Entity\Client:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ClientBundle\Repository\ClientRepository
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: client_moyenscom
+                joinColumns:
+                    client_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyencom_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+#    manyToMany:
+        nationalites:
+            nullable: true
+            targetEntity: Nationalite
+            joinTable:
+                name: client_nationalite
+                joinColumns:
+                    physique_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    nationalite_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    fields:
+        vip:
+            type: boolean
+        dateNaissance:
+            type: date
+    lifecycleCallbacks: {  }

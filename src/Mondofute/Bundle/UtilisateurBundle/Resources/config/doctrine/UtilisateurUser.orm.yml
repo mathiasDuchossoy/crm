@@ -1,0 +1,27 @@
+Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser:
+    type: entity
+    table: utilisateur_user
+    repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurUserRepository
+    constraints:
+        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+              fields: username
+              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
+              message: fos_user.username.already_used
+        - PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity:
+              fields: email
+              targetClass: Mondofute\UtilisateurBundle\Entity\UtilisateurUser
+              message: fos_user.email.already_used
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    oneToOne:
+        utilisateur:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+            persist: ['persist' , 'remove']
+
+    lifecycleCallbacks: {  }

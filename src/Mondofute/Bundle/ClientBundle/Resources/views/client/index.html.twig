@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste des clients' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des clients' | capitalize }}</h1>
+
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Vip</th>
+            <th>Login</th>
+            <th>Prenom / Nom</th>
+            <th>Datenaissance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for clientUser in clientUsers %}
+            <tr>
+                <td><a href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ clientUser.id }}</a></td>
+                <td>{% if clientUser.client.vip %}{{ "oui" | trans |capitalize }}{% else %}{{ "non" | trans |capitalize }}{% endif %}</td>
+                <td>{{ clientUser.username }}</td>
+                <td>{{ clientUser.client.prenom ~ " / " ~ clientUser.client.nom }}</td>
+                <td>{% if clientUser.client.dateNaissance %}{{ clientUser.client.dateNaissance|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('client_show', { 'id': clientUser.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('client_edit', { 'id': clientUser.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('client_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

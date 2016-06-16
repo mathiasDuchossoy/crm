@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Repository\InterlocuteurFonctionRepository;
 use Mondofute\Bundle\FournisseurBundle\Repository\ServiceInterlocuteurRepository;
@@ -22,6 +23,26 @@ class InterlocuteurType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+//        $fournisseurId = $options['fournisseurId'];
+//        $test = $builder->getData();
+
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//            $interlocuteur = $event->getData();
+//            $form = $event->getForm();
+//
+////            dump($event);
+//            // vérifie si l'objet Product est "nouveau"
+//            // Si aucune donnée n'est passée au formulaire, la donnée est "null".
+//            // Ce doit être considéré comme un nouveau "Product"
+//            if ($interlocuteur && null !== $interlocuteur->getId()) {
+//                $form->add('passwordChange', CheckboxType::class, array(
+//                    'label' => 'Changer de mot de passe?',
+//                    'required' => false,
+//                    'mapped' => false,
+//                ));
+//            }
+//        });
+//        dump($test);
         $locale = $options['locale'];
         $builder
             ->add('prenom')
@@ -63,8 +84,12 @@ class InterlocuteurType extends AbstractType
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
                     'by_reference' => false,
+                    'required' => true
                 )
             )
+            ->add('user', InterlocuteurUserType::class, array(
+                'data_class' => InterlocuteurUser::class
+            ))
         ;
     }
 
@@ -75,13 +100,15 @@ class InterlocuteurType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur',
-            'locale' => 'fr_FR'
+            'locale' => 'fr_FR',
+            'fournisseurId' => null,
         ));
     }
 
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        parent::finishView($view, $form, $options);
         $cViewComm = [];
         foreach ($view->children['moyenComs']->children as $viewMoyenComs) {
             $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
@@ -99,7 +126,17 @@ class InterlocuteurType extends AbstractType
                 }
             }
         }
+
+//        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+//
+//        if ($typeComm == 'Email' && empty($login)) {
+//            $login = $moyenCom->getAdresse();
+//            $utilisateurUser
+//                ->setUsername($login)
+//                ->setEmail($login);
+//        }
     }
+
 
 //    public function finishView(FormView $view, FormInterface $form, array $options)
 //    {

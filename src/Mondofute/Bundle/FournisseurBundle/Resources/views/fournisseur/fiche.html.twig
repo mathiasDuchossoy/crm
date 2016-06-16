@@ -23,7 +23,7 @@
             {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
             {#{{ form_label(form.moyenComs[0]) }}#}
             {#{{ dump(form.moyenComs[0]) }}#}
-            {{ form_row(form.moyenComs[0].codePostal) }}
+            {{ form_row(form.moyenComs[0].code_postal) }}
             {{ form_row(form.moyenComs[0].adresse1) }}
             {{ form_row(form.moyenComs[0].adresse2) }}
             {{ form_row(form.moyenComs[0].adresse3) }}
@@ -197,19 +197,42 @@
             </div>
 
             {{ form_row(form.submit) }}
+            {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur']) }}#}
 
-            {% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}
-            {% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}
-            {% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}
+            {% set interlocuteurs %}
+                {% include('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur} %}
+            {% endset %}
+            {#{{ dump(interlocuteurs) }}#}
+            {#{% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}#}
+            {% set moyenComsAdresse %}
+                {% include('@MondofuteFournisseur/Interlocuteur/fiche_adresse.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse} %}
+            {% endset %}
+            {#{% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}#}
+            {% set moyenComsMail %}
+                {% include('@MondofuteFournisseur/Interlocuteur/fiche_mail.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email} %}
+            {% endset %}
+            {#{% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}#}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
-            {% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , { 'label' : 'Télephone __number__' }) %}
-            {% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile , { 'label' : 'Mobile' }) %}
+            {% set moyenComsFixe %}
+                {#{% filter escape %}#}
+                {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_fixe.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , 'label' : 'Téléphone __number__'} %}
+                {#{% endfilter %}#}
+            {% endset %}
+            {#{% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , { 'label' : 'Télephone __number__' }) %}#}
+            {% set moyenComsMobile %}
+                {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_mobile.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile } %}
+            {% endset %}
+            {#{% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile , { 'label' : 'Mobile' }) %}#}
             {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
             {#<div id="values-interlocuteurs" style="">#}
+            {#{{ dump(form.interlocuteurs) }}#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
-                    {% for element in interlocuteur.children %}
-                        {{ form_widget(element) }}
+                    {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
+                    {#{% for element in interlocuteur.children %}#}
+                    {#{{ form_widget(element) }}#}
+
+
                         {#{% for child in element.children %}#}
                         {#{{ dump(child.vars.name) }}#}
                         {#{%  if child.vars.name == 'moyenComs' %}#}
@@ -224,7 +247,9 @@
                         {#{{ form_row(child) }}#}
                         {#{% endif %}#}
                         {#{% endfor %}#}
-                    {% endfor %}
+
+
+                    {#{% endfor %}#}
                 {% endfor %}
             </div>
             {{ form_widget(form._token) }}
@@ -241,6 +266,11 @@
                         </div>
                         <div class="modal-body">
                             <form id="form-interlocuteur" data-interlocuteur-index="{{ countInterlocuteur }}"
+                                    {#data-prototype="#}
+                                    {#{% filter escape %}#}
+                                    {#{% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteurs} %}#}
+                                    {#{% endfilter %}#}
+                                    {#"#}
                                   data-prototype="{{ interlocuteurs | e }}"
                                   data-prototype_moyen_coms_adresse="{{ moyenComsAdresse | e }}"
                                   data-prototype_moyen_coms_mail="{{ moyenComsMail | e }}"
@@ -248,7 +278,7 @@
                                   data-prototype_moyen_coms_tel2="{{ moyenComsFixe | e }}"
                                   data-prototype_moyen_coms_mobile="{{ moyenComsMobile | e }}"
                                   class="form-horizontal">
-                                {{ interlocuteurs|raw }}
+                                {#{{ interlocuteurs|raw }}#}
                                 {#{{ prenom|raw }}#}
                                 {#{{ service|raw }}#}
                                 {#{{ fonction|raw }}#}
@@ -688,11 +718,6 @@
             newformMoyenComAdresse = newformMoyenComAdresse.replace(/__mycom_name__/g, 0);
             $moyenComsInterlocuteur.html(newformMoyenComAdresse);
 
-            var formMoyenComMailPrototype = $formInterlocuteur.data('prototype_moyen_coms_mail');
-            var newformMoyenComMail = formMoyenComMailPrototype.replace(/__name__/g, interlocuteurIndex);
-            newformMoyenComMail = newformMoyenComMail.replace(/__mycom_name__/g, 1);
-            $moyenComsInterlocuteur.append(newformMoyenComMail);
-
             var formMoyenComTel1Prototype = $formInterlocuteur.data('prototype_moyen_coms_tel1');
             var newformMoyenComTel1 = formMoyenComTel1Prototype.replace(/__name__/g, interlocuteurIndex);
             newformMoyenComTel1 = newformMoyenComTel1.replace(/__mycom_name__/g, 2);
@@ -710,6 +735,11 @@
             newformmoyenComsMobile = newformmoyenComsMobile.replace(/__mycom_name__/g, 4);
             $moyenComsInterlocuteur.append(newformmoyenComsMobile);
 
+            var formMoyenComMailPrototype = $formInterlocuteur.data('prototype_moyen_coms_mail');
+            var newformMoyenComMail = formMoyenComMailPrototype.replace(/__name__/g, interlocuteurIndex);
+            newformMoyenComMail = newformMoyenComMail.replace(/__mycom_name__/g, 1);
+            $moyenComsInterlocuteur.append(newformMoyenComMail);
+
             $formInterlocuteur.find('input').each(function (index, item) {
                 $(item).keypress(function (event) {
                     refuserToucheEntree(event);
@@ -724,24 +754,32 @@
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $('#interlocuteurModal');
 
-            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouterun interlocuteur</button>'));
+            $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" class="btn btn-primary">Ajouter un interlocuteur</button>'));
 //                $('#enregistrer_interlocuteur').replaceWith($('<button onclick="ajouterInterlocuteur();" id="enregistrer_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">Ajouterun interlocuteur</button>'));
             modal.find('.modal-title').text('Nouvel intelocuteur pour le service ' + service);
             modal.find('.modal-body [id$="service"]').val(service_id);
             modal.modal().show();
         }
 
+        function testPassword(interlocuteur) {
+            if (interlocuteur.plainPasswordFirst != interlocuteur.plainPasswordSecond) {
+                alert("Password and Confirm Password don't match");
+                return false;
+            }
+            return true;
+        }
+
         function ajouterInterlocuteur() {
+
+            var interlocuteur = getDataIntelocuteurModal();
 
             if (!testRequired()) {
                 return false;
             }
 
             var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
 
-            var interlocuteur = getDataIntelocuteurModal();
-            console.log(interlocuteur);
+            $interlocuteurModal.modal('hide');
 
             var fonction = '';
             if (interlocuteur.fonction) {
@@ -751,7 +789,7 @@
             var $formInterlocuteur = $('#form-interlocuteur');
             var index = $formInterlocuteur.data('interlocuteur-index');
 
-            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
+            var buttonModifie = '<button  onclick="afficherModalModificationInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
             var $addInterlocuteur = $('<td>' + interlocuteur.prenom + ' ' + interlocuteur.nom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer(index) + '</td>');
             var $newLigne = $('<tr id="row_interlocuteur_' + index + '" class="success"></tr>').append($addInterlocuteur);
@@ -788,7 +826,10 @@
                 longitude: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
-                smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val()
+                smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val(),
+                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+//                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+//                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
             };
 
 
@@ -828,6 +869,9 @@
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
+            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword"]').val(interlocuteur.plainPasswordFirst);
+//            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+//            $divFournisseurInterlocuteurClone.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
 
             $('#enregistrer_interlocuteur').replaceWith($('<button id="enregistrer_interlocuteur" type="button" class="btn btn-primary" onclick="modifierInterlocuteur(\'' + index + '\');">Modifer cet interlocuteur</button>'));
 
@@ -835,21 +879,21 @@
         }
 
         function modifierInterlocuteur(index) {
+            var interlocuteur = getDataIntelocuteurModal();
 
             if (!testRequired()) {
                 return false;
             }
             var $interlocuteurModal = $('#interlocuteurModal');
-            $interlocuteurModal.modal('hide');
 
-            var interlocuteur = getDataIntelocuteurModal();
+            $interlocuteurModal.modal('hide');
 
             var fonction = '';
             if (interlocuteur.fonction) {
                 fonction = $interlocuteurModal.find('.modal-body [id$="fonction"] option[value=\'' + interlocuteur.fonction + '\']').text();
             }
 
-            var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + index + ');" id=\'modifie_interlocuteur_' + index + '\' \' type=\'button\' class=\'btn btn-default\'>Modifier <span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
+            var buttonModifie = '<button onclick="afficherModalModificationInterlocuteur(' + index + ');" id=\'modifie_interlocuteur_' + index + '\' \' type=\'button\' class=\'btn btn-default\'><span class=\'glyphicon glyphicon-edit\' aria-hidden=\'true\'></span></button>';
 
             var $addInterlocuteur = $('<td>' + interlocuteur.prenom + ' ' + interlocuteur.nom + '</td><td>' + fonction + '</td><td>' + buttonModifie + ' ' + getButtonSupprimer(index) + '</td>');
             var $newLigne = $('<tr id="row_interlocuteur_' + index + '" class="success"></tr>').append($addInterlocuteur);
@@ -867,7 +911,7 @@
         }
 
         function getButtonSupprimer(index) {
-            return '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'> Supprimer <span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
+            return '<button onclick="supprimerInterlocuteur(' + index + ');" type=\'button\' class=\'btn btn-default\'><span class=\'glyphicon glyphicon-trash\' aria-hidden=\'true\'></span></button>';
         }
 
         function getDataIntelocuteurModal() {
@@ -891,7 +935,10 @@
                 longitude: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_longitude"]').val(),
                 precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
-                smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val()
+                smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val(),
+                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+//                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
+//                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
             };
 
             return interlocuteur;
@@ -918,6 +965,9 @@
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(interlocuteur.precis);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_numero"]').val(interlocuteur.mobile);
             $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_moyenComs_4_smsing"]').val(interlocuteur.smsing);
+            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword"]').val(interlocuteur.plainPasswordFirst);
+//            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_first"]').val(interlocuteur.plainPasswordFirst);
+//            $valuesInterlocuteur.find('[id$="interlocuteurs_' + index + '_interlocuteur_user_plainPassword_second"]').val(interlocuteur.plainPasswordSecond);
         }
 
 
@@ -953,9 +1003,11 @@
         fournisseurParentSelect(optionVal);
 
         function testRequired() {
+
             fail = false;
             fail_tab = [];
-            $('#form-interlocuteur').find('select, textarea, input').each(function () {
+
+            $('#form-interlocuteur').find('select, textarea, input, [type="email"]').each(function () {
                 if (!$(this).prop('required')) {
 
                 } else {
@@ -968,6 +1020,16 @@
                     }
                 }
             });
+            // test email qui deviendra l'username de l'interlocuteur
+            var $email = $('#form-interlocuteur').find('[type="email"]');
+
+            if (!$email.val() || !isValidEmailAddress($email.val())) {
+                fail = true;
+                fail_tab.push($email);
+            }
+            else {
+                $email.attr('style', 'border: 1px solid green;');
+            }
 
             //submit if fail never got set to true
             if (!fail) {

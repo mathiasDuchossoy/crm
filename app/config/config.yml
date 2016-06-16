@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
     - { resource: services.yml }
+    - { resource: @MondofuteCoreBundle/Resources/config/config.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -92,16 +93,19 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    MondofuteHebergementBundle: ~
-                    MondofuteRemiseClefBundle: ~
-                    MondofuteTrancheHoraireBundle: ~
-                    MondofuteLogementBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -121,12 +125,23 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Model'
+#                        D:\projets\v2\crm\www\vendor\friendsofsymfony\user-bundle\Resources\config\doctrine-mapping
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/FOS/UserBundle/Resources/config/doctrine/model'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -142,6 +157,9 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
                     MondofuteHebergementBundle: ~
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
@@ -152,6 +170,11 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -165,7 +188,7 @@ swiftmailer:
 assetic:
     debug:  true
     use_controller: false
-    bundles: []
+#    bundles: ['FOSUserBundle']
     filters:
         cssrewrite: ~
         lessphp:
@@ -226,3 +249,19 @@ assetic:
 
 sc_datetimepicker:
     picker: ~
+
+fos_user:
+#    model_manager_name: ~
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Mondofute\Bundle\CoreBundle\Entity\User
+#    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+    service:
+        user_manager: pugx_user_manager
+    registration:
+        form:
+            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+#    change_password:
+#        form:
+#            type: mondofute_utilisateur_user
+#            name: mondofute_utilisateur_user

@@ -1,0 +1,7 @@
+mondofute_utilisateur_utilisateur:
+    resource: "@MondofuteUtilisateurBundle/Resources/config/routing/utilisateur.yml"
+    prefix:   /utilisateur
+
+utilisateur_user_register:
+    path:     /register/utilisateur-user
+    defaults: { _controller: MondofuteUtilisateurBundle:UtilisateurUser:register }
