@@ -7,7 +7,6 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
-use Mondofute\Bundle\FournisseurBundle\Repository\TypeFournisseurRepository;
 use ReflectionClass;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -57,7 +56,9 @@ class FournisseurType extends AbstractType
 ////                'expanded'  => true,
 ////                'multiple'  => true
 //            ))
-            ->add('types', CollectionType::class, array('mapped' => false))
+            ->add('types', CollectionType::class, array(
+                'mapped' => false,
+            ))
             ->add('typeFournisseurs', ChoiceType::class, array(
                 'choices' => array(
                     TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
@@ -71,9 +72,14 @@ class FournisseurType extends AbstractType
                 'translation_domain' => 'messages',
                 'mapped' => false,
                 'expanded' => true,
-                'multiple' => true
+                'multiple' => true,
+//                'required'  => true,
             ))
-            ->add('enseigne', null, array('label' => 'enseigne', 'translation_domain' => 'messages'))
+            ->add('enseigne', null, array(
+                'label' => 'enseigne',
+                'translation_domain' => 'messages',
+                'required' => true,
+            ))
             ->add('fournisseurParent', EntityType::class, array(
                 'choice_label' => 'enseigne',
                 'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
@@ -101,6 +107,9 @@ class FournisseurType extends AbstractType
                     'label' => 'interlocuteurs',
                     'translation_domain' => 'messages',
                     'by_reference' => false,
+                    'entry_options' => array(
+                        'fournisseurId' => $fournisseurId,
+                    )
                 )
             )
             ->add('moyenComs',
@@ -159,13 +168,16 @@ class FournisseurType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $arrayType = new ArrayCollection();
-        foreach ($view->vars['value']->getTypes() as $type) {
-            $arrayType->add($type->getTypeFournisseur());
-        }
 
-        foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
-            if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
-                $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+        if (!empty($view->vars['value']->getTypes())) {
+            foreach ($view->vars['value']->getTypes() as $type) {
+                $arrayType->add($type->getTypeFournisseur());
+            }
+
+            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+                }
             }
         }
 

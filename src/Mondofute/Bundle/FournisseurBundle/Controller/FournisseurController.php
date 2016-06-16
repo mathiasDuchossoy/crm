@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
@@ -91,35 +90,29 @@ class FournisseurController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
-//        echo 'coucou';die;
-        if ($form->isSubmitted() && $form->isValid()) {
 
-            foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $typeFournisseur = new TypeFournisseur();
-                $typeFournisseur->setTypeFournisseur($type);
-                $fournisseur->addType($typeFournisseur);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+
+            if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
+                foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
+                    $typeFournisseur = new TypeFournisseur();
+                    $typeFournisseur->setTypeFournisseur($type);
+                    $fournisseur->addType($typeFournisseur);
+                }
             }
 
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
 
-            $this->copieVersSites($fournisseur);
+            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-            foreach ($fournisseur->getMoyenComs() as $moyenCom) {
-                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-                switch ($typeComm) {
-                    case "Adresse":
-                        /** @var Adresse $moyenComSite */
-                        $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
-                        break;
-                    default:
-                        break;
-                }
-            }
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+                $this->copieVersSites($fournisseur);
 
+                foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                     switch ($typeComm) {
                         case "Adresse":
@@ -130,19 +123,44 @@ class FournisseurController extends Controller
                             break;
                     }
                 }
+
+                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                    foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+
+                        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+                        switch ($typeComm) {
+                            case "Adresse":
+                                /** @var Adresse $moyenComSite */
+                                $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+
+                $em->persist($fournisseur);
+                $em->flush();
+
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été créé.'
+                );
+
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
-
-            $em->persist($fournisseur);
-            $em->flush();
-
-            // add flash messages
-            $this->addFlash(
-                'success',
-                'Le fournisseur a bien été créé.'
-            );
-
-            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
+//
+//        dump($fournisseur);
+//
+//        /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
+//        foreach ($fournisseur->getInterlocuteurs() as $fournisseurInterlocuteur)
+//        {
+//            $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
+//            $user = $interlocuteur->getUser();
+//            dump($user);
+//        }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
@@ -298,8 +316,10 @@ class FournisseurController extends Controller
             // type de fournisseur
             $arrayTypeFournisseur = new ArrayCollection();
 
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
+            if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+                foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
+                    $arrayTypeFournisseur->add(intval($type));
+                }
             }
 
             /** @var TypeFournisseur $type */
@@ -312,6 +332,7 @@ class FournisseurController extends Controller
                 }
             }
 
+            /** @var integer $type */
             foreach ($arrayTypeFournisseur as $type) {
                 if (!$originalTypes->filter(function (TypeFournisseur $element) use ($type) {
                     return $element->getTypeFournisseur() == $type;
@@ -325,9 +346,11 @@ class FournisseurController extends Controller
 
             // *****
 
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
-
 
                     // if it was a many-to-one relationship, remove the relationship like this
                     $this->deleteInterlocuteurSites($interlocuteur);
@@ -340,6 +363,11 @@ class FournisseurController extends Controller
                     $em->remove($interlocuteur);
                 }
             }
+
+
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+
+
             foreach ($originalRemiseClefs as $remiseClef) {
                 if (false === $fournisseur->getRemiseClefs()->contains($remiseClef)) {
                     $fournisseur->getRemiseClefs()->removeElement($remiseClef);
@@ -354,22 +382,24 @@ class FournisseurController extends Controller
                     $em->remove($reception);
                 }
             }
+            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-            $this->mAJSites($fournisseur);
+                $this->mAJSites($fournisseur);
 
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                $interlocuteur->setFournisseur($fournisseur);
+                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                    $interlocuteur->setFournisseur($fournisseur);
+                }
+
+                $em->persist($fournisseur);
+                $em->flush();
+
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été modifié.'
+                );
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
-
-            $em->persist($fournisseur);
-            $em->flush();
-
-            // add flash messages
-            $this->addFlash(
-                'success',
-                'Le fournisseur a bien été modifié.'
-            );
-            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(
@@ -422,9 +452,11 @@ class FournisseurController extends Controller
 //                    }
 //                }
 
+                $emSite->flush();
                 $interlocuteurSite->setFournisseur(null);
 
                 $emSite->remove($interlocuteurSite);
+
 //                die;
                 
             }
