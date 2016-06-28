@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
+use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
+use Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie;
 use Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType;
@@ -60,11 +62,59 @@ class SecteurUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
+            /** @var Secteur $secteur */
 
-//            $em = $this->getDoctrine()->getManager();
+            // ***** Gestion des Medias *****
+            /** @var SecteurImage $image */
+
+            foreach ($request->get('secteur_unifie')['secteurs'] as $key => $secteur) {
+                if ($secteurUnifie->getSecteurs()->get($key)->getSite()->getCrm() == 1) {
+                    $secteurCrm = $secteurUnifie->getSecteurs()->get($key);
+                    foreach ($secteur['images'] as $keyImage => $image) {
+                        /** @var SecteurImage $imageCrm */
+                        $imageCrm = $secteurCrm->getImages()[$keyImage];
+                        $imageCrm->setActif(true);
+//                        $imageCrm->setSecteur($secteurCrm);
+                        foreach ($sites as $site) {
+                            if ($site->getCrm() == 0) {
+                                /** @var Secteur $secteurSite */
+                                $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
+                                    return $element->getSite() == $site;
+                                })->first();
+                                $secteurImage = new SecteurImage();
+//                                $secteurImage->setSecteur($secteurSite);
+                                $secteurImage->setImage($imageCrm->getImage());
+                                $secteurSite->addImage($secteurImage);
+                                foreach ($imageCrm->getTraductions() as $traduction) {
+                                    $traductionSite = new SecteurImageTraduction();
+                                    /** @var SecteurImageTraduction $traduction */
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                    $traductionSite->setLangue($traduction->getLangue());
+                                    $secteurImage->addTraduction($traductionSite);
+                                }
+                                if (in_array($site->getId(), $image['sites'])) {
+                                    $secteurImage->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+//            foreach ($secteurUnifie->getSecteurs() as $secteur)
+//            {
+//                if (!empty($secteur->getImages()))
+//                {
+//                    foreach ($secteur->getImages() as $image)
+//                    {
+//                        $image->setSecteur($secteur);
+//                    }
+//                }
+//            }
+
             $em->persist($secteurUnifie);
+
             $em->flush();
 
             $this->copieVersSites($secteurUnifie);
@@ -202,21 +252,22 @@ class SecteurUnifieController extends Controller
     {
         /** @var SecteurTraduction $secteurTraduc */
 //        Boucle sur les secteurs afin de savoir sur quel site nous devons l'enregistrer
+        /** @var Secteur $secteur */
         foreach ($entity->getSecteurs() as $secteur) {
             if ($secteur->getSite()->getCrm() == false) {
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $em = $this->getDoctrine()->getManager($secteur->getSite()->getLibelle());
-                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $secteur->getSite()->getId()));
+                $emSite = $this->getDoctrine()->getManager($secteur->getSite()->getLibelle());
+                $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $secteur->getSite()->getId()));
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->find(SecteurUnifie::class, $entity->getId())))) {
+                if (is_null(($entitySite = $emSite->find(SecteurUnifie::class, $entity->getId())))) {
                     $entitySite = new SecteurUnifie();
                 }
 
 //            Récupération du secteur sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($secteurSite = $em->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $entitySite))))) {
+                if (empty(($secteurSite = $emSite->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $entitySite))))) {
                     $secteurSite = new Secteur();
                 }
 //            copie des données secteur
@@ -227,10 +278,10 @@ class SecteurUnifieController extends Controller
 //            Gestion des traductions
                 foreach ($secteur->getTraductions() as $secteurTraduc) {
 //                récupération de la langue sur le site distant
-                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $secteurTraduc->getLangue()->getId()));
+                    $langue = $emSite->getRepository(Langue::class)->findOneBy(array('id' => $secteurTraduc->getLangue()->getId()));
 
 //                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($secteurTraducSite = $em->getRepository(SecteurTraduction::class)->findOneBy(array(
+                    if (empty(($secteurTraducSite = $emSite->getRepository(SecteurTraduction::class)->findOneBy(array(
                         'secteur' => $secteurSite,
                         'langue' => $langue
                     ))))
@@ -248,9 +299,71 @@ class SecteurUnifieController extends Controller
                     $secteurSite->addTraduction($secteurTraducSite);
                 }
 
+                // Gestion des images
+                $secteurImages = $secteur->getImages();
+                $secteurImageSites = $secteurSite->getImages();
+                /** @var SecteurImage $secteurImage */
+                /** @var SecteurImage $secteurImageSite */
+                if (!empty($secteurImageSites)) {
+                    foreach ($secteurImageSites as $secteurImageSite) {
+//                    $collectionMediaSites->add($secteurImageSite->getImage());
+                        dump($secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
+                            return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
+                        })->first());
+                        if (
+                            false === $secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
+                                return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
+                            })->first()
+                        ) {
+                            dump($secteurImageSite);
+                            $secteurImageSite->setSecteur(null);
+                            $emSite->remove($secteurImageSite->getImage());
+                            $emSite->remove($secteurImageSite);
+                            $emSite->flush();
+                        }
+                    }
+                }
+
+                if (!empty($secteurImages)) {
+                    foreach ($secteurImages as $secteurImage) {
+                        if (empty($secteurImageSites)) {
+                            $secteurImageSite = null;
+                        } else {
+                            $secteurImageSite = $secteurImageSites->filter(function (SecteurImage $element) use ($secteurImage) {
+                                return $element->getImage()->getName() == $secteurImage->getImage()->getName();
+                            })->first();
+                        }
+                        if (empty($secteurImageSite)) {
+                            $mediaSite = clone $secteurImage->getImage();
+                            $secteurImageSite = new SecteurImage();
+                            $secteurImageSite->setImage($mediaSite);
+                            $secteurSite->addImage($secteurImageSite);
+                            $secteurImageSite->setSecteur($secteurSite);
+                        } else {
+                            $mediaSite = $secteurImageSite->getImage();
+                            $secteurImageSite->setImage($mediaSite);
+                        }
+
+                        /** @var SecteurImageTraduction $traduction */
+                        foreach ($secteurImage->getTraductions() as $traduction) {
+                            if (!empty($secteurSite->getTraductions())) {
+                                $traductionSite = $secteurImageSite->getTraductions()->filter(function (SecteurImageTraduction $element) use ($traduction) {
+                                    return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                })->first();
+                                if (empty($traductionSite)) {
+                                    $traductionSite = new SecteurImageTraduction();
+                                    $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+                                    $secteurImageSite->addTraduction($traductionSite);
+                                }
+                                $traductionSite->setLibelle($traduction->getLibelle());
+                            }
+                        }
+                    }
+                }
+
                 $entitySite->addSecteur($secteurSite);
-                $em->persist($entitySite);
-                $em->flush();
+                $emSite->persist($entitySite);
+                $emSite->flush();
             }
         }
         $this->ajouterSecteurUnifieSiteDistant($entity->getId(), $entity->getSecteurs());
@@ -341,6 +454,20 @@ class SecteurUnifieController extends Controller
             $originalSecteurs->add($secteur);
         }
 
+
+        $originalImages = new ArrayCollection();
+
+        // Create an ArrayCollection of the current Image objects in the database
+        /** @var Secteur $secteur */
+        /** @var SecteurImage $image */
+        foreach ($secteurUnifie->getSecteurs() as $secteur) {
+            if (!empty($secteur->getImages())) {
+                foreach ($secteur->getImages() as $image) {
+                    $originalImages->add($image);
+                }
+            }
+        }
+
         $this->ajouterSecteursDansForm($secteurUnifie);
 //        $this->dispacherDonneesCommune($secteurUnifie);
         $this->secteursSortByAffichage($secteurUnifie);
@@ -350,6 +477,9 @@ class SecteurUnifieController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
+
+
+//        dump($editForm);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
@@ -370,15 +500,60 @@ class SecteurUnifieController extends Controller
                     $em->remove($secteur);
                 }
             }
+
+
+            // ****** Image ******
+            /** @var Secteur $secteur */
+            /** @var SecteurImage $image */
+            $collectionImage = new ArrayCollection();
+            foreach ($secteurUnifie->getSecteurs() as $secteur) {
+                if (!empty($secteur->getImages())) {
+                    foreach ($secteur->getImages() as $image) {
+                        $collectionImage->add($image);
+                    }
+                }
+            }
+            foreach ($originalImages as $image) {
+                if (false === $collectionImage->contains($image)) {
+                    //  suppression de l'image sur le site
+                    $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
+                    $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
+                    $secteurSite = $entitySite->getSecteurs()->first();
+
+                    /** @var Secteur $secteurSite */
+                    $secteurImageSite = $secteurSite->getImages()->filter(function (SecteurImage $element) use ($image) {
+                        return $element->getImage()->getName() == $image->getImage()->getName();
+                    })->first();
+                    if (!empty($secteurImageSite)) {
+                        $emSite->remove($secteurImageSite->getimage());
+                        $emSite->remove($secteurImageSite);
+                        $emSite->flush();
+                    }
+
+                    $image->setSecteur(null);
+                    $em->remove($image->getImage());
+                    dump($image->getImage());
+                    $em->remove($image);
+                }
+
+            }
+            /** @var Secteur $secteur */
+            /** @var SecteurImage $image */
+            foreach ($secteurUnifie->getSecteurs() as $secteur) {
+                if (!empty($secteur->getImages())) {
+                    foreach ($secteur->getImages() as $image) {
+                        $image->setSecteur($secteur);
+                    }
+                }
+            }
+            // ****** Image ******
+
             $em->persist($secteurUnifie);
             $em->flush();
 
-
             $this->copieVersSites($secteurUnifie);
             $this->addFlash('success', 'le secteur a bien été modifié');
-//            dump($secteurUnifie);
-//            dump($secteurCrm);
-//            die;
+
             return $this->redirectToRoute('geographie_secteur_edit', array('id' => $secteurUnifie->getId()));
         }
 

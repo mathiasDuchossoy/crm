@@ -34,7 +34,8 @@
         "pugx/multi-user-bundle": "3.0.*@dev",
         "twig/extensions": "^1.3",
         "sonata-project/intl-bundle": "^2.2",
-        "symfony/translation": "3.0.x-dev"
+        "symfony/translation": "3.0.x-dev",
+        "sonata-project/media-bundle": "^2.3"
     },
     "repositories": [
         {

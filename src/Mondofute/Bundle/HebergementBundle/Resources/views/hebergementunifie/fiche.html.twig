@@ -132,6 +132,40 @@
                                 </div>
                             {% endfor %}
                         </div>
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if hebergement.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Visuels
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des photos #}
+                                    <ul class="visuels"
+                                        data-prototype_photo="
+                                        {% filter escape %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementPhotoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% endfilter %}
+                                        "
+                                        data-prototype_video="
+                                        {% filter escape %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementVideoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% endfilter %}
+                                        "
+                                    >
+                                        {% set i = 0 %}
+                                        {% for visuel in hebergement.visuels %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': visuel,'langues': langues, 'name': i, 'entity': 'visuel'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
                 <div id="data_fournisseurs" class="tab-pane fade">
@@ -814,4 +848,102 @@
             });
         });
     </script>
+
+
+    <script type="text/javascript">
+        var $visuelsCollectionHolder;
+
+        var $visuelsAddLinkPhoto = $('<a href="#" class="add_visuel_link_photo">Ajouter photo</a>');
+        var $visuelsAddLinkVideo = $('<a href="#" class="add_visuel_link_video">Ajouter video</a>');
+
+        var $newLinkLiVisuel = $('<li></li>').append($visuelsAddLinkPhoto);
+        $newLinkLiVisuel = $newLinkLiVisuel.append($('<br/>'));
+        $newLinkLiVisuel = $newLinkLiVisuel.append($visuelsAddLinkVideo);
+
+
+        var link = {
+            visuels: $newLinkLiVisuel
+        };
+
+        var elements = [
+            'visuels'
+        ];
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of diaporamas
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing diaporama form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a diaporama" anchor and li to the diaporamas ul
+//                $.each(link[element] , function(index , $link){
+//                    window['$'+element+'CollectionHolder'].append($link);
+//                });
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input[id$=_binaryContent]').length);
+
+                window['$' + element + 'AddLinkPhoto'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new diaporama form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], 'photo');
+                });
+
+                if (window['$' + element + 'AddLinkVideo']) {
+                    window['$' + element + 'AddLinkVideo'].on('click', function (e) {
+                        // prevent the link from creating a "#" on the URL
+                        e.preventDefault();
+
+                        // add a new diaporama form (see next code block)
+                        addForm(window['$' + element + 'CollectionHolder'], link[element], 'video');
+                    });
+                }
+
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype_' + type);
+//            var prototype = $collectionHolder.data('prototype_video');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
 {% endblock %}

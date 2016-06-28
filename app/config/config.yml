@@ -4,14 +4,15 @@ imports:
     - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
     - { resource: services.yml }
     - { resource: @MondofuteCoreBundle/Resources/config/config.yml }
+    - { resource: "@MondofuteMediaBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: fr_FR
-#    locale: en_EN
-#    database_name_skifute: skifute2
-#    database_name_francefute: francefute2
+    sonata.media.provider.file.class: Mondofute\Bundle\MediaBundle\Provider\FileProvider
+    sonata.media.provider.image.class: Mondofute\Bundle\MediaBundle\Provider\ImageProvider
+    sonata.media.provider.youtube.class: Mondofute\Bundle\MediaBundle\Provider\YouTubeProvider
 
 framework:
     #esi:             ~
@@ -43,6 +44,7 @@ twig:
     form:
         resources:
             - 'InfiniteFormBundle::form_theme.html.twig'
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -73,6 +75,8 @@ doctrine:
                 user:     "%database_user%"
                 password: "%database_password%"
                 charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -106,6 +110,9 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -142,6 +149,9 @@ doctrine:
 #                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/FOS/UserBundle/Resources/config/doctrine/model'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -175,6 +185,9 @@ doctrine:
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -261,7 +274,46 @@ fos_user:
     registration:
         form:
             type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
-#    change_password:
-#        form:
-#            type: mondofute_utilisateur_user
-#            name: mondofute_utilisateur_user
+
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media:        MyVendor\MediaBundle\Entity\Media
+    #    gallery:      MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_item: MyVendor\MediaBundle\Entity\GalleryItem
+    db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+    default_context: default # you need to set a context
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+        secteur_image:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  "%kernel.root_dir%/../web/uploads/media"
+            create:     false
