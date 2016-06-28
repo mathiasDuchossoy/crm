@@ -76,9 +76,11 @@ class HebergementUnifieType extends AbstractType
             }
         }
 
+        $hebergementCrm = null;
         foreach ($view->children['hebergements'] as $hebergement) {
             if ($hebergement->vars['value']->getSite()->getCrm() == 1) {
                 $hebergementCrm = $hebergement;
+//                dump($hebergementCrm);
             } else {
                 foreach ($hebergement->children['visuels'] as $key => $image) {
                     if ($image->vars['value']->getActif() == true) {
