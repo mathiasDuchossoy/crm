@@ -83,7 +83,7 @@ abstract class HebergementVisuel
      */
     public function addTraduction(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setHebergementVisuel($this);
 
         return $this;
     }
