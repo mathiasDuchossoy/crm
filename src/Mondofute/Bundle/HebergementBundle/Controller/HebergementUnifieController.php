@@ -159,19 +159,7 @@ class HebergementUnifieController extends Controller
 //                                $typeVisuel = (new ReflectionClass($visuelCrm))->getShortName();
                                 $typeVisuel = (new ReflectionClass($visuelCrm))->getName();
 
-//                                $hebergementVisuel = null;
-//                                switch ($hebergementVisuel)
-//                                {
-//                                    case 'HebergementPhoto':
-//
-//                                        $hebergementVisuel = new HebergementVisuel();
-//
-//                                }
-//                                dump($typeVisuel);die;
-                                // génération de la video ou de la photo
                                 $hebergementVisuel = new $typeVisuel();
-//                                dump($hebergementVisuel);
-//                                die;
 //                                $hebergementVisuel->setHebergement($hebergementSite);
                                 $hebergementVisuel->setVisuel($visuelCrm->getVisuel());
                                 $hebergementSite->addVisuel($hebergementVisuel);
@@ -738,10 +726,18 @@ class HebergementUnifieController extends Controller
         }
 
         $originalHebergements = new ArrayCollection();
+        $originalHebergementVisuels = new ArrayCollection();
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
+        /** @var Hebergement $hebergement */
         foreach ($hebergementUnifie->getHebergements() as $hebergement) {
             $originalHebergements->add($hebergement);
+            if ($hebergement->getSite()->getCrm() == 1) {
+                foreach ($hebergement->getVisuels() as $hebergementVisuel) {
+                    $originalHebergementVisuels->add($hebergementVisuel->getVisuel());
+                }
+            }
         }
+
 
         $this->ajouterHebergementsDansForm($hebergementUnifie);
 //        $this->dispacherDonneesCommune($departementUnifie);
@@ -758,7 +754,6 @@ class HebergementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            dump($originalFournisseursHebergement);
 
             /** @var Hebergement $hebergement */
             foreach ($hebergementUnifie->getHebergements() as $keyHebergement => $hebergement) {
@@ -805,7 +800,6 @@ class HebergementUnifieController extends Controller
                                 $emSite->remove($hebergementSite);
                                 $emSite->flush();
                             }
-
                         }
                     }
                     if (!empty($hebergement->getMoyenComs())) {
@@ -820,39 +814,97 @@ class HebergementUnifieController extends Controller
                     $hebergement->setHebergementUnifie(null);
                     $em->remove($hebergement);
                 }
-//                else {
-//                    /** @var MoyenCommunication $moyenCom */
-//                    foreach ($hebergement->getMoyenComs() as $moyenCom) {
-//                        $moyenCom->setDateModification(new DateTime());
-//                    }
-//
-//                }
             }
             /** @var FournisseurHebergement $fournisseur */
             foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
                 if (empty($fournisseur->getFournisseur())) {
-//                    supprime le fournisseurHebergement car plus présent
+                    //  supprime le fournisseurHebergement car plus présent
                     $hebergementUnifie->removeFournisseur($fournisseur);
                     $em->remove($fournisseur);
                 } else {
                     $fournisseur->setHebergement($hebergementUnifie);
-//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
-//                        $fournisseur->getAdresse()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
-//                    }
-//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
-//                        $fournisseur->getTelFixe()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
-//                    }
-//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
-//                        $fournisseur->getTelMobile()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
-//                    }
                 }
             }
+
+            // ***** Gestion des Medias *****
+            /** @var Hebergement $hebergementCrm */
+            /** @var HebergementVisuel $visuel */
+            $hebergementCrm = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $hebergementVisuels = new ArrayCollection();
+            foreach ($hebergementCrm->getVisuels() as $visuel) {
+                $hebergementVisuels->add($visuel->getVisuel());
+            }
+            foreach ($originalHebergementVisuels as $key => $originalHebergementVisuel) {
+                if (false === $hebergementVisuels->contains($originalHebergementVisuel)) {
+                    foreach ($sites as $site) {
+                        if ($site->getCrm() == 0) {
+                            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                            dump($hebergementCrm->getHebergementUnifie());
+                            die;
+                            $hebergementSite = $emSite->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $hebergementCrm->getHebergementUnifie()->getId()));
+                            dump($hebergementSite);
+                            die;
+                            $visuelSite = $hebergementSite->getVisuels()->get($key)->getVisuel();
+                            dump($visuelSite);
+                            die;
+                            $hebergementSite->getVisuels()->get($key)->setVisuel(null);
+                            $emSite->persist($hebergementSite);
+                            $emSite->flush();
+                            $emSite->remove($visuelSite);
+                            $emSite->flush();
+                        }
+                    }
+                    $em->remove($originalHebergementVisuel);
+                }
+            }
+
+            foreach ($request->get('hebergement_unifie')['hebergements'] as $key => $hebergement) {
+                if ($hebergementUnifie->getHebergements()->get($key)->getSite()->getCrm() == 1) {
+                    $hebergementCrm = $hebergementUnifie->getHebergements()->get($key);
+                    foreach ($hebergement['visuels'] as $keyVisuel => $visuel) {
+                        /** @var HebergementVisuel $visuelCrm */
+                        $visuelCrm = $hebergementCrm->getVisuels()[$keyVisuel];
+                        $visuelCrm->setActif(true);
+//                        $visuelCrm->setHebergement($hebergementCrm);
+                        foreach ($sites as $site) {
+                            if ($site->getCrm() == 0) {
+                                /** @var Hebergement $hebergementSite */
+                                $hebergementSite = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                                    return $element->getSite() == $site;
+                                })->first();
+//                                $typeVisuel = (new ReflectionClass($visuelCrm))->getShortName();
+                                if (!empty($visuelCrm->getId())) {
+                                    $hebergementVisuel = $hebergementSite->getVisuels()->get($keyVisuel);
+                                } else {
+                                    $typeVisuel = (new ReflectionClass($visuelCrm))->getName();
+                                    $hebergementVisuel = new $typeVisuel();
+                                }
+//                                $hebergementVisuel->setHebergement($hebergementSite);
+                                $hebergementVisuel->setVisuel($visuelCrm->getVisuel());
+                                $hebergementSite->addVisuel($hebergementVisuel);
+                                foreach ($visuelCrm->getTraductions() as $keyTraduction => $traduction) {
+                                    if (!empty($traduction->getId())) {
+                                        $traductionSite = $hebergementVisuel->getTraductions()->get($keyTraduction);
+                                    } else {
+                                        $traductionSite = new HebergementVisuelTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $hebergementVisuel->addTraduction($traductionSite);
+                                    }
+                                    /** @var HebergementVisuelTraduction $traduction */
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                if (in_array($site->getId(), $visuel['sites'])) {
+                                    $hebergementVisuel->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+
             $em->persist($hebergementUnifie);
             $em->flush();
             $this->copieVersSites($hebergementUnifie);
