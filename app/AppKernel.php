@@ -35,15 +35,20 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Mondofute\Bundle\CoreBundle\MondofuteCoreBundle(),
             new \Mondofute\Bundle\ClientBundle\MondofuteClientBundle(),
-            new Sonata\IntlBundle\SonataIntlBundle(),
             new Mondofute\Bundle\CatalogueBundle\MondofuteCatalogueBundle(),
             new Mondofute\Bundle\HebergementBundle\MondofuteHebergementBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new Mondofute\Bundle\RemiseClefBundle\MondofuteRemiseClefBundle(),
             new Mondofute\Bundle\TrancheHoraireBundle\MondofuteTrancheHoraireBundle(),
             new Mondofute\Bundle\LogementBundle\MondofuteLogementBundle(),
+            new Mondofute\Bundle\MediaBundle\MondofuteMediaBundle(),
             new Mondofute\Bundle\ServiceBundle\MondofuteServiceBundle(),
             new Mondofute\Bundle\PeriodeBundle\MondofutePeriodeBundle(),
+            // SonataMediabundle
+            new Sonata\MediaBundle\SonataMediaBundle(),
+            new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
+            new Sonata\IntlBundle\SonataIntlBundle(),
+            new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

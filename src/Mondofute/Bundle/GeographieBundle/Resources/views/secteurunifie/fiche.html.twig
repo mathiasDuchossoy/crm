@@ -53,6 +53,36 @@
                                 </div>
                             {% endfor %}
                         </div>
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if secteur.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Images
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des images #}
+                                    <ul class="images_{{ secteur.vars.value.site.id }}" data-prototype_image="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': secteur.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for image in secteur.images %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+
+
                     </div>
                 {% endfor %}
             </div>
@@ -174,5 +204,116 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
+    </script>
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% for site in sites %}
+
+
+        var $images_{{ site.id }}CollectionHolder;
+        //        var $vignettesCollectionHolder;
+
+        // setup an "add a image" link
+        var $images_{{ site.id }}AddLinkImage = $('<a href="#" class="add_{{ site.id }}_image_link_image">Ajouter Image</a>');
+        var ${{ site.id }}_newLinkLiImageImage = $('<li></li>').append($images_{{ site.id }}AddLinkImage);
+
+        //        var $vignettesAddLinkImage    = $('<a href="#" class="add_vignette_link_image">Ajouter image</a>');
+        //        var $vignettesAddLinkVideo    = $('<a href="#" class="add_vignette_link_video">Ajouter video</a>');
+        //
+        //        var $newLinkLiVignette  = $('<li></li>').append($vignettesAddLinkImage);
+        //        $newLinkLiVignette      = $newLinkLiVignette.append($('<br/>'));
+        //        $newLinkLiVignette      = $newLinkLiVignette.append($vignettesAddLinkVideo);
+
+        //        var link = {
+        //            images  : $newLinkLiImageImage,
+        ////            vignettes : $newLinkLiVignette
+        //        };
+        link.images_{{ site.id }} = ${{ site.id }}_newLinkLiImageImage;
+
+        elements.push('images_{{ site.id }}');
+        {% endfor %}
+
+        //        var elements = [
+        //            'images',
+        //            'vignettes'
+        //        ];
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of images
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing image form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a image" anchor and li to the images ul
+//                $.each(link[element] , function(index , $link){
+//                    window['$'+element+'CollectionHolder'].append($link);
+//                });
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input[id$=_binaryContent]').length);
+
+                window['$' + element + 'AddLinkImage'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new image form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], 'image');
+                });
+
+                if (window['$' + element + 'AddLinkVideo']) {
+                    window['$' + element + 'AddLinkVideo'].on('click', function (e) {
+                        // prevent the link from creating a "#" on the URL
+                        e.preventDefault();
+
+                        // add a new image form (see next code block)
+                        addForm(window['$' + element + 'CollectionHolder'], link[element], 'video');
+                    });
+                }
+
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype_' + type);
+//            var prototype = $collectionHolder.data('prototype_video');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
     </script>
 {% endblock %}

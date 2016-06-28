@@ -1,0 +1,28 @@
+Mondofute\Bundle\GeographieBundle\Entity\SecteurImage:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\SecteurImageRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        secteur:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: images
+        image:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction
+            mappedBy: image
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

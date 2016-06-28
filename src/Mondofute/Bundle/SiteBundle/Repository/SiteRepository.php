@@ -18,4 +18,18 @@ class SiteRepository extends \Doctrine\ORM\EntityRepository
             array('classementAffichage' => 'ASC'));
         return $sites;
     }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getSitesSansCrm()
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('site')
+            ->where('site.crm != 1')
+            ->from('MondofuteSiteBundle:Site', 'site');
+        $qb->orderBy('site.classementAffichage', 'ASC');
+
+        return $qb;
+    }
 }

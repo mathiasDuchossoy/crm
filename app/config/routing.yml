@@ -26,10 +26,6 @@ mondofute_catalogue:
     resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
     prefix:   /
 
-mondofute_fournisseur:
-    resource: "@MondofuteFournisseurBundle/Resources/config/routing.yml"
-    prefix:   /
-
 mondofute_domaine:
     resource: "@MondofuteDomaineBundle/Resources/config/routing.yml"
     prefix:   /

@@ -75,6 +75,22 @@ class HebergementUnifieType extends AbstractType
                 $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
             }
         }
+
+        foreach ($view->children['hebergements'] as $hebergement) {
+            if ($hebergement->vars['value']->getSite()->getCrm() == 1) {
+                $hebergementCrm = $hebergement;
+            } else {
+                foreach ($hebergement->children['visuels'] as $key => $image) {
+                    if ($image->vars['value']->getActif() == true) {
+
+                        $siteId = $hebergement->vars['value']->getSite()->getId();
+                        $hebergementCrm->children['visuels']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
+            }
+
+        }
+
         foreach ($view->children['listeService']->vars['choices'] as $choice) {
             $affiche = false;
             foreach ($view->vars['data']->getFournisseurs() as $fournisseur) {
@@ -87,4 +103,6 @@ class HebergementUnifieType extends AbstractType
             }
         }
     }
+
+
 }

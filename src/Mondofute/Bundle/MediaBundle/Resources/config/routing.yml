@@ -1,0 +1,3 @@
+mondofute_media_homepage:
+    path:     /
+    defaults: { _controller: MondofuteMediaBundle:Default:index }
