@@ -1,0 +1,10 @@
+<?php
+
+namespace Mondofute\Bundle\HebergementBundle\Entity;
+
+/**
+ * HebergementVisuel
+ */
+abstract class HebergementVisuel
+{
+}
