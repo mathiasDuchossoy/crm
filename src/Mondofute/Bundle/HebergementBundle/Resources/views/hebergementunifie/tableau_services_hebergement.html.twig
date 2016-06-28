@@ -1,0 +1,44 @@
+{% for service in form.services %}
+    <tr>
+        <td>{{ form_row(service.service,{'attr':{'style':'display:none;'},'label_attr':{'style':'display:none'}}) }}
+            <input type="checkbox" {% if service.checkbox.vars.checked %}checked="checked"{% endif %}
+                   id="{{ service.checkbox.vars.id }}" name="{{ service.checkbox.vars.full_name }}"
+                   value="{{ service.checkbox.vars.value }}">{#{{ form_row(service.checkbox) }}#}</td>
+        <td>{{ service.service.vars.data.type.id }}</td>
+        <td>{{ service.service.vars.data.categorieService | trans }}</td>
+        <td>{{ service.service.vars.data.sousCategorieService | trans }}</td>
+        <td>
+            <button type="button" class="btn btn-default afficher-modal-tarif-service"
+                    data-index-service="{{ service.vars.name }}"
+            ><span class="glyphicon glyphicon-edit"></span></button>
+            <div style="display: none;" id="ctn-tarifs-service-{{ service.vars.name }}">
+                <div id="form-tarifs-service-{{ service.vars.name }}"
+                     data-index="{{ service.tarifs | length }}">
+                    <table class="table table-responsive table-striped">
+                        <thead>
+                        <tr>
+                            <th>{{ 'tarif' | trans | capitalize }}</th>
+                            {#<th>{{ 'unite' | trans | capitalize }}</th>#}
+                            <th>{{ 'periode' | trans | capitalize }}</th>
+                            <th>{{ 'supprimer' | trans | capitalize }}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tarifs-{{ service.vars.name }}">
+
+                        {% for tarif in service.tarifs %}
+                            {% include '@MondofuteService/tarifservicehebergement/prototype-tarif-service-hebergement.html.twig' with {'form': tarif} %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <button data-prototype="
+    {% filter escape %}
+    {% include '@MondofuteService/tarifservicehebergement/prototype-tarif-service-hebergement.html.twig' with {'form': service.tarifs.vars.prototype} %}
+    {% endfilter %}
+    " data-index-service="{{ service.vars.name }}"
+                            type="button" class="btn btn-default ajouter-ligne-tarif-service"><span
+                                class="glyphicon glyphicon-plus"></span></button>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endfor %}

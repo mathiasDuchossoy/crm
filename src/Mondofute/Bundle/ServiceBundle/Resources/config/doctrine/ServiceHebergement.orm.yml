@@ -11,11 +11,14 @@ Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement:
     manyToOne:
         hebergementUnifie:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            inversedBy: services
         service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+
 
     oneToMany:
         tarifs:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif
             mappedBy: service
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

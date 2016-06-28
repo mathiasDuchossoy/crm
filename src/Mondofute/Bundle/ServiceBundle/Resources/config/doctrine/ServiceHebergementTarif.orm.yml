@@ -11,6 +11,7 @@ Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif:
     oneToOne:
         tarif:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
+            cascade: ['persist','remove']
     manyToOne:
         typePeriode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
