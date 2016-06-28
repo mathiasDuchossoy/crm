@@ -55,7 +55,17 @@ class HebergementType extends AbstractType
                     'entry_type' => EmplacementHebergementType::class,
                 ))
             ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
-            ->add('site', HiddenType::class, array('mapped' => false));
+            ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('visuels', 'Infinite\FormBundle\Form\Type\PolyCollectionType', array(
+                'types' => array(
+                    'Mondofute\Bundle\HebergementBundle\Form\HebergementVideoType',
+                    'Mondofute\Bundle\HebergementBundle\Form\HebergementPhotoType',
+                ),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+            ));
     }
 
     /**

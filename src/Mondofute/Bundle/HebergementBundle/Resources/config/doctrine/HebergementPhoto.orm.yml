@@ -1,0 +1,13 @@
+Mondofute\Bundle\HebergementBundle\Entity\HebergementPhoto:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementPhotoRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    lifecycleCallbacks: {  }

@@ -15,6 +15,8 @@ use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
@@ -35,6 +37,7 @@ use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,7 +140,59 @@ class HebergementUnifieController extends Controller
                     }
                 }
             }
-            $em = $this->getDoctrine()->getManager();
+
+            // ***** Gestion des Medias *****
+            foreach ($request->get('hebergement_unifie')['hebergements'] as $key => $hebergement) {
+                if ($hebergementUnifie->getHebergements()->get($key)->getSite()->getCrm() == 1) {
+                    $hebergementCrm = $hebergementUnifie->getHebergements()->get($key);
+                    foreach ($hebergement['visuels'] as $keyVisuel => $visuel) {
+                        /** @var HebergementVisuel $visuelCrm */
+                        $visuelCrm = $hebergementCrm->getVisuels()[$keyVisuel];
+                        $visuelCrm->setActif(true);
+//                        $visuelCrm->setHebergement($hebergementCrm);
+                        foreach ($sites as $site) {
+                            if ($site->getCrm() == 0) {
+                                /** @var Hebergement $hebergementSite */
+                                $hebergementSite = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                                    return $element->getSite() == $site;
+                                })->first();
+//                                $typeVisuel = (new ReflectionClass($visuelCrm))->getShortName();
+                                $typeVisuel = (new ReflectionClass($visuelCrm))->getName();
+
+//                                $hebergementVisuel = null;
+//                                switch ($hebergementVisuel)
+//                                {
+//                                    case 'HebergementPhoto':
+//
+//                                        $hebergementVisuel = new HebergementVisuel();
+//
+//                                }
+//                                dump($typeVisuel);die;
+                                // génération de la video ou de la photo
+                                $hebergementVisuel = new $typeVisuel();
+//                                dump($hebergementVisuel);
+//                                die;
+//                                $hebergementVisuel->setHebergement($hebergementSite);
+                                $hebergementVisuel->setVisuel($visuelCrm->getVisuel());
+                                $hebergementSite->addVisuel($hebergementVisuel);
+                                foreach ($visuelCrm->getTraductions() as $traduction) {
+                                    $traductionSite = new HebergementVisuelTraduction();
+                                    /** @var HebergementVisuelTraduction $traduction */
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                    $traductionSite->setLangue($traduction->getLangue());
+                                    $hebergementVisuel->addTraduction($traductionSite);
+                                }
+                                if (in_array($site->getId(), $visuel['sites'])) {
+                                    $hebergementVisuel->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+
+
             $em->persist($hebergementUnifie);
             $em->flush();
 
