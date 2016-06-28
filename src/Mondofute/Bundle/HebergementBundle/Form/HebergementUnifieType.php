@@ -76,6 +76,7 @@ class HebergementUnifieType extends AbstractType
             }
         }
 
+        $hebergementCrm = null;
         foreach ($view->children['hebergements'] as $hebergement) {
             if ($hebergement->vars['value']->getSite()->getCrm() == 1) {
                 $hebergementCrm = $hebergement;
@@ -88,7 +89,6 @@ class HebergementUnifieType extends AbstractType
                     }
                 }
             }
-
         }
 
         foreach ($view->children['listeService']->vars['choices'] as $choice) {
@@ -103,6 +103,5 @@ class HebergementUnifieType extends AbstractType
             }
         }
     }
-
 
 }

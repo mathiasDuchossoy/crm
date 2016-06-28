@@ -56,6 +56,7 @@ class HebergementPhotoType extends AbstractType
                         },
                         'mapped' => false,
                         'attr' => ['class' => 'form-inline'],
+//                        'data' => $sites,
                     ));
             } else {
                 $form
