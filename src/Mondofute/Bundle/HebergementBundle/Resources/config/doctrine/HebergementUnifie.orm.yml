@@ -19,4 +19,11 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
             mappedBy: hebergement
             cascade: ['persist','remove']
+        services:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement
+            mappedBy: hebergementUnifie
+            cascade: ['persist','remove']
+    manyToOne:
+        listeService:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ListeService
     lifecycleCallbacks: {  }

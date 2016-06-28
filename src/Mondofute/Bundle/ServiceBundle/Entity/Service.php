@@ -213,6 +213,6 @@ class Service
     public function __toString()
     {
         // TODO: Implement __toString() method.
-        return 'a';
+        return ' ';
     }
 }

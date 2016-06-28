@@ -22,3 +22,13 @@ hebergement_hebergement_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:delete" }
     methods:  DELETE
+
+hebergement_hebergement_charger_services_ajax:
+    path:   /{idHebergementUnifie}/{idListeService}/charger_services_ajax
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerServicesXML", idHebergementUnifie: 0}
+    methods:  POST
+
+hebergement_hebergement_charger_liste_services_fournisseur_ajax:
+    path:   /{idFournisseur}/charger_liste_services_fournisseur_ajax
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerListeServicesFournisseur", idFournisseur: 0}
+    methods:  POST

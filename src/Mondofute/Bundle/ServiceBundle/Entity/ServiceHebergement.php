@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\ServiceBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+
 /**
  * ServiceHebergement
  */
@@ -12,11 +15,11 @@ class ServiceHebergement
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @var HebergementUnifie
      */
     private $hebergementUnifie;
     /**
-     * @var \Mondofute\Bundle\ServiceBundle\Entity\Service
+     * @var Service
      */
     private $service;
     /**
@@ -29,7 +32,7 @@ class ServiceHebergement
      */
     public function __construct()
     {
-        $this->tarifs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tarifs = new ArrayCollection();
     }
 
     /**
@@ -45,7 +48,7 @@ class ServiceHebergement
     /**
      * Get hebergementUnifie
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+     * @return HebergementUnifie
      */
     public function getHebergementUnifie()
     {
@@ -55,12 +58,12 @@ class ServiceHebergement
     /**
      * Set hebergementUnifie
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergementUnifie
+     * @param HebergementUnifie $hebergementUnifie
      *
      * @return ServiceHebergement
      */
     public function setHebergementUnifie(
-        \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergementUnifie = null
+        HebergementUnifie $hebergementUnifie = null
     ) {
         $this->hebergementUnifie = $hebergementUnifie;
 
@@ -70,7 +73,7 @@ class ServiceHebergement
     /**
      * Get service
      *
-     * @return \Mondofute\Bundle\ServiceBundle\Entity\Service
+     * @return Service
      */
     public function getService()
     {
@@ -80,11 +83,11 @@ class ServiceHebergement
     /**
      * Set service
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\Service $service
+     * @param Service $service
      *
      * @return ServiceHebergement
      */
-    public function setService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service = null)
+    public function setService(Service $service = null)
     {
         $this->service = $service;
 
@@ -94,13 +97,13 @@ class ServiceHebergement
     /**
      * Add tarif
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif $tarif
+     * @param ServiceHebergementTarif $tarif
      *
      * @return ServiceHebergement
      */
-    public function addTarif(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif $tarif)
+    public function addTarif(ServiceHebergementTarif $tarif)
     {
-        $this->tarifs[] = $tarif;
+        $this->tarifs[] = $tarif->setService($this);
 
         return $this;
     }
@@ -108,9 +111,9 @@ class ServiceHebergement
     /**
      * Remove tarif
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif $tarif
+     * @param ServiceHebergementTarif $tarif
      */
-    public function removeTarif(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif $tarif)
+    public function removeTarif(ServiceHebergementTarif $tarif)
     {
         $this->tarifs->removeElement($tarif);
     }

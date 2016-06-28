@@ -1,0 +1,15 @@
+{% if form is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+<tr id="tarif-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}">
+    <td>{{ form_row(form.tarif.valeur) }}{{ form_row(form.tarif.unite) }}</td>
+    <td>{{ form_widget(form.typePeriode) }}</td>
+    <td>
+        <button type="button" class="btn btn-default suppr-tarif-service"
+                data-index-service-hebergement="{{ form.parent.parent.vars.name }}"
+                data-index-tarif-service="{{ form.vars.name }}">
+            <span class="glyphicon glyphicon-trash"></span></button>
+    </td>
+</tr>
+
+{#{{ form_row(form) }}#}
