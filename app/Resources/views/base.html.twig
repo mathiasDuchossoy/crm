@@ -15,14 +15,6 @@
     {% if delete_form is defined %}
         {% form_theme delete_form  'bootstrap_3_horizontal_layout.html.twig' %}
     {% endif %}
-
-    {% javascripts
-    'js/jquery.min.js'
-    'js/bootstrap.js'
-    'bundles/scdatetimepicker/js/bootstrap-datetimepicker.js'
-    'bundles/scdatetimepicker/js/locales/bootstrap-datetimepicker.fr.js' %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 </head>
 <body>
 {% block header %}
@@ -50,7 +42,6 @@
         //        var itemNonPersonalisable = [];
         //                var items = [];
         $(document).ready(function () {
-
             $(':submit').click(function () {
 //                recupère le form du submit
                 var form = $(this).closest('form');
