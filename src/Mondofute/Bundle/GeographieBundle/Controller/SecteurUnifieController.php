@@ -102,16 +102,6 @@ class SecteurUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-//            foreach ($secteurUnifie->getSecteurs() as $secteur)
-//            {
-//                if (!empty($secteur->getImages()))
-//                {
-//                    foreach ($secteur->getImages() as $image)
-//                    {
-//                        $image->setSecteur($secteur);
-//                    }
-//                }
-//            }
 
             $em->persist($secteurUnifie);
 
@@ -307,15 +297,15 @@ class SecteurUnifieController extends Controller
                 if (!empty($secteurImageSites)) {
                     foreach ($secteurImageSites as $secteurImageSite) {
 //                    $collectionMediaSites->add($secteurImageSite->getImage());
-                        dump($secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
-                            return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
-                        })->first());
+//                        dump($secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
+//                            return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
+//                        })->first());
                         if (
                             false === $secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
                                 return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
                             })->first()
                         ) {
-                            dump($secteurImageSite);
+//                            dump($secteurImageSite);
                             $secteurImageSite->setSecteur(null);
                             $emSite->remove($secteurImageSite->getImage());
                             $emSite->remove($secteurImageSite);
@@ -360,6 +350,7 @@ class SecteurUnifieController extends Controller
                         }
                     }
                 }
+                // FIN Gestion des images
 
                 $entitySite->addSecteur($secteurSite);
                 $emSite->persist($entitySite);
