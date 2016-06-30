@@ -348,7 +348,7 @@ class HebergementUnifieController extends Controller
      * Copie dans la base de données site l'entité hébergement
      * @param HebergementUnifie $entity
      */
-    private function copieVersSites(HebergementUnifie $entity, $originalVisuels = null)
+    private function copieVersSites(HebergementUnifie $entity, $originalHebergementVisuels = null)
     {
         /** @var HebergementTraduction $hebergementTraduc */
 //        Boucle sur les hébergements afin de savoir sur quel site nous devons l'enregistrer
@@ -520,29 +520,39 @@ class HebergementUnifieController extends Controller
                         /** @var HebergementVisuel $hebergementVisuel */
                         foreach ($hebergementVisuels as $hebergementVisuel) {
                             // on récupère le Visuel distant correspondant
-//                            dump($originalVisuels);
+//                            dump($originalHebergementVisuels);
 //                            récupérer le visuel old du site sur le crm
 //                             puis
-                            $hebergementVisuelSite = $hebergementVisuelSites->filter(function (HebergementVisuel $element) use ($hebergementVisuel) {
-                                return $element->getVisuel()->getProviderReference() == $hebergementVisuel->getVisuel()->getProviderReference();
-                            })->first();
-                            dump($originalVisuels);
-                            dump($hebergementVisuel);
-//                            $originalVisuel = $originalVisuels->filter(function (Media $element) use ($hebergementVisuel) {
-//                                return $element->getName() == $hebergementVisuel->getVisuel()->getName();
+//                            $hebergementVisuelSite = $hebergementVisuelSites->filter(function (HebergementVisuel $element) use ($hebergementVisuel) {
+//                                return $element->getVisuel()->getProviderReference() == $hebergementVisuel->getVisuel()->getProviderReference();
 //                            })->first();
+                            /** @var ArrayCollection $originalHebergementVisuels */
+//                            dump($originalHebergementVisuels);
+//                            dump($hebergementVisuel);
+                            $originalVisuel = $originalHebergementVisuels->filter(function ($element) use ($hebergementVisuel) {
+                                return $element->getVisuel()->getName() == $hebergementVisuel->getVisuel()->getName();
+                            })->first();
+//                            dump($originalVisuel);
+                            $keyoriginalVisuel = $originalHebergementVisuels->indexOf($originalVisuel);
+//                            dump($keyoriginalVisuel);
 ////                            die;
 //                            $hebergementVisuelSite = $hebergementVisuelSites->filter(function (HebergementVisuel $element) use ($originalVisuel) {
 //                                return $element->getVisuel()->getName() == $originalVisuel->getName();
 //                            })->first();
-//                            dump($originalVisuels);
-                            dump($hebergementVisuelSites);
-//                            dump($hebergementVisuelSite);
+//                            dump($originalHebergementVisuels);
+//                            dump($hebergementVisuelSites);
+                            $hebergementVisuelSite = $hebergementVisuelSites->get($keyoriginalVisuel);
+//                            dump($hebergementVisuelSite->getVisuel()->getProviderReference());
+//                            dump($hebergementVisuel->getVisuel()->getProviderReference());
 //                            die;
+                            // todo: à voir, l'hergement ne se cré plus
                             // si le visuel existe on va le modifier
                             /** @var HebergementVisuel $heberge mentVisuelSite */
                             if (!empty($hebergementVisuelSite)) {
-                                $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
+//                                if ($hebergementVisuelSite->getVisuel()->getName() != $hebergementVisuel->getVisuel()->getName()) {
+                                if ($hebergementVisuelSite->getVisuel()->getProviderReference() != $hebergementVisuel->getVisuel()->getProviderReference()) {
+                                    $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
+                                }
                                 $hebergementVisuelSite->setActif($hebergementVisuel->getActif());
                                 // on parcours les traductions
                                 /** @var HebergementVisuelTraduction $traduction */
@@ -976,13 +986,37 @@ class HebergementUnifieController extends Controller
                     // on parcourt les hebergement des sites
                     /** @var Hebergement $hebergementSite */
                     foreach ($hebergementSites as $hebergementSite) {
-                        $hebergementVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array('hebergement' => $hebergementSite, 'visuel' => $originalHebergementVisuel->getVisuel()));
+                        $hebergementVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(
+                            array(
+                                'hebergement' => $hebergementSite,
+                                'visuel' => $originalHebergementVisuel->getVisuel()
+                            ));
+                        $emSite = $this->getDoctrine()->getEntityManager($hebergementVisuelSite->getHebergement()->getSite()->getLibelle());
+                        $hebergementSite = $emSite->getRepository(Hebergement::class)->findOneBy(
+                            array(
+                                'hebergementUnifie' => $hebergementVisuelSite->getHebergement()->getHebergementUnifie()
+                            ));
+//                        /** @var ArrayCollection $hebergementVisuelSiteSites */
+                        $hebergementVisuelSiteSites = new ArrayCollection($emSite->getRepository(HebergementVisuel::class)->findBy(
+                            array(
+                                'hebergement' => $hebergementSite
+                            )));
+                        $hebergementVisuelSiteSite = $hebergementVisuelSiteSites->filter(function (HebergementVisuel $element)
+                        use ($hebergementVisuelSite) {
+                            return $element->getVisuel()->getProviderReference() == $hebergementVisuelSite->getVisuel()->getProviderReference();
+                        })->first();
+                        $hebergementVisuelSiteSite->setHebergement(null);
+                        $emSite->remove($hebergementVisuelSiteSite->getVisuel());
+                        $emSite->remove($hebergementVisuelSiteSite);
+                        $emSite->flush();
+//                        dump($hebergementVisuelSiteSite);
                         $hebergementVisuelSite->setHebergement(null);
                         $em->remove($hebergementVisuelSite->getVisuel());
                         $em->remove($hebergementVisuelSite);
                     }
                 }
             }
+//            die();
             // CAS D'UN NOUVEAU 'HEBERGEMENT VISUEL' OU L'ON MODIFIE UN "HEBERGEMENT VISUEL"
             /** @var HebergementVisuel $hebergementVisuel */
             // on parcourt les hebergementVisuel
@@ -1016,7 +1050,7 @@ class HebergementUnifieController extends Controller
                         }
 //                        dump($hebergementVisuel->getVisuel());
 //                        dump($hebergementVisuelSite->getVisuel());
-                        if ($hebergementVisuelSite->getVisuel() != ($hebergementVisuel->getVisuel())) {
+                        if ($hebergementVisuelSite->getVisuel() != $hebergementVisuel->getVisuel()) {
                             $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
                         }
                         $hebergementSite->addVisuel($hebergementVisuelSite);
@@ -1055,19 +1089,19 @@ class HebergementUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($hebergementUnifie);
-//            $em->flush();
+            $em->flush();
 //            $this->copieVersSites($hebergementUnifie , $originalVisuels);
             $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
 
             // on parcourt les médias à supprimer
-            if (!empty($visuelToRemoveCollection)) {
-                foreach ($visuelToRemoveCollection as $item) {
-                    if (!empty($item)) {
-                        $em->remove($item);
-                    }
-                }
-                $em->flush();
-            }
+//            if (!empty($visuelToRemoveCollection)) {
+//                foreach ($visuelToRemoveCollection as $item) {
+//                    if (!empty($item)) {
+//                        $em->remove($item);
+//                    }
+//                }
+//                $em->flush();
+//            }
 
             $this->addFlash('success', 'L\'hébergement a bien été modifié');
             return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
