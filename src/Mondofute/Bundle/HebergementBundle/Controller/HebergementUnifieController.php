@@ -29,6 +29,7 @@ use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
+use Sonata\MediaBundle\Model\Media;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -347,7 +348,7 @@ class HebergementUnifieController extends Controller
      * Copie dans la base de données site l'entité hébergement
      * @param HebergementUnifie $entity
      */
-    private function copieVersSites(HebergementUnifie $entity)
+    private function copieVersSites(HebergementUnifie $entity, $originalVisuels = null)
     {
         /** @var HebergementTraduction $hebergementTraduc */
 //        Boucle sur les hébergements afin de savoir sur quel site nous devons l'enregistrer
@@ -510,22 +511,36 @@ class HebergementUnifieController extends Controller
                 // GESTION DES MEDIAS
                 $hebergementVisuels = $hebergement->getVisuels();
                 $hebergementVisuelSites = $hebergementSite->getVisuels();
+
                 // si il y a des Medias pour l'hebergement de référence
                 if (!$hebergementVisuels->isEmpty()) {
                     // si il y a des medias pour l'hébergement présent sur le site
                     if (!$hebergementVisuelSites->isEmpty()) {
-                        dump($hebergementVisuels);
-                        dump($hebergementVisuelSites);
-                        die;
                         // on parcours les Visuels de la base
                         /** @var HebergementVisuel $hebergementVisuel */
                         foreach ($hebergementVisuels as $hebergementVisuel) {
                             // on récupère le Visuel distant correspondant
+//                            dump($originalVisuels);
+//                            récupérer le visuel old du site sur le crm
+//                             puis
                             $hebergementVisuelSite = $hebergementVisuelSites->filter(function (HebergementVisuel $element) use ($hebergementVisuel) {
                                 return $element->getVisuel()->getProviderReference() == $hebergementVisuel->getVisuel()->getProviderReference();
                             })->first();
+                            dump($originalVisuels);
+                            dump($hebergementVisuel);
+//                            $originalVisuel = $originalVisuels->filter(function (Media $element) use ($hebergementVisuel) {
+//                                return $element->getName() == $hebergementVisuel->getVisuel()->getName();
+//                            })->first();
+////                            die;
+//                            $hebergementVisuelSite = $hebergementVisuelSites->filter(function (HebergementVisuel $element) use ($originalVisuel) {
+//                                return $element->getVisuel()->getName() == $originalVisuel->getName();
+//                            })->first();
+//                            dump($originalVisuels);
+                            dump($hebergementVisuelSites);
+//                            dump($hebergementVisuelSite);
+//                            die;
                             // si le visuel existe on va le modifier
-                            /** @var HebergementVisuel $hebergementVisuelSite */
+                            /** @var HebergementVisuel $heberge mentVisuelSite */
                             if (!empty($hebergementVisuelSite)) {
                                 $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
                                 $hebergementVisuelSite->setActif($hebergementVisuel->getActif());
@@ -534,9 +549,17 @@ class HebergementUnifieController extends Controller
                                 foreach ($hebergementVisuel->getTraductions() as $traduction) {
                                     // on récupère la traduction correspondante
                                     /** @var HebergementVisuelTraduction $traductionSite */
-                                    $traductionSite = $hebergementVisuelSite->getTraductions()->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
-                                        return $element->getLangue()->getId() == $traduction->getLangue()->getId();
-                                    })->first();
+                                    $traductionSites = $hebergementVisuelSite->getTraductions();
+
+                                    $traductionSite = null;
+
+                                    if (!$traductionSites->isEmpty()) {
+//                                        dump($traductionSites);
+                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId()
+                                            == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
                                     // si une traduction existe on la modifie
                                     if (!empty($traductionSite)) {
                                         $traductionSite->setLibelle($traduction->getLibelle());
@@ -545,7 +568,7 @@ class HebergementUnifieController extends Controller
                                         $traductionSite = new HebergementVisuelTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle());
                                         $traductionSite->setHebergementVisuel($hebergementVisuelSite);
-                                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getId()));
+                                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                                         $hebergementVisuelSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -979,7 +1002,9 @@ class HebergementUnifieController extends Controller
                         $hebergementSite = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
                             return $element->getSite() == $site;
                         })->first();
+                        // s'il ne s'agit pas d'un nouveau hebergementVisuel
                         if (!empty($hebergementVisuel->getId())) {
+                            // on récupère l'hebergementVisuel pour le modifier
                             $hebergementVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array('hebergement' => $hebergementSite, 'visuel' => $originalVisuels->get($key)));
                         } else {
                             // on récupère la classe correspondant au visuel (photo ou video)
@@ -988,14 +1013,20 @@ class HebergementUnifieController extends Controller
                             /** @var HebergementVisuel $hebergementVisuelSite */
                             $hebergementVisuelSite = new $typeVisuel();
                             $hebergementVisuelSite->setHebergement($hebergementSite);
-                            $hebergementSite->addVisuel($hebergementVisuelSite);
                         }
-                        $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
+//                        dump($hebergementVisuel->getVisuel());
+//                        dump($hebergementVisuelSite->getVisuel());
+                        if ($hebergementVisuelSite->getVisuel() != ($hebergementVisuel->getVisuel())) {
+                            $hebergementVisuelSite->setVisuel($hebergementVisuel->getVisuel());
+                        }
+                        $hebergementSite->addVisuel($hebergementVisuelSite);
+//                        dump($hebergementVisuelSite);
                         /** @var HebergementVisuelTraduction $traduction */
                         foreach ($hebergementVisuel->getTraductions() as $traduction) {
                             /** @var HebergementVisuelTraduction $traductionSite */
                             $traductionSites = $hebergementVisuelSite->getTraductions();
-                            if (!empty($traductionSites)) {
+                            $traductionSite = null;
+                            if (!$traductionSites->isEmpty()) {
                                 $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
                                     return $element->getLangue() == $traduction->getLangue();
                                 })->first();
@@ -1024,8 +1055,9 @@ class HebergementUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($hebergementUnifie);
-            $em->flush();
-            $this->copieVersSites($hebergementUnifie);
+//            $em->flush();
+//            $this->copieVersSites($hebergementUnifie , $originalVisuels);
+            $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
 
             // on parcourt les médias à supprimer
             if (!empty($visuelToRemoveCollection)) {
