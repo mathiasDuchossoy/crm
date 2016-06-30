@@ -26,4 +26,8 @@ Mondofute\Bundle\ServiceBundle\Entity\Service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TarifService
             mappedBy: service
             cascade: ['persist','remove']
+        serviceHebergement:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement
+            mappedBy: service
+            cascade: ['remove']
     lifecycleCallbacks: {  }

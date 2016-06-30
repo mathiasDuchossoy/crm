@@ -20,5 +20,9 @@ Mondofute\Bundle\ServiceBundle\Entity\ListeService:
         services:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
             mappedBy: listeService
-            cascade: ['persist','remove']
+            cascade: ['persist']
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            mappedBy: listeService
+            orphanRemoval: false
     lifecycleCallbacks: {  }

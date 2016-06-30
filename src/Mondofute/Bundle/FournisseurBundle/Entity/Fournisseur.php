@@ -531,16 +531,6 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Get listeServices
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getListeServices()
-    {
-        return $this->listeServices;
-    }
-
-    /**
      * Add type
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
@@ -564,27 +554,4 @@ class Fournisseur extends Moral
         $this->types->removeElement($type);
     }
 
-    /**
-     * Add listeService
-     *
-     * @param ListeService $listeService
-     *
-     * @return Fournisseur
-     */
-    public function addListeService(ListeService $listeService)
-    {
-        $this->listeServices[] = $listeService->setFournisseur($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove listeService
-     *
-     * @param ListeService $listeService
-     */
-    public function removeListeService(ListeService $listeService)
-    {
-        $this->listeServices->removeElement($listeService);
-    }
 }

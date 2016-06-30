@@ -36,6 +36,10 @@ class Service
      * @var TypeService
      */
     private $type;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $serviceHebergement;
 
     /**
      * Constructor
@@ -214,5 +218,40 @@ class Service
     {
         // TODO: Implement __toString() method.
         return ' ';
+    }
+
+    /**
+     * Add serviceHebergement
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
+     *
+     * @return Service
+     */
+    public function addServiceHebergement(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement)
+    {
+        $this->serviceHebergement[] = $serviceHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove serviceHebergement
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
+     */
+    public function removeServiceHebergement(
+        \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
+    ) {
+        $this->serviceHebergement->removeElement($serviceHebergement);
+    }
+
+    /**
+     * Get serviceHebergement
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getServiceHebergement()
+    {
+        return $this->serviceHebergement;
     }
 }

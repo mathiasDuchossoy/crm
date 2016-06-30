@@ -29,7 +29,7 @@
                     {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
                     {#{{ form_label(form.moyenComs[0]) }}#}
                     {#{{ dump(form.moyenComs[0]) }}#}
-                    {{ form_row(form.moyenComs[0].codePostal) }}
+                    {{ form_row(form.moyenComs[0].code_postal) }}
                     {{ form_row(form.moyenComs[0].adresse1) }}
                     {{ form_row(form.moyenComs[0].adresse2) }}
                     {{ form_row(form.moyenComs[0].adresse3) }}
@@ -557,15 +557,16 @@
         function afficherModalTarifsService(indexListeService, indexService) {
             var $modal = $('#modalTarifsService');
             var $form = $('#form-tarifs-service-' + indexListeService + '-' + indexService);
-            $('#valider-tarifs-service').attr('data-index-liste-service', indexListeService);
-            $('#valider-tarifs-service').attr('data-index-service', indexService);
+            var $valider = $('#valider-tarifs-service');
+            $valider.attr('data-index-liste-service', indexListeService);
+            $valider.attr('data-index-service', indexService);
             $modal.find('.modal-body').append(cloneFormulaire($form));
             $modal.modal('show');
         }
         function afficherModalListeService(action, index) {
-            var $btnsModifier = $('#modalListeService').find('.modifier-liste-service');
-            var $btnsAjouter = $('#modalListeService').find('.ajouter-liste-service');
             var $modal = $('#modalListeService');
+            var $btnsModifier = $modal.find('.modifier-liste-service');
+            var $btnsAjouter = $modal.find('.ajouter-liste-service');
             switch (action) {
                 case 'add':
                     $modal.find('.modal-title').each(function () {
@@ -626,8 +627,10 @@
             $form = $modalListeService.find('#form-liste-service_' + indexListeService);
 //            affichage du libelle dans l'onglet service
             $listeService.find('#titre-liste-service-' + indexListeService).html($form.find('#fournisseur_listeServices_' + indexListeService + '_libelle').val());
-            $('#liste-service-' + indexListeService).find('#ctn-form-' + indexListeService).html('');
-            $('#liste-service-' + indexListeService).find('#ctn-form-' + indexListeService).append($form);
+            var $listeService = $('#liste-service-' + indexListeService);
+            var $ctnForm = $listeService.find('#ctn-form-' + indexListeService);
+            $ctnForm.html('');
+            $ctnForm.append($form);
             $modalListeService.modal('hide');
         }
         //        Fonctions liées à la réceptions
@@ -1086,7 +1089,7 @@
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val()
 //                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
 //                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
             };
@@ -1195,7 +1198,7 @@
                 precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val()
 //                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
 //                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
             };

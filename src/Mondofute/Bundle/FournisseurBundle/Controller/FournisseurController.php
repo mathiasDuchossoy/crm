@@ -475,6 +475,10 @@ class FournisseurController extends Controller
             /** @var ListeService $listeService */
             foreach ($originalListeServices as $listeService) {
                 if (false === $fournisseur->getListeServices()->contains($listeService)) {
+                    foreach ($listeService->getHebergements() as $hebergementUnifie) {
+                        $listeService->removeHebergement($hebergementUnifie);
+                        $em->persist($listeService);
+                    }
                     $this->deleteListeServiceSites($listeService);
                     $em->remove($listeService);
                 }
@@ -642,6 +646,10 @@ class FournisseurController extends Controller
             $listeServiceSite = $emSite->find(ListeService::class,
                 $listeService->getId());
             if (!empty($listeServiceSite)) {
+                foreach ($listeServiceSite->getHebergements() as $hebergementUnifieSite) {
+                    $listeServiceSite->removeHebergement($hebergementUnifieSite);
+                    $emSite->persist($listeServiceSite);
+                }
                 $listeServiceSite->setFournisseur(null);
                 $emSite->remove($listeServiceSite);
             }
@@ -765,12 +773,14 @@ class FournisseurController extends Controller
                 switch ($typeComm) {
                     case "Adresse":
                         $adresse = $fournisseurSite->getMoyenComs()->get($key);
-                        $adresse->setCodePostal($moyenCom->getCodePostal());
-                        $adresse->setAdresse1($moyenCom->getAdresse1());
-                        $adresse->setAdresse2($moyenCom->getAdresse2());
-                        $adresse->setAdresse3($moyenCom->getAdresse3());
-                        $adresse->setVille($moyenCom->getVille());
-                        $adresse->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+                        if (!empty($adresse)) {
+                            $adresse->setCodePostal($moyenCom->getCodePostal());
+                            $adresse->setAdresse1($moyenCom->getAdresse1());
+                            $adresse->setAdresse2($moyenCom->getAdresse2());
+                            $adresse->setAdresse3($moyenCom->getAdresse3());
+                            $adresse->setVille($moyenCom->getVille());
+                            $adresse->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+                        }
 //                        $adresse->setDateModification(new DateTime());
                         break;
                     default:

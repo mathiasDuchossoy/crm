@@ -7,8 +7,6 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
-use Mondofute\Bundle\FournisseurBundle\Repository\TypeFournisseurRepository;
-use ReflectionClass;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;

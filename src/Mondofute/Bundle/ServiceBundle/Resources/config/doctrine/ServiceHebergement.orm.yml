@@ -12,6 +12,7 @@ Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement:
         hebergementUnifie:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
             inversedBy: services
+            cascade: ['persist']
         service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
 

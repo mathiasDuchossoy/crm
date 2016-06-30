@@ -25,6 +25,11 @@ class ListeService
     private $fournisseur;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -122,5 +127,39 @@ class ListeService
         $this->fournisseur = $fournisseur;
 
         return $this;
+    }
+
+    /**
+     * Add hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement
+     *
+     * @return ListeService
+     */
+    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement)
+    {
+        $this->hebergements[] = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement
+     */
+    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement->setListeService(null));
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
     }
 }

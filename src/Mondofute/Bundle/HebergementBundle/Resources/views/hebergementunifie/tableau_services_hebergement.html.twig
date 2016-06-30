@@ -4,7 +4,15 @@
             <input type="checkbox" {% if service.checkbox.vars.checked %}checked="checked"{% endif %}
                    id="{{ service.checkbox.vars.id }}" name="{{ service.checkbox.vars.full_name }}"
                    value="{{ service.checkbox.vars.value }}">{#{{ form_row(service.checkbox) }}#}</td>
-        <td>{{ service.service.vars.data.type.id }}</td>
+        <td>
+            {#{{ service.service.vars.data.type.id }}#}
+            {% for traduction in service.service.vars.data.type.traductions %}
+                {% if traduction.langue.code == app.request.locale %}
+                    {{ traduction.libelle }}
+                {% endif %}
+            {% endfor %}
+            {#{{ dump(app.request.locale) }}#}
+        </td>
         <td>{{ service.service.vars.data.categorieService | trans }}</td>
         <td>{{ service.service.vars.data.sousCategorieService | trans }}</td>
         <td>

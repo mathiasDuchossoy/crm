@@ -52,7 +52,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         listeServices:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ListeService
             mappedBy: fournisseur
-            cascade: ['persist','remove']
+            cascade: ['persist']
         receptions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
             mappedBy: fournisseur
