@@ -133,7 +133,9 @@ class FournisseurController extends Controller
 
             if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
+                dump($fournisseur);
                 $this->copieVersSites($fournisseur);
+
 
                 foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -161,7 +163,7 @@ class FournisseurController extends Controller
                         }
                     }
                 }
-
+//                dump($fournisseur);die;
                 $em->persist($fournisseur);
                 $em->flush();
 
@@ -196,7 +198,15 @@ class FournisseurController extends Controller
             $fournisseurSite = clone $fournisseur;
 //            $fournisseurSite = new Fournisseur();
             $fournisseurSite->getListeServices()->clear();
+
+//            dump($fournisseur);
+//            foreach ($fournisseur->getListeServices() as $listeService)
+//            {
+//                dump($listeService);
+//            }
             $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
+
+//            dump($fournisseur);
             $moyenComsSite = $fournisseurSite->getMoyenComs();
             if (!empty($moyenComsSite)) {
                 foreach ($moyenComsSite as $key => $moyenComSite) {
@@ -315,6 +325,7 @@ class FournisseurController extends Controller
 //            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
+        dump($fournisseurSite);
 //        $emSite->flush();
     }
 

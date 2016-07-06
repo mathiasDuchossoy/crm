@@ -233,7 +233,7 @@ class Fournisseur extends Moral
         if (count($listeServices) > 0) {
             /** @var ListeService $listeService */
             foreach ($listeServices as $listeService) {
-                $cloneListeService = $listeService;
+                $cloneListeService = clone $listeService;
                 $this->listeServices->add($cloneListeService);
                 $cloneListeService->setFournisseur($this);
             }

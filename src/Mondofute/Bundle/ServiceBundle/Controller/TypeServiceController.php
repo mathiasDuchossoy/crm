@@ -140,6 +140,7 @@ class TypeServiceController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('type_service_delete', array('id' => $typeService->getId())))
+            ->add('delete', SubmitType::class, array('label' => 'supprimer'))
             ->setMethod('DELETE')
             ->getForm();
     }
