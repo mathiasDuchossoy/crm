@@ -133,7 +133,7 @@ class FournisseurController extends Controller
 
             if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-                dump($fournisseur);
+//                dump($fournisseur);
                 $this->copieVersSites($fournisseur);
 
 
@@ -325,7 +325,7 @@ class FournisseurController extends Controller
 //            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
-        dump($fournisseurSite);
+//        dump($fournisseurSite);
 //        $emSite->flush();
     }
 
