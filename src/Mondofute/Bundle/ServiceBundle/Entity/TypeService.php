@@ -15,6 +15,10 @@ class TypeService
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $services;
 
     /**
      * Constructor
@@ -66,5 +70,39 @@ class TypeService
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Add service
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\Service $service
+     *
+     * @return TypeService
+     */
+    public function addService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service)
+    {
+        $this->services[] = $service;
+
+        return $this;
+    }
+
+    /**
+     * Remove service
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\Service $service
+     */
+    public function removeService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service)
+    {
+        $this->services->removeElement($service);
+    }
+
+    /**
+     * Get services
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getServices()
+    {
+        return $this->services;
     }
 }

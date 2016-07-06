@@ -13,4 +13,8 @@ Mondofute\Bundle\ServiceBundle\Entity\TypeService:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TypeServiceTraduction
             mappedBy: typeService
             cascade: ['persist','remove']
+        services:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+            mappedBy: type
+
     lifecycleCallbacks: {  }

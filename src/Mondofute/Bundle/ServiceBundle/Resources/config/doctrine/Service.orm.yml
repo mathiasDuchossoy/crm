@@ -21,6 +21,7 @@ Mondofute\Bundle\ServiceBundle\Entity\Service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService
         type:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TypeService
+            inversedBy: services
     oneToMany:
         tarifs:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TarifService

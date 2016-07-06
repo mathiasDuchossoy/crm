@@ -657,6 +657,12 @@ class FournisseurController extends Controller
             $listeServiceSite = $emSite->find(ListeService::class,
                 $listeService->getId());
             if (!empty($listeServiceSite)) {
+                /** @var Service $serviceSite */
+                foreach ($listeServiceSite->getServices() as $serviceSite) {
+//                    foreach($serviceSite->getTarifs() AS $tarifSite)
+                    $serviceSite->setListeService(null);
+                    $emSite->remove($serviceSite);
+                }
                 foreach ($listeServiceSite->getHebergements() as $hebergementUnifieSite) {
                     $listeServiceSite->removeHebergement($hebergementUnifieSite);
                     $emSite->persist($listeServiceSite);
