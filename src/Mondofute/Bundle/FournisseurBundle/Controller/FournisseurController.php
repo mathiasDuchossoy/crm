@@ -659,7 +659,6 @@ class FournisseurController extends Controller
             if (!empty($listeServiceSite)) {
                 /** @var Service $serviceSite */
                 foreach ($listeServiceSite->getServices() as $serviceSite) {
-//                    foreach($serviceSite->getTarifs() AS $tarifSite)
                     $serviceSite->setListeService(null);
                     $emSite->remove($serviceSite);
                 }
