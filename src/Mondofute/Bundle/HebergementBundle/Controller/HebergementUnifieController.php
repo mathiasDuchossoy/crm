@@ -1030,13 +1030,15 @@ class HebergementUnifieController extends Controller
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
-            $serviceSite = $emSite->find(ServiceHebergement::class,
-                $service->getId());
-            if (!empty($serviceSite)) {
-                $serviceSite->setHebergementUnifie(null);
-                $emSite->remove($serviceSite);
+            if (!empty($service->getId())) {
+                $serviceSite = $emSite->find(ServiceHebergement::class,
+                    $service->getId());
+                if (!empty($serviceSite)) {
+                    $serviceSite->setHebergementUnifie(null);
+                    $emSite->remove($serviceSite);
 //                $listeServiceSite->setFournisseur(null);
 //                $emSite->remove($listeServiceSite);
+                }
             }
 
         }
