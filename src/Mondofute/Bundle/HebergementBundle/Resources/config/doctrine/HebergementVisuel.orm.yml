@@ -28,7 +28,8 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel:
             inversedBy: visuels
         visuel:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
-            cascade: ['persist','remove']
+#            cascade: ['persist','remove']
+            cascade: ['persist']
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction
