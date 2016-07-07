@@ -1,0 +1,21 @@
+Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\ServiceHebergementTarifRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    oneToOne:
+        tarif:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
+            cascade: ['persist','remove']
+    manyToOne:
+        typePeriode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+        service:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement
+            inversedBy: tarifs
+    lifecycleCallbacks: {  }

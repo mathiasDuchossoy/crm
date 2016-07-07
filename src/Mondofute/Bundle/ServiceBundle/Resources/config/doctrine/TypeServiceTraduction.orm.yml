@@ -1,0 +1,21 @@
+Mondofute\Bundle\ServiceBundle\Entity\TypeServiceTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\ServiceBundle\Repository\TypeServiceTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        typeService:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\TypeService
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

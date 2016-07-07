@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
 
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Mondofute\Bundle\ServiceBundle\Form\ServiceHebergementType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,6 +23,18 @@ class HebergementUnifieType extends AbstractType
         $builder
             ->add('hebergements', CollectionType::class,
                 array('entry_type' => HebergementType::class, 'entry_options' => array('locale' => $options["locale"])))
+            ->add('listeService', EntityType::class, array(
+                'class' => ListeService::class,
+                'choice_label' => 'libelle',
+                'placeholder' => '--- choix d\'une liste de service ---',
+                'required' => false,
+            ))
+            ->add('services', CollectionType::class, array(
+                'entry_type' => ServiceHebergementType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'allow_extra_fields' => true,
+            ))
             ->add('fournisseurs', CollectionType::class,
                 array(
                     'entry_type' => FournisseurHebergementType::class
@@ -58,6 +73,17 @@ class HebergementUnifieType extends AbstractType
                     }
                 }
                 $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
+            }
+        }
+        foreach ($view->children['listeService']->vars['choices'] as $choice) {
+            $affiche = false;
+            foreach ($view->vars['data']->getFournisseurs() as $fournisseur) {
+                if ($choice->data->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId()) {
+                    $affiche = true;
+                }
+            }
+            if ($affiche == false) {
+                $choice->attr = array('style' => 'display:none;');
             }
         }
     }

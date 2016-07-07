@@ -1,0 +1,7 @@
+mondofute_service_type_service:
+    resource: "@MondofuteServiceBundle/Resources/config/routing/typeservice.yml"
+    prefix:   /type_service
+
+mondofute_service_homepage:
+    path:     /
+    defaults: { _controller: MondofuteServiceBundle:Default:index }

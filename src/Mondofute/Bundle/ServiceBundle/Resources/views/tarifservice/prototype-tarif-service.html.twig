@@ -1,0 +1,12 @@
+<tr id="tarif-{{ form.parent.parent.parent.parent.vars.name }}-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}">
+    <td>{{ form_row(form.tarif.valeur) }}{{ form_row(form.tarif.unite) }}</td>
+    <td>{{ form_widget(form.typePeriode) }}</td>
+    <td>
+        <button type="button" class="btn btn-default suppr-tarif-service"
+                data-index-liste-service="{{ form.parent.parent.parent.parent.vars.name }}"
+                data-index-service="{{ form.parent.parent.vars.name }}" data-index-tarif-service="{{ form.vars.name }}">
+            <span class="glyphicon glyphicon-trash"></span></button>
+    </td>
+</tr>
+
+{#{{ form_row(form) }}#}

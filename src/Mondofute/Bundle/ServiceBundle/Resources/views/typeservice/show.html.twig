@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation du type service' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation du type service' | capitalize }}</h1>
+
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ typeService.id }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('type_service_index') }}">Back to the list</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('type_service_edit', { 'id': typeService.id }) }}">Edit</a>
+            </li>
+            {% if (typeService.services | length) == 0 %}
+                <li>
+                    {{ form_start(delete_form) }}
+                    {{ form_end(delete_form) }}
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

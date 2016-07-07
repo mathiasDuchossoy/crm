@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\ORM\Query;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -18,17 +19,26 @@ use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Mondofute\Bundle\ServiceBundle\Entity\Service;
+use Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement;
+use Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergementTarif;
+use Mondofute\Bundle\ServiceBundle\Entity\TarifService;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
+use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
+use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 //use DateTime;
 
@@ -99,19 +109,6 @@ class HebergementUnifieController extends Controller
 //            $this->dispacherDonneesCommune($hebergementUnifie);
 
             $this->supprimerHebergements($hebergementUnifie, $sitesAEnregistrer);
-//            foreach ($hebergementUnifie->getHebergements() as $hebergement) {
-//                /** @var MoyenCommunication $moyenCom */
-//                foreach ($hebergement->getMoyenComs() as $moyenCom) {
-//                    $moyenCom->setDateCreation();
-//                }
-//            }
-            /** @var FournisseurHebergement $fournisseur */
-//            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
-//                $fournisseur->getTelFixe()->setDateCreation();
-//                $fournisseur->getTelMobile()->setDateCreation();
-//                $fournisseur->getAdresse()->setDateCreation();
-//            }
-//            $this->gestionDatesMoyenComs($hebergementUnifie);
             /** @var FournisseurHebergement $fournisseur */
             foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
                 if (empty($fournisseur->getFournisseur())) {
@@ -120,21 +117,24 @@ class HebergementUnifieController extends Controller
                     $em->remove($fournisseur);
                 } else {
                     $fournisseur->setHebergement($hebergementUnifie);
-//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
-//                        $fournisseur->getAdresse()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
+                }
+            }
+            foreach ($hebergementUnifie->getServices() as $key => $serviceHebergement) {
+                if (empty($request->request->get('hebergement_unifie')['services'][$key]['checkbox'])) {
+//                    foreach ($serviceHebergement->getTarifs() as $serviceHebergementTarif) {
+////                        dump($serviceHebergementTarif);
+//                        $serviceHebergement->removeTarif($serviceHebergementTarif);
+//                        $em->remove($serviceHebergementTarif);
 //                    }
-//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
-//                        $fournisseur->getTelFixe()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
-//                    }
-//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
-//                        $fournisseur->getTelMobile()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
-//                    }
+//                    $serviceHebergement->setHebergementUnifie(null);
+                    $hebergementUnifie->removeService($serviceHebergement);
+                    $em->remove($serviceHebergement);
+                } else {
+                    $serviceHebergement->setHebergementUnifie($hebergementUnifie);
+                    /** @var ServiceHebergementTarif $serviceHebergementTarif */
+                    foreach ($serviceHebergement->getTarifs() as $serviceHebergementTarif) {
+                        $serviceHebergementTarif->setService($serviceHebergement);
+                    }
                 }
             }
             $em = $this->getDoctrine()->getManager();
@@ -331,6 +331,7 @@ class HebergementUnifieController extends Controller
                 if (is_null(($entitySite = $em->getRepository(HebergementUnifie::class)->find($entity->getId())))) {
                     $entitySite = new HebergementUnifie();
                 }
+
                 /** @var FournisseurHebergement $fournisseur */
                 /** @var FournisseurHebergement $fournisseurSite */
 //                supprime les fournisseurHebergement du site distant
@@ -347,6 +348,45 @@ class HebergementUnifieController extends Controller
                             $em->remove($fournisseurSite);
                         }
                     }
+                }
+//                copie des services hebergement vers les sites distants
+                /** @var ServiceHebergement $service */
+                foreach ($entity->getServices() as $service) {
+                    if (empty($serviceSite = $em->getRepository(ServiceHebergement::class)->findOneBy(array(
+                        'hebergementUnifie' => $entity->getId(),
+                        'service' => $service->getId(),
+                    )))
+                    ) {
+                        $serviceSite = new ServiceHebergement();
+                        $serviceSite->setHebergementUnifie($entitySite);
+                        $entitySite->addService($serviceSite);
+
+                    }
+                    $serviceSite->setService($em->getRepository(Service::class)->find($service->getService()->getId()));
+
+                    /** @var ServiceHebergementTarif $serviceHebergementTarif */
+                    foreach ($service->getTarifs() as $serviceHebergementTarif) {
+                        if (empty($serviceHebergementTarifSite = $em->getRepository(ServiceHebergementTarif::class)->find(
+                            $serviceHebergementTarif->getId()
+                        ))
+                        ) {
+                            $serviceHebergementTarifSite = new ServiceHebergementTarif();
+                            $serviceSite->addTarif($serviceHebergementTarifSite);
+                        }
+
+                        if (empty(($tarifSite = $serviceHebergementTarifSite->getTarif()))) {
+                            $tarifSite = new Tarif();
+                        }
+                        /** @var Tarif $tarifSite */
+                        $tarifSite->setUnite($em->getRepository(UniteTarif::class)->find($serviceHebergementTarif->getTarif()->getUnite()->getId()))
+                            ->setValeur($serviceHebergementTarif->getTarif()->getValeur());
+                        $serviceHebergementTarifSite->setService($serviceSite)
+                            ->setTarif($tarifSite)
+                            ->setTypePeriode($em->getRepository(TypePeriode::class)->find($serviceHebergementTarif->getTypePeriode()->getId()));
+                        $em->persist($tarifSite);
+                        $em->persist($serviceHebergementTarifSite);
+                    }
+                    $em->persist($serviceSite);
                 }
 //                balaye les fournisseurHebergement et copie les données
                 foreach ($entity->getFournisseurs() as $fournisseur) {
@@ -657,6 +697,93 @@ class HebergementUnifieController extends Controller
             ->getForm();
     }
 
+    public function chargerListeServicesFournisseurAction(Request $request, $idFournisseur)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+            /** @var ArrayCollection $liste */
+            $liste = $em->getRepository(ListeService::class)->chargerParFournisseur($idFournisseur)->getQuery()->getArrayResult();
+//            $listeArray = $liste->toArray();
+//            $serializer = $this->container->get('serializer');
+            $response = new Response();
+//            $data = $serializer->serialize($liste,'json');
+            $data = json_encode($liste); // formater le résultat de la requête en json
+
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent($data);
+
+            return $response;
+        } else {
+            return new Response();
+        }
+    }
+
+    public function chargerServicesXMLAction(Request $request, $idListeService, $idHebergementUnifie = null)
+    {
+        if ($request->isXmlHttpRequest()) {
+//        $enseigne = $request->get('enseigne');
+            $em = $this->getDoctrine()->getManager();
+            if ($idHebergementUnifie <= 0) {
+                $hebergementUnifie = new HebergementUnifie();
+//            $services = $em->getRepository(Service::class)->findBy(array('listeService'=>$idListeService));
+
+            } else {
+                $hebergementUnifie = $em->getRepository(HebergementUnifie::class)->find($idHebergementUnifie);
+                if (empty($hebergementUnifie->getListeService()) || ($hebergementUnifie->getListeService()->getId() != $idListeService)) {
+                    $hebergementUnifie->getServices()->clear();
+                }
+            }
+            $hebergementUnifie->setListeService($em->getRepository(ListeService::class)->find($idListeService));
+            $this->genererServiceHebergements($hebergementUnifie);
+            $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
+                $hebergementUnifie, array('locale' => $request->getLocale()));
+            $html = $this->render('@MondofuteHebergement/hebergementunifie/tableau_services_hebergement.html.twig',
+                array('form' => $editForm->createView()));
+//        $fournisseurs = $em->getRepository('MondofuteFournisseurBundle:Fournisseur')->rechercherTypeHebergement($enseigne)->getQuery()->getArrayResult();
+
+//            $response = new Response();
+//
+//            $data = json_encode(null); // formater le résultat de la requête en json
+//
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent($data);
+
+            return $html;
+        }
+        return new Response();
+    }
+
+    public function genererServiceHebergements(HebergementUnifie $hebergementUnifie)
+    {
+        $services = new ArrayCollection();
+        /** @var ServiceHebergement $serv */
+        foreach ($hebergementUnifie->getServices() as $serv) {
+            $services->add($serv->getService());
+        }
+        /** @var Service $service */
+        if (!empty($hebergementUnifie->getListeService())) {
+            foreach ($hebergementUnifie->getListeService()->getServices() as $service) {
+                if (!($services->contains($service))) {
+                    $serviceHebergement = new ServiceHebergement();
+                    $serviceHebergement->setService($service);
+                    $serviceHebergement->setHebergementUnifie($hebergementUnifie);
+                    /** @var TarifService $tarifService */
+                    foreach ($service->getTarifs() as $tarifService) {
+                        $tarifHebergement = new ServiceHebergementTarif();
+                        $tarifHebergement->setService($serviceHebergement);
+                        $tarifHebergement->setTypePeriode($tarifService->getTypePeriode());
+                        $tarif = new Tarif();
+                        $tarif->setUnite($tarifService->getTarif()->getUnite())
+                            ->setValeur($tarifService->getTarif()->getValeur());
+                        $tarifHebergement->setTarif($tarif);
+                        $serviceHebergement->addTarif($tarifHebergement);
+                    }
+                    $hebergementUnifie->addService($serviceHebergement);
+                }
+            }
+        }
+    }
+
     /**
      * Displays a form to edit an existing HebergementUnifie entity.
      *
@@ -667,7 +794,21 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-
+//        dump($hebergementUnifie); die;
+        $originalServices = new ArrayCollection();
+        $originalTarifs = new ArrayCollection();
+        /** @var ServiceHebergement $serviceHebergement */
+        foreach ($hebergementUnifie->getServices() as $serviceHebergement) {
+            foreach ($serviceHebergement->getTarifs() as $originalTarif) {
+                $originalTarifs->add($originalTarif);
+            }
+//            dump($serviceHebergement->getService());
+////            dump($hebergementUnifie->getServices()->contains($originalService));
+////            dump($hebergementUnifie->getServices());
+            $originalServices->add($serviceHebergement);
+        }
+//        die;
+        $this->genererServiceHebergements($hebergementUnifie);
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
@@ -704,6 +845,54 @@ class HebergementUnifieController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 //            dump($originalFournisseursHebergement);
+            /** @var ServiceHebergement $serviceHebergement */
+            foreach ($originalServices as $originalService) {
+                if (!($hebergementUnifie->getServices()->contains($originalService)) || empty($hebergementUnifie->getServices()) || empty($originalService->getService())) {
+                    /** @var ServiceHebergement $originalService */
+                    /** @var ServiceHebergementTarif $originalTarif */
+                    foreach ($originalTarifs as $originalTarif) {
+                        if ($originalTarif->getService() == $originalService) {
+//                            $originalTarifs->remove($originalTarif);
+                            $em->remove($originalTarif);
+                            $this->deleteTarifSites($originalTarif);
+                        }
+                    }
+                    $em->remove($originalService);
+                    $this->deleteServiceSites($originalService);
+                }
+            }
+            foreach ($originalTarifs as $originalTarif) {
+                $effacer = true;
+                foreach ($hebergementUnifie->getServices() as $serviceHebergement) {
+                    if ($serviceHebergement->getTarifs()->contains($originalTarif)) {
+                        $effacer = false;
+                    }
+                }
+                if ($effacer == true) {
+                    $em->remove($originalTarif);
+                    $this->deleteTarifSites($originalTarif);
+                }
+            }
+            foreach ($hebergementUnifie->getServices() as $key => $serviceHebergement) {
+                if (empty($request->request->get('hebergement_unifie')['services'][$key]['checkbox'])) {
+//                    foreach ($serviceHebergement->getTarifs() as $serviceHebergementTarif) {
+////                        dump($serviceHebergementTarif);
+//                        $serviceHebergement->removeTarif($serviceHebergementTarif);
+//                        $em->remove($serviceHebergementTarif);
+//                    }
+//                    $serviceHebergement->setHebergementUnifie(null);
+                    $hebergementUnifie->removeService($serviceHebergement);
+                    $em->remove($serviceHebergement);
+                    $this->deleteServiceSites($serviceHebergement);
+                } else {
+                    $serviceHebergement->setHebergementUnifie($hebergementUnifie);
+                    /** @var ServiceHebergementTarif $serviceHebergementTarif */
+                    foreach ($serviceHebergement->getTarifs() as $serviceHebergementTarif) {
+                        $serviceHebergementTarif->setService($serviceHebergement);
+                    }
+                }
+            }
+//            die;
 
             /** @var Hebergement $hebergement */
             foreach ($hebergementUnifie->getHebergements() as $keyHebergement => $hebergement) {
@@ -813,6 +1002,46 @@ class HebergementUnifieController extends Controller
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    private function deleteTarifSites(ServiceHebergementTarif $tarif)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $tarifSite = $emSite->find(ServiceHebergementTarif::class,
+                $tarif->getId());
+            if (!empty($tarifSite)) {
+                $tarifSite->setService(null);
+                $emSite->remove($tarifSite);
+//                $listeServiceSite->setFournisseur(null);
+//                $emSite->remove($listeServiceSite);
+            }
+
+        }
+    }
+
+    private function deleteServiceSites(ServiceHebergement $service)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            if (!empty($service->getId())) {
+                $serviceSite = $emSite->find(ServiceHebergement::class,
+                    $service->getId());
+                if (!empty($serviceSite)) {
+                    $serviceSite->setHebergementUnifie(null);
+                    $emSite->remove($serviceSite);
+//                $listeServiceSite->setFournisseur(null);
+//                $emSite->remove($listeServiceSite);
+                }
+            }
+
+        }
     }
 
     /**

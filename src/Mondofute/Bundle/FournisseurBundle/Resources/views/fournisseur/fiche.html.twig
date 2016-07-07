@@ -13,189 +13,230 @@
             {% set countInterlocuteur = 0 %}
 
             {{ form_start(form) }}
-            {{ form_row(form.enseigne) }}
-            {{ form_row(form.raisonSociale) }}
-            {#{{ form_row(form.type) }}#}
-            {{ form_row(form.typeFournisseurs) }}
-            {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
-            {{ form_row(form.fournisseurParent) }}
-            {{ form_row(form.contient) }}
-            {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
-            {#{{ form_label(form.moyenComs[0]) }}#}
-            {#{{ dump(form.moyenComs[0]) }}#}
-            {{ form_row(form.moyenComs[0].code_postal) }}
-            {{ form_row(form.moyenComs[0].adresse1) }}
-            {{ form_row(form.moyenComs[0].adresse2) }}
-            {{ form_row(form.moyenComs[0].adresse3) }}
-            {{ form_row(form.moyenComs[0].ville) }}
-            {{ form_row(form.moyenComs[0].pays) }}
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
+                <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="fiche" class="tab-pane fade in active">
+                    {{ form_row(form.enseigne) }}
+                    {{ form_row(form.raisonSociale) }}
+                    {#{{ form_row(form.type) }}#}
+                    {{ form_row(form.typeFournisseurs) }}
+                    {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
+                    {{ form_row(form.fournisseurParent) }}
+                    {{ form_row(form.contient) }}
+                    {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
+                    {#{{ form_label(form.moyenComs[0]) }}#}
+                    {#{{ dump(form.moyenComs[0]) }}#}
+                    {{ form_row(form.moyenComs[0].code_postal) }}
+                    {{ form_row(form.moyenComs[0].adresse1) }}
+                    {{ form_row(form.moyenComs[0].adresse2) }}
+                    {{ form_row(form.moyenComs[0].adresse3) }}
+                    {{ form_row(form.moyenComs[0].ville) }}
+                    {{ form_row(form.moyenComs[0].pays) }}
 
-            {#{{ form_row(form.remiseClefs) }}#}
-            <div class="form-group ">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-sm-11"
-                                 onclick="var $remiseClefs = $('#remiseClefs');($remiseClefs.is(':visible'))?$remiseClefs.hide():$remiseClefs.show()">
-                                <h3 class="panel-title">{{ form.remiseClefs.vars['label'] | trans | capitalize }}</h3>
+                    {#{{ form_row(form.remiseClefs) }}#}
+                    <div class="form-group ">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-11"
+                                         onclick="var $remiseClefs = $('#remiseClefs');($remiseClefs.is(':visible'))?$remiseClefs.hide():$remiseClefs.show()">
+                                        <h3 class="panel-title">{{ form.remiseClefs.vars['label'] | trans | capitalize }}</h3>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-default btn-xs" type="button"
+                                                onclick="afficherModaleAjouterRemiseClef()">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-1">
-                                <button class="btn btn-default btn-xs" type="button"
-                                        onclick="afficherModaleAjouterRemiseClef()">
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
-                    <div class="panel-body" id="remiseClefs" data-nb-remise-clef="{{ form.remiseClefs|length }}"
-                         data-prototype-traduction="
+                            {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
+                            <div class="panel-body" id="remiseClefs" data-nb-remise-clef="{{ form.remiseClefs|length }}"
+                                 data-prototype-traduction="
                          {% filter escape %}
         {% include '@MondofuteRemiseClef/remiseclef/prototype_traduction.html.twig' with { 'form': form.remiseClefs.vars['prototype'].traductions.vars['prototype'], 'idRemiseClef': '__idRemiseClef__', 'active':'__active__', 'indexLangue' : '__indexLangue__'} %}
     {% endfilter %}
                          "
-                         data-prototype="
+                                 data-prototype="
                     {% filter escape %}
         {% include '@MondofuteRemiseClef/remiseclef/prototype.html.twig' with { 'form': form.remiseClefs.vars['prototype'] } %}
     {% endfilter %}
                     ">
-                        {% for remiseClef in form.remiseClefs %}
-                            <div class="row" id="contenuRemiseClef_{{ remiseClef.vars.name }}">
-                                <div class="col-sm-12">
-                                    <div class="col-sm-10"
-                                         id="remiseClef_{{ remiseClef.vars.name }}_libelle">{{ remiseClef.vars.value.libelle }}</div>
-                                    <div class="col-sm-2">
-                                        <button class="btn btn-default" type="button"
-                                                onclick="afficherModaleModifierRemiseClef({{ remiseClef.vars.name }});">
-                                            <span class="glyphicon glyphicon-edit"></span>
-                                        </button>
-                                        <button class="btn btn-default" type="button"
-                                                onclick="supprimerRemiseClef({{ remiseClef.vars.name }});">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
+                                {% for remiseClef in form.remiseClefs %}
+                                    <div class="row" id="contenuRemiseClef_{{ remiseClef.vars.name }}">
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-10"
+                                                 id="remiseClef_{{ remiseClef.vars.name }}_libelle">{{ remiseClef.vars.value.libelle }}</div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-default" type="button"
+                                                        onclick="afficherModaleModifierRemiseClef({{ remiseClef.vars.name }});">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                </button>
+                                                <button class="btn btn-default" type="button"
+                                                        onclick="supprimerRemiseClef({{ remiseClef.vars.name }});">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="formRemiseClef_{{ remiseClef.vars.name }}" style="display:none;">
+                                            {% include '@MondofuteRemiseClef/remiseclef/prototype.html.twig' with { 'form': remiseClef } %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="formRemiseClef_{{ remiseClef.vars.name }}" style="display:none;">
-                                    {% include '@MondofuteRemiseClef/remiseclef/prototype.html.twig' with { 'form': remiseClef } %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="panel  panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-sm-11"
-                                 onclick="var $receptions = $('#receptions');($receptions.is(':visible'))?$receptions.hide():$receptions.show()">
-                                {#{{ form_label(form.receptions) }}#}
-                                <h3 class="panel-title">{{ form.receptions.vars['label'] | trans | capitalize }}</h3>
-                            </div>
-                            <div class="col-sm-1">
-                                <button class="btn btn-default btn-xs" type="button"
-                                        onclick="afficherModaleReception('add')">
-                                    <span class="glyphicon glyphicon-plus"></span>
-                                </button>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                    {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
-                    {#maRecetpyioType = form.reception.vars[#}
-                    <div class="panel-body" id="receptions" data-nb-receptions="{{ form.receptions|length }}"
-                         data-prototype="
+                    <div class="form-group ">
+                        <div class="panel  panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-11"
+                                         onclick="var $receptions = $('#receptions');($receptions.is(':visible'))?$receptions.hide():$receptions.show()">
+                                        {#{{ form_label(form.receptions) }}#}
+                                        <h3 class="panel-title">{{ form.receptions.vars['label'] | trans | capitalize }}</h3>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <button class="btn btn-default btn-xs" type="button"
+                                                onclick="afficherModaleReception('add')">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
+                            {#maRecetpyioType = form.reception.vars[#}
+                            <div class="panel-body" id="receptions" data-nb-receptions="{{ form.receptions|length }}"
+                                 data-prototype="
                     {% filter escape %}
         {% include '@MondofuteFournisseur/fournisseur/prototype-reception.html.twig' with { 'form': form.receptions.vars['prototype'] } %}
     {% endfilter %}
                     "
-                    >
-                        {% for reception in form.receptions %}
-                            <div class="row" id="contenuReception_{{ reception.vars.name }}">
-                                <div class="col-sm-12">
-                                    {#création de la ligne d'affichage (jour tranche1 et tranche 2#}
-                                    {% set libelleReception = ('de'|trans)~' '~reception.tranche1.debut.vars.data|date('H')~('h'|trans)~reception.tranche1.debut.vars.data|date('i')~' '~('à'|trans)~' '~ reception.tranche1.fin.vars.data|date('H')~('h'|trans)~reception.tranche1.fin.vars.data|date('i') %}
-                                    {% if reception.tranche2.debut.hour.vars.value != 0 or reception.tranche2.debut.minute.vars.value != 0 or reception.tranche2.fin.hour.vars.value != 0 or reception.tranche2.fin.minute.vars.value != 0 %}
-                                        {% set libelleReception = libelleReception~' '~('et.de'|trans)~' '~reception.tranche2.debut.vars.data|date('H')~('h'|trans)~reception.tranche2.debut.vars.data|date('i')~' '~('à'|trans)~' '~ reception.tranche2.fin.vars.data|date('H')~('h'|trans)~reception.tranche2.fin.vars.data|date('i') %}
-                                    {% endif %}
-                                    <div class="col-sm-10"
-                                         id="reception_{{ reception.vars.name }}_libelle">{{ ('jour.'~reception.jour.vars.value~'.libelle') | trans }} {{ libelleReception }}</div>
-                                    <div class="col-sm-2">
-                                        <button class="btn btn-default" type="button"
-                                                onclick="afficherModaleReception('edit',{{ reception.vars.name }});">
-                                            <span class="glyphicon glyphicon-edit"></span>
-                                        </button>
-                                        <button class="btn btn-default" type="button"
-                                                onclick="supprimerReception({{ reception.vars.name }});">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
+                            >
+                                {% for reception in form.receptions %}
+                                    <div class="row" id="contenuReception_{{ reception.vars.name }}">
+                                        <div class="col-sm-12">
+                                            {#création de la ligne d'affichage (jour tranche1 et tranche 2#}
+                                            {% set libelleReception = ('de'|trans)~' '~reception.tranche1.debut.vars.data|date('H')~('h'|trans)~reception.tranche1.debut.vars.data|date('i')~' '~('à'|trans)~' '~ reception.tranche1.fin.vars.data|date('H')~('h'|trans)~reception.tranche1.fin.vars.data|date('i') %}
+                                            {% if reception.tranche2.debut.hour.vars.value != 0 or reception.tranche2.debut.minute.vars.value != 0 or reception.tranche2.fin.hour.vars.value != 0 or reception.tranche2.fin.minute.vars.value != 0 %}
+                                                {% set libelleReception = libelleReception~' '~('et.de'|trans)~' '~reception.tranche2.debut.vars.data|date('H')~('h'|trans)~reception.tranche2.debut.vars.data|date('i')~' '~('à'|trans)~' '~ reception.tranche2.fin.vars.data|date('H')~('h'|trans)~reception.tranche2.fin.vars.data|date('i') %}
+                                            {% endif %}
+                                            <div class="col-sm-10"
+                                                 id="reception_{{ reception.vars.name }}_libelle">{{ ('jour.'~reception.jour.vars.value~'.libelle') | trans }} {{ libelleReception }}</div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-default" type="button"
+                                                        onclick="afficherModaleReception('edit',{{ reception.vars.name }});">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                </button>
+                                                <button class="btn btn-default" type="button"
+                                                        onclick="supprimerReception({{ reception.vars.name }});">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="formReception_{{ reception.vars.name }}" style="display: none;">
+                                            {% include '@MondofuteFournisseur/fournisseur/prototype-reception.html.twig' with { 'form': reception } %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div id="formReception_{{ reception.vars.name }}" style="display: none;">
-                                    {% include '@MondofuteFournisseur/fournisseur/prototype-reception.html.twig' with { 'form': reception } %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="interlocuteur_panels">
+                        {% for serviceInterlocuteur in serviceInterlocuteurs %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        {% for traduction in  serviceInterlocuteur.traductions %}
+                                            {% if traduction.langue.code == app.request.locale %}
+                                                {{ traduction.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </h3></div>
+                                <div class="panel-body">
+                                    <table class="table table-striped" id="service_{{ serviceInterlocuteur.id }}"
+                                           data-service="{{ serviceInterlocuteur.id }}">
+                                        <tr>
+                                            <th>Prénom / Nom</th>
+                                            <th>Fonction</th>
+                                            <th style="width: 225px;">Action</th>
+                                        </tr>
+
+                                        {% for  key, interlocuteur in fournisseur.interlocuteurs %}
+                                            {% if interlocuteur.interlocuteur.service.id ==  serviceInterlocuteur.id %}
+                                                <tr id="row_interlocuteur_{{ key }}">
+                                                    <td>{{ interlocuteur.interlocuteur.prenom }} {{ interlocuteur.interlocuteur.nom }}</td>
+                                                    <td>
+                                                        {% for traduction in  interlocuteur.interlocuteur.fonction.traductions %}
+                                                            {% if traduction.langue.code == app.request.locale %}
+                                                                {{ traduction.libelle }}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td>
+                                                        <button onclick="afficherModalModificationInterlocuteur( {{ key }} )"
+                                                                type='button' class='btn btn-default'><span
+                                                                    class='glyphicon glyphicon-edit'
+                                                                    aria-hidden='true'></span>
+                                                        </button>
+                                                        <button onclick="supprimerInterlocuteur( {{ key }} )"
+                                                                type='button' class='btn btn-default'><span
+                                                                    class='glyphicon glyphicon-trash'
+                                                                    aria-hidden='true'></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% set countInterlocuteur = countInterlocuteur + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </table>
+                                    <button type="button" class="btn btn-default"
+                                            data-service-libelle="{% for traduction in  serviceInterlocuteur.traductions %}{% if traduction.langue.code == app.request.locale %}{{ traduction.libelle }}{% endif %}{% endfor %}"
+                                            data-service-id="{{ serviceInterlocuteur.id }}"
+                                            onclick="afficherModalInterlocuteur(this);"
+                                    >
+                                        Ajouter
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>
-            <div id="interlocuteur_panels">
-                {% for serviceInterlocuteur in serviceInterlocuteurs %}
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h3 class="panel-title">
-                                {% for traduction in  serviceInterlocuteur.traductions %}
-                                    {% if traduction.langue.code == app.request.locale %}
-                                        {{ traduction.libelle }}
-                                    {% endif %}
-                                {% endfor %}
-                            </h3></div>
-                        <div class="panel-body">
-                            <table class="table table-striped" id="service_{{ serviceInterlocuteur.id }}"
-                                   data-service="{{ serviceInterlocuteur.id }}">
-                                <tr>
-                                    <th>Prénom / Nom</th>
-                                    <th>Fonction</th>
-                                    <th style="width: 225px;">Action</th>
-                                </tr>
+                {% set prototypeListeService = form.listeServices.vars.prototype %}
+                <div id="service" class="tab-pane fade in">
+                    <div id="liste-service" data-index="{{ form.listeServices | length }}">
+                        {#{% include '@MondofuteService/listeservice/prototype-ligne-liste-service.html.twig' with {'form' : prototypeListeService} %}#}
+                        {% for listeService in form.listeServices %}
+                            {#<div id="form-liste-service" style="display: none;">#}
+                            <div class="row panel" id="liste-service-{{ listeService.vars.name }}">
+                                <div class="col-sm-10"
+                                     id="titre-liste-service-{{ listeService.vars.name }}">{{ listeService.libelle.vars.value }}</div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-default afficher-modal-modif-liste-service"
+                                            data-index="{{ listeService.vars.name }}"><span
+                                                class="glyphicon glyphicon-edit"></span></button>
+                                    <button type="button" class="btn btn-default suppr-liste-service"
+                                            data-index="{{ listeService.vars.name }}"><span
+                                                class=" glyphicon glyphicon-trash
+                                    "></span></button>
+                                </div>
+                                <div style="display: none;"
+                                     id="ctn-form-{{ listeService.vars.name }}">
+                                    {% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form':listeService} %}
+                                </div>
+                            </div>
 
-                                {% for  key, interlocuteur in fournisseur.interlocuteurs %}
-                                    {% if interlocuteur.interlocuteur.service.id ==  serviceInterlocuteur.id %}
-                                        <tr id="row_interlocuteur_{{ key }}">
-                                            <td>{{ interlocuteur.interlocuteur.prenom }} {{ interlocuteur.interlocuteur.nom }}</td>
-                                            <td>
-                                                {% for traduction in  interlocuteur.interlocuteur.fonction.traductions %}
-                                                    {% if traduction.langue.code == app.request.locale %}
-                                                        {{ traduction.libelle }}
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </td>
-                                            <td>
-                                                <button onclick="afficherModalModificationInterlocuteur( {{ key }} )"
-                                                        type='button' class='btn btn-default'><span
-                                                            class='glyphicon glyphicon-edit' aria-hidden='true'></span>
-                                                </button>
-                                                <button onclick="supprimerInterlocuteur( {{ key }} )"
-                                                        type='button' class='btn btn-default'><span
-                                                            class='glyphicon glyphicon-trash' aria-hidden='true'></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        {% set countInterlocuteur = countInterlocuteur + 1 %}
-                                    {% endif %}
-                                {% endfor %}
-                            </table>
-                            <button type="button" class="btn btn-default"
-                                    data-service-libelle="{% for traduction in  serviceInterlocuteur.traductions %}{% if traduction.langue.code == app.request.locale %}{{ traduction.libelle }}{% endif %}{% endfor %}"
-                                    data-service-id="{{ serviceInterlocuteur.id }}"
-                                    onclick="afficherModalInterlocuteur(this);"
-                            >
-                                Ajouter
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            </button>
-                        </div>
+
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                    <div class="form-group">
+                        <button class="btn btn-default afficher-modal-ajout-liste-service" type="button"><span
+                                    class="glyphicon glyphicon-plus"></span></button>
+                    </div>
+                </div>
             </div>
-
             {{ form_row(form.submit) }}
             {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur']) }}#}
 
@@ -254,7 +295,71 @@
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
-
+            <div class="modal fade" id="modalListeService" tabindex="-1" role="dialog"
+                 aria-labelledby="modalListeService">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="{{ 'fermer' | trans | capitalize }}"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" id="modal-prototype-liste-service"
+                                 data-prototype-service="
+                                 "
+                                 data-prototype="
+                            {% filter escape %}
+                                {% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}
+                                {% endfilter %}
+                            ">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">{{ 'fermer' | trans | capitalize }}</button>
+                            <button type="button" class="btn btn-default modifier-liste-service"
+                            >{{ 'modifier' | trans | capitalize }}</button>
+                            <button type="button" class="btn btn-default ajouter-liste-service"
+                            >{{ 'ajouter' | trans | capitalize }}</button>
+                            <div id="index-liste-service" data-index=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modalTarifsService" tabindex="-1" role="dialog"
+                 aria-labelledby="modalTarifService">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="{{ 'fermer' | trans | capitalize }}"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">{{ 'gestion.tarifs.service' | trans | capitalize }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            {#<div class="row" id="modal-prototype-liste-service"#}
+                            {#data-prototype-service="#}
+                            {#"#}
+                            {#data-prototype="#}
+                            {#{% filter escape %}#}
+                            {#{% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}#}
+                            {#{% endfilter %}#}
+                            {#">#}
+                            {#</div>#}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">{{ 'fermer' | trans | capitalize }}</button>
+                            <button type="button" class="btn btn-default valider-tarifs-service"
+                                    id="valider-tarifs-service" data-index-liste-service="" data-index-service=""
+                            >{{ 'valider' | trans | capitalize }}</button>
+                            {#<div id="index-tarif-service" data-index=""></div>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal fade" id="interlocuteurModal" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel">
                 <div class="modal-dialog modal-lg">
@@ -371,6 +476,163 @@
         {% for i in 0..6 %}
         _libelleJour[{{ i }}] = '{{ ('jour.'~i~'.libelle') | trans }}';
         {% endfor %}
+        $(document).on('click', '.addLigneService', function () {
+            ajouterLigneService();
+        });
+        $(document).on('click', '.ajouter-liste-service', function () {
+            ajouterListeService();
+        });
+        $(document).on('click', '.modifier-liste-service', function () {
+            modifierListeService();
+        });
+
+        $('.afficher-modal-ajout-liste-service').on('click', function (event) {
+            afficherModalListeService('add', null);
+        });
+        $(document).on('click', '.afficher-modal-modif-liste-service', function (event) {
+            afficherModalListeService('edit', parseInt($(this).attr('data-index')));
+        });
+        $(document).on('click', '.afficher-modal-tarif-service', function (event) {
+            afficherModalTarifsService(parseInt($(this).attr('data-index-liste-services')), parseInt($(this).attr('data-index-service')));
+        });
+        $(document).on('click', '.ajouter-ligne-tarif-service', function () {
+            ajouterLigneTarifService($(this).attr('data-prototype'), $(this).attr('data-index-liste-services'), $(this).attr('data-index-service'));
+        });
+        $(document).on('click', '.suppr-liste-service', function () {
+            supprimerListeService(parseInt($(this).attr('data-index')));
+        });
+        $(document).on('click', '.suppr-service', function () {
+            supprimerService(parseInt($(this).attr('data-index-liste-services')), parseInt($(this).attr('data-index-service')));
+        });
+        $(document).on('click', '.suppr-tarif-service', function () {
+            supprimerTarifService(parseInt($(this).attr('data-index-liste-service')), parseInt($(this).attr('data-index-service')), parseInt($(this).attr('data-index-tarif-service')));
+        });
+        $(document).on('click', '.valider-tarifs-service', function () {
+            validerTarifsService(parseInt($(this).attr('data-index-liste-service')), parseInt($(this).attr('data-index-service')));
+        });
+        $('#modalListeService').on('hidden.bs.modal', function () {
+            $('#modal-prototype-liste-service').html('');
+        });
+        $('#modalTarifsService').on('hidden.bs.modal', function () {
+            $(this).find('.modal-body').html('');
+        });
+        function supprimerListeService(index) {
+            $('#liste-service-' + index).remove();
+        }
+        function supprimerService(indexListeService, indexService) {
+            $modal = $('#modalListeService');
+            $modal.find('#service-' + indexListeService + '-' + indexService).remove();
+        }
+        function supprimerTarifService(indexListeService, indexService, indexTarifService) {
+            $modal = $('#modalTarifsService');
+            $modal.find('#tarif-' + indexListeService + '-' + indexService + '-' + indexTarifService).remove();
+        }
+        function ajouterLigneService() {
+            $modalListeService = $('#modalListeService');
+            $modalLigneService = $modalListeService.find('#modal-ligne-service');
+            var indexService = parseInt($modalLigneService.attr('data-index'));
+            var prototype = $modalLigneService.attr('data-prototype');
+            prototype = prototype.replace(/__service_name__/g, indexService);
+            $modalListeService.find('#modal-table-services tbody.table-liste-services').append($(prototype));
+            $modalLigneService.attr('data-index', indexService + 1);
+        }
+        function validerTarifsService(indexListeService, indexService) {
+            $modalTarifsService = $('#modalTarifsService');
+            $modalListeService = $('#modalListeService');
+            $form = $modalTarifsService.find('#form-tarifs-service-' + indexListeService + '-' + indexService);
+            $modalListeService.find('#ctn-tarifs-service-' + indexListeService + '-' + indexService).html('');
+            $modalListeService.find('#ctn-tarifs-service-' + indexListeService + '-' + indexService).append($form);
+            $modalTarifsService.modal('hide');
+        }
+        //        Fonction liées à la liste de service
+
+        function ajouterLigneTarifService(prototype, indexListeService, indexService) {
+            var $modal = $('#modalTarifsService');
+            var $form = $modal.find('#form-tarifs-service-' + indexListeService + '-' + indexService);
+            var $tarifs = $form.find('#tarifs-' + indexListeService + '-' + indexService);
+            prototype = prototype.replace(/__name__/g, $form.attr('data-index'));
+            $tarifs.append($(prototype));
+            $form.attr('data-index', parseInt($form.attr('data-index')) + 1);
+        }
+        function afficherModalTarifsService(indexListeService, indexService) {
+            var $modal = $('#modalTarifsService');
+            var $form = $('#form-tarifs-service-' + indexListeService + '-' + indexService);
+            var $valider = $('#valider-tarifs-service');
+            $valider.attr('data-index-liste-service', indexListeService);
+            $valider.attr('data-index-service', indexService);
+            $modal.find('.modal-body').append(cloneFormulaire($form));
+            $modal.modal('show');
+        }
+        function afficherModalListeService(action, index) {
+            var $modal = $('#modalListeService');
+            var $btnsModifier = $modal.find('.modifier-liste-service');
+            var $btnsAjouter = $modal.find('.ajouter-liste-service');
+            switch (action) {
+                case 'add':
+                    $modal.find('.modal-title').each(function () {
+                        $(this).html('{{ 'ajout.liste.service' | trans | capitalize }}');
+                    });
+                    initModalListeService();
+                    index = parseInt($('#liste-service').attr('data-index'));
+                    $('#index-liste-service').attr('data-index', index);
+                    $btnsModifier.each(function () {
+                        $(this).hide();
+                    });
+                    $btnsAjouter.each(function () {
+                        $(this).show();
+                    });
+                    $modal.modal('show');
+                    break;
+                case 'edit':
+                    $modal.find('.modal-title').each(function () {
+                        $(this).html('{{ 'modif.liste.service' | trans | capitalize }}');
+                    });
+                    var $form = $('#form-liste-service_' + index);
+                    $('#modal-prototype-liste-service').append(cloneFormulaire($form));
+                    $btnsModifier.each(function () {
+                        $(this).show();
+                    });
+                    $btnsAjouter.each(function () {
+                        $(this).hide();
+                    });
+                    $('#index-liste-service').attr('data-index', index);
+                    $modal.modal('show');
+                    break;
+                default:
+                    break;
+            }
+        }
+        function initModalListeService() {
+            var $modalPrototypeListeService = $('#modal-prototype-liste-service');
+            $modalPrototypeListeService.html('');
+            var prototype = $modalPrototypeListeService.attr('data-prototype');
+            prototype = prototype.replace(/__liste_service_name__/g, parseInt($('#liste-service').attr('data-index')));
+            $modalPrototypeListeService.append($(prototype));
+        }
+        function ajouterListeService() {
+            $listeService = $('#liste-service');
+            indexListeService = parseInt($listeService.attr('data-index'));
+            $modalListeService = $('#modalListeService');
+            $form = $modalListeService.find('#form-liste-service_' + indexListeService);
+            $ligne = $('<div class="row panel" id="liste-service-' + indexListeService + '"><div class="col-sm-10" id="titre-liste-service-' + indexListeService + '">' + $('#fournisseur_listeServices_' + indexListeService + '_libelle').val() + '</div><div class="col-sm-2"> <button type="button" class="btn btn-default afficher-modal-modif-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-edit"></span></button> <button type="button" class="btn btn-default suppr-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-trash"></span></button></div><div style="display: none;" id="ctn-form-' + indexListeService + '"></div></div>');
+            $ligne.find('#ctn-form-' + indexListeService).append($form);
+            $ligne.appendTo($listeService);
+            $listeService.attr('data-index', indexListeService + 1);
+            $modalListeService.modal('hide');
+        }
+        function modifierListeService() {
+            $listeService = $('#liste-service');
+            indexListeService = parseInt($('#index-liste-service').attr('data-index'));
+            $modalListeService = $('#modalListeService');
+            $form = $modalListeService.find('#form-liste-service_' + indexListeService);
+//            affichage du libelle dans l'onglet service
+            $listeService.find('#titre-liste-service-' + indexListeService).html($form.find('#fournisseur_listeServices_' + indexListeService + '_libelle').val());
+            var $listeService = $('#liste-service-' + indexListeService);
+            var $ctnForm = $listeService.find('#ctn-form-' + indexListeService);
+            $ctnForm.html('');
+            $ctnForm.append($form);
+            $modalListeService.modal('hide');
+        }
         //        Fonctions liées à la réceptions
         function supprimerReception(index) {
             $('#contenuReception_' + index).remove();
@@ -827,7 +1089,7 @@
                 precis: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword"]').val()
 //                plainPasswordFirst: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
 //                plainPasswordSecond: $divFournisseurInterlocuteur.find('[id$="_interlocuteur_user_plainPassword_second"]').val(),
             };
@@ -936,7 +1198,7 @@
                 precis: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_0_coordonnee_gps_precis"]').val(),
                 mobile: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_numero"]').val(),
                 smsing: $interlocuteurModal.find('.modal-body [id$="_interlocuteur_moyenComs_4_smsing"]').val(),
-                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val(),
+                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword"]').val()
 //                plainPasswordFirst: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_first"]').val(),
 //                plainPasswordSecond: $interlocuteurModal.find('[id$="_interlocuteur_user_plainPassword_second"]').val()
             };
@@ -1049,7 +1311,6 @@
                 return false;
             }
         }
-
 
     </script>
 {% endblock %}
