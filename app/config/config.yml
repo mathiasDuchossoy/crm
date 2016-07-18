@@ -318,10 +318,26 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        hebergement_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
 
     cdn:
         server:
+#            path: /uploads/media # http://media.sonata-project.org/
             path: /uploads/media # http://media.sonata-project.org/
+#            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
 
     filesystem:
         local:
