@@ -41,7 +41,7 @@ class HebergementVideoType extends AbstractType
                 $form
                     ->add('visuel', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.youtube',
-                        'context' => 'hebergement_visuel',
+                        'context' => 'hebergement_visuel_crm',
                         'required' => false,
                         'label' => 'video',
                     ))
@@ -60,7 +60,7 @@ class HebergementVideoType extends AbstractType
                 $form
                     ->add('visuel', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.youtube',
-                        'context' => 'hebergement_visuel',
+                        'context' => 'hebergement_visuel_crm',
                         'required' => true,
                         'label' => 'video',
                     ))
