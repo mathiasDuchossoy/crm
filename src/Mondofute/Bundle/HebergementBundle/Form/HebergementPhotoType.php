@@ -42,7 +42,7 @@ class HebergementPhotoType extends AbstractType
                 $form
                     ->add('visuel', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel',
+                        'context' => 'hebergement_visuel_crm',
                         'required' => false,
                         'label' => 'photo',
                     ))
@@ -62,7 +62,7 @@ class HebergementPhotoType extends AbstractType
                 $form
                     ->add('visuel', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel',
+                        'context' => 'hebergement_visuel_crm',
                         'required' => true,
                         'label' => 'photo',
                     ))

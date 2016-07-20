@@ -30,6 +30,7 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
 #            cascade: ['persist','remove']
             cascade: ['persist']
+#            orphanRemoval: true
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction
