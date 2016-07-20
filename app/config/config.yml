@@ -93,19 +93,26 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
-                    MondofuteHebergementBundle: ~
-                    MondofuteRemiseClefBundle: ~
-                    MondofuteTrancheHoraireBundle: ~
-                    MondofuteLogementBundle: ~
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -125,9 +132,11 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    MondofutePeriodeBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine
@@ -164,6 +173,8 @@ doctrine:
                     MondofuteRemiseClefBundle: ~
                     MondofuteTrancheHoraireBundle: ~
                     MondofuteLogementBundle: ~
+                    MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
                     NucleusContactBundle:
                         type: yml
                         dir: Resources/config/doctrine

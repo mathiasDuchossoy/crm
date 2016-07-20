@@ -7,8 +7,9 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
-use ReflectionClass;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
+use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
+use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -150,6 +151,15 @@ class FournisseurType extends AbstractType
                 'label' => 'receptions',
                 'translation_domain' => 'messages',
                 'mapped' => false,
+            ))
+            ->add('listeServices', CollectionType::class, array(
+                'entry_type' => ListeServiceType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'liste_service',
+                'translation_domain' => 'messages',
+                'prototype_name' => '__liste_service_name__',
             ));
     }
 

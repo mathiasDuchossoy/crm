@@ -19,4 +19,9 @@
             <a data-toggle="tab" href="#data_fournisseurs">Fournisseurs</a>
         </li>
     {% endif %}
+    {% if ongletServices is defined and ongletServices == 1 %}
+        <li id="onglet_data_services">
+            <a data-toggle="tab" href="#data_services">Services</a>
+        </li>
+    {% endif %}
 </ul>

@@ -24,3 +24,10 @@ liste.logements: 'liste des logements'
 logements: logements
 rechercher.fournisseur: 'rechercher un fournisseur'
 dissocier.fournisseur: 'dissocier le fournisseur'
+souscategorie: 'sous catégorie'
+categorie: 'catégorie'
+tarifs: 'tarifs'
+selectionner: 'sélectionner'
+tarif: 'tarif'
+periode: 'période'
+

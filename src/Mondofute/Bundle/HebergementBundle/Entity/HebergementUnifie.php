@@ -21,6 +21,14 @@ class HebergementUnifie
      * @var \Doctrine\Common\Collections\Collection
      */
     private $fournisseurs;
+    /**
+     * @var \Mondofute\Bundle\ServiceBundle\Entity\ListeService
+     */
+    private $listeService;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $services;
 
     /**
      * Constructor
@@ -29,7 +37,7 @@ class HebergementUnifie
     {
         $this->hebergements = new ArrayCollection();
         $this->fournisseurs = new ArrayCollection();
-
+        $this->services = new ArrayCollection();
     }
 
     /**
@@ -122,5 +130,63 @@ class HebergementUnifie
     public function getFournisseurs()
     {
         return $this->fournisseurs;
+    }
+
+    /**
+     * Get listeService
+     *
+     * @return \Mondofute\Bundle\ServiceBundle\Entity\ListeService
+     */
+    public function getListeService()
+    {
+        return $this->listeService;
+    }
+
+    /**
+     * Set listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     *
+     * @return HebergementUnifie
+     */
+    public function setListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService = null)
+    {
+        $this->listeService = $listeService;
+
+        return $this;
+    }
+
+    /**
+     * Add service
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service
+     *
+     * @return HebergementUnifie
+     */
+    public function addService(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service)
+    {
+        $this->services[] = $service;
+
+        return $this;
+    }
+
+    /**
+     * Remove service
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service
+     */
+    public function removeService(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service)
+    {
+        $this->services->removeElement($service);
+    }
+
+    /**
+     * Get services
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getServices()
+    {
+        return $this->services;
     }
 }

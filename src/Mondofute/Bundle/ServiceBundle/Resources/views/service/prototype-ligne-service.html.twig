@@ -1,0 +1,44 @@
+<tr id="service-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}">
+    <td class="text-center">{{ form_widget(form.defaut,{'label':' '}) }}</td>
+    <td>{{ form_widget(form.type) }}</td>
+
+    <td>{{ form_widget(form.categorieService) }}</td>
+    <td>{{ form_widget(form.sousCategorieService) }}</td>
+    <td>
+        <button type="button" class="btn btn-default afficher-modal-tarif-service"
+                data-index-service="{{ form.vars.name }}" data-index-liste-services="{{ form.parent.parent.vars.name }}"
+        ><span class="glyphicon glyphicon-edit"></span></button>
+        <div style="display: none;" id="ctn-tarifs-service-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}">
+            <div id="form-tarifs-service-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}"
+                 data-index="{{ form.tarifs | length }}">
+                <table class="table table-responsive table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ 'tarif' | trans | capitalize }}</th>
+                        {#<th>{{ 'unite' | trans | capitalize }}</th>#}
+                        <th>{{ 'periode' | trans | capitalize }}</th>
+                        <th>{{ 'supprimer' | trans | capitalize }}</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tarifs-{{ form.parent.parent.vars.name }}-{{ form.vars.name }}">
+                    {% for tarif in form.tarifs %}
+                        {% include '@MondofuteService/tarifservice/prototype-tarif-service.html.twig' with {'form': tarif} %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button data-prototype="
+    {% filter escape %}
+    {% include '@MondofuteService/tarifservice/prototype-tarif-service.html.twig' with {'form': form.tarifs.vars.prototype} %}
+    {% endfilter %}
+    " data-index-service="{{ form.vars.name }}" data-index-liste-services="{{ form.parent.parent.vars.name }}"
+                        type="button" class="btn btn-default ajouter-ligne-tarif-service"><span
+                            class="glyphicon glyphicon-plus"></span></button>
+            </div>
+        </div>
+    </td>
+    <td>
+        <button type="button" class="btn btn-default suppr-service" data-index-service="{{ form.vars.name }}"
+                data-index-liste-services="{{ form.parent.parent.vars.name }}"><span
+                    class="glyphicon glyphicon-trash"></span></button>
+    </td>
+</tr>

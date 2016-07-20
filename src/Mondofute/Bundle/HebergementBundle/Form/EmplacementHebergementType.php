@@ -25,7 +25,8 @@ class EmplacementHebergementType extends AbstractType
             ->add('typeEmplacement', EntityType::class,
                 array(
                     'class' => Emplacement::class,
-                    'property' => 'id',
+//                    'property' => 'id',
+                    'choice_label' => 'id',
                     'mapped' => false
                 ));
     }

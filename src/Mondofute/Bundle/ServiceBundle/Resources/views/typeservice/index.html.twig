@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'type_service.liste' | trans | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'type_service.liste' | trans | capitalize }}</h1>
+
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'libelle' | trans | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for typeService in typeServices %}
+            <tr>
+                <td>
+                    <a href="{{ path('type_service_show', { 'id': typeService.id }) }}">{{ typeService.id }}</a>
+                </td>
+                <td>
+                    {% for traduction in typeService.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('type_service_show', { 'id': typeService.id }) }}">{{ 'visualiser' | trans | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('type_service_edit', { 'id': typeService.id }) }}">{{ 'modifier' | trans | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('type_service_new') }}">{{ 'ajouter' | trans | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

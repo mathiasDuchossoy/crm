@@ -4,10 +4,11 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
-use Nucleus\ContactBundle\Entity\Moral;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Nucleus\ContactBundle\Entity\Moral;
 
 class FournisseurContient
 {
@@ -85,6 +86,45 @@ class Fournisseur extends Moral
     private $types;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $listeServices;
+
+//    /**
+//     * Get id
+//     *
+//     * @return integer
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
+
+//    /**
+//     * Get enseigne
+//     *
+//     * @return string
+//     */
+//    public function getEnseigne()
+//    {
+//        return $this->enseigne;
+//    }
+//
+//    /**
+//     * Set enseigne
+//     *
+//     * @param string $enseigne
+//     *
+//     * @return Fournisseur
+//     */
+//    public function setEnseigne($enseigne)
+//    {
+//        $this->enseigne = $enseigne;
+//
+//        return $this;
+//    }
+
+    /**
      * Fournisseur constructor.
      */
     public function __construct()
@@ -93,6 +133,7 @@ class Fournisseur extends Moral
         $this->interlocuteurs = new ArrayCollection();
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
+        $this->listeServices = new ArrayCollection();
     }
 
     /**
@@ -116,8 +157,7 @@ class Fournisseur extends Moral
      */
     public function removeInterlocuteur(
         FournisseurInterlocuteur $interlocuteur
-    )
-    {
+    ) {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
 
@@ -147,6 +187,7 @@ class Fournisseur extends Moral
 
     function __clone()
     {
+//        $this->getListeServices()->clear();
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
         $interlocuteurs = $this->getInterlocuteurs();
@@ -187,7 +228,16 @@ class Fournisseur extends Moral
                 $cloneType->setFournisseur($this);
             }
         }
-
+        $listeServices = $this->getListeServices();
+        $this->listeServices = new ArrayCollection();
+        if (count($listeServices) > 0) {
+            /** @var ListeService $listeService */
+            foreach ($listeServices as $listeService) {
+                $cloneListeService = clone $listeService;
+                $this->listeServices->add($cloneListeService);
+                $cloneListeService->setFournisseur($this);
+            }
+        }
         return $this;
     }
 
@@ -229,6 +279,16 @@ class Fournisseur extends Moral
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * Get listeServices
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getListeServices()
+    {
+        return $this->listeServices;
     }
 
     public function triRemiseClefs()
@@ -447,6 +507,30 @@ class Fournisseur extends Moral
     }
 
     /**
+     * Add listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     *
+     * @return Fournisseur
+     */
+    public function addListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    {
+        $this->listeServices[] = $listeService;
+
+        return $this;
+    }
+
+    /**
+     * Remove listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     */
+    public function removeListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    {
+        $this->listeServices->removeElement($listeService);
+    }
+
+    /**
      * Add type
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
@@ -469,4 +553,5 @@ class Fournisseur extends Moral
     {
         $this->types->removeElement($type);
     }
+
 }

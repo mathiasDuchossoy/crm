@@ -43,6 +43,18 @@ mettre.a.jour: 'mettre à jour'
 standard: standard
 supprimer: delete
 fournisseur:
-    edition: "édition d'un fournisseur"
-    creation: "création d'un fournisseur"
-
+    edition: 'édition d''un fournisseur'
+    creation: 'création d''un fournisseur'
+fiche: fiche
+service: service
+categorieservice1: 'service et drap inclus'
+categorieservice2: 'service et drap inclus 2'
+categorieservice3: 'service et drap inclus 3'
+souscategorieservice1: 'sous service et drap inclus'
+souscategorieservice2: 'sous service et drap inclus 2'
+souscategorieservice3: 'sous service et drap inclus 3'
+fermer: 'fermer'
+gestion.tarifs.service: 'gestion des tarifs pour le service'
+valider: 'valider'
+ajout.liste.service: 'ajout d''une liste de service'
+modif.liste.service: 'modification de la liste de service'

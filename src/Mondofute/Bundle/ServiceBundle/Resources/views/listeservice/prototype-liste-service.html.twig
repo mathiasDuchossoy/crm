@@ -1,0 +1,28 @@
+<div id="form-liste-service_{{ form.vars.name }}">
+    {{ form_row(form.libelle) }}
+    <table id="modal-table-services" class="table table-responsive table-striped">
+        <thead>
+        <tr>
+            <th>{{ 'defaut' | trans | capitalize }}</th>
+            <th>{{ 'type_service' | trans | capitalize }}</th>
+            <th>{{ 'categorie' | trans | capitalize }}</th>
+            <th>{{ 'sous_categorie' | trans | capitalize }}</th>
+            <th>{{ 'tarifs' | trans | capitalize }}</th>
+            <th>{{ 'supprimer' | trans | capitalize }}</th>
+        </tr>
+        </thead>
+        <tbody class="table-liste-services">
+        {% for service in form.services %}
+            {% include '@MondofuteService/service/prototype-ligne-service.html.twig' with {'form': service} %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <div id="modal-ligne-service" data-index="{{ form.services | length }}" data-prototype="
+{% filter escape %}
+    {% include '@MondofuteService/service/prototype-ligne-service.html.twig' with {'form': form.services.vars.prototype} %}
+    {% endfilter %}
+">
+    </div>
+    <button class="btn btn-default addLigneService" type="button"><span class="glyphicon glyphicon-plus"></span>
+    </button>
+</div>
