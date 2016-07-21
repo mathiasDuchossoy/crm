@@ -345,7 +345,6 @@ sonata_media:
 
     cdn:
         server:
-#            path: /uploads/media # http://media.sonata-project.org/
             path: /uploads/media # http://media.sonata-project.org/
 #            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
 
@@ -353,6 +352,10 @@ sonata_media:
         local:
             directory:  "%kernel.root_dir%/../web/uploads/media"
             create:     false
+
+#    buzz:
+#        connector:  sonata.media.buzz.connector.curl
+#        connector:  sonata.media.buzz.connector.file_get_content
 jms_job_queue:
     queue_options_defaults:
         max_concurrent_jobs: 3  # par defaut le jobs queue peut lancer 3 jobs en meme temps
