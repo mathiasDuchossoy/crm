@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction;
@@ -14,6 +15,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\SecteurUnifie;
 use Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,35 +68,41 @@ class SecteurUnifieController extends Controller
             /** @var Secteur $secteur */
 
             // ***** Gestion des Medias *****
-            /** @var SecteurImage $image */
-
             foreach ($request->get('secteur_unifie')['secteurs'] as $key => $secteur) {
-                if ($secteurUnifie->getSecteurs()->get($key)->getSite()->getCrm() == 1) {
+                if (!empty($secteurUnifie->getSecteurs()->get($key)) && $secteurUnifie->getSecteurs()->get($key)->getSite()->getCrm() == 1) {
                     $secteurCrm = $secteurUnifie->getSecteurs()->get($key);
-                    foreach ($secteur['images'] as $keyImage => $image) {
-                        /** @var SecteurImage $imageCrm */
-                        $imageCrm = $secteurCrm->getImages()[$keyImage];
-                        $imageCrm->setActif(true);
-//                        $imageCrm->setSecteur($secteurCrm);
-                        foreach ($sites as $site) {
-                            if ($site->getCrm() == 0) {
-                                /** @var Secteur $secteurSite */
-                                $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
-                                    return $element->getSite() == $site;
-                                })->first();
-                                $secteurImage = new SecteurImage();
-//                                $secteurImage->setSecteur($secteurSite);
-                                $secteurImage->setImage($imageCrm->getImage());
-                                $secteurSite->addImage($secteurImage);
-                                foreach ($imageCrm->getTraductions() as $traduction) {
-                                    $traductionSite = new SecteurImageTraduction();
-                                    /** @var SecteurImageTraduction $traduction */
-                                    $traductionSite->setLibelle($traduction->getLibelle());
-                                    $traductionSite->setLangue($traduction->getLangue());
-                                    $secteurImage->addTraduction($traductionSite);
-                                }
-                                if (in_array($site->getId(), $image['sites'])) {
-                                    $secteurImage->setActif(true);
+                    if (!empty($secteur['images'])) {
+                        foreach ($secteur['images'] as $keyImage => $image) {
+                            /** @var SecteurImage $imageCrm */
+                            $imageCrm = $secteurCrm->getImages()[$keyImage];
+                            $imageCrm->setActif(true);
+                            $imageCrm->setSecteur($secteurCrm);
+                            foreach ($sites as $site) {
+                                if ($site->getCrm() == 0) {
+                                    /** @var Secteur $secteurSite */
+                                    $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
+                                        return $element->getSite() == $site;
+                                    })->first();
+                                    if (!empty($secteurSite)) {
+//                                      $typeImage = (new ReflectionClass($imageCrm))->getShortName();
+                                        $typeImage = (new ReflectionClass($imageCrm))->getName();
+
+                                        /** @var SecteurImage $secteurImage */
+                                        $secteurImage = new $typeImage();
+                                        $secteurImage->setSecteur($secteurSite);
+                                        $secteurImage->setImage($imageCrm->getImage());
+                                        $secteurSite->addImage($secteurImage);
+                                        foreach ($imageCrm->getTraductions() as $traduction) {
+                                            $traductionSite = new SecteurImageTraduction();
+                                            /** @var SecteurImageTraduction $traduction */
+                                            $traductionSite->setLibelle($traduction->getLibelle());
+                                            $traductionSite->setLangue($traduction->getLangue());
+                                            $secteurImage->addTraduction($traductionSite);
+                                        }
+                                        if (!empty($image['sites']) && in_array($site->getId(), $image['sites'])) {
+                                            $secteurImage->setActif(true);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -289,68 +297,114 @@ class SecteurUnifieController extends Controller
                     $secteurSite->addTraduction($secteurTraducSite);
                 }
 
-                // Gestion des images
-                $secteurImages = $secteur->getImages();
-                $secteurImageSites = $secteurSite->getImages();
-                /** @var SecteurImage $secteurImage */
-                /** @var SecteurImage $secteurImageSite */
-                if (!empty($secteurImageSites)) {
-                    foreach ($secteurImageSites as $secteurImageSite) {
-//                    $collectionMediaSites->add($secteurImageSite->getImage());
-//                        dump($secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
-//                            return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
-//                        })->first());
-                        if (
-                            false === $secteurImages->filter(function (SecteurImage $element) use ($secteurImageSite) {
-                                return $element->getImage()->getName() == $secteurImageSite->getImage()->getName();
-                            })->first()
-                        ) {
-//                            dump($secteurImageSite);
+
+                // ********** GESTION DES MEDIAS **********
+
+                $secteurImages = $secteur->getImages(); // ce sont les hebegementImages ajouté
+
+                // si il y a des Medias pour l'secteur de référence
+                if (!empty($secteurImages) && !$secteurImages->isEmpty()) {
+                    // si il y a des medias pour l'hébergement présent sur le site
+                    // (on passera dans cette condition, seulement si nous sommes en edition)
+                    if (!empty($secteurSite->getImages()) && !$secteurSite->getImages()->isEmpty()) {
+                        // on ajoute les hébergementImages dans un tableau afin de travailler dessus
+                        $secteurImageSites = new ArrayCollection();
+                        foreach ($secteurSite->getImages() as $secteurimageSite) {
+                            $secteurImageSites->add($secteurimageSite);
+                        }
+                        // on parcourt les hébergmeentImages de la base
+                        /** @var SecteurImage $secteurImage */
+                        foreach ($secteurImages as $secteurImage) {
+                            // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
+                            // récupérer l'secteurImage original correspondant sur le crm
+                            /** @var ArrayCollection $originalSecteurImages */
+                            $originalSecteurImage = $originalSecteurImages->filter(function (SecteurImage $element) use ($secteurImage) {
+                                return $element->getImage() == $secteurImage->getImage();
+                            })->first();
+                            unset($secteurImageSite);
+                            if ($originalSecteurImage !== false) {
+                                $tab = new ArrayCollection();
+                                foreach ($originalSecteurImages as $item) {
+                                    if (!empty($item->getId())) {
+                                        $tab->add($item);
+                                    }
+                                }
+                                $keyoriginalImage = $tab->indexOf($originalSecteurImage);
+
+                                $secteurImageSite = $secteurImageSites->get($keyoriginalImage);
+                            }
+                            // *** fin récupération de l'hébergementImage correspondant sur la bdd distante ***
+
+                            // si l'secteurImage existe sur la bdd distante, on va le modifier
+                            /** @var SecteurImage $secteurImageSite */
+                            if (!empty($secteurImageSite)) {
+                                // Si le image a été modifié
+                                // (que le crm_ref_id est différent de de l'id du image de l'secteurImage du crm)
+                                if ($secteurImageSite->getImage()->getMetadataValue('crm_ref_id') != $secteurImage->getImage()->getId()) {
+                                    $cloneImage = clone $secteurImage->getImage();
+                                    $cloneImage->setMetadataValue('crm_ref_id', $secteurImage->getImage()->getId());
+                                    $cloneImage->setContext('secteur_image_' . $secteur->getSite()->getLibelle());
+
+                                    // on supprime l'ancien image
+                                    $emSite->remove($secteurImageSite->getImage());
+
+                                    $secteurImageSite->setImage($cloneImage);
+                                }
+
+                                $secteurImageSite->setActif($secteurImage->getActif());
+
+                                // on parcourt les traductions
+                                /** @var SecteurImageTraduction $traduction */
+                                foreach ($secteurImage->getTraductions() as $traduction) {
+                                    // on récupère la traduction correspondante
+                                    /** @var SecteurImageTraduction $traductionSite */
+                                    /** @var ArrayCollection $traductionSites */
+                                    $traductionSites = $secteurImageSite->getTraductions();
+
+                                    unset($traductionSite);
+                                    if (!$traductionSites->isEmpty()) {
+                                        // on récupère la traduction correspondante en fonction de la langue
+                                        $traductionSite = $traductionSites->filter(function (SecteurImageTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
+                                    // si une traduction existe pour cette langue, on la modifie
+                                    if (!empty($traductionSite)) {
+                                        $traductionSite->setLibelle($traduction->getLibelle());
+                                    } // sinon on en cré une
+                                    else {
+                                        $traductionSite = new SecteurImageTraduction();
+                                        $traductionSite->setLibelle($traduction->getLibelle())
+                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                        $secteurImageSite->addTraduction($traductionSite);
+                                    }
+                                }
+                            } // sinon on va le créer
+                            else {
+                                $this->createSecteurImage($secteurImage, $secteurSite, $emSite);
+                            }
+                        }
+                    } // sinon si l'hébergement de référence n'a pas de medias
+                    else {
+                        // on lui cré alors les medias
+                        // on parcours les medias de l'secteur de référence
+                        /** @var SecteurImage $secteurImage */
+                        foreach ($secteurImages as $secteurImage) {
+                            $this->createSecteurImage($secteurImage, $secteurSite, $emSite);
+                        }
+                    }
+                } // sinon on doit supprimer les medias présent pour l'hébergement correspondant sur le site distant
+                else {
+                    if (!empty($secteurImageSites)) {
+                        /** @var SecteurImage $secteurImageSite */
+                        foreach ($secteurImageSites as $secteurImageSite) {
                             $secteurImageSite->setSecteur(null);
                             $emSite->remove($secteurImageSite->getImage());
                             $emSite->remove($secteurImageSite);
-                            $emSite->flush();
                         }
                     }
                 }
-
-                if (!empty($secteurImages)) {
-                    foreach ($secteurImages as $secteurImage) {
-                        if (empty($secteurImageSites)) {
-                            $secteurImageSite = null;
-                        } else {
-                            $secteurImageSite = $secteurImageSites->filter(function (SecteurImage $element) use ($secteurImage) {
-                                return $element->getImage()->getName() == $secteurImage->getImage()->getName();
-                            })->first();
-                        }
-                        if (empty($secteurImageSite)) {
-                            $mediaSite = clone $secteurImage->getImage();
-                            $secteurImageSite = new SecteurImage();
-                            $secteurImageSite->setImage($mediaSite);
-                            $secteurSite->addImage($secteurImageSite);
-                            $secteurImageSite->setSecteur($secteurSite);
-                        } else {
-                            $mediaSite = $secteurImageSite->getImage();
-                            $secteurImageSite->setImage($mediaSite);
-                        }
-
-                        /** @var SecteurImageTraduction $traduction */
-                        foreach ($secteurImage->getTraductions() as $traduction) {
-                            if (!empty($secteurSite->getTraductions())) {
-                                $traductionSite = $secteurImageSite->getTraductions()->filter(function (SecteurImageTraduction $element) use ($traduction) {
-                                    return $element->getLangue()->getId() == $traduction->getLangue()->getId();
-                                })->first();
-                                if (empty($traductionSite)) {
-                                    $traductionSite = new SecteurImageTraduction();
-                                    $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
-                                    $secteurImageSite->addTraduction($traductionSite);
-                                }
-                                $traductionSite->setLibelle($traduction->getLibelle());
-                            }
-                        }
-                    }
-                }
-                // FIN Gestion des images
+                // ********** FIN GESTION DES MEDIAS **********
 
                 $entitySite->addSecteur($secteurSite);
                 $emSite->persist($entitySite);
@@ -358,6 +412,54 @@ class SecteurUnifieController extends Controller
             }
         }
         $this->ajouterSecteurUnifieSiteDistant($entity->getId(), $entity->getSecteurs());
+    }
+
+    /**
+     * Création d'un nouveau secteurImage
+     * @param SecteurImage $secteurImage
+     * @param Secteur $secteurSite
+     * @param EntityManager $emSite
+     */
+    private function createSecteurImage(SecteurImage $secteurImage, Secteur $secteurSite, EntityManager $emSite)
+    {
+        /** @var SecteurImage $secteurImageSite */
+        // on récupère la classe correspondant au image (photo ou video)
+        $typeImage = (new ReflectionClass($secteurImage))->getName();
+        // on cré un nouveau SecteurImage on fonction du type
+        $secteurImageSite = new $typeImage();
+        $secteurImageSite->setSecteur($secteurSite);
+        $secteurImageSite->setActif($secteurImage->getActif());
+        // on lui clone l'image
+        $cloneImage = clone $secteurImage->getImage();
+
+        // **** récupération du image physique ****
+        $pool = $this->container->get('sonata.media.pool');
+        $provider = $pool->getProvider($cloneImage->getProviderName());
+        $provider->getReferenceImage($cloneImage);
+
+        // c'est ce qui permet de récupérer le fichier lorsqu'il est nouveau todo:(à mettre en variable paramètre => parameter.yml)
+//        $cloneImage->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($cloneImage));
+        $cloneImage->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneImage));
+
+        $cloneImage->setProviderReference($secteurImage->getImage()->getProviderReference());
+        $cloneImage->setName($secteurImage->getImage()->getName());
+        // **** fin récupération du image physique ****
+
+        // on donne au nouveau image, le context correspondant en fonction du site
+        $cloneImage->setContext('secteur_image_' . $secteurSite->getSite()->getLibelle());
+        // on lui attache l'id de référence du image correspondant sur la bdd crm
+        $cloneImage->setMetadataValue('crm_ref_id', $secteurImage->getImage()->getId());
+
+        $secteurImageSite->setImage($cloneImage);
+
+        $secteurSite->addImage($secteurImageSite);
+        // on ajoute les traductions correspondante
+        foreach ($secteurImage->getTraductions() as $traduction) {
+            $traductionSite = new SecteurImageTraduction();
+            $traductionSite->setLibelle($traduction->getLibelle())
+                ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+            $secteurImageSite->addTraduction($traductionSite);
+        }
     }
 
     /**
@@ -440,9 +542,21 @@ class SecteurUnifieController extends Controller
 
 //        $secteurCrm = $this->dissocierSecteurCrm($secteurUnifie);
         $originalSecteurs = new ArrayCollection();
+        $originalSecteurImages = new ArrayCollection();
+        $originalImages = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($secteurUnifie->getSecteurs() as $secteur) {
             $originalSecteurs->add($secteur);
+            // si l'secteur est celui du CRM
+            if ($secteur->getSite()->getCrm() == 1) {
+                // on parcourt les secteurImage pour les comparer ensuite
+                /** @var SecteurImage $secteurImage */
+                foreach ($secteur->getImages() as $secteurImage) {
+                    // on ajoute les image dans la collection de sauvegarde
+                    $originalSecteurImages->add($secteurImage);
+                    $originalImages->add($secteurImage->getImage());
+                }
+            }
         }
 
 
@@ -473,6 +587,70 @@ class SecteurUnifieController extends Controller
 //        dump($editForm);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+
+            // ************* suppression images *************
+            // ** CAS OU L'ON SUPPRIME UN "SECTEUR IMAGE" **
+            // on récupère les SecteurImage de l'hébergementCrm pour les mettre dans une collection
+            // afin de les comparer au originaux.
+            /** @var Secteur $secteurCrm */
+            $secteurCrm = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $secteurSites = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            $newSecteurImages = new ArrayCollection();
+            foreach ($secteurCrm->getImages() as $secteurImage) {
+                $newSecteurImages->add($secteurImage);
+            }
+            /** @var SecteurImage $originalSecteurImage */
+            foreach ($originalSecteurImages as $key => $originalSecteurImage) {
+
+                if (false === $newSecteurImages->contains($originalSecteurImage)) {
+                    $originalSecteurImage->setSecteur(null);
+                    $em->remove($originalSecteurImage->getImage());
+                    $em->remove($originalSecteurImage);
+                    // on doit supprimer l'hébergementImage des autres sites
+                    // on parcourt les secteur des sites
+                    /** @var Secteur $secteurSite */
+                    foreach ($secteurSites as $secteurSite) {
+                        $secteurImageSite = $em->getRepository(SecteurImage::class)->findOneBy(
+                            array(
+                                'secteur' => $secteurSite,
+                                'image' => $originalSecteurImage->getImage()
+                            ));
+                        if (!empty($secteurImageSite)) {
+                            $emSite = $this->getDoctrine()->getEntityManager($secteurImageSite->getSecteur()->getSite()->getLibelle());
+                            $secteurSite = $emSite->getRepository(Secteur::class)->findOneBy(
+                                array(
+                                    'secteurUnifie' => $secteurImageSite->getSecteur()->getSecteurUnifie()
+                                ));
+                            $secteurImageSiteSites = new ArrayCollection($emSite->getRepository(SecteurImage::class)->findBy(
+                                array(
+                                    'secteur' => $secteurSite
+                                ))
+                            );
+                            $secteurImageSiteSite = $secteurImageSiteSites->filter(function (SecteurImage $element)
+                            use ($secteurImageSite) {
+//                            return $element->getImage()->getProviderReference() == $secteurImageSite->getImage()->getProviderReference();
+                                return $element->getImage()->getMetadataValue('crm_ref_id') == $secteurImageSite->getImage()->getId();
+                            })->first();
+                            if (!empty($secteurImageSiteSite)) {
+                                $emSite->remove($secteurImageSiteSite->getImage());
+                                $secteurImageSiteSite->setSecteur(null);
+                                $emSite->remove($secteurImageSiteSite);
+                                $emSite->flush();
+                            }
+                            $secteurImageSite->setSecteur(null);
+                            $em->remove($secteurImageSite->getImage());
+                            $em->remove($secteurImageSite);
+                        }
+                    }
+                }
+            }
+            // ************* fin suppression images *************
+            
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
 //            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
 //            $em->persist($secteurCrm);
@@ -485,64 +663,146 @@ class SecteurUnifieController extends Controller
                     $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
                     $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
                     $secteurSite = $entitySite->getSecteurs()->first();
+
+
+                    /** @var SecteurImage $secteurImageSite */
+                    if (!empty($secteurSite->getImages())) {
+                        foreach ($secteurSite->getImages() as $secteurImageSite) {
+                            $secteurSite->removeImage($secteurImageSite);
+//                                        $secteurImageSite->setSecteur(null);
+//                                        $secteurImageSite->setImage(null);
+                            $emSite->remove($secteurImageSite);
+                            $emSite->remove($secteurImageSite->getImage());
+                        }
+                        $emSite->flush();
+                    }
+                    
                     $emSite->remove($secteurSite);
                     $emSite->flush();
                     $secteur->setSecteurUnifie(null);
+
+
+                    // *** suppression des secteurImages de l'secteur à supprimer ***
+                    /** @var SecteurImage $secteurImage */
+                    $secteurImageSites = $em->getRepository(SecteurImage::class)->findBy(array('secteur' => $secteur));
+                    if (!empty($secteurImageSites)) {
+                        foreach ($secteurImageSites as $secteurImage) {
+                            $secteurImage->setImage(null);
+                            $secteurImage->setSecteur(null);
+                            $em->remove($secteurImage);
+                        }
+                        $em->flush();
+                    }
+                    // *** fin suppression des secteurImages de l'secteur à supprimer ***
+                    
                     $em->remove($secteur);
                 }
             }
 
 
-            // ****** Image ******
-            /** @var Secteur $secteur */
-            /** @var SecteurImage $image */
-            $collectionImage = new ArrayCollection();
-            foreach ($secteurUnifie->getSecteurs() as $secteur) {
-                if (!empty($secteur->getImages())) {
-                    foreach ($secteur->getImages() as $image) {
-                        $collectionImage->add($image);
+            // ***** Gestion des Medias *****
+            // CAS D'UN NOUVEAU 'SECTEUR IMAGE' OU DE MODIFICATION D'UN "SECTEUR IMAGE"
+            /** @var SecteurImage $secteurImage */
+            // tableau pour la suppression des anciens images
+            $imageToRemoveCollection = new ArrayCollection();
+            $keyCrm = $secteurUnifie->getSecteurs()->indexOf($secteurCrm);
+            // on parcourt les secteurImages de l'secteur crm
+            foreach ($secteurCrm->getImages() as $key => $secteurImage) {
+                // on active le nouveau secteurImage (CRM) => il doit être toujours actif
+                $secteurImage->setActif(true);
+                // parcourir tout les sites
+                /** @var Site $site */
+                foreach ($sites as $site) {
+                    // sauf  le crm (puisqu'on l'a déjà renseigné)
+                    // dans le but de créer un hebegrementImage pour chacun
+                    if ($site->getCrm() == 0) {
+                        // on récupère l'hébegergement du site
+                        /** @var Secteur $secteurSite */
+                        $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+                        // si hébergement existe
+                        if (!empty($secteurSite)) {
+                            // on réinitialise la variable
+                            unset($secteurImageSite);
+                            // s'il ne s'agit pas d'un nouveau secteurImage
+                            if (!empty($secteurImage->getId())) {
+                                // on récupère l'secteurImage pour le modifier
+                                $secteurImageSite = $em->getRepository(SecteurImage::class)->findOneBy(array('secteur' => $secteurSite, 'image' => $originalImages->get($key)));
+                            }
+                            // si l'secteurImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
+                            if (empty($secteurImage->getId()) || empty($secteurImageSite)) {
+                                // on récupère la classe correspondant au image (photo ou video)
+                                $typeImage = (new ReflectionClass($secteurImage))->getName();
+                                // on créé un nouveau SecteurImage on fonction du type
+                                /** @var SecteurImage $secteurImageSite */
+                                $secteurImageSite = new $typeImage();
+                                $secteurImageSite->setSecteur($secteurSite);
+                            }
+                            // si l'hébergemenent image existe déjà pour le site
+                            if (!empty($secteurImageSite)) {
+                                if ($secteurImageSite->getImage() != $secteurImage->getImage()) {
+//                                    // si l'hébergementImageSite avait déjà un image
+//                                    if (!empty($secteurImageSite->getImage()) && !$imageToRemoveCollection->contains($secteurImageSite->getImage()))
+//                                    {
+//                                        // on met l'ancien image dans un tableau afin de le supprimer plus tard
+//                                        $imageToRemoveCollection->add($secteurImageSite->getImage());
+//                                    }
+                                    // on met le nouveau image
+                                    $secteurImageSite->setImage($secteurImage->getImage());
+                                }
+                                $secteurSite->addImage($secteurImageSite);
+
+                                /** @var SecteurImageTraduction $traduction */
+                                foreach ($secteurImage->getTraductions() as $traduction) {
+                                    /** @var SecteurImageTraduction $traductionSite */
+                                    $traductionSites = $secteurImageSite->getTraductions();
+                                    $traductionSite = null;
+                                    if (!$traductionSites->isEmpty()) {
+                                        $traductionSite = $traductionSites->filter(function (SecteurImageTraduction $element) use ($traduction) {
+                                            return $element->getLangue() == $traduction->getLangue();
+                                        })->first();
+                                    }
+                                    if (empty($traductionSite)) {
+                                        $traductionSite = new SecteurImageTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $secteurImageSite->addTraduction($traductionSite);
+                                    }
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                // on vérifie si l'hébergementImage doit être actif sur le site ou non
+                                if (!empty($request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites']) &&
+                                    in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites'])
+                                ) {
+                                    $secteurImageSite->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                    // on est dans l'secteurImage CRM
+                    // s'il s'agit d'un nouveau média
+                    elseif (empty($secteurImage->getImage()->getId()) && !empty($originalImages->get($key))) {
+                        // on stocke  l'ancien media pour le supprimer après le persist final
+                        $imageToRemoveCollection->add($originalImages->get($key));
                     }
                 }
             }
-            foreach ($originalImages as $image) {
-                if (false === $collectionImage->contains($image)) {
-                    //  suppression de l'image sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
-                    $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
-                    $secteurSite = $entitySite->getSecteurs()->first();
-
-                    /** @var Secteur $secteurSite */
-                    $secteurImageSite = $secteurSite->getImages()->filter(function (SecteurImage $element) use ($image) {
-                        return $element->getImage()->getName() == $image->getImage()->getName();
-                    })->first();
-                    if (!empty($secteurImageSite)) {
-                        $emSite->remove($secteurImageSite->getimage());
-                        $emSite->remove($secteurImageSite);
-                        $emSite->flush();
-                    }
-
-                    $image->setSecteur(null);
-                    $em->remove($image->getImage());
-                    dump($image->getImage());
-                    $em->remove($image);
-                }
-
-            }
-            /** @var Secteur $secteur */
-            /** @var SecteurImage $image */
-            foreach ($secteurUnifie->getSecteurs() as $secteur) {
-                if (!empty($secteur->getImages())) {
-                    foreach ($secteur->getImages() as $image) {
-                        $image->setSecteur($secteur);
-                    }
-                }
-            }
-            // ****** Image ******
+            // ***** Fin Gestion des Medias *****
 
             $em->persist($secteurUnifie);
             $em->flush();
 
             $this->copieVersSites($secteurUnifie);
+
+            if (!empty($imageToRemoveCollection)) {
+                foreach ($imageToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $em->remove($item);
+                    }
+                }
+                $em->flush();
+            }
+            
             $this->addFlash('success', 'le secteur a bien été modifié');
 
             return $this->redirectToRoute('geographie_secteur_edit', array('id' => $secteurUnifie->getId()));
@@ -579,10 +839,46 @@ class SecteurUnifieController extends Controller
                 $secteurUnifieSite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
                 if (!empty($secteurUnifieSite)) {
                     $emSite->remove($secteurUnifieSite);
+                    $secteurSite = $secteurUnifieSite->getSecteurs()->first();
+
+                    // si il y a des images pour l'entité, les supprimer
+                    if (!empty($secteurSite->getImages())) { // todo: a finir
+                        /** @var SecteurImage $secteurImageSite */
+                        foreach ($secteurSite->getImages() as $secteurImageSite) {
+                            $imageSite = $secteurImageSite->getImage();
+                            $secteurImageSite->setImage(null);
+                            if (!empty($imageSite)) {
+                                $emSite->remove($imageSite);
+                            }
+                        }
+                    }
+                    
                     $emSite->flush();
                 }
             }
-            $em = $this->getDoctrine()->getManager();
+
+
+            if (!empty($secteurUnifie)) {
+                if (!empty($secteurUnifie->getSecteurs())) {
+                    /** @var Secteur $secteur */
+                    foreach ($secteurUnifie->getSecteurs() as $secteur) {
+
+                        // si il y a des images pour l'entité, les supprimer
+                        if (!empty($secteur->getImages())) {
+                            /** @var SecteurImage $secteurImage */
+                            foreach ($secteur->getImages() as $secteurImage) {
+                                $image = $secteurImage->getImage();
+                                $secteurImage->setImage(null);
+                                $em->remove($image);
+                            }
+                        }
+                    }
+                    $em->flush();
+                }
+//                    $emSite->remove($secteurUnifieSite);
+//                    $emSite->flush();
+            }
+            
             $em->remove($secteurUnifie);
             $em->flush();
         }
