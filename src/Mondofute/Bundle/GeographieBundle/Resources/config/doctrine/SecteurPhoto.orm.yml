@@ -1,7 +1,7 @@
-Mondofute\Bundle\GeographieBundle\Entity\SecteurImage:
+Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\SecteurImageRepository
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\SecteurPhotoRepository
     id:
         id:
             type: integer
@@ -18,13 +18,13 @@ Mondofute\Bundle\GeographieBundle\Entity\SecteurImage:
     manyToOne:
         secteur:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
-            inversedBy: images
-        image:
+            inversedBy: photos
+        photo:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
             cascade: ['persist' , 'remove']
     oneToMany:
         traductions:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction
-            mappedBy: image
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurPhotoTraduction
+            mappedBy: photo
             cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

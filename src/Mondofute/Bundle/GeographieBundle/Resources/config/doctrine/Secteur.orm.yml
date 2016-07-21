@@ -28,4 +28,8 @@ Mondofute\Bundle\GeographieBundle\Entity\Secteur:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurImage
             mappedBy: secteur
             cascade: ['persist' , 'remove']
+        photos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto
+            mappedBy: secteur
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

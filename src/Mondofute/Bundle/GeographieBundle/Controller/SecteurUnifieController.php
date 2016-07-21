@@ -842,7 +842,7 @@ class SecteurUnifieController extends Controller
                     $secteurSite = $secteurUnifieSite->getSecteurs()->first();
 
                     // si il y a des images pour l'entité, les supprimer
-                    if (!empty($secteurSite->getImages())) { // todo: a finir
+                    if (!empty($secteurSite->getImages())) {
                         /** @var SecteurImage $secteurImageSite */
                         foreach ($secteurSite->getImages() as $secteurImageSite) {
                             $imageSite = $secteurImageSite->getImage();
