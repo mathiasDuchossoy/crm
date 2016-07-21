@@ -44,6 +44,8 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\LogementBundle\MondofuteLogementBundle(),
             new Mondofute\Bundle\ServiceBundle\MondofuteServiceBundle(),
             new Mondofute\Bundle\PeriodeBundle\MondofutePeriodeBundle(),
+            new \JMS\JobQueueBundle\JMSJobQueueBundle(),
+            new nucleus\deployBundle\nucleusdeployBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

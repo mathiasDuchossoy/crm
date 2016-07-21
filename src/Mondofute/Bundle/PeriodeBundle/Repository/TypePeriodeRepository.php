@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\PeriodeBundle\Repository;
 
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+
 /**
  * TypePeriodeRepository
  *
@@ -10,4 +12,14 @@ namespace Mondofute\Bundle\PeriodeBundle\Repository;
  */
 class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function chargerParDates()
+    {
+        $qb = $this->createQueryBuilder('type_periode_repository');
+        $qb->from('MondofutePeriodeBundle:TypePeriode', 'tp')
+            ->leftJoin('tp.periodes', 'p')
+            ->addOrderBy('type_periode_repository.id', 'ASC')
+            ->addOrderBy('p.debut', 'ASC')
+            ->addOrderBy('p.fin', 'ASC');
+        return $qb->getQuery()->getResult();
+    }
 }

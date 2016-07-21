@@ -3,3 +3,8 @@ type_periode:
     2: semaine
     3: '2 semaines'
     4: '3 semaines'
+periode:
+    creation: 'création de périodes'
+    liste: 'liste des périodes'
+placeholder:
+    choix_periode_type: '-- choix du type de période --'
