@@ -35,6 +35,10 @@ class Secteur
      * @var \Doctrine\Common\Collections\Collection
      */
     private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -226,5 +230,39 @@ class Secteur
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
+     *
+     * @return Secteur
+     */
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
+    {
+        $this->photos[] = $photo->setSecteur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }
