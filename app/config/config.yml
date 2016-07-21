@@ -353,8 +353,8 @@ sonata_media:
             directory:  "%kernel.root_dir%/../web/uploads/media"
             create:     false
 
-#    buzz:
-#        connector:  sonata.media.buzz.connector.curl
+    buzz:
+        connector:  sonata.media.buzz.connector.curl
 #        connector:  sonata.media.buzz.connector.file_get_content
 jms_job_queue:
     queue_options_defaults:

@@ -44,8 +44,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-//use DateTime;
-
 /**
  * HebergementUnifie controller.
  *
@@ -58,7 +56,6 @@ class HebergementUnifieController extends Controller
      */
     public function indexAction()
     {
-        phpinfo();
         $em = $this->getDoctrine()->getManager();
 
         $hebergementUnifies = $em->getRepository('MondofuteHebergementBundle:HebergementUnifie')->findAll();
@@ -601,6 +598,7 @@ class HebergementUnifieController extends Controller
 
                                     // on supprime l'ancien visuel
                                     $emSite->remove($hebergementVisuelSite->getVisuel());
+                                    $this->deleteFile($hebergementVisuelSite->getVisuel());
 
                                     $hebergementVisuelSite->setVisuel($cloneVisuel);
                                 }
@@ -654,6 +652,7 @@ class HebergementUnifieController extends Controller
                         foreach ($hebergementVisuelSites as $hebergementVisuelSite) {
                             $hebergementVisuelSite->setHebergement(null);
                             $emSite->remove($hebergementVisuelSite->getVisuel());
+                            $this->deleteFile($hebergementVisuelSite->getVisuel());
                             $emSite->remove($hebergementVisuelSite);
                         }
                     }
@@ -790,6 +789,13 @@ class HebergementUnifieController extends Controller
             $hebergementSite->addEmplacement($emplacementSite);
         }
         $emSite->flush();
+    }
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
+        }
     }
 
     /**
@@ -1127,6 +1133,7 @@ class HebergementUnifieController extends Controller
                 if (false === $newHebergementVisuels->contains($originalHebergementVisuel)) {
                     $originalHebergementVisuel->setHebergement(null);
                     $em->remove($originalHebergementVisuel->getVisuel());
+                    $this->deleteFile($originalHebergementVisuel->getVisuel());
                     $em->remove($originalHebergementVisuel);
                     // on doit supprimer l'hébergementVisuel des autres sites
                     // on parcourt les hebergement des sites
@@ -1155,12 +1162,14 @@ class HebergementUnifieController extends Controller
                             })->first();
                             if (!empty($hebergementVisuelSiteSite)) {
                                 $emSite->remove($hebergementVisuelSiteSite->getVisuel());
+                                $this->deleteFile($hebergementVisuelSiteSite->getVisuel());
                                 $hebergementVisuelSiteSite->setHebergement(null);
                                 $emSite->remove($hebergementVisuelSiteSite);
                                 $emSite->flush();
                             }
                             $hebergementVisuelSite->setHebergement(null);
                             $em->remove($hebergementVisuelSite->getVisuel());
+                            $this->deleteFile($hebergementVisuelSite->getVisuel());
                             $em->remove($hebergementVisuelSite);
                         }
                     }
@@ -1218,6 +1227,7 @@ class HebergementUnifieController extends Controller
 //                                        $hebergementVisuelSite->setVisuel(null);
                                         $emSite->remove($hebergementVisuelSite);
                                         $emSite->remove($hebergementVisuelSite->getVisuel());
+                                        $this->deleteFile($hebergementVisuelSite->getVisuel());
                                     }
                                     $emSite->flush();
                                 }
@@ -1362,6 +1372,7 @@ class HebergementUnifieController extends Controller
             if (!empty($visuelToRemoveCollection)) {
                 foreach ($visuelToRemoveCollection as $item) {
                     if (!empty($item)) {
+                        $this->deleteFile($item);
                         $em->remove($item);
                     }
                 }
@@ -1463,6 +1474,7 @@ class HebergementUnifieController extends Controller
                                         $hebergementVisuelSite->setVisuel(null);
                                         if (!empty($visuelSite)) {
                                             $emSite->remove($visuelSite);
+                                            $this->deleteFile($visuelSite);
                                         }
                                     }
                                 }
@@ -1492,6 +1504,7 @@ class HebergementUnifieController extends Controller
                                     $visuel = $hebergementVisuel->getVisuel();
                                     $hebergementVisuel->setVisuel(null);
                                     $em->remove($visuel);
+                                    $this->deleteFile($visuel);
                                 }
                             }
                         }
@@ -1520,17 +1533,4 @@ class HebergementUnifieController extends Controller
         $this->addFlash('success', 'L\'hébergement a bien été supprimé');
         return $this->redirectToRoute('hebergement_hebergement_index');
     }
-
-//    /**
-//     * @param $entity
-//     */
-//    private function deleteMoyenComs($entity)
-//    {
-//        $moyenComs = $entity->getMoyenComs();
-//        if (!empty($moyenComs)) {
-//            foreach ($moyenComs as $moyenCom) {
-//                $entity->removeMoyenCom($moyenCom);
-//            }
-//        }
-//    }
 }
