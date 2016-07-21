@@ -19,7 +19,18 @@ class SecteurImageType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+        global $kernel;
+
+        if ('AppCache' == get_class($kernel)) {
+            $kernel = $kernel->getKernel();
+        }
+        $doctrine = $kernel->getContainer()->get('doctrine');
+
+        $siteRepository = $doctrine->getRepository('MondofuteSiteBundle:Site');
+        $sites = $siteRepository->chargerSansCrmParClassementAffichage();
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($sites) {
             $data = $event->getData();
             $form = $event->getForm();
 
@@ -30,29 +41,49 @@ class SecteurImageType extends AbstractType
                 $form
                     ->add('image', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'secteur_image',
+                        'context' => 'secteur_image_crm',
                         'required' => false,
+                        'label' => 'image',
+                    ))
+                    ->add('sites', EntityType::class, array(
+                        'class' => 'MondofuteSiteBundle:Site',
+                        'choice_label' => 'libelle',
+                        'multiple' => true,
+                        'expanded' => true,
+                        'query_builder' => function (SiteRepository $rr) {
+                            return $rr->getSitesSansCrm();
+                        },
+                        'mapped' => false,
+                        'attr' => ['class' => 'form-inline'],
+//                        'data' => $sites,
                     ));
             } else {
                 $form
                     ->add('image', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'secteur_image',
+                        'context' => 'secteur_image_crm',
                         'required' => true,
+                        'label' => 'image',
+                    ))
+                    ->add('sites', EntityType::class, array(
+                        'class' => 'MondofuteSiteBundle:Site',
+                        'choice_label' => 'libelle',
+                        'multiple' => true,
+                        'expanded' => true,
+                        'query_builder' => function (SiteRepository $rr) {
+                            return $rr->getSitesSansCrm();
+                        },
+                        'mapped' => false,
+                        'attr' => ['class' => 'form-inline'],
+                        'data' => $sites,
                     ));
             }
         });
+
         $builder
-            ->add('sites', EntityType::class, array(
-                'class' => 'MondofuteSiteBundle:Site',
-                'choice_label' => 'libelle',
-                'multiple' => true,
-                'expanded' => true,
-                'query_builder' => function (SiteRepository $rr) {
-                    return $rr->getSitesSansCrm();
-                },
-                'mapped' => false,
-                'attr' => ['class' => 'form-inline']
+            ->add('_type', 'hidden', array(
+                'data' => $this->getName(),
+                'mapped' => false
             ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => SecteurImageTraductionType::class,
