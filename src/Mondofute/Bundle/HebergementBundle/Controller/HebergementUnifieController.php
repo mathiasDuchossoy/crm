@@ -48,6 +48,7 @@ class HebergementUnifieController extends Controller
      */
     public function indexAction()
     {
+        phpinfo();
         $em = $this->getDoctrine()->getManager();
 
         $hebergementUnifies = $em->getRepository('MondofuteHebergementBundle:HebergementUnifie')->findAll();
@@ -525,7 +526,7 @@ class HebergementUnifieController extends Controller
                         foreach ($hebergementSite->getVisuels() as $hebergementvisuelSite) {
                             $hebergementVisuelSites->add($hebergementvisuelSite);
                         }
-                        // on parcours les hébergmeentVisuels de la base
+                        // on parcourt les hébergmeentVisuels de la base
                         /** @var HebergementVisuel $hebergementVisuel */
                         foreach ($hebergementVisuels as $hebergementVisuel) {
                             // *** récupération de l'hébergementVisuel correspondant sur la bdd distante ***
@@ -751,6 +752,12 @@ class HebergementUnifieController extends Controller
         $emSite->flush();
     }
 
+    /**
+     * Création d'un nouveau hebergementVisuel
+     * @param HebergementVisuel $hebergementVisuel
+     * @param Hebergement $hebergementSite
+     * @param EntityManager $emSite
+     */
     private function createHebergementVisuel(HebergementVisuel $hebergementVisuel, Hebergement $hebergementSite, EntityManager $emSite)
     {
         /** @var HebergementVisuel $hebergementVisuelSite */
@@ -769,14 +776,14 @@ class HebergementUnifieController extends Controller
         $provider->getReferenceImage($cloneVisuel);
 
         // c'est ce qui permet de récupérer le fichier lorsqu'il est nouveau todo:(à mettre en variable paramètre => parameter.yml)
-        $cloneVisuel->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($cloneVisuel));
+//        $cloneVisuel->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($cloneVisuel));
+        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
 
         $cloneVisuel->setProviderReference($hebergementVisuel->getVisuel()->getProviderReference());
         $cloneVisuel->setName($hebergementVisuel->getVisuel()->getName());
         // **** fin récupération du visuel physique ****
 
         // on donne au nouveau visuel, le context correspondant en fonction du site
-//        $cloneVisuel->setContext('hebergement_visuel_' . $hebergement->getSite()->getLibelle());
         $cloneVisuel->setContext('hebergement_visuel_' . $hebergementSite->getSite()->getLibelle());
         // on lui attache l'id de référence du visuel correspondant sur la bdd crm
         $cloneVisuel->setMetadataValue('crm_ref_id', $hebergementVisuel->getVisuel()->getId());
