@@ -26,6 +26,11 @@ class SecteurType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
             ))
+            ->add('photos', CollectionType::class, array(
+                'entry_type' => SecteurPhotoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ))
         ;
     }
     
