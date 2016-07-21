@@ -19,3 +19,6 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # chemin pour le téléchargement des media
+    chemin_media: "%kernel.root_dir%/../web/uploads/media/"
