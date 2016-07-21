@@ -78,6 +78,29 @@
 
                                 </div>
                             </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Photos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des photos #}
+                                    <ul class="photos_{{ secteur.vars.value.site.id }}" data-prototype_photo="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': secteur.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for photo in secteur.photos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
                         {% endif %}
 
 
