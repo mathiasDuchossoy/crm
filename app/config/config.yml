@@ -623,7 +623,6 @@ sonata_media:
 
     cdn:
         server:
-#            path: /uploads/media # http://media.sonata-project.org/
             path: /uploads/media # http://media.sonata-project.org/
 #            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
 
@@ -631,3 +630,7 @@ sonata_media:
         local:
             directory:  "%kernel.root_dir%/../web/uploads/media"
             create:     false
+
+#    buzz:
+#        connector:  sonata.media.buzz.connector.curl
+#        connector:  sonata.media.buzz.connector.file_get_content
