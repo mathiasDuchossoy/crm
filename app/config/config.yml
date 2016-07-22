@@ -260,6 +260,11 @@ assetic:
             inputs:
               - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"
               - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.nl.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min.js"
             filters: [?yui_js]
             output: js/bootstrap-datepicker.js
 
