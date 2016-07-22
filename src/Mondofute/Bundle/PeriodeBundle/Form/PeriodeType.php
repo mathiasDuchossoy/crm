@@ -14,31 +14,25 @@ class PeriodeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('debut', DateType::class, array(
-//                'required' => true
-//            ))
-//            ->add('fin', DateType::class, array(
-//                'required' => true
-//            ))
             ->add('debut', DateType::class, array(
                 'required' => true,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
-                'attr' => [
-                    'class' => 'form-control input-inline datepicker',
+                'attr' => array(
+                    'class' => 'form-control input-inline datepicker date',
                     'data-provide' => 'datepicker',
                     'data-date-format' => 'dd/mm/yyyy'
-                ]
+                )
             ))
             ->add('fin', DateType::class, array(
                 'required' => true,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
-                'attr' => [
-                    'class' => 'form-control input-inline datepicker',
+                'attr' => array(
+                    'class' => 'form-control input-inline datepicker date',
                     'data-provide' => 'datepicker',
                     'data-date-format' => 'dd/mm/yyyy'
-                ]
+                )
             ))
             ->add('nbJour', null, array('required' => false))
             ->add('type', EntityType::class, array(
