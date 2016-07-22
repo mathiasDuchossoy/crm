@@ -25,7 +25,6 @@
         "components/jquery": "^2.1",
         "twitter/bootstrap": "^3.3",
         "oyejorge/less.php": "v1.7.0.10",
-        "stephanecollot/datetimepicker-bundle": "^1.0",
         "infinite-networks/form-bundle": "1.0.3",
         "nucleus/contactbundle": "dev-commun",
         "nucleus/moyencombundle": "dev-commun",
@@ -36,7 +35,8 @@
         "sonata-project/intl-bundle": "^2.2",
         "symfony/translation": "3.0.x-dev",
         "jms/job-queue-bundle": "dev-master",
-        "nucleus/deploybundle": "dev-master"
+        "nucleus/deploybundle": "dev-master",
+        "eternicode/bootstrap-datepicker": "1.6.1"
     },
     "repositories": [
         {

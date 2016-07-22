@@ -8,40 +8,38 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class PeriodeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $today = new DateTime();
         $builder
-            ->add('debut', DateType::class, array(
-                'required' => true
-            ))
-            ->add('fin', DateType::class, array(
-                'required' => true
-            ))
 //            ->add('debut', DateType::class, array(
-//                'required' => true,
-//                'widget' => 'single_text',
-//                'format' => 'dd/MM/yyyy',
-//                'attr' => [
-//                    'class' => 'form-control input-inline datepicker',
-//                    'data-provide' => 'datepicker',
-//                    'data-date-format' => 'dd/mm/yyyy'
-//                ]
+//                'required' => true
 //            ))
 //            ->add('fin', DateType::class, array(
-//                'required' => true,
-//                'widget' => 'single_text',
-//                'format' => 'dd/MM/yyyy',
-//                'attr' => [
-//                    'class' => 'form-control input-inline datepicker',
-//                    'data-provide' => 'datepicker',
-//                    'data-date-format' => 'dd/mm/yyyy'
-//                ]
+//                'required' => true
 //            ))
+            ->add('debut', DateType::class, array(
+                'required' => true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => [
+                    'class' => 'form-control input-inline datepicker',
+                    'data-provide' => 'datepicker',
+                    'data-date-format' => 'dd/mm/yyyy'
+                ]
+            ))
+            ->add('fin', DateType::class, array(
+                'required' => true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => [
+                    'class' => 'form-control input-inline datepicker',
+                    'data-provide' => 'datepicker',
+                    'data-date-format' => 'dd/mm/yyyy'
+                ]
+            ))
             ->add('nbJour', null, array('required' => false))
             ->add('type', EntityType::class, array(
                 'class' => TypePeriode::class,

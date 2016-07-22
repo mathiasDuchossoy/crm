@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\AccueilBundle\MondofuteAccueilBundle(),
             new Mondofute\Bundle\LangueBundle\MondofuteLangueBundle(),
             new Mondofute\Bundle\GeographieBundle\MondofuteGeographieBundle(),
-            new SC\DatetimepickerBundle\SCDatetimepickerBundle(),
             new Mondofute\Bundle\StationBundle\MondofuteStationBundle(),
             new Mondofute\Bundle\DomaineBundle\MondofuteDomaineBundle(),
             new Mondofute\Bundle\FournisseurBundle\MondofuteFournisseurBundle(),
