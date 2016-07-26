@@ -8,6 +8,15 @@
     <div>
         {{ form(form) }}
     </div>
+    <section>
+        {% block actions %}
+            <div style="text-align: right">
+                <ul class="list-unstyled">
+                    <li><a href="{{ path('periode_periode_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+                </ul>
+            </div>
+        {% endblock %}
+    </section>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

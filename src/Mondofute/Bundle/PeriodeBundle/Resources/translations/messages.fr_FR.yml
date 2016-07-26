@@ -9,3 +9,11 @@ periode:
 placeholder:
     choix_periode_type: '-- choix du type de période --'
 format_date: 'jj/mm/aaaa'
+nbJours: 'nombre de jours'
+id: 'id'
+Debut: 'Début'
+Fin: 'Fin'
+Nb jour: 'Nombre de jours'
+Type: 'Type'
+creation_periodes_en_cours: 'les périodes sont en cours de création'
+valider: 'valider'

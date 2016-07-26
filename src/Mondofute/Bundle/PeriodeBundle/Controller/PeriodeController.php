@@ -27,8 +27,8 @@ class PeriodeController extends Controller
     {
         $periode = new Periode();
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(new PeriodeType(), $periode);
-        $form->add('submit', SubmitType::class);
+        $form = $this->createForm(PeriodeType::class, $periode);
+        $form->add('submit', SubmitType::class, array('label' => $this->get('translator')->trans('valider')));
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
@@ -69,7 +69,7 @@ class PeriodeController extends Controller
 //            dump($output->fetch());die;
 //            return $this->redirectToRoute('periode_periode_index');
 
-                $this->addFlash('success', 'les périodes sont en cours de création');
+                $this->addFlash('success', $this->get('translator')->trans('creation_periodes_en_cours'));
             }
         }
         return $this->render('MondofutePeriodeBundle:Periode:new.html.twig', array('form' => $form->createView()));

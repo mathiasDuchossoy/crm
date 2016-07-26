@@ -52,6 +52,11 @@ class PeriodeType extends AbstractType
         $resolver->setDefaults(array('data_class' => 'Mondofute\Bundle\PeriodeBundle\Entity\Periode'));
     }
 
+    public function getBlockPrefix()
+    {
+        return $this->getName();
+    }
+
     public function getName()
     {
         return 'mondofute_periode_bundle_periode';

@@ -4,7 +4,7 @@ imports:
     - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
     - { resource: services.yml }
     - { resource: '../../src/deployBundle/parameters.yml', ignore_errors: true }
-    - { resource: @MondofuteCoreBundle/Resources/config/config.yml }
+    - { resource: '@MondofuteCoreBundle/Resources/config/config.yml' }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
