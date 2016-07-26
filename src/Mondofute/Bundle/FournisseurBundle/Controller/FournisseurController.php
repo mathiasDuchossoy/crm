@@ -596,8 +596,8 @@ class FournisseurController extends Controller
                 }
             }
             if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
-
-                $this->mAJSites($fournisseur);
+//
+//                $this->mAJSites($fournisseur);
 
                 foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                     $interlocuteur->setFournisseur($fournisseur);
@@ -613,7 +613,10 @@ class FournisseurController extends Controller
             $em->persist($fournisseur);
             $em->flush();
 
-                if ($originalLogo != $fournisseur->getLogo()) {
+
+                $this->mAJSites($fournisseur);
+
+                if (!empty($originalLogo) && $originalLogo != $fournisseur->getLogo() ) {
                     $em->remove($originalLogo);
                     $em->flush();
                 }

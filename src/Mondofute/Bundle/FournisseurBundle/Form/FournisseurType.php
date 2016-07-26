@@ -30,23 +30,15 @@ class FournisseurType extends AbstractType
         $fournisseurId = $builder->getData()->getId();
         $locale = $options["locale"];
 
-        if (!empty($fournisseurId)) {
-            $builder
-                ->add('logo', 'sonata_media_type', array(
-                    'provider' => 'sonata.media.provider.image',
-                    'context' => 'fournisseur_logo_crm',
-                    'required' => true,
-                    'label' => 'logo',
-                ));
-        } else {
-            $builder
-                ->add('logo', 'sonata_media_type', array(
-                    'provider' => 'sonata.media.provider.image',
-                    'context' => 'fournisseur_logo_crm',
-                    'required' => false,
-                    'label' => 'logo',
-                ));
-        }
+
+
+        $builder
+            ->add('logo', 'sonata_media_type', array(
+                'provider' => 'sonata.media.provider.image',
+                'context' => 'fournisseur_logo_crm',
+                'required' => false,
+                'label' => 'logo',
+            ));
 
         $builder
             ->add('raisonSociale')

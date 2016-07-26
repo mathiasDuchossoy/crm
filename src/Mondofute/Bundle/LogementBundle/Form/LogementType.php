@@ -40,6 +40,13 @@ class LogementType extends AbstractType
 //                array('class' => Hebergement::class, 'choice_label' => 'id', 'mapped' => false))
 //            ->add('fournisseur', EntityType::class,
 //                array('class' => Fournisseur::class, 'choice_label' => 'id', 'mapped' => false))
+            ->add('photos', CollectionType::class, array(
+                'entry_type' => LogementPhotoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+            ))
         ;
     }
 

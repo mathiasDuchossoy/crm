@@ -1,0 +1,23 @@
+Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\LogementPhotoTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        photo:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementPhoto
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

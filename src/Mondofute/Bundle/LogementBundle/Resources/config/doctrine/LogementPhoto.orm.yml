@@ -1,0 +1,30 @@
+Mondofute\Bundle\LogementBundle\Entity\LogementPhoto:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\LogementPhotoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: photos
+        photo:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction
+            mappedBy: photo
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
