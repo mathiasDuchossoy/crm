@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Form;
+namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HebergementPhotoType extends AbstractType
+class RegionPhotoType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -34,14 +34,14 @@ class HebergementPhotoType extends AbstractType
             $data = $event->getData();
             $form = $event->getForm();
 
-            // vérifie si l'objet Image est "nouveau"
+            // vérifie si l'objet Photo est "nouveau"
             // Si aucune donnée n'est passée au formulaire, la donnée est "null".
-            // Ce doit être considéré comme un nouveau "Image"
+            // Ce doit être considéré comme un nouveau "Photo"
             if ($data && null !== $data->getId()) {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('photo', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_photo_crm',
                         'required' => false,
                         'label' => 'photo',
                     ))
@@ -59,9 +59,9 @@ class HebergementPhotoType extends AbstractType
                     ));
             } else {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('photo', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_photo_crm',
                         'required' => true,
                         'label' => 'photo',
                     ))
@@ -86,7 +86,7 @@ class HebergementPhotoType extends AbstractType
                 'mapped' => false
             ))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => HebergementVisuelTraductionType::class,
+                'entry_type' => RegionPhotoTraductionType::class,
                 'allow_add' => true,
                 'prototype_name' => '__name_traduction__',
                 'required' => true,
@@ -99,8 +99,9 @@ class HebergementPhotoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementPhoto',
-            'model_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementPhoto',
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto',
         ));
     }
+
+
 }

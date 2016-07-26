@@ -107,13 +107,7 @@ class HebergementUnifieController extends Controller
 //                    $moyenCom->setDateCreation();
 //                }
 //            }
-            /** @var FournisseurHebergement $fournisseur */
-//            foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
-//                $fournisseur->getTelFixe()->setDateCreation();
-//                $fournisseur->getTelMobile()->setDateCreation();
-//                $fournisseur->getAdresse()->setDateCreation();
-//            }
-//            $this->gestionDatesMoyenComs($hebergementUnifie);
+
             /** @var FournisseurHebergement $fournisseur */
             foreach ($hebergementUnifie->getFournisseurs() as $fournisseur) {
                 if (empty($fournisseur->getFournisseur())) {
@@ -122,21 +116,6 @@ class HebergementUnifieController extends Controller
                     $em->remove($fournisseur);
                 } else {
                     $fournisseur->setHebergement($hebergementUnifie);
-//                    if (is_null($fournisseur->getAdresse()->getDateCreation())) {
-//                        $fournisseur->getAdresse()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getAdresse()->setDateModification(new DateTime());
-//                    }
-//                    if (is_null($fournisseur->getTelFixe()->getDateCreation())) {
-//                        $fournisseur->getTelFixe()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelFixe()->setDateModification(new DateTime());
-//                    }
-//                    if (is_null($fournisseur->getTelMobile()->getDateCreation())) {
-//                        $fournisseur->getTelMobile()->setDateCreation();
-//                    } else {
-//                        $fournisseur->getTelMobile()->setDateModification(new DateTime());
-//                    }
                 }
             }
 
@@ -1179,7 +1158,6 @@ class HebergementUnifieController extends Controller
             $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
 
             // on parcourt les médias à supprimer
-            dump($visuelToRemoveCollection);
             if (!empty($visuelToRemoveCollection)) {
                 foreach ($visuelToRemoveCollection as $item) {
                     if (!empty($item)) {
