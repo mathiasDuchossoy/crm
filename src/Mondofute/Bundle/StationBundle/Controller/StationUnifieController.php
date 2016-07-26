@@ -1087,7 +1087,7 @@ class StationUnifieController extends Controller
                 if (!$stationUnifie->getStations()->contains($station)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($station->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                     $entitySite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
                     $stationSite = $entitySite->getStations()->first();
 
