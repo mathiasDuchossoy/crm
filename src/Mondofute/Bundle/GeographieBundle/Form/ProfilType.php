@@ -20,7 +20,21 @@ class ProfilType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => ProfilTraductionType::class
             ))
-            ->add('site', HiddenType::class, array('mapped' => false));
+            ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('images', CollectionType::class, array(
+                'entry_type' => ProfilImageType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+            ))
+            ->add('photos', CollectionType::class, array(
+                'entry_type' => ProfilPhotoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+            ));
 
     }
 
