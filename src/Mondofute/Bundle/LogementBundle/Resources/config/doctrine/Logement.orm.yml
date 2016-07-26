@@ -45,4 +45,8 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementTraduction
             mappedBy: logement
             cascade: ['persist','remove']
+        photos:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementPhoto
+            mappedBy: logement
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

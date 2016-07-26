@@ -3,13 +3,18 @@
 namespace Mondofute\Bundle\LogementBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
+use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementBundle\Form\LogementUnifieType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -224,9 +229,56 @@ class LogementUnifieController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
             $em = $this->getDoctrine()->getManager();
-            $this->copieVersSites($logementUnifie);
+//            $this->copieVersSites($logementUnifie);
+
+
+            // ***** Gestion des Medias *****
+            foreach ($request->get('logement_unifie')['logements'] as $key => $logement) {
+                if (!empty($logementUnifie->getLogements()->get($key)) && $logementUnifie->getLogements()->get($key)->getSite()->getCrm() == 1) {
+                    $logementCrm = $logementUnifie->getLogements()->get($key);
+                    if (!empty($logement['photos'])) {
+                        foreach ($logement['photos'] as $keyPhoto => $photo) {
+                            /** @var LogementPhoto $photoCrm */
+                            $photoCrm = $logementCrm->getPhotos()[$keyPhoto];
+                            $photoCrm->setActif(true);
+                            $photoCrm->setLogement($logementCrm);
+                            foreach ($sites as $site) {
+                                if ($site->getCrm() == 0) {
+                                    /** @var Logement $logementSite */
+                                    $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element) use ($site) {
+                                        return $element->getSite() == $site;
+                                    })->first();
+                                    if (!empty($logementSite)) {
+//                                      $typePhoto = (new ReflectionClass($photoCrm))->getShortName();
+                                        $typePhoto = (new ReflectionClass($photoCrm))->getName();
+
+                                        /** @var LogementPhoto $logementPhoto */
+                                        $logementPhoto = new $typePhoto();
+                                        $logementPhoto->setLogement($logementSite);
+                                        $logementPhoto->setPhoto($photoCrm->getPhoto());
+                                        $logementSite->addPhoto($logementPhoto);
+                                        foreach ($photoCrm->getTraductions() as $traduction) {
+                                            $traductionSite = new LogementPhotoTraduction();
+                                            /** @var LogementPhotoTraduction $traduction */
+                                            $traductionSite->setLibelle($traduction->getLibelle());
+                                            $traductionSite->setLangue($traduction->getLangue());
+                                            $logementPhoto->addTraduction($traductionSite);
+                                        }
+                                        if (!empty($photo['sites']) && in_array($site->getId(), $photo['sites'])) {
+                                            $logementPhoto->setActif(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+            
             $em->persist($logementUnifie);
             $em->flush();
+            $this->copieVersSites($logementUnifie);
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
@@ -263,7 +315,7 @@ class LogementUnifieController extends Controller
      * Copie dans la base de données site l'entité hébergement
      * @param LogementUnifie $entity
      */
-    private function copieVersSites(LogementUnifie $entity)
+    private function copieVersSites(LogementUnifie $entity, $originalLogementPhotos = null)
     {
         /** @var HebergementTraduction $hebergementTraduc */
 //        Boucle sur les hébergements afin de savoir sur quel site nous devons l'enregistrer
@@ -311,11 +363,171 @@ class LogementUnifieController extends Controller
                         ->setLogement($logementSite)
                         ->setNom($traduction->getNom());
                 }
+
+
+                // ********** GESTION DES MEDIAS **********
+                $logementPhotos = $logement->getPhotos(); // ce sont les hebegementPhotos ajouté
+
+                // si il y a des Medias pour l'logement de référence
+                if (!empty($logementPhotos) && !$logementPhotos->isEmpty()) {
+                    // si il y a des medias pour l'hébergement présent sur le site
+                    // (on passera dans cette condition, seulement si nous sommes en edition)
+                    if (!empty($logementSite->getPhotos()) && !$logementSite->getPhotos()->isEmpty()) {
+                        // on ajoute les hébergementPhotos dans un tableau afin de travailler dessus
+                        $logementPhotoSites = new ArrayCollection();
+                        foreach ($logementSite->getPhotos() as $logementphotoSite) {
+                            $logementPhotoSites->add($logementphotoSite);
+                        }
+                        // on parcourt les hébergmeentPhotos de la base
+                        /** @var LogementPhoto $logementPhoto */
+                        foreach ($logementPhotos as $logementPhoto) {
+                            // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
+                            // récupérer l'logementPhoto original correspondant sur le crm
+                            /** @var ArrayCollection $originalLogementPhotos */
+                            $originalLogementPhoto = $originalLogementPhotos->filter(function (LogementPhoto $element) use ($logementPhoto) {
+                                return $element->getPhoto() == $logementPhoto->getPhoto();
+                            })->first();
+                            unset($logementPhotoSite);
+                            if ($originalLogementPhoto !== false) {
+                                $tab = new ArrayCollection();
+                                foreach ($originalLogementPhotos as $item) {
+                                    if (!empty($item->getId())) {
+                                        $tab->add($item);
+                                    }
+                                }
+                                $keyoriginalPhoto = $tab->indexOf($originalLogementPhoto);
+
+                                $logementPhotoSite = $logementPhotoSites->get($keyoriginalPhoto);
+                            }
+                            // *** fin récupération de l'hébergementPhoto correspondant sur la bdd distante ***
+
+                            // si l'logementPhoto existe sur la bdd distante, on va le modifier
+                            /** @var LogementPhoto $logementPhotoSite */
+                            if (!empty($logementPhotoSite)) {
+                                // Si le photo a été modifié
+                                // (que le crm_ref_id est différent de de l'id du photo de l'logementPhoto du crm)
+                                if ($logementPhotoSite->getPhoto()->getMetadataValue('crm_ref_id') != $logementPhoto->getPhoto()->getId()) {
+                                    $clonePhoto = clone $logementPhoto->getPhoto();
+                                    $clonePhoto->setMetadataValue('crm_ref_id', $logementPhoto->getPhoto()->getId());
+                                    $clonePhoto->setContext('logement_photo_' . $logement->getSite()->getLibelle());
+
+                                    // on supprime l'ancien photo
+                                    $emSite->remove($logementPhotoSite->getPhoto());
+
+                                    $logementPhotoSite->setPhoto($clonePhoto);
+                                }
+
+                                $logementPhotoSite->setActif($logementPhoto->getActif());
+
+                                // on parcourt les traductions
+                                /** @var LogementPhotoTraduction $traduction */
+                                foreach ($logementPhoto->getTraductions() as $traduction) {
+                                    // on récupère la traduction correspondante
+                                    /** @var LogementPhotoTraduction $traductionSite */
+                                    /** @var ArrayCollection $traductionSites */
+                                    $traductionSites = $logementPhotoSite->getTraductions();
+
+                                    unset($traductionSite);
+                                    if (!$traductionSites->isEmpty()) {
+                                        // on récupère la traduction correspondante en fonction de la langue
+                                        $traductionSite = $traductionSites->filter(function (LogementPhotoTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
+                                    // si une traduction existe pour cette langue, on la modifie
+                                    if (!empty($traductionSite)) {
+                                        $traductionSite->setLibelle($traduction->getLibelle());
+                                    } // sinon on en cré une
+                                    else {
+                                        $traductionSite = new LogementPhotoTraduction();
+                                        $traductionSite->setLibelle($traduction->getLibelle())
+                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                        $logementPhotoSite->addTraduction($traductionSite);
+                                    }
+                                }
+                            } // sinon on va le créer
+                            else {
+                                $this->createLogementPhoto($logementPhoto, $logementSite, $emSite);
+                            }
+                        }
+                    } // sinon si l'hébergement de référence n'a pas de medias
+                    else {
+                        // on lui cré alors les medias
+                        // on parcours les medias de l'logement de référence
+                        /** @var LogementPhoto $logementPhoto */
+                        foreach ($logementPhotos as $logementPhoto) {
+                            $this->createLogementPhoto($logementPhoto, $logementSite, $emSite);
+                        }
+                    }
+                } // sinon on doit supprimer les medias présent pour l'hébergement correspondant sur le site distant
+                else {
+                    if (!empty($logementPhotoSites)) {
+                        /** @var LogementPhoto $logementPhotoSite */
+                        foreach ($logementPhotoSites as $logementPhotoSite) {
+                            $logementPhotoSite->setLogement(null);
+                            $emSite->remove($logementPhotoSite->getPhoto());
+                            $emSite->remove($logementPhotoSite);
+                        }
+                    }
+                }
+
+                // ********** FIN GESTION DES MEDIAS **********
+                
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
         }
     }
+
+
+    /**
+     * Création d'un nouveau logementPhoto
+     * @param LogementPhoto $logementPhoto
+     * @param Logement $logementSite
+     * @param EntityManager $emSite
+     */
+    private function createLogementPhoto(LogementPhoto $logementPhoto, Logement $logementSite, EntityManager $emSite)
+    {
+        /** @var LogementPhoto $logementPhotoSite */
+        // on récupère la classe correspondant au photo (photo ou video)
+        $typePhoto = (new ReflectionClass($logementPhoto))->getName();
+        // on cré un nouveau LogementPhoto on fonction du type
+        $logementPhotoSite = new $typePhoto();
+        $logementPhotoSite->setLogement($logementSite);
+        $logementPhotoSite->setActif($logementPhoto->getActif());
+        // on lui clone l'photo
+        $clonePhoto = clone $logementPhoto->getPhoto();
+
+        // **** récupération du photo physique ****
+        $pool = $this->container->get('sonata.media.pool');
+        $provider = $pool->getProvider($clonePhoto->getProviderName());
+        $provider->getReferenceImage($clonePhoto);
+
+        // c'est ce qui permet de récupérer le fichier lorsqu'il est nouveau todo:(à mettre en variable paramètre => parameter.yml)
+//        $clonePhoto->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($clonePhoto));
+        $clonePhoto->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($clonePhoto));
+
+        $clonePhoto->setProviderReference($logementPhoto->getPhoto()->getProviderReference());
+        $clonePhoto->setName($logementPhoto->getPhoto()->getName());
+        // **** fin récupération du photo physique ****
+
+        // on donne au nouveau photo, le context correspondant en fonction du site
+        $clonePhoto->setContext('logement_photo_' . $logementSite->getSite()->getLibelle());
+        // on lui attache l'id de référence du photo correspondant sur la bdd crm
+        $clonePhoto->setMetadataValue('crm_ref_id', $logementPhoto->getPhoto()->getId());
+
+        $logementPhotoSite->setPhoto($clonePhoto);
+
+        $logementSite->addPhoto($logementPhotoSite);
+        // on ajoute les traductions correspondante
+        foreach ($logementPhoto->getTraductions() as $traduction) {
+            $traductionSite = new LogementPhotoTraduction();
+            $traductionSite->setLibelle($traduction->getLibelle())
+                ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+            $logementPhotoSite->addTraduction($traductionSite);
+        }
+    }
+
 
     /**
      * Duplique a new LogementUnifie entity.
@@ -600,6 +812,11 @@ class LogementUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
         $originalLogements = new ArrayCollection();
+
+
+        $originalLogementPhotos = new ArrayCollection();
+        $originalPhotos = new ArrayCollection();
+        
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         /** @var Logement $logement */
         foreach ($logementUnifie->getLogements() as $logement) {
@@ -607,6 +824,17 @@ class LogementUnifieController extends Controller
                 $fournisseurHebergement = $logement->getFournisseurHebergement();
             }
             $originalLogements->add($logement);
+
+            // si l'logement est celui du CRM
+            if ($logement->getSite()->getCrm() == 1) {
+                // on parcourt les logementPhoto pour les comparer ensuite
+                /** @var LogementPhoto $logementPhoto */
+                foreach ($logement->getPhotos() as $logementPhoto) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalLogementPhotos->add($logementPhoto);
+                    $originalPhotos->add($logementPhoto->getPhoto());
+                }
+            }
         }
         $this->ajouterLogementsDansForm($logementUnifie);
         $this->logementsSortByAffichage($logementUnifie);
@@ -621,7 +849,71 @@ class LogementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+//            $em = $this->getDoctrine()->getManager();
+
+
+            // ************* suppression photos *************
+            // ** CAS OU L'ON SUPPRIME UN "LOGEMENT PHOTO" **
+            // on récupère les LogementPhoto de l'hébergementCrm pour les mettre dans une collection
+            // afin de les comparer au originaux.
+            /** @var Logement $logementCrm */
+            $logementCrm = $logementUnifie->getLogements()->filter(function (Logement $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $logementSites = $logementUnifie->getLogements()->filter(function (Logement $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            $newLogementPhotos = new ArrayCollection();
+            foreach ($logementCrm->getPhotos() as $logementPhoto) {
+                $newLogementPhotos->add($logementPhoto);
+            }
+            /** @var LogementPhoto $originalLogementPhoto */
+            foreach ($originalLogementPhotos as $key => $originalLogementPhoto) {
+
+                if (false === $newLogementPhotos->contains($originalLogementPhoto)) {
+                    $originalLogementPhoto->setLogement(null);
+                    $em->remove($originalLogementPhoto->getPhoto());
+                    $em->remove($originalLogementPhoto);
+                    // on doit supprimer l'hébergementPhoto des autres sites
+                    // on parcourt les logement des sites
+                    /** @var Logement $logementSite */
+                    foreach ($logementSites as $logementSite) {
+                        $logementPhotoSite = $em->getRepository(LogementPhoto::class)->findOneBy(
+                            array(
+                                'logement' => $logementSite,
+                                'photo' => $originalLogementPhoto->getPhoto()
+                            ));
+                        if (!empty($logementPhotoSite)) {
+                            $emSite = $this->getDoctrine()->getEntityManager($logementPhotoSite->getLogement()->getSite()->getLibelle());
+                            $logementSite = $emSite->getRepository(Logement::class)->findOneBy(
+                                array(
+                                    'logementUnifie' => $logementPhotoSite->getLogement()->getLogementUnifie()
+                                ));
+                            $logementPhotoSiteSites = new ArrayCollection($emSite->getRepository(LogementPhoto::class)->findBy(
+                                array(
+                                    'logement' => $logementSite
+                                ))
+                            );
+                            $logementPhotoSiteSite = $logementPhotoSiteSites->filter(function (LogementPhoto $element)
+                            use ($logementPhotoSite) {
+//                            return $element->getPhoto()->getProviderReference() == $logementPhotoSite->getPhoto()->getProviderReference();
+                                return $element->getPhoto()->getMetadataValue('crm_ref_id') == $logementPhotoSite->getPhoto()->getId();
+                            })->first();
+                            if (!empty($logementPhotoSiteSite)) {
+                                $emSite->remove($logementPhotoSiteSite->getPhoto());
+                                $logementPhotoSiteSite->setLogement(null);
+                                $emSite->remove($logementPhotoSiteSite);
+                                $emSite->flush();
+                            }
+                            $logementPhotoSite->setLogement(null);
+                            $em->remove($logementPhotoSite->getPhoto());
+                            $em->remove($logementPhotoSite);
+                        }
+                    }
+                }
+            }
+            // ************* fin suppression photos *************
+            
             $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalLogements as $logement) {
@@ -638,14 +930,145 @@ class LogementUnifieController extends Controller
 //                    $departement->setDepartementUnifie(null);
                     $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
                     $logementSite = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logementUnifie));
+
+
+                    /** @var LogementPhoto $logementPhotoSite */
+                    if (!empty($logementSite->getPhotos())) {
+                        foreach ($logementSite->getPhotos() as $logementPhotoSite) {
+                            $logementSite->removePhoto($logementPhotoSite);
+//                                        $logementPhotoSite->setLogement(null);
+//                                        $logementPhotoSite->setPhoto(null);
+                            $emSite->remove($logementPhotoSite);
+                            $emSite->remove($logementPhotoSite->getPhoto());
+                        }
+                        $emSite->flush();
+                    }
+                    
                     $emSite->remove($logementSite);
                     $emSite->flush();
+
+
+                    // *** suppression des logementPhotos de l'logement à supprimer ***
+                    /** @var LogementPhoto $logementPhoto */
+                    $logementPhotoSites = $em->getRepository(LogementPhoto::class)->findBy(array('logement' => $logement));
+                    if (!empty($logementPhotoSites)) {
+                        foreach ($logementPhotoSites as $logementPhoto) {
+                            $logementPhoto->setPhoto(null);
+                            $logementPhoto->setLogement(null);
+                            $em->remove($logementPhoto);
+                        }
+                        $em->flush();
+                    }
+                    // *** fin suppression des logementPhotos de l'logement à supprimer ***
+                    
                     $em->remove($logement);
                 }
             }
-            $this->copieVersSites($logementUnifie);
+//            $this->copieVersSites($logementUnifie);
+
+
+            // CAS D'UN NOUVEAU 'LOGEMENT PHOTO' OU DE MODIFICATION D'UN "LOGEMENT PHOTO"
+            /** @var LogementPhoto $logementPhoto */
+            // tableau pour la suppression des anciens photos
+            $photoToRemoveCollection = new ArrayCollection();
+            $keyCrm = $logementUnifie->getLogements()->indexOf($logementCrm);
+            // on parcourt les logementPhotos de l'logement crm
+            foreach ($logementCrm->getPhotos() as $key => $logementPhoto) {
+                // on active le nouveau logementPhoto (CRM) => il doit être toujours actif
+                $logementPhoto->setActif(true);
+                // parcourir tout les sites
+                /** @var Site $site */
+                foreach ($sites as $site) {
+                    // sauf  le crm (puisqu'on l'a déjà renseigné)
+                    // dans le but de créer un hebegrementPhoto pour chacun
+                    if ($site->getCrm() == 0) {
+                        // on récupère l'hébegergement du site
+                        /** @var Logement $logementSite */
+                        $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+                        // si hébergement existe
+                        if (!empty($logementSite)) {
+                            // on réinitialise la variable
+                            unset($logementPhotoSite);
+                            // s'il ne s'agit pas d'un nouveau logementPhoto
+                            if (!empty($logementPhoto->getId())) {
+                                // on récupère l'logementPhoto pour le modifier
+                                $logementPhotoSite = $em->getRepository(LogementPhoto::class)->findOneBy(array('logement' => $logementSite, 'photo' => $originalPhotos->get($key)));
+                            }
+                            // si l'logementPhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
+                            if (empty($logementPhoto->getId()) || empty($logementPhotoSite)) {
+                                // on récupère la classe correspondant au photo (photo ou video)
+                                $typePhoto = (new ReflectionClass($logementPhoto))->getName();
+                                // on créé un nouveau LogementPhoto on fonction du type
+                                /** @var LogementPhoto $logementPhotoSite */
+                                $logementPhotoSite = new $typePhoto();
+                                $logementPhotoSite->setLogement($logementSite);
+                            }
+                            // si l'hébergemenent photo existe déjà pour le site
+                            if (!empty($logementPhotoSite)) {
+                                if ($logementPhotoSite->getPhoto() != $logementPhoto->getPhoto()) {
+//                                    // si l'hébergementPhotoSite avait déjà un photo
+//                                    if (!empty($logementPhotoSite->getPhoto()) && !$photoToRemoveCollection->contains($logementPhotoSite->getPhoto()))
+//                                    {
+//                                        // on met l'ancien photo dans un tableau afin de le supprimer plus tard
+//                                        $photoToRemoveCollection->add($logementPhotoSite->getPhoto());
+//                                    }
+                                    // on met le nouveau photo
+                                    $logementPhotoSite->setPhoto($logementPhoto->getPhoto());
+                                }
+                                $logementSite->addPhoto($logementPhotoSite);
+
+                                /** @var LogementPhotoTraduction $traduction */
+                                foreach ($logementPhoto->getTraductions() as $traduction) {
+                                    /** @var LogementPhotoTraduction $traductionSite */
+                                    $traductionSites = $logementPhotoSite->getTraductions();
+                                    $traductionSite = null;
+                                    if (!$traductionSites->isEmpty()) {
+                                        $traductionSite = $traductionSites->filter(function (LogementPhotoTraduction $element) use ($traduction) {
+                                            return $element->getLangue() == $traduction->getLangue();
+                                        })->first();
+                                    }
+                                    if (empty($traductionSite)) {
+                                        $traductionSite = new LogementPhotoTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $logementPhotoSite->addTraduction($traductionSite);
+                                    }
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
+                                if (!empty($request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites']) &&
+                                    in_array($site->getId(), $request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites'])
+                                ) {
+                                    $logementPhotoSite->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                    // on est dans l'logementPhoto CRM
+                    // s'il s'agit d'un nouveau média
+                    elseif (empty($logementPhoto->getPhoto()->getId()) && !empty($originalPhotos->get($key))) {
+                        // on stocke  l'ancien media pour le supprimer après le persist final
+                        $photoToRemoveCollection->add($originalPhotos->get($key));
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+            
             $em->persist($logementUnifie);
             $em->flush();
+            
+            $this->copieVersSites($logementUnifie , $originalLogementPhotos);
+
+
+            if (!empty($photoToRemoveCollection)) {
+                foreach ($photoToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $em->remove($item);
+                    }
+                }
+                $em->flush();
+            }
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
@@ -705,9 +1128,47 @@ class LogementUnifieController extends Controller
                 $logementUnifieSite = $emSite->find(LogementUnifie::class, $logementUnifie->getId());
                 if (!empty($logementUnifieSite)) {
                     $emSite->remove($logementUnifieSite);
+
+                    $logementSite = $logementUnifieSite->getLogements()->first();
+
+                    // si il y a des photos pour l'entité, les supprimer
+                    if (!empty($logementSite->getPhotos())) {
+                        /** @var LogementPhoto $logementPhotoSite */
+                        foreach ($logementSite->getPhotos() as $logementPhotoSite) {
+                            $photoSite = $logementPhotoSite->getPhoto();
+                            $logementPhotoSite->setPhoto(null);
+                            if (!empty($photoSite)) {
+                                $emSite->remove($photoSite);
+                            }
+                        }
+                    }
+                    
+                    
                     $emSite->flush();
                 }
             }
+
+            if (!empty($logementUnifie)) {
+                if (!empty($logementUnifie->getLogements())) {
+                    /** @var Logement $logement */
+                    foreach ($logementUnifie->getLogements() as $logement) {
+
+                        // si il y a des photos pour l'entité, les supprimer
+                        if (!empty($logement->getPhotos())) {
+                            /** @var LogementPhoto $logementPhoto */
+                            foreach ($logement->getPhotos() as $logementPhoto) {
+                                $photo = $logementPhoto->getPhoto();
+                                $logementPhoto->setPhoto(null);
+                                $em->remove($photo);
+                            }
+                        }
+                    }
+                    $em->flush();
+                }
+//                    $emSite->remove($logementUnifieSite);
+//                    $emSite->flush();
+            }
+            
             $em->remove($logementUnifie);
             $em->flush();
         }
