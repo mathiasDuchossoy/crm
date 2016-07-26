@@ -351,6 +351,42 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        departement_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
         region_image_crm:
             providers:
                 - sonata.media.provider.image
