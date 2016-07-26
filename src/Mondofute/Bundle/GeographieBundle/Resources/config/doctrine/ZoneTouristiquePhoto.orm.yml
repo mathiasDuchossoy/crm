@@ -1,0 +1,30 @@
+Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiquePhotoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        zoneTouristique:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            inversedBy: photos
+        photo:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhotoTraduction
+            mappedBy: photo
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
