@@ -331,6 +331,24 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        fournisseur_logo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
         profil_image_crm:
             providers:
                 - sonata.media.provider.image
