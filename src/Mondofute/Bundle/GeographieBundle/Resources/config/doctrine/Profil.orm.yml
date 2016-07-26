@@ -21,4 +21,12 @@ Mondofute\Bundle\GeographieBundle\Entity\Profil:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction
             mappedBy: profil
             cascade:  ['persist' , 'remove']
+        images:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilImage
+            mappedBy: profil
+            cascade: ['persist' , 'remove']
+        photos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto
+            mappedBy: profil
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

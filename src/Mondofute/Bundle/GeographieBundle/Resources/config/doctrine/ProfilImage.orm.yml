@@ -1,0 +1,30 @@
+Mondofute\Bundle\GeographieBundle\Entity\ProfilImage:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ProfilImageRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        profil:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
+            inversedBy: images
+        image:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilImageTraduction
+            mappedBy: image
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
