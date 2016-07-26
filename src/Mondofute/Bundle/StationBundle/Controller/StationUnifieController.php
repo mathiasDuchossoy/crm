@@ -407,7 +407,7 @@ class StationUnifieController extends Controller
                 if (!$stationUnifie->getStations()->contains($station)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($station->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                     $entitySite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
                     $stationSite = $entitySite->getStations()->first();
                     $emSite->remove($stationSite);
@@ -466,7 +466,7 @@ class StationUnifieController extends Controller
                 }
             }
             if (!$erreurHebergement) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM

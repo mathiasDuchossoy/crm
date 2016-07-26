@@ -386,7 +386,7 @@ class DomaineUnifieController extends Controller
                     if (!$domaineUnifie->getDomaines()->contains($domaine)) {
 
                         //  suppression de la station sur le site
-                        $emSite = $this->getDoctrine()->getEntityManager($domaine->getSite()->getLibelle());
+                        $emSite = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
                         $entitySite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
                         $domaineSite = $entitySite->getDomaines()->first();
                         $emSite->remove($domaineSite);
@@ -444,7 +444,7 @@ class DomaineUnifieController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             try {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM

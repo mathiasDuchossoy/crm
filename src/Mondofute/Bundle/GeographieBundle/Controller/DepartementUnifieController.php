@@ -958,7 +958,7 @@ class DepartementUnifieController extends Controller
                 if (!$departementUnifie->getDepartements()->contains($departement)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($departement->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
                     $entitySite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
                     $departementSite = $entitySite->getDepartements()->first();
 
@@ -1251,7 +1251,7 @@ class DepartementUnifieController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM

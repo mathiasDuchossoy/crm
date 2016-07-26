@@ -173,7 +173,6 @@ class SecteurUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($secteurUnifie);
-
             $em->flush();
 
             $this->copieVersSites($secteurUnifie);
@@ -925,7 +924,7 @@ class SecteurUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-            
+
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
 //            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
 //            $em->persist($secteurCrm);
@@ -935,7 +934,7 @@ class SecteurUnifieController extends Controller
                 if (!$secteurUnifie->getSecteurs()->contains($secteur)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($secteur->getSite()->getLibelle());
                     $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
                     $secteurSite = $entitySite->getSecteurs()->first();
 
@@ -962,7 +961,7 @@ class SecteurUnifieController extends Controller
                         }
                         $emSite->flush();
                     }
-                    
+
                     $emSite->remove($secteurSite);
                     $emSite->flush();
                     $secteur->setSecteurUnifie(null);
@@ -992,7 +991,7 @@ class SecteurUnifieController extends Controller
                         $em->flush();
                     }
                     // *** fin suppression des secteurPhotos de l'secteur à supprimer ***
-                    
+
                     $em->remove($secteur);
                 }
             }
@@ -1201,7 +1200,7 @@ class SecteurUnifieController extends Controller
                 }
                 $em->flush();
             }
-            
+
             $this->addFlash('success', 'le secteur a bien été modifié');
 
             return $this->redirectToRoute('geographie_secteur_edit', array('id' => $secteurUnifie->getId()));
@@ -1238,7 +1237,7 @@ class SecteurUnifieController extends Controller
             }
             if (!$erreurStation) {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
