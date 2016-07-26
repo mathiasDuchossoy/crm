@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
+use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
@@ -133,9 +134,7 @@ class FournisseurController extends Controller
 
             if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-//                dump($fournisseur);
-                $this->copieVersSites($fournisseur);
-
+//                $this->copieVersSites($fournisseur);
 
                 foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -163,9 +162,12 @@ class FournisseurController extends Controller
                         }
                     }
                 }
-//                dump($fournisseur);die;
+
                 $em->persist($fournisseur);
                 $em->flush();
+
+
+                $this->copieVersSites($fournisseur);
 
                 // add flash messages
                 $this->addFlash(
@@ -262,6 +264,61 @@ class FournisseurController extends Controller
                     $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                 }
             }
+
+            // ***** gestion logo *****
+            if (!empty($fournisseur->getLogo())) {
+                $logo = $fournisseur->getLogo();
+//                if (!empty($fournisseurSite->getLogo())){
+//                    dump($fournisseurSite->getLogo());die;
+//                    $logoSite = $fournisseurSite->getLogo();
+//                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
+
+                $cloneVisuel = clone $logo;
+                $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+
+                // on supprime l'ancien visuel
+                $fournisseurSite->setLogo(null);
+//                        $emSite->remove($logoSite);
+
+                $fournisseurSite->setLogo($cloneVisuel);
+//                    }
+//                }
+//                else
+//                {
+//                    dump('ici');
+//                    // on lui clone l'image
+//                    $cloneVisuel = clone $logo;
+//                    // **** récupération du visuel physique ****
+//                    $pool = $this->container->get('sonata.media.pool');
+//                    $provider = $pool->getProvider($cloneVisuel->getProviderName());
+//                    $provider->getReferenceImage($cloneVisuel);
+//
+//                    $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
+//
+//                    $cloneVisuel->setProviderReference($logo->getProviderReference());
+//                    $cloneVisuel->setName($logo->getName());
+//                    // **** fin récupération du visuel physique ****
+//
+//                    // on donne au nouveau visuel, le context correspondant en fonction du site
+//                    $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+//                    // on lui attache l'id de référence du visuel correspondant sur la bdd crm
+//                    $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+//
+//                    $fournisseur->setLogo($cloneVisuel);
+//                }
+//            }
+//            else
+//            {
+//                if (!empty($fournisseurSite->getLogo()))
+//                {
+//                    $fournisseurSite->setLogo(null);
+//                    $emSite->remove($fournisseurSite->getLogo());
+//                }
+            }
+            // ***** fin gestion logo *****
+
+
             $emSite->persist($fournisseurSite);
 
             $emSite->flush();
@@ -401,6 +458,8 @@ class FournisseurController extends Controller
             }
             $originalListeServices->add($listeService);
         }
+
+        $originalLogo = $fournisseur->getLogo();
 
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
@@ -553,6 +612,11 @@ class FournisseurController extends Controller
 
             $em->persist($fournisseur);
             $em->flush();
+
+                if ($originalLogo != $fournisseur->getLogo()) {
+                    $em->remove($originalLogo);
+                    $em->flush();
+                }
 
                 // add flash messages
                 $this->addFlash(
@@ -1095,6 +1159,53 @@ class FournisseurController extends Controller
                 }
 //                $fournisseurSite->addReception($receptionSite);
             }
+
+            // ***** gestion logo *****
+            if (!empty($fournisseur->getLogo())) {
+                $logo = $fournisseur->getLogo();
+                if (!empty($fournisseurSite->getLogo())) {
+                    $logoSite = $fournisseurSite->getLogo();
+                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
+
+                        $cloneVisuel = clone $logo;
+                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+
+                        // on supprime l'ancien visuel
+                        $fournisseurSite->setLogo(null);
+                        $emSite->remove($logoSite);
+
+                        $fournisseurSite->setLogo($cloneVisuel);
+                    }
+                } else {
+                    // on lui clone l'image
+                    $cloneVisuel = clone $logo;
+                    // **** récupération du visuel physique ****
+                    $pool = $this->container->get('sonata.media.pool');
+                    $provider = $pool->getProvider($cloneVisuel->getProviderName());
+                    $provider->getReferenceImage($cloneVisuel);
+
+                    $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
+
+                    $cloneVisuel->setProviderReference($logo->getProviderReference());
+                    $cloneVisuel->setName($logo->getName());
+                    // **** fin récupération du visuel physique ****
+
+                    // on donne au nouveau visuel, le context correspondant en fonction du site
+                    $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+                    // on lui attache l'id de référence du visuel correspondant sur la bdd crm
+                    $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+
+                    $fournisseur->setLogo($cloneVisuel);
+                }
+            } else {
+                if (!empty($fournisseurSite->getLogo())) {
+                    $fournisseurSite->setLogo(null);
+                    $emSite->remove($fournisseurSite->getLogo());
+                }
+            }
+            // ***** fin gestion logo *****
+
             $emSite->persist($fournisseurSite);
             $emSite->flush();
         }

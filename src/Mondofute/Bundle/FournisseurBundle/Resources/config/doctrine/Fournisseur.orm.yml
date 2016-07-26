@@ -68,4 +68,8 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         fournisseurParent:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: fournisseurEnfants
+    oneToOne:
+        logo:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
