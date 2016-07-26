@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Form;
+namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HebergementPhotoType extends AbstractType
+class RegionImageType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -39,11 +39,11 @@ class HebergementPhotoType extends AbstractType
             // Ce doit être considéré comme un nouveau "Image"
             if ($data && null !== $data->getId()) {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('image', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_image_crm',
                         'required' => false,
-                        'label' => 'photo',
+                        'label' => 'image',
                     ))
                     ->add('sites', EntityType::class, array(
                         'class' => 'MondofuteSiteBundle:Site',
@@ -59,11 +59,11 @@ class HebergementPhotoType extends AbstractType
                     ));
             } else {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('image', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.image',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_image_crm',
                         'required' => true,
-                        'label' => 'photo',
+                        'label' => 'image',
                     ))
                     ->add('sites', EntityType::class, array(
                         'class' => 'MondofuteSiteBundle:Site',
@@ -86,7 +86,7 @@ class HebergementPhotoType extends AbstractType
                 'mapped' => false
             ))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => HebergementVisuelTraductionType::class,
+                'entry_type' => RegionImageTraductionType::class,
                 'allow_add' => true,
                 'prototype_name' => '__name_traduction__',
                 'required' => true,
@@ -99,8 +99,9 @@ class HebergementPhotoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementPhoto',
-            'model_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementPhoto',
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionImage',
         ));
     }
+
+
 }
