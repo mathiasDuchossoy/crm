@@ -6,7 +6,6 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use Doctrine\ORM\Query;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -918,7 +917,7 @@ class HebergementUnifieController extends Controller
                 /** @var Hebergement $hebergementSite */
                 if (!$hebergementUnifie->getHebergements()->contains($hebergement)) {
                     //  suppression de l'hébergement sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($hebergement->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($hebergement->getSite()->getLibelle());
                     $entitySite = $emSite->find(HebergementUnifie::class, $hebergementUnifie->getId());
                     foreach ($entitySite->getFournisseurs() as $fournisseurSite) {
                         $entitySite->removeFournisseur($fournisseurSite);
@@ -1007,10 +1006,10 @@ class HebergementUnifieController extends Controller
     private function deleteTarifSites(ServiceHebergementTarif $tarif)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $tarifSite = $emSite->find(ServiceHebergementTarif::class,
                 $tarif->getId());
             if (!empty($tarifSite)) {
@@ -1026,10 +1025,10 @@ class HebergementUnifieController extends Controller
     private function deleteServiceSites(ServiceHebergement $service)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             if (!empty($service->getId())) {
                 $serviceSite = $emSite->find(ServiceHebergement::class,
                     $service->getId());
@@ -1056,7 +1055,7 @@ class HebergementUnifieController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM

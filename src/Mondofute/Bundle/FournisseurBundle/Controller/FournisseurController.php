@@ -190,10 +190,10 @@ class FournisseurController extends Controller
         /** @var MoyenCommunication $moyenComSite */
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $fournisseurSite = clone $fournisseur;
 //            $fournisseurSite = new Fournisseur();
@@ -575,10 +575,10 @@ class FournisseurController extends Controller
     private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $typeFournisseurSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
                 'fournisseur' => $typeFournisseur->getFournisseur(),
@@ -596,10 +596,10 @@ class FournisseurController extends Controller
     private function deleteInterlocuteurSites(FournisseurInterlocuteur $interlocuteur)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $interlocuteurSite = $emSite->find('MondofuteFournisseurBundle:FournisseurInterlocuteur',
                 $interlocuteur->getId());
@@ -650,10 +650,10 @@ class FournisseurController extends Controller
     private function deleteListeServiceSites(ListeService $listeService)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $listeServiceSite = $emSite->find(ListeService::class,
                 $listeService->getId());
             if (!empty($listeServiceSite)) {
@@ -679,10 +679,10 @@ class FournisseurController extends Controller
     private function deleteServiceSites(Service $service)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $serviceSite = $emSite->find(Service::class,
                 $service->getId());
             if (!empty($serviceSite)) {
@@ -699,10 +699,10 @@ class FournisseurController extends Controller
     private function deleteTarifServiceSites(TarifService $tarifService)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $tarifServiceSite = $emSite->find(TarifService::class,
                 $tarifService->getId());
             if (!empty($tarifServiceSite)) {
@@ -716,10 +716,10 @@ class FournisseurController extends Controller
     private function deleteRemiseClefSites(RemiseClef $remiseClef)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $remiseClefSite = $emSite->find('MondofuteRemiseClefBundle:RemiseClef', $remiseClef->getId());
             if (!empty($remiseClefSite)) {
@@ -733,10 +733,10 @@ class FournisseurController extends Controller
     private function deleteReceptionSites(Reception $reception)
     {
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $receptionSite = $emSite->find(Reception::class, $reception->getId());
             if (!empty($receptionSite)) {
@@ -760,10 +760,10 @@ class FournisseurController extends Controller
         /** @var FournisseurInterlocuteur $interlocuteurSite */
         /** @var Site $site */
         /** @var FournisseurInterlocuteur $interlocuteur */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
             $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);

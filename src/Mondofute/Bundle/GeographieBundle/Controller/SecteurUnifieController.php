@@ -361,7 +361,7 @@ class SecteurUnifieController extends Controller
                 if (!$secteurUnifie->getSecteurs()->contains($secteur)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($secteur->getSite()->getLibelle());
                     $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
                     $secteurSite = $entitySite->getSecteurs()->first();
                     $emSite->remove($secteurSite);
@@ -402,7 +402,7 @@ class SecteurUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             // Parcourir les sites non CRM

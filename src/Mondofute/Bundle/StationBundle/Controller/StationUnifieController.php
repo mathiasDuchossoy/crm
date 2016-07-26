@@ -5,13 +5,13 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
-use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -390,7 +390,7 @@ class StationUnifieController extends Controller
                 if (!$stationUnifie->getStations()->contains($station)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($station->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
                     $entitySite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
                     $stationSite = $entitySite->getStations()->first();
                     $emSite->remove($stationSite);
@@ -439,7 +439,7 @@ class StationUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             // Parcourir les sites non CRM

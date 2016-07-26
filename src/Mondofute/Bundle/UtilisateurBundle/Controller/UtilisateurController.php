@@ -5,14 +5,13 @@ namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 use FOS\UserBundle\Model\UserInterface;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
 use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 
 /**
  * Utilisateur controller.
@@ -62,7 +61,7 @@ class UtilisateurController extends Controller
             $utilisateurUser->setEnabled(true);
             $utilisateurUser->setRoles(array(UserInterface::ROLE_SUPER_ADMIN));
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
 //                $moyenCom->setDateCreation();
@@ -82,7 +81,7 @@ class UtilisateurController extends Controller
                 foreach ($sites as $site) {
                     $utilisateurUserClone = clone $utilisateurUser;
                     $utilisateurClone = clone $utilisateur;
-                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
                     $this->dupliquerMoyenComs($utilisateur);
 
@@ -134,7 +133,7 @@ class UtilisateurController extends Controller
     private function loginExist(UtilisateurUser $utilisateurUser)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $utilisateurUserByUsername = $em->getRepository(UtilisateurUser::class)->findOneBy(array('username' => $utilisateurUser->getUsername()));
         $utilisateurUserByMail = $em->getRepository(UtilisateurUser::class)->findOneBy(array('email' => $utilisateurUser->getEmail()));
         if ((!empty($utilisateurUserByUsername) && $utilisateurUser != $utilisateurUserByUsername)
@@ -280,7 +279,7 @@ class UtilisateurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
             $utilisateurSite = $utilisateurUserSite->getUtilisateur();
             $utilisateurSite
@@ -352,7 +351,7 @@ class UtilisateurController extends Controller
 
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
                 $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
 

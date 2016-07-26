@@ -368,7 +368,7 @@ class RegionUnifieController extends Controller
                     if (!$regionUnifie->getRegions()->contains($region)) {
 
                         //  suppression de la station sur le site
-                        $emSite = $this->getDoctrine()->getEntityManager($region->getSite()->getLibelle());
+                        $emSite = $this->getDoctrine()->getManager($region->getSite()->getLibelle());
                         $entitySite = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
                         $regionSite = $entitySite->getRegions()->first();
 
@@ -425,7 +425,7 @@ class RegionUnifieController extends Controller
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
@@ -466,7 +466,7 @@ class RegionUnifieController extends Controller
     public function getRegionsCommunesBySiteAction(Request $request)
     {
         $sites = $request->get('sites');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $regionUnifies = $em->getRepository(RegionUnifie::class)->findAll();
 //        $regionUnifiesNotEmpty  = new ArrayCollection();

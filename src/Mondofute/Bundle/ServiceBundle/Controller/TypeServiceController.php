@@ -64,7 +64,7 @@ class TypeServiceController extends Controller
 
     public function chargerLangues()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         return $langues;
     }
@@ -75,7 +75,7 @@ class TypeServiceController extends Controller
      */
     public function ajouterTraductions(TypeService $typeService)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         foreach ($langues as $langue) {
             if ($typeService->getTraductions()->filter(function (TypeServiceTraduction $element) use ($langue) {
@@ -92,11 +92,11 @@ class TypeServiceController extends Controller
 
     public function copieVersSites(TypeService $entity)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         /** @var Site $site */
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             if (empty($entity->getId()) || is_null(($entitySite = $emSite->getRepository(TypeService::class)->find($entity)))) {
                 $entitySite = new TypeService();

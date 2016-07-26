@@ -372,7 +372,7 @@ class ZoneTouristiqueUnifieController extends Controller
                     if (!$zoneTouristiqueUnifie->getZoneTouristiques()->contains($zoneTouristique)) {
 
                         //  suppression de la station sur le site
-                        $emSite = $this->getDoctrine()->getEntityManager($zoneTouristique->getSite()->getLibelle());
+                        $emSite = $this->getDoctrine()->getManager($zoneTouristique->getSite()->getLibelle());
                         $entitySite = $emSite->find(ZoneTouristiqueUnifie::class, $zoneTouristiqueUnifie->getId());
                         $zoneTouristiqueSite = $entitySite->getZoneTouristiques()->first();
                         $emSite->remove($zoneTouristiqueSite);
@@ -426,7 +426,7 @@ class ZoneTouristiqueUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
