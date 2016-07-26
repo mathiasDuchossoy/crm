@@ -9,6 +9,11 @@
         {{ form_widget(form.sites) }}
         {% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'image'} %}
     {% endif %}
+    {% if form.photo is defined %}
+        {{ form_widget(form.photo) }}
+        {{ form_widget(form.sites) }}
+        {% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'photo'} %}
+    {% endif %}
     {% if form.visuel is defined %}
         {{ form_widget(form.visuel) }}
         {{ form_widget(form.sites) }}

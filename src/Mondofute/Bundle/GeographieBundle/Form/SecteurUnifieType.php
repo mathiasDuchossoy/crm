@@ -44,11 +44,19 @@ class SecteurUnifieType extends AbstractType
                 foreach ($secteur->children['images'] as $key => $image) {
                     if ($image->vars['value']->getActif() == true) {
 
-                        dump($secteur->vars['value']->getSite()->getId());
+//                        dump($secteur->vars['value']->getSite()->getId());
                         $siteId = $secteur->vars['value']->getSite()->getId();
 //                    $secteurCrm->children['images']->children[$key]
                         $secteurCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
-                        dump($secteurCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr']);
+//                        dump($secteurCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr']);
+                    }
+                }
+                foreach ($secteur->children['photos'] as $key => $photo) {
+                    if ($photo->vars['value']->getActif() == true) {
+
+                        $siteId = $secteur->vars['value']->getSite()->getId();
+//                    $secteurCrm->children['photos']->children[$key]
+                        $secteurCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
             }

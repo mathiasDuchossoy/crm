@@ -29,6 +29,14 @@ class Region
      * @var \Doctrine\Common\Collections\Collection
      */
     private $departements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -190,7 +198,71 @@ class Region
         return $this->departements;
     }
 
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image
+     *
+     * @return Region
+     */
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image)
+    {
+        $this->images[] = $image->setRegion($this);
 
+        return $this;
+    }
 
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image)
+    {
+        $this->images->removeElement($image);
+    }
 
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo
+     *
+     * @return Region
+     */
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo)
+    {
+        $this->photos[] = $photo->setRegion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
+    }
 }

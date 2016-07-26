@@ -24,4 +24,12 @@ Mondofute\Bundle\GeographieBundle\Entity\Region:
         departements:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
             mappedBy: region
+        images:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionImage
+            mappedBy: region
+            cascade: ['persist' , 'remove']
+        photos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto
+            mappedBy: region
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
