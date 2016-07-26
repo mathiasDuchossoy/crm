@@ -24,4 +24,12 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: zoneTouristique
+        images:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage
+            mappedBy: zoneTouristique
+            cascade: ['persist' , 'remove']
+        photos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto
+            mappedBy: zoneTouristique
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
