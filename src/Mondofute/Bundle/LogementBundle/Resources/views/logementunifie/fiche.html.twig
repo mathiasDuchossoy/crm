@@ -68,6 +68,35 @@
                                 </div>
                             {% endfor %}
                         </div>
+
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if logement.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Photos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des photos#}
+                                    <ul class="photo" data-prototype_photo="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': logement.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for photo in logement.photos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                        
                     </div>
                 {% endfor %}
             </div>

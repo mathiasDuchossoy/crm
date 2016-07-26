@@ -53,6 +53,10 @@ class Logement
      * @var \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
      */
     private $fournisseurHebergement;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -313,7 +317,6 @@ class Logement
         return $this;
     }
 
-
     /**
      * Get fournisseurHebergement
      *
@@ -333,9 +336,44 @@ class Logement
      */
     public function setFournisseurHebergement(
         \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement = null
-    ) {
+    )
+    {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo
+     *
+     * @return Logement
+     */
+    public function addPhoto(\Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo)
+    {
+        $this->photos[] = $photo->setLogement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }
