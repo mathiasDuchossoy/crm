@@ -284,3 +284,10 @@ fos_user:
 #        form:
 #            type: mondofute_utilisateur_user
 #            name: mondofute_utilisateur_user
+
+jms_job_queue:
+    queue_options_defaults:
+        max_concurrent_jobs: 3  # par defaut le jobs queue peut lancer 3 jobs en meme temps
+    queue_options:
+        periode:
+            max_concurrent_jobs: 1  # lance les jobs de type periode 1 par 1

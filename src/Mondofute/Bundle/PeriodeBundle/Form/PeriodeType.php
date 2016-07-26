@@ -21,7 +21,8 @@ class PeriodeType extends AbstractType
                 'attr' => array(
                     'class' => 'form-control input-inline datepicker date',
                     'data-provide' => 'datepicker',
-                    'data-date-format' => 'dd/mm/yyyy'
+                    'data-date-format' => 'dd/mm/yyyy',
+                    'placeholder' => 'format_date',
                 )
             ))
             ->add('fin', DateType::class, array(
@@ -31,7 +32,8 @@ class PeriodeType extends AbstractType
                 'attr' => array(
                     'class' => 'form-control input-inline datepicker date',
                     'data-provide' => 'datepicker',
-                    'data-date-format' => 'dd/mm/yyyy'
+                    'data-date-format' => 'dd/mm/yyyy',
+                    'placeholder' => 'format_date',
                 )
             ))
             ->add('nbJour', null, array('required' => false))

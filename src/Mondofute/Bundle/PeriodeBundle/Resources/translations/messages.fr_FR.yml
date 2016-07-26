@@ -8,3 +8,4 @@ periode:
     liste: 'liste des périodes'
 placeholder:
     choix_periode_type: '-- choix du type de période --'
+format_date: 'jj/mm/aaaa'
