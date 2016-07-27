@@ -108,18 +108,31 @@ class FournisseurController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $interlocuteurController = new InterlocuteurController();
-            $interlocuteurController->setContainer($this->container);
-            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+        $errorType = false;
+        if ($form->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+            $errorType = true;
+            $this->addFlash('error', 'Vous devez choisir au moins un type.');
+        }
 
+        if ($form->isSubmitted() && $form->isValid() && !$errorType) {
+            // ***** GESTION DES TYPES DU FOURNISSEUR *****
+            $errorType = false;
             if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $typeFournisseur = new TypeFournisseur();
                     $typeFournisseur->setTypeFournisseur($type);
                     $fournisseur->addType($typeFournisseur);
                 }
+            } else {
+                $errorType = true;
+                // add flash messages
+                $this->addFlash(
+                    'error',
+                    'Vous devez choisir au moins un type.'
+                );
             }
+            // ***** FIN GESTION DES TYPES DU FOURNISSEUR *****
+
             /** @var ListeService $listeService */
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -132,13 +145,17 @@ class FournisseurController extends Controller
                     }
                 }
             }
+
+            $interlocuteurController = new InterlocuteurController();
+            $interlocuteurController->setContainer($this->container);
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
 
             if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
 
-//                $this->copieVersSites($fournisseur);
 
                 foreach ($fournisseur->getMoyenComs() as $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -166,20 +183,20 @@ class FournisseurController extends Controller
                         }
                     }
                 }
+                if (!$errorType) {
+                    $em->persist($fournisseur);
+                    $em->flush();
 
-                $em->persist($fournisseur);
-                $em->flush();
+                    $this->copieVersSites($fournisseur);
 
+                    // add flash messages
+                    $this->addFlash(
+                        'success',
+                        'Le fournisseur a bien été créé.'
+                    );
 
-                $this->copieVersSites($fournisseur);
-
-                // add flash messages
-                $this->addFlash(
-                    'success',
-                    'Le fournisseur a bien été créé.'
-                );
-
-                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
+                    return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
+                }
             }
         }
 
@@ -382,8 +399,6 @@ class FournisseurController extends Controller
 //            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
-//        dump($fournisseurSite);
-//        $emSite->flush();
     }
 
     /**
@@ -473,11 +488,17 @@ class FournisseurController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $errorType = false;
+        if ($editForm->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+            $errorType = true;
+            $this->addFlash('error', 'Vous devez choisir au moins un type.');
+        }
+
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType) {
             // ***** GESTION DES TYPES DU FOURNISSEUR ****
             // *** on récupère les types de fournisseus coché dans le formulaires via la reqête ***
             $arrayTypeFournisseur = new ArrayCollection();
-
+            $errorType = false;
             if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $arrayTypeFournisseur->add(intval($type));
@@ -505,7 +526,6 @@ class FournisseurController extends Controller
                 }
             }
             // ***** FIN GESTION DES TYPES DU FOURNISSEUR ****
-
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
                 foreach ($listeService->getServices() as $service) {
@@ -516,7 +536,6 @@ class FournisseurController extends Controller
                     }
                 }
             }
-
             // ***** GESTION SUPPRESSION DES INTERLOCUTEURS *****
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);
@@ -528,7 +547,7 @@ class FournisseurController extends Controller
                     $this->deleteInterlocuteurSites($interlocuteur);
                     $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
 
-                    $em->flush();
+//                    $em->flush();
                     $interlocuteur->setFournisseur(null);
 
                     // if you wanted to delete the Tag entirely, you can also do that
@@ -636,7 +655,6 @@ class FournisseurController extends Controller
                 $em->persist($fournisseur);
                 $em->flush();
 
-                $this->mAJSites($fournisseur);
 
 
                 $this->mAJSites($fournisseur);
