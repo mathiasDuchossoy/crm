@@ -495,6 +495,19 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
+            foreach ($fournisseur->getListeServices() as $listeService) {
+                $listeService->setFournisseur($fournisseur);
+                foreach ($listeService->getServices() as $service) {
+                    $service->setListeService($listeService);
+                    /** @var TarifService $tarifService */
+                    foreach ($service->getTarifs() as $tarifService) {
+                        $tarifService->setService($service);
+                    }
+                }
+            }
+            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
+                $arrayTypeFournisseur->add(intval($type));
+            }
 
             /** @var TypeFournisseur $type */
             foreach ($originalTypeFournisseurs as $type) {
