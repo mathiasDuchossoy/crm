@@ -42,14 +42,14 @@ class DepartementType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'required' => false,
+//                'required' => false,
             ))
             ->add('photos', CollectionType::class, array(
                 'entry_type' => DepartementPhotoType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'required' => false,
+//                'required' => false,
             ))
         ;
     }
