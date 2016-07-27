@@ -61,12 +61,18 @@ class FournisseurType extends AbstractType
                 'mapped' => false,
             ))
             ->add('typeFournisseurs', ChoiceType::class, array(
+//            ->add('types', ChoiceType::class, array(
                 'choices' => array(
                     TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
                     TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
                     TypeFournisseur::getLibelle(TypeFournisseur::LocationMaterielDeSki) => TypeFournisseur::LocationMaterielDeSki,
                     TypeFournisseur::getLibelle(TypeFournisseur::ESF) => TypeFournisseur::ESF,
                     TypeFournisseur::getLibelle(TypeFournisseur::Assurance) => TypeFournisseur::Assurance,
+//                    new TypeFournisseur(TypeFournisseur::Hebergement),
+//                    new TypeFournisseur(TypeFournisseur::RemonteesMecaniques) ,
+//                    new TypeFournisseur(TypeFournisseur::LocationMaterielDeSki) ,
+//                    new TypeFournisseur(TypeFournisseur::ESF),
+//                    new TypeFournisseur(TypeFournisseur::Assurance) ,
                 ),
                 'choices_as_values' => true,
                 'label' => 'types',
@@ -74,7 +80,9 @@ class FournisseurType extends AbstractType
                 'mapped' => false,
                 'expanded' => true,
                 'multiple' => true,
-//                'required'  => true,
+//                'choice_label' => 'libelle',
+//                'property_path' => 'libelle',
+                'required' => true,
             ))
             ->add('enseigne', null, array(
                 'label' => 'enseigne',

@@ -157,7 +157,8 @@ class Fournisseur extends Moral
      */
     public function removeInterlocuteur(
         FournisseurInterlocuteur $interlocuteur
-    ) {
+    )
+    {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
 
