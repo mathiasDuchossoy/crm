@@ -647,7 +647,6 @@ class FournisseurController extends Controller
                 }
 
                 $em->persist($fournisseur);
-
                 $em->flush();
 
                 $this->mAJSites($fournisseur);
