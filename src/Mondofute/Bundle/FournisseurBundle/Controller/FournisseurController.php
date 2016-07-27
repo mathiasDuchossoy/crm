@@ -495,9 +495,6 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
-            }
 
             /** @var TypeFournisseur $type */
             foreach ($originalTypeFournisseurs as $type) {
