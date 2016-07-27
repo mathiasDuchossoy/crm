@@ -123,13 +123,6 @@ class FournisseurController extends Controller
                     $typeFournisseur->setTypeFournisseur($type);
                     $fournisseur->addType($typeFournisseur);
                 }
-            } else {
-                $errorType = true;
-                // add flash messages
-                $this->addFlash(
-                    'error',
-                    'Vous devez choisir au moins un type.'
-                );
             }
             // ***** FIN GESTION DES TYPES DU FOURNISSEUR *****
 
@@ -183,20 +176,19 @@ class FournisseurController extends Controller
                         }
                     }
                 }
-                if (!$errorType) {
-                    $em->persist($fournisseur);
-                    $em->flush();
+//                dump($fournisseur);die;
+                $em->persist($fournisseur);
+                $em->flush();
 
-                    $this->copieVersSites($fournisseur);
+                $this->copieVersSites($fournisseur);
 
-                    // add flash messages
-                    $this->addFlash(
-                        'success',
-                        'Le fournisseur a bien été créé.'
-                    );
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été créé.'
+                );
 
-                    return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
-                }
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
         }
 
@@ -671,8 +663,6 @@ class FournisseurController extends Controller
                     'Le fournisseur a bien été modifié.'
                 );
                 return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
-
-
             }
         }
 
