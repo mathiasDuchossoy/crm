@@ -6,7 +6,12 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhotoTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteUnifie;
 use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
@@ -24,6 +29,7 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,6 +91,93 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
 
             $em = $this->getDoctrine()->getManager();
+
+
+            // ***** Gestion des Medias *****
+            foreach ($request->get('domaine_carte_identite_unifie')['domaineCarteIdentites'] as $key => $domaineCarteIdentite) {
+                if (!empty($domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key)) && $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key)->getSite()->getCrm() == 1) {
+                    $domaineCarteIdentiteCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key);
+                    if (!empty($domaineCarteIdentite['images'])) {
+                        foreach ($domaineCarteIdentite['images'] as $keyImage => $image) {
+                            /** @var DomaineCarteIdentiteImage $imageCrm */
+                            $imageCrm = $domaineCarteIdentiteCrm->getImages()[$keyImage];
+                            $imageCrm->setActif(true);
+                            $imageCrm->setDomaineCarteIdentite($domaineCarteIdentiteCrm);
+                            foreach ($sites as $site) {
+                                if ($site->getCrm() == 0) {
+                                    /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                                    $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
+                                        return $element->getSite() == $site;
+                                    })->first();
+                                    if (!empty($domaineCarteIdentiteSite)) {
+//                                      $typeImage = (new ReflectionClass($imageCrm))->getShortName();
+                                        $typeImage = (new ReflectionClass($imageCrm))->getName();
+
+                                        /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                                        $domaineCarteIdentiteImage = new $typeImage();
+                                        $domaineCarteIdentiteImage->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+                                        $domaineCarteIdentiteImage->setImage($imageCrm->getImage());
+                                        $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImage);
+                                        foreach ($imageCrm->getTraductions() as $traduction) {
+                                            $traductionSite = new DomaineCarteIdentiteImageTraduction();
+                                            /** @var DomaineCarteIdentiteImageTraduction $traduction */
+                                            $traductionSite->setLibelle($traduction->getLibelle());
+                                            $traductionSite->setLangue($traduction->getLangue());
+                                            $domaineCarteIdentiteImage->addTraduction($traductionSite);
+                                        }
+                                        if (!empty($image['sites']) && in_array($site->getId(), $image['sites'])) {
+                                            $domaineCarteIdentiteImage->setActif(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            foreach ($request->get('domaine_carte_identite_unifie')['domaineCarteIdentites'] as $key => $domaineCarteIdentite) {
+                if (!empty($domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key)) && $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key)->getSite()->getCrm() == 1) {
+                    $domaineCarteIdentiteCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->get($key);
+                    if (!empty($domaineCarteIdentite['photos'])) {
+                        foreach ($domaineCarteIdentite['photos'] as $keyPhoto => $photo) {
+                            /** @var DomaineCarteIdentitePhoto $photoCrm */
+                            $photoCrm = $domaineCarteIdentiteCrm->getPhotos()[$keyPhoto];
+                            $photoCrm->setActif(true);
+                            $photoCrm->setDomaineCarteIdentite($domaineCarteIdentiteCrm);
+                            foreach ($sites as $site) {
+                                if ($site->getCrm() == 0) {
+                                    /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                                    $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
+                                        return $element->getSite() == $site;
+                                    })->first();
+                                    if (!empty($domaineCarteIdentiteSite)) {
+//                                      $typePhoto = (new ReflectionClass($photoCrm))->getShortName();
+                                        $typePhoto = (new ReflectionClass($photoCrm))->getName();
+
+                                        /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                                        $domaineCarteIdentitePhoto = new $typePhoto();
+                                        $domaineCarteIdentitePhoto->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+                                        $domaineCarteIdentitePhoto->setPhoto($photoCrm->getPhoto());
+                                        $domaineCarteIdentiteSite->addPhoto($domaineCarteIdentitePhoto);
+                                        foreach ($photoCrm->getTraductions() as $traduction) {
+                                            $traductionSite = new DomaineCarteIdentitePhotoTraduction();
+                                            /** @var DomaineCarteIdentitePhotoTraduction $traduction */
+                                            $traductionSite->setLibelle($traduction->getLibelle());
+                                            $traductionSite->setLangue($traduction->getLangue());
+                                            $domaineCarteIdentitePhoto->addTraduction($traductionSite);
+                                        }
+                                        if (!empty($photo['sites']) && in_array($site->getId(), $photo['sites'])) {
+                                            $domaineCarteIdentitePhoto->setActif(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+            
             $em->persist($domaineCarteIdentiteUnifie);
             $em->flush();
 
@@ -341,7 +434,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
      * Copie dans la base de données site l'entité domaineCarteIdentite
      * @param DomaineCarteIdentiteUnifie $entity
      */
-    private function copieVersSites(DomaineCarteIdentiteUnifie $entity)
+    private function copieVersSites(DomaineCarteIdentiteUnifie $entity, $originalDomaineCarteIdentiteImages = null, $originalDomaineCarteIdentitePhotos = null)
     {
         /** @var SnowparkTraduction $snowparkTraductionSite */
         /** @var HandiskiTraduction $handiskiTraductionSite */
@@ -426,10 +519,10 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 $domaineCarteIdentiteSite
                     ->setSite($site)
                     ->setDomaineCarteIdentiteUnifie($entitySite)
-                    ->setAltitudeMini($domaineCarteIdentite->getAltitudeMini())
-                    ->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi())
-                    ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
-                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
+//                    ->setAltitudeMini($domaineCarteIdentite->getAltitudeMini())
+//                    ->setAltitudeMaxi($domaineCarteIdentite->getAltitudeMaxi())
+//                    ->setKmPistesSkiAlpin($domaineCarteIdentite->getKmPistesSkiAlpin())
+//                    ->setKmPistesSkiNordique($domaineCarteIdentite->getKmPistesSkiNordique())
                     ->setSnowpark($snowparkSite)
                     ->setHandiski($handiskiSite)
                     ->setRemonteeMecanique($remonteeMecaniqueSite)
@@ -503,6 +596,222 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $domaineCarteIdentiteSite->addTraduction($domaineCarteIdentiteTraducSite);
                 }
 
+
+                // ********** GESTION DES MEDIAS **********
+
+                $domaineCarteIdentiteImages = $domaineCarteIdentite->getImages(); // ce sont les hebegementImages ajouté
+
+                // si il y a des Medias pour l'domaineCarteIdentite de référence
+                if (!empty($domaineCarteIdentiteImages) && !$domaineCarteIdentiteImages->isEmpty()) {
+                    // si il y a des medias pour l'hébergement présent sur le site
+                    // (on passera dans cette condition, seulement si nous sommes en edition)
+                    if (!empty($domaineCarteIdentiteSite->getImages()) && !$domaineCarteIdentiteSite->getImages()->isEmpty()) {
+                        // on ajoute les hébergementImages dans un tableau afin de travailler dessus
+                        $domaineCarteIdentiteImageSites = new ArrayCollection();
+                        foreach ($domaineCarteIdentiteSite->getImages() as $domaineCarteIdentiteimageSite) {
+                            $domaineCarteIdentiteImageSites->add($domaineCarteIdentiteimageSite);
+                        }
+                        // on parcourt les hébergmeentImages de la base
+                        /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                        foreach ($domaineCarteIdentiteImages as $domaineCarteIdentiteImage) {
+                            // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
+                            // récupérer l'domaineCarteIdentiteImage original correspondant sur le crm
+                            /** @var ArrayCollection $originalDomaineCarteIdentiteImages */
+                            $originalDomaineCarteIdentiteImage = $originalDomaineCarteIdentiteImages->filter(function (DomaineCarteIdentiteImage $element) use ($domaineCarteIdentiteImage) {
+                                return $element->getImage() == $domaineCarteIdentiteImage->getImage();
+                            })->first();
+                            unset($domaineCarteIdentiteImageSite);
+                            if ($originalDomaineCarteIdentiteImage !== false) {
+                                $tab = new ArrayCollection();
+                                foreach ($originalDomaineCarteIdentiteImages as $item) {
+                                    if (!empty($item->getId())) {
+                                        $tab->add($item);
+                                    }
+                                }
+                                $keyoriginalImage = $tab->indexOf($originalDomaineCarteIdentiteImage);
+
+                                $domaineCarteIdentiteImageSite = $domaineCarteIdentiteImageSites->get($keyoriginalImage);
+                            }
+                            // *** fin récupération de l'hébergementImage correspondant sur la bdd distante ***
+
+                            // si l'domaineCarteIdentiteImage existe sur la bdd distante, on va le modifier
+                            /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                            if (!empty($domaineCarteIdentiteImageSite)) {
+                                // Si le image a été modifié
+                                // (que le crm_ref_id est différent de de l'id du image de l'domaineCarteIdentiteImage du crm)
+                                if ($domaineCarteIdentiteImageSite->getImage()->getMetadataValue('crm_ref_id') != $domaineCarteIdentiteImage->getImage()->getId()) {
+                                    $cloneImage = clone $domaineCarteIdentiteImage->getImage();
+                                    $cloneImage->setMetadataValue('crm_ref_id', $domaineCarteIdentiteImage->getImage()->getId());
+                                    $cloneImage->setContext('domaine_carte_identite_image_' . $domaineCarteIdentite->getSite()->getLibelle());
+
+                                    // on supprime l'ancien image
+                                    $emSite->remove($domaineCarteIdentiteImageSite->getImage());
+
+                                    $domaineCarteIdentiteImageSite->setImage($cloneImage);
+                                }
+
+                                $domaineCarteIdentiteImageSite->setActif($domaineCarteIdentiteImage->getActif());
+
+                                // on parcourt les traductions
+                                /** @var DomaineCarteIdentiteImageTraduction $traduction */
+                                foreach ($domaineCarteIdentiteImage->getTraductions() as $traduction) {
+                                    // on récupère la traduction correspondante
+                                    /** @var DomaineCarteIdentiteImageTraduction $traductionSite */
+                                    /** @var ArrayCollection $traductionSites */
+                                    $traductionSites = $domaineCarteIdentiteImageSite->getTraductions();
+
+                                    unset($traductionSite);
+                                    if (!$traductionSites->isEmpty()) {
+                                        // on récupère la traduction correspondante en fonction de la langue
+                                        $traductionSite = $traductionSites->filter(function (DomaineCarteIdentiteImageTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
+                                    // si une traduction existe pour cette langue, on la modifie
+                                    if (!empty($traductionSite)) {
+                                        $traductionSite->setLibelle($traduction->getLibelle());
+                                    } // sinon on en cré une
+                                    else {
+                                        $traductionSite = new DomaineCarteIdentiteImageTraduction();
+                                        $traductionSite->setLibelle($traduction->getLibelle())
+                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                        $domaineCarteIdentiteImageSite->addTraduction($traductionSite);
+                                    }
+                                }
+                            } // sinon on va le créer
+                            else {
+                                $this->createDomaineCarteIdentiteImage($domaineCarteIdentiteImage, $domaineCarteIdentiteSite, $emSite);
+                            }
+                        }
+                    } // sinon si l'hébergement de référence n'a pas de medias
+                    else {
+                        // on lui cré alors les medias
+                        // on parcours les medias de l'domaineCarteIdentite de référence
+                        /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                        foreach ($domaineCarteIdentiteImages as $domaineCarteIdentiteImage) {
+                            $this->createDomaineCarteIdentiteImage($domaineCarteIdentiteImage, $domaineCarteIdentiteSite, $emSite);
+                        }
+                    }
+                } // sinon on doit supprimer les medias présent pour l'hébergement correspondant sur le site distant
+                else {
+                    if (!empty($domaineCarteIdentiteImageSites)) {
+                        /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                        foreach ($domaineCarteIdentiteImageSites as $domaineCarteIdentiteImageSite) {
+                            $domaineCarteIdentiteImageSite->setDomaineCarteIdentite(null);
+                            $emSite->remove($domaineCarteIdentiteImageSite->getImage());
+                            $emSite->remove($domaineCarteIdentiteImageSite);
+                        }
+                    }
+                }
+
+
+                $domaineCarteIdentitePhotos = $domaineCarteIdentite->getPhotos(); // ce sont les hebegementPhotos ajouté
+
+                // si il y a des Medias pour l'domaineCarteIdentite de référence
+                if (!empty($domaineCarteIdentitePhotos) && !$domaineCarteIdentitePhotos->isEmpty()) {
+                    // si il y a des medias pour l'hébergement présent sur le site
+                    // (on passera dans cette condition, seulement si nous sommes en edition)
+                    if (!empty($domaineCarteIdentiteSite->getPhotos()) && !$domaineCarteIdentiteSite->getPhotos()->isEmpty()) {
+                        // on ajoute les hébergementPhotos dans un tableau afin de travailler dessus
+                        $domaineCarteIdentitePhotoSites = new ArrayCollection();
+                        foreach ($domaineCarteIdentiteSite->getPhotos() as $domaineCarteIdentitephotoSite) {
+                            $domaineCarteIdentitePhotoSites->add($domaineCarteIdentitephotoSite);
+                        }
+                        // on parcourt les hébergmeentPhotos de la base
+                        /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                        foreach ($domaineCarteIdentitePhotos as $domaineCarteIdentitePhoto) {
+                            // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
+                            // récupérer l'domaineCarteIdentitePhoto original correspondant sur le crm
+                            /** @var ArrayCollection $originalDomaineCarteIdentitePhotos */
+                            $originalDomaineCarteIdentitePhoto = $originalDomaineCarteIdentitePhotos->filter(function (DomaineCarteIdentitePhoto $element) use ($domaineCarteIdentitePhoto) {
+                                return $element->getPhoto() == $domaineCarteIdentitePhoto->getPhoto();
+                            })->first();
+                            unset($domaineCarteIdentitePhotoSite);
+                            if ($originalDomaineCarteIdentitePhoto !== false) {
+                                $tab = new ArrayCollection();
+                                foreach ($originalDomaineCarteIdentitePhotos as $item) {
+                                    if (!empty($item->getId())) {
+                                        $tab->add($item);
+                                    }
+                                }
+                                $keyoriginalPhoto = $tab->indexOf($originalDomaineCarteIdentitePhoto);
+
+                                $domaineCarteIdentitePhotoSite = $domaineCarteIdentitePhotoSites->get($keyoriginalPhoto);
+                            }
+                            // *** fin récupération de l'hébergementPhoto correspondant sur la bdd distante ***
+
+                            // si l'domaineCarteIdentitePhoto existe sur la bdd distante, on va le modifier
+                            /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                            if (!empty($domaineCarteIdentitePhotoSite)) {
+                                // Si le photo a été modifié
+                                // (que le crm_ref_id est différent de de l'id du photo de l'domaineCarteIdentitePhoto du crm)
+                                if ($domaineCarteIdentitePhotoSite->getPhoto()->getMetadataValue('crm_ref_id') != $domaineCarteIdentitePhoto->getPhoto()->getId()) {
+                                    $clonePhoto = clone $domaineCarteIdentitePhoto->getPhoto();
+                                    $clonePhoto->setMetadataValue('crm_ref_id', $domaineCarteIdentitePhoto->getPhoto()->getId());
+                                    $clonePhoto->setContext('domaine_carte_identite_photo_' . $domaineCarteIdentite->getSite()->getLibelle());
+
+                                    // on supprime l'ancien photo
+                                    $emSite->remove($domaineCarteIdentitePhotoSite->getPhoto());
+
+                                    $domaineCarteIdentitePhotoSite->setPhoto($clonePhoto);
+                                }
+
+                                $domaineCarteIdentitePhotoSite->setActif($domaineCarteIdentitePhoto->getActif());
+
+                                // on parcourt les traductions
+                                /** @var DomaineCarteIdentitePhotoTraduction $traduction */
+                                foreach ($domaineCarteIdentitePhoto->getTraductions() as $traduction) {
+                                    // on récupère la traduction correspondante
+                                    /** @var DomaineCarteIdentitePhotoTraduction $traductionSite */
+                                    /** @var ArrayCollection $traductionSites */
+                                    $traductionSites = $domaineCarteIdentitePhotoSite->getTraductions();
+
+                                    unset($traductionSite);
+                                    if (!$traductionSites->isEmpty()) {
+                                        // on récupère la traduction correspondante en fonction de la langue
+                                        $traductionSite = $traductionSites->filter(function (DomaineCarteIdentitePhotoTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
+                                    // si une traduction existe pour cette langue, on la modifie
+                                    if (!empty($traductionSite)) {
+                                        $traductionSite->setLibelle($traduction->getLibelle());
+                                    } // sinon on en cré une
+                                    else {
+                                        $traductionSite = new DomaineCarteIdentitePhotoTraduction();
+                                        $traductionSite->setLibelle($traduction->getLibelle())
+                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                        $domaineCarteIdentitePhotoSite->addTraduction($traductionSite);
+                                    }
+                                }
+                            } // sinon on va le créer
+                            else {
+                                $this->createDomaineCarteIdentitePhoto($domaineCarteIdentitePhoto, $domaineCarteIdentiteSite, $emSite);
+                            }
+                        }
+                    } // sinon si l'hébergement de référence n'a pas de medias
+                    else {
+                        // on lui cré alors les medias
+                        // on parcours les medias de l'domaineCarteIdentite de référence
+                        /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                        foreach ($domaineCarteIdentitePhotos as $domaineCarteIdentitePhoto) {
+                            $this->createDomaineCarteIdentitePhoto($domaineCarteIdentitePhoto, $domaineCarteIdentiteSite, $emSite);
+                        }
+                    }
+                } // sinon on doit supprimer les medias présent pour l'hébergement correspondant sur le site distant
+                else {
+                    if (!empty($domaineCarteIdentitePhotoSites)) {
+                        /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                        foreach ($domaineCarteIdentitePhotoSites as $domaineCarteIdentitePhotoSite) {
+                            $domaineCarteIdentitePhotoSite->setDomaineCarteIdentite(null);
+                            $emSite->remove($domaineCarteIdentitePhotoSite->getPhoto());
+                            $emSite->remove($domaineCarteIdentitePhotoSite);
+                        }
+                    }
+                }
+
+                // ********** FIN GESTION DES MEDIAS **********
+
                 $entitySite->addDomaineCarteIdentite($domaineCarteIdentiteSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
@@ -510,6 +819,103 @@ class DomaineCarteIdentiteUnifieController extends Controller
         }
         $this->ajouterDomaineCarteIdentiteUnifieSiteDistant($entity->getId(), $entity->getDomaineCarteIdentites());
     }
+
+
+    /**
+     * Création d'un nouveau domaineCarteIdentiteImage
+     * @param DomaineCarteIdentiteImage $domaineCarteIdentiteImage
+     * @param DomaineCarteIdentite $domaineCarteIdentiteSite
+     * @param EntityManager $emSite
+     */
+    private function createDomaineCarteIdentiteImage(DomaineCarteIdentiteImage $domaineCarteIdentiteImage, DomaineCarteIdentite $domaineCarteIdentiteSite, EntityManager $emSite)
+    {
+        /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+        // on récupère la classe correspondant au image (photo ou video)
+        $typeImage = (new ReflectionClass($domaineCarteIdentiteImage))->getName();
+        // on cré un nouveau DomaineCarteIdentiteImage on fonction du type
+        $domaineCarteIdentiteImageSite = new $typeImage();
+        $domaineCarteIdentiteImageSite->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+        $domaineCarteIdentiteImageSite->setActif($domaineCarteIdentiteImage->getActif());
+        // on lui clone l'image
+        $cloneImage = clone $domaineCarteIdentiteImage->getImage();
+
+        // **** récupération du image physique ****
+        $pool = $this->container->get('sonata.media.pool');
+        $provider = $pool->getProvider($cloneImage->getProviderName());
+        $provider->getReferenceImage($cloneImage);
+
+//        $cloneImage->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($cloneImage));
+        $cloneImage->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneImage));
+
+        $cloneImage->setProviderReference($domaineCarteIdentiteImage->getImage()->getProviderReference());
+        $cloneImage->setName($domaineCarteIdentiteImage->getImage()->getName());
+        // **** fin récupération du image physique ****
+
+        // on donne au nouveau image, le context correspondant en fonction du site
+        $cloneImage->setContext('domaine_carte_identite_image_' . $domaineCarteIdentiteSite->getSite()->getLibelle());
+        // on lui attache l'id de référence du image correspondant sur la bdd crm
+        $cloneImage->setMetadataValue('crm_ref_id', $domaineCarteIdentiteImage->getImage()->getId());
+
+        $domaineCarteIdentiteImageSite->setImage($cloneImage);
+
+        $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImageSite);
+        // on ajoute les traductions correspondante
+        foreach ($domaineCarteIdentiteImage->getTraductions() as $traduction) {
+            $traductionSite = new DomaineCarteIdentiteImageTraduction();
+            $traductionSite->setLibelle($traduction->getLibelle())
+                ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+            $domaineCarteIdentiteImageSite->addTraduction($traductionSite);
+        }
+    }
+
+
+    /**
+     * Création d'un nouveau domaineCarteIdentitePhoto
+     * @param DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto
+     * @param DomaineCarteIdentite $domaineCarteIdentiteSite
+     * @param EntityManager $emSite
+     */
+    private function createDomaineCarteIdentitePhoto(DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto, DomaineCarteIdentite $domaineCarteIdentiteSite, EntityManager $emSite)
+    {
+        /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+        // on récupère la classe correspondant au photo (photo ou video)
+        $typePhoto = (new ReflectionClass($domaineCarteIdentitePhoto))->getName();
+        // on cré un nouveau DomaineCarteIdentitePhoto on fonction du type
+        $domaineCarteIdentitePhotoSite = new $typePhoto();
+        $domaineCarteIdentitePhotoSite->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+        $domaineCarteIdentitePhotoSite->setActif($domaineCarteIdentitePhoto->getActif());
+        // on lui clone l'photo
+        $clonePhoto = clone $domaineCarteIdentitePhoto->getPhoto();
+
+        // **** récupération du photo physique ****
+        $pool = $this->container->get('sonata.media.pool');
+        $provider = $pool->getProvider($clonePhoto->getProviderName());
+        $provider->getReferenceImage($clonePhoto);
+
+//        $clonePhoto->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($clonePhoto));
+        $clonePhoto->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($clonePhoto));
+
+        $clonePhoto->setProviderReference($domaineCarteIdentitePhoto->getPhoto()->getProviderReference());
+        $clonePhoto->setName($domaineCarteIdentitePhoto->getPhoto()->getName());
+        // **** fin récupération du photo physique ****
+
+        // on donne au nouveau photo, le context correspondant en fonction du site
+        $clonePhoto->setContext('domaine_carte_identite_photo_' . $domaineCarteIdentiteSite->getSite()->getLibelle());
+        // on lui attache l'id de référence du photo correspondant sur la bdd crm
+        $clonePhoto->setMetadataValue('crm_ref_id', $domaineCarteIdentitePhoto->getPhoto()->getId());
+
+        $domaineCarteIdentitePhotoSite->setPhoto($clonePhoto);
+
+        $domaineCarteIdentiteSite->addPhoto($domaineCarteIdentitePhotoSite);
+        // on ajoute les traductions correspondante
+        foreach ($domaineCarteIdentitePhoto->getTraductions() as $traduction) {
+            $traductionSite = new DomaineCarteIdentitePhotoTraduction();
+            $traductionSite->setLibelle($traduction->getLibelle())
+                ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+            $domaineCarteIdentitePhotoSite->addTraduction($traductionSite);
+        }
+    }
+
 
     /**
      * @param $idUnifie
@@ -592,11 +998,32 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $sitesAEnregistrer = $request->get('sites');
         }
 
-//        $domaineCarteIdentiteCrm = $this->dissocierDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie);
+
         $originalDomaineCarteIdentites = new ArrayCollection();
-//          Créer un ArrayCollection des objets de domaineCarteIdentites courants dans la base de données
+        $originalDomaineCarteIdentiteImages = new ArrayCollection();
+        $originalImages = new ArrayCollection();
+        $originalDomaineCarteIdentitePhotos = new ArrayCollection();
+        $originalPhotos = new ArrayCollection();
+//          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
             $originalDomaineCarteIdentites->add($domaineCarteIdentite);
+            // si l'domaineCarteIdentite est celui du CRM
+            if ($domaineCarteIdentite->getSite()->getCrm() == 1) {
+                // on parcourt les domaineCarteIdentiteImage pour les comparer ensuite
+                /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                foreach ($domaineCarteIdentite->getImages() as $domaineCarteIdentiteImage) {
+                    // on ajoute les image dans la collection de sauvegarde
+                    $originalDomaineCarteIdentiteImages->add($domaineCarteIdentiteImage);
+                    $originalImages->add($domaineCarteIdentiteImage->getImage());
+                }
+                // on parcourt les domaineCarteIdentitePhoto pour les comparer ensuite
+                /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                foreach ($domaineCarteIdentite->getPhotos() as $domaineCarteIdentitePhoto) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalDomaineCarteIdentitePhotos->add($domaineCarteIdentitePhoto);
+                    $originalPhotos->add($domaineCarteIdentitePhoto->getPhoto());
+                }
+            }
         }
 
         $this->ajouterDomaineCarteIdentitesDansForm($domaineCarteIdentiteUnifie)
@@ -616,10 +1043,133 @@ class DomaineCarteIdentiteUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $this->dispacherDonneesCommune($domaineCarteIdentiteUnifie);
+
+            // ************* suppression images *************
+            // ** CAS OU L'ON SUPPRIME UN "DomaineCarteIdentite IMAGE" **
+            // on récupère les DomaineCarteIdentiteImage de l'hébergementCrm pour les mettre dans une collection
+            // afin de les comparer au originaux.
+            /** @var DomaineCarteIdentite $domaineCarteIdentiteCrm */
+            $domaineCarteIdentiteCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $domaineCarteIdentiteSites = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            $newDomaineCarteIdentiteImages = new ArrayCollection();
+            foreach ($domaineCarteIdentiteCrm->getImages() as $domaineCarteIdentiteImage) {
+                $newDomaineCarteIdentiteImages->add($domaineCarteIdentiteImage);
+            }
+            /** @var DomaineCarteIdentiteImage $originalDomaineCarteIdentiteImage */
+            foreach ($originalDomaineCarteIdentiteImages as $key => $originalDomaineCarteIdentiteImage) {
+
+                if (false === $newDomaineCarteIdentiteImages->contains($originalDomaineCarteIdentiteImage)) {
+                    $originalDomaineCarteIdentiteImage->setDomaineCarteIdentite(null);
+                    $em->remove($originalDomaineCarteIdentiteImage->getImage());
+                    $em->remove($originalDomaineCarteIdentiteImage);
+                    // on doit supprimer l'hébergementImage des autres sites
+                    // on parcourt les domaineCarteIdentite des sites
+                    /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                    foreach ($domaineCarteIdentiteSites as $domaineCarteIdentiteSite) {
+                        $domaineCarteIdentiteImageSite = $em->getRepository(DomaineCarteIdentiteImage::class)->findOneBy(
+                            array(
+                                'domaineCarteIdentite' => $domaineCarteIdentiteSite,
+                                'image' => $originalDomaineCarteIdentiteImage->getImage()
+                            ));
+                        if (!empty($domaineCarteIdentiteImageSite)) {
+                            $emSite = $this->getDoctrine()->getEntityManager($domaineCarteIdentiteImageSite->getDomaineCarteIdentite()->getSite()->getLibelle());
+                            $domaineCarteIdentiteSite = $emSite->getRepository(DomaineCarteIdentite::class)->findOneBy(
+                                array(
+                                    'domaineCarteIdentiteUnifie' => $domaineCarteIdentiteImageSite->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie()
+                                ));
+                            $domaineCarteIdentiteImageSiteSites = new ArrayCollection($emSite->getRepository(DomaineCarteIdentiteImage::class)->findBy(
+                                array(
+                                    'domaineCarteIdentite' => $domaineCarteIdentiteSite
+                                ))
+                            );
+                            $domaineCarteIdentiteImageSiteSite = $domaineCarteIdentiteImageSiteSites->filter(function (DomaineCarteIdentiteImage $element)
+                            use ($domaineCarteIdentiteImageSite) {
+//                            return $element->getImage()->getProviderReference() == $domaineCarteIdentiteImageSite->getImage()->getProviderReference();
+                                return $element->getImage()->getMetadataValue('crm_ref_id') == $domaineCarteIdentiteImageSite->getImage()->getId();
+                            })->first();
+                            if (!empty($domaineCarteIdentiteImageSiteSite)) {
+                                $emSite->remove($domaineCarteIdentiteImageSiteSite->getImage());
+                                $domaineCarteIdentiteImageSiteSite->setDomaineCarteIdentite(null);
+                                $emSite->remove($domaineCarteIdentiteImageSiteSite);
+                                $emSite->flush();
+                            }
+                            $domaineCarteIdentiteImageSite->setDomaineCarteIdentite(null);
+                            $em->remove($domaineCarteIdentiteImageSite->getImage());
+                            $em->remove($domaineCarteIdentiteImageSite);
+                        }
+                    }
+                }
+            }
+            // ************* fin suppression images *************
+
+
+            // ************* suppression photos *************
+            // ** CAS OU L'ON SUPPRIME UN "DomaineCarteIdentite PHOTO" **
+            // on récupère les DomaineCarteIdentitePhoto de l'hébergementCrm pour les mettre dans une collection
+            // afin de les comparer au originaux.
+            /** @var DomaineCarteIdentite $domaineCarteIdentiteCrm */
+            $domaineCarteIdentiteCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $domaineCarteIdentiteSites = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            $newDomaineCarteIdentitePhotos = new ArrayCollection();
+            foreach ($domaineCarteIdentiteCrm->getPhotos() as $domaineCarteIdentitePhoto) {
+                $newDomaineCarteIdentitePhotos->add($domaineCarteIdentitePhoto);
+            }
+            /** @var DomaineCarteIdentitePhoto $originalDomaineCarteIdentitePhoto */
+            foreach ($originalDomaineCarteIdentitePhotos as $key => $originalDomaineCarteIdentitePhoto) {
+
+                if (false === $newDomaineCarteIdentitePhotos->contains($originalDomaineCarteIdentitePhoto)) {
+                    $originalDomaineCarteIdentitePhoto->setDomaineCarteIdentite(null);
+                    $em->remove($originalDomaineCarteIdentitePhoto->getPhoto());
+                    $em->remove($originalDomaineCarteIdentitePhoto);
+                    // on doit supprimer l'hébergementPhoto des autres sites
+                    // on parcourt les domaineCarteIdentite des sites
+                    /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                    foreach ($domaineCarteIdentiteSites as $domaineCarteIdentiteSite) {
+                        $domaineCarteIdentitePhotoSite = $em->getRepository(DomaineCarteIdentitePhoto::class)->findOneBy(
+                            array(
+                                'domaineCarteIdentite' => $domaineCarteIdentiteSite,
+                                'photo' => $originalDomaineCarteIdentitePhoto->getPhoto()
+                            ));
+                        if (!empty($domaineCarteIdentitePhotoSite)) {
+                            $emSite = $this->getDoctrine()->getEntityManager($domaineCarteIdentitePhotoSite->getDomaineCarteIdentite()->getSite()->getLibelle());
+                            $domaineCarteIdentiteSite = $emSite->getRepository(DomaineCarteIdentite::class)->findOneBy(
+                                array(
+                                    'domaineCarteIdentiteUnifie' => $domaineCarteIdentitePhotoSite->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie()
+                                ));
+                            $domaineCarteIdentitePhotoSiteSites = new ArrayCollection($emSite->getRepository(DomaineCarteIdentitePhoto::class)->findBy(
+                                array(
+                                    'domaineCarteIdentite' => $domaineCarteIdentiteSite
+                                ))
+                            );
+                            $domaineCarteIdentitePhotoSiteSite = $domaineCarteIdentitePhotoSiteSites->filter(function (DomaineCarteIdentitePhoto $element)
+                            use ($domaineCarteIdentitePhotoSite) {
+//                            return $element->getPhoto()->getProviderReference() == $domaineCarteIdentitePhotoSite->getPhoto()->getProviderReference();
+                                return $element->getPhoto()->getMetadataValue('crm_ref_id') == $domaineCarteIdentitePhotoSite->getPhoto()->getId();
+                            })->first();
+                            if (!empty($domaineCarteIdentitePhotoSiteSite)) {
+                                $emSite->remove($domaineCarteIdentitePhotoSiteSite->getPhoto());
+                                $domaineCarteIdentitePhotoSiteSite->setDomaineCarteIdentite(null);
+                                $emSite->remove($domaineCarteIdentitePhotoSiteSite);
+                                $emSite->flush();
+                            }
+                            $domaineCarteIdentitePhotoSite->setDomaineCarteIdentite(null);
+                            $em->remove($domaineCarteIdentitePhotoSite->getPhoto());
+                            $em->remove($domaineCarteIdentitePhotoSite);
+                        }
+                    }
+                }
+            }
+            // ************* fin suppression photos *************
+            
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
-//            $this->mettreAJourDomaineCarteIdentiteCrm($domaineCarteIdentiteUnifie, $domaineCarteIdentiteCrm);
-//            $em->persist($domaineCarteIdentiteCrm);
 
             // Supprimer la relation entre la domaineCarteIdentite et domaineCarteIdentiteUnifie
             foreach ($originalDomaineCarteIdentites as $domaineCarteIdentite) {
@@ -629,18 +1179,266 @@ class DomaineCarteIdentiteUnifieController extends Controller
                     $emSite = $this->getDoctrine()->getEntityManager($domaineCarteIdentite->getSite()->getLibelle());
                     $entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
                     $domaineCarteIdentiteSite = $entitySite->getDomaineCarteIdentites()->first();
+
+                    /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                    if (!empty($domaineCarteIdentiteSite->getImages())) {
+                        foreach ($domaineCarteIdentiteSite->getImages() as $domaineCarteIdentiteImageSite) {
+                            $domaineCarteIdentiteSite->removeImage($domaineCarteIdentiteImageSite);
+//                                        $domaineCarteIdentiteImageSite->setDomaineCarteIdentite(null);
+//                                        $domaineCarteIdentiteImageSite->setImage(null);
+                            $emSite->remove($domaineCarteIdentiteImageSite);
+                            $emSite->remove($domaineCarteIdentiteImageSite->getImage());
+                        }
+                        $emSite->flush();
+                    }
+                    /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                    if (!empty($domaineCarteIdentiteSite->getPhotos())) {
+                        foreach ($domaineCarteIdentiteSite->getPhotos() as $domaineCarteIdentitePhotoSite) {
+                            $domaineCarteIdentiteSite->removePhoto($domaineCarteIdentitePhotoSite);
+//                                        $domaineCarteIdentitePhotoSite->setDomaineCarteIdentite(null);
+//                                        $domaineCarteIdentitePhotoSite->setPhoto(null);
+                            $emSite->remove($domaineCarteIdentitePhotoSite);
+                            $emSite->remove($domaineCarteIdentitePhotoSite->getPhoto());
+                        }
+                        $emSite->flush();
+                    }
+                    
+                    
                     $emSite->remove($domaineCarteIdentiteSite);
                     $emSite->flush();
-//                    dump($domaineCarteIdentite);
                     $domaineCarteIdentite->setDomaineCarteIdentiteUnifie(null);
+
+
+                    // *** suppression des domaineCarteIdentiteImages de l'domaineCarteIdentite à supprimer ***
+                    /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                    $domaineCarteIdentiteImageSites = $em->getRepository(DomaineCarteIdentiteImage::class)->findBy(array('domaineCarteIdentite' => $domaineCarteIdentite));
+                    if (!empty($domaineCarteIdentiteImageSites)) {
+                        foreach ($domaineCarteIdentiteImageSites as $domaineCarteIdentiteImage) {
+                            $domaineCarteIdentiteImage->setImage(null);
+                            $domaineCarteIdentiteImage->setDomaineCarteIdentite(null);
+                            $em->remove($domaineCarteIdentiteImage);
+                        }
+                        $em->flush();
+                    }
+                    // *** fin suppression des domaineCarteIdentiteImages de l'domaineCarteIdentite à supprimer ***
+                    // *** suppression des domaineCarteIdentitePhotos de l'domaineCarteIdentite à supprimer ***
+                    /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                    $domaineCarteIdentitePhotoSites = $em->getRepository(DomaineCarteIdentitePhoto::class)->findBy(array('domaineCarteIdentite' => $domaineCarteIdentite));
+                    if (!empty($domaineCarteIdentitePhotoSites)) {
+                        foreach ($domaineCarteIdentitePhotoSites as $domaineCarteIdentitePhoto) {
+                            $domaineCarteIdentitePhoto->setPhoto(null);
+                            $domaineCarteIdentitePhoto->setDomaineCarteIdentite(null);
+                            $em->remove($domaineCarteIdentitePhoto);
+                        }
+                        $em->flush();
+                    }
+                    // *** fin suppression des domaineCarteIdentitePhotos de l'domaineCarteIdentite à supprimer ***
+                    
+                    
                     $em->remove($domaineCarteIdentite);
                 }
             }
+
+
+            // ***** Gestion des Medias *****
+//            dump($domaineCarteIdentiteUnifie);die;
+            // CAS D'UN NOUVEAU 'DomaineCarteIdentite IMAGE' OU DE MODIFICATION D'UN "DomaineCarteIdentite IMAGE"
+            /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+            // tableau pour la suppression des anciens images
+            $imageToRemoveCollection = new ArrayCollection();
+            $keyCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->indexOf($domaineCarteIdentiteCrm);
+            // on parcourt les domaineCarteIdentiteImages de l'domaineCarteIdentite crm
+            foreach ($domaineCarteIdentiteCrm->getImages() as $key => $domaineCarteIdentiteImage) {
+                // on active le nouveau domaineCarteIdentiteImage (CRM) => il doit être toujours actif
+                $domaineCarteIdentiteImage->setActif(true);
+                // parcourir tout les sites
+                /** @var Site $site */
+                foreach ($sites as $site) {
+                    // sauf  le crm (puisqu'on l'a déjà renseigné)
+                    // dans le but de créer un hebegrementImage pour chacun
+                    if ($site->getCrm() == 0) {
+                        // on récupère l'hébegergement du site
+                        /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                        $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+                        // si hébergement existe
+                        if (!empty($domaineCarteIdentiteSite)) {
+                            // on réinitialise la variable
+                            unset($domaineCarteIdentiteImageSite);
+                            // s'il ne s'agit pas d'un nouveau domaineCarteIdentiteImage
+                            if (!empty($domaineCarteIdentiteImage->getId())) {
+                                // on récupère l'domaineCarteIdentiteImage pour le modifier
+                                $domaineCarteIdentiteImageSite = $em->getRepository(DomaineCarteIdentiteImage::class)->findOneBy(array('domaineCarteIdentite' => $domaineCarteIdentiteSite, 'image' => $originalImages->get($key)));
+                            }
+                            // si l'domaineCarteIdentiteImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
+                            if (empty($domaineCarteIdentiteImage->getId()) || empty($domaineCarteIdentiteImageSite)) {
+                                // on récupère la classe correspondant au image (photo ou video)
+                                $typeImage = (new ReflectionClass($domaineCarteIdentiteImage))->getName();
+                                // on créé un nouveau DomaineCarteIdentiteImage on fonction du type
+                                /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                                $domaineCarteIdentiteImageSite = new $typeImage();
+                                $domaineCarteIdentiteImageSite->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+                            }
+                            // si l'hébergemenent image existe déjà pour le site
+                            if (!empty($domaineCarteIdentiteImageSite)) {
+                                if ($domaineCarteIdentiteImageSite->getImage() != $domaineCarteIdentiteImage->getImage()) {
+//                                    // si l'hébergementImageSite avait déjà un image
+//                                    if (!empty($domaineCarteIdentiteImageSite->getImage()) && !$imageToRemoveCollection->contains($domaineCarteIdentiteImageSite->getImage()))
+//                                    {
+//                                        // on met l'ancien image dans un tableau afin de le supprimer plus tard
+//                                        $imageToRemoveCollection->add($domaineCarteIdentiteImageSite->getImage());
+//                                    }
+                                    // on met le nouveau image
+                                    $domaineCarteIdentiteImageSite->setImage($domaineCarteIdentiteImage->getImage());
+                                }
+                                $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImageSite);
+
+                                /** @var DomaineCarteIdentiteImageTraduction $traduction */
+                                foreach ($domaineCarteIdentiteImage->getTraductions() as $traduction) {
+                                    /** @var DomaineCarteIdentiteImageTraduction $traductionSite */
+                                    $traductionSites = $domaineCarteIdentiteImageSite->getTraductions();
+                                    $traductionSite = null;
+                                    if (!$traductionSites->isEmpty()) {
+                                        $traductionSite = $traductionSites->filter(function (DomaineCarteIdentiteImageTraduction $element) use ($traduction) {
+                                            return $element->getLangue() == $traduction->getLangue();
+                                        })->first();
+                                    }
+                                    if (empty($traductionSite)) {
+                                        $traductionSite = new DomaineCarteIdentiteImageTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $domaineCarteIdentiteImageSite->addTraduction($traductionSite);
+                                    }
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                // on vérifie si l'hébergementImage doit être actif sur le site ou non
+                                if (!empty($request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['images'][$key]['sites']) &&
+                                    in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['images'][$key]['sites'])
+                                ) {
+                                    $domaineCarteIdentiteImageSite->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                    // on est dans l'domaineCarteIdentiteImage CRM
+                    // s'il s'agit d'un nouveau média
+                    elseif (empty($domaineCarteIdentiteImage->getImage()->getId()) && !empty($originalImages->get($key))) {
+                        // on stocke  l'ancien media pour le supprimer après le persist final
+                        $imageToRemoveCollection->add($originalImages->get($key));
+                    }
+                }
+            }
+
+
+            // CAS D'UN NOUVEAU 'DomaineCarteIdentite PHOTO' OU DE MODIFICATION D'UN "DomaineCarteIdentite PHOTO"
+            /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+            // tableau pour la suppression des anciens photos
+            $photoToRemoveCollection = new ArrayCollection();
+            $keyCrm = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->indexOf($domaineCarteIdentiteCrm);
+            // on parcourt les domaineCarteIdentitePhotos de l'domaineCarteIdentite crm
+            foreach ($domaineCarteIdentiteCrm->getPhotos() as $key => $domaineCarteIdentitePhoto) {
+                // on active le nouveau domaineCarteIdentitePhoto (CRM) => il doit être toujours actif
+                $domaineCarteIdentitePhoto->setActif(true);
+                // parcourir tout les sites
+                /** @var Site $site */
+                foreach ($sites as $site) {
+                    // sauf  le crm (puisqu'on l'a déjà renseigné)
+                    // dans le but de créer un hebegrementPhoto pour chacun
+                    if ($site->getCrm() == 0) {
+                        // on récupère l'hébegergement du site
+                        /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+                        $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+                        // si hébergement existe
+                        if (!empty($domaineCarteIdentiteSite)) {
+                            // on réinitialise la variable
+                            unset($domaineCarteIdentitePhotoSite);
+                            // s'il ne s'agit pas d'un nouveau domaineCarteIdentitePhoto
+                            if (!empty($domaineCarteIdentitePhoto->getId())) {
+                                // on récupère l'domaineCarteIdentitePhoto pour le modifier
+                                $domaineCarteIdentitePhotoSite = $em->getRepository(DomaineCarteIdentitePhoto::class)->findOneBy(array('domaineCarteIdentite' => $domaineCarteIdentiteSite, 'photo' => $originalPhotos->get($key)));
+                            }
+                            // si l'domaineCarteIdentitePhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
+                            if (empty($domaineCarteIdentitePhoto->getId()) || empty($domaineCarteIdentitePhotoSite)) {
+                                // on récupère la classe correspondant au photo (photo ou video)
+                                $typePhoto = (new ReflectionClass($domaineCarteIdentitePhoto))->getName();
+                                // on créé un nouveau DomaineCarteIdentitePhoto on fonction du type
+                                /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                                $domaineCarteIdentitePhotoSite = new $typePhoto();
+                                $domaineCarteIdentitePhotoSite->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+                            }
+                            // si l'hébergemenent photo existe déjà pour le site
+                            if (!empty($domaineCarteIdentitePhotoSite)) {
+                                if ($domaineCarteIdentitePhotoSite->getPhoto() != $domaineCarteIdentitePhoto->getPhoto()) {
+//                                    // si l'hébergementPhotoSite avait déjà un photo
+//                                    if (!empty($domaineCarteIdentitePhotoSite->getPhoto()) && !$photoToRemoveCollection->contains($domaineCarteIdentitePhotoSite->getPhoto()))
+//                                    {
+//                                        // on met l'ancien photo dans un tableau afin de le supprimer plus tard
+//                                        $photoToRemoveCollection->add($domaineCarteIdentitePhotoSite->getPhoto());
+//                                    }
+                                    // on met le nouveau photo
+                                    $domaineCarteIdentitePhotoSite->setPhoto($domaineCarteIdentitePhoto->getPhoto());
+                                }
+                                $domaineCarteIdentiteSite->addPhoto($domaineCarteIdentitePhotoSite);
+
+                                /** @var DomaineCarteIdentitePhotoTraduction $traduction */
+                                foreach ($domaineCarteIdentitePhoto->getTraductions() as $traduction) {
+                                    /** @var DomaineCarteIdentitePhotoTraduction $traductionSite */
+                                    $traductionSites = $domaineCarteIdentitePhotoSite->getTraductions();
+                                    $traductionSite = null;
+                                    if (!$traductionSites->isEmpty()) {
+                                        $traductionSite = $traductionSites->filter(function (DomaineCarteIdentitePhotoTraduction $element) use ($traduction) {
+                                            return $element->getLangue() == $traduction->getLangue();
+                                        })->first();
+                                    }
+                                    if (empty($traductionSite)) {
+                                        $traductionSite = new DomaineCarteIdentitePhotoTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $domaineCarteIdentitePhotoSite->addTraduction($traductionSite);
+                                    }
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
+                                if (!empty($request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['photos'][$key]['sites']) &&
+                                    in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['photos'][$key]['sites'])
+                                ) {
+                                    $domaineCarteIdentitePhotoSite->setActif(true);
+                                }
+                            }
+                        }
+                    }
+                    // on est dans l'domaineCarteIdentitePhoto CRM
+                    // s'il s'agit d'un nouveau média
+                    elseif (empty($domaineCarteIdentitePhoto->getPhoto()->getId()) && !empty($originalPhotos->get($key))) {
+                        // on stocke  l'ancien media pour le supprimer après le persist final
+                        $photoToRemoveCollection->add($originalPhotos->get($key));
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+
             $em->persist($domaineCarteIdentiteUnifie);
             $em->flush();
 
+            $this->copieVersSites($domaineCarteIdentiteUnifie, $originalDomaineCarteIdentiteImages, $originalDomaineCarteIdentitePhotos);
 
-            $this->copieVersSites($domaineCarteIdentiteUnifie);
+            if (!empty($imageToRemoveCollection)) {
+                foreach ($imageToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $em->remove($item);
+                    }
+                }
+                $em->flush();
+            }
+            if (!empty($photoToRemoveCollection)) {
+                foreach ($photoToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $em->remove($item);
+                    }
+                }
+                $em->flush();
+            }
 
             // add flash messages
             $this->addFlash(
@@ -683,10 +1481,68 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 $domaineCarteIdentiteUnifieSite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
                 if (!empty($domaineCarteIdentiteUnifieSite)) {
                     $emSite->remove($domaineCarteIdentiteUnifieSite);
+                    $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifieSite->getDomaineCarteIdentites()->first();
+
+                    if (!empty($domaineCarteIdentiteSite)) {
+                        // si il y a des images pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentiteSite->getImages())) {
+                            /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                            foreach ($domaineCarteIdentiteSite->getImages() as $domaineCarteIdentiteImageSite) {
+                                $imageSite = $domaineCarteIdentiteImageSite->getImage();
+                                $domaineCarteIdentiteImageSite->setImage(null);
+                                if (!empty($imageSite)) {
+                                    $emSite->remove($imageSite);
+                                }
+                            }
+                        }
+                        // si il y a des photos pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentiteSite->getPhotos())) {
+                            /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                            foreach ($domaineCarteIdentiteSite->getPhotos() as $domaineCarteIdentitePhotoSite) {
+                                $photoSite = $domaineCarteIdentitePhotoSite->getPhoto();
+                                $domaineCarteIdentitePhotoSite->setPhoto(null);
+                                if (!empty($photoSite)) {
+                                    $emSite->remove($photoSite);
+                                }
+                            }
+                        }
+                    }
                     $emSite->flush();
                 }
             }
-            $em = $this->getDoctrine()->getManager();
+//            $em = $this->getDoctrine()->getManager();
+
+
+            if (!empty($domaineCarteIdentiteUnifie)) {
+                if (!empty($domaineCarteIdentiteUnifie->getDomaineCarteIdentites())) {
+                    /** @var DomaineCarteIdentite $domaineCarteIdentite */
+                    foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+
+                        // si il y a des images pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentite->getImages())) {
+                            /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                            foreach ($domaineCarteIdentite->getImages() as $domaineCarteIdentiteImage) {
+                                $image = $domaineCarteIdentiteImage->getImage();
+                                $domaineCarteIdentiteImage->setImage(null);
+                                $em->remove($image);
+                            }
+                        }
+                        // si il y a des photos pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentite->getPhotos())) {
+                            /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                            foreach ($domaineCarteIdentite->getPhotos() as $domaineCarteIdentitePhoto) {
+                                $photo = $domaineCarteIdentitePhoto->getPhoto();
+                                $domaineCarteIdentitePhoto->setPhoto(null);
+                                $em->remove($photo);
+                            }
+                        }
+                    }
+                    $em->flush();
+                }
+//                    $emSite->remove($domaineCarteIdentiteUnifieSite);
+//                    $emSite->flush();
+            }
+            
             $em->remove($domaineCarteIdentiteUnifie);
             $em->flush();
 

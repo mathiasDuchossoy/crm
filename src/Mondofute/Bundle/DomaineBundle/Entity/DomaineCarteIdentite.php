@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -67,6 +68,14 @@ class DomaineCarteIdentite
      * @var \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
      */
     private $kmPistesSkiNordique;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -468,5 +477,73 @@ class DomaineCarteIdentite
         $this->kmPistesSkiNordique = $kmPistesSkiNordique;
 
         return $this;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image)
+    {
+        $this->images[] = $image->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo
+     *
+     * @return DomaineCarteIdentite
+     */
+    public function addPhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo)
+    {
+        $this->photos[] = $photo->setDomaineCarteIdentite($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }
