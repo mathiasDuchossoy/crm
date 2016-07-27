@@ -123,13 +123,6 @@ class FournisseurController extends Controller
                     $typeFournisseur->setTypeFournisseur($type);
                     $fournisseur->addType($typeFournisseur);
                 }
-            } else {
-                $errorType = true;
-                // add flash messages
-                $this->addFlash(
-                    'error',
-                    'Vous devez choisir au moins un type.'
-                );
             }
             // ***** FIN GESTION DES TYPES DU FOURNISSEUR *****
 
@@ -498,11 +491,24 @@ class FournisseurController extends Controller
             // ***** GESTION DES TYPES DU FOURNISSEUR ****
             // *** on récupère les types de fournisseus coché dans le formulaires via la reqête ***
             $arrayTypeFournisseur = new ArrayCollection();
-            $errorType = false;
+
             if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $arrayTypeFournisseur->add(intval($type));
                 }
+            }
+            foreach ($fournisseur->getListeServices() as $listeService) {
+                $listeService->setFournisseur($fournisseur);
+                foreach ($listeService->getServices() as $service) {
+                    $service->setListeService($listeService);
+                    /** @var TarifService $tarifService */
+                    foreach ($service->getTarifs() as $tarifService) {
+                        $tarifService->setService($service);
+                    }
+                }
+            }
+            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
+                $arrayTypeFournisseur->add(intval($type));
             }
 
             /** @var TypeFournisseur $type */
