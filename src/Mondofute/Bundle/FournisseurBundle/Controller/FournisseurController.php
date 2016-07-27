@@ -116,7 +116,6 @@ class FournisseurController extends Controller
 
         if ($form->isSubmitted() && $form->isValid() && !$errorType) {
             // ***** GESTION DES TYPES DU FOURNISSEUR *****
-            $errorType = false;
             if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $typeFournisseur = new TypeFournisseur();
@@ -176,20 +175,17 @@ class FournisseurController extends Controller
                         }
                     }
                 }
-                if (!$errorType) {
-                    $em->persist($fournisseur);
-                    $em->flush();
+//                dump($fournisseur);die;
+                $em->persist($fournisseur);
+                $em->flush();
 
-                    $this->copieVersSites($fournisseur);
+                // add flash messages
+                $this->addFlash(
+                    'success',
+                    'Le fournisseur a bien été créé.'
+                );
 
-                    // add flash messages
-                    $this->addFlash(
-                        'success',
-                        'Le fournisseur a bien été créé.'
-                    );
-
-                    return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
-                }
+                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
         }
 
@@ -497,16 +493,6 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
-            foreach ($fournisseur->getListeServices() as $listeService) {
-                $listeService->setFournisseur($fournisseur);
-                foreach ($listeService->getServices() as $service) {
-                    $service->setListeService($listeService);
-                    /** @var TarifService $tarifService */
-                    foreach ($service->getTarifs() as $tarifService) {
-                        $tarifService->setService($service);
-                    }
-                }
-            }
             foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
                 $arrayTypeFournisseur->add(intval($type));
             }
@@ -542,6 +528,7 @@ class FournisseurController extends Controller
                     }
                 }
             }
+
             // ***** GESTION SUPPRESSION DES INTERLOCUTEURS *****
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);
@@ -660,8 +647,6 @@ class FournisseurController extends Controller
 
                 $em->persist($fournisseur);
                 $em->flush();
-
-
 
                 $this->mAJSites($fournisseur);
 
