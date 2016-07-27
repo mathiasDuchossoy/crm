@@ -116,7 +116,6 @@ class FournisseurController extends Controller
 
         if ($form->isSubmitted() && $form->isValid() && !$errorType) {
             // ***** GESTION DES TYPES DU FOURNISSEUR *****
-            $errorType = false;
             if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $typeFournisseur = new TypeFournisseur();
