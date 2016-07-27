@@ -164,11 +164,22 @@ class HebergementUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($hebergementUnifie);
-            $em->flush();
-
-            $this->copieVersSites($hebergementUnifie);
-            $this->addFlash('success', 'l\'hébergement a bien été créé');
-            return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
+            try {
+                $error = false;
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
+//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
+//                {
+//
+//                }
+            }
+            if (!$error) {
+                $this->copieVersSites($hebergementUnifie);
+                $this->addFlash('success', 'l\'hébergement a bien été créé');
+                return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
+            }
         }
         $formView = $form->createView();
         return $this->render('@MondofuteHebergement/hebergementunifie/new.html.twig', array(
@@ -1153,23 +1164,38 @@ class HebergementUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+
             $em->persist($hebergementUnifie);
-            $em->flush();
-            $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
 
-            // on parcourt les médias à supprimer
-            if (!empty($visuelToRemoveCollection)) {
-                foreach ($visuelToRemoveCollection as $item) {
-                    if (!empty($item)) {
-                        $this->deleteFile($item);
-                        $em->remove($item);
-                    }
-                }
+
+            try {
+                $error = false;
                 $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
+//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
+//                {
+//
+//                }
             }
+            if (!$error) {
+                $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
 
-            $this->addFlash('success', 'L\'hébergement a bien été modifié');
-            return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
+                // on parcourt les médias à supprimer
+                if (!empty($visuelToRemoveCollection)) {
+                    foreach ($visuelToRemoveCollection as $item) {
+                        if (!empty($item)) {
+                            $this->deleteFile($item);
+                            $em->remove($item);
+                        }
+                    }
+                    $em->flush();
+                }
+
+                $this->addFlash('success', 'L\'hébergement a bien été modifié');
+                return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $hebergementUnifie->getId()));
+            }
         }
 
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
