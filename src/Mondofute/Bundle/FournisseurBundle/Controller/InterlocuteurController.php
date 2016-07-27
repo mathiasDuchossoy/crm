@@ -29,17 +29,13 @@ class InterlocuteurController extends Controller
     public function newInterlocuteurUsers(Collection $interlocuteurs)
     {
         /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
-        
         foreach ($interlocuteurs as $fournisseurInterlocuteur) {
             $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
             $interlocuteurUser = $interlocuteur->getUser();
             $interlocuteurUser->setEnabled(true);
 
-
             $userManager = $this->get('fos_user.user_manager');
             $userManager->updatePassword($interlocuteurUser);
-
-//            dump($interlocuteurUser);
 
             foreach ($interlocuteur->getMoyenComs() as $moyenCom) {
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -80,7 +76,6 @@ class InterlocuteurController extends Controller
 
     public function loginExist(InterlocuteurUser $interlocuteurUser)
     {
-
         $em = $this->getDoctrine()->getEntityManager();
         $interlocuteurUserByUsername = $em->getRepository(InterlocuteurUser::class)->findOneBy(array('username' => $interlocuteurUser->getUsername()));
         $interlocuteurUserByMail = $em->getRepository(InterlocuteurUser::class)->findOneBy(array('email' => $interlocuteurUser->getEmail()));
