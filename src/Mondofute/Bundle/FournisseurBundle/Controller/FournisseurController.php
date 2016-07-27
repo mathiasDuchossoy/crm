@@ -179,6 +179,8 @@ class FournisseurController extends Controller
                 $em->persist($fournisseur);
                 $em->flush();
 
+                $this->copieVersSites($fournisseur);
+
                 // add flash messages
                 $this->addFlash(
                     'success',
@@ -493,9 +495,6 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
-            }
 
             /** @var TypeFournisseur $type */
             foreach ($originalTypeFournisseurs as $type) {
@@ -528,7 +527,6 @@ class FournisseurController extends Controller
                     }
                 }
             }
-
             // ***** GESTION SUPPRESSION DES INTERLOCUTEURS *****
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);
