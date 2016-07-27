@@ -369,7 +369,7 @@ class FournisseurController extends Controller
         $originalInterlocuteurs = new ArrayCollection();
         $originalRemiseClefs = new ArrayCollection();
         $originalReceptions = new ArrayCollection();
-        $originalTypes = new ArrayCollection();
+        $originalTypeFournisseurs = new ArrayCollection();
         $originalListeServices = new ArrayCollection();
         $originalServices = new ArrayCollection();
         $originalTarifsService = new ArrayCollection();
@@ -385,8 +385,9 @@ class FournisseurController extends Controller
         foreach ($fournisseur->getReceptions() as $reception) {
             $originalReceptions->add($reception);
         }
-        foreach ($fournisseur->getTypes() as $type) {
-            $originalTypes->add($type);
+        /** @var TypeFournisseur $typeFournisseur */
+        foreach ($fournisseur->getTypes() as $typeFournisseur) {
+            $originalTypeFournisseurs->add($typeFournisseur);
         }
 
         foreach ($fournisseur->getListeServices() as $listeService) {
@@ -414,8 +415,8 @@ class FournisseurController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
-            // type de fournisseur
+            // ***** GESTION DES TYPES DU FOURNISSEUR ****
+            // *** on récupère les types de fournisseus coché dans le formulaires via la reqête ***
             $arrayTypeFournisseur = new ArrayCollection();
 
             if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
@@ -423,24 +424,10 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
-            foreach ($fournisseur->getListeServices() as $listeService) {
-                $listeService->setFournisseur($fournisseur);
-                foreach ($listeService->getServices() as $service) {
-                    $service->setListeService($listeService);
-                    /** @var TarifService $tarifService */
-                    foreach ($service->getTarifs() as $tarifService) {
-                        $tarifService->setService($service);
-                    }
-                }
-            }
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
-            }
 
             /** @var TypeFournisseur $type */
-            foreach ($originalTypes as $type) {
+            foreach ($originalTypeFournisseurs as $type) {
                 if (!$arrayTypeFournisseur->contains($type->getTypeFournisseur())) {
-
                     $fournisseur->getTypes()->removeElement($type);
                     $this->deleteTypeFournisseurSites($type);
                     $em->remove($type);
@@ -449,13 +436,25 @@ class FournisseurController extends Controller
 
             /** @var integer $type */
             foreach ($arrayTypeFournisseur as $type) {
-                if (!$originalTypes->filter(function (TypeFournisseur $element) use ($type) {
+                if (!$originalTypeFournisseurs->filter(function (TypeFournisseur $element) use ($type) {
                     return $element->getTypeFournisseur() == $type;
                 })->first()
                 ) {
                     $typeFournisseur = new TypeFournisseur();
                     $typeFournisseur->setTypeFournisseur($type);
                     $fournisseur->addType($typeFournisseur);
+                }
+            }
+            // ***** FIN GESTION DES TYPES DU FOURNISSEUR ****
+
+            foreach ($fournisseur->getListeServices() as $listeService) {
+                $listeService->setFournisseur($fournisseur);
+                foreach ($listeService->getServices() as $service) {
+                    $service->setListeService($listeService);
+                    /** @var TarifService $tarifService */
+                    foreach ($service->getTarifs() as $tarifService) {
+                        $tarifService->setService($service);
+                    }
                 }
             }
 
