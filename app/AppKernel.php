@@ -20,7 +20,6 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\AccueilBundle\MondofuteAccueilBundle(),
             new Mondofute\Bundle\LangueBundle\MondofuteLangueBundle(),
             new Mondofute\Bundle\GeographieBundle\MondofuteGeographieBundle(),
-            new SC\DatetimepickerBundle\SCDatetimepickerBundle(),
             new Mondofute\Bundle\StationBundle\MondofuteStationBundle(),
             new Mondofute\Bundle\DomaineBundle\MondofuteDomaineBundle(),
             new Mondofute\Bundle\FournisseurBundle\MondofuteFournisseurBundle(),
@@ -44,6 +43,8 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\LogementBundle\MondofuteLogementBundle(),
             new Mondofute\Bundle\ServiceBundle\MondofuteServiceBundle(),
             new Mondofute\Bundle\PeriodeBundle\MondofutePeriodeBundle(),
+            new \JMS\JobQueueBundle\JMSJobQueueBundle(),
+            new nucleus\deployBundle\nucleusdeployBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

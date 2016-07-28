@@ -96,7 +96,6 @@ $minorProblems = $symfonyRequirements->getFailedRecommendations();
             .sf-reset .ko {
                 background-color: #d66;
             }
-
             .sf-reset p.help {
                 padding: 12px 16px;
                 word-break: break-word;

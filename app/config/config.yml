@@ -3,7 +3,8 @@ imports:
     - { resource: security.yml }
     - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
     - { resource: services.yml }
-    - { resource: @MondofuteCoreBundle/Resources/config/config.yml }
+    - { resource: '../../src/deployBundle/parameters.yml', ignore_errors: true }
+    - { resource: '@MondofuteCoreBundle/Resources/config/config.yml' }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -211,7 +212,10 @@ assetic:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
-
+        menu_css:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
+            output: css/menu.css
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
@@ -219,6 +223,13 @@ assetic:
                - lessphp
                - cssrewrite
            output: css/bootstrap.css
+        bootstrap_datepicker_css:
+          inputs:
+             - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/build/build_standalone3.less"
+          filters:
+             - lessphp
+             - cssrewrite
+          output: css/bootstrap-datepicker.css
         bootstrap_glyphicons_ttf:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
@@ -242,24 +253,22 @@ assetic:
 
         bootstrap_js:
            inputs:
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/affix.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/alert.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/button.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/carousel.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/collapse.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/dropdown.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/modal.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/tooltip.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/popover.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/scrollspy.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/tab.js"
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/js/transition.js"
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
            filters: [?yui_js]
            output: js/bootstrap.js
+        bootstrap_datepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.nl.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min.js"
+              - "%kernel.root_dir%/../app/Resources/public/js/datepicker-type.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datepicker.js
 
-
-sc_datetimepicker:
-    picker: ~
 
 fos_user:
 #    model_manager_name: ~
@@ -276,3 +285,10 @@ fos_user:
 #        form:
 #            type: mondofute_utilisateur_user
 #            name: mondofute_utilisateur_user
+
+jms_job_queue:
+    queue_options_defaults:
+        max_concurrent_jobs: 3  # par defaut le jobs queue peut lancer 3 jobs en meme temps
+    queue_options:
+        periode:
+            max_concurrent_jobs: 1  # lance les jobs de type periode 1 par 1
