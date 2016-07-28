@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+{% block title %}
+    {{ 'periode' | trans | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'periode.creation'|trans|capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <div>
+        {{ form(form) }}
+    </div>
+    <section>
+        {% block actions %}
+            <div style="text-align: right">
+                <ul class="list-unstyled">
+                    <li><a href="{{ path('periode_periode_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+                </ul>
+            </div>
+        {% endblock %}
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

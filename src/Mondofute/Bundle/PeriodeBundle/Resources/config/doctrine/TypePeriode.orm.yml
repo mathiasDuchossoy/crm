@@ -15,4 +15,8 @@ Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode:
                 unsigned: true
         court:
             type: boolean
+    oneToMany:
+        periodes:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
+            mappedBy: type
     lifecycleCallbacks: {  }

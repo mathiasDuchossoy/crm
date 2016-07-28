@@ -19,6 +19,18 @@ class TypePeriode
      * @var boolean
      */
     private $court;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $periodes;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->periodes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get nbJourDefaut
@@ -82,5 +94,39 @@ class TypePeriode
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Add periode
+     *
+     * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode
+     *
+     * @return TypePeriode
+     */
+    public function addPeriode(\Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode)
+    {
+        $this->periodes[] = $periode;
+
+        return $this;
+    }
+
+    /**
+     * Remove periode
+     *
+     * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode
+     */
+    public function removePeriode(\Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode)
+    {
+        $this->periodes->removeElement($periode);
+    }
+
+    /**
+     * Get periodes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPeriodes()
+    {
+        return $this->periodes;
     }
 }

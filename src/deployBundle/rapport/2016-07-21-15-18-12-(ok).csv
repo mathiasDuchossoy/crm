@@ -1,0 +1,4 @@
+bdd name;batch name;resultat (ok|ko);commentaire
+crm_75_crm;2016-07-21a_sls_periode.sql;OK;
+crm_75_skifute;2016-07-21a_sls_periode.sql;OK;
+crm_75_francefute;2016-07-21a_sls_periode.sql;OK;
