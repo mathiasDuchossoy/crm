@@ -379,7 +379,9 @@ class StationUnifieController extends Controller
         foreach ($stationUnifie->getStations() as $station) {
             // Si la carte d'identité est lié à la station mère
             if (!empty($request->get('cboxStationCI_' . $station->getSite()->getId()))) {
-                $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
+                if (!empty($station->getStationMere())) {
+                    $station->setStationCarteIdentite($station->getStationMere()->getStationCarteIdentite());
+                }
             } else {
                 // sinon on on en créé une nouvelle
                 $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($station);
@@ -407,7 +409,9 @@ class StationUnifieController extends Controller
         foreach ($stationUnifie->getStations() as $station) {
             // Si la carte d'identité est lié à la station mère
             if (!empty($request->get('cboxStationCommentVenir_' . $station->getSite()->getId()))) {
-                $station->setStationCommentVenir($station->getStationMere()->getStationCommentVenir());
+                if (!empty($station->getStationMere())) {
+                    $station->setStationCommentVenir($station->getStationMere()->getStationCommentVenir());
+                }
             } else {
                 // sinon on on en créé une nouvelle
                 $stationCommentVenirUnifie = $stationCommentVenirController->newEntity($station);
@@ -435,7 +439,9 @@ class StationUnifieController extends Controller
         foreach ($stationUnifie->getStations() as $station) {
             // Si la carte d'identité est lié à la station mère
             if (!empty($request->get('cboxStationDescription_' . $station->getSite()->getId()))) {
-                $station->setStationDescription($station->getStationMere()->getStationDescription());
+                if (!empty($station->getStationMere())) {
+                    $station->setStationDescription($station->getStationMere()->getStationDescription());
+                }
             } else {
                 // sinon on on en créé une nouvelle
                 $stationDescriptionUnifie = $stationDescriptionController->newEntity($station);
@@ -840,7 +846,7 @@ class StationUnifieController extends Controller
                         ->setCodePostal($station->getStationCarteIdentite()->getAdresse()->getCodePostal())
                         ->setDateCreation();
                     $newGPS = new CoordonneesGPS();
-                    $adresse->setCoordonneeGPS($newGPS);
+                    $adresse->setCoordonneeGps($newGPS);
 //                    $newCI->addMoyenCom($adresse);
                     $newCI->setAdresse($adresse);
                     $altitudeVillage = new Distance();

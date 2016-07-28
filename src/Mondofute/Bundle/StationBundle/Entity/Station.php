@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -67,6 +68,10 @@ class Station
      * @var \Mondofute\Bundle\StationBundle\Entity\Station
      */
     private $stationMere;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
 
     /**
      * Constructor
@@ -528,5 +533,39 @@ class Station
         $this->stationMere = $stationMere;
 
         return $this;
+    }
+
+    /**
+     * Add hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
+     *
+     * @return Station
+     */
+    public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
+    {
+        $this->hebergements[] = $hebergement->setStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
+     */
+    public function removeHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement);
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
     }
 }
