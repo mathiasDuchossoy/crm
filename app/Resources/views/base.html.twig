@@ -40,17 +40,7 @@
         //        var itemNonPersonalisable = [];
         //                var items = [];
         $(document).ready(function () {
-            $('[data-provide="datepicker"]').datepicker({
-                todayBtn: "linked",
-                format: "dd/mm/yyyy",
-                autoclose: "true",
-                pickerPosition: "bottom-left",
-                startView: "day",
-                minView: "month",
-                daysOfWeekHighlighted: [0, 6],
-                language: "{{ app.request.locale | slice(0,2) }}",
-                todayHighlight: true
-            });
+
             $(':submit').click(function () {
 //                recupère le form du submit
                 var form = $(this).closest('form');
