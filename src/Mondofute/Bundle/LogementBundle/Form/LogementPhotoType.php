@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LogementPhotoType extends AbstractType
@@ -101,6 +103,13 @@ class LogementPhotoType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\LogementBundle\Entity\LogementPhoto',
         ));
+    }
+
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
+        $view->children['photo']->children['binaryContent']->vars['attr'] = array("accept" => "image/x-png, image/gif, image/jpeg");
     }
 
 
