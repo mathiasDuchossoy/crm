@@ -95,7 +95,9 @@ fabric.properties
 /composer.phar
 
 ### Symfony Patch ###
-/web/bundles/
-/web/uploads/
 /web/css/
 /web/js/
+
+/app/SymfonyRequirements.php
+/composer.lock
+/web/config.php
