@@ -5,7 +5,7 @@
     <title>{% block title %}{{ 'CRM Mondofute !' }}{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
     {% block stylesheets %}
-        {% stylesheets 'css/bootstrap.css' '../app/Resources/public/css/menu.css' %}
+        {% stylesheets 'css/bootstrap.css' 'css/menu.css' 'css/bootstrap-datepicker.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
@@ -24,7 +24,7 @@
 {% endblock %}
 <div class="container">
     <div class="row">
-    {% block body %}{% endblock %}
+        {% block body %}{% endblock %}
     </div>
 </div>
 {% block footer %}
@@ -33,14 +33,14 @@
     {% javascripts
     'js/jquery.min.js'
     'js/bootstrap.js'
-    'bundles/scdatetimepicker/js/bootstrap-datetimepicker.js'
-    'bundles/scdatetimepicker/js/locales/bootstrap-datetimepicker.fr.js' %}
+    'js/bootstrap-datepicker.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">
         //        var itemNonPersonalisable = [];
         //                var items = [];
         $(document).ready(function () {
+
             $(':submit').click(function () {
 //                recupère le form du submit
                 var form = $(this).closest('form');

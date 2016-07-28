@@ -1,3 +1,7 @@
-mondofute_periode_homepage:
-    path:     /
-    defaults: { _controller: MondofutePeriodeBundle:Default:index }
+periode_periode_index:
+    path:     /periode
+    defaults: { _controller: MondofutePeriodeBundle:Periode:index }
+
+periode_periode_new:
+    path:     /periode/new
+    defaults: { _controller: MondofutePeriodeBundle:Periode:new}

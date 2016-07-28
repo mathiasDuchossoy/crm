@@ -246,6 +246,19 @@
                         </li>
                     </ul>
                 </li>
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'periode' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'periode' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'periode_periode_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'periode_periode_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </li>
         {#<li role="presentation"#}

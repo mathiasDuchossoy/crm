@@ -1,0 +1,22 @@
+Mondofute\Bundle\PeriodeBundle\Entity\Periode:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PeriodeBundle\Repository\PeriodeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        debut:
+            type: date
+        fin:
+            type: date
+        nbJour:
+            type: smallint
+    manyToOne:
+        type:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+            inversedBy: periodes
+    lifecycleCallbacks: {  }

@@ -3,3 +3,17 @@ type_periode:
     2: semaine
     3: '2 semaines'
     4: '3 semaines'
+periode:
+    creation: 'création de périodes'
+    liste: 'liste des périodes'
+placeholder:
+    choix_periode_type: '-- choix du type de période --'
+format_date: 'jj/mm/aaaa'
+nbJours: 'nombre de jours'
+id: 'id'
+Debut: 'Début'
+Fin: 'Fin'
+Nb jour: 'Nombre de jours'
+Type: 'Type'
+creation_periodes_en_cours: 'les périodes sont en cours de création'
+valider: 'valider'
