@@ -49,7 +49,7 @@ class UtilisateurUserType extends AbstractType
 
             }
         });
-        ;
+
     }
 
 
