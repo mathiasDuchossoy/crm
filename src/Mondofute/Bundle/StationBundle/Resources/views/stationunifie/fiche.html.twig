@@ -96,7 +96,7 @@
                                         Carte d'identité
                                     </h3></div>
                                 <div class="panel-body">
-                                    {{ form_row( station.stationCarteIdentite.adresse.codePostal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.adresse.codePostal.vars['unique_block_prefix']}}) }}
+                                    {{ form_row( station.stationCarteIdentite.adresse.code_postal , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.adresse.code_postal.vars['unique_block_prefix']}}) }}
                                     {{ form_row( station.stationCarteIdentite.adresse.ville , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.adresse.ville.vars['unique_block_prefix']}}) }}
                                     {{ form_row( station.stationCarteIdentite.jourOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.jourOuverture.vars['unique_block_prefix']}}) }}
                                     {{ form_row( station.stationCarteIdentite.moisOuverture , { 'attr' : { 'data-unique_block_prefix' : station.stationCarteIdentite.moisOuverture.vars['unique_block_prefix']}}) }}
@@ -290,7 +290,7 @@
 
 
         {% endfor %}
-        items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_codePostal");
+        items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_code_postal");
         items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_ville");
         items.push("_station_unifie_stations_entry_stationCarteIdentite_jourOuverture");
         items.push("_station_unifie_stations_entry_stationCarteIdentite_moisOuverture");
