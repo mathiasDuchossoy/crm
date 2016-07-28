@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DomaineCarteIdentiteImageType extends AbstractType
@@ -103,5 +105,11 @@ class DomaineCarteIdentiteImageType extends AbstractType
         ));
     }
 
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
+        $view->children['image']->children['binaryContent']->vars['attr'] = array("accept" => "image/x-png, image/gif, image/jpeg");
+    }
 
 }

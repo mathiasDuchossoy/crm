@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DepartementPhotoType extends AbstractType
@@ -102,6 +104,13 @@ class DepartementPhotoType extends AbstractType
             'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto',
         ));
     }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::finishView($view, $form, $options);
+        $view->children['photo']->children['binaryContent']->vars['attr'] = array("accept" => "image/x-png, image/gif, image/jpeg");
+    }
+
 
 
 }
