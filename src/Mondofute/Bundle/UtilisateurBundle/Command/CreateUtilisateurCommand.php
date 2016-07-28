@@ -13,9 +13,7 @@ use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -55,10 +53,6 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
         foreach ($sites as $site) {
             $emSite = $this->getContainer()->get('doctrine')->getEntityManager($site->getLibelle());
-            $a = $emSite->getRepository(UtilisateurUser::class)->findOneBy(array('email' => 'admin2@mondofute.com'));
-            $em->remove($a);
-            $em->flush();
-
 
             /** @var Utilisateur $utilisateur */
             $utilisateur        = new Utilisateur();
