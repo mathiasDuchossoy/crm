@@ -21,6 +21,10 @@ parameters:
             - crm_79_crm
             - crm_79_skifute
             - crm_79_francefute
+        dev.crm_79:
+            - crm_79_mondofutedev_comclone_crm
+            - crm_79_mondofutedev_comclone_skifute
+            - crm_79_mondofutedev_comclone_francefute
     deploy_bundle.dossier_defaut: maj
     deploy_bundle.type_bdd: param
     deploy_bundle.url: null
