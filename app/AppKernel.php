@@ -43,7 +43,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\ServiceBundle\MondofuteServiceBundle(),
             new Mondofute\Bundle\PeriodeBundle\MondofutePeriodeBundle(),
             new \JMS\JobQueueBundle\JMSJobQueueBundle(),
-            new nucleus\deployBundle\nucleusdeployBundle()
+            new nucleus\deployBundle\nucleusdeployBundle(),
             new Mondofute\Bundle\MediaBundle\MondofuteMediaBundle(),
             // SonataMediabundle
             new Sonata\MediaBundle\SonataMediaBundle(),
