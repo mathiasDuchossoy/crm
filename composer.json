@@ -48,6 +48,10 @@
     {
       "type": "vcs",
       "url": "http://labgit.com/symfony-vendors/moyenCommunicationBundle.git"
+    },
+    {
+      "type": "git",
+      "url": "http://labgit.com/symfony-vendors/deploybundle.git"
     }
   ],
   "require-dev": {
