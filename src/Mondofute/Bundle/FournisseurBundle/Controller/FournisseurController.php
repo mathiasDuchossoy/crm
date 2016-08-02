@@ -461,6 +461,8 @@ class FournisseurController extends Controller
             $originalListeServices->add($listeService);
         }
 
+        $originalLogo = $fournisseur->getLogo();
+
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
