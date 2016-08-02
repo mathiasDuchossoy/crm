@@ -4,77 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a8ae6f5d3e865904a90c6fba6951a947",
-    "content-hash": "7dde7f77167b6e1323514742b845937d",
+    "hash": "0c20185b9ec29d5e8a51e67e24d5d313",
+    "content-hash": "327aad9d579f1bbbd7a0953d0e8207bb",
     "packages": [
-        {
-            "name": "components/bootstrap",
-            "version": "3.3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/components/bootstrap.git",
-                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/components/bootstrap/zipball/fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
-                "reference": "fb4923919c620b8b2aa8a11eda16b49b0a9e8a27",
-                "shasum": ""
-            },
-            "require": {
-                "components/jquery": "1.9.1 - 2"
-            },
-            "suggest": {
-                "components/bootstrap-default": "Provide a theme for Bootstrap as components/bootstrap only provides the CSS as file assets"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "js/bootstrap.js"
-                    ],
-                    "files": [
-                        "js/*.js",
-                        "css/*.css",
-                        "css/*.map",
-                        "fonts/*",
-                        "less/mixins/*.less",
-                        "less/*.less"
-                    ],
-                    "shim": {
-                        "deps": [
-                            "jquery"
-                        ]
-                    }
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                },
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                }
-            ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "http://getbootstrap.com",
-            "keywords": [
-                "css",
-                "framework",
-                "front-end",
-                "less",
-                "mobile-first",
-                "responsive",
-                "web"
-            ],
-            "time": "2015-11-24 20:19:41"
-        },
         {
             "name": "components/jquery",
             "version": "2.2.4",
@@ -885,72 +817,17 @@
             "time": "2016-01-05 21:34:58"
         },
         {
-            "name": "eternicode/bootstrap-datepicker",
-            "version": "v1.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eternicode/bootstrap-datepicker.git",
-                "reference": "f4df9ac6679b15b12157324c556e0da1c628af6e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eternicode/bootstrap-datepicker/zipball/f4df9ac6679b15b12157324c556e0da1c628af6e",
-                "reference": "f4df9ac6679b15b12157324c556e0da1c628af6e",
-                "shasum": ""
-            },
-            "require": {
-                "components/bootstrap": ">=3.0, <4.0",
-                "components/jquery": ">=1.7.1",
-                "robloach/component-installer": "*"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "js/bootstrap-datepicker.js"
-                    ],
-                    "styles": [
-                        "dist/css/bootstrap-datepicker.css",
-                        "dist/css/bootstrap-datepicker3.css"
-                    ],
-                    "files": [
-                        "js/locales/bootstrap-datepicker.*.js"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Andrew Rowls",
-                    "email": "eternicode@gmail.com"
-                },
-                {
-                    "name": "Community",
-                    "homepage": "https://github.com/eternicode/bootstrap-datepicker/contributors"
-                }
-            ],
-            "description": "A datepicker for Bootstrap forked from Stefan Petre's (of eyecon.ro)",
-            "keywords": [
-                "bootstrap",
-                "datepicker"
-            ],
-            "time": "2016-05-06 19:11:24"
-        },
-        {
             "name": "friendsofsymfony/user-bundle",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "42ad0730ee22406de20da75fa9a3f4d74c565a83"
+                "reference": "edbf8401e81faaf570e54dcd3b35cfda953f1338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/42ad0730ee22406de20da75fa9a3f4d74c565a83",
-                "reference": "42ad0730ee22406de20da75fa9a3f4d74c565a83",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/edbf8401e81faaf570e54dcd3b35cfda953f1338",
+                "reference": "edbf8401e81faaf570e54dcd3b35cfda953f1338",
                 "shasum": ""
             },
             "require": {
@@ -959,6 +836,9 @@
                 "symfony/framework-bundle": "~2.3|~3.0",
                 "symfony/security-bundle": "~2.3|~3.0",
                 "symfony/twig-bundle": "~2.3|~3.0"
+            },
+            "conflict": {
+                "symfony/doctrine-bridge": "<2.3"
             },
             "require-dev": {
                 "doctrine/doctrine-bundle": "~1.3",
@@ -1006,7 +886,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-06-21 10:34:42"
+            "time": "2016-07-31 15:14:05"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -1206,241 +1086,6 @@
                 "sql"
             ],
             "time": "2014-01-12 16:20:24"
-        },
-        {
-            "name": "jms/aop-bundle",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSAopBundle.git",
-                "reference": "78000d007e74283cc564a58e184d7f62548ad394"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/78000d007e74283cc564a58e184d7f62548ad394",
-                "reference": "78000d007e74283cc564a58e184d7f62548ad394",
-                "shasum": ""
-            },
-            "require": {
-                "jms/cg": "^1.1",
-                "php": ">=5.3.9",
-                "symfony/framework-bundle": "^2.3|^3.0"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "^2.7"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JMS\\AopBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Adds AOP capabilities to Symfony2",
-            "keywords": [
-                "annotations",
-                "aop"
-            ],
-            "time": "2015-12-09 16:30:46"
-        },
-        {
-            "name": "jms/cg",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/cg-library.git",
-                "reference": "0af1113c7409b8636c5244bbae10b2e0ff792e9c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/cg-library/zipball/0af1113c7409b8636c5244bbae10b2e0ff792e9c",
-                "reference": "0af1113c7409b8636c5244bbae10b2e0ff792e9c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "CG\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Toolset for generating PHP code",
-            "keywords": [
-                "code generation"
-            ],
-            "time": "2015-09-13 08:54:43"
-        },
-        {
-            "name": "jms/di-extra-bundle",
-            "version": "1.7.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSDiExtraBundle.git",
-                "reference": "27c3fc7150550ccc0731290b2c1ceb57449f909d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSDiExtraBundle/zipball/27c3fc7150550ccc0731290b2c1ceb57449f909d",
-                "reference": "27c3fc7150550ccc0731290b2c1ceb57449f909d",
-                "shasum": ""
-            },
-            "require": {
-                "jms/aop-bundle": "~1.1",
-                "jms/metadata": "~1.0",
-                "php": "~5.3|~7.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/finder": "~2.3|~3.0",
-                "symfony/framework-bundle": "~2.3|~3.0",
-                "symfony/http-kernel": "^2.3.24|~3.0",
-                "symfony/process": "~2.3|~3.0",
-                "symfony/routing": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "~1.5",
-                "doctrine/orm": "~2.3",
-                "jms/security-extra-bundle": "~1.0",
-                "phpcollection/phpcollection": ">=0.2,<0.3-dev",
-                "sensio/framework-extra-bundle": "~2.0|~3.0",
-                "symfony/browser-kit": "~2.3|~3.0",
-                "symfony/class-loader": "~2.3|~3.0",
-                "symfony/form": "~2.3|~3.0",
-                "symfony/phpunit-bridge": "~2.7",
-                "symfony/security-bundle": "~2.3",
-                "symfony/twig-bundle": "~2.3|~3.0",
-                "symfony/validator": "~2.3|~3.0",
-                "symfony/yaml": "~2.3|~3.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JMS\\DiExtraBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Allows to configure dependency injection using annotations",
-            "homepage": "http://jmsyst.com/bundles/JMSDiExtraBundle",
-            "keywords": [
-                "annotations",
-                "dependency injection"
-            ],
-            "time": "2016-04-18 22:27:09"
-        },
-        {
-            "name": "jms/job-queue-bundle",
-            "version": "dev-master",
-            "target-dir": "JMS/JobQueueBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/schmittjoh/JMSJobQueueBundle.git",
-                "reference": "252f93dbc293905d05e19ed9a230246235a2b8f2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSJobQueueBundle/zipball/252f93dbc293905d05e19ed9a230246235a2b8f2",
-                "reference": "252f93dbc293905d05e19ed9a230246235a2b8f2",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": ">=2.3,<3.0",
-                "jms/di-extra-bundle": ">=1.1,<2.0",
-                "php": "^5.5.0 || ^7.0",
-                "symfony/framework-bundle": ">=2.1,<3.0-dev"
-            },
-            "require-dev": {
-                "doctrine/doctrine-bundle": "*",
-                "doctrine/doctrine-fixtures-bundle": "*",
-                "doctrine/orm": "*",
-                "pagerfanta/pagerfanta": "dev-master",
-                "phpunit/phpunit": "^5.2",
-                "sensio/framework-extra-bundle": "*",
-                "symfony/browser-kit": "*",
-                "symfony/class-loader": "*",
-                "symfony/css-selector": "*",
-                "symfony/finder": "*",
-                "symfony/form": "*",
-                "symfony/process": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
-            },
-            "suggest": {
-                "pagerfanta/pagerfanta": "Required when using the webinterface.",
-                "sensio/framework-extra-bundle": "Required when using the webinterface.",
-                "symfony/twig-bundle": "Required when using the webinterface."
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "JMS\\JobQueueBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache2"
-            ],
-            "authors": [
-                {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Allows to schedule Symfony2 console commands as jobs.",
-            "homepage": "http://jmsyst.com/bundles/JMSJobQueueBundle",
-            "keywords": [
-                "job",
-                "queue"
-            ],
-            "time": "2016-03-09 11:26:06"
         },
         {
             "name": "jms/metadata",
@@ -1751,16 +1396,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.20.0",
+            "version": "1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037"
+                "reference": "f42fbdfd53e306bda545845e4dbfd3e72edb4952"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/55841909e2bcde01b5318c35f2b74f8ecc86e037",
-                "reference": "55841909e2bcde01b5318c35f2b74f8ecc86e037",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f42fbdfd53e306bda545845e4dbfd3e72edb4952",
+                "reference": "f42fbdfd53e306bda545845e4dbfd3e72edb4952",
                 "shasum": ""
             },
             "require": {
@@ -1825,7 +1470,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-07-02 14:02:10"
+            "time": "2016-07-29 03:23:52"
         },
         {
             "name": "nucleus/contactbundle",
@@ -1857,48 +1502,6 @@
                 "Contact"
             ],
             "time": "2016-05-25 11:14:36"
-        },
-        {
-            "name": "nucleus/deploybundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "http://labgit.com/symfony-vendors/deploybundle.git",
-                "reference": "849876bc64edde031e95f78274f002cf6bd15f79"
-            },
-            "require": {
-                "doctrine/doctrine-bundle": "*",
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": ">=2.1",
-                "twig/twig": "*"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "nucleus\\deployBundle\\": ""
-                }
-            },
-            "license": [
-                "GPL-3.0+"
-            ],
-            "authors": [
-                {
-                    "name": "Infonova",
-                    "email": "developpement@infonova.fr",
-                    "homepage": "http://www.infonova.fr"
-                }
-            ],
-            "description": "Permet de lancer des fichiers sql et batch depuis une commande",
-            "homepage": "http://www.infonova.fr",
-            "keywords": [
-                "Lanceur"
-            ],
-            "time": "2016-07-21 12:42:22"
         },
         {
             "name": "nucleus/moyencombundle",
@@ -2233,54 +1836,6 @@
             "time": "2016-04-20 11:08:03"
         },
         {
-            "name": "robloach/component-installer",
-            "version": "0.2.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/RobLoach/component-installer.git",
-                "reference": "908a859aa7c4949ba9ad67091e67bac10b66d3d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/908a859aa7c4949ba9ad67091e67bac10b66d3d7",
-                "reference": "908a859aa7c4949ba9ad67091e67bac10b66d3d7",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0",
-                "kriswallsmith/assetic": "1.*",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "composer/composer": "1.*@alpha",
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                },
-                "class": "ComponentInstaller\\ComponentInstallerPlugin"
-            },
-            "autoload": {
-                "psr-0": {
-                    "ComponentInstaller": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rob Loach",
-                    "homepage": "http://robloach.net"
-                }
-            ],
-            "description": "Allows installation of Components via Composer.",
-            "time": "2015-08-10 12:35:38"
-        },
-        {
             "name": "sensio/distribution-bundle",
             "version": "v5.0.7",
             "source": {
@@ -2501,6 +2056,52 @@
                 "time"
             ],
             "time": "2016-02-20 16:29:57"
+        },
+        {
+            "name": "stephanecollot/datetimepicker-bundle",
+            "version": "1.0.1",
+            "target-dir": "SC/DatetimepickerBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stephanecollot/DatetimepickerBundle.git",
+                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stephanecollot/DatetimepickerBundle/zipball/dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
+                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "symfony/framework-bundle": "2.*",
+                "symfony/symfony": "2.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "SC\\DatetimepickerBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stephane Collot"
+                }
+            ],
+            "description": "Symfony bundle for Bootstrap DateTime picker",
+            "keywords": [
+                "bootstrap",
+                "bundle",
+                "datepicker",
+                "picker",
+                "symfony",
+                "timepicker"
+            ],
+            "time": "2015-02-27 05:46:07"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3256,16 +2857,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.8",
+            "version": "v2.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "038d13264f732f9bba850c423e374dc72874d1a6"
+                "reference": "df02dd5d3f7decb3a05c6d0f31054b4263625dcb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/038d13264f732f9bba850c423e374dc72874d1a6",
-                "reference": "038d13264f732f9bba850c423e374dc72874d1a6",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/df02dd5d3f7decb3a05c6d0f31054b4263625dcb",
+                "reference": "df02dd5d3f7decb3a05c6d0f31054b4263625dcb",
                 "shasum": ""
             },
             "require": {
@@ -3386,7 +2987,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-06-30 15:42:24"
+            "time": "2016-07-30 08:48:52"
         },
         {
             "name": "symfony/translation",
@@ -3394,12 +2995,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "6bf844e1ee3c820c012386c10427a5c67bbefec8"
+                "reference": "eee6c664853fd0576f21ae25725cfffeafe83f26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/6bf844e1ee3c820c012386c10427a5c67bbefec8",
-                "reference": "6bf844e1ee3c820c012386c10427a5c67bbefec8",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/eee6c664853fd0576f21ae25725cfffeafe83f26",
+                "reference": "eee6c664853fd0576f21ae25725cfffeafe83f26",
                 "shasum": ""
             },
             "require": {
@@ -3450,7 +3051,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:40:00"
+            "time": "2016-07-30 07:22:48"
         },
         {
             "name": "twig/extensions",
@@ -3567,16 +3168,16 @@
         },
         {
             "name": "twitter/bootstrap",
-            "version": "v3.3.6",
+            "version": "v3.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "81df608a40bf0629a1dc08e584849bb1e43e0b7a"
+                "reference": "0b9c4a4007c44201dce9a6cc1a38407005c26c86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/81df608a40bf0629a1dc08e584849bb1e43e0b7a",
-                "reference": "81df608a40bf0629a1dc08e584849bb1e43e0b7a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0b9c4a4007c44201dce9a6cc1a38407005c26c86",
+                "reference": "0b9c4a4007c44201dce9a6cc1a38407005c26c86",
                 "shasum": ""
             },
             "replace": {
@@ -3614,7 +3215,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2015-11-24 19:37:05"
+            "time": "2016-07-25 15:51:55"
         }
     ],
     "packages-dev": [
@@ -3671,54 +3272,8 @@
             "time": "2016-06-20 05:58:05"
         },
         {
-            "name": "stephanecollot/datetimepicker-bundle",
-            "version": "1.0.1",
-            "target-dir": "SC/DatetimepickerBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stephanecollot/DatetimepickerBundle.git",
-                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stephanecollot/DatetimepickerBundle/zipball/dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
-                "reference": "dcdc1f5ff0b93e9c7372700103ffaa459064f3f3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3",
-                "symfony/framework-bundle": "2.*",
-                "symfony/symfony": "2.*"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-0": {
-                    "SC\\DatetimepickerBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stephane Collot"
-                }
-            ],
-            "description": "Symfony bundle for Bootstrap DateTime picker",
-            "keywords": [
-                "bootstrap",
-                "bundle",
-                "datepicker",
-                "picker",
-                "symfony",
-                "timepicker"
-            ],
-            "time": "2015-02-27 05:46:07"
-        },
-        {
             "name": "symfony/phpunit-bridge",
-            "version": "v2.8.8",
+            "version": "v2.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
@@ -3779,9 +3334,7 @@
         "nucleus/moyencombundle": 20,
         "friendsofsymfony/user-bundle": 20,
         "pugx/multi-user-bundle": 20,
-        "symfony/translation": 20,
-        "jms/job-queue-bundle": 20,
-        "nucleus/deploybundle": 20
+        "symfony/translation": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
