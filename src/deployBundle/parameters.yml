@@ -9,10 +9,14 @@ parameters:
             login: root
             pass: null
     deploy_bundle.bases:
-        preprod:
+        local.preprod:
             - crm2
             - skifute2
             - francefute2
+        local.crm_79:
+            - crm_79_crm
+            - crm_79_skifute
+            - crm_79_francefute
     deploy_bundle.dossier_defaut: maj
     deploy_bundle.type_bdd: param
     deploy_bundle.url: null
