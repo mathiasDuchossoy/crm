@@ -20,7 +20,21 @@ class ZoneTouristiqueType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => ZoneTouristiqueTraductionType::class,
             ))
-            ->add('site', HiddenType::class, array('mapped' => false));
+            ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('images', CollectionType::class, array(
+                'entry_type' => ZoneTouristiqueImageType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => false,
+            ))
+            ->add('photos', CollectionType::class, array(
+                'entry_type' => ZoneTouristiquePhotoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => false,
+            ));
     }
 
     /**

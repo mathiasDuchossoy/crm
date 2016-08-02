@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -30,6 +31,14 @@ class Secteur
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -187,5 +196,73 @@ class Secteur
     public function getStations()
     {
         return $this->stations;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image
+     *
+     * @return Secteur
+     */
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image)
+    {
+        $this->images[] = $image->setSecteur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
+     *
+     * @return Secteur
+     */
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
+    {
+        $this->photos[] = $photo->setSecteur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }

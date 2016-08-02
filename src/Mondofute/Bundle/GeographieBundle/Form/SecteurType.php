@@ -21,7 +21,20 @@ class SecteurType extends AbstractType
                 'entry_type' => SecteurTraductionType::class,
             ))
             ->add('site', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('images', CollectionType::class, array(
+                'entry_type' => SecteurImageType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => false,
+            ))
+            ->add('photos', CollectionType::class, array(
+                'entry_type' => SecteurPhotoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => true,
+            ));
     }
     
     /**

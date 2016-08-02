@@ -58,5 +58,35 @@ class DepartementUnifieType extends AbstractType
             }
             $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
         }
+
+
+        foreach ($view->children['departements'] as $departement) {
+//            dump($departement);
+            if ($departement->vars['value']->getSite()->getCrm() == 1) {
+                $departementCrm = $departement;
+            } else {
+                foreach ($departement->children['images'] as $key => $image) {
+                    if ($image->vars['value']->getActif() == true) {
+
+//                        dump($departement->vars['value']->getSite()->getId());
+                        $siteId = $departement->vars['value']->getSite()->getId();
+//                    $departementCrm->children['images']->children[$key]
+                        $departementCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+//                        dump($departementCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr']);
+                    }
+                }
+                foreach ($departement->children['photos'] as $key => $photo) {
+                    if ($photo->vars['value']->getActif() == true) {
+
+                        $siteId = $departement->vars['value']->getSite()->getId();
+//                    $departementCrm->children['photos']->children[$key]
+                        $departementCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
+            }
+
+        }
     }
+
+
 }

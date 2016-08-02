@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
     - { resource: services.yml }
+    - { resource: "@MondofuteMediaBundle/Resources/config/services.yml" }
     - { resource: '../../src/deployBundle/parameters.yml', ignore_errors: true }
     - { resource: '@MondofuteCoreBundle/Resources/config/config.yml' }
 
@@ -10,9 +11,9 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: fr_FR
-#    locale: en_EN
-#    database_name_skifute: skifute2
-#    database_name_francefute: francefute2
+    sonata.media.provider.file.class: Mondofute\Bundle\MediaBundle\Provider\FileProvider
+    sonata.media.provider.image.class: Mondofute\Bundle\MediaBundle\Provider\ImageProvider
+    sonata.media.provider.youtube.class: Mondofute\Bundle\MediaBundle\Provider\YouTubeProvider
 
 framework:
     #esi:             ~
@@ -44,6 +45,7 @@ twig:
     form:
         resources:
             - 'InfiniteFormBundle::form_theme.html.twig'
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -74,6 +76,8 @@ doctrine:
                 user:     "%database_user%"
                 password: "%database_password%"
                 charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -94,10 +98,6 @@ doctrine:
                     MondofuteUniteBundle: ~
                     MondofuteDescriptionForfaitSkiBundle: ~
                     MondofuteChoixBundle: ~
-                    MondofuteHebergementBundle: ~
-                    MondofuteRemiseClefBundle: ~
-                    MondofuteTrancheHoraireBundle: ~
-                    MondofuteLogementBundle: ~
                     MondofuteUtilisateurBundle: ~
                     MondofuteClientBundle: ~
                     MondofuteCoreBundle: ~
@@ -109,6 +109,13 @@ doctrine:
                     NucleusMoyenComBundle:
                         type: yml
                         dir: Resources/config/doctrine
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
                     FOSUserBundle:
                         type: xml
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
@@ -152,6 +159,9 @@ doctrine:
 #                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/FOS/UserBundle/Resources/config/doctrine/model'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -187,6 +197,9 @@ doctrine:
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -281,14 +294,416 @@ fos_user:
     registration:
         form:
             type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
-#    change_password:
-#        form:
-#            type: mondofute_utilisateur_user
-#            name: mondofute_utilisateur_user
 
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media:        MyVendor\MediaBundle\Entity\Media
+    #    gallery:      MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_item: MyVendor\MediaBundle\Entity\GalleryItem
+    db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+    default_context: default # you need to set a context
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+        secteur_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_crm:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+    providers:
+        file:
+            service:    sonata.media.provider.file
+            resizer:    false
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            allowed_extensions: ['pdf', 'txt', 'rtf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pttx', 'odt', 'odg', 'odp', 'ods', 'odc', 'odf', 'odb', 'csv', 'xml']
+            allowed_mime_types: ['application/pdf', 'application/x-pdf', 'application/rtf', 'text/html', 'text/rtf', 'text/plain']
+
+        image:
+            service:    sonata.media.provider.image
+            resizer:    sonata.media.resizer.simple # sonata.media.resizer.square
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            allowed_extensions: ['jpg', 'png', 'jpeg']
+            allowed_mime_types: ['image/pjpeg', 'image/jpeg', 'image/png', 'image/x-png']
+
+        youtube:
+            service:    sonata.media.provider.youtube
+            resizer:    sonata.media.resizer.simple
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            html5: false
+
+        dailymotion:
+            service:    sonata.media.provider.dailymotion
+            resizer:    sonata.media.resizer.simple
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+#            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  "%kernel.root_dir%/../web/uploads/media"
+            create:     false
+
+    buzz:
+        connector:  sonata.media.buzz.connector.curl
+#        connector:  sonata.media.buzz.connector.file_get_content
 jms_job_queue:
     queue_options_defaults:
         max_concurrent_jobs: 3  # par defaut le jobs queue peut lancer 3 jobs en meme temps
     queue_options:
         periode:
             max_concurrent_jobs: 1  # lance les jobs de type periode 1 par 1
+
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media:        MyVendor\MediaBundle\Entity\Media
+    #    gallery:      MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_item: MyVendor\MediaBundle\Entity\GalleryItem
+    db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+    default_context: default # you need to set a context
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+        secteur_image:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_crm:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+#            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  "%kernel.root_dir%/../web/uploads/media"
+            create:     false
+
+#    buzz:
+#        connector:  sonata.media.buzz.connector.curl
+#        connector:  sonata.media.buzz.connector.file_get_content

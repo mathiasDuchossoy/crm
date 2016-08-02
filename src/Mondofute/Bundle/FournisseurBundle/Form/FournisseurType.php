@@ -30,6 +30,16 @@ class FournisseurType extends AbstractType
         $fournisseurId = $builder->getData()->getId();
         $locale = $options["locale"];
 
+
+
+        $builder
+            ->add('logo', 'sonata_media_type', array(
+                'provider' => 'sonata.media.provider.image',
+                'context' => 'fournisseur_logo_crm',
+                'required' => false,
+                'label' => 'logo',
+            ));
+
         $builder
             ->add('raisonSociale')
 //            ->add('type', EntityType::class, array(
@@ -178,6 +188,7 @@ class FournisseurType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $arrayType = new ArrayCollection();
+        $view->children['logo']->children['binaryContent']->vars['attr'] = array('accept' => "image/x-png, image/gif, image/jpeg");
 
         if (!empty($view->vars['value']->getTypes())) {
             foreach ($view->vars['value']->getTypes() as $type) {
@@ -191,7 +202,6 @@ class FournisseurType extends AbstractType
             }
         }
 
-//        dump($view->children['interlocuteurs']->children[0]->children['interlocuteur']->children['moyenComs']->children);
         // ordre d'affichage: Adresse , Email, Téléphone 1, Téléphone 2, Mobile
         $interlocuteurs = $view->children['interlocuteurs']->children;
         foreach ($interlocuteurs as $interlocuteur) {
@@ -230,10 +240,8 @@ class FournisseurType extends AbstractType
                     $i++;
                 }
             }
-//            dump($interlocuteur->children['interlocuteur']->children['moyenComs']->children);
 
         }
-//        die;
     }
 
 

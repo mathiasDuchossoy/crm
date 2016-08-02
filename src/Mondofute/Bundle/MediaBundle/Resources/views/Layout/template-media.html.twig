@@ -1,0 +1,77 @@
+<div>
+    {#{% if form.vignette is defined %}#}
+    {#{{ form_widget(form.vignette) }}#}
+    {#{{ form_widget(form._type) }}#}
+    {#{% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'vignette'} %}#}
+    {#{% endif %}#}
+    {% if form.image is defined %}
+        {{ form_widget(form.image) }}
+        {{ form_widget(form.sites) }}
+        {% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'image'} %}
+    {% endif %}
+    {% if form.photo is defined %}
+        {{ form_widget(form.photo) }}
+        {{ form_widget(form.sites) }}
+        {% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'photo'} %}
+    {% endif %}
+    {% if form.visuel is defined %}
+        {{ form_widget(form.visuel) }}
+        {{ form_widget(form.sites) }}
+        {{ form_widget(form._type) }}
+        {% include('@MondofuteMedia/Layout/template-traduction.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'visuel'} %}
+    {% endif %}
+    <!-- Nav tabs -->
+</div>
+
+<script type="text/javascript">
+
+    var langues = [];
+    var firstOnglet = true;
+    {% for langue in langues %}
+    {% set ok = false %}
+    {% for value in form.traductions.vars.value %}
+    {% if value.langue == langue %}
+    {% set ok = true %}
+    {% endif %}
+    {% endfor %}
+    {% if ok == false %}
+    langues.push("{{ langue.id }}");
+    {% else %}
+    firstOnglet = false;
+    {% endif %}
+    {% endfor %}
+    var $_collectionHolder_{{ name }};
+
+    jQuery(document).ready(function () {
+        $_collectionHolder_{{ name }} = $('div.{{ entity }}s_{{ name }}');
+
+        $_collectionHolder_{{ name }}.data('index', $_collectionHolder_{{ name }}.find(':input').length);
+
+        langues.forEach(function (langue) {
+            addForm_{{ entity }}_{{ name }}($_collectionHolder_{{ name }}, langue, firstOnglet);
+            firstOnglet = false;
+        });
+    });
+
+    function addForm_{{ entity }}_{{ name }} ($_collectionHolder_{{ name }}, langue, firstOnglet) {
+        var prototype = $_collectionHolder_{{ name }}.data('prototype');
+
+        var index = $_collectionHolder_{{ name }}.data('index');
+
+        var newForm = prototype.replace(/__name_traduction__/g, index);
+
+        // increase the index with one for the next item
+        $_collectionHolder_{{ name }}.data('index', index + 1);
+
+        var classActive = '';
+        if (firstOnglet) {
+            classActive = ' active';
+        }
+        var $newFormLi = $('<div role="tabpanel" class="tab-pane ' + classActive + '" id="onglet-{{ entity }}-{{ name }}-' + langue + '"></div>').append(newForm);
+
+        $_collectionHolder_{{ name }}.append($newFormLi);
+
+        $newFormLi.find('[id$=langue]').val(langue);
+    }
+
+</script>

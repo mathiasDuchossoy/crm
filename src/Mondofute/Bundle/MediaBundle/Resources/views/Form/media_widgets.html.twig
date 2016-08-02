@@ -1,0 +1,88 @@
+{% block sonata_media_type_widget %}
+
+    {#<div class="span3 pull-left">#}
+    {#{% if value is not empty and value.providerReference %}#}
+    {#<div class="pull-left" style="margin-right: 5px">#}
+    {#{% thumbnail value, 'admin' with {'class': 'img-polaroid media-object'} %}#}
+    {#</div>#}
+
+    {#{% if sonata_admin_enabled is defined and sonata_admin_enabled %}#}
+    {#<a href="{{ url('admin_sonata_media_media_edit', {id: value.id}) }}"><strong>{{ value.name }}</strong></a>#}
+    {#{% else %}#}
+    {#<strong>{{ value.name }}</strong>#}
+    {#{% endif %}#}
+    {#<br />#}
+    {#<span type="label">{{ value.providerName|trans({}, 'SonataMediaBundle') }}</span> ~ {{ value.context }}#}
+    {#{% else %}#}
+    {#<div class="pull-left" style="margin-right: 5px">#}
+    {#<img src="{{ asset('bundles/sonatamedia/grey.png') }}" class="img-polaroid media-object" style="width: 85px; height: 85px"/>#}
+    {#</div>#}
+    {#<strong>{{ 'no_linked_media'|trans({}, 'SonataMediaBundle') }}</strong> <br />#}
+    {#<span type="label">{{ form.vars['provider']|trans({}, 'SonataMediaBundle') }} ~ {{ form.vars['context']|trans({}, 'SonataMediaBundle') }}</span>#}
+    {#{% endif %}#}
+    {#</div>#}
+
+    {#<div class="span3 pull-left">#}
+    {#{{ 'link_media'|trans({}, 'SonataMediaBundle') }}#}
+    {#{{ block('form_widget') }}#}
+    {#</div>#}
+
+    <div>
+        {% if value is not empty and value.providerReference %}
+            <div>
+                {% thumbnail value, 'admin' with {'class': 'img-polaroid media-object'} %}
+            </div>
+        {% else %}
+            <div>
+                <img src="{{ asset('bundles/sonatamedia/grey.png') }}" class="img-polaroid media-object"
+                     style="width: 85px; height: 85px"/>
+            </div>
+        {% endif %}
+    </div>
+    <div>
+        {{ block('form_widget') }}
+    </div>
+{% endblock sonata_media_type_widget %}
+
+{#<div id="logement_vignettes_0">#}
+    {#<div><label>Vignette</label>#}
+
+
+        {#<div>#}
+            {#<div>#}
+
+                {#<img width="100" src="/uploads/media/logement_vignette/0001/01/thumb_82_admin.jpeg"#}
+                     {#class="img-polaroid media-object" title="13147347_10156712748425391_8993651750965878899_o.jpg">#}
+            {#</div>#}
+        {#</div>#}
+        {#<div>#}
+            {#<div id="logement_vignettes_0_vignette">#}
+                {#<div><input type="file" name="logement[vignettes][0][vignette][binaryContent]"#}
+                            {#id="logement_vignettes_0_vignette_binaryContent"></div>#}
+                {#<input type="hidden" name="logement[vignettes][0][vignette][unlink]"#}
+                       {#id="logement_vignettes_0_vignette_unlink"></div>#}
+        {#</div>#}
+    {#</div>#}
+{#</div>#}
+
+{#<li class="toto">#}
+    {#<div id="logement_vignettes_2">#}
+        {#<div><label class="required">image</label>#}
+
+
+            {#<div>#}
+                {#<div>#}
+                    {#<img style="width: 85px; height: 85px" class="img-polaroid media-object"#}
+                         {#src="/bundles/sonatamedia/grey.png">#}
+                {#</div>#}
+            {#</div>#}
+            {#<div>#}
+                {#<div id="logement_vignettes_2_vignette">#}
+                    {#<div><input type="file" required="required" name="logement[vignettes][2][vignette][binaryContent]"#}
+                                {#id="logement_vignettes_2_vignette_binaryContent"></div>#}
+                    {#<input type="hidden" name="logement[vignettes][2][vignette][unlink]"#}
+                           {#id="logement_vignettes_2_vignette_unlink"></div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+    {#<a href="#">Supprimer</a></li>#}

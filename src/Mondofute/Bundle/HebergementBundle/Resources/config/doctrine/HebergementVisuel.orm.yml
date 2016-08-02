@@ -1,0 +1,39 @@
+Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementVisuelRepository
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: discr
+        type: integer
+    discriminatorMap:
+      1: HebergementVideo
+      2: HebergementPhoto
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: visuels
+        visuel:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+#            cascade: ['persist','remove']
+            cascade: ['persist']
+#            orphanRemoval: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction
+            mappedBy: hebergementVisuel
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

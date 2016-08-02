@@ -84,6 +84,10 @@ class Fournisseur extends Moral
      * @var \Doctrine\Common\Collections\Collection
      */
     private $types;
+    /**
+     * @var \Application\Sonata\MediaBundle\Entity\Media
+     */
+    private $logo;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -187,7 +191,6 @@ class Fournisseur extends Moral
 
     function __clone()
     {
-//        $this->getListeServices()->clear();
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
         $interlocuteurs = $this->getInterlocuteurs();
@@ -552,6 +555,30 @@ class Fournisseur extends Moral
     public function removeType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
     {
         $this->types->removeElement($type);
+    }
+
+    /**
+     * Get logo
+     *
+     * @return \Application\Sonata\MediaBundle\Entity\Media
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param \Application\Sonata\MediaBundle\Entity\Media $logo
+     *
+     * @return Fournisseur
+     */
+    public function setLogo(\Application\Sonata\MediaBundle\Entity\Media $logo = null)
+    {
+        $this->logo = $logo;
+
+        return $this;
     }
 
 }

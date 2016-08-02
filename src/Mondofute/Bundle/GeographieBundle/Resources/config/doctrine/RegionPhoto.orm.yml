@@ -1,0 +1,30 @@
+Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\RegionPhotoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        region:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region
+            inversedBy: photos
+        photo:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionPhotoTraduction
+            mappedBy: photo
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

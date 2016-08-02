@@ -97,20 +97,6 @@ class Region
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction
-     *
-     * @return Region
-     */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setRegion($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction
@@ -146,7 +132,27 @@ class Region
 
     public function setTraductions($traductions)
     {
-        $this->traductions = $traductions;
+//        $this->traductions = $traductions;
+//        return $this;
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction
+     *
+     * @return Region
+     */
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setRegion($this);
+
         return $this;
     }
 
