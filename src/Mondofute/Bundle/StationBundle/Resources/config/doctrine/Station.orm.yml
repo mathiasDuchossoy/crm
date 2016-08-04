@@ -43,6 +43,9 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationMere
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            mappedBy: station
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
@@ -53,7 +56,4 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         profils:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
             inversedBy: stations
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
-            mappedBy: station
     lifecycleCallbacks: {  }
