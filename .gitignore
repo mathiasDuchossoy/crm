@@ -101,3 +101,5 @@ fabric.properties
 /app/SymfonyRequirements.php
 /composer.lock
 /web/config.php
+/src/deployBundle/rapport/
+/components/
