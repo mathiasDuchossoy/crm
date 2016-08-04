@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -543,7 +544,7 @@ class Station
      */
     public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
     {
-        $this->hebergements[] = $hebergement;
+        $this->hebergements[] = $hebergement->setStation($this);
 
         return $this;
     }
