@@ -165,15 +165,15 @@ class Interlocuteur extends Physique
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function __clone()
-    {
-        $this->user = clone $this->getUser();
-
-        return $this;
-    }
+//    /**
+//     * @return $this
+//     */
+//    public function __clone()
+//    {
+//        $this->user = clone $this->getUser();
+//
+//        return $this;
+//    }
 
     /**
      * Get user
@@ -194,8 +194,8 @@ class Interlocuteur extends Physique
      */
     public function setUser(\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser $user = null)
     {
-        $this->user = $user;
-//        $this->user = $user->setInterlocuteur($this);
+//        $this->user = $user;
+        $this->user = $user->setInterlocuteur($this);
 
 
         return $this;
