@@ -194,15 +194,15 @@ class Fournisseur extends Moral
     {
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
-        $interlocuteurs = $this->getInterlocuteurs();
-        $this->interlocuteurs = new ArrayCollection();
-        if (count($interlocuteurs) > 0) {
-            foreach ($interlocuteurs as $interlocuteur) {
-                $cloneInterlocuteur = clone $interlocuteur;
-                $this->interlocuteurs->add($cloneInterlocuteur);
-                $cloneInterlocuteur->setFournisseur($this);
-            }
-        }
+//        $interlocuteurs = $this->getInterlocuteurs();
+//        $this->interlocuteurs = new ArrayCollection();
+//        if (count($interlocuteurs) > 0) {
+//            foreach ($interlocuteurs as $interlocuteur) {
+//                $cloneInterlocuteur = clone $interlocuteur;
+//                $this->interlocuteurs->add($cloneInterlocuteur);
+//                $cloneInterlocuteur->setFournisseur($this);
+//            }
+//        }
         $remiseClefs = $this->getRemiseClefs();
         $this->remiseClefs = new ArrayCollection();
         if (count($remiseClefs) > 0) {
@@ -246,16 +246,6 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Get interlocuteurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getInterlocuteurs()
-    {
-        return $this->interlocuteurs;
-    }
-
-    /**
      * Get remiseClefs
      *
      * @return \Doctrine\Common\Collections\Collection
@@ -293,6 +283,16 @@ class Fournisseur extends Moral
     public function getListeServices()
     {
         return $this->listeServices;
+    }
+
+    /**
+     * Get interlocuteurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInterlocuteurs()
+    {
+        return $this->interlocuteurs;
     }
 
     public function triRemiseClefs()

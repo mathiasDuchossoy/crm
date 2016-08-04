@@ -57,14 +57,14 @@ class FournisseurInterlocuteur
         return $this;
     }
 
-    function __clone()
-    {
-        /** @var Interlocuteur $interlocuteur */
-        $this->id = null;
-        $this->interlocuteur = clone $this->getInterlocuteur();
-
-        return $this;
-    }
+//    function __clone()
+//    {
+//        /** @var Interlocuteur $interlocuteur */
+//        $this->id = null;
+//        $this->interlocuteur = clone $this->getInterlocuteur();
+//
+//        return $this;
+//    }
 
     /**
      * Get interlocuteur
