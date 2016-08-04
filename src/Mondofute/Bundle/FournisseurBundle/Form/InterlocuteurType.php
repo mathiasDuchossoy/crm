@@ -76,10 +76,10 @@ class InterlocuteurType extends AbstractType
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
                 array('types' => array(
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
-                    'nucleus_moyencombundle_adresse',
                     'nucleus_moyencombundle_email',
                     'nucleus_moyencombundle_telfixe',
                     'nucleus_moyencombundle_telmobile',
+                    'nucleus_moyencombundle_adresse',
                 ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
