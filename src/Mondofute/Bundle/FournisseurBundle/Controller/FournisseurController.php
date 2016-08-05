@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Controller;
 
-use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
@@ -10,6 +9,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
+use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
@@ -30,8 +30,11 @@ use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
+use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use Nucleus\MoyenComBundle\Entity\Pays;
+use Nucleus\MoyenComBundle\Entity\TelFixe;
+use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -104,11 +107,24 @@ class FournisseurController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $interlocuteurController = new InterlocuteurController();
-            $interlocuteurController->setContainer($this->container);
-            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+        $errorType = false;
+        if ($form->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+            $errorType = true;
+            $this->addFlash('error', 'Vous devez choisir au moins un type.');
+        }
 
+        $errorInterlocuteur = false;
+        $interlocuteurController = new InterlocuteurController();
+        $interlocuteurController->setContainer($this->container);
+        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+            if ($interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
+                $errorInterlocuteur = true;
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && !$errorType && !$errorInterlocuteur) {
+            // ***** GESTION DES TYPES DU FOURNISSEUR *****
             if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
                 foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
                     $typeFournisseur = new TypeFournisseur();
@@ -116,6 +132,8 @@ class FournisseurController extends Controller
                     $fournisseur->addType($typeFournisseur);
                 }
             }
+            // ***** FIN GESTION DES TYPES DU FOURNISSEUR *****
+
             /** @var ListeService $listeService */
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -128,15 +146,49 @@ class FournisseurController extends Controller
                     }
                 }
             }
+
+            // ***** GESTION DES INTERLOCUTEURS *****
+            // Si le fournisseur a un parent, on efface la liste des interlocuteurs
+            if (!empty($fournisseur->getFournisseurParent())) {
+                $fournisseur->getInterlocuteurs()->clear();
+            } else {
+//                $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+            }
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
 
-            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
+//            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+//                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+//
+//                    $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+//                    switch ($typeComm) {
+//                        case "Adresse":
+//                            /** @var Adresse $moyenComSite */
+//                            $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//            }
+            // ***** FIN GESTION DES INTERLOCUTEURS *****
 
-//                $this->copieVersSites($fournisseur);
+            foreach ($fournisseur->getMoyenComs() as $moyenCom) {
+                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+                switch ($typeComm) {
+                    case "Adresse":
+                        /** @var Adresse $moyenComSite */
+                        $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-                foreach ($fournisseur->getMoyenComs() as $moyenCom) {
+            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
+
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
                     switch ($typeComm) {
                         case "Adresse":
@@ -147,36 +199,21 @@ class FournisseurController extends Controller
                             break;
                     }
                 }
-
-                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                    foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
-
-                        $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-                        switch ($typeComm) {
-                            case "Adresse":
-                                /** @var Adresse $moyenComSite */
-                                $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                $em->persist($fournisseur);
-                $em->flush();
-
-
-                $this->copieVersSites($fournisseur);
-
-                // add flash messages
-                $this->addFlash(
-                    'success',
-                    'Le fournisseur a bien été créé.'
-                );
-
-                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
             }
+
+            $em->persist($fournisseur);
+            $em->flush();
+
+            $this->copieVersSites($fournisseur);
+
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'Le fournisseur a bien été créé.'
+            );
+
+            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
+
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
@@ -197,18 +234,27 @@ class FournisseurController extends Controller
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
-            $fournisseurSite = clone $fournisseur;
-//            $fournisseurSite = new Fournisseur();
-            $fournisseurSite->getListeServices()->clear();
+            $fournisseurSite = new Fournisseur();
+            $fournisseurSite
+                ->setContient($fournisseur->getContient())
+                ->setEnseigne($fournisseur->getEnseigne())
+                ->setRaisonSociale($fournisseur->getRaisonSociale());
 
-//            dump($fournisseur);
-//            foreach ($fournisseur->getListeServices() as $listeService)
-//            {
-//                dump($listeService);
-//            }
+            /** @var TypeFournisseur $typeFournisseur */
+            foreach ($fournisseur->getTypes() as $typeFournisseur) {
+                $typeFournisseurSite = new TypeFournisseur();
+                $typeFournisseurSite->setFournisseur($fournisseurSite);
+                $typeFournisseurSite->setTypeFournisseur($typeFournisseur->getTypeFournisseur());
+                $fournisseurSite->addType($typeFournisseurSite);
+            }
+
+            if (!empty($fournisseurSite->getFournisseurParent())) {
+                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                    $fournisseurSite->getFournisseurParent()->getId()));
+            }
+
             $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
 
-//            dump($fournisseur);
             $moyenComsSite = $fournisseurSite->getMoyenComs();
             if (!empty($moyenComsSite)) {
                 foreach ($moyenComsSite as $key => $moyenComSite) {
@@ -228,48 +274,73 @@ class FournisseurController extends Controller
                 }
             }
 
-            if (!empty($fournisseurSite->getFournisseurParent())) {
-                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
-                    $fournisseurSite->getFournisseurParent()->getId()));
-            }
+            // ***** GESTION DES INTERLOCUTEURS *****
+            // on parcourt les fournisseurInterlocuteurs du fournisseur de la base crm
+            /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
+            /** @var FournisseurInterlocuteur $fournisseurInterlocuteurSite */
+            /** @var Interlocuteur $interlocuteur */
+            /** @var Interlocuteur $interlocuteurSite */
+            /** @var InterlocuteurUser $interlocuteurUser */
+            /** @var InterlocuteurUser $interlocuteurUserSite */
 
-//            $fournisseurSite->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $fournisseurSite->getType()->getId()));
+            foreach ($fournisseur->getInterlocuteurs() as $fournisseurInterlocuteur) {
+                $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
 
-            foreach ($fournisseurSite->getInterlocuteurs() as $interlocuteur) {
+                $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
 
-                if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                    $interlocuteur->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
-                        $interlocuteur->getInterlocuteur()->getFonction()->getId()));
+                /** @var Interlocuteur $interlocuteurSite */
+                $interlocuteurSite = new Interlocuteur();
+
+                $interlocuteurSite->setPrenom($interlocuteur->getPrenom());
+                $interlocuteurSite->setNom($interlocuteur->getNom());
+
+                if (!empty($interlocuteur->getFonction())) {
+                    $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                        $interlocuteur->getFonction()->getId()));
                 }
-                if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                    $interlocuteur->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
-                        $interlocuteur->getInterlocuteur()->getService()->getId()));
+                if (!empty($interlocuteur->getService())) {
+                    $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                        $interlocuteur->getService()->getId()));
                 }
 
-                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
-                    $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+                $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
+                $fournisseurInterlocuteurSite->setInterlocuteur($interlocuteurSite);
+
+                foreach ($interlocuteur->getMoyenComs() as $moyenCom) {
+                    $moyenComClone = clone $moyenCom;
+                    $interlocuteurSite->addMoyenCom($moyenComClone);
+
+                    $typeComm = (new ReflectionClass($moyenComClone))->getShortName();
                     switch ($typeComm) {
                         case "Adresse":
-                            $moyenCom->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+                            /** @var Adresse $moyenComClone */
+                            $moyenComClone->setPays($emSite->find(Pays::class, $moyenComClone->getPays()));
                             break;
                         default:
                             break;
                     }
                 }
+                // ***** gestion creation interlocuteur_user *****
+                $interlocuteurUserSite = clone $interlocuteur->getUser();
+                $interlocuteurSite->setUser($interlocuteurUserSite);
+                // ***** fin creation gestion interlocuteur_user *****
+
+                $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
             }
-            /** @var RemiseClef $remiseClef */
-            foreach ($fournisseurSite->getRemiseClefs() as $remiseClef) {
-                /** @var RemiseClefTraduction $traduction */
-                foreach ($remiseClef->getTraductions() as $traduction) {
-                    $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
-                }
+            // ***** FIN GESTION DES INTERLOCUTEURS *****
+
+            if (!empty($fournisseur->getRemiseClefs())) {
+                $this->dupliquerRemiseClefsSite($fournisseur->getRemiseClefs(), $fournisseurSite, $emSite);
+            }
+
+            if (!empty($fournisseur->getReceptions())) {
+                $this->dupliquerReceptionsSite($fournisseur->getReceptions(), $fournisseurSite);
             }
 
             // ***** gestion logo *****
             if (!empty($fournisseur->getLogo())) {
                 $logo = $fournisseur->getLogo();
 //                if (!empty($fournisseurSite->getLogo())){
-//                    dump($fournisseurSite->getLogo());die;
 //                    $logoSite = $fournisseurSite->getLogo();
 //                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
 
@@ -282,42 +353,8 @@ class FournisseurController extends Controller
 //                        $emSite->remove($logoSite);
 
                 $fournisseurSite->setLogo($cloneVisuel);
-//                    }
-//                }
-//                else
-//                {
-//                    dump('ici');
-//                    // on lui clone l'image
-//                    $cloneVisuel = clone $logo;
-//                    // **** récupération du visuel physique ****
-//                    $pool = $this->container->get('sonata.media.pool');
-//                    $provider = $pool->getProvider($cloneVisuel->getProviderName());
-//                    $provider->getReferenceImage($cloneVisuel);
-//
-//                    $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
-//
-//                    $cloneVisuel->setProviderReference($logo->getProviderReference());
-//                    $cloneVisuel->setName($logo->getName());
-//                    // **** fin récupération du visuel physique ****
-//
-//                    // on donne au nouveau visuel, le context correspondant en fonction du site
-//                    $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-//                    // on lui attache l'id de référence du visuel correspondant sur la bdd crm
-//                    $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-//
-//                    $fournisseur->setLogo($cloneVisuel);
-//                }
-//            }
-//            else
-//            {
-//                if (!empty($fournisseurSite->getLogo()))
-//                {
-//                    $fournisseurSite->setLogo(null);
-//                    $emSite->remove($fournisseurSite->getLogo());
-//                }
             }
             // ***** fin gestion logo *****
-
 
             $emSite->persist($fournisseurSite);
 
@@ -337,7 +374,8 @@ class FournisseurController extends Controller
         Fournisseur $fournisseurSite,
         $listeServices,
         EntityManager $emSite
-    ) {
+    )
+    {
         /** @var ListeService $listeService */
         foreach ($listeServices as $listeService) {
             if (empty($listeService->getId()) || empty($listeServiceSite = $emSite->getRepository(ListeService::class)->find($listeService->getId()))) {
@@ -382,8 +420,51 @@ class FournisseurController extends Controller
 //            $emSite->persist($listeServiceSite);
         }
         $emSite->persist($fournisseurSite);
-//        dump($fournisseurSite);
-//        $emSite->flush();
+    }
+
+    public function dupliquerRemiseClefsSite($remiseClefs, Fournisseur $fournisseurSite, EntityManager $emSite)
+    {
+        /** @var RemiseClef $remiseClef */
+        foreach ($remiseClefs as $remiseClef) {
+
+            $remiseClefSite = new RemiseClef();
+            $fournisseurSite->addRemiseClef($remiseClefSite);
+            $remiseClefSite
+                ->setLibelle($remiseClef->getLibelle())
+                ->setHeureRemiseClefLongSejour($remiseClef->getHeureRemiseClefLongSejour())
+                ->setHeureRemiseClefCourtSejour($remiseClef->getHeureRemiseClefCourtSejour())
+                ->setHeureDepartLongSejour($remiseClef->getHeureDepartLongSejour())
+                ->setHeureDepartCourtSejour($remiseClef->getHeureDepartCourtSejour())
+                ->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour())
+                ->setHeureTardiveCourtSejour($remiseClef->getHeureRemiseClefCourtSejour())
+                ->setStandard($remiseClef->getStandard());
+
+            /** @var RemiseClefTraduction $traduction */
+            foreach ($remiseClef->getTraductions() as $traduction) {
+                $traductionSite = new RemiseClefTraduction();
+                $remiseClefSite->addTraduction($traductionSite);
+                $traductionSite->setLieuxRemiseClef($traduction->getLieuxRemiseClef());
+                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+            }
+        }
+    }
+
+    public function dupliquerReceptionsSite($receptions, Fournisseur $fournisseurSite)
+    {
+        /** @var Reception $reception */
+        foreach ($receptions as $reception) {
+            $receptionSite = new Reception();
+            $fournisseurSite->addReception($receptionSite);
+            $tranche1 = new TrancheHoraire();
+            $tranche1->setDebut($reception->getTranche1()->getDebut());
+            $tranche1->setFin($reception->getTranche1()->getFin());
+            $receptionSite->setTranche1($tranche1);
+            $tranche2 = new TrancheHoraire();
+            $tranche2->setDebut($reception->getTranche2()->getDebut());
+            $tranche2->setFin($reception->getTranche2()->getFin());
+            $receptionSite->setTranche2($tranche2);
+            $receptionSite->setJour($reception->getJour());
+        }
     }
 
     /**
@@ -426,7 +507,7 @@ class FournisseurController extends Controller
         $originalInterlocuteurs = new ArrayCollection();
         $originalRemiseClefs = new ArrayCollection();
         $originalReceptions = new ArrayCollection();
-        $originalTypes = new ArrayCollection();
+        $originalTypeFournisseurs = new ArrayCollection();
         $originalListeServices = new ArrayCollection();
         $originalServices = new ArrayCollection();
         $originalTarifsService = new ArrayCollection();
@@ -442,8 +523,9 @@ class FournisseurController extends Controller
         foreach ($fournisseur->getReceptions() as $reception) {
             $originalReceptions->add($reception);
         }
-        foreach ($fournisseur->getTypes() as $type) {
-            $originalTypes->add($type);
+        /** @var TypeFournisseur $typeFournisseur */
+        foreach ($fournisseur->getTypes() as $typeFournisseur) {
+            $originalTypeFournisseurs->add($typeFournisseur);
         }
 
         $originalLogo = $fournisseur->getLogo();
@@ -461,8 +543,6 @@ class FournisseurController extends Controller
             $originalListeServices->add($listeService);
         }
 
-        $originalLogo = $fournisseur->getLogo();
-
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
@@ -474,9 +554,25 @@ class FournisseurController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $errorType = false;
+        if ($editForm->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
+            $errorType = true;
+            $this->addFlash('error', 'Vous devez choisir au moins un type.');
+        }
 
-            // type de fournisseur
+        $errorInterlocuteur = false;
+        $interlocuteurController = new InterlocuteurController();
+        $interlocuteurController->setContainer($this->container);
+        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+            $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
+            if ($interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
+                $errorInterlocuteur = true;
+            }
+        }
+
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur) {
+            // ***** GESTION DES TYPES DU FOURNISSEUR ****
+            // *** on récupère les types de fournisseus coché dans le formulaires via la reqête ***
             $arrayTypeFournisseur = new ArrayCollection();
 
             if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
@@ -484,6 +580,29 @@ class FournisseurController extends Controller
                     $arrayTypeFournisseur->add(intval($type));
                 }
             }
+
+            /** @var TypeFournisseur $type */
+            foreach ($originalTypeFournisseurs as $type) {
+                if (!$arrayTypeFournisseur->contains($type->getTypeFournisseur())) {
+                    $fournisseur->getTypes()->removeElement($type);
+                    $this->deleteTypeFournisseurSites($type);
+                    $em->remove($type);
+                }
+            }
+
+            /** @var integer $type */
+            foreach ($arrayTypeFournisseur as $type) {
+                if (!$originalTypeFournisseurs->filter(function (TypeFournisseur $element) use ($type) {
+                    return $element->getTypeFournisseur() == $type;
+                })->first()
+                ) {
+                    $typeFournisseur = new TypeFournisseur();
+                    $typeFournisseur->setTypeFournisseur($type);
+                    $fournisseur->addType($typeFournisseur);
+                }
+            }
+            // ***** FIN GESTION DES TYPES DU FOURNISSEUR ****
+
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
                 foreach ($listeService->getServices() as $service) {
@@ -494,36 +613,15 @@ class FournisseurController extends Controller
                     }
                 }
             }
-            foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                $arrayTypeFournisseur->add(intval($type));
-            }
 
-            /** @var TypeFournisseur $type */
-            foreach ($originalTypes as $type) {
-                if (!$arrayTypeFournisseur->contains($type->getTypeFournisseur())) {
-
-                    $fournisseur->getTypes()->removeElement($type);
-                    $this->deleteTypeFournisseurSites($type);
-                    $em->remove($type);
-                }
-            }
-
-            /** @var integer $type */
-            foreach ($arrayTypeFournisseur as $type) {
-                if (!$originalTypes->filter(function (TypeFournisseur $element) use ($type) {
-                    return $element->getTypeFournisseur() == $type;
-                })->first()
-                ) {
-                    $typeFournisseur = new TypeFournisseur();
-                    $typeFournisseur->setTypeFournisseur($type);
-                    $fournisseur->addType($typeFournisseur);
-                }
-            }
-
-            // *****
-
+            // ***** GESTION SUPPRESSION DES INTERLOCUTEURS *****
             $interlocuteurController = new InterlocuteurController();
             $interlocuteurController->setContainer($this->container);
+
+            // Si le fournisseur a un parent, on efface la liste des interlocuteurs
+            if (!empty($fournisseur->getFournisseurParent())) {
+                $fournisseur->getInterlocuteurs()->clear();
+            }
 
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
@@ -540,9 +638,8 @@ class FournisseurController extends Controller
                 }
             }
 
-
             $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
-
+            // ***** FIN SUPPRESSION DES INTERLOCUTEURS *****
 
             /** @var ListeService $listeService */
             foreach ($originalListeServices as $listeService) {
@@ -597,16 +694,39 @@ class FournisseurController extends Controller
                     $em->remove($reception);
                 }
             }
-            if (!$interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
-//
-//                $this->mAJSites($fournisseur);
 
-                foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-                    $interlocuteur->setFournisseur($fournisseur);
+
+            // ***** MISE A JOURS DES INTERLOCUTEURS *****
+            /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
+            /** @var Interlocuteur $interlocuteur */
+            foreach ($fournisseur->getInterlocuteurs() as $fournisseurInterlocuteur) {
+                $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
+                $interlocuteurUser = $interlocuteur->getUser();
+                $interlocuteurUser->setEnabled(true);
+
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updatePassword($interlocuteurUser);
+
+                foreach ($interlocuteur->getMoyenComs() as $moyenCom) {
+                    $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+
+                    if ($typeComm == 'Email' && empty($login)) {
+                        /** @var Email $moyenCom */
+                        $login = $moyenCom->getAdresse();
+                        $interlocuteurUser
+                            ->setUsername($login)
+                            ->setEmail($login);
+                        unset($login);
+                    }
                 }
 
-                $em->persist($fournisseur);
-                $em->flush();
+                // Mis à jours du mot de passe du user
+                $userManager = $this->get('fos_user.user_manager');
+                $userManager->updatePassword($interlocuteurUser);
+                $fournisseurInterlocuteur->setFournisseur($fournisseur);
+            }
+            // ***** FIN MISE A JOURS DES INTERLOCUTEURS *****
+
             /** @var ListeService $listeService */
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -615,21 +735,19 @@ class FournisseurController extends Controller
             $em->persist($fournisseur);
             $em->flush();
 
+            $this->mAJSites($fournisseur);
 
-                $this->mAJSites($fournisseur);
-
-                if (!empty($originalLogo) && $originalLogo != $fournisseur->getLogo() ) {
-                    $em->remove($originalLogo);
-                    $em->flush();
-                }
-
-                // add flash messages
-                $this->addFlash(
-                    'success',
-                    'Le fournisseur a bien été modifié.'
-                );
-                return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
+            if (!empty($originalLogo) && $originalLogo != $fournisseur->getLogo()) {
+                $em->remove($originalLogo);
+                $em->flush();
             }
+
+            // add flash messages
+            $this->addFlash(
+                'success',
+                'Le fournisseur a bien été modifié.'
+            );
+            return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(
@@ -685,12 +803,11 @@ class FournisseurController extends Controller
 //                    }
 //                }
 
-                $emSite->flush();
                 $interlocuteurSite->setFournisseur(null);
 
                 $emSite->remove($interlocuteurSite);
 
-//                die;
+                $emSite->flush();
 
             }
 
@@ -835,384 +952,407 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
 
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur->getId());
-            $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
-            $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
-            foreach ($fournisseur->getTypes() as $type) {
-                $typeSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
-                    'fournisseur' => $fournisseurSite,
-                    "typeFournisseur" => $type->getTypeFournisseur()
-                ));
-                if (empty($typeSite)) {
-                    $typeFournisseur = new TypeFournisseur();
-                    $typeFournisseur->setTypeFournisseur($type->getTypeFournisseur());
-                    $fournisseurSite->addType($typeFournisseur);
+            if (!empty($fournisseurSite)) {
+                $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
+                $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
+                foreach ($fournisseur->getTypes() as $type) {
+                    $typeSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
+                        'fournisseur' => $fournisseurSite,
+                        "typeFournisseur" => $type->getTypeFournisseur()
+                    ));
+                    if (empty($typeSite)) {
+                        $typeFournisseur = new TypeFournisseur();
+                        $typeFournisseur->setTypeFournisseur($type->getTypeFournisseur());
+                        $fournisseurSite->addType($typeFournisseur);
+                    }
                 }
-            }
 
-            $fournisseurSite->setContient($fournisseur->getContient());
+                $fournisseurSite->setContient($fournisseur->getContient());
 //            $fournisseurSite->setDateModification(new DateTime());
 
 
-            foreach ($fournisseur->getMoyenComs() as $key => $moyenCom) {
-                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-                switch ($typeComm) {
-                    case "Adresse":
-                        $adresse = $fournisseurSite->getMoyenComs()->get($key);
-                        if (!empty($adresse)) {
-                            $adresse->setCodePostal($moyenCom->getCodePostal());
-                            $adresse->setAdresse1($moyenCom->getAdresse1());
-                            $adresse->setAdresse2($moyenCom->getAdresse2());
-                            $adresse->setAdresse3($moyenCom->getAdresse3());
-                            $adresse->setVille($moyenCom->getVille());
-                            $adresse->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
-                        }
+                foreach ($fournisseur->getMoyenComs() as $key => $moyenCom) {
+                    $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+                    switch ($typeComm) {
+                        case "Adresse":
+                            $adresse = $fournisseurSite->getMoyenComs()->get($key);
+                            if (!empty($adresse)) {
+                                $adresse->setCodePostal($moyenCom->getCodePostal());
+                                $adresse->setAdresse1($moyenCom->getAdresse1());
+                                $adresse->setAdresse2($moyenCom->getAdresse2());
+                                $adresse->setAdresse3($moyenCom->getAdresse3());
+                                $adresse->setVille($moyenCom->getVille());
+                                $adresse->setPays($emSite->find(Pays::class, $moyenCom->getPays()));
+                            }
 //                        $adresse->setDateModification(new DateTime());
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
 
-            if (!empty($fournisseur->getFournisseurParent())) {
-                $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
-                    $fournisseur->getFournisseurParent()->getId()));
-            } else {
-                $fournisseurSite->setFournisseurParent(null);
-            }
+                if (!empty($fournisseur->getFournisseurParent())) {
+                    $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                        $fournisseur->getFournisseurParent()->getId()));
+                } else {
+                    $fournisseurSite->setFournisseurParent(null);
+                }
 
-            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
+                // ***** GESTION CREATION & EDITION DES INTERLOCUTEURS *****
+                // on parcourt les fournisseurInterlocuteurs du fournisseur de la base crm
+                /** @var FournisseurInterlocuteur $fournisseurInterlocuteur */
+                /** @var FournisseurInterlocuteur $fournisseurInterlocuteurSite */
+                /** @var Interlocuteur $interlocuteur */
+                /** @var Interlocuteur $interlocuteurSite */
+                /** @var InterlocuteurUser $interlocuteurUser */
+                /** @var InterlocuteurUser $interlocuteurUserSite */
 
-                $interlocuteurSite = $fournisseurSite->getInterlocuteurs()->filter(function (
-                    FournisseurInterlocuteur $element
-                ) use ($interlocuteur) {
-                    return $element->getId() == $interlocuteur->getId();
-                })->first();
+                foreach ($fournisseur->getInterlocuteurs() as $fournisseurInterlocuteur) {
+                    $interlocuteur = $fournisseurInterlocuteur->getInterlocuteur();
+                    $interlocuteurUser = $interlocuteur->getUser();
 
-                if (!empty($interlocuteurSite)) {
-                    $interlocuteurSite->getInterlocuteur()->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
-                    $interlocuteurSite->getInterlocuteur()->setNom($interlocuteur->getInterlocuteur()->getNom());
+                    // on récupère le fournisseurInterlocuteur correspondant à celui de la base distante
+                    $fournisseurInterlocuteurSite = $fournisseurSite->getInterlocuteurs()->filter(function (
+                        FournisseurInterlocuteur $element
+                    ) use ($fournisseurInterlocuteur) {
+                        return $element->getId() == $fournisseurInterlocuteur->getId();
+                    })->first();
+                    // si il existe pas
+                    if (!empty($fournisseurInterlocuteurSite)) {
+                        $interlocuteurSite = $fournisseurInterlocuteurSite->getInterlocuteur();
+                        $interlocuteurUserSite = $interlocuteurSite->getUser();
 
-                    if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                        $interlocuteurSite->getInterlocuteur()->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
-                            $interlocuteur->getInterlocuteur()->getFonction()->getId()));
-                    } else {
-                        $interlocuteurSite->getInterlocuteur()->setFonction(null);
-                    }
-                    if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                        $interlocuteurSite->getInterlocuteur()->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
-                            $interlocuteur->getInterlocuteur()->getService()->getId()));
-                    } else {
-                        $interlocuteurSite->getInterlocuteur()->setService(null);
-                    }
-//                    $interlocuteurSite->getInterlocuteur()->setDateModification(new DateTime());
+                        $interlocuteurSite->setPrenom($interlocuteur->getPrenom());
+                        $interlocuteurSite->setNom($interlocuteur->getNom());
+                        // on met à jours
+                        if (!empty($interlocuteur->getFonction())) {
+                            $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                                $interlocuteur->getFonction()->getId()));
+                        } else {
+                            $interlocuteurSite->setFonction(null);
+                        }
+                        if (!empty($interlocuteur->getService())) {
+                            $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                                $interlocuteur->getService()->getId()));
+                        } else {
+                            $interlocuteurSite->setService(null);
+                        }
 
-                    $moyenComsSite = $interlocuteurSite->getInterlocuteur()->getMoyenComs();
-                    if (!empty($moyenComsSite)) {
-                        // todo : maj les moyens de communications
-                        foreach ($moyenComsSite as $key => $moyenComSite) {
-                            $typeComm = (new ReflectionClass($moyenComSite))->getShortName();
-//                            switch ($typeComm)
-                            $firstFixe = true;
-                            switch ($typeComm) {
-                                case 'Adresse':
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (
-                                        $element
-                                    ) {
-                                        return (new ReflectionClass($element))->getShortName() == 'Adresse';
-                                    })->first();
-                                    if ($moyenComCrm) {
-                                        $moyenComSite->setCodePostal($moyenComCrm->getCodePostal());
-                                        $moyenComSite->setAdresse1($moyenComCrm->getAdresse1());
-                                        $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
-                                        $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
-                                        $moyenComSite->setVille($moyenComCrm->getVille());
-                                        $moyenComSite->setPays($emSite->find(Pays::class, $moyenComCrm->getPays()));
-                                        $moyenComSite->getCoordonneeGPS()->setLatitude($moyenComCrm->getCoordonneeGPS()->getLatitude());
-                                        $moyenComSite->getCoordonneeGPS()->setLongitude($moyenComCrm->getCoordonneeGPS()->getLongitude());
-                                        $moyenComSite->getCoordonneeGPS()->setPrecis($moyenComCrm->getCoordonneeGPS()->getPrecis());
-                                    }
-//                                    $moyenComSite->setDateModification(new DateTime());
-                                    break;
-                                case 'Email':
-//                                    dump($interlocuteur->getInterlocuteur()->getMoyenComs());
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (
-                                        $element
-                                    ) {
-                                        return (new ReflectionClass($element))->getShortName() == 'Email';
-                                    })->first();
-                                    if ($moyenComCrm) {
-                                        $moyenComSite->setAdresse($moyenComCrm->getAdresse());
-                                    }
-//                                    $moyenComSite->setDateModification(new DateTime());
-                                    break;
-                                case 'Mobile':
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (
-                                        $element
-                                    ) {
-                                        return (new ReflectionClass($element))->getShortName() == 'Mobile';
-                                    })->first();
-                                    if ($moyenComCrm) {
-                                        $moyenComSite->setNumero($moyenComCrm->getnumero());
-                                    }
-//                                    $moyenComSite->setDateModification(new DateTime());
-                                    break;
-                                case 'Fixe':
-                                    $moyenComCrm = $interlocuteur->getInterlocuteur()->getMoyenComs()->filter(function (
-                                        $element
-                                    ) {
-                                        return (new ReflectionClass($element))->getShortName() == 'Fixe';
-                                    });
-                                    if ($moyenComCrm) {
-                                        if ($firstFixe) {
-                                            $moyenComSite->setNumero($moyenComCrm->first()->getNumero());
-//                                        $moyenComSite->setDateModification(new DateTime());
-                                            $firstFixe = false;
-                                        } else {
-                                            $moyenComSite->setNumero($moyenComSite->last()->getnumero());
-//                                        $moyenComSite->setDateModification(new DateTime());
+                        $moyenComsSite = $interlocuteurSite->getMoyenComs();
+                        if (!empty($moyenComsSite)) {
+                            foreach ($moyenComsSite as $key => $moyenComSite) {
+                                $typeComm = (new ReflectionClass($moyenComSite))->getShortName();
+                                $firstFixe = true;
+                                switch ($typeComm) {
+                                    case 'Adresse':
+                                        $moyenComCrm = $interlocuteur->getMoyenComs()->filter(function (
+                                            $element
+                                        ) {
+                                            return (new ReflectionClass($element))->getShortName() == 'Adresse';
+                                        })->first();
+                                        if ($moyenComCrm) {
+                                            /** @var Adresse $moyenComSite */
+                                            /** @var Adresse $moyenComCrm */
+                                            $moyenComSite->setCodePostal($moyenComCrm->getCodePostal());
+                                            $moyenComSite->setAdresse1($moyenComCrm->getAdresse1());
+                                            $moyenComSite->setAdresse2($moyenComCrm->getAdresse2());
+                                            $moyenComSite->setAdresse3($moyenComCrm->getAdresse3());
+                                            $moyenComSite->setVille($moyenComCrm->getVille());
+                                            $moyenComSite->setPays($emSite->find(Pays::class, $moyenComCrm->getPays()));
+                                            $moyenComSite->getCoordonneeGps()->setLatitude($moyenComCrm->getCoordonneeGps()->getLatitude());
+                                            $moyenComSite->getCoordonneeGps()->setLongitude($moyenComCrm->getCoordonneeGps()->getLongitude());
+                                            $moyenComSite->getCoordonneeGps()->setPrecis($moyenComCrm->getCoordonneeGps()->getPrecis());
                                         }
-                                    }
+                                        break;
+                                    case 'Email':
+                                        $moyenComCrm = $interlocuteur->getMoyenComs()->filter(function (
+                                            $element
+                                        ) {
+                                            return (new ReflectionClass($element))->getShortName() == 'Email';
+                                        })->first();
+                                        if ($moyenComCrm) {
+                                            /** @var Email $moyenComSite */
+                                            /** @var Email $moyenComCrm */
+                                            $moyenComSite->setAdresse($moyenComCrm->getAdresse());
+                                            $interlocuteurUserSite
+                                                ->setUsername($moyenComCrm->getAdresse())
+                                                ->setEmail($moyenComCrm->getAdresse());
+                                        }
+                                        break;
+                                    case 'Mobile':
+                                        $moyenComCrm = $interlocuteur->getMoyenComs()->filter(function (
+                                            $element
+                                        ) {
+                                            return (new ReflectionClass($element))->getShortName() == 'Mobile';
+                                        })->first();
+                                        if ($moyenComCrm) {
+                                            /** @var TelMobile $moyenComSite */
+                                            /** @var TelMobile $moyenComCrm */
+                                            $moyenComSite->setNumero($moyenComCrm->getNumero());
+                                        }
+                                        break;
+                                    case 'Fixe':
+                                        $moyenComCrm = $interlocuteur->getMoyenComs()->filter(function (
+                                            $element
+                                        ) {
+                                            return (new ReflectionClass($element))->getShortName() == 'Fixe';
+                                        });
+                                        if ($moyenComCrm) {
+                                            /** @var TelFixe $moyenComSite */
+                                            /** @var ArrayCollection $moyenComCrm */
+                                            if ($firstFixe) {
+                                                $moyenComSite->setNumero($moyenComCrm->first()->getNumero());
+                                                $firstFixe = false;
+                                            } else {
+                                                $moyenComSite->setNumero($moyenComCrm->last()->getNumero());
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                        // Mis à jours du mot de passe du user
+                        $interlocuteurUserSite->setPassword($interlocuteurUser->getPassword());
+                    } else {
+                        $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
+
+                        /** @var Interlocuteur $interlocuteurSite */
+                        $interlocuteurSite = new Interlocuteur();
+
+                        $interlocuteurSite->setPrenom($interlocuteur->getPrenom());
+                        $interlocuteurSite->setNom($interlocuteur->getNom());
+
+                        if (!empty($interlocuteur->getFonction())) {
+                            $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
+                                $interlocuteur->getFonction()->getId()));
+                        }
+                        if (!empty($interlocuteur->getService())) {
+                            $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
+                                $interlocuteur->getService()->getId()));
+                        }
+
+                        $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
+                        $fournisseurInterlocuteurSite->setInterlocuteur($interlocuteurSite);
+
+                        foreach ($interlocuteur->getMoyenComs() as $moyenCom) {
+                            $moyenComClone = clone $moyenCom;
+                            $interlocuteurSite->addMoyenCom($moyenComClone);
+
+                            $typeComm = (new ReflectionClass($moyenComClone))->getShortName();
+                            switch ($typeComm) {
+                                case "Adresse":
+                                    /** @var Adresse $moyenComClone */
+                                    $moyenComClone->setPays($emSite->find(Pays::class, $moyenComClone->getPays()));
                                     break;
                                 default:
                                     break;
                             }
                         }
+                        // ***** gestion creation interlocuteur_user *****
+                        $interlocuteurUserSite = clone $interlocuteur->getUser();
+                        $interlocuteurSite->setUser($interlocuteurUserSite);
+                        // ***** fin creation gestion interlocuteur_user *****
+
+                        $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
                     }
-                } else {
-                    $fournisseurInterlocuteurSite = new FournisseurInterlocuteur();
+                }
+                // ***** FIN GESTION CREATION & EDITION DES INTERLOCUTEURS *****
 
-                    /** @var Interlocuteur $interlocuteurSite */
-                    $interlocuteurSite = new Interlocuteur();
-
-                    $interlocuteurSite->setPrenom($interlocuteur->getInterlocuteur()->getPrenom());
-                    $interlocuteurSite->setNom($interlocuteur->getInterlocuteur()->getNom());
-
-                    if (!empty($interlocuteur->getInterlocuteur()->getFonction())) {
-                        $interlocuteurSite->setFonction($emSite->find('MondofuteFournisseurBundle:InterlocuteurFonction',
-                            $interlocuteur->getInterlocuteur()->getFonction()->getId()));
-                    }
-                    if (!empty($interlocuteur->getInterlocuteur()->getService())) {
-                        $interlocuteurSite->setService($emSite->find('MondofuteFournisseurBundle:ServiceInterlocuteur',
-                            $interlocuteur->getInterlocuteur()->getService()->getId()));
-                    }
-
-                    $fournisseurInterlocuteurSite->setFournisseur($fournisseurSite);
-                    $fournisseurInterlocuteurSite->setInterlocuteur($interlocuteurSite);
-
-                    foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
-//                        $moyenCom->setDateCreation();
-                        $moyenComClone = clone $moyenCom;
-                        $interlocuteurSite->addMoyenCom($moyenComClone);
-
-                        $typeComm = (new ReflectionClass($moyenComClone))->getShortName();
-                        switch ($typeComm) {
-                            case "Adresse":
-                                /** @var Adresse $moyenComSite */
-                                $moyenComClone->setPays($emSite->find(Pays::class, $moyenComClone->getPays()));
-                                break;
-                            default:
-                                break;
-                        }
-//                        dump($moyenCom);
-                    }
-
-                    $fournisseurSite->addInterlocuteur($fournisseurInterlocuteurSite);
-
-                }
-
-            }
-            /** @var RemiseClef $remiseClef */
-            foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
-                if (!empty($remiseClef->getId())) {
-                    $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
-                        $remiseClef
-                    ) {
-                        return $element->getId() == $remiseClef->getId();
-                    })->first();
-                } else {
-                    $remiseClefSite = null;
-                }
-                if (empty($remiseClefSite)) {
-                    $remiseClefSite = new RemiseClef();
-                }
-                $remiseClefSite->setLibelle($remiseClef->getLibelle());
-                if (!empty($remiseClef->getHeureDepartCourtSejour())) {
-                    $remiseClefSite->setHeureDepartCourtSejour($remiseClef->getHeureDepartCourtSejour());
-                } else {
-                    $remiseClefSite->setHeureDepartCourtSejour(null);
-                }
-                if (!empty($remiseClef->getHeureTardiveCourtSejour())) {
-                    $remiseClefSite->setHeureTardiveCourtSejour($remiseClef->getHeureTardiveCourtSejour());
-                } else {
-                    $remiseClefSite->setHeureTardiveCourtSejour(null);
-                }
-                if (!empty($remiseClef->getFournisseur())) {
-                    $remiseClefSite->setFournisseur($emSite->find(Fournisseur::class,
-                        $remiseClef->getFournisseur()->getId()));
-                } else {
-                    $remiseClefSite->setFournisseur(null);
-                }
-                if (!empty($remiseClef->getHeureDepartLongSejour())) {
-                    $remiseClefSite->setHeureDepartLongSejour($remiseClef->getHeureDepartLongSejour());
-                } else {
-                    $remiseClefSite->setHeureDepartLongSejour(null);
-                }
-                if (!empty($remiseClef->getHeureRemiseClefCourtSejour())) {
-                    $remiseClefSite->setHeureRemiseClefCourtSejour($remiseClef->getHeureRemiseClefCourtSejour());
-                } else {
-                    $remiseClefSite->setHeureRemiseClefCourtSejour(null);
-                }
-                if (!empty($remiseClef->getHeureRemiseClefLongSejour())) {
-                    $remiseClefSite->setHeureRemiseClefLongSejour($remiseClef->getHeureRemiseClefLongSejour());
-                } else {
-                    $remiseClefSite->setHeureRemiseClefLongSejour(null);
-                }
-                if (!empty($remiseClef->getHeureTardiveLongSejour())) {
-                    $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
-                } else {
-                    $remiseClefSite->setHeureTardiveLongSejour(null);
-                }
-                if (!empty($remiseClef->getStandard())) {
-                    $remiseClefSite->setStandard($remiseClef->getStandard());
-                } else {
-                    $remiseClefSite->setStandard(false);
-                }
-                if (!empty($remiseClef->getHeureTardiveLongSejour())) {
-                    $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
-                } else {
-                    $remiseClefSite->setHeureTardiveLongSejour(null);
-                }
-                /** @var RemiseClefTraduction $remiseClefTraduction */
-                foreach ($remiseClef->getTraductions() as $remiseClefTraduction) {
-                    if (!empty($remiseClefTraduction->getId())) {
-                        $remiseClefTraductionSite = $remiseClefSite->getTraductions()->filter(function (
-                            RemiseClefTraduction $element
-                        ) use (
-                            $remiseClefTraduction
+                /** @var RemiseClef $remiseClef */
+                foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
+                    if (!empty($remiseClef->getId())) {
+                        $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
+                            $remiseClef
                         ) {
-                            return ($element->getLangue()->getId() == $remiseClefTraduction->getLangue()->getId()) && ($element->getRemiseClef()->getId() == $remiseClefTraduction->getRemiseClef()->getId());
+                            return $element->getId() == $remiseClef->getId();
                         })->first();
                     } else {
-                        $remiseClefTraductionSite = null;
+                        $remiseClefSite = null;
                     }
-                    if (empty($remiseClefTraductionSite)) {
-                        $remiseClefTraductionSite = new RemiseClefTraduction();
+                    if (empty($remiseClefSite)) {
+                        $remiseClefSite = new RemiseClef();
                     }
-                    if (!empty($remiseClefTraduction->getLangue())) {
-                        $remiseClefTraductionSite->setLangue($emSite->find(Langue::class,
-                            $remiseClefTraduction->getLangue()->getId()));
-                    }
-                    if (!empty($remiseClefTraduction->getLieuxRemiseClef())) {
-                        $remiseClefTraductionSite->setLieuxRemiseClef($remiseClefTraduction->getLieuxRemiseClef());
+                    $remiseClefSite->setLibelle($remiseClef->getLibelle());
+                    if (!empty($remiseClef->getHeureDepartCourtSejour())) {
+                        $remiseClefSite->setHeureDepartCourtSejour($remiseClef->getHeureDepartCourtSejour());
                     } else {
-                        $remiseClefTraductionSite->setLieuxRemiseClef('');
+                        $remiseClefSite->setHeureDepartCourtSejour(null);
                     }
-                    $remiseClefSite->addTraduction($remiseClefTraductionSite);
+                    if (!empty($remiseClef->getHeureTardiveCourtSejour())) {
+                        $remiseClefSite->setHeureTardiveCourtSejour($remiseClef->getHeureTardiveCourtSejour());
+                    } else {
+                        $remiseClefSite->setHeureTardiveCourtSejour(null);
+                    }
+                    if (!empty($remiseClef->getFournisseur())) {
+                        $remiseClefSite->setFournisseur($emSite->find(Fournisseur::class,
+                            $remiseClef->getFournisseur()->getId()));
+                    } else {
+                        $remiseClefSite->setFournisseur(null);
+                    }
+                    if (!empty($remiseClef->getHeureDepartLongSejour())) {
+                        $remiseClefSite->setHeureDepartLongSejour($remiseClef->getHeureDepartLongSejour());
+                    } else {
+                        $remiseClefSite->setHeureDepartLongSejour(null);
+                    }
+                    if (!empty($remiseClef->getHeureRemiseClefCourtSejour())) {
+                        $remiseClefSite->setHeureRemiseClefCourtSejour($remiseClef->getHeureRemiseClefCourtSejour());
+                    } else {
+                        $remiseClefSite->setHeureRemiseClefCourtSejour(null);
+                    }
+                    if (!empty($remiseClef->getHeureRemiseClefLongSejour())) {
+                        $remiseClefSite->setHeureRemiseClefLongSejour($remiseClef->getHeureRemiseClefLongSejour());
+                    } else {
+                        $remiseClefSite->setHeureRemiseClefLongSejour(null);
+                    }
+                    if (!empty($remiseClef->getHeureTardiveLongSejour())) {
+                        $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
+                    } else {
+                        $remiseClefSite->setHeureTardiveLongSejour(null);
+                    }
+                    if (!empty($remiseClef->getStandard())) {
+                        $remiseClefSite->setStandard($remiseClef->getStandard());
+                    } else {
+                        $remiseClefSite->setStandard(false);
+                    }
+                    if (!empty($remiseClef->getHeureTardiveLongSejour())) {
+                        $remiseClefSite->setHeureTardiveLongSejour($remiseClef->getHeureTardiveLongSejour());
+                    } else {
+                        $remiseClefSite->setHeureTardiveLongSejour(null);
+                    }
+                    /** @var RemiseClefTraduction $remiseClefTraduction */
+                    foreach ($remiseClef->getTraductions() as $remiseClefTraduction) {
+                        if (!empty($remiseClefTraduction->getId())) {
+                            $remiseClefTraductionSite = $remiseClefSite->getTraductions()->filter(function (
+                                RemiseClefTraduction $element
+                            ) use (
+                                $remiseClefTraduction
+                            ) {
+                                return ($element->getLangue()->getId() == $remiseClefTraduction->getLangue()->getId()) && ($element->getRemiseClef()->getId() == $remiseClefTraduction->getRemiseClef()->getId());
+                            })->first();
+                        } else {
+                            $remiseClefTraductionSite = null;
+                        }
+                        if (empty($remiseClefTraductionSite)) {
+                            $remiseClefTraductionSite = new RemiseClefTraduction();
+                        }
+                        if (!empty($remiseClefTraduction->getLangue())) {
+                            $remiseClefTraductionSite->setLangue($emSite->find(Langue::class,
+                                $remiseClefTraduction->getLangue()->getId()));
+                        }
+                        if (!empty($remiseClefTraduction->getLieuxRemiseClef())) {
+                            $remiseClefTraductionSite->setLieuxRemiseClef($remiseClefTraduction->getLieuxRemiseClef());
+                        } else {
+                            $remiseClefTraductionSite->setLieuxRemiseClef('');
+                        }
+                        $remiseClefSite->addTraduction($remiseClefTraductionSite);
 //                    if(!empty($remiseClefTraduction->getRemiseClef())){
 //                        $remiseClefTraductionSite->setRemiseClef($emSite->find(RemiseClef::class,$remiseClefTraduction->getRemiseClef()->getId()));
 //                    }else{
 //                        $remiseClefTraductionSite->setRemiseClef(null);
 //                    }
+                    }
+                    $fournisseurSite->addRemiseClef($remiseClefSite);
                 }
-                $fournisseurSite->addRemiseClef($remiseClefSite);
-            }
-            /** @var Reception $reception */
-            foreach ($fournisseur->getReceptions() as $reception) {
-                if (!empty($reception->getId())) {
-                    $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
-                        $reception
-                    ) {
-                        return $element->getId() == $reception->getId();
-                    })->first();
-                } else {
-                    $receptionSite = null;
-                }
+                /** @var Reception $reception */
+                foreach ($fournisseur->getReceptions() as $reception) {
+                    if (!empty($reception->getId())) {
+                        $receptionSite = $fournisseurSite->getReceptions()->filter(function (Reception $element) use (
+                            $reception
+                        ) {
+                            return $element->getId() == $reception->getId();
+                        })->first();
+                    } else {
+                        $receptionSite = null;
+                    }
 //                if(empty($receptionSite = $emSite->getRepository(Reception::class)->find($reception->getId()))){
 //
 ////                }
-                if (empty($receptionSite)) {
-                    $receptionSite = new Reception();
-                    $fournisseurSite->addReception($receptionSite);
-                }
-                if (!empty($reception->getTranche1())) {
+                    if (empty($receptionSite)) {
+                        $receptionSite = new Reception();
+                        $fournisseurSite->addReception($receptionSite);
+                    }
+                    if (!empty($reception->getTranche1())) {
 //                    if(empty($tranche1Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche1()))){
-                    if (empty($receptionSite->getTranche1())) {
-                        $tranche1Site = new TrancheHoraire();
-                    } else {
-                        $tranche1Site = $receptionSite->getTranche1();
+                        if (empty($receptionSite->getTranche1())) {
+                            $tranche1Site = new TrancheHoraire();
+                        } else {
+                            $tranche1Site = $receptionSite->getTranche1();
+                        }
+                        $tranche1Site->setDebut($reception->getTranche1()->getDebut())
+                            ->setFin($reception->getTranche1()->getFin());
+                        $receptionSite->setTranche1($tranche1Site);
                     }
-                    $tranche1Site->setDebut($reception->getTranche1()->getDebut())
-                        ->setFin($reception->getTranche1()->getFin());
-                    $receptionSite->setTranche1($tranche1Site);
-                }
-                if (!empty($reception->getTranche2())) {
+                    if (!empty($reception->getTranche2())) {
 //                    if(empty($tranche2Site = $emSite->getRepository(TrancheHoraire::class)->find($receptionSite->getTranche2()))){
-                    if (empty($receptionSite->getTranche2())) {
-                        $tranche2Site = new TrancheHoraire();
-                    } else {
-                        $tranche2Site = $receptionSite->getTranche2();
+                        if (empty($receptionSite->getTranche2())) {
+                            $tranche2Site = new TrancheHoraire();
+                        } else {
+                            $tranche2Site = $receptionSite->getTranche2();
+                        }
+                        $tranche2Site->setDebut($reception->getTranche2()->getDebut())
+                            ->setFin($reception->getTranche2()->getFin());
+                        $receptionSite->setTranche2($tranche2Site);
                     }
-                    $tranche2Site->setDebut($reception->getTranche2()->getDebut())
-                        ->setFin($reception->getTranche2()->getFin());
-                    $receptionSite->setTranche2($tranche2Site);
-                }
 //                if (!empty($reception->getTranche2())) {
 //                    $receptionSite->setTranche2($reception->getTranche2());
 //                }
-                if (!empty($reception->getJour())) {
-                    $receptionSite->setJour($reception->getJour());
-                }
+                    if (!empty($reception->getJour())) {
+                        $receptionSite->setJour($reception->getJour());
+                    }
 //                $fournisseurSite->addReception($receptionSite);
-            }
+                }
 
-            // ***** gestion logo *****
-            if (!empty($fournisseur->getLogo())) {
-                $logo = $fournisseur->getLogo();
-                if (!empty($fournisseurSite->getLogo())) {
-                    $logoSite = $fournisseurSite->getLogo();
-                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
+                // ***** gestion logo *****
+                if (!empty($fournisseur->getLogo())) {
+                    $logo = $fournisseur->getLogo();
+                    if (!empty($fournisseurSite->getLogo())) {
+                        $logoSite = $fournisseurSite->getLogo();
+                        if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
 
+                            $cloneVisuel = clone $logo;
+                            $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                            $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+
+                            // on supprime l'ancien visuel
+                            $fournisseurSite->setLogo(null);
+                            $emSite->remove($logoSite);
+
+                            $fournisseurSite->setLogo($cloneVisuel);
+                        }
+                    } else {
+                        // on lui clone l'image
                         $cloneVisuel = clone $logo;
-                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                        // **** récupération du visuel physique ****
+                        $pool = $this->container->get('sonata.media.pool');
+                        $provider = $pool->getProvider($cloneVisuel->getProviderName());
+                        $provider->getReferenceImage($cloneVisuel);
+
+                        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
+
+                        $cloneVisuel->setProviderReference($logo->getProviderReference());
+                        $cloneVisuel->setName($logo->getName());
+                        // **** fin récupération du visuel physique ****
+
+                        // on donne au nouveau visuel, le context correspondant en fonction du site
                         $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+                        // on lui attache l'id de référence du visuel correspondant sur la bdd crm
+                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
 
-                        // on supprime l'ancien visuel
-                        $fournisseurSite->setLogo(null);
-                        $emSite->remove($logoSite);
-
-                        $fournisseurSite->setLogo($cloneVisuel);
+                        $fournisseur->setLogo($cloneVisuel);
                     }
                 } else {
-                    // on lui clone l'image
-                    $cloneVisuel = clone $logo;
-                    // **** récupération du visuel physique ****
-                    $pool = $this->container->get('sonata.media.pool');
-                    $provider = $pool->getProvider($cloneVisuel->getProviderName());
-                    $provider->getReferenceImage($cloneVisuel);
-
-                    $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
-
-                    $cloneVisuel->setProviderReference($logo->getProviderReference());
-                    $cloneVisuel->setName($logo->getName());
-                    // **** fin récupération du visuel physique ****
-
-                    // on donne au nouveau visuel, le context correspondant en fonction du site
-                    $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-                    // on lui attache l'id de référence du visuel correspondant sur la bdd crm
-                    $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-
-                    $fournisseur->setLogo($cloneVisuel);
+                    if (!empty($fournisseurSite->getLogo())) {
+                        $fournisseurSite->setLogo(null);
+                        $emSite->remove($fournisseurSite->getLogo());
+                    }
                 }
-            } else {
-                if (!empty($fournisseurSite->getLogo())) {
-                    $fournisseurSite->setLogo(null);
-                    $emSite->remove($fournisseurSite->getLogo());
-                }
+                // ***** fin gestion logo *****
+
+                $emSite->persist($fournisseurSite);
+                $emSite->flush();
             }
-            // ***** fin gestion logo *****
-
-            $emSite->persist($fournisseurSite);
-            $emSite->flush();
         }
     }
 
@@ -1249,20 +1389,20 @@ class FournisseurController extends Controller
 
 
                         $emSite->flush();
-                        $interlocuteurs = $fournisseurSite->getInterlocuteurs();
-                        if (!empty($interlocuteurs)) {
-                            foreach ($interlocuteurs as $interlocuteur) {
-                                $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $emSite);
-//                            $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+                        $fournisseurInterlocuteurs = $fournisseurSite->getInterlocuteurs();
+                        if (!empty($fournisseurInterlocuteurs)) {
+                            foreach ($fournisseurInterlocuteurs as $fournisseurInterlocuteur) {
+                                $this->deleteMoyenComs($fournisseurInterlocuteur->getInterlocuteur(), $emSite);
+//                            $moyenComs = $fournisseurInterlocuteur->getInterlocuteur()->getMoyenComs();
 //                            if (!empty($moyenComs)) {
 //                                foreach ($moyenComs as $moyenCom) {
-//                                    $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                                    $fournisseurInterlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
 //                                }
 //                            }
 
 
                                 $emSite->flush();
-                                $emSite->remove($interlocuteur);
+                                $emSite->remove($fournisseurInterlocuteur);
                             }
                         }
                         // ***** fin suppression des moyen de communications *****
@@ -1284,23 +1424,23 @@ class FournisseurController extends Controller
                 $this->deleteMoyenComs($fournisseur, $em);
                 $em->flush();
 
-                $interlocuteurs = $fournisseur->getInterlocuteurs();
-                if (!empty($interlocuteurs)) {
-                    foreach ($interlocuteurs as $interlocuteur) {
-//                        $moyenComs = $interlocuteur->getInterlocuteur()->getMoyenComs();
+                $fournisseurInterlocuteurs = $fournisseur->getInterlocuteurs();
+                if (!empty($fournisseurInterlocuteurs)) {
+                    foreach ($fournisseurInterlocuteurs as $fournisseurInterlocuteur) {
+//                        $moyenComs = $fournisseurInterlocuteur->getInterlocuteur()->getMoyenComs();
 //                        if (!empty($moyenComs)) {
 //                            foreach ($moyenComs as $moyenCom) {
-//                                $interlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
+//                                $fournisseurInterlocuteur->getInterlocuteur()->removeMoyenCom($moyenCom);
 //                                $em->remove($moyenCom);
 //                            }
 //                        }
-                        $this->deleteMoyenComs($interlocuteur->getInterlocuteur(), $em);
+                        $this->deleteMoyenComs($fournisseurInterlocuteur->getInterlocuteur(), $em);
 
-//                        $interlocuteur->getInterlocuteur()->getMoyenComs()->clear();
+//                        $fournisseurInterlocuteur->getInterlocuteur()->getMoyenComs()->clear();
 //                        die;
                         $em->flush();
 //                        die;
-                        $em->remove($interlocuteur);
+                        $em->remove($fournisseurInterlocuteur);
                     }
                 }
 
@@ -1348,36 +1488,5 @@ class FournisseurController extends Controller
         return $this->redirectToRoute('fournisseur_index');
     }
 
-//    private function ajouterInterlocuteurMoyenComunnications(Fournisseur $fournisseur)
-//    {
-//        /** @var FournisseurInterlocuteur $interlocuteur */
-//        $interlocuteurs = $fournisseur->getInterlocuteurs();
-//        foreach ($interlocuteurs as $interlocuteur) {
-//            $interlocuteur->getInterlocuteur()->addMoyenCommunication(new Mobile())
-//                ->addMoyenCommunication(new Fixe())
-//                ->addMoyenCommunication(new Fixe());
-//        }
-//    }
-//
-//    public function chargerFormInterlocuteur()
-//    {
-//        $interlocuteur = new Interlocuteur();
-//        $interlocuteur->getMoyenComs()
-//            ->add(new Adresse());
-//        $interlocuteur
-//            ->addMoyenCom(new Adresse())
-//            ->addMoyenCom(new Fixe())
-//            ->addMoyenCom(new Fixe())
-//            ->addMoyenCom(new Mobile())
-//            ->addMoyenCom(new Email());
-//
-//        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\InterlocuteurType', $interlocuteur);
-//
-//        return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
-//            'interlocuteur' => $interlocuteur,
-//            'form' => $form->createView(),
-//        ));
-//
-//    }
 
 }
