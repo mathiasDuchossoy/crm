@@ -1,11 +1,5 @@
 {% extends '@MondofuteStation/stationunifie/fiche.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ form_stylesheet(form) }}
-{% endblock %}
-
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
     {{ 'création d\une station' | capitalize }}
 {% endblock %}
@@ -20,12 +14,5 @@
         <ul class="list-unstyled">
             <li><a href="{{ path('station_station_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
         </ul>
-
     </div>
 {% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {{ form_javascript(form) }}
-{% endblock %}
-

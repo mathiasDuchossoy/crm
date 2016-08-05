@@ -176,6 +176,10 @@ class Profil
     public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations[] = $station;
+
+        return $this;
+    }
+
     /**
      * Add image
      *
@@ -208,8 +212,6 @@ class Profil
     public function getStations()
     {
         return $this->stations;
-    }
-        return $this;
     }
 
     /**
