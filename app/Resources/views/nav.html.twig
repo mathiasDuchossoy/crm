@@ -1,5 +1,3 @@
-{#<div class="container-fluid">#}
-
 <nav role="navigation">
     <ul class="nav navbar-nav">
         <li>
@@ -161,6 +159,134 @@
             </ul>
         </li>
         {# ***** FIN FOURNISSEUR ***** #}
+        {# ***** UTILISATEUR ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Utilisateur <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Utilisateur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'utilisateur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'utilisateur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN UTILISATEUR ***** #}
+        {# ***** CLIENT ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Client <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Client</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'client_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'client_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN CLIENT ***** #}
+        {# ***** HEBERGEMENT ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Hébergement <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Hebergement</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'hebergement_hebergement_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'hebergement_hebergement_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN HEBERGEMENT ***** #}
+        {# ***** PARAMETRAGE ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                {{ 'parametrages' | trans |capitalize }} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'type.service' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'type_service_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'type_service_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'periode' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'periode' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'periode_periode_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'periode_periode_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN PARAMETRAGE ***** #}
     </ul>
+    {# ***** LOGIN ***** #}
+    <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <li style="color: white; margin-top: 15px;">
+                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+            </li>
+            <li>
+                <a href="{{ path('fos_user_security_logout') }}">
+                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path('utilisateur_new') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+            </li>
+            <li>
+                <a href="{{ path('fos_user_security_login') }}"><span
+                            class="glyphicon glyphicon-log-in"></span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+    {# ***** FIN LOGIN ***** #}
 </nav>
 {#</div>#}
