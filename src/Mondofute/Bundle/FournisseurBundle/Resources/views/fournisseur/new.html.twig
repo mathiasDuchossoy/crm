@@ -1,6 +1,5 @@
 {% extends '@MondofuteFournisseur/fournisseur/fiche.html.twig' %}
 
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% block title %}
     {{ 'fournisseur.creation' | trans | capitalize }}
 {% endblock %}
@@ -14,9 +13,7 @@
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li><a href="{{ path('fournisseur_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
-            {#<li>{{ form(delete_form) }}</li>#}
         </ul>
-
     </div>
 {% endblock %}
 
