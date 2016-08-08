@@ -1,4 +1,0 @@
-bdd name;batch name;resultat (ok|ko);commentaire
-crm_79_crm;2016-07-21a_sls_periode.sql;KO;ERROR 1050 (42S01) at line 1: La table 'periode' existe d‚j…
-crm_79_skifute;2016-07-21a_sls_periode.sql;OK;
-crm_79_francefute;2016-07-21a_sls_periode.sql;OK;

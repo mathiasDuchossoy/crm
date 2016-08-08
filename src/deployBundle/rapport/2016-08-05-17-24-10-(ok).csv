@@ -1,4 +1,0 @@
-bdd name;batch name;resultat (ok|ko);commentaire
-crm_preprod_crm;2016-08-02a_md_medias.sql;OK;
-crm_preprod_skifute;2016-08-02a_md_medias.sql;OK;
-crm_preprod_francefute;2016-08-02a_md_medias.sql;OK;

@@ -1,7 +1,0 @@
-bdd name;batch name;resultat (ok|ko);commentaire
-crm_54_crm;2016-07-21a_sls_periode.sql;OK;
-crm_54_crm;2016-08-02a_md_medias.sql;OK;
-crm_54_skifute;2016-07-21a_sls_periode.sql;OK;
-crm_54_skifute;2016-08-02a_md_medias.sql;OK;
-crm_54_francefute;2016-07-21a_sls_periode.sql;OK;
-crm_54_francefute;2016-08-02a_md_medias.sql;OK;
