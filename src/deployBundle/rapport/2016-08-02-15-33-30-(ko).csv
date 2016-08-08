@@ -1,7 +1,0 @@
-bdd name;batch name;resultat (ok|ko);commentaire
-crm_79_crm;2016-07-21a_sls_periode.sql;KO;'mysql' n'est pas reconnu en tant que commande interne
-;;;ou externe, un programme ex‚cutable ou un fichier de commandes.
-crm_79_skifute;2016-07-21a_sls_periode.sql;KO;'mysql' n'est pas reconnu en tant que commande interne
-;;;ou externe, un programme ex‚cutable ou un fichier de commandes.
-crm_79_francefute;2016-07-21a_sls_periode.sql;KO;'mysql' n'est pas reconnu en tant que commande interne
-;;;ou externe, un programme ex‚cutable ou un fichier de commandes.
