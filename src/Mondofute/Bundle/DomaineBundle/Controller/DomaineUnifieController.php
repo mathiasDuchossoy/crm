@@ -366,7 +366,7 @@ class DomaineUnifieController extends Controller
                 }
             } else {
                 // sinon on on en créé une nouvelle
-                $domaineCarteIdentiteUnifie = $domaineCarteIdentiteController->newEntity($domaine);
+                $domaineCarteIdentiteUnifie = $domaineCarteIdentiteController->newEntity($domaine, $request);
 
                 $site = $domaine->getSite();
                 $domaineCarteIdentite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
@@ -753,7 +753,7 @@ class DomaineUnifieController extends Controller
             if (!empty($domaine->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie())) {
                 $domaineCarteIdentiteUnifieController->editEntity($domaine->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie());
             } else {
-                $domaineCarteIdentiteUnifieController->newEntity($domaine);
+                $domaineCarteIdentiteUnifieController->newEntity($domaine, $request);
             }
 
             $em->persist($domaine);
