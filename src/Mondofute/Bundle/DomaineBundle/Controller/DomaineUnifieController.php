@@ -75,7 +75,6 @@ class DomaineUnifieController extends Controller
             $domaineCarteIdentiteController = new DomaineCarteIdentiteUnifieController();
             $domaineCarteIdentiteController->setContainer($this->container);
             
-            
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
 
             // ***** Carte d'identité *****
@@ -361,8 +360,10 @@ class DomaineUnifieController extends Controller
 
         foreach ($domaineUnifie->getDomaines() as $domaine) {
             // Si la carte d'identité est lié au domaine parent
-            if (!empty($request->get('cboxDomaineCarteIdentite_' . $domaine->getSite()->getId()))) {
-                $domaine->setDomaineCarteIdentite($domaine->getDomaineParent()->getDomaineCarteIdentite());
+            if (!empty($request->get('cboxDomaineCarteIdentite_' . $domaine->getSite()->getId())) && !empty($domaine->getDomaineParent())) {
+                if (!empty($domaine->getDomaineParent())) {
+                    $domaine->setDomaineCarteIdentite($domaine->getDomaineParent()->getDomaineCarteIdentite());
+                }
             } else {
                 // sinon on on en créé une nouvelle
                 $domaineCarteIdentiteUnifie = $domaineCarteIdentiteController->newEntity($domaine);
