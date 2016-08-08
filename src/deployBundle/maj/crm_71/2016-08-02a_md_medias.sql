@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS secteur_photo (
+CREATE TABLE secteur_photo (
   id         INT UNSIGNED AUTO_INCREMENT NOT NULL,
   secteur_id INT UNSIGNED DEFAULT NULL,
   photo_id   INT          DEFAULT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS secteur_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS departement_photo (
+CREATE TABLE departement_photo (
   id             INT UNSIGNED AUTO_INCREMENT NOT NULL,
   departement_id INT UNSIGNED DEFAULT NULL,
   photo_id       INT          DEFAULT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS departement_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS zone_touristique_image_traduction (
+CREATE TABLE zone_touristique_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS zone_touristique_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS zone_touristique_photo_traduction (
+CREATE TABLE zone_touristique_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS zone_touristique_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS secteur_photo_traduction (
+CREATE TABLE secteur_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS secteur_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS departement_image (
+CREATE TABLE departement_image (
   id             INT UNSIGNED AUTO_INCREMENT NOT NULL,
   departement_id INT UNSIGNED DEFAULT NULL,
   image_id       INT          DEFAULT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS departement_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS region_photo (
+CREATE TABLE region_photo (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   region_id INT UNSIGNED DEFAULT NULL,
   photo_id  INT          DEFAULT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS region_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS profil_photo (
+CREATE TABLE profil_photo (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   profil_id INT UNSIGNED DEFAULT NULL,
   photo_id  INT          DEFAULT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS profil_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS profil_image_traduction (
+CREATE TABLE profil_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS profil_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS profil_image (
+CREATE TABLE profil_image (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   profil_id INT UNSIGNED DEFAULT NULL,
   image_id  INT          DEFAULT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS profil_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS departement_photo_traduction (
+CREATE TABLE departement_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS departement_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS zone_touristique_photo (
+CREATE TABLE zone_touristique_photo (
   id                  INT UNSIGNED AUTO_INCREMENT NOT NULL,
   zone_touristique_id INT UNSIGNED DEFAULT NULL,
   photo_id            INT          DEFAULT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS zone_touristique_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS region_image (
+CREATE TABLE region_image (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   region_id INT UNSIGNED DEFAULT NULL,
   image_id  INT          DEFAULT NULL,
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS region_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS region_photo_traduction (
+CREATE TABLE region_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS region_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS profil_photo_traduction (
+CREATE TABLE profil_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS profil_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS departement_image_traduction (
+CREATE TABLE departement_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS departement_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS region_image_traduction (
+CREATE TABLE region_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -202,7 +202,7 @@ CREATE TABLE IF NOT EXISTS region_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS secteur_image (
+CREATE TABLE secteur_image (
   id         INT UNSIGNED AUTO_INCREMENT NOT NULL,
   secteur_id INT UNSIGNED DEFAULT NULL,
   image_id   INT          DEFAULT NULL,
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS secteur_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS secteur_image_traduction (
+CREATE TABLE secteur_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS secteur_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS zone_touristique_image (
+CREATE TABLE zone_touristique_image (
   id                  INT UNSIGNED AUTO_INCREMENT NOT NULL,
   zone_touristique_id INT UNSIGNED DEFAULT NULL,
   image_id            INT          DEFAULT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS zone_touristique_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS domaine_carte_identite_photo_traduction (
+CREATE TABLE domaine_carte_identite_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS domaine_carte_identite_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS domaine_carte_identite_photo (
+CREATE TABLE domaine_carte_identite_photo (
   id                        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   domaine_carte_identite_id INT UNSIGNED DEFAULT NULL,
   photo_id                  INT          DEFAULT NULL,
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS domaine_carte_identite_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS domaine_carte_identite_image_traduction (
+CREATE TABLE domaine_carte_identite_image_traduction (
   id        INT AUTO_INCREMENT NOT NULL,
   image_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS domaine_carte_identite_image_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS domaine_carte_identite_image (
+CREATE TABLE domaine_carte_identite_image (
   id                        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   domaine_carte_identite_id INT UNSIGNED DEFAULT NULL,
   image_id                  INT          DEFAULT NULL,
@@ -286,7 +286,7 @@ CREATE TABLE IF NOT EXISTS domaine_carte_identite_image (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS hebergement_visuel_traduction (
+CREATE TABLE hebergement_visuel_traduction (
   id                    INT UNSIGNED AUTO_INCREMENT NOT NULL,
   hebergement_visuel_id INT UNSIGNED DEFAULT NULL,
   langue_id             INT UNSIGNED DEFAULT NULL,
@@ -298,21 +298,21 @@ CREATE TABLE IF NOT EXISTS hebergement_visuel_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS hebergement_photo (
+CREATE TABLE hebergement_photo (
   id INT UNSIGNED NOT NULL,
   PRIMARY KEY (id)
 )
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS hebergement_video (
+CREATE TABLE hebergement_video (
   id INT UNSIGNED NOT NULL,
   PRIMARY KEY (id)
 )
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS hebergement_visuel (
+CREATE TABLE hebergement_visuel (
   id             INT UNSIGNED AUTO_INCREMENT NOT NULL,
   hebergement_id INT UNSIGNED DEFAULT NULL,
   visuel_id      INT          DEFAULT NULL,
@@ -325,7 +325,7 @@ CREATE TABLE IF NOT EXISTS hebergement_visuel (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS logement_photo (
+CREATE TABLE logement_photo (
   id          INT UNSIGNED AUTO_INCREMENT NOT NULL,
   logement_id INT UNSIGNED DEFAULT NULL,
   photo_id    INT          DEFAULT NULL,
@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS logement_photo (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS logement_photo_traduction (
+CREATE TABLE logement_photo_traduction (
   id        INT UNSIGNED AUTO_INCREMENT NOT NULL,
   photo_id  INT UNSIGNED DEFAULT NULL,
   langue_id INT UNSIGNED DEFAULT NULL,
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS logement_photo_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS media__gallery_media (
+CREATE TABLE media__gallery_media (
   id         INT AUTO_INCREMENT NOT NULL,
   gallery_id INT DEFAULT NULL,
   media_id   INT DEFAULT NULL,
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS media__gallery_media (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS media__gallery (
+CREATE TABLE media__gallery (
   id             INT AUTO_INCREMENT NOT NULL,
   name           VARCHAR(255)       NOT NULL,
   context        VARCHAR(64)        NOT NULL,
@@ -377,7 +377,7 @@ CREATE TABLE IF NOT EXISTS media__gallery (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS media__media (
+CREATE TABLE media__media (
   id                 INT AUTO_INCREMENT NOT NULL,
   name               VARCHAR(255)       NOT NULL,
   description        TEXT           DEFAULT NULL,
@@ -535,4 +535,3 @@ ALTER TABLE fournisseur
   ADD CONSTRAINT FK_369ECA32F98F144A FOREIGN KEY (logo_id) REFERENCES media__media (id);
 CREATE UNIQUE INDEX UNIQ_369ECA32F98F144A
   ON fournisseur (logo_id);
-
