@@ -435,7 +435,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
      * Copie dans la base de données site l'entité domaineCarteIdentite
      * @param DomaineCarteIdentiteUnifie $entity
      */
-    private function copieVersSites(DomaineCarteIdentiteUnifie $entity, $originalDomaineCarteIdentiteImages = null, $originalDomaineCarteIdentitePhotos = null)
+    public function copieVersSites(DomaineCarteIdentiteUnifie $entity, $originalDomaineCarteIdentiteImages = null, $originalDomaineCarteIdentitePhotos = null)
     {
         /** @var SnowparkTraduction $snowparkTraductionSite */
         /** @var HandiskiTraduction $handiskiTraductionSite */
@@ -468,7 +468,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //            copie des données domaineCarteIdentite
                 // ***** Snowpark *****
                 $snowparkSite = !empty($domaineCarteIdentiteSite->getSnowpark()) ? $domaineCarteIdentiteSite->getSnowpark() : clone $domaineCarteIdentite->getSnowpark();
-                $snowparkSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $snowparkSite->getPresent()));
+                $snowparkSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $domaineCarteIdentite->getSnowpark()->getPresent()));
                 foreach ($snowparkSite->getTraductions() as $snowparkTraductionSite) {
                     /** @var SnowparkTraduction $snowparkTraduction */
                     $snowparkTraduction = $domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($snowparkTraductionSite) {
@@ -479,7 +479,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
                 // ***** Handiski *****
                 $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
-                $handiskiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $handiskiSite->getPresent()));
+                $handiskiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $domaineCarteIdentite->getHandiski()->getPresent()));
                 foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
                     /** @var HandiskiTraduction $handiskiTraduction */
                     $handiskiTraduction = $domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($handiskiTraductionSite) {
