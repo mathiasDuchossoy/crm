@@ -33,5 +33,4 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: zoneTouristiques
-            mappedBy: zoneTouristique
     lifecycleCallbacks: {  }
