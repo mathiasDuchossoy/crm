@@ -199,7 +199,7 @@ class StationUnifieController extends Controller
                         ) {
                             $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
                             $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
-                            $stationCommentVenirGranceVille->setStationCommentVenir($station);
+                            $stationCommentVenirGranceVille->setStationCommentVenir($stationCommentVenir);
                             $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
                         }
                     }
@@ -358,8 +358,20 @@ class StationUnifieController extends Controller
      */
     private function supprimerStations(StationUnifie $entity, array $sitesAEnregistrer)
     {
+        /** @var Secteur $secteur */
+        /** @var Station $station */
+        /** @var ZoneTouristique $zoneTouristique */
         foreach ($entity->getStations() as $station) {
             if (!in_array($station->getSite()->getId(), $sitesAEnregistrer)) {
+                foreach ($station->getZoneTouristiques() as $zoneTouristique) {
+                    $zoneTouristique->removeStation($station);
+                }
+                foreach ($station->getSecteurs() as $secteur) {
+                    $secteur->removeStation($station);
+                }
+                foreach ($station->getProfils() as $profil) {
+                    $profil->removeStation($station);
+                }
                 $station->setStationUnifie(null);
                 $entity->removeStation($station);
             }
@@ -529,26 +541,28 @@ class StationUnifieController extends Controller
 //                    if(empty($stationCommentVenir)){
 //                        $stationCommentVenir = new StationCommentVenir();
 //                    }
-                    /** @var StationCommentVenirGrandeVille $grandeVille */
-                    if (!empty($stationCommentVenir->getGrandeVilles())) {
-                        if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
-                            foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                                if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
-                                    return $element->getGrandeVille()->getId() == $grandeVille->getGrandeVille()->getId();
-                                })->isEmpty()
-                                ) {
-                                    $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                                    $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()));
-                                    $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
+                    if (!empty($stationCommentVenir)) {
+                        /** @var StationCommentVenirGrandeVille $grandeVille */
+                        if (!empty($stationCommentVenir->getGrandeVilles())) {
+                            if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
+                                foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
+                                    if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
+                                        return $element->getGrandeVille()->getId() == $grandeVille->getGrandeVille()->getId();
+                                    })->isEmpty()
+                                    ) {
+                                        $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
+                                        $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()));
+                                        $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
-                            foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                                $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                                $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()->getId()));
-                                $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
+                        } else {
+                            if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
+                                foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
+                                    $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
+                                    $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()->getId()));
+                                    $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
+                                }
                             }
                         }
                     }
@@ -744,6 +758,7 @@ class StationUnifieController extends Controller
                     $stationSite = $entitySite->getStations()->first();
                     $emSite->remove($stationSite);
                     $emSite->flush();
+
                     $stationUnifie->removeStation($station);
                     $station->setStationUnifie(null);
                     $stationMere = $station->getStationMere();
