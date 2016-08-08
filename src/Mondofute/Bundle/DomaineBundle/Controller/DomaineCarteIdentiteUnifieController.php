@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Doctrine\ORM\EntityManager;
-use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction;
@@ -1579,7 +1578,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
         /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
         /** @var DomaineCarteIdentite $domaineCarteIdentite */
         $em = $this->getDoctrine()->getEntityManager();
-        dump($domaineCarteIdentiteUnifie);
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
         foreach ($sitesDistants as $siteDistant) {
@@ -1587,11 +1585,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
             $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $domaineCarteIdentiteUnifieSite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
-            dump('ici');
             if (!empty($domaineCarteIdentiteUnifieSite)) {
-                dump('ici');
                 foreach ($domaineCarteIdentiteUnifieSite->getDomaineCarteIdentites() as $domaineCarteIdentiteSite) {
-                    dump('ici');
                     $emSite->remove($domaineCarteIdentiteSite);
                 }
                 $emSite->remove($domaineCarteIdentiteUnifieSite);

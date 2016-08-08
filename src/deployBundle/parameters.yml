@@ -9,18 +9,24 @@ parameters:
             login: root
             pass: null
     deploy_bundle.bases:
-        local.preprod:
+#   LOCAL
+        local_preprod:
             - crm2
             - skifute2
             - francefute2
-        crm_71:
+        local_crm_65:
+            - crm_65_crm
+            - crm_65_skifute
+            - crm_65_francefute
+        local_crm_71:
             - crm_71_crm
             - crm_71_skifute
             - crm_71_francefute
-        local.crm_79:
+        local_crm_79:
             - crm_79_crm
             - crm_79_skifute
             - crm_79_francefute
+#   DEV
         dev.crm_79:
             - crm_79_mondofutedev_comclone_crm
             - crm_79_mondofutedev_comclone_skifute
