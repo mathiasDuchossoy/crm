@@ -52,7 +52,9 @@ class DomaineType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
 //                'required' => true,
-            ));
+            ))
+            ->add('imagesParent')
+            ->add('photosParent');
     }
 
     /**

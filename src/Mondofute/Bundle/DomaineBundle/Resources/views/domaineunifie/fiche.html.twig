@@ -62,6 +62,12 @@
                             {% endfor %}
                         </div>
 
+                        <div id="cbox_medias_parent_{{ domaine.vars.value.site.id }}">
+                            {{ form_widget(domaine.imagesParent) }}
+                            {{ form_widget(domaine.photosParent) }}
+                        </div>
+                        <br/>
+
                         {# Medias Domaine #}
 
                         {# si le site est le crm on affiche le panel des medias #}
@@ -410,6 +416,7 @@
         $('[data-unique_block_prefix="_domaine_unifie_domaines_entry_domaineParent"]').each(function (index, element) {
             if (!$(element).val()) {
                 $('#cboxDomaineCarteIdentite_' + $(element).data('site')).hide();
+                $('#cbox_medias_parent_' + $(element).data('site')).hide();
             }
         });
 

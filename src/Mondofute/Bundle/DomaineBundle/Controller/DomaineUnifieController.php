@@ -103,6 +103,15 @@ class DomaineUnifieController extends Controller
             $this->carteIdentiteNew($request, $domaineUnifie);
             // ***** Fin Carte d'identité *****
 
+            // on vérifie si les domaines on un parent,
+            // s'il le domaine n'a pas de parent on lui met dans tous les cas la liaison aux medias parent à false
+            foreach ($domaineUnifie->getDomaines() as $domaine) {
+                if (empty($domaine->getDomaineParent())) {
+                    $domaine
+                        ->setPhotosParent(false)
+                        ->setImagesParent(false);
+                }
+            }
 
             // ***** Gestion des Medias *****
             foreach ($request->get('domaine_unifie')['domaines'] as $key => $domaine) {
@@ -501,8 +510,12 @@ class DomaineUnifieController extends Controller
                 $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $domaine->getSite()->getId()));
                 if (!empty($domaine->getDomaineParent())) {
                     $domaineParent = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
+                    $photosParent = $domaine->getPhotosParent();
+                    $imagesParent = $domaine->getImagesParent();
                 } else {
                     $domaineParent = null;
+                    $photosParent = false;
+                    $imagesParent = false;
                 }
 
                 if (!empty($domaine->getDomaineCarteIdentite())) {
@@ -529,7 +542,9 @@ class DomaineUnifieController extends Controller
                     ->setSite($site)
                     ->setDomaineUnifie($entitySite)
                     ->setDomaineParent($domaineParent)
-                    ->setDomaineCarteIdentite($domaineCarteIdentite);
+                    ->setDomaineCarteIdentite($domaineCarteIdentite)
+                    ->setImagesParent($imagesParent)
+                    ->setPhotosParent($photosParent);
 
 //            Gestion des traductions
                 foreach ($domaine->getTraductions() as $domaineTraduc) {
@@ -996,6 +1011,15 @@ class DomaineUnifieController extends Controller
             $domaineCarteIdentiteUnifieController->setContainer($this->container);
             try {
 
+                // on vérifie si les domaines on un parent,
+                // s'il le domaine n'a pas de parent on lui met dans tous les cas la liaison aux medias parent à false
+                foreach ($domaineUnifie->getDomaines() as $domaine) {
+                    if (empty($domaine->getDomaineParent())) {
+                        $domaine
+                            ->setPhotosParent(false)
+                            ->setImagesParent(false);
+                    }
+                }
 
                 // ************* suppression images *************
                 // ** CAS OU L'ON SUPPRIME UN "DOMAINE IMAGE" **

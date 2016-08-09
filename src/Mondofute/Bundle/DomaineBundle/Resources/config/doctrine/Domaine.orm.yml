@@ -10,6 +10,15 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        imagesParent:
+            type: boolean
+            options:
+                default: false
+        photosParent:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site

@@ -51,6 +51,14 @@ class Domaine
      * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
+    /**
+     * @var boolean
+     */
+    private $imagesParent = false;
+    /**
+     * @var boolean
+     */
+    private $photosParent = false;
 
     /**
      * Constructor
@@ -358,5 +366,53 @@ class Domaine
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Get imagesParent
+     *
+     * @return boolean
+     */
+    public function getImagesParent()
+    {
+        return $this->imagesParent;
+    }
+
+    /**
+     * Set imagesParent
+     *
+     * @param boolean $imagesParent
+     *
+     * @return Domaine
+     */
+    public function setImagesParent($imagesParent)
+    {
+        $this->imagesParent = $imagesParent;
+
+        return $this;
+    }
+
+    /**
+     * Get photosParent
+     *
+     * @return boolean
+     */
+    public function getPhotosParent()
+    {
+        return $this->photosParent;
+    }
+
+    /**
+     * Set photosParent
+     *
+     * @param boolean $photosParent
+     *
+     * @return Domaine
+     */
+    public function setPhotosParent($photosParent)
+    {
+        $this->photosParent = $photosParent;
+
+        return $this;
     }
 }
