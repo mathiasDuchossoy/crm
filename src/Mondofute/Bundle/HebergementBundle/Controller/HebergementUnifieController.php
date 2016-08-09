@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -409,7 +408,7 @@ class HebergementUnifieController extends Controller
 //                copie des services hebergement vers les sites distants
                 /** @var ServiceHebergement $service */
                 foreach ($entity->getServices() as $service) {
-                    if (empty($serviceSite = $em->getRepository(ServiceHebergement::class)->findOneBy(array(
+                    if (empty($serviceSite = $emSite->getRepository(ServiceHebergement::class)->findOneBy(array(
                         'hebergementUnifie' => $entity->getId(),
                         'service' => $service->getId(),
                     )))
@@ -419,11 +418,11 @@ class HebergementUnifieController extends Controller
                         $entitySite->addService($serviceSite);
 
                     }
-                    $serviceSite->setService($em->getRepository(Service::class)->find($service->getService()->getId()));
+                    $serviceSite->setService($emSite->getRepository(Service::class)->find($service->getService()->getId()));
 
                     /** @var ServiceHebergementTarif $serviceHebergementTarif */
                     foreach ($service->getTarifs() as $serviceHebergementTarif) {
-                        if (empty($serviceHebergementTarifSite = $em->getRepository(ServiceHebergementTarif::class)->find(
+                        if (empty($serviceHebergementTarifSite = $emSite->getRepository(ServiceHebergementTarif::class)->find(
                             $serviceHebergementTarif->getId()
                         ))
                         ) {
@@ -435,15 +434,15 @@ class HebergementUnifieController extends Controller
                             $tarifSite = new Tarif();
                         }
                         /** @var Tarif $tarifSite */
-                        $tarifSite->setUnite($em->getRepository(UniteTarif::class)->find($serviceHebergementTarif->getTarif()->getUnite()->getId()))
+                        $tarifSite->setUnite($emSite->getRepository(UniteTarif::class)->find($serviceHebergementTarif->getTarif()->getUnite()->getId()))
                             ->setValeur($serviceHebergementTarif->getTarif()->getValeur());
                         $serviceHebergementTarifSite->setService($serviceSite)
                             ->setTarif($tarifSite)
-                            ->setTypePeriode($em->getRepository(TypePeriode::class)->find($serviceHebergementTarif->getTypePeriode()->getId()));
-                        $em->persist($tarifSite);
-                        $em->persist($serviceHebergementTarifSite);
+                            ->setTypePeriode($emSite->getRepository(TypePeriode::class)->find($serviceHebergementTarif->getTypePeriode()->getId()));
+                        $emSite->persist($tarifSite);
+                        $emSite->persist($serviceHebergementTarifSite);
                     }
-                    $em->persist($serviceSite);
+                    $emSite->persist($serviceSite);
                 }
 //                balaye les fournisseurHebergement et copie les données
                 foreach ($entity->getFournisseurs() as $fournisseur) {
@@ -1019,12 +1018,9 @@ class HebergementUnifieController extends Controller
             foreach ($serviceHebergement->getTarifs() as $originalTarif) {
                 $originalTarifs->add($originalTarif);
             }
-//            dump($serviceHebergement->getService());
-////            dump($hebergementUnifie->getServices()->contains($originalService));
-////            dump($hebergementUnifie->getServices());
             $originalServices->add($serviceHebergement);
         }
-//        die;
+
         $this->genererServiceHebergements($hebergementUnifie);
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -1536,10 +1532,8 @@ class HebergementUnifieController extends Controller
                         }
                         $em->flush();
                     }
-//                    $emSite->remove($hebergementUnifieSite);
-//                    $emSite->flush();
                 }
-//                $em = $this->getDoctrine()->getManager();
+
                 $em->remove($hebergementUnifie);
                 $em->flush();
             }

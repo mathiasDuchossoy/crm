@@ -1,0 +1,23 @@
+Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationVisuelTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        stationVisuel:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuel
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

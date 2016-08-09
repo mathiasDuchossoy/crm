@@ -72,6 +72,10 @@ class Station
      * @var \Doctrine\Common\Collections\Collection
      */
     private $hebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $visuels;
 
     /**
      * Constructor
@@ -567,5 +571,39 @@ class Station
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Add visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     *
+     * @return Station
+     */
+    public function addVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels[] = $visuel->setStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     */
+    public function removeVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels->removeElement($visuel);
+    }
+
+    /**
+     * Get visuels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVisuels()
+    {
+        return $this->visuels;
     }
 }

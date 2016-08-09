@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
@@ -23,12 +24,15 @@ use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\StationBundle\Entity\StationVisuel;
+use Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +51,38 @@ class StationUnifieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $stationUnifiesSite = $emSite->getRepository(StationUnifie::class)->findAll();
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                foreach ($stationUnify->getStations() as $station){
+//                    $station->setStationMere(null);
+//                }
+//                $emSite->persist($stationUnify);
+//                $emSite->flush();
+//            }
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                $emSite->remove($stationUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCarteIdentiteUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCommentVenirUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationDescriptionUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+        }
 
         $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
 
@@ -107,6 +143,53 @@ class StationUnifieController extends Controller
             // ***** Fin description *****
 
             $em = $this->getDoctrine()->getManager();
+
+
+            // ***** Gestion des Medias *****
+            foreach ($request->get('station_unifie')['stations'] as $key => $station) {
+                if (!empty($stationUnifie->getStations()->get($key)) && $stationUnifie->getStations()->get($key)->getSite()->getCrm() == 1) {
+                    $stationCrm = $stationUnifie->getStations()->get($key);
+                    if (!empty($station['visuels'])) {
+                        foreach ($station['visuels'] as $keyVisuel => $visuel) {
+                            /** @var StationVisuel $visuelCrm */
+                            $visuelCrm = $stationCrm->getVisuels()[$keyVisuel];
+                            $visuelCrm->setActif(true);
+                            $visuelCrm->setStation($stationCrm);
+                            foreach ($sites as $site) {
+                                if ($site->getCrm() == 0) {
+                                    /** @var Station $stationSite */
+                                    $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use ($site) {
+                                        return $element->getSite() == $site;
+                                    })->first();
+                                    if (!empty($stationSite)) {
+//                                      $typeVisuel = (new ReflectionClass($visuelCrm))->getShortName();
+                                        $typeVisuel = (new ReflectionClass($visuelCrm))->getName();
+
+                                        /** @var StationVisuel $stationVisuel */
+                                        $stationVisuel = new $typeVisuel();
+                                        $stationVisuel->setStation($stationSite);
+                                        $stationVisuel->setVisuel($visuelCrm->getVisuel());
+                                        $stationSite->addVisuel($stationVisuel);
+                                        foreach ($visuelCrm->getTraductions() as $traduction) {
+                                            $traductionSite = new StationVisuelTraduction();
+                                            /** @var StationVisuelTraduction $traduction */
+                                            $traductionSite->setLibelle($traduction->getLibelle());
+                                            $traductionSite->setLangue($traduction->getLangue());
+                                            $stationVisuel->addTraduction($traductionSite);
+                                        }
+                                        if (!empty($visuel['sites']) && in_array($site->getId(), $visuel['sites'])) {
+                                            $stationVisuel->setActif(true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+
+            
             $em->persist($stationUnifie);
 
             $em->flush();
@@ -471,7 +554,7 @@ class StationUnifieController extends Controller
      * Copie dans la base de données site l'entité station
      * @param StationUnifie $entity
      */
-    private function copieVersSites(StationUnifie $entity)
+    private function copieVersSites(StationUnifie $entity, $originalStationVisuels = null)
     {
         /** @var StationTraduction $stationTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
@@ -628,12 +711,179 @@ class StationUnifieController extends Controller
                     $stationSite->addTraduction($stationTraducSite);
                 }
 
+
+                // ********** GESTION DES MEDIAS **********
+
+                $stationVisuels = $station->getVisuels(); // ce sont les hebegementVisuels ajouté
+
+                // si il y a des Medias pour l'station de référence
+                if (!empty($stationVisuels) && !$stationVisuels->isEmpty()) {
+                    // si il y a des medias pour l'hébergement présent sur le site
+                    // (on passera dans cette condition, seulement si nous sommes en edition)
+                    if (!empty($stationSite->getVisuels()) && !$stationSite->getVisuels()->isEmpty()) {
+                        // on ajoute les hébergementVisuels dans un tableau afin de travailler dessus
+                        $stationVisuelSites = new ArrayCollection();
+                        foreach ($stationSite->getVisuels() as $stationvisuelSite) {
+                            $stationVisuelSites->add($stationvisuelSite);
+                        }
+                        // on parcourt les hébergmeentVisuels de la base
+                        /** @var StationVisuel $stationVisuel */
+                        foreach ($stationVisuels as $stationVisuel) {
+                            // *** récupération de l'hébergementVisuel correspondant sur la bdd distante ***
+                            // récupérer l'stationVisuel original correspondant sur le crm
+                            /** @var ArrayCollection $originalStationVisuels */
+                            $originalStationVisuel = $originalStationVisuels->filter(function (StationVisuel $element) use ($stationVisuel) {
+                                return $element->getVisuel() == $stationVisuel->getVisuel();
+                            })->first();
+                            unset($stationVisuelSite);
+                            if ($originalStationVisuel !== false) {
+                                $tab = new ArrayCollection();
+                                foreach ($originalStationVisuels as $item) {
+                                    if (!empty($item->getId())) {
+                                        $tab->add($item);
+                                    }
+                                }
+                                $keyoriginalVisuel = $tab->indexOf($originalStationVisuel);
+
+                                $stationVisuelSite = $stationVisuelSites->get($keyoriginalVisuel);
+                            }
+                            // *** fin récupération de l'hébergementVisuel correspondant sur la bdd distante ***
+
+                            // si l'stationVisuel existe sur la bdd distante, on va le modifier
+                            /** @var StationVisuel $stationVisuelSite */
+                            if (!empty($stationVisuelSite)) {
+                                // Si le visuel a été modifié
+                                // (que le crm_ref_id est différent de de l'id du visuel de l'stationVisuel du crm)
+                                if ($stationVisuelSite->getVisuel()->getMetadataValue('crm_ref_id') != $stationVisuel->getVisuel()->getId()) {
+                                    $cloneVisuel = clone $stationVisuel->getVisuel();
+                                    $cloneVisuel->setMetadataValue('crm_ref_id', $stationVisuel->getVisuel()->getId());
+                                    $cloneVisuel->setContext('station_visuel_' . $station->getSite()->getLibelle());
+
+                                    // on supprime l'ancien visuel
+                                    $emSite->remove($stationVisuelSite->getVisuel());
+                                    $this->deleteFile($stationVisuelSite->getVisuel());
+
+                                    $stationVisuelSite->setVisuel($cloneVisuel);
+                                }
+
+                                $stationVisuelSite->setActif($stationVisuel->getActif());
+
+                                // on parcourt les traductions
+                                /** @var StationVisuelTraduction $traduction */
+                                foreach ($stationVisuel->getTraductions() as $traduction) {
+                                    // on récupère la traduction correspondante
+                                    /** @var StationVisuelTraduction $traductionSite */
+                                    /** @var ArrayCollection $traductionSites */
+                                    $traductionSites = $stationVisuelSite->getTraductions();
+
+                                    unset($traductionSite);
+                                    if (!$traductionSites->isEmpty()) {
+                                        // on récupère la traduction correspondante en fonction de la langue
+                                        $traductionSite = $traductionSites->filter(function (StationVisuelTraduction $element) use ($traduction) {
+                                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                                        })->first();
+                                    }
+                                    // si une traduction existe pour cette langue, on la modifie
+                                    if (!empty($traductionSite)) {
+                                        $traductionSite->setLibelle($traduction->getLibelle());
+                                    } // sinon on en cré une
+                                    else {
+                                        $traductionSite = new StationVisuelTraduction();
+                                        $traductionSite->setLibelle($traduction->getLibelle())
+                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                        $stationVisuelSite->addTraduction($traductionSite);
+                                    }
+                                }
+                            } // sinon on va le créer
+                            else {
+                                $this->createStationVisuel($stationVisuel, $stationSite, $emSite);
+                            }
+                        }
+                    } // sinon si l'hébergement de référence n'a pas de medias
+                    else {
+                        // on lui cré alors les medias
+                        // on parcours les medias de l'station de référence
+                        /** @var StationVisuel $stationVisuel */
+                        foreach ($stationVisuels as $stationVisuel) {
+                            $this->createStationVisuel($stationVisuel, $stationSite, $emSite);
+                        }
+                    }
+                } // sinon on doit supprimer les medias présent pour l'hébergement correspondant sur le site distant
+                else {
+                    if (!empty($stationVisuelSites)) {
+                        /** @var StationVisuel $stationVisuelSite */
+                        foreach ($stationVisuelSites as $stationVisuelSite) {
+                            $stationVisuelSite->setStation(null);
+                            $emSite->remove($stationVisuelSite->getVisuel());
+                            $this->deleteFile($stationVisuelSite->getVisuel());
+                            $emSite->remove($stationVisuelSite);
+                        }
+                    }
+                }
+                // ********** FIN GESTION DES MEDIAS **********
+                
+
                 $entitySite->addStation($stationSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
         }
         $this->ajouterStationUnifieSiteDistant($entity->getId(), $entity->getStations());
+    }
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
+        }
+    }
+
+    /**
+     * Création d'un nouveau stationVisuel
+     * @param StationVisuel $stationVisuel
+     * @param Station $stationSite
+     * @param EntityManager $emSite
+     */
+    private function createStationVisuel(StationVisuel $stationVisuel, Station $stationSite, EntityManager $emSite)
+    {
+        /** @var StationVisuel $stationVisuelSite */
+        // on récupère la classe correspondant au visuel (photo ou video)
+        $typeVisuel = (new ReflectionClass($stationVisuel))->getName();
+        // on cré un nouveau StationVisuel on fonction du type
+        $stationVisuelSite = new $typeVisuel();
+        $stationVisuelSite->setStation($stationSite);
+        $stationVisuelSite->setActif($stationVisuel->getActif());
+        // on lui clone l'image
+        $cloneVisuel = clone $stationVisuel->getVisuel();
+
+        // **** récupération du visuel physique ****
+        $pool = $this->container->get('sonata.media.pool');
+        $provider = $pool->getProvider($cloneVisuel->getProviderName());
+        $provider->getReferenceImage($cloneVisuel);
+
+        // c'est ce qui permet de récupérer le fichier lorsqu'il est nouveau todo:(à mettre en variable paramètre => parameter.yml)
+//        $cloneVisuel->setBinaryContent(__DIR__ . "/../../../../../web/uploads/media/" . $provider->getReferenceImage($cloneVisuel));
+        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
+
+        $cloneVisuel->setProviderReference($stationVisuel->getVisuel()->getProviderReference());
+        $cloneVisuel->setName($stationVisuel->getVisuel()->getName());
+        // **** fin récupération du visuel physique ****
+
+        // on donne au nouveau visuel, le context correspondant en fonction du site
+        $cloneVisuel->setContext('station_visuel_' . $stationSite->getSite()->getLibelle());
+        // on lui attache l'id de référence du visuel correspondant sur la bdd crm
+        $cloneVisuel->setMetadataValue('crm_ref_id', $stationVisuel->getVisuel()->getId());
+
+        $stationVisuelSite->setVisuel($cloneVisuel);
+
+        $stationSite->addVisuel($stationVisuelSite);
+        // on ajoute les traductions correspondante
+        foreach ($stationVisuel->getTraductions() as $traduction) {
+            $traductionSite = new StationVisuelTraduction();
+            $traductionSite->setLibelle($traduction->getLibelle())
+                ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+            $stationVisuelSite->addTraduction($traductionSite);
+        }
     }
 
     /**
@@ -719,9 +969,22 @@ class StationUnifieController extends Controller
         }
 
         $originalStations = new ArrayCollection();
-//          Créer un ArrayCollection des objets de stations courants dans la base de données
+        $originalStationVisuels = new ArrayCollection();
+        $originalVisuels = new ArrayCollection();
+//          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
+        /** @var Station $station */
         foreach ($stationUnifie->getStations() as $station) {
             $originalStations->add($station);
+            // si l'station est celui du CRM
+            if ($station->getSite()->getCrm() == 1) {
+                // on parcourt les stationVisuel pour les comparer ensuite
+                /** @var StationVisuel $stationVisuel */
+                foreach ($station->getVisuels() as $stationVisuel) {
+                    // on ajoute les visuel dans la collection de sauvegarde
+                    $originalStationVisuels->add($stationVisuel);
+                    $originalVisuels->add($stationVisuel->getVisuel());
+                }
+            }
         }
 
         $this->ajouterStationsDansForm($stationUnifie);
@@ -746,6 +1009,72 @@ class StationUnifieController extends Controller
             $stationDescriptionUnifieController = new StationDescriptionUnifieController();
             $stationDescriptionUnifieController->setContainer($this->container);
 
+
+            // ************* suppression visuels *************
+            // ** CAS OU L'ON SUPPRIME UN "STATION VISUEL" **
+            // on récupère les StationVisuel de l'hébergementCrm pour les mettre dans une collection
+            // afin de les comparer au originaux.
+            /** @var Station $stationCrm */
+            $stationCrm = $stationUnifie->getStations()->filter(function (Station $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $stationSites = $stationUnifie->getStations()->filter(function (Station $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            $newStationVisuels = new ArrayCollection();
+            foreach ($stationCrm->getVisuels() as $stationVisuel) {
+                $newStationVisuels->add($stationVisuel);
+            }
+            /** @var StationVisuel $originalStationVisuel */
+            foreach ($originalStationVisuels as $key => $originalStationVisuel) {
+
+                if (false === $newStationVisuels->contains($originalStationVisuel)) {
+                    $originalStationVisuel->setStation(null);
+                    $em->remove($originalStationVisuel->getVisuel());
+                    $this->deleteFile($originalStationVisuel->getVisuel());
+                    $em->remove($originalStationVisuel);
+                    // on doit supprimer l'hébergementVisuel des autres sites
+                    // on parcourt les station des sites
+                    /** @var Station $stationSite */
+                    foreach ($stationSites as $stationSite) {
+                        $stationVisuelSite = $em->getRepository(StationVisuel::class)->findOneBy(
+                            array(
+                                'station' => $stationSite,
+                                'visuel' => $originalStationVisuel->getVisuel()
+                            ));
+                        if (!empty($stationVisuelSite)) {
+                            $emSite = $this->getDoctrine()->getEntityManager($stationVisuelSite->getStation()->getSite()->getLibelle());
+                            $stationSite = $emSite->getRepository(Station::class)->findOneBy(
+                                array(
+                                    'stationUnifie' => $stationVisuelSite->getStation()->getStationUnifie()
+                                ));
+                            $stationVisuelSiteSites = new ArrayCollection($emSite->getRepository(StationVisuel::class)->findBy(
+                                array(
+                                    'station' => $stationSite
+                                ))
+                            );
+                            $stationVisuelSiteSite = $stationVisuelSiteSites->filter(function (StationVisuel $element)
+                            use ($stationVisuelSite) {
+//                            return $element->getVisuel()->getProviderReference() == $stationVisuelSite->getVisuel()->getProviderReference();
+                                return $element->getVisuel()->getMetadataValue('crm_ref_id') == $stationVisuelSite->getVisuel()->getId();
+                            })->first();
+                            if (!empty($stationVisuelSiteSite)) {
+                                $emSite->remove($stationVisuelSiteSite->getVisuel());
+                                $this->deleteFile($stationVisuelSiteSite->getVisuel());
+                                $stationVisuelSiteSite->setStation(null);
+                                $emSite->remove($stationVisuelSiteSite);
+                                $emSite->flush();
+                            }
+                            $stationVisuelSite->setStation(null);
+                            $em->remove($stationVisuelSite->getVisuel());
+                            $this->deleteFile($stationVisuelSite->getVisuel());
+                            $em->remove($stationVisuelSite);
+                        }
+                    }
+                }
+            }
+            // ************* fin suppression visuels *************
+
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la station et stationUnifie
@@ -756,6 +1085,20 @@ class StationUnifieController extends Controller
                     $emSite = $this->getDoctrine()->getEntityManager($station->getSite()->getLibelle());
                     $entitySite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
                     $stationSite = $entitySite->getStations()->first();
+
+                    /** @var StationVisuel $stationVisuelSite */
+                    if (!empty($stationSite->getVisuels())) {
+                        foreach ($stationSite->getVisuels() as $stationVisuelSite) {
+                            $stationSite->removeVisuel($stationVisuelSite);
+//                                        $stationVisuelSite->setStation(null);
+//                                        $stationVisuelSite->setVisuel(null);
+                            $emSite->remove($stationVisuelSite);
+                            $emSite->remove($stationVisuelSite->getVisuel());
+                            $this->deleteFile($stationVisuelSite->getVisuel());
+                        }
+                        $emSite->flush();
+                    }
+                    
                     $emSite->remove($stationSite);
                     $emSite->flush();
 
@@ -773,6 +1116,19 @@ class StationUnifieController extends Controller
                     $station->getStationDescription()->removeStation($station);
 
                     $station->setStationMere(null);
+
+                    // *** suppression des stationVisuels de l'station à supprimer ***
+                    /** @var StationVisuel $stationVisuel */
+                    $stationVisuelSites = $em->getRepository(StationVisuel::class)->findBy(array('station' => $station));
+                    if (!empty($stationVisuelSites)) {
+                        foreach ($stationVisuelSites as $stationVisuel) {
+                            $stationVisuel->setVisuel(null);
+                            $stationVisuel->setStation(null);
+                            $em->remove($stationVisuel);
+                        }
+                        $em->flush();
+                    }
+                    // *** fin suppression des stationVisuels de l'station à supprimer ***
 
                     $em->remove($station);
                     if (empty($stationMere) || $stationCI != $stationMere->getStationCarteIdentite()) {
@@ -800,6 +1156,99 @@ class StationUnifieController extends Controller
             $this->descriptionEdit($request, $stationUnifie);
             // ***** fin comment venir *****
 
+
+            // ***** Gestion des Medias *****
+            // CAS D'UN NOUVEAU 'STATION VISUEL' OU DE MODIFICATION D'UN "STATION VISUEL"
+            /** @var StationVisuel $stationVisuel */
+            // tableau pour la suppression des anciens visuels
+            $visuelToRemoveCollection = new ArrayCollection();
+            $keyCrm = $stationUnifie->getStations()->indexOf($stationCrm);
+            // on parcourt les stationVisuels de l'station crm
+            foreach ($stationCrm->getVisuels() as $key => $stationVisuel) {
+                // on active le nouveau stationVisuel (CRM) => il doit être toujours actif
+                $stationVisuel->setActif(true);
+                // parcourir tout les sites
+                /** @var Site $site */
+                foreach ($sites as $site) {
+                    // sauf  le crm (puisqu'on l'a déjà renseigné)
+                    // dans le but de créer un hebegrementVisuel pour chacun
+                    if ($site->getCrm() == 0) {
+                        // on récupère l'hébegergement du site
+                        /** @var Station $stationSite */
+                        $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+                        // si hébergement existe
+                        if (!empty($stationSite)) {
+                            // on réinitialise la variable
+                            unset($stationVisuelSite);
+                            // s'il ne s'agit pas d'un nouveau stationVisuel
+                            if (!empty($stationVisuel->getId())) {
+                                // on récupère l'stationVisuel pour le modifier
+                                $stationVisuelSite = $em->getRepository(StationVisuel::class)->findOneBy(array('station' => $stationSite, 'visuel' => $originalVisuels->get($key)));
+                            }
+                            // si l'stationVisuel est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
+                            if (empty($stationVisuel->getId()) || empty($stationVisuelSite)) {
+                                // on récupère la classe correspondant au visuel (photo ou video)
+                                $typeVisuel = (new ReflectionClass($stationVisuel))->getName();
+                                // on créé un nouveau StationVisuel on fonction du type
+                                /** @var StationVisuel $stationVisuelSite */
+                                $stationVisuelSite = new $typeVisuel();
+                                $stationVisuelSite->setStation($stationSite);
+                            }
+                            // si l'hébergemenent visuel existe déjà pour le site
+                            if (!empty($stationVisuelSite)) {
+                                if ($stationVisuelSite->getVisuel() != $stationVisuel->getVisuel()) {
+//                                    // si l'hébergementVisuelSite avait déjà un visuel
+//                                    if (!empty($stationVisuelSite->getVisuel()) && !$visuelToRemoveCollection->contains($stationVisuelSite->getVisuel()))
+//                                    {
+//                                        // on met l'ancien visuel dans un tableau afin de le supprimer plus tard
+//                                        $visuelToRemoveCollection->add($stationVisuelSite->getVisuel());
+//                                    }
+                                    // on met le nouveau visuel
+                                    $stationVisuelSite->setVisuel($stationVisuel->getVisuel());
+                                }
+                                $stationSite->addVisuel($stationVisuelSite);
+
+                                /** @var StationVisuelTraduction $traduction */
+                                foreach ($stationVisuel->getTraductions() as $traduction) {
+                                    /** @var StationVisuelTraduction $traductionSite */
+                                    $traductionSites = $stationVisuelSite->getTraductions();
+                                    $traductionSite = null;
+                                    if (!$traductionSites->isEmpty()) {
+                                        $traductionSite = $traductionSites->filter(function (StationVisuelTraduction $element) use ($traduction) {
+                                            return $element->getLangue() == $traduction->getLangue();
+                                        })->first();
+                                    }
+                                    if (empty($traductionSite)) {
+                                        $traductionSite = new StationVisuelTraduction();
+                                        $traductionSite->setLangue($traduction->getLangue());
+                                        $stationVisuelSite->addTraduction($traductionSite);
+                                    }
+                                    $traductionSite->setLibelle($traduction->getLibelle());
+                                }
+                                // on vérifie si l'hébergementVisuel doit être actif sur le site ou non
+                                if (!empty($request->get('station_unifie')['stations'][$keyCrm]['visuels'][$key]['sites']) &&
+                                    in_array($site->getId(), $request->get('station_unifie')['stations'][$keyCrm]['visuels'][$key]['sites'])
+                                ) {
+                                    $stationVisuelSite->setActif(true);
+                                } else {
+                                    $stationVisuelSite->setActif(false);
+                                }
+                            }
+                        }
+                    }
+                    // on est dans l'stationVisuel CRM
+                    // s'il s'agit d'un nouveau média
+                    elseif (empty($stationVisuel->getVisuel()->getId()) && !empty($originalVisuels->get($key))) {
+                        // on stocke  l'ancien media pour le supprimer après le persist final
+                        $visuelToRemoveCollection->add($originalVisuels->get($key));
+                    }
+                }
+            }
+            // ***** Fin Gestion des Medias *****
+            
+
             $em->persist($stationUnifie);
             $em->flush();
 
@@ -808,7 +1257,19 @@ class StationUnifieController extends Controller
                 $stationCommentVenirUnifieController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
                 $stationDescriptionUnifieController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
             }
-            $this->copieVersSites($stationUnifie);
+            $this->copieVersSites($stationUnifie, $originalStationVisuels);
+
+            // on parcourt les médias à supprimer
+            if (!empty($visuelToRemoveCollection)) {
+                foreach ($visuelToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $this->deleteFile($item);
+                        $em->remove($item);
+                    }
+                }
+                $em->flush();
+            }
+            
 
             $session = $request->getSession();
             $session->start();
@@ -1082,14 +1543,25 @@ class StationUnifieController extends Controller
 
                     if (!empty($stationUnifieSite)) {
                         /** @var Station $stationSite */
-//                        foreach ($stationUnifieSite->getStations() as $stationSite)
-//                        {
-//                            $stationSite->setStationCarteIdentite(null);
-//                            $stationSite->setStationCommentVenir(null);
-//                            $stationSite->setStationDescription(null);
-//                            $emSite->remove($stationSite);
-//                            $emSite->flush();
-//                        }
+                        if (!empty($stationUnifieSite->getStations())) {
+                            /** @var Station $stationSite */
+                            foreach ($stationUnifieSite->getStations() as $stationSite) {
+
+                                // si il y a des visuels pour l'entité, les supprimer
+                                if (!empty($stationSite->getVisuels())) {
+                                    /** @var StationVisuel $stationVisuelSite */
+                                    foreach ($stationSite->getVisuels() as $stationVisuelSite) {
+                                        $visuelSite = $stationVisuelSite->getVisuel();
+                                        $stationVisuelSite->setVisuel(null);
+                                        if (!empty($visuelSite)) {
+                                            $emSite->remove($visuelSite);
+                                            $this->deleteFile($visuelSite);
+                                        }
+                                    }
+                                }
+                            }
+                            $emSite->flush();
+                        }
                         $emSite->remove($stationUnifieSite);
                         $emSite->flush();
                     }
@@ -1110,8 +1582,24 @@ class StationUnifieController extends Controller
                     }
                 }
 
-
-//                $em = $this->getDoctrine()->getManager();
+                if (!empty($stationUnifie)) {
+                    if (!empty($stationUnifie->getStations())) {
+                        /** @var Station $station */
+                        foreach ($stationUnifie->getStations() as $station) {
+                            // si il y a des visuels pour l'entité, les supprimer
+                            if (!empty($station->getVisuels())) {
+                                /** @var StationVisuel $stationVisuel */
+                                foreach ($station->getVisuels() as $stationVisuel) {
+                                    $visuel = $stationVisuel->getVisuel();
+                                    $stationVisuel->setVisuel(null);
+                                    $em->remove($visuel);
+                                    $this->deleteFile($visuel);
+                                }
+                            }
+                        }
+                        $em->flush();
+                    }
+                }
 
                 $em->remove($stationUnifie);
 
