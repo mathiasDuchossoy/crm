@@ -76,6 +76,14 @@ class Station
      * @var \Doctrine\Common\Collections\Collection
      */
     private $visuels;
+    /**
+     * @var boolean
+     */
+    private $videosParent = false;
+    /**
+     * @var boolean
+     */
+    private $photosParent = false;
 
     /**
      * Constructor
@@ -605,5 +613,53 @@ class Station
     public function getVisuels()
     {
         return $this->visuels;
+    }
+
+    /**
+     * Get videosParent
+     *
+     * @return boolean
+     */
+    public function getVideosParent()
+    {
+        return $this->videosParent;
+    }
+
+    /**
+     * Set videosParent
+     *
+     * @param boolean $videosParent
+     *
+     * @return Station
+     */
+    public function setVideosParent($videosParent)
+    {
+        $this->videosParent = $videosParent;
+
+        return $this;
+    }
+
+    /**
+     * Get photosParent
+     *
+     * @return boolean
+     */
+    public function getPhotosParent()
+    {
+        return $this->photosParent;
+    }
+
+    /**
+     * Set photosParent
+     *
+     * @param boolean $photosParent
+     *
+     * @return Station
+     */
+    public function setPhotosParent($photosParent)
+    {
+        $this->photosParent = $photosParent;
+
+        return $this;
     }
 }

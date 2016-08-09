@@ -10,6 +10,15 @@ Mondofute\Bundle\StationBundle\Entity\Station:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        videosParent:
+            type: boolean
+            options:
+                default: false
+        photosParent:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site

@@ -70,6 +70,11 @@
                         </div>
                         {#{{ form_row(station.stationCarteIdentite) }}#}
 
+                        <div id="cbox_medias_parent_{{ station.vars.value.site.id }}">
+                            {{ form_widget(station.photosParent) }}
+                            {{ form_widget(station.videosParent) }}
+                        </div>
+                        <br />
 
                         {# si le site est le crm on affiche le panel des medias #}
                         {% if station.vars.value.site.crm == 1 %}
@@ -476,11 +481,13 @@
             $checkboxCI = $('#cboxStationCI_' + checkbox);
             $checkboxCV = $('#cboxStationCommentVenir_' + checkbox);
             $checkboxDescription = $('#cboxStationDescription_' + checkbox);
+            $cboxMediasParent = $('#cbox_medias_parent_' + checkbox);
 //            console.log(checkbox);
             $element = $(element);
 //            console.log($element.val());
             if ($element.val()) {
                 // carte identite
+                $cboxMediasParent.show();
                 $checkboxCI.show();
                 $($checkboxCI.find('input')[0]).prop('checked', true);
                 displayStationChild($checkboxCI.find('input')[0], "stationCarteIdentite_" + checkbox);
@@ -496,6 +503,7 @@
             }
             else {
                 // carte identite
+                $cboxMediasParent.hide();
                 $checkboxCI.hide();
                 $($checkboxCI.find('input')[0]).prop('checked', false);
                 $('#stationCarteIdentite_' + checkbox).show();
@@ -512,6 +520,7 @@
 //            console.log($(element));
             if (!$(element).val()) {
                 $('#cboxStationCI_' + $(element).data('site')).hide();
+                $('#cbox_medias_parent_' + $(element).data('site')).hide();
             }
             if (!$(element).val()) {
                 $('#cboxStationCommentVenir_' + $(element).data('site')).hide();

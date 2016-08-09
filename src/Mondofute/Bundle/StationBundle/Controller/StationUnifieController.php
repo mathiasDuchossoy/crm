@@ -117,6 +117,17 @@ class StationUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var Station $station */
+            foreach ($stationUnifie->getStations() as $station){
+                if (empty($station->getStationMere())){
+                    $station
+                        ->setPhotosParent(false)
+                        ->setVideosParent(false)
+                    ;
+                }
+            }
+
             // Récupérer le controleur et lui donner le container de celui dans lequel on est
             $stationCarteIdentiteController = new StationCarteIdentiteUnifieController();
             $stationCarteIdentiteController->setContainer($this->container);
@@ -606,14 +617,14 @@ class StationUnifieController extends Controller
                 }
                 if (!empty($station->getStationMere())) {
                     $stationMere = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $station->getStationMere()->getStationUnifie()));
-//                    $emSite->refresh($stationMere);
-//                    foreach ($stationMere->getStationCarteIdentite()->getMoyenComs() as $moyenCom) {
-//                        $emSite->refresh($moyenCom);
-//                    }
-//                    $emSite->refresh($stationMere->getStationCarteIdentite()->getAltitudeVillage());
+                    $photosParent = $station->getPhotosParent();
+                    $videosParent = $station->getVideosParent();
                 } else {
                     $stationMere = null;
+                    $photosParent = false;
+                    $videosParent = false;
                 }
+
                 if (!empty($station->getStationCarteIdentite())) {
                     $stationCarteIdentite = $emSite->getRepository(StationCarteIdentite::class)->findOneBy(array('stationCarteIdentiteUnifie' => $station->getStationCarteIdentite()->getStationCarteIdentiteUnifie()));
                 } else {
@@ -686,7 +697,10 @@ class StationUnifieController extends Controller
                     ->setStationMere($stationMere)
                     ->setStationCarteIdentite($stationCarteIdentite)
                     ->setStationCommentVenir($stationCommentVenir)
-                    ->setStationDescription($stationDescription);
+                    ->setStationDescription($stationDescription)
+                    ->setPhotosParent($photosParent)
+                    ->setVideosParent($videosParent)
+                ;
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -1001,6 +1015,16 @@ class StationUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            foreach ($stationUnifie->getStations() as $station){
+                if (empty($station->getStationMere())){
+                    $station
+                        ->setPhotosParent(false)
+                        ->setVideosParent(false)
+                    ;
+                }
+            }
+
             $stationCarteIdentiteUnifieController = new StationCarteIdentiteUnifieController();
             $stationCarteIdentiteUnifieController->setContainer($this->container);
 
