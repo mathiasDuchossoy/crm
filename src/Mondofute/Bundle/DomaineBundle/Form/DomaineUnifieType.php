@@ -68,5 +68,29 @@ class DomaineUnifieType extends AbstractType
             }
             $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
         }
+
+        foreach ($view->children['domaines'] as $domaine) {
+            if ($domaine->vars['value']->getSite()->getCrm() == 1) {
+                $domaineCrm = $domaine;
+            } else {
+                foreach ($domaine->children['images'] as $key => $image) {
+                    if ($image->vars['value']->getActif() == true) {
+                        $siteId = $domaine->vars['value']->getSite()->getId();
+                        $domaineCrm->children['images']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
+                foreach ($domaine->children['photos'] as $key => $photo) {
+                    if ($photo->vars['value']->getActif() == true) {
+
+                        $siteId = $domaine->vars['value']->getSite()->getId();
+                        $domaineCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
+            }
+
+        }
+        
     }
+
+
 }

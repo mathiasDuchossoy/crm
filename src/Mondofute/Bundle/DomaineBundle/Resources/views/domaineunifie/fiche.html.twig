@@ -62,6 +62,59 @@
                             {% endfor %}
                         </div>
 
+                        {# Medias Domaine #}
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if domaine.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Images
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des images #}
+                                    <ul class="image" data-prototype_image="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for image in domaine.images %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Photos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des photos#}
+                                    <ul class="photo" data-prototype_photo="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for photo in domaine.photos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                        {# Fin Medias Domaine #}
+
 
                         <label id="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}">
                             <input type="checkbox" name="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
@@ -71,8 +124,7 @@
                                         {% endif %}
                                     {% endif %}
                                    onclick="displayChild(this , 'domaineCarteIdentite_{{ domaine.vars.value.site.id }}')">
-                            Utiliser le Comment venir de la
-                            domaine mère
+                            Utiliser la carte d'identité du domaine parent
                         </label>
                         <br>
                         {#{% endif %}#}
@@ -155,54 +207,54 @@
                                     {{ form_row( domaine.domaineCarteIdentite.site ) }}
 
                                     {# si le site est le crm on affiche le panel des medias #}
-                                    {% if domaine.domaineCarteIdentite.vars.value.site.crm == 1 %}
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading"><h3 class="panel-title">
-                                                    Images
-                                                </h3>
-                                            </div>
-                                            <div class="panel-body">
+                                    {#{% if domaine.domaineCarteIdentite.vars.value.site.crm == 1 %}#}
+                                    {#<div class="panel panel-primary">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">#}
+                                    {#Images#}
+                                    {#</h3>#}
+                                    {#</div>#}
+                                    {#<div class="panel-body">#}
                                                 {# liste des images #}
-                                                <ul class="image" data-prototype_image="
-                                            {% filter escape %}
-                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}
-                                            {% endfilter %}
-                                            ">
-                                                    {% set i = 0 %}
-                                                    {% for image in domaine.domaineCarteIdentite.images %}
-                                                        <li class="element">
-                                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}
-                                                        </li>
-                                                        {% set i = i + 1 %}
-                                                    {% endfor %}
-                                                </ul>
+                                    {#<ul class="image" data-prototype_image="#}
+                                    {#{% filter escape %}#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}#}
+                                    {#{% endfilter %}#}
+                                    {#">#}
+                                    {#{% set i = 0 %}#}
+                                    {#{% for image in domaine.domaineCarteIdentite.images %}#}
+                                    {#<li class="element">#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}#}
+                                    {#</li>#}
+                                    {#{% set i = i + 1 %}#}
+                                    {#{% endfor %}#}
+                                    {#</ul>#}
 
-                                            </div>
-                                        </div>
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading"><h3 class="panel-title">
-                                                    Photos
-                                                </h3>
-                                            </div>
-                                            <div class="panel-body">
+                                    {#</div>#}
+                                    {#</div>#}
+                                    {#<div class="panel panel-primary">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">#}
+                                    {#Photos#}
+                                    {#</h3>#}
+                                    {#</div>#}
+                                    {#<div class="panel-body">#}
                                                 {#liste des photos#}
-                                                <ul class="photo" data-prototype_photo="
-                                            {% filter escape %}
-                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
-                                            {% endfilter %}
-                                            ">
-                                                    {% set i = 0 %}
-                                                    {% for photo in domaine.domaineCarteIdentite.photos %}
-                                                        <li class="element">
-                                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
-                                                        </li>
-                                                        {% set i = i + 1 %}
-                                                    {% endfor %}
-                                                </ul>
+                                    {#<ul class="photo" data-prototype_photo="#}
+                                    {#{% filter escape %}#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}#}
+                                    {#{% endfilter %}#}
+                                    {#">#}
+                                    {#{% set i = 0 %}#}
+                                    {#{% for photo in domaine.domaineCarteIdentite.photos %}#}
+                                    {#<li class="element">#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}#}
+                                    {#</li>#}
+                                    {#{% set i = i + 1 %}#}
+                                    {#{% endfor %}#}
+                                    {#</ul>#}
 
-                                            </div>
-                                        </div>
-                                    {% endif %}
+                                    {#</div>#}
+                                    {#</div>#}
+                                    {#{% endif %}#}
 
 
                                 </div>

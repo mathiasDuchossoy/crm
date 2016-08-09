@@ -1,0 +1,21 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineImageTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineImageTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        image:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineImage
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

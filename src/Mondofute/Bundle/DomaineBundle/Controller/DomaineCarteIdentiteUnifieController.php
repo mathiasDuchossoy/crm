@@ -954,58 +954,58 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
         /** @var Domaine $domaine */
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
 
         $domaineCarteIdentiteUnifie = new  DomaineCarteIdentiteUnifie();
         $domaineCarteIdentite = $domaine->getDomaineCarteIdentite();
         $domaineCarteIdentiteUnifie->addDomaineCarteIdentite($domaineCarteIdentite);
 
 
-        // ***** Gestion des Medias *****
-        if ($domaine->getSite()->getCrm()) {
-            foreach ($request->get('domaine_unifie')['domaines'] as $domaineRequest) {
-                if (!empty($domaineRequest['domaineCarteIdentite']['images'])) {
-                    $domaineCarteIdentiteCrm = $domaine->getDomaineCarteIdentite();
-                    foreach ($domaineRequest['domaineCarteIdentite']['images'] as $keyImage => $image) {
-                        /** @var DomaineCarteIdentiteImage $imageCrm */
-                        $imageCrm = $domaineCarteIdentiteCrm->getImages()[$keyImage];
-                        $imageCrm->setActif(true);
-                        $imageCrm->setDomaineCarteIdentite($domaineCarteIdentiteCrm);
-                        foreach ($sites as $site) {
-                            if ($site->getCrm() == 0) {
-                                /** @var Domaine $domaineSite */
-                                $domaineSite = $domaine->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($site) {
-                                    return $element->getSite() == $site;
-                                })->first();
-                                /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
-                                $domaineCarteIdentiteSite = $domaineSite->getDomaineCarteIdentite();
-                                if (!empty($domaineCarteIdentiteSite)) {
-                                    $typeImage = (new ReflectionClass($imageCrm))->getName();
-
-                                    /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
-                                    $domaineCarteIdentiteImage = new $typeImage();
-                                    $domaineCarteIdentiteImage->setDomaineCarteIdentite($domaineCarteIdentiteSite);
-                                    $domaineCarteIdentiteImage->setImage($imageCrm->getImage());
-                                    $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImage);
-                                    foreach ($imageCrm->getTraductions() as $traduction) {
-                                        $traductionSite = new DomaineCarteIdentiteImageTraduction();
-                                        /** @var DomaineCarteIdentiteImageTraduction $traduction */
-                                        $traductionSite->setLibelle($traduction->getLibelle());
-                                        $traductionSite->setLangue($traduction->getLangue());
-                                        $domaineCarteIdentiteImage->addTraduction($traductionSite);
-                                    }
-                                    if (!empty($image['sites']) && in_array($site->getId(), $image['sites'])) {
-                                        $domaineCarteIdentiteImage->setActif(true);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // ***** Fin Gestion des Medias *****
+//        // ***** Gestion des Medias *****
+//        if ($domaine->getSite()->getCrm()) {
+//            foreach ($request->get('domaine_unifie')['domaines'] as $domaineRequest) {
+//                if (!empty($domaineRequest['domaineCarteIdentite']['images'])) {
+//                    $domaineCarteIdentiteCrm = $domaine->getDomaineCarteIdentite();
+//                    foreach ($domaineRequest['domaineCarteIdentite']['images'] as $keyImage => $image) {
+//                        /** @var DomaineCarteIdentiteImage $imageCrm */
+//                        $imageCrm = $domaineCarteIdentiteCrm->getImages()[$keyImage];
+//                        $imageCrm->setActif(true);
+//                        $imageCrm->setDomaineCarteIdentite($domaineCarteIdentiteCrm);
+//                        foreach ($sites as $site) {
+//                            if ($site->getCrm() == 0) {
+//                                /** @var Domaine $domaineSite */
+//                                $domaineSite = $domaine->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($site) {
+//                                    return $element->getSite() == $site;
+//                                })->first();
+//                                /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+//                                $domaineCarteIdentiteSite = $domaineSite->getDomaineCarteIdentite();
+//                                if (!empty($domaineCarteIdentiteSite)) {
+//                                    $typeImage = (new ReflectionClass($imageCrm))->getName();
+//
+//                                    /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+//                                    $domaineCarteIdentiteImage = new $typeImage();
+//                                    $domaineCarteIdentiteImage->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+//                                    $domaineCarteIdentiteImage->setImage($imageCrm->getImage());
+//                                    $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImage);
+//                                    foreach ($imageCrm->getTraductions() as $traduction) {
+//                                        $traductionSite = new DomaineCarteIdentiteImageTraduction();
+//                                        /** @var DomaineCarteIdentiteImageTraduction $traduction */
+//                                        $traductionSite->setLibelle($traduction->getLibelle());
+//                                        $traductionSite->setLangue($traduction->getLangue());
+//                                        $domaineCarteIdentiteImage->addTraduction($traductionSite);
+//                                    }
+//                                    if (!empty($image['sites']) && in_array($site->getId(), $image['sites'])) {
+//                                        $domaineCarteIdentiteImage->setActif(true);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // ***** Fin Gestion des Medias *****
 
         $em->persist($domaineCarteIdentiteUnifie);
 
