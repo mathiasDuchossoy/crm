@@ -192,26 +192,27 @@ class StationUnifieController extends Controller
             
             $em->persist($stationUnifie);
 
-            $em->flush();
 
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
+            try {
+                $error = false;
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
             }
-            $this->copieVersSites($stationUnifie);
 
-            $session = $request->getSession();
-            $session->start();
+            if (!$error) {
+                foreach ($stationUnifie->getStations() as $station) {
+                    $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                    $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                    $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
+                }
+                $this->copieVersSites($stationUnifie);
 
-            // add flash messages
-            /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La station a bien été créé.'
-            );
+                $this->addFlash('success', 'La station a bien été créé.');
 
-            return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
+                return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
+            }
         }
 
         return $this->render('@MondofuteStation/stationunifie/new.html.twig', array(
@@ -1252,36 +1253,38 @@ class StationUnifieController extends Controller
             $em->persist($stationUnifie);
             $em->flush();
 
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteUnifieController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                $stationCommentVenirUnifieController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                $stationDescriptionUnifieController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
-            }
-            $this->copieVersSites($stationUnifie, $originalStationVisuels);
-
-            // on parcourt les médias à supprimer
-            if (!empty($visuelToRemoveCollection)) {
-                foreach ($visuelToRemoveCollection as $item) {
-                    if (!empty($item)) {
-                        $this->deleteFile($item);
-                        $em->remove($item);
-                    }
-                }
+            try {
+                $error = false;
                 $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
             }
-            
+            if (!$error) {
 
-            $session = $request->getSession();
-            $session->start();
+                foreach ($stationUnifie->getStations() as $station) {
+                    $stationCarteIdentiteUnifieController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                    $stationCommentVenirUnifieController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                    $stationDescriptionUnifieController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
+                }
+                $this->copieVersSites($stationUnifie, $originalStationVisuels);
 
-            // add flash messages
-            /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La station a bien été modifié.'
-            );
+                // on parcourt les médias à supprimer
+                if (!empty($visuelToRemoveCollection)) {
+                    foreach ($visuelToRemoveCollection as $item) {
+                        if (!empty($item)) {
+                            $this->deleteFile($item);
+                            $em->remove($item);
+                        }
+                    }
+                    $em->flush();
+                }
 
-            return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
+                $this->addFlash('success', 'La station a bien été modifié.');
+
+                return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
+            }
+
         }
 
         return $this->render('@MondofuteStation/stationunifie/edit.html.twig', array(

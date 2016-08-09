@@ -190,10 +190,6 @@ class HebergementUnifieController extends Controller
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
                 $error = true;
-//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
-//                {
-//
-//                }
             }
             if (!$error) {
                 $this->copieVersSites($hebergementUnifie);
@@ -1381,10 +1377,6 @@ class HebergementUnifieController extends Controller
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
                 $error = true;
-//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
-//                {
-//
-//                }
             }
             if (!$error) {
                 $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
