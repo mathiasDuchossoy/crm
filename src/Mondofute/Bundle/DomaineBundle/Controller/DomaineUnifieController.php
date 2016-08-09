@@ -42,6 +42,21 @@ class DomaineUnifieController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+
+//        $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+//        foreach ($sites as $site){
+//            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $domaineUnifies = $emSite->getRepository(DomaineUnifie::class)->findAll();
+//            foreach ($domaineUnifies as $domaineUnify){
+//                $emSite->remove($domaineUnify);
+//            }
+//            $domaineCIUnifies = $emSite->getRepository(DomaineCarteIdentiteUnifie::class)->findAll();
+//            foreach ($domaineCIUnifies as $domaineCIUnify){
+//                $emSite->remove($domaineCIUnify);
+//            }
+//            $emSite->flush();
+//        }
+
         $domaineUnifies = $em->getRepository(DomaineUnifie::class)->findAll();
         return $this->render('@MondofuteDomaine/domaineunifie/index.html.twig', array(
             'domaineUnifies' => $domaineUnifies,
@@ -790,8 +805,6 @@ class DomaineUnifieController extends Controller
                         $emSite->flush();
                     }
                 }
-//                $em = $this->getDoctrine()->getManager();
-
 
                 $arrayDomaineCarteIdentiteUnifies = new ArrayCollection();
                 /** @var Domaine $domaine */
