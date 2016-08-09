@@ -439,35 +439,36 @@ class StationUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
-                if (!empty($stationUnifieSite)) {
-                    $emSite->remove($stationUnifieSite);
-                    $emSite->flush();
+            /** @var Station $station */
+            $erreurHebergement = false;
+            foreach ($stationUnifie->getStations() as $station) {
+                if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
+                    $erreurHebergement = true;
+                    $this->addFlash('error', 'La station est lié à un hébergement.');
                 }
             }
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($stationUnifie);
-            $em->flush();
+            if (!$erreurHebergement) {
+                $em = $this->getDoctrine()->getEntityManager();
 
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
+                    if (!empty($stationUnifieSite)) {
+                        $emSite->remove($stationUnifieSite);
+                        $emSite->flush();
+                    }
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($stationUnifie);
+                $em->flush();
 
-            $session = $request->getSession();
-            $session->start();
-
-            // add flash messages
-            /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La station a été supprimé avec succès.'
-            );
-
+                $this->addFlash('success', 'La station a été supprimé avec succès.');
+            }
         }
 
         return $this->redirectToRoute('station_station_index');
