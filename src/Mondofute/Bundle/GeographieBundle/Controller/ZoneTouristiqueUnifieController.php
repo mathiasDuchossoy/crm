@@ -1066,6 +1066,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                         in_array($site->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['images'][$key]['sites'])
                                     ) {
                                         $zoneTouristiqueImageSite->setActif(true);
+                                    } else {
+                                        $zoneTouristiqueImageSite->setActif(false);
                                     }
                                 }
                             }
@@ -1154,6 +1156,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                         in_array($site->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['photos'][$key]['sites'])
                                     ) {
                                         $zoneTouristiquePhotoSite->setActif(true);
+                                    } else {
+                                        $zoneTouristiquePhotoSite->setActif(false);
                                     }
                                 }
                             }
