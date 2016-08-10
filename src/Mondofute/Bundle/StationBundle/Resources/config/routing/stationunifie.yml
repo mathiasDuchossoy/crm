@@ -1,6 +1,6 @@
 station_station_index:
-    path:     /
-    defaults: { _controller: "MondofuteStationBundle:StationUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteStationBundle:StationUnifie:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 station_station_show:

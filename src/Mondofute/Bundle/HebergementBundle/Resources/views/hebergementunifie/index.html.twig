@@ -9,7 +9,7 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>{{ 'libelle' | capitalize }}</th>
+            <th>{{ 'nom' | capitalize }}</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -54,4 +54,5 @@
             </li>
         </ul>
     </div>
+    {% include '@MondofuteCore/pagination.html.twig' %}
 {% endblock %}

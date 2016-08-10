@@ -14,6 +14,7 @@ parameters:
     sonata.media.provider.file.class: Mondofute\Bundle\MediaBundle\Provider\FileProvider
     sonata.media.provider.image.class: Mondofute\Bundle\MediaBundle\Provider\ImageProvider
     sonata.media.provider.youtube.class: Mondofute\Bundle\MediaBundle\Provider\YouTubeProvider
+    max_per_page: 25
 
 framework:
     #esi:             ~

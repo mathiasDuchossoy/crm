@@ -1,6 +1,6 @@
 fournisseur_index:
-    path:     /
-    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 fournisseur_show:

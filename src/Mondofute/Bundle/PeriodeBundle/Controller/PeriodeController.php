@@ -20,6 +20,42 @@ class PeriodeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $typePeriodes = $em->getRepository(TypePeriode::class)->chargerParDates();
+//        dump($typePeriodes);die;
+//        $typePeriodes   = $em->getRepository(TypePeriode::class)->findAll();
+//        $paginations    = new ArrayCollection();
+//        $entitiesByTypePeriode    = new ArrayCollection();
+//        $maxPerPage     = $this->container->getParameter('max_per_page');
+//        $page           = 1;
+//        /** @var TypePeriode $typePeriode */
+//        foreach ($typePeriodes as $typePeriode){
+//            $count = $em
+//                ->getRepository('MondofutePeriodeBundle:TypePeriode')
+//                ->countTotalByTypePeriode($typePeriode->getId());
+//            $pagination = array(
+//                'page'          => $page,
+//                'route'         => 'periode_periode_index',
+//                'pages_count'   => ceil($count / $maxPerPage),
+//                'route_params'  => array(),
+//                'max_per_page'  => $maxPerPage
+//            );
+//
+//            $sortbyArray    = array(
+//                'entity.id'   => 'ASC',
+//                'periodes.debut'   => 'ASC',
+//                'periodes.fin'   => 'ASC'
+//            );
+//
+//            $entities = $this->getDoctrine()->getRepository('MondofutePeriodeBundle:TypePeriode')
+//                ->getList($page, $maxPerPage, $typePeriode->getId(), $sortbyArray);
+//
+////            $entities->getQuery()->getResult();
+//
+//            dump($entities);
+//            $entitiesByTypePeriode->add($entities);
+//        }
+//        dump($entitiesByTypePeriode);
+//        die;
+//        return $this->render('@MondofutePeriode/Periode/index.html.twig', array('typePeriodes' => $entitiesByTypePeriode));
         return $this->render('@MondofutePeriode/Periode/index.html.twig', array('typePeriodes' => $typePeriodes));
     }
 

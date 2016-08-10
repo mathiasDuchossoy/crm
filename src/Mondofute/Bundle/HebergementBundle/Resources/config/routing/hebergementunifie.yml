@@ -1,6 +1,6 @@
 hebergement_hebergement_index:
-    path:     /
-    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 hebergement_hebergement_show:

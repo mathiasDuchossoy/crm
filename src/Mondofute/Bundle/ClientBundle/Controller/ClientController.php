@@ -29,14 +29,29 @@ class ClientController extends Controller
      * Lists all Client entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $clients = $em->getRepository('MondofuteClientBundle:ClientUser')->findAll();
+        $count = $em
+            ->getRepository('MondofuteClientBundle:ClientUser')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'client_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array();
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteClientBundle:ClientUser')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteClient/client/index.html.twig', array(
-            'clientUsers' => $clients,
+            'clientUsers' => $entities,
+            'pagination' => $pagination
         ));
     }
 
