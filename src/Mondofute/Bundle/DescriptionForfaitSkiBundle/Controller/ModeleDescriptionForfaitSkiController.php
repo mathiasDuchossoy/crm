@@ -24,17 +24,31 @@ use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSk
 class ModeleDescriptionForfaitSkiController extends Controller
 {
     /**
-     * Lists all ModeleDescriptionForfaitSki entities.
+     * Lists all ModeleDescriptionForfaitSkiUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
+        $count = $em
+            ->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'modeledescriptionforfaitski_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
 
-        $modeleDescriptionForfaitSkis = $em->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')->findAll();
+        $sortbyArray = array();
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteDescriptionForfaitSki/modeledescriptionforfaitski/index.html.twig', array(
-            'modeleDescriptionForfaitSkis' => $modeleDescriptionForfaitSkis,
+            'modeleDescriptionForfaitSkis' => $entities,
+            'pagination' => $pagination
         ));
     }
 

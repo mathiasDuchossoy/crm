@@ -1,6 +1,6 @@
 modeledescriptionforfaitski_index:
-    path:     /
-    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki:index", page: 1 , maxPerPage: %max_per_page% }
     methods:  GET
 
 modeledescriptionforfaitski_show:

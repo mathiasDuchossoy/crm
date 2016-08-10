@@ -1,6 +1,6 @@
 geographie_region_index:
-    path:     /
-    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteGeographieBundle:RegionUnifie:index", page: 1 , maxPerPage: %max_per_page% }
     methods:  GET
 
 geographie_region_show:

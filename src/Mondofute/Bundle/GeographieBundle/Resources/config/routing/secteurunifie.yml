@@ -1,6 +1,11 @@
+#geographie_secteur_index:
+#    path:     /
+#    defaults: { _controller: "MondofuteGeographieBundle:SecteurUnifie:index" }
+#    methods:  GET
+
 geographie_secteur_index:
-    path:     /
-    defaults: { _controller: "MondofuteGeographieBundle:SecteurUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteGeographieBundle:SecteurUnifie:index", page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 geographie_secteur_show:
