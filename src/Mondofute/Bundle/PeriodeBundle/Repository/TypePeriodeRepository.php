@@ -25,20 +25,6 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-     * @return mixed
-     */
-    public function countTotalByTypePeriode($typePeriode)
-    {
-        return $this->createQueryBuilder('entity')
-            ->select('COUNT(entity)')
-            ->leftJoin('entity.periodes', 'periodes')
-            ->where('periodes.id = :typePeriode')
-            ->setParameter('typePeriode', $typePeriode)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Get the paginated list of published secteurs
      *
      * @param int $page
@@ -46,32 +32,17 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
      * @param array $sortbyArray
      * @return Paginator
      */
-    public function getList($page = 1, $maxperpage, $typePeriode, $sortbyArray = array())
+    public function getList($page = 1, $maxperpage, $sortbyArray = array(), TypePeriode $typePeriode = null)
     {
-//        $qb = $this->createQueryBuilder('type_periode_repository');
-//        $qb->from('MondofutePeriodeBundle:TypePeriode', 'tp')
-//            ->leftJoin('tp.periodes', 'p')
-//            ->where('p.type = :typePeriode')
-//            ->setParameter('typePeriode' , $typePeriode)
-//            ->addOrderBy('type_periode_repository.id', 'ASC')
-//            ->addOrderBy('p.debut', 'ASC')
-//            ->addOrderBy('p.fin', 'ASC');
-
         $q = $this->createQueryBuilder('entity')
             ->select('entity')
             ->leftJoin('entity.periodes', 'periodes')
-            ->where('entity.id = :typePeriode')
-            ->setParameter('typePeriode', $typePeriode)
+            ->where('periodes.type = :type')
+            ->setParameter('type', $typePeriode)
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
-        foreach ($sortbyArray as $key => $item) {
-            $q
-                ->orderBy($key, $item);
-        }
-
-
-        return $q->getQuery()->getSingleResult();
-//        return new Paginator($q);
+        $pag = new Paginator($q, true);
+        return $pag;
     }
 }
