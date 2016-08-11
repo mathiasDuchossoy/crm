@@ -39,6 +39,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if  fournisseurs is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li>
@@ -46,5 +49,4 @@
             </li>
         </ul>
     </div>
-    {% include '@MondofuteCore/pagination.html.twig' %}
 {% endblock %}
