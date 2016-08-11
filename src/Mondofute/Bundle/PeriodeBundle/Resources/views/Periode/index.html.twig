@@ -6,7 +6,7 @@
     <h1>{{ 'periode.liste'|trans|capitalize }}</h1>
     {% include '::flashbags.html.twig' %}
     <ul class="nav nav-tabs">
-        {% for typePeriode in typePeriodes %}
+        {% for typePeriode in typePeriodes  if typePeriode is not empty %}
             <li class="{% if loop.index == 1 %}active{% endif %}"><a data-toggle="tab"
                                                                      href="#type_periode_{{ typePeriode.id }}">{{ ('type_periode.'~typePeriode.id)|trans }}</a>
             </li>
@@ -14,40 +14,12 @@
     </ul>
     <div class="tab-content">
 
-        {% for typePeriode in typePeriodes %}
+        {% for key, typePeriode in typePeriodes if typePeriode is not empty %}
             <div id="type_periode_{{ typePeriode.id }}"
+                    {#<div id="type_periode_"#}
                  class="tab-pane fade in {% if loop.index == 1 %}active{% endif %} ">
-                <table class="table table-responsive table-striped">
-                    <thead>
-                    <tr>
-                        <th>{{ 'id' |trans|capitalize }}</th>
-                        <th>{{ 'debut' |trans|capitalize }}</th>
-                        <th>{{ 'fin' |trans|capitalize }}</th>
-                        <th>{{ 'nbJours' |trans|capitalize }}</th>
-                        {#<th>{{ 'actions' |trans|capitalize }}</th>#}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for periode in typePeriode.periodes %}
-                        <tr>
-                            <td>{{ periode.id }}</td>
-                            <td>{{ periode.debut|date('d-m-Y') }}</td>
-                            <td>{{ periode.fin|date('d-m-Y') }}</td>
-                            <td>{{ periode.nbJour }}</td>
-                            {#<td>#}
-                            {#<button type="button" class="btn btn-default"><span#}
-                            {#class="glyphicon glyphicon-edit"></span>#}
-                            {#</button>#}
-                            {#<button type="button" class="btn btn-default"><span#}
-                            {#class="glyphicon glyphicon-trash"></span>#}
-                            {#</button>#}
-                            {#</td>#}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                {% include('@MondofutePeriode/Periode/periode.html.twig') with { 'typePeriodeId': typePeriode.id, 'periodes' : periodes[key], 'pagination' : paginations[key]} %}
             </div>
-            {#{% include '@MondofuteCore/pagination-ajax.html.twig' %}#}
         {% endfor %}
     </div>
     <div style="text-align: right">
@@ -58,4 +30,26 @@
             </li>
         </ul>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+        function refreshList(typePeriodeId, page, maxPerPage) {
+            var path = "{{ path('periode_periode_liste' ,{'typePeriodeId': '_typePeriodeId_' , 'page' : '_page_' , 'maxPerPage' : '_maxPerPage_' }) }}";
+            path = path.replace(/_typePeriodeId_/g, typePeriodeId);
+            path = path.replace(/_page_/g, page);
+            path = path.replace(/_maxPerPage_/g, maxPerPage);
+
+            $.ajax(path,
+                    {
+                        method: 'GET'
+                    }
+            ).done(function (data) {
+                $("#type_periode_" + typePeriodeId).html(data);
+            })
+
+        }
+
+    </script>
 {% endblock %}

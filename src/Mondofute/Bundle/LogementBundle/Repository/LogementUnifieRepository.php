@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementBundle\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 
 /**
@@ -25,6 +26,66 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
 //        $qb->orderBy('r.id', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function countTotalToFournisseur($idFournisseurHebergement, $site = 1)
+    {
+        return $this->createQueryBuilder('entity')
+            ->select('COUNT(entity)')
+            ->join('entity.logements', 'logements')
+            ->where('logements.site = :site')
+            ->setParameter('site', $site)
+            ->join('logements.fournisseurHebergement', 'fournisseurHebergement')
+            ->andWhere('fournisseurHebergement.id = :idFournisseurHebergement')
+            ->setParameter('idFournisseurHebergement', $idFournisseurHebergement)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Get the paginated list of published secteurs
+     *
+     * @param int $page
+     * @param int $maxperpage
+     * @param $locale
+     * @param array $sortbyArray
+     * @param int $site
+     * @return Paginator
+     */
+    public function getListToFournisseur($page = 1, $maxperpage, $locale, $sortbyArray = array(), $fournisseurHebergement, $site = 1)
+    {
+        $q = $this->createQueryBuilder('unifie')
+            ->select('unifie')
+            ->join('unifie.logements', 'entities')
+            ->join('entities.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->join('entities.fournisseurHebergement', 'fournisseurHebergement')
+            ->where('entities.site = :site')
+            ->setParameter('site', $site)
+            ->andWhere('fournisseurHebergement.id = :fournisseurHebergement')
+            ->setParameter('fournisseurHebergement', $fournisseurHebergement)
+            ->andWhere('langue.code = :code')
+            ->setParameter('code', $locale)
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
+
+        $q->setParameters(array(
+            'site' => $site,
+            'fournisseurHebergement' => $fournisseurHebergement,
+            'code' => $locale,
+        ));
+
+        foreach ($sortbyArray as $key => $item) {
+            $q
+                ->orderBy($key, $item);
+        }
+
+
+        return new Paginator($q);
     }
 
 }
