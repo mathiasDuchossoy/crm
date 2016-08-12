@@ -52,38 +52,6 @@ class StationUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $sites = $em->getRepository(Site::class)->findAll();
-        foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-//            $stationUnifiesSite = $emSite->getRepository(StationUnifie::class)->findAll();
-//            foreach ($stationUnifiesSite as $stationUnify){
-//                foreach ($stationUnify->getStations() as $station){
-//                    $station->setStationMere(null);
-//                }
-//                $emSite->persist($stationUnify);
-//                $emSite->flush();
-//            }
-//            foreach ($stationUnifiesSite as $stationUnify){
-//                $emSite->remove($stationUnify);
-//                $emSite->flush();
-//            }
-//            $stationCIUnifiesSite = $emSite->getRepository(StationCarteIdentiteUnifie::class)->findAll();
-//            foreach ($stationCIUnifiesSite as $stationCIUnify){
-//                $emSite->remove($stationCIUnify);
-//                $emSite->flush();
-//            }
-//            $stationCIUnifiesSite = $emSite->getRepository(StationCommentVenirUnifie::class)->findAll();
-//            foreach ($stationCIUnifiesSite as $stationCIUnify){
-//                $emSite->remove($stationCIUnify);
-//                $emSite->flush();
-//            }
-//            $stationCIUnifiesSite = $emSite->getRepository(StationDescriptionUnifie::class)->findAll();
-//            foreach ($stationCIUnifiesSite as $stationCIUnify){
-//                $emSite->remove($stationCIUnify);
-//                $emSite->flush();
-//            }
-        }
-
         $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
 
         return $this->render('@MondofuteStation/stationunifie/index.html.twig', array(
@@ -458,14 +426,20 @@ class StationUnifieController extends Controller
         /** @var ZoneTouristique $zoneTouristique */
         foreach ($entity->getStations() as $station) {
             if (!in_array($station->getSite()->getId(), $sitesAEnregistrer)) {
-                foreach ($station->getZoneTouristiques() as $zoneTouristique) {
-                    $zoneTouristique->removeStation($station);
+                if (!empty($station->getZoneTouristiques())) {
+                    foreach ($station->getZoneTouristiques() as $zoneTouristique) {
+                        $zoneTouristique->removeStation($station);
+                    }
                 }
-                foreach ($station->getSecteurs() as $secteur) {
-                    $secteur->removeStation($station);
+                if (!empty($station->getSecteurs())) {
+                    foreach ($station->getSecteurs() as $secteur) {
+                        $secteur->removeStation($station);
+                    }
                 }
-                foreach ($station->getProfils() as $profil) {
-                    $profil->removeStation($station);
+                if (!empty($station->getProfils())) {
+                    foreach ($station->getProfils() as $profil) {
+                        $profil->removeStation($station);
+                    }
                 }
                 $station->setStationUnifie(null);
                 $entity->removeStation($station);
