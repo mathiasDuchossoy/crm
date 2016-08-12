@@ -927,7 +927,7 @@ class ProfilUnifieController extends Controller
             foreach ($originalProfils as $profil) {
                 if (!$profilUnifie->getProfils()->contains($profil)) {
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($profil->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($profil->getSite()->getLibelle());
                     $entitySite = $emSite->find(ProfilUnifie::class, $profilUnifie->getId());
                     $profilSite = $entitySite->getProfils()->first();
 
@@ -1202,7 +1202,7 @@ class ProfilUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             // Parcourir les sites non CRM

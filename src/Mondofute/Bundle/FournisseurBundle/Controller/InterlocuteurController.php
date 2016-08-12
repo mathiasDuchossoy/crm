@@ -76,7 +76,7 @@ class InterlocuteurController extends Controller
 
     public function loginExist(InterlocuteurUser $interlocuteurUser)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $interlocuteurUserByUsername = $em->getRepository(InterlocuteurUser::class)->findOneBy(array('username' => $interlocuteurUser->getUsername()));
         $interlocuteurUserByMail = $em->getRepository(InterlocuteurUser::class)->findOneBy(array('email' => $interlocuteurUser->getEmail()));
         if ((!empty($interlocuteurUserByUsername) && $interlocuteurUser != $interlocuteurUserByUsername)
