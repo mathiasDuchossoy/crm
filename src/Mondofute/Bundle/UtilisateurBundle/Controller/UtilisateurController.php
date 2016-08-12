@@ -275,21 +275,26 @@ class UtilisateurController extends Controller
 
     private function majSites(UtilisateurUser $utilisateurUser)
     {
+        /** @var UtilisateurUser $utilisateurUserSite */
         $utilisateur = $utilisateurUser->getUtilisateur();
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updatePassword($utilisateurUser);
+
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
             $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
             $utilisateurSite = $utilisateurUserSite->getUtilisateur();
             $utilisateurSite
-//                ->setPassword($utilisateur->getPassword())
-//                ->setLogin($utilisateur->getPassword())
                 ->setNom($utilisateur->getNom())
                 ->setPrenom($utilisateur->getPrenom());
-//            $utilisateurSite->setDateModification($utilisateur->getDateModification());
+//            $utilisateurUserSite->setPlainPassword($utilisateurUser->getPlainPassword());
             $utilisateurUserSite->setPassword($utilisateurUser->getPassword());
+//            $userManager->updatePassword($utilisateurUserSite);
+
             $utilisateurUserSite->setEnabled($utilisateurUser->isEnabled());
 
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
