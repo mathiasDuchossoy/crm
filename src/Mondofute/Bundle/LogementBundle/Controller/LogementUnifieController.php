@@ -833,7 +833,7 @@ class LogementUnifieController extends Controller
                 if (!$logementUnifie->getLogements()->contains($logement)) {
 
 //                    //  suppression de la station sur le site
-//                    $emSite = $this->getDoctrine()->getEntityManager($logement->getSite()->getLibelle());
+//                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
 //                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
 //                    $departementSite = $entitySite->getDepartements()->first();
 //                    $emSite->remove($departementSite);
@@ -995,7 +995,7 @@ class LogementUnifieController extends Controller
                 if (!$logementUnifie->getLogements()->contains($logement)) {
 
 //                    //  suppression de la station sur le site
-//                    $emSite = $this->getDoctrine()->getEntityManager($logement->getSite()->getLibelle());
+//                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
 //                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
 //                    $departementSite = $entitySite->getDepartements()->first();
 //                    $emSite->remove($departementSite);
