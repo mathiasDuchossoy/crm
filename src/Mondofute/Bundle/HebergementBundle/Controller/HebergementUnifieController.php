@@ -1361,6 +1361,8 @@ class HebergementUnifieController extends Controller
                                     in_array($site->getId(), $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
                                 ) {
                                     $hebergementVisuelSite->setActif(true);
+                                } else {
+                                    $hebergementVisuelSite->setActif(false);
                                 }
                             }
                         }

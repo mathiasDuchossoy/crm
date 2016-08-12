@@ -1060,6 +1060,8 @@ class RegionUnifieController extends Controller
                                         in_array($site->getId(), $request->get('region_unifie')['regions'][$keyCrm]['images'][$key]['sites'])
                                     ) {
                                         $regionImageSite->setActif(true);
+                                    } else {
+                                        $regionImageSite->setActif(false);
                                     }
                                 }
                             }
@@ -1148,6 +1150,8 @@ class RegionUnifieController extends Controller
                                         in_array($site->getId(), $request->get('region_unifie')['regions'][$keyCrm]['photos'][$key]['sites'])
                                     ) {
                                         $regionPhotoSite->setActif(true);
+                                    } else {
+                                        $regionPhotoSite->setActif(false);
                                     }
                                 }
                             }

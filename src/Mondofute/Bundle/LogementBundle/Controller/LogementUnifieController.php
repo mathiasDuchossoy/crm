@@ -1041,6 +1041,8 @@ class LogementUnifieController extends Controller
                                     in_array($site->getId(), $request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $logementPhotoSite->setActif(true);
+                                } else {
+                                    $logementPhotoSite->setActif(false);
                                 }
                             }
                         }

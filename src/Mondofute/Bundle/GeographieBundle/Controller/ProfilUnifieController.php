@@ -1048,6 +1048,8 @@ class ProfilUnifieController extends Controller
                                     in_array($site->getId(), $request->get('profil_unifie')['profils'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $profilImageSite->setActif(true);
+                                } else {
+                                    $profilImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1136,6 +1138,8 @@ class ProfilUnifieController extends Controller
                                     in_array($site->getId(), $request->get('profil_unifie')['profils'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $profilPhotoSite->setActif(true);
+                                } else {
+                                    $profilPhotoSite->setActif(false);
                                 }
                             }
                         }

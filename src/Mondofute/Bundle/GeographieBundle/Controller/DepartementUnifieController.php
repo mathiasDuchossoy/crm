@@ -1081,6 +1081,8 @@ class DepartementUnifieController extends Controller
                                     in_array($site->getId(), $request->get('departement_unifie')['departements'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $departementImageSite->setActif(true);
+                                } else {
+                                    $departementImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1169,6 +1171,8 @@ class DepartementUnifieController extends Controller
                                     in_array($site->getId(), $request->get('departement_unifie')['departements'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $departementPhotoSite->setActif(true);
+                                } else {
+                                    $departementPhotoSite->setActif(false);
                                 }
                             }
                         }
