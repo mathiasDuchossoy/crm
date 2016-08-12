@@ -32,6 +32,7 @@
                             {{ form_row( domaine.domaineParent, { 'attr' : {
                                 'data-unique_block_prefix' : domaine.domaineParent.vars['unique_block_prefix'] ,
                                 'onchange' : 'displayCheckbox(this ,  "' ~ domaine.vars.value.site.id ~'")',
+                                'onkeyup' : 'displayCheckbox(this ,  "' ~ domaine.vars.value.site.id ~'")',
                                 'data-site' : domaine.vars.value.site.id
                             }}) }}
                             {% set iTraduc = 0 %}
@@ -123,7 +124,8 @@
 
 
                         <label id="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
+                            <input type="checkbox" id="inputcboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
+                                   name="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
                                     {% if  domaine.vars.value.domaineParent is not empty %}
                                         {% if domaine.vars.value.domaineParent.domaineCarteIdentite.id == domaine.vars.value.domaineCarteIdentite.id %}
                                             checked
@@ -417,6 +419,14 @@
             if (!$(element).val()) {
                 $('#cboxDomaineCarteIdentite_' + $(element).data('site')).hide();
                 $('#cbox_medias_parent_' + $(element).data('site')).hide();
+            }
+            else {
+                var $inputcboxDomaineCarteIdentite = $('#inputcboxDomaineCarteIdentite_' + $(element).data('site'));
+                if ($inputcboxDomaineCarteIdentite.is(':checked')) {
+                    $('#domaineCarteIdentite_' + $(element).data('site')).hide();
+                    $('#cboxDomaineCarteIdentite_' + $(element).data('site')).show();
+                    displayChild($inputcboxDomaineCarteIdentite, 'domaineCarteIdentite_' + $(element).data('site'));
+                }
             }
         });
 

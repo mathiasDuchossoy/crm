@@ -168,8 +168,10 @@
                                         if ($optionSelect.length == 0) multiSelectEmpty = true;
                                     }
                                     for (var index = 0; index < sourceSelect.length; index++) {
-                                        if (!$('#' + this.id + ' option:selected').data('unifie_id') || multiSelectEmpty) {
-                                            $('#' + this.id + '  option[data-unifie_id=' + sourceSelect[index] + ']').prop('selected', 'selected');
+                                        if ((!$('#' + this.id + ' option:selected').data('unifie_id') || multiSelectEmpty) && sourceSelect[index]) {
+//                                            $('#' + this.id + '  option[data-unifie_id=' + sourceSelect[index] + ']').prop('selected', 'selected');
+                                            var option = $('#' + this.id + '  option[data-unifie_id=' + sourceSelect[index] + ']').val();
+                                            $('#' + this.id).val(option).trigger('change');
                                         }
                                     }
 
