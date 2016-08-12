@@ -1316,6 +1316,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                                     in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $domaineCarteIdentiteImageSite->setActif(true);
+                                } else {
+                                    $domaineCarteIdentiteImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1404,6 +1406,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                                     in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $domaineCarteIdentitePhotoSite->setActif(true);
+                                } else {
+                                    $domaineCarteIdentitePhotoSite->setActif(false);
                                 }
                             }
                         }

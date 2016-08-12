@@ -1056,6 +1056,8 @@ class SecteurUnifieController extends Controller
                                     in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $secteurImageSite->setActif(true);
+                                } else {
+                                    $secteurImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1144,6 +1146,8 @@ class SecteurUnifieController extends Controller
                                     in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $secteurPhotoSite->setActif(true);
+                                } else {
+                                    $secteurPhotoSite->setActif(false);
                                 }
                             }
                         }
