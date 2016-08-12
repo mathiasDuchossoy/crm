@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
-use Knp\Component\Pager\Paginator;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction;
