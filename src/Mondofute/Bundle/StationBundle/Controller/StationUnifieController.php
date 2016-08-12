@@ -27,14 +27,31 @@ class StationUnifieController extends Controller
      * Lists all StationUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
+        $count = $em
+            ->getRepository('MondofuteStationBundle:StationUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'station_station_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteStationBundle:StationUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteStation/stationunifie/index.html.twig', array(
-            'stationUnifies' => $stationUnifies,
+            'stationUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 

@@ -24,8 +24,13 @@ logement_logement_delete:
     methods:  DELETE
 
 popup_logement_logement_index:
-    path:     /popup/{idFournisseurHebergement}
-    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:indexPopup" }
+    path:     /popup/{idFournisseurHebergement}/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:indexPopup" , page: 1, maxPerPage: %max_per_page%  }
+    methods:  GET
+
+popup_logement_logement_list:
+    path:     /popup/list/{idFournisseurHebergement}/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:list" , page: 1, maxPerPage: %max_per_page%  }
     methods:  GET
 
 popup_logement_logement_show:

@@ -29,19 +29,34 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DepartementUnifieController extends Controller
 {
-//    TODO : ajout du lien avec la région (commun aux départements site ou chaque site peut avoir une region différente
     /**
      * Lists all DepartementUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
+        $count = $em
+            ->getRepository('MondofuteGeographieBundle:DepartementUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'geographie_departement_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
 
-        $departementUnifies = $em->getRepository('MondofuteGeographieBundle:DepartementUnifie')->findAll();
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteGeographieBundle:DepartementUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteGeographie/departementunifie/index.html.twig', array(
-            'departementUnifies' => $departementUnifies,
+            'departementUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 

@@ -41,6 +41,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if  clientUsers is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
 
     <div style="text-align: right">
         <ul class="list-unstyled">

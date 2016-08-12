@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\Paginator;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction;
@@ -32,14 +33,31 @@ class SecteurUnifieController extends Controller
      * Lists all SecteurUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $secteurUnifies = $em->getRepository('MondofuteGeographieBundle:SecteurUnifie')->findAll();
+        $count = $em
+            ->getRepository('MondofuteGeographieBundle:SecteurUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'geographie_secteur_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteGeographieBundle:SecteurUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteGeographie/secteurunifie/index.html.twig', array(
-            'secteurUnifies' => $secteurUnifies,
+            'secteurUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 
