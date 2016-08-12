@@ -28,13 +28,11 @@
                         {{ form_row(station.site) }}
                         <ul class="nav nav-tabs">
                             {{ form_row( station.domaine , { 'attr' : { 'data-unique_block_prefix' : station.domaine.vars['unique_block_prefix']}}) }}
-                            {#{{ dump(station) }}#}
-                            {#{{ dump(station.vars.data.stations) }}#}
                             {#{% if station.vars.data.stations is not empty %}#}
-
                             {{ form_row( station.stationMere, { 'attr' : {
                                 'data-unique_block_prefix' : station.stationMere.vars['unique_block_prefix'] ,
-                                'onchange' : 'displayCheckbox(this ,  "' ~ station.vars.value.site.id ~'")',
+                                'onchange' : 'displayCheckbox(this ,  "' ~ station.vars.value.site.id ~'");return false;',
+                                'onkeyup' : 'displayCheckbox(this ,  "' ~ station.vars.value.site.id ~'");return false;',
                                 'data-site' : station.vars.value.site.id
                             }}) }}
                             {#{% endif %}#}
@@ -112,7 +110,8 @@
 
                         {#{% if station.vars.data.stations is not empty %}#}
                         <label id="cboxStationCI_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationCI_{{ station.vars.value.site.id }}"
+                            <input type="checkbox" id="inputcboxStationCI_{{ station.vars.value.site.id }}"
+                                   name="cboxStationCI_{{ station.vars.value.site.id }}"
                                     {% if  station.vars.value.stationMere is not empty %}
                                         {% if station.vars.value.stationMere.stationCarteIdentite.id == station.vars.value.stationCarteIdentite.id %}
                                             checked
@@ -149,7 +148,8 @@
                             </div>
                         </div>
                         <label id="cboxStationCommentVenir_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationCommentVenir_{{ station.vars.value.site.id }}"
+                            <input type="checkbox" id="inputcboxStationCommentVenir_{{ station.vars.value.site.id }}"
+                                   name="cboxStationCommentVenir_{{ station.vars.value.site.id }}"
                                     {% if  station.vars.value.stationMere is not empty %}
                                         {% if station.vars.value.stationMere.stationCommentVenir.id == station.vars.value.stationCommentVenir.id %}
                                             checked
@@ -208,7 +208,8 @@
                             </div>
                         </div>
                         <label id="cboxStationDescription_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationDescription_{{ station.vars.value.site.id }}"
+                            <input type="checkbox" id="inputcboxStationDescription_{{ station.vars.value.site.id }}"
+                                   name="cboxStationDescription_{{ station.vars.value.site.id }}"
                                     {% if  station.vars.value.stationMere is not empty %}
                                         {% if station.vars.value.stationMere.stationDescription.id == station.vars.value.stationDescription.id %}
                                             checked
@@ -516,19 +517,45 @@
                 $('#stationDescription_' + checkbox).show();
             }
         }
+        //        function selectOption($select, option) {
+        //            if ($select.val() != option) {
+        //                $select.val(option).trigger('change');
+        //            }
+        //        }
+
+        //        $(document).ready(function() {
+        //            console.log('ready');
+
         $('[data-unique_block_prefix="_station_unifie_stations_entry_stationMere"]').each(function (index, element) {
-//            console.log($(element));
             if (!$(element).val()) {
                 $('#cboxStationCI_' + $(element).data('site')).hide();
                 $('#cbox_medias_parent_' + $(element).data('site')).hide();
-            }
-            if (!$(element).val()) {
                 $('#cboxStationCommentVenir_' + $(element).data('site')).hide();
-            }
-            if (!$(element).val()) {
                 $('#cboxStationDescription_' + $(element).data('site')).hide();
             }
+            else {
+                var $inputcboxStationCI = $('#inputcboxStationCI_' + $(element).data('site'));
+                var $inputcboxStationCommentVenir = $('#inputcboxStationCommentVenir_' + $(element).data('site'));
+                var $inputcboxStationDescription = $('#inputcboxStationDescription_' + $(element).data('site'));
+                if ($inputcboxStationCI.is(':checked')) {
+                    $('#stationCarteIdentite_' + $(element).data('site')).hide();
+                    $('#cboxStationCI_' + $(element).data('site')).show();
+                    displayStationChild($inputcboxStationCI, 'stationCarteIdentite_' + $(element).data('site'));
+                }
+                if ($inputcboxStationCommentVenir.is(':checked')) {
+                    $('#stationCommentVenir_' + $(element).data('site')).hide();
+                    $('#cboxStationCommentVenir_' + $(element).data('site')).show();
+                    displayStationChild($inputcboxStationCommentVenir, 'stationCommentVenir_' + $(element).data('site'));
+                }
+                if ($inputcboxStationDescription.is(':checked')) {
+                    $('#stationDescription_' + $(element).data('site')).hide();
+                    $('#cboxStationDescription_' + $(element).data('site')).show();
+                    displayStationChild($inputcboxStationDescription, 'stationDescription_' + $(element).data('site'));
+                }
+            }
         });
+
+        //        });
 
     </script>
 
