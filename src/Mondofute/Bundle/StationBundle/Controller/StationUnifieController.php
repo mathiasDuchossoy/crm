@@ -78,7 +78,7 @@ class StationUnifieController extends Controller
 
 //        $commentVenir = new StationCommentVenirUnifieController();
 //        $commentVenir->testnewAction();
-        
+
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
@@ -168,7 +168,7 @@ class StationUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
-            
+
             $em->persist($stationUnifie);
 
 
@@ -810,7 +810,7 @@ class StationUnifieController extends Controller
                     }
                 }
                 // ********** FIN GESTION DES MEDIAS **********
-                
+
 
                 $entitySite->addStation($stationSite);
                 $emSite->persist($entitySite);
@@ -1097,7 +1097,7 @@ class StationUnifieController extends Controller
                         }
                         $emSite->flush();
                     }
-                    
+
                     $emSite->remove($stationSite);
                     $emSite->flush();
 
@@ -1246,7 +1246,7 @@ class StationUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
 
             $em->persist($stationUnifie);
             $em->flush();
@@ -1531,8 +1531,17 @@ class StationUnifieController extends Controller
         $stationDescriptionUnifieController->setContainer($this->container);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $em = $this->getDoctrine()->getEntityManager();
+
+            /** @var Station $station */
+            $erreurHebergement = false;
+            foreach ($stationUnifie->getStations() as $station) {
+                if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
+                    $erreurHebergement = true;
+                    $this->addFlash('error', 'La station est lié à un hébergement.');
+                }
+            }
+            if (!$erreurHebergement) {
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
@@ -1616,30 +1625,8 @@ class StationUnifieController extends Controller
 
                 $em->flush();
 
-            } catch (ForeignKeyConstraintViolationException $except) {
-                //                dump($except);
-                switch ($except->getCode()) {
-                    case 0:
-                        $this->addFlash('error',
-                            'impossible de supprimer la station, elle est utilisé par une autre entité');
-                        break;
-                    default:
-                        $this->addFlash('error', 'une erreur inconnue');
-                        break;
-                }
-                return $this->redirect($request->headers->get('referer'));
+                $this->addFlash('success', 'La station a été supprimé avec succès.');
             }
-
-            $session = $request->getSession();
-            $session->start();
-
-            // add flash messages
-            /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La station a été supprimé avec succès.'
-            );
-
         }
 
         return $this->redirectToRoute('station_station_index');
