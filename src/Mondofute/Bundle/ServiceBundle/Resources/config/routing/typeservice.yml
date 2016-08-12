@@ -1,6 +1,6 @@
 type_service_index:
-    path:     /
-    defaults: { _controller: "MondofuteServiceBundle:TypeService:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteServiceBundle:TypeService:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 type_service_show:

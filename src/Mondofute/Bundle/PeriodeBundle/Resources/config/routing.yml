@@ -5,3 +5,8 @@ periode_periode_index:
 periode_periode_new:
     path:     /periode/new
     defaults: { _controller: MondofutePeriodeBundle:Periode:new}
+
+periode_periode_liste:
+    path:     /list/{typePeriodeId}/{page}/{maxPerPage}
+    defaults: { _controller: "MondofutePeriodeBundle:Periode:liste" , typePeriodeId: null, page: 1 , maxPerPage: %max_per_page%  }
+    methods:  GET

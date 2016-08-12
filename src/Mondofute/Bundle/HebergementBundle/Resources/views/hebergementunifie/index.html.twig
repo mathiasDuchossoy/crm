@@ -9,7 +9,7 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>{{ 'libelle' | capitalize }}</th>
+            <th>{{ 'nom' | capitalize }}</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -46,6 +46,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if  hebergementUnifies is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
     <div style="text-align: right">
         <ul class="list-unstyled">
             <li>

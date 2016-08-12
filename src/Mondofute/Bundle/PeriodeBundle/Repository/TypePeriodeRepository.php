@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\PeriodeBundle\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 
 /**
@@ -21,5 +22,27 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
             ->addOrderBy('p.debut', 'ASC')
             ->addOrderBy('p.fin', 'ASC');
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Get the paginated list of published secteurs
+     *
+     * @param int $page
+     * @param int $maxperpage
+     * @param array $sortbyArray
+     * @return Paginator
+     */
+    public function getList($page = 1, $maxperpage, $sortbyArray = array(), TypePeriode $typePeriode = null)
+    {
+        $q = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->leftJoin('entity.periodes', 'periodes')
+            ->where('periodes.type = :type')
+            ->setParameter('type', $typePeriode)
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
+
+        $pag = new Paginator($q, true);
+        return $pag;
     }
 }

@@ -32,12 +32,30 @@ class ProfilUnifieController extends Controller
      * Lists all ProfilUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $profilUnifies = $em->getRepository('MondofuteGeographieBundle:ProfilUnifie')->findAll();
+        $count = $em
+            ->getRepository('MondofuteGeographieBundle:ProfilUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'geographie_profil_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteGeographieBundle:ProfilUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
+
         return $this->render('@MondofuteGeographie/profilunifie/index.html.twig', array(
-            'profilUnifies' => $profilUnifies,
+            'profilUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 
