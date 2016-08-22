@@ -147,7 +147,6 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <label id="cboxStationCommentVenir_{{ station.vars.value.site.id }}">
                             <input type="checkbox" id="inputcboxStationCommentVenir_{{ station.vars.value.site.id }}"
                                    name="cboxStationCommentVenir_{{ station.vars.value.site.id }}"
@@ -208,6 +207,7 @@
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
                         <label id="cboxStationDescription_{{ station.vars.value.site.id }}">
                             <input type="checkbox" id="inputcboxStationDescription_{{ station.vars.value.site.id }}"
                                    name="cboxStationDescription_{{ station.vars.value.site.id }}"
@@ -266,41 +266,39 @@
                                 </div>
                             </div>
                         </div>
-||||||| parent of 5bf8aad... CRM-61 Station - Liaison CommentVenir
+||||||| parent of 2389b0f... CRM-62 station - liaison description
 =======
-                        <label id="cboxStationCommentVenir_{{ station.vars.value.site.id }}">
-                            <input type="checkbox" name="cboxStationCommentVenir_{{ station.vars.value.site.id }}"
+                        <label id="cboxStationDescription_{{ station.vars.value.site.id }}">
+                            <input type="checkbox" name="cboxStationDescription_{{ station.vars.value.site.id }}"
                                     {% if  station.vars.value.stationMere is not empty %}
-                                        {% if station.vars.value.stationMere.stationCommentVenir.id == station.vars.value.stationCommentVenir.id %}
+                                        {% if station.vars.value.stationMere.stationDescription.id == station.vars.value.stationDescription.id %}
                                             checked
                                         {% endif %}
                                     {% endif %}
-                                   onclick="displayStationChild(this , 'stationCommentVenir_{{ station.vars.value.site.id }}')">
-                            Utiliser le Comment venir de la
+                                   onclick="displayStationChild(this , 'stationDescription_{{ station.vars.value.site.id }}')">
+                            Utiliser la description de la
                             station mère
                         </label>
                         <br>
-                        {#{% endif %}#}
-                        <div id="stationCommentVenir_{{ station.vars.value.site.id }}"
+                        <div id="stationDescription_{{ station.vars.value.site.id }}"
                                 {% if  station.vars.value.stationMere is not empty %}
-                                    {% if station.vars.value.stationMere.stationCommentVenir.id == station.vars.value.stationCommentVenir.id %}
+                                    {% if station.vars.value.stationMere.stationDescription.id == station.vars.value.stationDescription.id %}
                                         style="display: none"
                                     {% endif %}
                                 {% endif %}
                         >
                             <div class="panel panel-default">
                                 <div class="panel-heading"><h3 class="panel-title">
-                                        Comment venir
+                                        Description
                                     </h3></div>
                                 <div class="panel-body">
 
                                     <ul class="nav nav-tabs">
-                                        {{ form_row( station.stationCommentVenir.grandeVilles, { 'attr' : { 'data-unique_block_prefix' : station.stationCommentVenir.grandeVilles.vars['unique_block_prefix']}}) }}
                                         {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationCommentVenir.traductions %}
+                                        {% for traduction in station.stationDescription.traductions %}
                                             <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
                                                 <a data-toggle="tab"
-                                                   href="#comment_venir_{{ station.stationCommentVenir.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                                   href="#description_{{ station.stationDescription.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
                                                     {# affiche la langue en fonction de la locale#}
                                                     {% for traductionLangue in  traduction.vars.value.langue.traductions %}
                                                         {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
@@ -313,8 +311,8 @@
                                     </ul>
                                     <div class="tab-content">
                                         {% set iTraduc = 0 %}
-                                        {% for traduction in station.stationCommentVenir.traductions %}
-                                            <div id="comment_venir_{{ station.stationCommentVenir.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                                        {% for traduction in station.stationDescription.traductions %}
+                                            <div id="description_{{ station.stationDescription.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
                                                  class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
                                                 {% for element in traduction.children %}
                                                     {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
@@ -322,12 +320,12 @@
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    {{ form_row( station.stationCommentVenir.site ) }}
+                                    {{ form_row( station.stationDescription.site ) }}
 
                                 </div>
                             </div>
                         </div>
->>>>>>> 5bf8aad... CRM-61 Station - Liaison CommentVenir
+>>>>>>> 2389b0f... CRM-62 station - liaison description
                     </div>
 
                     {% set index = (index + 1) %}
@@ -381,7 +379,6 @@
         {% for langue in langues %}
         items.push("_station_unifie_stations_entry_traductions_entry_libelle_{{ langue.code }}");
         items.push("_station_unifie_stations_entry_traductions_entry_parking_{{ langue.code }}");
-<<<<<<< HEAD
         //        commentVenir
         items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enVoiture_{{ langue.code }}");
         items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enTrain_{{ langue.code }}");
@@ -394,15 +391,6 @@
         items.push("_station_unifie_stations_entry_stationDescription_traductions_entry_generalite_{{ langue.code }}");
 
 
-||||||| parent of 5bf8aad... CRM-61 Station - Liaison CommentVenir
-=======
-        //        commentVenir
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enVoiture_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enTrain_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_enAvion_{{ langue.code }}");
-        items.push("_station_unifie_stations_entry_stationCommentVenir_traductions_entry_distancesGrandesVilles_{{ langue.code }}");
-
->>>>>>> 5bf8aad... CRM-61 Station - Liaison CommentVenir
         {% endfor %}
         items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_code_postal");
         items.push("_station_unifie_stations_entry_stationCarteIdentite_adresse_ville");
@@ -554,8 +542,13 @@
         function displayCheckbox(element, checkbox) {
             $checkboxCI = $('#cboxStationCI_' + checkbox);
             $checkboxCV = $('#cboxStationCommentVenir_' + checkbox);
+<<<<<<< HEAD
             $checkboxDescription = $('#cboxStationDescription_' + checkbox);
             $cboxMediasParent = $('#cbox_medias_parent_' + checkbox);
+||||||| parent of 2389b0f... CRM-62 station - liaison description
+=======
+            $checkboxDescription = $('#cboxStationDescription_' + checkbox);
+>>>>>>> 2389b0f... CRM-62 station - liaison description
 //            console.log(checkbox);
             $element = $(element);
 //            console.log($element.val());
@@ -625,6 +618,9 @@
                     $('#cboxStationDescription_' + $(element).data('site')).show();
                     displayStationChild($inputcboxStationDescription, 'stationDescription_' + $(element).data('site'));
                 }
+            }
+            if (!$(element).val()) {
+                $('#cboxStationDescription_' + $(element).data('site')).hide();
             }
         });
 
