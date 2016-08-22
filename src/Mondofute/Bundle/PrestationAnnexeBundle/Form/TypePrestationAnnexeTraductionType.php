@@ -3,11 +3,11 @@
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SousTypePrestationAnnexeType extends AbstractType
+class TypePrestationAnnexeTraductionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,18 +16,19 @@ class SousTypePrestationAnnexeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('traductions', CollectionType::class, array(
-                'entry_type' => SousTypePrestationAnnexeTraductionType::class,
-            ))
+            ->add('libelle')
+            ->add('langue', HiddenType::class, array('mapped' => false))
         ;
+
     }
+    
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousTypePrestationAnnexe'
+            'data_class' => 'Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexeTraduction'
         ));
     }
 }
