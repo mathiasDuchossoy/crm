@@ -1,0 +1,66 @@
+<div>
+    {#{% if form.sousTypePrestationAnnexes is defined %}#}
+
+        {% include('@MondofutePrestationAnnexe/soustypeprestationannexe/template-traduction-sous-type-prestation-annexe.html.twig') with {'traductions': form.traductions, 'langues': langues, 'name': name, 'entity': 'sous_type_prestation_annexe'} %}
+    {#{% endif %}#}
+    <!-- Nav tabs -->
+</div>
+
+<script type="text/javascript">
+
+    var langues = [];
+    var firstOnglet = true;
+    {% for langue in langues %}
+    {% set ok = false %}
+    {% for value in form.traductions.vars.value %}
+    {% if value.langue == langue %}
+    {% set ok = true %}
+    {% endif %}
+    {% endfor %}
+    {% if ok == false %}
+    langues.push("{{ langue.id }}");
+    {% else %}
+    firstOnglet = false;
+    {% endif %}
+    {% endfor %}
+    var $_collectionHolder_{{ name }};
+
+    jQuery(document).ready(function () {
+        $_collectionHolder_{{ name }} = $('div.{{ entity }}s_{{ name }}');
+        console.log($_collectionHolder_{{ name }});
+        console.log('div.{{ entity }}s_{{ name }}');
+
+        $_collectionHolder_{{ name }}.data('index', $_collectionHolder_{{ name }}.find(':input').length);
+
+        langues.forEach(function (langue) {
+            addForm_{{ entity }}_{{ name }}($_collectionHolder_{{ name }}, langue, firstOnglet);
+            firstOnglet = false;
+        });
+    });
+
+    function addForm_{{ entity }}_{{ name }} ($_collectionHolder_{{ name }}, langue, firstOnglet) {
+        var prototype = $_collectionHolder_{{ name }}.data('prototype');
+
+        var index = $_collectionHolder_{{ name }}.data('index');
+        {#console.log($_collectionHolder_{{ name }});#}
+        {#console.log('{{ name }}');#}
+        {#console.log(prototype);#}
+
+        var newForm = prototype.replace(/__name_traduction__/g, index);
+
+        // increase the index with one for the next item
+        $_collectionHolder_{{ name }}.data('index', index + 1);
+
+        var classActive = '';
+        if (firstOnglet) {
+            classActive = ' active';
+        }
+        var $newFormLi = $('<div role="tabpanel" class="tab-pane ' + classActive + '" id="onglet-{{ entity }}-{{ name }}-' + langue + '"></div>').append(newForm);
+
+        $_collectionHolder_{{ name }}.append($newFormLi);
+
+        $newFormLi.find('[id$=langue]').val(langue);
+        console.log($newFormLi.find('[id$=langue]').val(langue));
+    }
+
+</script>

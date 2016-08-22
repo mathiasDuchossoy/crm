@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexeTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -77,40 +78,52 @@ class TypePrestationAnnexeController extends Controller
     public function editAction(Request $request, TypePrestationAnnexe $typePrestationAnnexe)
     {
         /** @var Site $site */
-        /** @var TypePrestationAnnexeTraduction $traduction */
-        /** @var TypePrestationAnnexeTraduction $traductionSite */
 //        $deleteForm = $this->createDeleteForm($typePrestationAnnexe);
+        $em     = $this->getDoctrine()->getManager();
+        $langues    = $em->getRepository(Langue::class)->findAll();
+
         $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType', $typePrestationAnnexe);
         $editForm
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
+//            dump($typePrestationAnnexe->getSousTypePrestationAnnexes()->first());die;
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em     = $this->getDoctrine()->getManager();
-            $sites  = $em->getRepository(Site::class)->findBy(array('crm'=>0));
-            foreach ($sites as $site){
-                $emSite  = $this->getDoctrine()->getManager($site->getLibelle());
-                $typePrestationAnnexeSite = $emSite->find(TypePrestationAnnexe::class,$typePrestationAnnexe);
-                foreach ($typePrestationAnnexeSite->getTraductions() as $traductionSite){
-                    $traduction = $typePrestationAnnexe->getTraductions()->filter(function (TypePrestationAnnexeTraduction $element) use ($traductionSite){
-                        return $element->getLangue()->getId() == $traductionSite->getId();
-                    })->first();
-                    $traductionSite->setLibelle($traduction->getLibelle());
-                }
-                $emSite->persist($typePrestationAnnexeSite);
-                $emSite->flush();
-            }
             $em->persist($typePrestationAnnexe);
             $em->flush();
+
+            $this->copieVerSites($typePrestationAnnexe);
 
             return $this->redirectToRoute('typeprestationannexe_edit', array('id' => $typePrestationAnnexe->getId()));
         }
 
         return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/edit.html.twig', array(
-            'typePrestationAnnexe' => $typePrestationAnnexe,
-            'form' => $editForm->createView(),
+            'typePrestationAnnexe'  => $typePrestationAnnexe,
+            'form'                  => $editForm->createView(),
 //            'delete_form' => $deleteForm->createView(),
+            'langues'                => $langues
         ));
+    }
+
+    public function copieVerSites($typePrestationAnnexe){
+        /** @var TypePrestationAnnexeTraduction $traductionSite */
+        /** @var TypePrestationAnnexe $typePrestationAnnexeSite */
+        /** @var TypePrestationAnnexe $typePrestationAnnexe */
+        /** @var TypePrestationAnnexeTraduction $traduction */
+        $em     = $this->getDoctrine()->getManager();
+        $sites  = $em->getRepository(Site::class)->findBy(array('crm'=>0));
+        foreach ($sites as $site){
+            $emSite  = $this->getDoctrine()->getManager($site->getLibelle());
+            $typePrestationAnnexeSite = $emSite->find(TypePrestationAnnexe::class,$typePrestationAnnexe);
+            foreach ($typePrestationAnnexeSite->getTraductions() as $traductionSite){
+                $traduction = $typePrestationAnnexe->getTraductions()->filter(function (TypePrestationAnnexeTraduction $element) use ($traductionSite){
+                    return $element->getLangue()->getId() == $traductionSite->getId();
+                })->first();
+                $traductionSite->setLibelle($traduction->getLibelle());
+            }
+            $emSite->persist($typePrestationAnnexeSite);
+            $emSite->flush();
+        }
     }
 
     /**
