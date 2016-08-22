@@ -1,26 +1,41 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    {{ 'Liste des types de prestation annexe' | capitalize }}
+{% endblock %}
 {% block body %}
-    <h1>TypePrestationAnnexe list</h1>
+    <h1>{{ 'liste des types de prestation annexe' | capitalize }}</h1>
 
-    <table>
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'libelle' | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for typePrestationAnnexe in typePrestationAnnexes %}
             <tr>
-                <td><a href="{{ path('typeprestationannexe_show', { 'id': typePrestationAnnexe.id }) }}">{{ typePrestationAnnexe.id }}</a></td>
                 <td>
-                    <ul>
+                    <a href="{{ path('typeprestationannexe_show', { 'id': typePrestationAnnexe.id }) }}">{{ typePrestationAnnexe.id }}</a>
+                </td>
+                <td>
+                    {% for traduction in typePrestationAnnexe.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="{{ path('typeprestationannexe_show', { 'id': typePrestationAnnexe.id }) }}">show</a>
+                            <a class="btn btn-default"
+                               href="{{ path('typeprestationannexe_show', { 'id': typePrestationAnnexe.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
-                            <a href="{{ path('typeprestationannexe_edit', { 'id': typePrestationAnnexe.id }) }}">edit</a>
+                            <a class="btn btn-default"
+                               href="{{ path('typeprestationannexe_edit', { 'id': typePrestationAnnexe.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -28,10 +43,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('typeprestationannexe_new') }}">Create a new entry</a>
-        </li>
-    </ul>
 {% endblock %}

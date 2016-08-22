@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexeTraduction;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -24,7 +27,7 @@ class TypePrestationAnnexeController extends Controller
 
         $typePrestationAnnexes = $em->getRepository('MondofutePrestationAnnexeBundle:TypePrestationAnnexe')->findAll();
 
-        return $this->render('typeprestationannexe/index.html.twig', array(
+        return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/index.html.twig', array(
             'typePrestationAnnexes' => $typePrestationAnnexes,
         ));
     }
@@ -47,7 +50,7 @@ class TypePrestationAnnexeController extends Controller
             return $this->redirectToRoute('typeprestationannexe_show', array('id' => $typePrestationAnnexe->getId()));
         }
 
-        return $this->render('typeprestationannexe/new.html.twig', array(
+        return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/new.html.twig', array(
             'typePrestationAnnexe' => $typePrestationAnnexe,
             'form' => $form->createView(),
         ));
@@ -61,7 +64,7 @@ class TypePrestationAnnexeController extends Controller
     {
         $deleteForm = $this->createDeleteForm($typePrestationAnnexe);
 
-        return $this->render('typeprestationannexe/show.html.twig', array(
+        return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/show.html.twig', array(
             'typePrestationAnnexe' => $typePrestationAnnexe,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -73,22 +76,40 @@ class TypePrestationAnnexeController extends Controller
      */
     public function editAction(Request $request, TypePrestationAnnexe $typePrestationAnnexe)
     {
-        $deleteForm = $this->createDeleteForm($typePrestationAnnexe);
+        /** @var Site $site */
+        /** @var TypePrestationAnnexeTraduction $traduction */
+        /** @var TypePrestationAnnexeTraduction $traductionSite */
+//        $deleteForm = $this->createDeleteForm($typePrestationAnnexe);
         $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType', $typePrestationAnnexe);
+        $editForm
+            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em     = $this->getDoctrine()->getManager();
+            $sites  = $em->getRepository(Site::class)->findBy(array('crm'=>0));
+            foreach ($sites as $site){
+                $emSite  = $this->getDoctrine()->getManager($site->getLibelle());
+                $typePrestationAnnexeSite = $emSite->find(TypePrestationAnnexe::class,$typePrestationAnnexe);
+                foreach ($typePrestationAnnexeSite->getTraductions() as $traductionSite){
+                    $traduction = $typePrestationAnnexe->getTraductions()->filter(function (TypePrestationAnnexeTraduction $element) use ($traductionSite){
+                        return $element->getLangue()->getId() == $traductionSite->getId();
+                    })->first();
+                    $traductionSite->setLibelle($traduction->getLibelle());
+                }
+                $emSite->persist($typePrestationAnnexeSite);
+                $emSite->flush();
+            }
             $em->persist($typePrestationAnnexe);
             $em->flush();
 
             return $this->redirectToRoute('typeprestationannexe_edit', array('id' => $typePrestationAnnexe->getId()));
         }
 
-        return $this->render('typeprestationannexe/edit.html.twig', array(
+        return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/edit.html.twig', array(
             'typePrestationAnnexe' => $typePrestationAnnexe,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form' => $editForm->createView(),
+//            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -121,6 +142,7 @@ class TypePrestationAnnexeController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('typeprestationannexe_delete', array('id' => $typePrestationAnnexe->getId())))
+            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
             ->setMethod('DELETE')
             ->getForm()
         ;

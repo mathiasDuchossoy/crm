@@ -1,0 +1,6 @@
+mettre.a.jour: 'mettre à jour'
+supprimer: delete
+typeprestationannexe:
+    edition: 'édition d''un type de prestation annexe'
+    creation: 'création d''un type de prestation annexe'
+fiche: fiche

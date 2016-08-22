@@ -1,21 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends '@MondofutePrestationAnnexe/typeprestationannexe/fiche.html.twig' %}
 
-{% block body %}
-    <h1>TypePrestationAnnexe edit</h1>
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'typeprestationannexe.edition' | trans | capitalize }}
+{% endblock %}
+{% block titre %}
+    Edition d'un type de prestation annexe
+{% endblock %}
 
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('typeprestationannexe_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            {#<li>{{ form(delete_form) }}</li>#}
+        </ul>
 
-    <ul>
-        <li>
-            <a href="{{ path('typeprestationannexe_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    </div>
 {% endblock %}
