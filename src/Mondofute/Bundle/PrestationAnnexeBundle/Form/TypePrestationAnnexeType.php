@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousTypePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexeTraduction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -19,6 +20,12 @@ class TypePrestationAnnexeType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => TypePrestationAnnexeTraductionType::class,
+            ))
+            ->add('sousTypePrestationAnnexes', CollectionType::class, array(
+                'entry_type' => SousTypePrestationAnnexeType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ))
         ;
     }

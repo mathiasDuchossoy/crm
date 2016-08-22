@@ -18,6 +18,9 @@ class SousTypePrestationAnnexeType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => SousTypePrestationAnnexeTraductionType::class,
+                'allow_add' => true,
+                'prototype_name' => '__name_traduction__',
+                'required' => true,
             ))
         ;
     }
