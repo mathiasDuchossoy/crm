@@ -11,7 +11,9 @@
 maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
-||||||| parent of f700b57... ajout du sql grande_ville
-=======
+||||||| parent of e243ce4... CRM-90 Stations - Medias
 maj\crm_54\2016-08-08a_md_grande_ville.sql
->>>>>>> f700b57... ajout du sql grande_ville
+=======
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_90\2016-08-09a_md_visuels_station.sql
+>>>>>>> e243ce4... CRM-90 Stations - Medias
