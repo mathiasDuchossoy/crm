@@ -29,11 +29,13 @@
     </table>
     <div class="panel panel-primary">
         <div class="panel-heading"><h3 class="panel-title">
-                Sous type de la prestaion annexe
+                Sous-types de la prestation annexe
             </h3>
         </div>
         <div class="panel-body">
             {# liste des images #}
+
+            {% if  typePrestationAnnexe.sousTypePrestationAnnexes is not empty %}
             <ul class="sous_type_prestation_annexe"
                     {#style="list-style-type: none;"#}
             >
@@ -47,6 +49,9 @@
                     {% endfor %}
                 {% endfor %}
             </ul>
+            {% else %}
+                <div class="alert alert-info" role="alert">Pas de sous-types.</div>
+            {% endif %}
         </div>
     </div>
     <div style="text-align: right">

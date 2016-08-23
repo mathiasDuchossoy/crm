@@ -163,6 +163,8 @@ class TypePrestationAnnexeController extends Controller
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             $this->udpateSites($typePrestationAnnexe, $sites);
 
+            $this->addFlash('success' , 'Le type de prestation externe a bien été modifié.');
+
             return $this->redirectToRoute('typeprestationannexe_edit', array('id' => $typePrestationAnnexe->getId()));
         }
 
