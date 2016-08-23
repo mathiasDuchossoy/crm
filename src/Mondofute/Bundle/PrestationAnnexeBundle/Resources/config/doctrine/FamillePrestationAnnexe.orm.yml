@@ -1,0 +1,22 @@
+Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        sousFamillePrestationAnnexes:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+            mappedBy: famillePrestationAnnexe
+            cascade: ['persist','remove']
+        traductions:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction
+            mappedBy: famillePrestationAnnexe
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }
