@@ -34,12 +34,15 @@ class PrestationAnnexeType extends AbstractType
                 'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
+                'attr' => array(
+                    'onchange' => 'javascript:sortSousFamilleByFamille(this);'
+                )
             ))
             ->add('sousFamillePrestationAnnexes', EntityType::class, array(
                 'class' => SousFamillePrestationAnnexe::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
+                "placeholder" => " --- choisir une sous-famile ---",
                 'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },

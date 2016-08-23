@@ -4,6 +4,8 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * PrestationAnnexeTraduction
@@ -33,7 +35,7 @@ class PrestationAnnexe
      */
     private $prestationAnnexeUnifie;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
@@ -125,7 +127,7 @@ class PrestationAnnexe
     /**
      * Remove sousFamillePrestationAnnexe
      *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      */
     public function removeSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
     {
@@ -193,7 +195,7 @@ class PrestationAnnexe
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -203,39 +205,15 @@ class PrestationAnnexe
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return PrestationAnnexe
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
         return $this;
-    }
-
-    /**
-     * Add sousFamillePrestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
-     *
-     * @return PrestationAnnexe
-     */
-    public function addSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
-    {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnex;
-
-        return $this;
-    }
-
-    /**
-     * Remove sousFamillePrestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
-     */
-    public function removeSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
-    {
-        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnex);
     }
 
     /**
