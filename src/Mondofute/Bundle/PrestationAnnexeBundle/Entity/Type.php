@@ -22,8 +22,8 @@ class Type
     );
 
 
-    static public function getLibelle($permission)
+    static public function getLibelle($id)
     {
-        return self::$libelles[$permission];
+        return self::$libelles[$id];
     }
 }
