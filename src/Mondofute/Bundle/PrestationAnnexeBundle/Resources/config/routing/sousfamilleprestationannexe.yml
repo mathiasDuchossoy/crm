@@ -1,0 +1,24 @@
+sousfamilleprestationannexe_index:
+    path:     /
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe:index" }
+    methods:  GET
+
+sousfamilleprestationannexe_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe:show" }
+    methods:  GET
+
+sousfamilleprestationannexe_new:
+    path:     /new
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe:new" }
+    methods:  [GET, POST]
+
+sousfamilleprestationannexe_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe:edit" }
+    methods:  [GET, POST]
+
+sousfamilleprestationannexe_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe:delete" }
+    methods:  DELETE

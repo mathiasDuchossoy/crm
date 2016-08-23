@@ -1,0 +1,20 @@
+{% extends '@MondofutePrestationAnnexe/familleprestationannexe/fiche.html.twig' %}
+
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'familleprestationannexe.edition' | trans | capitalize }}
+{% endblock %}
+{% block titre %}
+    Edition d'une famille de prestation annexe
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('familleprestationannexe_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            {#<li>{{ form(delete_form) }}</li>#}
+        </ul>
+
+    </div>
+{% endblock %}
