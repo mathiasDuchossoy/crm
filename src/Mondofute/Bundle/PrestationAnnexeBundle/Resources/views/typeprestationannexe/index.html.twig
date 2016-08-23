@@ -43,4 +43,7 @@
         {% endfor %}
         </tbody>
     </table>
+    {% if  typePrestationAnnexes is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
 {% endblock %}
