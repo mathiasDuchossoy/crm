@@ -49,7 +49,6 @@ class FamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
         return new Paginator($q);
     }
 
-
     /**
      * @param $locale
      * @return \Doctrine\ORM\QueryBuilder
@@ -69,21 +68,4 @@ class FamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb;
     }
-
-//    public function getTraductionsByLocale($locale)
-//    {
-//
-//        $qb = $this->getEntityManager()->createQueryBuilder();
-//        $qb->select('r , rt')
-//            ->from('MondofuteGeographieBundle:Departement', 'r')
-//            ->join('r.traductions', 'rt')
-//            ->join('r.site', 's')
-//            ->join('rt.langue', 'l')
-//            ->where("l.code = '$locale'");
-////        ->setParameter('code' , $locale)
-//        $qb->orderBy('r.id', 'ASC');
-//
-//        return $qb;
-//    }
-
 }
