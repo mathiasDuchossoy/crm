@@ -7,6 +7,7 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\SousFamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -34,15 +35,16 @@ class PrestationAnnexeType extends AbstractType
                     return $r->getTraductionsByLocale($locale);
                 },
             ))
-//            ->add('sousFamillePrestationAnnexes', EntityType::class, array(
-//                'class' => SousFamillePrestationAnnexe::class,
-//                'required' => true,
-//                "choice_label" => "libelle",
-//                "placeholder" => " --- choisir un type ---",
-////                'query_builder' => function (DepartementRepository $rr) use ($locale) {
-////                    return $rr->getTraductionsByLocale($locale);
-////                },
-//            ))
+            ->add('sousFamillePrestationAnnexes', EntityType::class, array(
+                'class' => SousFamillePrestationAnnexe::class,
+                'required' => false,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un secteur ---",
+                'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
+                    return $rr->getTraductionsByLocale($locale);
+                },
+                'multiple' => true
+            ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
             ))
