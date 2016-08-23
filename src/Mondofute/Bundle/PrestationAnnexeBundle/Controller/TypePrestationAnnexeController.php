@@ -26,14 +26,33 @@ class TypePrestationAnnexeController extends Controller
      * Lists all TypePrestationAnnexe entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $typePrestationAnnexes = $em->getRepository('MondofutePrestationAnnexeBundle:TypePrestationAnnexe')->findAll();
+        $count = $em
+            ->getRepository('MondofutePrestationAnnexeBundle:TypePrestationAnnexe')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'typeprestationannexe_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $entities = $this->getDoctrine()->getRepository('MondofutePrestationAnnexeBundle:TypePrestationAnnexe')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
+
+//        $typePrestationAnnexes = $em->getRepository('MondofutePrestationAnnexeBundle:TypePrestationAnnexe')->findAll();
 
         return $this->render('@MondofutePrestationAnnexe/typeprestationannexe/index.html.twig', array(
-            'typePrestationAnnexes' => $typePrestationAnnexes,
+            'typePrestationAnnexes' => $entities,
+            'pagination' => $pagination
         ));
     }
 
