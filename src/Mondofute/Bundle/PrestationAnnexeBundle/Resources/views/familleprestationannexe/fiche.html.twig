@@ -1,0 +1,165 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {% block formulaire %}
+
+            {% include '::flashbags.html.twig' %}
+
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% set iTraduc = 0 %}
+            <ul class="nav nav-tabs">
+            {% for traduction in form.traductions %}
+                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                    <a data-toggle="tab"
+                       href="#traduction_{{ traduction.vars.value.langue.id }}">
+                         {#affiche la langue en fonction de la locale#}
+                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                {{ traductionLangue.libelle }}
+                            {% endif %}
+                        {% endfor %}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+            <div class="tab-content">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <div id="traduction_{{ traduction.vars.value.langue.id }}"
+                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {% for element in traduction.children %}
+                            {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title">
+                        Sous-familles de la prestaion annexe
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    {# liste des images #}
+                    <ul class="sous_famille_prestation_annexe" data-prototype_sous_famille_prestation_annexe="
+                        {% filter escape %}
+                        {% include('@MondofutePrestationAnnexe/sousfamilleprestationannexe/template-sous-famille-prestation-annexe.html.twig') with {'form': form.sousFamillePrestationAnnexes.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'sous_famille_prestation_annexe'} %}
+                        {% endfilter %}
+                    "
+                        style="list-style-type: none;"
+                    >
+                        {% set i = 0 %}
+                        {% for sousFamillePrestationAnnexe in form.sousFamillePrestationAnnexes %}
+                            <li class="element">
+                                {% include('@MondofutePrestationAnnexe/sousfamilleprestationannexe/template-sous-famille-prestation-annexe.html.twig') with {'form': sousFamillePrestationAnnexe,'langues': langues, 'name': i, 'entity': 'sous_famille_prestation_annexe'} %}
+                            </li>
+                            {% set i = i + 1 %}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% set elements = ['sous_famille_prestation_annexe' ] %}
+        {% for element in elements %}
+
+
+        var ${{ element }}CollectionHolder;
+
+        // setup an "add a image" link
+        var ${{ element }}AddLink = $('<a href="#" class="add_{{ element }}_link">Ajouter un sous-famille</a>');
+        var ${{ element }}_newLink = $('<li></li>').append(${{ element }}AddLink);
+        link.{{ element }} = ${{ element }}_newLink;
+
+        elements.push('{{ element }}');
+        {% endfor %}
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of images
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing image form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a image" anchor and li to the images ul
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input').length);
+
+                window['$' + element + 'AddLink'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new image form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], element);
+                });
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+//            console.log($collectionHolder);
+//            console.log(type);
+            var prototype = $collectionHolder.data('prototype_' + type);
+//            console.log(prototype);
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+{% endblock %}
