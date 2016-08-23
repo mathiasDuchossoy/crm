@@ -48,7 +48,7 @@ class FamillePrestationAnnexe
      *
      * @return FamillePrestationAnnexe
      */
-    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    public function addSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
     {
         $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe->setFamillePrestationAnnexe($this);
 
@@ -60,7 +60,7 @@ class FamillePrestationAnnexe
      *
      * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      */
-    public function removeSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    public function removeSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
     {
         $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnexe);
     }

@@ -205,5 +205,28 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
+
+        function sortSousFamilleByFamille(element) {
+            $element = $(element);
+            var domaineId = $element.val();
+            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe"]').each(function (index, select) {
+                if ($(select).is(":visible")) {
+                    $select = $(select);
+                    $select.val('');
+                    $select.find('option').each(function (index, option) {
+                        $option = $(option);
+                        if ($option.data('domaine_id')) {
+                            if ($option.data('domaine_id') != domaineId) {
+                                $option.hide();
+                            }
+                            else {
+                                $option.show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
     </script>
 {% endblock %}
