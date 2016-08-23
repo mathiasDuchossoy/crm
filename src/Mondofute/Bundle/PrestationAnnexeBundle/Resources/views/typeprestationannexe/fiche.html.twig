@@ -52,7 +52,9 @@
                         {% filter escape %}
                         {% include('@MondofutePrestationAnnexe/soustypeprestationannexe/template-sous-type-prestation-annexe.html.twig') with {'form': form.sousTypePrestationAnnexes.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'sous_type_prestation_annexe'} %}
                         {% endfilter %}
-                    ">
+                    "
+                        style="list-style-type: none;"
+                    >
                         {% set i = 0 %}
                         {% for sousTypePrestationAnnexe in form.sousTypePrestationAnnexes %}
                             <li class="element">

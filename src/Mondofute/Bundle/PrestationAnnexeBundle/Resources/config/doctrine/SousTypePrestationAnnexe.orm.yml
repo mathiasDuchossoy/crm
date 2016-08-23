@@ -13,7 +13,7 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousTypePrestationAnnexe:
     manyToOne:
         typePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexe
-            inverserBy: sousTypePrestationAnnexes
+            inversedBy: sousTypePrestationAnnexes
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousTypePrestationAnnexeTraduction
