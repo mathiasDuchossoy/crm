@@ -48,4 +48,42 @@ class FamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('entity , traductions')
+            ->from('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe', 'entity')
+            ->join('entity.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->where('langue.code = :locale')
+            ->setParameter('locale', $locale)
+            ->orderBy('traductions.libelle', 'ASC')
+        ;
+
+        return $qb;
+    }
+
+//    public function getTraductionsByLocale($locale)
+//    {
+//
+//        $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb->select('r , rt')
+//            ->from('MondofuteGeographieBundle:Departement', 'r')
+//            ->join('r.traductions', 'rt')
+//            ->join('r.site', 's')
+//            ->join('rt.langue', 'l')
+//            ->where("l.code = '$locale'");
+////        ->setParameter('code' , $locale)
+//        $qb->orderBy('r.id', 'ASC');
+//
+//        return $qb;
+//    }
+
 }
