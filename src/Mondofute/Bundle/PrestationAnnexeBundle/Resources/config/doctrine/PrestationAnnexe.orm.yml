@@ -20,14 +20,17 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
     manyToMany:
         sousFamillePrestationAnnexes:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
-            joinTable:
-                name: prestation_annexes_sous_famille_prestation_annexes
-                joinColumns:
-                    prestation_annexe_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    sous_famille_prestation_annexe_id:
-                        referencedColumnName: id
+#            joinTable:
+#                name: prestation_annexes_sous_famille_prestation_annexes
+#                joinColumns:
+#                    prestation_annexe_id:
+#                        referencedColumnName: id
+##                    cascade: ['persist','remove']
+#                inverseJoinColumns:
+#                    sous_famille_prestation_annexe_id:
+#                        referencedColumnName: id
+            cascade: ['persist','remove']
+#            cascade: ['persist','remove']
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction

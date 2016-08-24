@@ -263,4 +263,19 @@ class PrestationAnnexe
 
         return $this;
     }
+
+    /**
+     * @param $sousFamillePrestationAnnexes
+     * @return $this
+     */
+    public function setSousFamillePrestationAnnexes($sousFamillePrestationAnnexes)
+    {
+        $this->getSousFamillePrestationAnnexes()->clear();
+
+        foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
+            $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
+        }
+        return $this;
+    }
+
 }

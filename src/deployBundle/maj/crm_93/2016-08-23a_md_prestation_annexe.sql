@@ -15,6 +15,9 @@ ALTER TABLE prestation_annexes_sous_famille_prestation_annexes ADD CONSTRAINT FK
 ALTER TABLE prestation_annexes_sous_famille_prestation_annexes ADD CONSTRAINT FK_A949BBDC3AB7F643 FOREIGN KEY (sous_famille_prestation_annexe_id) REFERENCES sous_famille_prestation_annexe (id);
 ALTER TABLE prestation_annexe_traduction ADD CONSTRAINT FK_92C538DF33AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES prestation_annexe (id);
 ALTER TABLE prestation_annexe_traduction ADD CONSTRAINT FK_92C538DF2AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
-ALTER TABLE sous_famille_prestation_annexe ADD CONSTRAINT FK_F81CF9D05D1D40E4 FOREIGN KEY (famille_prestation_annexe_id) REFERENCES famille_prestation_annexe (id);
-ALTER TABLE sous_famille_prestation_annexe_traduction ADD CONSTRAINT FK_29BB02A23AB7F643 FOREIGN KEY (sous_famille_prestation_annexe_id) REFERENCES sous_famille_prestation_annexe (id);
-ALTER TABLE sous_famille_prestation_annexe_traduction ADD CONSTRAINT FK_29BB02A22AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+-- ALTER TABLE sous_famille_prestation_annexe ADD CONSTRAINT FK_F81CF9D05D1D40E4 FOREIGN KEY (famille_prestation_annexe_id) REFERENCES famille_prestation_annexe (id);
+-- ALTER TABLE sous_famille_prestation_annexe_traduction ADD CONSTRAINT FK_29BB02A23AB7F643 FOREIGN KEY (sous_famille_prestation_annexe_id) REFERENCES sous_famille_prestation_annexe (id);
+-- ALTER TABLE sous_famille_prestation_annexe_traduction ADD CONSTRAINT FK_29BB02A22AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+CREATE TABLE prestation_annexe_sous_famille_prestation_annexe (prestation_annexe_id INT UNSIGNED NOT NULL, sous_famille_prestation_annexe_id INT UNSIGNED NOT NULL, INDEX IDX_538CE55F33AD7BEF (prestation_annexe_id), INDEX IDX_538CE55F3AB7F643 (sous_famille_prestation_annexe_id), PRIMARY KEY(prestation_annexe_id, sous_famille_prestation_annexe_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE prestation_annexe_sous_famille_prestation_annexe ADD CONSTRAINT FK_538CE55F33AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES prestation_annexe (id) ON DELETE CASCADE;
+ALTER TABLE prestation_annexe_sous_famille_prestation_annexe ADD CONSTRAINT FK_538CE55F3AB7F643 FOREIGN KEY (sous_famille_prestation_annexe_id) REFERENCES sous_famille_prestation_annexe (id) ON DELETE CASCADE;
