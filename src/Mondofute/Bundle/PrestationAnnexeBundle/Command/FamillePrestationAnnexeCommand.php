@@ -133,6 +133,18 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         $famillePrestationAnnexe->addTraduction($famillePrestationAnnexeTraduction);
         $famillePrestationAnnexes->add($famillePrestationAnnexe);
         // *** Fin RESTAURATION ***
+        // *** HEBERGEMENT ***
+        $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
+        $famillePrestationAnnexeTraduction->setLangue($fr);
+        $famillePrestationAnnexeTraduction->setLibelle('Hébergement');
+        $famillePrestationAnnexe->addTraduction($famillePrestationAnnexeTraduction);
+        $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
+        $famillePrestationAnnexeTraduction->setLangue($en);
+        $famillePrestationAnnexeTraduction->setLibelle('Accommodation');
+        $famillePrestationAnnexe->addTraduction($famillePrestationAnnexeTraduction);
+        $famillePrestationAnnexes->add($famillePrestationAnnexe);
+        // *** Fin HEBERGEMENT ***
 
         // ***** ENREGISTREMENT *****
         $sites      = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
