@@ -30,7 +30,7 @@ class PrestationAnnexeType extends AbstractType
                 'class' => FamillePrestationAnnexe::class,
                 'required' => true,
                 "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un type ---",
+                "placeholder" => " --- choisir une famille ---",
                 'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
@@ -42,7 +42,7 @@ class PrestationAnnexeType extends AbstractType
                 'class' => SousFamillePrestationAnnexe::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir une sous-famile ---",
+                "placeholder" => " --- choisir une/des sous-famille(s) ---",
                 'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
                     return $rr->getTraductionsByLocale($locale);
                 },
@@ -54,10 +54,11 @@ class PrestationAnnexeType extends AbstractType
                     Type::getLibelle(Type::Quantite) => Type::Quantite,
                     Type::getLibelle(Type::Forfait) => Type::Forfait,
                 ),
+                "placeholder" => " --- choisir un type ---",
                 'choices_as_values' => true,
                 'label' => 'type',
                 'translation_domain' => 'messages',
-                'expanded' => true,
+//                'expanded' => true,
                 'required' => true,
             ))
             ->add('traductions', CollectionType::class, array(
