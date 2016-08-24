@@ -28,8 +28,9 @@
                          data-crm="{{ prestationAnnexe.vars.value.site.crm | number_format }}">
                         {{ form_row(prestationAnnexe.site) }}
                         <ul class="nav nav-tabs">
-                            {{ form_row( prestationAnnexe.famillePrestationAnnexe, { 'attr' : { 'data-unique_block_prefix' : prestationAnnexe.famillePrestationAnnexe.vars['unique_block_prefix']}}) }}
-                            {{ form_row( prestationAnnexe.sousFamillePrestationAnnexes , { 'attr' : { 'data-unique_block_prefix' : prestationAnnexe.sousFamillePrestationAnnexes.vars['unique_block_prefix']}}) }}
+                            {{ form_row( prestationAnnexe.type, { 'attr' : { 'data-unique_block_prefix' : prestationAnnexe.type.vars['unique_block_prefix']}}) }}
+                            {{ form_row( prestationAnnexe.famillePrestationAnnexe, { 'attr' : { 'data-index' : index,'data-unique_block_prefix' : prestationAnnexe.famillePrestationAnnexe.vars['unique_block_prefix']}}) }}
+                            {{ form_row( prestationAnnexe.sousFamillePrestationAnnexes , { 'attr' : { 'data-index' : index, 'data-unique_block_prefix' : prestationAnnexe.sousFamillePrestationAnnexes.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in prestationAnnexe.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
@@ -208,15 +209,16 @@
 
         function sortSousFamilleByFamille(element) {
             $element = $(element);
-            var domaineId = $element.val();
-            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe"]').each(function (index, select) {
-                if ($(select).is(":visible")) {
-                    $select = $(select);
+            var famillePrestationAnnexeId = $element.val();
+            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexes"]').each(function (index, select) {
+                $select = $(select);
+//                if ($select.data('index') == $element.data('index') && $select.is(":visible")) {
+                if ($select.data('index') == $element.data('index')) {
                     $select.val('');
                     $select.find('option').each(function (index, option) {
                         $option = $(option);
-                        if ($option.data('domaine_id')) {
-                            if ($option.data('domaine_id') != domaineId) {
+                        if ($option.data('famille_prestation_annexe_id')) {
+                            if ($option.data('famille_prestation_annexe_id') != famillePrestationAnnexeId) {
                                 $option.hide();
                             }
                             else {
@@ -227,6 +229,10 @@
                 }
             });
         }
+
+        $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe"]').each(function (index, select) {
+            sortSousFamilleByFamille(select);
+        });
 
     </script>
 {% endblock %}

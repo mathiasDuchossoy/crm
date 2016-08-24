@@ -5,6 +5,8 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PrestationAnnexeUnifieType extends AbstractType
@@ -31,67 +33,28 @@ class PrestationAnnexeUnifieType extends AbstractType
         ));
     }
 
+    /**
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
+     */
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        // todo: faire finish view  avec dependance famille sousfamille
-        /** @var FormView $viewChild */
-        $entities = 'stations';
-        $entitiesSelect = array();
-        $entitiesSelect[] = 'zoneTouristiques';
-//        echo ucfirst('zoneTouristique');die;
-        $entitiesSelect[] = 'secteurs';
-        $entitiesSelect[] = 'profils';
-        $entitiesSelect[] = 'departement';
-        $entitiesSelect[] = 'domaine';
-        foreach ($entitiesSelect as $entitySelect) {
-            foreach ($view->children[$entities]->children as $viewChild) {
-                $siteId = $viewChild->vars['value']->getSite()->getId();
-                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
-                if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
-                if ($entitySelect == 'profil') $entitySelect = 'profils';
-                $choices = $viewChild->children[$entitySelect]->vars['choices'];
-                $newChoices = array();
-                foreach ($choices as $key => $choice) {
-                    if ($entitySelect == 'secteurs') $entitySelect = 'secteur';
-                    if ($entitySelect == 'zoneTouristiques') $entitySelect = 'zoneTouristique';
-                    if ($entitySelect == 'profils') $entitySelect = 'profil';
-                    $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
-                    if ($choice->data->getSite()->getId() == $siteId) {
-                        $newChoices[$key] = $choice;
-                    }
-                }
-
-                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
-                if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
-                if ($entitySelect == 'profil') $entitySelect = 'profils';
-                $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
-
-            }
-        }
-
-
-        $entities = 'stations';
-        $entitySelect = 'stationMere';
+        $entities = 'prestationAnnexes';
+        $entitySelect = 'sousFamillePrestationAnnexes';
         /** @var FormView $viewChild */
         foreach ($view->children[$entities]->children as $viewChild) {
-            $siteId = $viewChild->vars['value']->getSite()->getId();
             $choices = $viewChild->children[$entitySelect]->vars['choices'];
-
 
             $newChoices = array();
             foreach ($choices as $key => $choice) {
-//                dump($choice->data->getDomaine());
-                $domaineId = !empty($choice->data->getDomaine()) ? $choice->data->getDomaine()->getId() : '';
+                $famillePrestationAnnexeId = !empty($choice->data->getFamillePrestationAnnexe()) ? $choice->data->getFamillePrestationAnnexe()->getId() : '';
                 $choice->attr = array(
-                    'data-unifie_id' => $choice->data->getStationUnifie()->getId(),
-                    'data-domaine_id' => $domaineId
+                    'data-famille_prestation_annexe_id' => $famillePrestationAnnexeId
                 );
-                if ($choice->data->getSite()->getId() == $siteId) {
-                    $newChoices[$key] = $choice;
-                }
+                $newChoices[$key] = $choice;
             }
             $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
         }
     }
-
 }
