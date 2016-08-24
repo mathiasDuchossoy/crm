@@ -26,4 +26,8 @@ class Type
     {
         return self::$libelles[$id];
     }
+
+    public function getType($type){
+        return constant($type);
+    }
 }

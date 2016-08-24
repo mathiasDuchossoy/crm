@@ -1,0 +1,48 @@
+Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PrestationAnnexeBundle\Repository\PrestationAnnexeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+        type:
+            type: integer
+    manyToMany:
+        sousFamillePrestationAnnexes:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+#            joinTable:
+#                name: prestation_annexes_sous_famille_prestation_annexes
+#                joinColumns:
+#                    prestation_annexe_id:
+#                        referencedColumnName: id
+##                    cascade: ['persist','remove']
+#                inverseJoinColumns:
+#                    sous_famille_prestation_annexe_id:
+#                        referencedColumnName: id
+#            cascade: ['persist','remove']
+#            cascade: ['persist','remove']
+#            inversedBy: prestationAnnexes
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction
+            mappedBy: prestationAnnexe
+            cascade: ['persist','remove']
+    manyToOne:
+        prestationAnnexeUnifie:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie
+            inversedBy: prestationAnnexes
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        famillePrestationAnnexe:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+    lifecycleCallbacks: {  }
