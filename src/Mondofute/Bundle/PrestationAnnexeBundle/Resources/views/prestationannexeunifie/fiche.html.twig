@@ -89,41 +89,19 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_zoneTouristique");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_secteur");#}
+        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");#}
+        {#itemNonPersonalisable.push("_prestationAnnexe_uni_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexesfie_prestationAnnexes_entry_secteur");#}
         {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_domaine");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_codePostal");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_lienMeteo");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_jourOuverture");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_moisOuverture");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_jourFermeture");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_moisFermeture");#}
         {#{% for langue in langues %}#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enVoiture_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enTrain_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enAvion_{{ langue.code }}");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");#}
-        {#{% endfor %}#}
+        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");#}
 
         var items = [];
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_zoneTouristique");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_secteur");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexes");
         items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_domaine");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_codePostal");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_lienMeteo");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_jourOuverture");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_moisOuverture");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_jourFermeture");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_moisFermeture");
         {% for langue in langues %}
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enVoiture_{{ langue.code }}");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enTrain_{{ langue.code }}");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_enAvion_{{ langue.code }}");
-        items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_traductions_entry_distancesGrandesVilles_{{ langue.code }}");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");
         {% endfor %}
 
     </script>
