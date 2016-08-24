@@ -16,6 +16,9 @@ use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\ServiceBundle\Entity\CategorieService;
@@ -117,6 +120,11 @@ class FournisseurController extends Controller
         $adresse = new Adresse();
         $adresse->setCoordonneeGps(new CoordonneesGPS());
         $fournisseur->addMoyenCom($adresse);
+
+        // **** gestion des prestations annexes ****
+//        $famillePrestationAnnexes = $em->getRepository(FamillePrestationAnnexe::class)->findAll();
+//        $fou
+        // **** fin gestion des prestations annexes ****
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array('locale' => $request->getLocale()));
@@ -1506,5 +1514,25 @@ class FournisseurController extends Controller
         return $this->redirectToRoute('fournisseur_index');
     }
 
+    public function getPrestationAnnexesAction($famillePrestationAnnexeId){
+        $fournisseur = new Fournisseur();
+        $em = $this->getDoctrine()->getManager();
+//        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
+        $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId, 'site' => 1 ));
+        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
+        foreach ($prestationAnnexes as $prestationAnnex){
+            $fournisseur->addPrestationAnnex($prestationAnnex);
+        }
+        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
+            array('locale' => 'fr_FR'));
+
+//        dump($form);die;
+
+        return $this->render('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig', array(
+            'formFournisseurPrestationAnnexe'   => $form->createView(),
+            'prestationAnnexes'                 => $prestationAnnexes,
+            'famillePrestationAnnexe'           => $famillePrestationAnnexe
+        ));
+    }
 
 }

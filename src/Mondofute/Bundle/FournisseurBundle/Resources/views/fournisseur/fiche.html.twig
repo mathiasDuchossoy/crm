@@ -16,6 +16,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
+                <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="fiche" class="tab-pane fade in active">
@@ -238,6 +239,11 @@
                         <button class="btn btn-default afficher-modal-ajout-liste-service" type="button"><span
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
+                </div>
+                <div id="prestationannexe" class="tab-pane fade in">
+                    {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+                        {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                    {% endfor %}
                 </div>
             </div>
             {{ form_row(form.submit) }}
@@ -1314,6 +1320,35 @@
                 });
                 return false;
             }
+        }
+
+        function updatePrestationAnnexe(element){
+            $element = $(element);
+            $(element).find('input:checkbox').each(function(){
+                var famillePrestationAnnexeId = $(this).val();
+                var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
+                if($(this).is(':checked')){
+                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
+                    path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
+
+                    if(!$famillePrestationAnnexe.length) {
+                        $.ajax(path,
+                                {
+                                    method: 'GET'
+                                }
+                        ).done(function (data) {
+                            $("#prestationannexe").append(data);
+//                        $("#type_periode_" + typePeriodeId).html(data);
+
+                        });
+                    }
+                }
+                else{
+                    if($famillePrestationAnnexe.length){
+                        $famillePrestationAnnexe.remove();
+                    }
+                }
+            });
         }
 
     </script>
