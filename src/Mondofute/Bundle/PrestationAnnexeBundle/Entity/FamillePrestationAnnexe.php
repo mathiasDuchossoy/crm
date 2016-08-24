@@ -42,27 +42,27 @@ class FamillePrestationAnnexe
     }
 
     /**
-     * Add sousFamillePrestationAnnex
+     * Add sousFamillePrestationAnnexe
      *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      *
      * @return FamillePrestationAnnexe
      */
-    public function addSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    public function addSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
     {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnex->setFamillePrestationAnnexe($this);
+        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe->setFamillePrestationAnnexe($this);
 
         return $this;
     }
 
     /**
-     * Remove sousFamillePrestationAnnex
+     * Remove sousFamillePrestationAnnexe
      *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      */
-    public function removeSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    public function removeSousFamillePrestationAnnex(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
     {
-        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnex);
+        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnexe);
     }
 
     /**

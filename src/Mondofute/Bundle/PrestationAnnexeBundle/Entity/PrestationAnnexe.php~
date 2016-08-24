@@ -1,0 +1,250 @@
+<?php
+
+namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
+/**
+ * PrestationAnnexeTraduction
+ */
+class PrestationAnnexe
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var Collection
+     */
+    private $traductions;
+
+    /**
+     * @var Collection
+     */
+    private $sousFamillePrestationAnnexes;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
+    /**
+     * @var PrestationAnnexeUnifie
+     */
+    private $prestationAnnexeUnifie;
+    /**
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    private $site;
+    /**
+     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     */
+    private $famillePrestationAnnexe;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->traductions = new ArrayCollection();
+        $this->sousFamillePrestationAnnexes = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param PrestationAnnexeTraduction $traduction
+     *
+     * @return PrestationAnnexe
+     */
+    public function addTraduction(PrestationAnnexeTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param PrestationAnnexeTraduction $traduction
+     */
+    public function removeTraduction(PrestationAnnexeTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Add sousFamillePrestationAnnexe
+     *
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
+     *
+     * @return PrestationAnnexe
+     */
+    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    {
+        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe;
+
+        return $this;
+    }
+
+    /**
+     * Remove sousFamillePrestationAnnexe
+     *
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     */
+    public function removeSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    {
+        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnexe);
+    }
+
+    /**
+     * Get sousFamillePrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getSousFamillePrestationAnnexes()
+    {
+        return $this->sousFamillePrestationAnnexes;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return PrestationAnnexe
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get prestationAnnexeUnifie
+     *
+     * @return PrestationAnnexeUnifie
+     */
+    public function getPrestationAnnexeUnifie()
+    {
+        return $this->prestationAnnexeUnifie;
+    }
+
+    /**
+     * Set prestationAnnexeUnifie
+     *
+     * @param PrestationAnnexeUnifie $prestationAnnexeUnifie
+     *
+     * @return PrestationAnnexe
+     */
+    public function setPrestationAnnexeUnifie(PrestationAnnexeUnifie $prestationAnnexeUnifie = null)
+    {
+        $this->prestationAnnexeUnifie = $prestationAnnexeUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set site
+     *
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     *
+     * @return PrestationAnnexe
+     */
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Add sousFamillePrestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     *
+     * @return PrestationAnnexe
+     */
+    public function addSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    {
+        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnex;
+
+        return $this;
+    }
+
+    /**
+     * Remove sousFamillePrestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     */
+    public function removeSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    {
+        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnex);
+    }
+
+    /**
+     * Get famillePrestationAnnexe
+     *
+     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     */
+    public function getFamillePrestationAnnexe()
+    {
+        return $this->famillePrestationAnnexe;
+    }
+
+    /**
+     * Set famillePrestationAnnexe
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe
+     *
+     * @return PrestationAnnexe
+     */
+    public function setFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe = null)
+    {
+        $this->famillePrestationAnnexe = $famillePrestationAnnexe;
+
+        return $this;
+    }
+}
