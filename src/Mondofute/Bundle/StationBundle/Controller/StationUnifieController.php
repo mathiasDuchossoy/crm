@@ -186,7 +186,7 @@ class StationUnifieController extends Controller
             $em->persist($stationUnifie);
             $em->flush();
 
-            if (!$error) {
+//            if (!$error) {
                 foreach ($stationUnifie->getStations() as $station) {
                     $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
                     $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
@@ -197,7 +197,7 @@ class StationUnifieController extends Controller
                 $this->addFlash('success', 'La station a bien été créé.');
 
                 return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
-            }
+//            }
         }
 
         return $this->render('@MondofuteStation/stationunifie/new.html.twig', array(
@@ -1310,7 +1310,7 @@ class StationUnifieController extends Controller
 
         foreach ($stationUnifie->getStations() as $station) {
             // si on choisit de lié la carte ID de la mère à la station
-            if (!empty($request->get('cboxStationCI_' . $station->getSite()->getId()))) {
+            if (!empty($station->getStationMere()) && !empty($request->get('cboxStationCI_' . $station->getSite()->getId()))) {
                 $oldCIUnifie = $station->getStationCarteIdentite()->getStationCarteIdentiteUnifie();
                 $station->getStationCarteIdentite()->removeStation($station);
 //                    $station->setStationCarteIdentite(null);
@@ -1385,7 +1385,7 @@ class StationUnifieController extends Controller
 
         foreach ($stationUnifie->getStations() as $station) {
             // si on choisit de lié la carte ID de la mère à la station
-            if (!empty($request->get('cboxStationCommentVenir_' . $station->getSite()->getId()))) {
+            if (!empty($station->getStationMere()) && !empty($request->get('cboxStationCommentVenir_' . $station->getSite()->getId()))) {
                 $oldCVUnifie = $station->getStationCommentVenir()->getStationCommentVenirUnifie();
                 $station->getStationCommentVenir()->removeStation($station);
 //                    $station->setStationCommentVenir(null);
@@ -1463,7 +1463,7 @@ class StationUnifieController extends Controller
 
         foreach ($stationUnifie->getStations() as $station) {
             // si on choisit de lié la carte ID de la mère à la station
-            if (!empty($request->get('cboxStationDescription_' . $station->getSite()->getId()))) {
+            if (!empty($station->getStationMere()) && !empty($request->get('cboxStationDescription_' . $station->getSite()->getId()))) {
                 $oldCVUnifie = $station->getStationDescription()->getStationDescriptionUnifie();
                 $station->getStationDescription()->removeStation($station);
 //                    $station->setStationDescription(null);
