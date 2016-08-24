@@ -7,6 +7,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
@@ -42,57 +44,16 @@ class FournisseurType extends AbstractType
 
         $builder
             ->add('raisonSociale')
-//            ->add('type', EntityType::class, array(
-//                'choice_label' => 'libelle',
-//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-//                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
-//            ))
-//            ->add('type', EntityType::class, array(
-//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-//                'required' => true,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un type de fournisseur ---",
-//                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsByLocale($locale);
-//                },
-//            ))
-//            ->add('types', CollectionType::class, array(
-//                'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\TypeFournisseurType',
-////                'required' => true,
-////                "choice_label" => "traductions[0].libelle",
-////                "placeholder" => " --- choisir un type de fournisseur ---",
-////                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
-////                    return $rr->getTraductionsByLocale($locale);
-////                },
-////                'expanded'  => true,
-////                'multiple'  => true
-//            ))
-            ->add('types', CollectionType::class, array(
-                'mapped' => false,
-            ))
-            ->add('typeFournisseurs', ChoiceType::class, array(
-//            ->add('types', ChoiceType::class, array(
-                'choices' => array(
-                    TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
-                    TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
-                    TypeFournisseur::getLibelle(TypeFournisseur::LocationMaterielDeSki) => TypeFournisseur::LocationMaterielDeSki,
-                    TypeFournisseur::getLibelle(TypeFournisseur::ESF) => TypeFournisseur::ESF,
-                    TypeFournisseur::getLibelle(TypeFournisseur::Assurance) => TypeFournisseur::Assurance,
-//                    new TypeFournisseur(TypeFournisseur::Hebergement),
-//                    new TypeFournisseur(TypeFournisseur::RemonteesMecaniques) ,
-//                    new TypeFournisseur(TypeFournisseur::LocationMaterielDeSki) ,
-//                    new TypeFournisseur(TypeFournisseur::ESF),
-//                    new TypeFournisseur(TypeFournisseur::Assurance) ,
-                ),
-                'choices_as_values' => true,
-                'label' => 'types',
-                'translation_domain' => 'messages',
-                'mapped' => false,
-                'expanded' => true,
-                'multiple' => true,
-//                'choice_label' => 'libelle',
-//                'property_path' => 'libelle',
+            ->add('types', EntityType::class, array(
+                'class' => FamillePrestationAnnexe::class,
                 'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'multiple'  => true,
+                'expanded'  => true
             ))
             ->add('enseigne', null, array(
                 'label' => 'enseigne',

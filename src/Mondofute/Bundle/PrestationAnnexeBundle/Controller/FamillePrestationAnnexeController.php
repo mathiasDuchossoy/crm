@@ -191,7 +191,7 @@ class FamillePrestationAnnexeController extends Controller
             // modification des traductions du famillePrestationAnnexe
             foreach ($famillePrestationAnnexe->getTraductions() as $traduction) {
                 $traductionSite = $famillePrestationAnnexeSite->getTraductions()->filter(function (FamillePrestationAnnexeTraduction $element) use ($traduction) {
-                    return $element->getLangue()->getId() == $traduction->getId();
+                    return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {
                     $traductionSite = new FamillePrestationAnnexeTraduction();
