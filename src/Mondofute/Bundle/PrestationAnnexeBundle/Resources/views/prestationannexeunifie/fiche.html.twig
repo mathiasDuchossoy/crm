@@ -212,16 +212,10 @@
             var famillePrestationAnnexeId = $element.val();
             $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexes"]').each(function (index, select) {
                 $select = $(select);
-//                if ($select.data('index') == $element.data('index') && $select.is(":visible")) {
-//                console.log($select.val());
                 if ($select.data('index') == $element.data('index')) {
-//
                     $select.find('option').each(function (index, option) {
                         $option = $(option);
                         if ($option.data('famille_prestation_annexe_id')) {
-                            console.log($option.data('famille_prestation_annexe_id'));
-                            console.log(famillePrestationAnnexeId);
-                            console.log('-------');
                             if ($option.data('famille_prestation_annexe_id') != famillePrestationAnnexeId) {
                                 $option.hide();
                                 $option.prop("selected", false);
