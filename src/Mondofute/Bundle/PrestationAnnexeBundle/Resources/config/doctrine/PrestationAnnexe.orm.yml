@@ -29,8 +29,9 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
 #                inverseJoinColumns:
 #                    sous_famille_prestation_annexe_id:
 #                        referencedColumnName: id
-            cascade: ['persist','remove']
 #            cascade: ['persist','remove']
+#            cascade: ['persist','remove']
+#            inversedBy: prestationAnnexes
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction

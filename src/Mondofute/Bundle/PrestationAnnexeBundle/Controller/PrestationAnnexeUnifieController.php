@@ -346,8 +346,6 @@ class PrestationAnnexeUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var PrestationAnnexe $prestationAnnexe */
             foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
-
-                dump($prestationAnnexe->getSousFamillePrestationAnnexes()->first());
                 if ($prestationAnnexe->getActif()){
                     array_push($sitesAEnregistrer, $prestationAnnexe->getSite()->getId());
                 }
@@ -356,13 +354,6 @@ class PrestationAnnexeUnifieController extends Controller
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
-        die;
-
-//        $originalPrestationAnnexes = new ArrayCollection();
-////          Créer un ArrayCollection des objets de prestationAnnexes courants dans la base de données
-//        foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
-//            $originalPrestationAnnexes->add($prestationAnnexe);
-//        }
 
         $this->ajouterPrestationAnnexesDansForm($prestationAnnexeUnifie);
 
@@ -382,26 +373,8 @@ class PrestationAnnexeUnifieController extends Controller
                 }else{
                     $prestationAnnexe->setActif(true);
                 }
-//                dump($prestationAnnexe->getSousFamillePrestationAnnexes());
             }
-//            die;
 
-
-            // Supprimer la relation entre la prestationAnnexe et prestationAnnexeUnifie
-//            foreach ($originalPrestationAnnexes as $prestationAnnexe) {
-//                if (!$prestationAnnexeUnifie->getPrestationAnnexes()->contains($prestationAnnexe)) {
-//
-//                    //  suppression de la prestationAnnexe sur le site
-//                    $emSite = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
-//                    $entitySite = $emSite->find(PrestationAnnexeUnifie::class, $prestationAnnexeUnifie->getId());
-//                    $prestationAnnexeSite = $entitySite->getPrestationAnnexes()->first();
-//                    $emSite->remove($prestationAnnexeSite);
-//                    $emSite->flush();
-////                    dump($prestationAnnexe);
-//                    $prestationAnnexe->setPrestationAnnexeUnifie(null);
-//                    $em->remove($prestationAnnexe);
-//                }
-//            }
             $em->persist($prestationAnnexeUnifie);
             $em->flush();
 
