@@ -25,7 +25,6 @@ class PrestationAnnexeType extends AbstractType
     {
         $locale = $options["locale"];
         $builder
-            ->add('actif')
             ->add('famillePrestationAnnexe', EntityType::class, array(
                 'class' => FamillePrestationAnnexe::class,
                 'required' => true,
@@ -48,6 +47,7 @@ class PrestationAnnexeType extends AbstractType
                 },
                 'multiple' => true
             ))
+            ->add('type')
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
             ))
