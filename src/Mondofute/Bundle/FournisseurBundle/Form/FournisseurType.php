@@ -8,7 +8,10 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\PrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
@@ -53,7 +56,10 @@ class FournisseurType extends AbstractType
                     return $r->getTraductionsByLocale($locale);
                 },
                 'multiple'  => true,
-                'expanded'  => true
+                'expanded'  => true,
+                'attr'      => array(
+                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+                )
             ))
             ->add('enseigne', null, array(
                 'label' => 'enseigne',
@@ -139,7 +145,22 @@ class FournisseurType extends AbstractType
                 'label' => 'liste_service',
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
-            ));
+            ))
+            ->add('prestationAnnexes', EntityType::class, array(
+                'class' => PrestationAnnexe::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (PrestationAnnexeRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'multiple'  => true,
+                'expanded'  => true,
+                'attr'      => array(
+                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+                )
+            ))
+        ;
     }
 
     /**

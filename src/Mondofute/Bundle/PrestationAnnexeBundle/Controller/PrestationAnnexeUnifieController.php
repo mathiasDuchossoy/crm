@@ -86,8 +86,6 @@ class PrestationAnnexeUnifieController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
-
-
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var PrestationAnnexe $prestationAnnexe */
             foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe){
@@ -247,6 +245,7 @@ class PrestationAnnexeUnifieController extends Controller
                         $sousFamilleCollection->add($emSite->find(SousFamillePrestationAnnexe::class,$sousFamillePrestationAnnexe));
                     }
                 }
+                // *** fin gestion sous-famille prestation annexe ***
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie

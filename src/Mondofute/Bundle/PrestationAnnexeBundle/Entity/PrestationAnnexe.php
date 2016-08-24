@@ -268,12 +268,13 @@ class PrestationAnnexe
      * @param $sousFamillePrestationAnnexes
      * @return $this
      */
-    public function setSousFamillePrestationAnnexes($sousFamillePrestationAnnexes)
+    public function setSousFamillePrestationAnnexes(ArrayCollection $sousFamillePrestationAnnexes)
     {
         $this->getSousFamillePrestationAnnexes()->clear();
-
-        foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
-            $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
+        if(!$sousFamillePrestationAnnexes->isEmpty()){
+            foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
+                $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
+            }
         }
         return $this;
     }
