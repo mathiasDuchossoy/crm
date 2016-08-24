@@ -10,6 +10,7 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRe
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\SousFamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,7 +48,18 @@ class PrestationAnnexeType extends AbstractType
                 },
                 'multiple' => true
             ))
-            ->add('type')
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
+                    Type::getLibelle(Type::Quantite) => Type::Quantite,
+                    Type::getLibelle(Type::Forfait) => Type::Forfait,
+                ),
+                'choices_as_values' => true,
+                'label' => 'type',
+                'translation_domain' => 'messages',
+                'expanded' => true,
+                'required' => true,
+            ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
             ))

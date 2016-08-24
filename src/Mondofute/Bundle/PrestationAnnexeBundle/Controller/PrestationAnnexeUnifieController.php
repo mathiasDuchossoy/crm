@@ -5,10 +5,12 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -30,13 +32,20 @@ class PrestationAnnexeUnifieController extends Controller
     public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
+//        $sites = $em->getRepository(Site::class)->findBy(array('crm'=>0));
+//        foreach ($sites as $site){
+//            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $unifie = $emSite->find(PrestationAnnexeUnifie::class, 1);
+//            $emSite->remove($unifie);
+//            $emSite->flush();
+//        }
 
         $count = $em
             ->getRepository('MondofutePrestationAnnexeBundle:PrestationAnnexeUnifie')
             ->countTotal();
         $pagination = array(
             'page' => $page,
-            'route' => 'prestationAnnexe_prestationAnnexe_index',
+            'route' => 'prestationannexe_index',
             'pages_count' => ceil($count / $maxPerPage),
             'route_params' => array(),
             'max_per_page' => $maxPerPage
@@ -80,10 +89,12 @@ class PrestationAnnexeUnifieController extends Controller
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // affilier les entités liés
-//            $this->affilierEntities($prestationAnnexeUnifie);
-
-            $this->supprimerPrestationAnnexes($prestationAnnexeUnifie, $sitesAEnregistrer);
+            /** @var PrestationAnnexe $prestationAnnexe */
+            foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe){
+                if(false === in_array($prestationAnnexe->getSite()->getId(),$sitesAEnregistrer)){
+                    $prestationAnnexe->setActif(false);
+                }
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($prestationAnnexeUnifie);
@@ -91,15 +102,7 @@ class PrestationAnnexeUnifieController extends Controller
 
             $this->copieVersSites($prestationAnnexeUnifie);
 
-            $session = $request->getSession();
-            $session->start();
-
-            // add flash messages
-            /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La prestationAnnexe a bien été créé.'
-            );
+            $this->addFlash('success','La prestation annexe a bien été créé.');
 
             return $this->redirectToRoute('prestationannexe_edit', array('id' => $prestationAnnexeUnifie->getId()));
         }
@@ -156,14 +159,12 @@ class PrestationAnnexeUnifieController extends Controller
         }
     }
 
-
     /**
      * Classe les prestationAnnexes par classementAffichage
      * @param PrestationAnnexeUnifie $entity
      */
     private function prestationAnnexesSortByAffichage(PrestationAnnexeUnifie $entity)
     {
-
         // Trier les prestationAnnexes en fonction de leurs ordre d'affichage
         $prestationAnnexes = $entity->getPrestationAnnexes(); // ArrayCollection data.
 
@@ -208,118 +209,93 @@ class PrestationAnnexeUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les prestationAnnexes qui ne doivent pas être enregistrer
-     * @param PrestationAnnexeUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerPrestationAnnexes(PrestationAnnexeUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getPrestationAnnexes() as $prestationAnnexe) {
-            if (!in_array($prestationAnnexe->getSite()->getId(), $sitesAEnregistrer)) {
-                $prestationAnnexe->setPrestationAnnexeUnifie(null);
-                $entity->removePrestationAnnexe($prestationAnnexe);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité prestationAnnexe
      * @param PrestationAnnexeUnifie $entity
      */
     private function copieVersSites(PrestationAnnexeUnifie $entity)
     {
+        /** @var PrestationAnnexe $prestationAnnexe */
         /** @var PrestationAnnexeTraduction $prestationAnnexeTraduc */
 //        Boucle sur les prestationAnnexes afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getPrestationAnnexes() as $prestationAnnexe) {
             if ($prestationAnnexe->getSite()->getCrm() == false) {
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $em = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
-                $site = $em->getRepository(Site::class)->findOneBy(array('id' => $prestationAnnexe->getSite()->getId()));
-                if (!empty($prestationAnnexe->getZoneTouristique())) {
-                    $zoneTouristique = $em->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $prestationAnnexe->getZoneTouristique()->getZoneTouristiqueUnifie()));
+                $emSite = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
+                $site = $emSite->find(Site::class , $prestationAnnexe->getSite());
+
+                // *** gestion du type ***
+                if (!empty($prestationAnnexe->getType())) {
+                    $type = $prestationAnnexe->getType();
                 } else {
-                    $zoneTouristique = null;
+                    $type = null;
+                }
+                // *** fin gestion du type ***
+
+                // *** gestion famille prestation annexe ***
+                if (!empty($prestationAnnexe->getFamillePrestationAnnexe())){
+                    $famille    = $emSite->find(FamillePrestationAnnexe::class,$prestationAnnexe->getFamillePrestationAnnexe());
+                }else{
+                    $famille    = null;
+                }
+                // *** fin gestion famille prestation annexe ***
+
+                // *** gestion sous-famille prestation annexe ***
+                $sousFamilleCollection    = new ArrayCollection();
+                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexes())){
+                    foreach ($prestationAnnexe->getSousFamillePrestationAnnexes() as $sousFamillePrestationAnnexe){
+                        $sousFamilleCollection->add($emSite->find(SousFamillePrestationAnnexe::class,$sousFamillePrestationAnnexe));
+                    }
                 }
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null(($entitySite = $em->getRepository(PrestationAnnexeUnifie::class)->find($entity->getId())))) {
+                if (empty(($entitySite = $emSite->find(PrestationAnnexeUnifie::class , $entity)))) {
                     $entitySite = new PrestationAnnexeUnifie();
                 }
-//                if (is_null(($entitySite = $em->getRepository('MondofutePrestationAnnexeBundle:PrestationAnnexeUnifie')->find(array($entity->getId()))))) {
-//                    $entitySite = new PrestationAnnexeUnifie();
-//                }
 
-
-//            Récupération de la prestationAnnexe sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($prestationAnnexeSite = $em->getRepository(PrestationAnnexe::class)->findOneBy(array('prestationAnnexeUnifie' => $entitySite))))) {
+                //  Récupération de la prestationAnnexe sur le site distant si elle existe sinon créer une nouvelle entité
+                if (empty(($prestationAnnexeSite = $emSite->getRepository(PrestationAnnexe::class)->findOneBy(array('prestationAnnexeUnifie' => $entitySite))))) {
                     $prestationAnnexeSite = new PrestationAnnexe();
+                    $entitySite->addPrestationAnnexe($prestationAnnexeSite);
                 }
 
-//            copie des données prestationAnnexe
+                //  copie des données prestationAnnexe
                 $prestationAnnexeSite
                     ->setSite($site)
                     ->setPrestationAnnexeUnifie($entitySite)
-                    ->setZoneTouristique($zoneTouristique);
+                    ->setType($type)
+                    ->setFamillePrestationAnnexe($famille)
+                    ->setSousFamillePrestationAnnexes($sousFamilleCollection)
+                    ->setActif($prestationAnnexe->getActif())
+                ;
 
-//            Gestion des traductions
+                //  Gestion des traductions
                 foreach ($prestationAnnexe->getTraductions() as $prestationAnnexeTraduc) {
-//                récupération de la langue sur le site distant
-                    $langue = $em->getRepository(Langue::class)->findOneBy(array('id' => $prestationAnnexeTraduc->getLangue()->getId()));
 
-//                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($prestationAnnexeTraducSite = $em->getRepository(PrestationAnnexeTraduction::class)->findOneBy(array(
+                    //  récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
+                    if (empty(($prestationAnnexeTraducSite = $emSite->getRepository(PrestationAnnexeTraduction::class)->findOneBy(array(
                         'prestationAnnexe' => $prestationAnnexeSite,
-                        'langue' => $langue
+                        'langue' => $prestationAnnexeTraduc->getLangue()
                     ))))
                     ) {
+                        //  récupération de la langue sur le site distant
+                        $langue = $emSite->find(Langue::class , $prestationAnnexeTraduc->getLangue());
                         $prestationAnnexeTraducSite = new PrestationAnnexeTraduction();
+                        $prestationAnnexeSite->addTraduction($prestationAnnexeTraducSite);
+                        $prestationAnnexeTraducSite
+                            ->setLangue($langue)
+                        ;
                     }
 
-//                copie des données traductions
-                    $prestationAnnexeTraducSite->setLangue($langue)
+                    //  copie des données traductions
+                    $prestationAnnexeTraducSite
                         ->setLibelle($prestationAnnexeTraduc->getLibelle())
-                        ->setPrestationAnnexe($prestationAnnexeSite);
-
-//                ajout a la collection de traduction de la prestationAnnexe distante
-                    $prestationAnnexeSite->addTraduction($prestationAnnexeTraducSite);
+                    ;
                 }
 
-                $entitySite->addPrestationAnnexe($prestationAnnexeSite);
-                $em->persist($entitySite);
-                $em->flush();
-            }
-        }
-        $this->ajouterPrestationAnnexeUnifieSiteDistant($entity->getId(), $entity->getPrestationAnnexes());
-    }
-
-    /**
-     * Ajoute la reference site unifie dans les sites n'ayant pas de prestationAnnexe a enregistrer
-     * @param $idUnifie
-     * @param $prestationAnnexes
-     */
-    private function ajouterPrestationAnnexeUnifieSiteDistant($idUnifie, $prestationAnnexes)
-    {
-        /** @var ArrayCollection $prestationAnnexes */
-        /** @var Site $site */
-        $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
-        //        récupération
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
-        foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-            $criteres = Criteria::create()
-                ->where(Criteria::expr()->eq('site', $site));
-            if (count($prestationAnnexes->matching($criteres)) == 0 && (empty($emSite->getRepository(PrestationAnnexeUnifie::class)->findBy(array('id' => $idUnifie))))) {
-                $entity = new PrestationAnnexeUnifie();
-                $emSite->persist($entity);
+                $emSite->persist($entitySite);
                 $emSite->flush();
-                // todo: signaler si l'id est différent de celui de la base CRM
-//                echo 'ajouter ' . $site->getLibelle();
             }
         }
     }
@@ -349,7 +325,7 @@ class PrestationAnnexeUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('prestationannexe_delete', array('id' => $prestationAnnexeUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('Supprimer', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -367,25 +343,28 @@ class PrestationAnnexeUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
+            /** @var PrestationAnnexe $prestationAnnexe */
             foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
-                array_push($sitesAEnregistrer, $prestationAnnexe->getSite()->getId());
+
+                dump($prestationAnnexe->getSousFamillePrestationAnnexes()->first());
+                if ($prestationAnnexe->getActif()){
+                    array_push($sitesAEnregistrer, $prestationAnnexe->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
+        die;
 
-        $originalPrestationAnnexes = new ArrayCollection();
-//          Créer un ArrayCollection des objets de prestationAnnexes courants dans la base de données
-        foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
-            $originalPrestationAnnexes->add($prestationAnnexe);
-        }
+//        $originalPrestationAnnexes = new ArrayCollection();
+////          Créer un ArrayCollection des objets de prestationAnnexes courants dans la base de données
+//        foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
+//            $originalPrestationAnnexes->add($prestationAnnexe);
+//        }
 
         $this->ajouterPrestationAnnexesDansForm($prestationAnnexeUnifie);
-//        $this->affilierEntities($prestationAnnexeUnifie);
 
         $this->prestationAnnexesSortByAffichage($prestationAnnexeUnifie);
         $deleteForm = $this->createDeleteForm($prestationAnnexeUnifie);
@@ -394,44 +373,43 @@ class PrestationAnnexeUnifieController extends Controller
             $prestationAnnexeUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
-//        dump($editForm);die;
-
         $editForm->handleRequest($request);
-//        dump($prestationAnnexeUnifie);die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->supprimerPrestationAnnexes($prestationAnnexeUnifie, $sitesAEnregistrer);
+            foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe){
+                if(false === in_array($prestationAnnexe->getSite()->getId(),$sitesAEnregistrer)){
+                    $prestationAnnexe->setActif(false);
+                }else{
+                    $prestationAnnexe->setActif(true);
+                }
+//                dump($prestationAnnexe->getSousFamillePrestationAnnexes());
+            }
+//            die;
+
 
             // Supprimer la relation entre la prestationAnnexe et prestationAnnexeUnifie
-            foreach ($originalPrestationAnnexes as $prestationAnnexe) {
-                if (!$prestationAnnexeUnifie->getPrestationAnnexes()->contains($prestationAnnexe)) {
-
-                    //  suppression de la prestationAnnexe sur le site
-                    $emSite = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
-                    $entitySite = $emSite->find(PrestationAnnexeUnifie::class, $prestationAnnexeUnifie->getId());
-                    $prestationAnnexeSite = $entitySite->getPrestationAnnexes()->first();
-                    $emSite->remove($prestationAnnexeSite);
-                    $emSite->flush();
-//                    dump($prestationAnnexe);
-                    $prestationAnnexe->setPrestationAnnexeUnifie(null);
-                    $em->remove($prestationAnnexe);
-                }
-            }
+//            foreach ($originalPrestationAnnexes as $prestationAnnexe) {
+//                if (!$prestationAnnexeUnifie->getPrestationAnnexes()->contains($prestationAnnexe)) {
+//
+//                    //  suppression de la prestationAnnexe sur le site
+//                    $emSite = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
+//                    $entitySite = $emSite->find(PrestationAnnexeUnifie::class, $prestationAnnexeUnifie->getId());
+//                    $prestationAnnexeSite = $entitySite->getPrestationAnnexes()->first();
+//                    $emSite->remove($prestationAnnexeSite);
+//                    $emSite->flush();
+////                    dump($prestationAnnexe);
+//                    $prestationAnnexe->setPrestationAnnexeUnifie(null);
+//                    $em->remove($prestationAnnexe);
+//                }
+//            }
             $em->persist($prestationAnnexeUnifie);
             $em->flush();
 
-
             $this->copieVersSites($prestationAnnexeUnifie);
-
-            $session = $request->getSession();
-            $session->start();
 
             // add flash messages
             /** @var Session $session */
-            $session->getFlashBag()->add(
-                'success',
-                'La prestationAnnexe a bien été modifié.'
-            );
+            $this->addFlash('success','La prestationAnnexe a bien été modifié.');
 
             return $this->redirectToRoute('prestationannexe_edit', array('id' => $prestationAnnexeUnifie->getId()));
         }
@@ -456,36 +434,25 @@ class PrestationAnnexeUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
 
-            /** @var PrestationAnnexe $prestationAnnexe */
-            $erreurHebergement = false;
-            foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe) {
-                if (!$prestationAnnexe->getHebergements()->isEmpty() && !$erreurHebergement) {
-                    $erreurHebergement = true;
-                    $this->addFlash('error', 'La prestationAnnexe est lié à un hébergement.');
+            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+            // Parcourir les sites non CRM
+            foreach ($sitesDistants as $siteDistant) {
+                // Récupérer le manager du site.
+                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                // Récupérer l'entité sur le site distant puis la suprrimer.
+                $prestationAnnexeUnifieSite = $emSite->find(PrestationAnnexeUnifie::class, $prestationAnnexeUnifie);
+                if (!empty($prestationAnnexeUnifieSite)) {
+                    $emSite->remove($prestationAnnexeUnifieSite);
+                    $emSite->flush();
                 }
             }
-            if (!$erreurHebergement) {
-                $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($prestationAnnexeUnifie);
+            $em->flush();
 
-                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                // Parcourir les sites non CRM
-                foreach ($sitesDistants as $siteDistant) {
-                    // Récupérer le manager du site.
-                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                    // Récupérer l'entité sur le site distant puis la suprrimer.
-                    $prestationAnnexeUnifieSite = $emSite->find(PrestationAnnexeUnifie::class, $prestationAnnexeUnifie->getId());
-                    if (!empty($prestationAnnexeUnifieSite)) {
-                        $emSite->remove($prestationAnnexeUnifieSite);
-                        $emSite->flush();
-                    }
-                }
-                $em = $this->getDoctrine()->getManager();
-                $em->remove($prestationAnnexeUnifie);
-                $em->flush();
-
-                $this->addFlash('success', 'La prestation annexe a été supprimé avec succès.');
-            }
+            $this->addFlash('success', 'La prestation annexe a été supprimé avec succès.');
         }
 
         return $this->redirectToRoute('prestationannexe_index');
