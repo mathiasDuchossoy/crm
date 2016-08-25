@@ -111,20 +111,6 @@ class PrestationAnnexe
     }
 
     /**
-     * Add sousFamillePrestationAnnexe
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
-     *
-     * @return PrestationAnnexe
-     */
-    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe;
-
-        return $this;
-    }
-
-    /**
      * Remove sousFamillePrestationAnnexe
      *
      * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
@@ -142,6 +128,35 @@ class PrestationAnnexe
     public function getSousFamillePrestationAnnexes()
     {
         return $this->sousFamillePrestationAnnexes;
+    }
+
+    /**
+     * @param $sousFamillePrestationAnnexes
+     * @return $this
+     */
+    public function setSousFamillePrestationAnnexes(ArrayCollection $sousFamillePrestationAnnexes)
+    {
+        $this->getSousFamillePrestationAnnexes()->clear();
+        if (!$sousFamillePrestationAnnexes->isEmpty()) {
+            foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
+                $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add sousFamillePrestationAnnexe
+     *
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
+     *
+     * @return PrestationAnnexe
+     */
+    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    {
+        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe;
+
+        return $this;
     }
 
     /**
@@ -265,18 +280,26 @@ class PrestationAnnexe
     }
 
     /**
-     * @param $sousFamillePrestationAnnexes
-     * @return $this
+     * Add sousFamillePrestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     *
+     * @return PrestationAnnexe
      */
-    public function setSousFamillePrestationAnnexes(ArrayCollection $sousFamillePrestationAnnexes)
+    public function addSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
     {
-        $this->getSousFamillePrestationAnnexes()->clear();
-        if(!$sousFamillePrestationAnnexes->isEmpty()){
-            foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
-                $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
-            }
-        }
+        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnex;
+
         return $this;
     }
 
+    /**
+     * Remove sousFamillePrestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     */
+    public function removeSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    {
+        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnex);
+    }
 }

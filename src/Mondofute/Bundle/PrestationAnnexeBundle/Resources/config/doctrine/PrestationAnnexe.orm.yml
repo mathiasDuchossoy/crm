@@ -45,4 +45,5 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         famillePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+            inversedBy: prestationAnnexes
     lifecycleCallbacks: {  }

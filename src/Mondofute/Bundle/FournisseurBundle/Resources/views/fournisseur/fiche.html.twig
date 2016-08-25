@@ -19,7 +19,7 @@
                 <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
             </ul>
             <div class="tab-content">
-                <div id="fiche" class="tab-pane fade in active">
+                <div id="fiche" class="tab-pane fade in ">
                     {{ form_row(form.enseigne) }}
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
@@ -240,10 +240,11 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
-                <div id="prestationannexe" class="tab-pane fade in">
-                    {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+                <div id="prestationannexe" class="tab-pane fade in active">
+
+                    {#{% for prestationAnnexe in fournisseur.prestationAnnexes %}#}
                         {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
-                    {% endfor %}
+                    {#{% endfor %}#}
                 </div>
             </div>
             {{ form_row(form.submit) }}

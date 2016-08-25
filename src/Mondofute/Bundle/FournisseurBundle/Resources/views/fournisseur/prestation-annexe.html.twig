@@ -1,59 +1,24 @@
-{% form_theme formFournisseurPrestationAnnexe 'bootstrap_3_horizontal_layout.html.twig' %}
-<div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}">
-    <div class="panel-heading">
-        {% for traduction in famillePrestationAnnexe.traductions %}
-            {% if traduction.langue.code == app.request.locale %}
-                {{ traduction.libelle }}
-            {% endif %}
-        {% endfor %}
+{% for famillePrestationAnnexe in famillePrestationAnnexes %}
+    {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
+    <div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}" style="">
+        <div class="panel-heading">
+            {% for traduction in famillePrestationAnnexe.traductions %}
+                {% if traduction.langue.code == app.request.locale %}
+                    {{ traduction.libelle }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="panel-body">
+            {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                    {#{{ dump(prestationAnnexe.id) }}#}
+                    {#{{ dump(formPrestationAnnexe.vars.value) }}#}
+                    {% if prestationAnnexe.id == formPrestationAnnexe.vars.value %}
+                        {#{{ dump(formPrestationAnnexe) }}#}
+                        {{ form_widget(formPrestationAnnexe) }}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-    <div class="panel-body">
-        {#{% for prestationAnnexe in prestationAnnexes %}#}
-            {#{% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}#}
-                {#{% for traduction in sousFamillePrestationAnnexe.traductions %}#}
-                    {#{% if traduction.langue.code == app.request.locale %}#}
-                        {#{{ traduction.libelle }}#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
-            {#{% endfor %}#}
-        {#{% endfor %}#}
-        {{ dump(formFournisseurPrestationAnnexe) }}
-
-        {% for prestationAnnexe in formFournisseurPrestationAnnexe.prestationAnnexes %}
-            {{ form_widget(prestationAnnexe) }}
-        {% endfor %}
-        {#{% for prestationAnnexe in formFournisseurPrestationAnnexe. %}#}
-            {#{% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}#}
-                {#{% for traduction in sousFamillePrestationAnnexe.traductions %}#}
-                    {#{% if traduction.langue.code == app.request.locale %}#}
-                        {#{{ traduction.libelle }}#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
-            {#{% endfor %}#}
-        {#{% endfor %}#}
-        {#<ul>#}
-            {#{% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}#}
-                {#<li>#}
-                    {#{% for traduction in sousFamillePrestationAnnexe.traductions %}#}
-                        {#{% if traduction.langue.code == app.request.locale %}#}
-                            {#{{ traduction.libelle }}#}
-                        {#{% endif %}#}
-                    {#{% endfor %}#}
-                {#</li>#}
-                {#<li>#}
-                    {#<ul>#}
-                        {#{% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}#}
-                            {#<li>#}
-                            {#{% for traduction in prestationAnnexe.traductions %}#}
-                                {#{% if traduction.langue.code == app.request.locale %}#}
-                                    {#{{ traduction.libelle }}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-                            {#</li>#}
-                        {#{% endfor %}#}
-                    {#</ul>#}
-                {#</li>#}
-            {#{% endfor %}#}
-        {#</ul>#}
-    </div>
-</div>
+{% endfor %}
