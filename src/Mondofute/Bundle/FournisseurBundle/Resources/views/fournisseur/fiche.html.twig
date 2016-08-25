@@ -19,7 +19,7 @@
                 <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
             </ul>
             <div class="tab-content">
-                <div id="fiche" class="tab-pane fade in ">
+                <div id="fiche" class="tab-pane fade in active">
                     {{ form_row(form.enseigne) }}
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
@@ -240,15 +240,41 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
-                <div id="prestationannexe" class="tab-pane fade in active">
-
-                    {#{% for prestationAnnexe in fournisseur.prestationAnnexes %}#}
-                        {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
-                    {#{% endfor %}#}
+                <div id="prestationannexe" class="tab-pane fade in">
+                    {% for famillePrestationAnnexe in famillePrestationAnnexes %}
+                        {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
+                        <div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
+                            {% set displayType = false %}
+                            {% for type in fournisseur.types %}
+                                {% if famillePrestationAnnexe.id == type.id %}
+                                    {% set displayType = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if displayType == false %}
+                                style="display: none"
+                            {% endif %}
+                        >
+                            <div class="panel-heading">
+                                {% for traduction in famillePrestationAnnexe.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                       onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
+                                                ><h3 class="panel-title"> {{ traduction.libelle }}</h3>
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="panel-body" id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
+                                {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             {{ form_row(form.submit) }}
-            {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur']) }}#}
 
             {% set interlocuteurs %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur} %}
@@ -1331,25 +1357,30 @@
                 if($(this).is(':checked')){
                     var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
-
-                    if(!$famillePrestationAnnexe.length) {
+//                    if($famillePrestationAnnexe.is(':hidden')) {
+                    if($famillePrestationAnnexe.css('display') == 'none') {
                         $.ajax(path,
-                                {
-                                    method: 'GET'
-                                }
+                            {
+                                method: 'GET'
+                            }
                         ).done(function (data) {
-                            $("#prestationannexe").append(data);
-//                        $("#type_periode_" + typePeriodeId).html(data);
-
+                            $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
+                            $famillePrestationAnnexe.show();
                         });
                     }
                 }
                 else{
-                    if($famillePrestationAnnexe.length){
-                        $famillePrestationAnnexe.remove();
-                    }
+                    $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
+                    $famillePrestationAnnexe.hide();
+                    $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
                 }
             });
+        }
+
+        function checkPrestatioAnnexe(element , test){
+            var $element = $(element);
+            $test = $('#' + test);
+            $test.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
     </script>

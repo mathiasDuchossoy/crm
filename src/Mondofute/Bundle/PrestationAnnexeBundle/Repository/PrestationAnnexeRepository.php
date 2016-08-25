@@ -15,7 +15,7 @@ class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
      * @return \Doctrine\ORM\QueryBuilder
      */
     // récupérer les traduction des stations crm qui sont de la langue locale
-    public function getTraductionsByLocale($locale)
+    public function getTraductionsByLocale($locale, $famillePrestationAnnexeId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('s , st')
@@ -26,6 +26,13 @@ class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
             ->where("l.code = '$locale'")
             ->andWhere('site.crm = 1')
         ;
+        if(!empty($famillePrestationAnnexeId)){
+            $qb
+                ->andWhere('s.famillePrestationAnnexe = :famillePrestationAnnexeId ')
+                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
+            ;
+        }
+
 //        ->setParameter('code' , $locale)
         $qb->orderBy('s.id', 'ASC');
 

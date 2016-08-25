@@ -30,7 +30,7 @@
                         <ul class="nav nav-tabs">
                             {{ form_row( prestationAnnexe.type, { 'attr' : { 'data-unique_block_prefix' : prestationAnnexe.type.vars['unique_block_prefix']}}) }}
                             {{ form_row( prestationAnnexe.famillePrestationAnnexe, { 'attr' : { 'data-index' : index,'data-unique_block_prefix' : prestationAnnexe.famillePrestationAnnexe.vars['unique_block_prefix']}}) }}
-                            {{ form_row( prestationAnnexe.sousFamillePrestationAnnexes , { 'attr' : { 'data-index' : index, 'data-unique_block_prefix' : prestationAnnexe.sousFamillePrestationAnnexes.vars['unique_block_prefix']}}) }}
+                            {{ form_row( prestationAnnexe.sousFamillePrestationAnnexe , { 'attr' : { 'data-index' : index, 'data-unique_block_prefix' : prestationAnnexe.sousFamillePrestationAnnexe.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in prestationAnnexe.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
@@ -91,15 +91,15 @@
         var itemNonPersonalisable = [];
         {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");#}
         {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_uni_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexesfie_prestationAnnexes_entry_secteur");#}
+        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe");#}
         {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");#}
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");#}
 
         var items = [];
         items.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");
-//        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");
-//        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexes");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");
+        items.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe");
         items.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");
         {% for langue in langues %}
         items.push("_prestation_annexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");
@@ -189,7 +189,7 @@
         function sortSousFamilleByFamille(element) {
             $element = $(element);
             var famillePrestationAnnexeId = $element.val();
-            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexes"]').each(function (index, select) {
+            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe"]').each(function (index, select) {
                 $select = $(select);
                 if ($select.data('index') == $element.data('index')) {
                     $select.find('option').each(function (index, option) {

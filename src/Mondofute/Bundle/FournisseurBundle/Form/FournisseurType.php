@@ -34,6 +34,7 @@ class FournisseurType extends AbstractType
     {
         $fournisseurId = $builder->getData()->getId();
         $locale = $options["locale"];
+        $famillePrestationAnnexeId = $options["famillePrestationAnnexeId"];
 
 
 
@@ -151,8 +152,8 @@ class FournisseurType extends AbstractType
                 'required' => true,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir un type ---",
-                'query_builder' => function (PrestationAnnexeRepository $r) use ($locale) {
-                    return $r->getTraductionsByLocale($locale);
+                'query_builder' => function (PrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
+                    return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
                 },
                 'multiple'  => true,
                 'expanded'  => true,
@@ -171,6 +172,7 @@ class FournisseurType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
             'locale' => 'fr_FR',
+            'famillePrestationAnnexeId' => null,
         ));
     }
 
@@ -180,17 +182,17 @@ class FournisseurType extends AbstractType
         $arrayType = new ArrayCollection();
         $view->children['logo']->children['binaryContent']->vars['attr'] = array('accept' => "image/x-png, image/gif, image/jpeg");
 
-        if (!empty($view->vars['value']->getTypes())) {
-            foreach ($view->vars['value']->getTypes() as $type) {
-                $arrayType->add($type->getTypeFournisseur());
-            }
-
-            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
-                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
-                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
-                }
-            }
-        }
+//        if (!empty($view->vars['value']->getTypes())) {
+//            foreach ($view->vars['value']->getTypes() as $type) {
+//                $arrayType->add($type->getTypeFournisseur());
+//            }
+//
+//            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+//                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+//                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+//                }
+//            }
+//        }
 
         // ordre d'affichage: Adresse , Email, Téléphone 1, Téléphone 2, Mobile
         $interlocuteurs = $view->children['interlocuteurs']->children;

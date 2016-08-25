@@ -239,11 +239,10 @@ class PrestationAnnexeUnifieController extends Controller
                 // *** fin gestion famille prestation annexe ***
 
                 // *** gestion sous-famille prestation annexe ***
-                $sousFamilleCollection    = new ArrayCollection();
-                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexes())){
-                    foreach ($prestationAnnexe->getSousFamillePrestationAnnexes() as $sousFamillePrestationAnnexe){
-                        $sousFamilleCollection->add($emSite->find(SousFamillePrestationAnnexe::class,$sousFamillePrestationAnnexe));
-                    }
+                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexe())){
+                    $sousFamille    = $emSite->find(SousFamillePrestationAnnexe::class,$prestationAnnexe->getSousFamillePrestationAnnexe());
+                }else{
+                    $sousFamille    = null;
                 }
                 // *** fin gestion sous-famille prestation annexe ***
 
@@ -265,7 +264,7 @@ class PrestationAnnexeUnifieController extends Controller
                     ->setPrestationAnnexeUnifie($entitySite)
                     ->setType($type)
                     ->setFamillePrestationAnnexe($famille)
-                    ->setSousFamillePrestationAnnexes($sousFamilleCollection)
+                    ->setSousFamillePrestationAnnexe($sousFamille)
                     ->setActif($prestationAnnexe->getActif())
                 ;
 

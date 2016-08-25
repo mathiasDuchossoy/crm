@@ -23,10 +23,6 @@ class PrestationAnnexe
     private $traductions;
 
     /**
-     * @var Collection
-     */
-    private $sousFamillePrestationAnnexes;
-    /**
      * @var boolean
      */
     private $actif = true;
@@ -46,6 +42,10 @@ class PrestationAnnexe
      * @var integer
      */
     private $type;
+    /**
+     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+     */
+    private $sousFamillePrestationAnnexe;
 
     /**
      * Constructor
@@ -53,7 +53,6 @@ class PrestationAnnexe
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
-        $this->sousFamillePrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -106,55 +105,6 @@ class PrestationAnnexe
     public function addTraduction(PrestationAnnexeTraduction $traduction)
     {
         $this->traductions[] = $traduction->setPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove sousFamillePrestationAnnexe
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
-     */
-    public function removeSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnexe);
-    }
-
-    /**
-     * Get sousFamillePrestationAnnexes
-     *
-     * @return Collection
-     */
-    public function getSousFamillePrestationAnnexes()
-    {
-        return $this->sousFamillePrestationAnnexes;
-    }
-
-    /**
-     * @param $sousFamillePrestationAnnexes
-     * @return $this
-     */
-    public function setSousFamillePrestationAnnexes(ArrayCollection $sousFamillePrestationAnnexes)
-    {
-        $this->getSousFamillePrestationAnnexes()->clear();
-        if (!$sousFamillePrestationAnnexes->isEmpty()) {
-            foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
-                $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * Add sousFamillePrestationAnnexe
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
-     *
-     * @return PrestationAnnexe
-     */
-    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe;
 
         return $this;
     }
@@ -280,26 +230,26 @@ class PrestationAnnexe
     }
 
     /**
-     * Add sousFamillePrestationAnnex
+     * Get sousFamillePrestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
-     *
-     * @return PrestationAnnexe
+     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
      */
-    public function addSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    public function getSousFamillePrestationAnnexe()
     {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnex;
-
-        return $this;
+        return $this->sousFamillePrestationAnnexe;
     }
 
     /**
-     * Remove sousFamillePrestationAnnex
+     * Set sousFamillePrestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
+     *
+     * @return PrestationAnnexe
      */
-    public function removeSousFamillePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnex)
+    public function setSousFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe = null)
     {
-        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnex);
+        $this->sousFamillePrestationAnnexe = $sousFamillePrestationAnnexe;
+
+        return $this;
     }
 }

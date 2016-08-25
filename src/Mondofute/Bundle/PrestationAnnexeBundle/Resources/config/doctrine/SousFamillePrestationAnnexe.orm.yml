@@ -19,4 +19,7 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexeTraduction
             mappedBy: sousFamillePrestationAnnexe
             cascade: ['persist','remove']
+        prestationAnnexes:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+            mappedBy: sousFamillePrestationAnnexe
     lifecycleCallbacks: {  }

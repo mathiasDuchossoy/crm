@@ -23,10 +23,6 @@ class PrestationAnnexe
     private $traductions;
 
     /**
-     * @var Collection
-     */
-    private $sousFamillePrestationAnnexes;
-    /**
      * @var boolean
      */
     private $actif = true;
@@ -53,7 +49,6 @@ class PrestationAnnexe
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
-        $this->sousFamillePrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -108,40 +103,6 @@ class PrestationAnnexe
         $this->traductions[] = $traduction->setPrestationAnnexe($this);
 
         return $this;
-    }
-
-    /**
-     * Add sousFamillePrestationAnnexe
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
-     *
-     * @return PrestationAnnexe
-     */
-    public function addSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        $this->sousFamillePrestationAnnexes[] = $sousFamillePrestationAnnexe;
-
-        return $this;
-    }
-
-    /**
-     * Remove sousFamillePrestationAnnexe
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
-     */
-    public function removeSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        $this->sousFamillePrestationAnnexes->removeElement($sousFamillePrestationAnnexe);
-    }
-
-    /**
-     * Get sousFamillePrestationAnnexes
-     *
-     * @return Collection
-     */
-    public function getSousFamillePrestationAnnexes()
-    {
-        return $this->sousFamillePrestationAnnexes;
     }
 
     /**
@@ -263,20 +224,4 @@ class PrestationAnnexe
 
         return $this;
     }
-
-    /**
-     * @param $sousFamillePrestationAnnexes
-     * @return $this
-     */
-    public function setSousFamillePrestationAnnexes(ArrayCollection $sousFamillePrestationAnnexes)
-    {
-        $this->getSousFamillePrestationAnnexes()->clear();
-        if(!$sousFamillePrestationAnnexes->isEmpty()){
-            foreach ($sousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
-                $this->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexe);
-            }
-        }
-        return $this;
-    }
-
 }
