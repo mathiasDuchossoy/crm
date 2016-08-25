@@ -27,3 +27,9 @@ fournisseur_rechercher_type_hebergement:
     path:     /type_hebergement
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:rechercherTypeHebergement" }
     methods:  GET
+
+fournisseur_get_prestation_annexes:
+    path:     /getprestationannexes/{famillePrestationAnnexeId}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getPrestationAnnexes" }
+    methods:  GET
+

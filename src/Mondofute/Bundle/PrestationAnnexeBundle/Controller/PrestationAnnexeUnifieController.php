@@ -86,8 +86,6 @@ class PrestationAnnexeUnifieController extends Controller
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
         $form->handleRequest($request);
 
-
-
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var PrestationAnnexe $prestationAnnexe */
             foreach ($prestationAnnexeUnifie->getPrestationAnnexes() as $prestationAnnexe){
@@ -241,12 +239,12 @@ class PrestationAnnexeUnifieController extends Controller
                 // *** fin gestion famille prestation annexe ***
 
                 // *** gestion sous-famille prestation annexe ***
-                $sousFamilleCollection    = new ArrayCollection();
-                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexes())){
-                    foreach ($prestationAnnexe->getSousFamillePrestationAnnexes() as $sousFamillePrestationAnnexe){
-                        $sousFamilleCollection->add($emSite->find(SousFamillePrestationAnnexe::class,$sousFamillePrestationAnnexe));
-                    }
+                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexe())){
+                    $sousFamille    = $emSite->find(SousFamillePrestationAnnexe::class,$prestationAnnexe->getSousFamillePrestationAnnexe());
+                }else{
+                    $sousFamille    = null;
                 }
+                // *** fin gestion sous-famille prestation annexe ***
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -266,7 +264,7 @@ class PrestationAnnexeUnifieController extends Controller
                     ->setPrestationAnnexeUnifie($entitySite)
                     ->setType($type)
                     ->setFamillePrestationAnnexe($famille)
-                    ->setSousFamillePrestationAnnexes($sousFamilleCollection)
+                    ->setSousFamillePrestationAnnexe($sousFamille)
                     ->setActif($prestationAnnexe->getActif())
                 ;
 

@@ -34,18 +34,6 @@ class Fournisseur extends Moral
 {
     use FournisseurTrait;
 
-//    const PRODUIT = 1; // 1
-//    const FOURNISSEUR = 2; // 10
-//    /**
-//     * @var integer
-//     */
-//    private $id;
-
-//    /**
-//     * @var string
-//     */
-//    private $enseigne;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -81,10 +69,6 @@ class Fournisseur extends Moral
     private $receptions;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $types;
-    /**
      * @var \Application\Sonata\MediaBundle\Entity\Media
      */
     private $logo;
@@ -94,39 +78,14 @@ class Fournisseur extends Moral
      */
     private $listeServices;
 
-//    /**
-//     * Get id
-//     *
-//     * @return integer
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
-
-//    /**
-//     * Get enseigne
-//     *
-//     * @return string
-//     */
-//    public function getEnseigne()
-//    {
-//        return $this->enseigne;
-//    }
-//
-//    /**
-//     * Set enseigne
-//     *
-//     * @param string $enseigne
-//     *
-//     * @return Fournisseur
-//     */
-//    public function setEnseigne($enseigne)
-//    {
-//        $this->enseigne = $enseigne;
-//
-//        return $this;
-//    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $types;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexes;
 
     /**
      * Fournisseur constructor.
@@ -222,16 +181,16 @@ class Fournisseur extends Moral
                 $cloneReception->setFournisseur($this);
             }
         }
-        $types = $this->getTypes();
-        $this->types = new ArrayCollection();
-        if (count($types) > 0) {
-            /** @var TypeFournisseur $type */
-            foreach ($types as $type) {
-                $cloneType = clone $type;
-                $this->types->add($cloneType);
-                $cloneType->setFournisseur($this);
-            }
-        }
+//        $types = $this->getTypes();
+//        $this->types = new ArrayCollection();
+//        if (count($types) > 0) {
+//            /** @var TypeFournisseur $type */
+//            foreach ($types as $type) {
+//                $cloneType = clone $type;
+//                $this->types->add($cloneType);
+//                $cloneType->setFournisseur($this);
+//            }
+//        }
         $listeServices = $this->getListeServices();
         $this->listeServices = new ArrayCollection();
         if (count($listeServices) > 0) {
@@ -263,16 +222,6 @@ class Fournisseur extends Moral
     public function getReceptions()
     {
         return $this->receptions;
-    }
-
-    /**
-     * Get types
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTypes()
-    {
-        return $this->types;
     }
 
     /**
@@ -535,30 +484,6 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Add type
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
-     *
-     * @return Fournisseur
-     */
-    public function addType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
-    {
-        $this->types[] = $type->setFournisseur($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove type
-     *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
-     */
-    public function removeType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
-    {
-        $this->types->removeElement($type);
-    }
-
-    /**
      * Get logo
      *
      * @return \Application\Sonata\MediaBundle\Entity\Media
@@ -582,4 +507,71 @@ class Fournisseur extends Moral
         return $this;
     }
 
+    /**
+     * Add type
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
+     *
+     * @return Fournisseur
+     */
+    public function addType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
+    {
+        $this->types[] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Remove type
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
+     */
+    public function removeType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
+    {
+        $this->types->removeElement($type);
+    }
+
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypes()
+    {
+        return $this->types;
+    }
+
+    /**
+     * Add prestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     *
+     * @return Fournisseur
+     */
+    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes[] = $prestationAnnex;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     */
+    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes->removeElement($prestationAnnex);
+    }
+
+    /**
+     * Get prestationAnnexes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexes()
+    {
+        return $this->prestationAnnexes;
+    }
 }

@@ -10,4 +10,32 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Repository;
  */
 class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traduction des stations crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale, $famillePrestationAnnexeId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('s , st')
+            ->from('MondofutePrestationAnnexeBundle:PrestationAnnexe', 's')
+            ->join('s.traductions', 'st')
+            ->join('s.site', 'site')
+            ->join('st.langue', 'l')
+            ->where("l.code = '$locale'")
+            ->andWhere('site.crm = 1')
+        ;
+        if(!empty($famillePrestationAnnexeId)){
+            $qb
+                ->andWhere('s.famillePrestationAnnexe = :famillePrestationAnnexeId ')
+                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
+            ;
+        }
+
+//        ->setParameter('code' , $locale)
+        $qb->orderBy('s.id', 'ASC');
+
+        return $qb;
+    }
 }
