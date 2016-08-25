@@ -20,6 +20,7 @@
                  class="tab-pane fade in {% if loop.index == 1 %}active{% endif %} ">
                 {% include('@MondofutePeriode/Periode/periode.html.twig') with { 'typePeriodeId': typePeriode.id, 'periodes' : periodes[key], 'pagination' : paginations[key]} %}
             </div>
+            {#{% include '@MondofuteCore/pagination-ajax.html.twig' %}#}
         {% endfor %}
     </div>
     <div style="text-align: right">
