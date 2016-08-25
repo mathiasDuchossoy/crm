@@ -137,7 +137,6 @@ class StationUnifieController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-<<<<<<< HEAD
 
             // ***** Gestion des Medias *****
             foreach ($request->get('station_unifie')['stations'] as $key => $station) {
@@ -180,24 +179,32 @@ class StationUnifieController extends Controller
                         }
                     }
                 }
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-=======
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
->>>>>>> 12b9eee... CRM-62 station - liaison description
             }
             // ***** Fin Gestion des Medias *****
 
 
             $em->persist($stationUnifie);
+<<<<<<< HEAD
             $em->flush();
 
 //            if (!$error) {
+||||||| parent of b5c2848... CRM-60 Station - liaisons
+
+
+            try {
+                $error = false;
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
+            }
+
+            if (!$error) {
+=======
+            $em->flush();
+
+            if (!$error) {
+>>>>>>> b5c2848... CRM-60 Station - liaisons
                 foreach ($stationUnifie->getStations() as $station) {
                     $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
                     $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
@@ -524,7 +531,6 @@ class StationUnifieController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * @param Request $request
      * @param StationUnifie $stationUnifie
      */
@@ -555,37 +561,6 @@ class StationUnifieController extends Controller
     }
 
     /**
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-     * @param Request $request
-     * @param StationUnifie $stationUnifie
-     */
-    private function descriptionNew(Request $request, StationUnifie $stationUnifie)
-    {
-        /** @var StationDescriptionUnifie $stationDescriptionUnifie */
-        /** @var Station $station */
-        $stationDescriptionController = new StationDescriptionUnifieController();
-        $stationDescriptionController->setContainer($this->container);
-
-        foreach ($stationUnifie->getStations() as $station) {
-            // Si la carte d'identité est lié à la station mère
-            if (!empty($request->get('cboxStationDescription_' . $station->getSite()->getId()))) {
-                $station->setStationDescription($station->getStationMere()->getStationDescription());
-            } else {
-                // sinon on on en créé une nouvelle
-                $stationDescriptionUnifie = $stationDescriptionController->newEntity($station);
-
-                $site = $station->getSite();
-                $stationDescription = $stationDescriptionUnifie->getStationDescriptions()->filter(function (StationDescription $element) use ($site) {
-                    return $site == $element->getSite();
-                })->first();
-                $station->setStationDescription($stationDescription);
-            }
-        }
-    }
-
-    /**
->>>>>>> 12b9eee... CRM-62 station - liaison description
      * Copie dans la base de données site l'entité station
      * @param StationUnifie $entity
      */
@@ -655,7 +630,6 @@ class StationUnifieController extends Controller
                 }
                 if (!empty($station->getStationCommentVenir())) {
                     $stationCommentVenir = $emSite->getRepository(StationCommentVenir::class)->findOneBy(array('stationCommentVenirUnifie' => $station->getStationCommentVenir()->getStationCommentVenirUnifie()));
-<<<<<<< HEAD
 //                    dump($stationCommentVenir);
 //                    if(empty($stationCommentVenir)){
 //                        $stationCommentVenir = new StationCommentVenir();
@@ -685,28 +659,6 @@ class StationUnifieController extends Controller
                             }
                         }
                     }
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-                    /** @var StationCommentVenirGrandeVille $grandeVille */
-                    if (!empty($stationCommentVenir->getGrandeVilles())) {
-                        foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                            if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
-                                return $element->getGrandeVille()->getId() == $grandeVille->getGrandeVille()->getId();
-                            })->isEmpty()
-                            ) {
-                                $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                                $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()));
-                                $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
-                            }
-                        }
-                    } else {
-                        foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                            $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                            $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()->getId()));
-                            $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
-                        }
-                    }
->>>>>>> 12b9eee... CRM-62 station - liaison description
                 } else {
                     $stationCommentVenir = null;
                 }
@@ -742,18 +694,11 @@ class StationUnifieController extends Controller
                     ->setDepartement($departement)
                     ->setStationMere($stationMere)
                     ->setStationCarteIdentite($stationCarteIdentite)
-<<<<<<< HEAD
                     ->setStationCommentVenir($stationCommentVenir)
                     ->setStationDescription($stationDescription)
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
                 ;
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-                    ->setStationCommentVenir($stationCommentVenir);
-=======
-                    ->setStationCommentVenir($stationCommentVenir)
-                    ->setStationDescription($stationDescription);
->>>>>>> 12b9eee... CRM-62 station - liaison description
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -1084,7 +1029,6 @@ class StationUnifieController extends Controller
             $stationCommentVenirUnifieController = new StationCommentVenirUnifieController();
             $stationCommentVenirUnifieController->setContainer($this->container);
 
-<<<<<<< HEAD
             $stationDescriptionUnifieController = new StationDescriptionUnifieController();
             $stationDescriptionUnifieController->setContainer($this->container);
 
@@ -1154,12 +1098,6 @@ class StationUnifieController extends Controller
             }
             // ************* fin suppression visuels *************
 
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-            $stationDescriptionUnifieController = new StationDescriptionUnifieController();
-            $stationDescriptionUnifieController->setContainer($this->container);
-
->>>>>>> 12b9eee... CRM-62 station - liaison description
             $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la station et stationUnifie
@@ -1237,7 +1175,6 @@ class StationUnifieController extends Controller
             $this->commentVenirEdit($request, $stationUnifie);
             // ***** fin comment venir *****
 
-<<<<<<< HEAD
             // ***** comment venir *****
             $this->descriptionEdit($request, $stationUnifie);
             // ***** fin comment venir *****
@@ -1335,32 +1272,15 @@ class StationUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
 
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-            // ***** comment venir *****
-            $this->descriptionEdit($request, $stationUnifie);
-            // ***** fin comment venir *****
-
->>>>>>> 12b9eee... CRM-62 station - liaison description
             $em->persist($stationUnifie);
             $em->flush();
 
-<<<<<<< HEAD
             try {
                 $error = false;
                 $em->flush();
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
                 $error = true;
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteUnifieController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-=======
-            foreach ($stationUnifie->getStations() as $station) {
-                $stationCarteIdentiteUnifieController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                $stationCommentVenirUnifieController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                $stationDescriptionUnifieController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
->>>>>>> 12b9eee... CRM-62 station - liaison description
             }
             if (!$error) {
 
@@ -1420,7 +1340,6 @@ class StationUnifieController extends Controller
                     if (!empty($oldCIUnifie)) {
                         $stationCarteIdentiteUnifieController->deleteEntity($oldCIUnifie);
                     }
-<<<<<<< HEAD
                 }
 
             } else {
@@ -1428,16 +1347,6 @@ class StationUnifieController extends Controller
                 if (!empty($station->getStationMere()) && $station->getStationMere()->getStationCarteIdentite() === $station->getStationCarteIdentite()) {
                     // OIn fait ça
                     $cIMere = $station->getStationMere()->getStationCarteIdentite();
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-                } else {
-                    if (!empty($station->getStationMere()) && $station->getStationMere()->getStationCarteIdentite() === $station->getStationCarteIdentite()) {
-                        $cIMere = $station->getStationMere()->getStationCarteIdentite();
-=======
-                }
-            } else {
-                if (!empty($station->getStationMere()) && $station->getStationMere()->getStationCarteIdentite() === $station->getStationCarteIdentite()) {
-                    $cIMere = $station->getStationMere()->getStationCarteIdentite();
->>>>>>> 12b9eee... CRM-62 station - liaison description
 
                     $newCI = new StationCarteIdentite();
                     $adresse = new Adresse();
@@ -1562,7 +1471,6 @@ class StationUnifieController extends Controller
 
     }
 
-<<<<<<< HEAD
     private function descriptionEdit(Request $request, StationUnifie $stationUnifie)
     {
         /** @var StationDescriptionTraduction $traduction */
@@ -1631,77 +1539,6 @@ class StationUnifieController extends Controller
 
     }
 
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-    private function descriptionEdit(Request $request, StationUnifie $stationUnifie)
-    {
-        /** @var StationDescriptionTraduction $traduction */
-        /** @var Station $station */
-        $stationDescriptionUnifieController = new StationDescriptionUnifieController();
-        $stationDescriptionUnifieController->setContainer($this->container);
-        $em = $this->getDoctrine()->getEntityManager();
-
-        foreach ($stationUnifie->getStations() as $station) {
-            // si on choisit de lié la carte ID de la mère à la station
-            if (!empty($request->get('cboxStationDescription_' . $station->getSite()->getId()))) {
-                $oldCVUnifie = $station->getStationDescription()->getStationDescriptionUnifie();
-                $station->getStationDescription()->removeStation($station);
-//                    $station->setStationDescription(null);
-
-                $em->refresh($station->getStationMere()->getStationDescription());
-                $station->setStationDescription($station->getStationMere()->getStationDescription());
-                if ($station->getStationMere()->getStationDescription()->getStationDescriptionUnifie() != $oldCVUnifie) {
-                    $this->copieVersSites($station->getStationUnifie());
-                    if (!empty($oldCVUnifie)) {
-//                        dump($oldCVUnifie);
-                        $stationDescriptionUnifieController->deleteEntity($oldCVUnifie);
-                    }
-                }
-
-            } else {
-                //
-                if (!empty($station->getStationMere()) && $station->getStationMere()->getStationDescription() === $station->getStationDescription()) {
-                    // OIn fait ça
-                    $cVMere = $station->getStationMere()->getStationDescription();
-                    $cVOld = $station->getStationDescription();
-
-                    $newCV = new StationDescription();
-                    foreach ($cVOld->getTraductions() as $traduction) {
-                        $newTrad = new StationDescriptionTraduction();
-                        $newTrad
-                            ->setLangue($traduction->getLangue())
-                            ->setAccroche($traduction->getAccroche())
-                            ->setGeneralite($traduction->getGeneralite());
-                        $newCV->addTraduction($newTrad);
-                    }
-                    $newCV
-                        ->setSite($station->getStationDescription()->getSite());
-                    $em->persist($newCV);
-                    $station->setStationDescription($newCV);
-
-                    $em->refresh($cVMere);
-                    foreach ($cVMere->getTraductions() as $traduction) {
-                        $em->refresh($traduction);
-                    }
-                }
-            }
-        }
-
-        foreach ($stationUnifie->getStations() as $station) {
-
-            if (!empty($station->getStationDescription()->getStationDescriptionUnifie())) {
-                $stationDescriptionUnifieController->editEntity($station->getStationDescription()->getStationDescriptionUnifie());
-            } else {
-                $stationDescriptionUnifieController->newEntity($station);
-            }
-
-            $em->persist($station);
-//                $em->flush();
-        }
-
-    }
-
->>>>>>> 12b9eee... CRM-62 station - liaison description
     /**
      * Deletes a StationUnifie entity.
      *
@@ -1771,7 +1608,6 @@ class StationUnifieController extends Controller
                     if (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite())) {
                         $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
                     }
-<<<<<<< HEAD
                     if (empty($station->getStationMere()) || !empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()) {
                         $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
                     }
@@ -1797,42 +1633,15 @@ class StationUnifieController extends Controller
                         }
                         $em->flush();
                     }
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-=======
-                    if (!empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()) {
-                        $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                    }
-                    if (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription()) {
-                        $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
-                    }
->>>>>>> 12b9eee... CRM-62 station - liaison description
                 }
 
                 $em->remove($stationUnifie);
-<<<<<<< HEAD
 
                 foreach ($arrayStationCarteIdentiteUnifies as $stationCarteIdentiteUnify) {
                     $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
                 }
                 foreach ($arrayStationCommentVenirUnifies as $stationCommentVenirUnify) {
                     $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
-||||||| parent of 12b9eee... CRM-62 station - liaison description
-                $em->flush();
-                
-                foreach ($arrayStationCarteIdentiteUnifies as $arrayStationCarteIdentiteUnify) {
-                    $stationCarteIdentiteUnifieController->deleteEntity($arrayStationCarteIdentiteUnify);
-=======
-                $em->flush();
-                
-                foreach ($arrayStationCarteIdentiteUnifies as $stationCarteIdentiteUnify) {
-                    $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
-                }
-                foreach ($arrayStationCommentVenirUnifies as $stationCommentVenirUnify) {
-                    $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
-                }
-                foreach ($arrayStationDescriptionUnifies as $stationDescriptionUnify) {
-                    $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
->>>>>>> 12b9eee... CRM-62 station - liaison description
                 }
                 foreach ($arrayStationDescriptionUnifies as $stationDescriptionUnify) {
                     $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
