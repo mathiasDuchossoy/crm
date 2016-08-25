@@ -69,6 +69,84 @@ class StationUnifieController extends Controller
 
         $unifies = $this->getDoctrine()->getRepository('MondofuteStationBundle:StationUnifie')
             ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
+<<<<<<< HEAD
+||||||| parent of a451e0d... CRM-54 Station - Divisions et liaisons
+||||||| parent of 8530c41... CRM-90 Stations - Medias
+        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
+=======
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $stationUnifiesSite = $emSite->getRepository(StationUnifie::class)->findAll();
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                foreach ($stationUnify->getStations() as $station){
+//                    $station->setStationMere(null);
+//                }
+//                $emSite->persist($stationUnify);
+//                $emSite->flush();
+//            }
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                $emSite->remove($stationUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCarteIdentiteUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCommentVenirUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationDescriptionUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+        }
+
+        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
+>>>>>>> 8530c41... CRM-90 Stations - Medias
+=======
+||||||| parent of 05f82a1... CRM-54 Station - Divisions et liaisons
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $stationUnifiesSite = $emSite->getRepository(StationUnifie::class)->findAll();
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                foreach ($stationUnify->getStations() as $station){
+//                    $station->setStationMere(null);
+//                }
+//                $emSite->persist($stationUnify);
+//                $emSite->flush();
+//            }
+//            foreach ($stationUnifiesSite as $stationUnify){
+//                $emSite->remove($stationUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCarteIdentiteUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationCommentVenirUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+//            $stationCIUnifiesSite = $emSite->getRepository(StationDescriptionUnifie::class)->findAll();
+//            foreach ($stationCIUnifiesSite as $stationCIUnify){
+//                $emSite->remove($stationCIUnify);
+//                $emSite->flush();
+//            }
+        }
+
+        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
+=======
+        $stationUnifies = $em->getRepository('MondofuteStationBundle:StationUnifie')->findAll();
+>>>>>>> 05f82a1... CRM-54 Station - Divisions et liaisons
+>>>>>>> a451e0d... CRM-54 Station - Divisions et liaisons
 
         return $this->render('@MondofuteStation/stationunifie/index.html.twig', array(
             'stationUnifies' => $unifies,
@@ -303,6 +381,7 @@ class StationUnifieController extends Controller
 >>>>>>> e243ce4... CRM-90 Stations - Medias
 
 
+<<<<<<< HEAD
             // ***** Gestion des Medias *****
             foreach ($request->get('station_unifie')['stations'] as $key => $station) {
                 if (!empty($stationUnifie->getStations()->get($key)) && $stationUnifie->getStations()->get($key)->getSite()->getCrm() == 1) {
@@ -344,13 +423,31 @@ class StationUnifieController extends Controller
                         }
                     }
                 }
+||||||| parent of a451e0d... CRM-54 Station - Divisions et liaisons
+            foreach ($stationUnifie->getStations() as $station) {
+                $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
+=======
+            try {
+                $error = false;
+                $em->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                $error = true;
+>>>>>>> a451e0d... CRM-54 Station - Divisions et liaisons
             }
+<<<<<<< HEAD
             // ***** Fin Gestion des Medias *****
 
 
             $em->persist($stationUnifie);
 <<<<<<< HEAD
             $em->flush();
+||||||| parent of a451e0d... CRM-54 Station - Divisions et liaisons
+            $this->copieVersSites($stationUnifie);
+=======
+>>>>>>> a451e0d... CRM-54 Station - Divisions et liaisons
 
 //            if (!$error) {
 ||||||| parent of b5c2848... CRM-60 Station - liaisons
@@ -1959,6 +2056,7 @@ class StationUnifieController extends Controller
                 $error = true;
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (!$error) {
 
                 foreach ($stationUnifie->getStations() as $station) {
@@ -2022,13 +2120,52 @@ class StationUnifieController extends Controller
                     if (!empty($item)) {
                         $this->deleteFile($item);
                         $em->remove($item);
-                    }
+||||||| parent of a451e0d... CRM-54 Station - Divisions et liaisons
+            $this->copieVersSites($stationUnifie, $originalStationVisuels);
+
+            // on parcourt les médias à supprimer
+            if (!empty($visuelToRemoveCollection)) {
+                foreach ($visuelToRemoveCollection as $item) {
+                    if (!empty($item)) {
+                        $this->deleteFile($item);
+                        $em->remove($item);
+=======
+            if (!$error) {
+
+                foreach ($stationUnifie->getStations() as $station) {
+                    $stationCarteIdentiteUnifieController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                    $stationCommentVenirUnifieController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                    $stationDescriptionUnifieController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
                 }
+                $this->copieVersSites($stationUnifie, $originalStationVisuels);
+
+                // on parcourt les médias à supprimer
+                if (!empty($visuelToRemoveCollection)) {
+                    foreach ($visuelToRemoveCollection as $item) {
+                        if (!empty($item)) {
+                            $this->deleteFile($item);
+                            $em->remove($item);
+                        }
+>>>>>>> a451e0d... CRM-54 Station - Divisions et liaisons
+                    }
+                    $em->flush();
+                }
+<<<<<<< HEAD
                 $em->flush();
             }
             
 >>>>>>> e243ce4... CRM-90 Stations - Medias
+<<<<<<< HEAD
 >>>>>>> d36581a... CRM-90 Stations - Medias
+||||||| parent of 47f268d... CRM-54 Station - Divisions et liaisons
+=======
+||||||| parent of a451e0d... CRM-54 Station - Divisions et liaisons
+                $em->flush();
+            }
+            
+=======
+>>>>>>> a451e0d... CRM-54 Station - Divisions et liaisons
+>>>>>>> 47f268d... CRM-54 Station - Divisions et liaisons
 
                 $this->addFlash('success', 'La station a bien été modifié.');
 
