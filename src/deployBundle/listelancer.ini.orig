@@ -6,14 +6,14 @@
 ;maj\crm_75\2016-07-21a_sls_periode.sql
 ;maj\crm_71\2016-08-02a_md_medias.sql
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
-<<<<<<< HEAD
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
+<<<<<<< HEAD
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
-||||||| parent of ad5be15... CRM-90 Stations - Medias
-maj\crm_54\2016-08-08a_md_grande_ville.sql
-=======
-;maj\crm_54\2016-08-08a_md_grande_ville.sql
+||||||| parent of 1a549a5... CRM-90 Stations - Medias
 maj\crm_90\2016-08-09a_md_visuels_station.sql
->>>>>>> ad5be15... CRM-90 Stations - Medias
+=======
+;maj\crm_90\2016-08-09a_md_visuels_station.sql
+maj\crm_90\2016-08-09b_md_visuels_station.sql
+>>>>>>> 1a549a5... CRM-90 Stations - Medias
