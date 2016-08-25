@@ -41,7 +41,7 @@ class PrestationAnnexeUnifieType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         $entities = 'prestationAnnexes';
-        $entitySelect = 'sousFamillePrestationAnnexes';
+        $entitySelect = 'sousFamillePrestationAnnexe';
         /** @var FormView $viewChild */
         foreach ($view->children[$entities]->children as $viewChild) {
             $choices = $viewChild->children[$entitySelect]->vars['choices'];

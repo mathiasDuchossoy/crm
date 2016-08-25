@@ -22,6 +22,10 @@ class SousFamillePrestationAnnexe
      * @var FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexes;
 
     /**
      * Constructor
@@ -97,5 +101,39 @@ class SousFamillePrestationAnnexe
         $this->famillePrestationAnnexe = $famillePrestationAnnexe;
 
         return $this;
+    }
+
+    /**
+     * Add prestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     *
+     * @return SousFamillePrestationAnnexe
+     */
+    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes[] = $prestationAnnex;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnex
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     */
+    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes->removeElement($prestationAnnex);
+    }
+
+    /**
+     * Get prestationAnnexes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexes()
+    {
+        return $this->prestationAnnexes;
     }
 }

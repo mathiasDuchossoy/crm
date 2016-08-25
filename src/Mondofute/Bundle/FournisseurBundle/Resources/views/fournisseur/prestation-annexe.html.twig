@@ -1,0 +1,47 @@
+{% if formAjax is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+{% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}
+    <div class="panel panel-default">
+        {% for traduction in sousFamillePrestationAnnexe.traductions %}
+            {% if traduction.langue.code == app.request.locale %}
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       onclick="checkPrestatioAnnexe(this , 'list_prestation_annexe_' + '{{ sousFamillePrestationAnnexe.id }}');"
+                                > {{ traduction.libelle }}
+                            </label>
+                        </div>
+                    </h3>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {#<div class="panel-body">#}
+        {#</div>#}
+        <ul class="list-group" id="list_prestation_annexe_{{ sousFamillePrestationAnnexe.id }}">
+            {% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}
+                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                    {% if prestationAnnexe.id == formPrestationAnnexe.vars.value %}
+                        <li class="list-group-item">{{ form_widget(formPrestationAnnexe) }}</li>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </ul>
+
+
+    </div>
+{% endfor %}
+
+        {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+            <ul class="list-group">
+                {#{% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}#}
+                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                    {% if prestationAnnexe.id == formPrestationAnnexe.vars.value and prestationAnnexe.sousFamillePrestationAnnexe is null %}
+                        <li class="list-group-item">{{ form_widget(formPrestationAnnexe) }}</li>
+                    {% endif %}
+                {% endfor %}
+                {#{% endfor %}#}
+            </ul>
+        {% endfor %}

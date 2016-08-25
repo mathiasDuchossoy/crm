@@ -16,14 +16,15 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
+                <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
             </ul>
             <div class="tab-content">
                 <div id="fiche" class="tab-pane fade in active">
                     {{ form_row(form.enseigne) }}
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
-                    {#{{ form_row(form.type) }}#}
-                    {{ form_row(form.typeFournisseurs) }}
+                    {{ form_row(form.types) }}
+                    {#{{ form_row(form.typeFournisseurs) }}#}
                     {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
                     {{ form_row(form.fournisseurParent) }}
                     {{ form_row(form.contient) }}
@@ -239,9 +240,41 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
+                <div id="prestationannexe" class="tab-pane fade in">
+                    {% for famillePrestationAnnexe in famillePrestationAnnexes %}
+                        {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
+                        <div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
+                            {% set displayType = false %}
+                            {% for type in fournisseur.types %}
+                                {% if famillePrestationAnnexe.id == type.id %}
+                                    {% set displayType = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if displayType == false %}
+                                style="display: none"
+                            {% endif %}
+                        >
+                            <div class="panel-heading">
+                                {% for traduction in famillePrestationAnnexe.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"
+                                                       onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
+                                                ><h3 class="panel-title"> {{ traduction.libelle }}</h3>
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="panel-body" id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
+                                {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
             {{ form_row(form.submit) }}
-            {#{{ dump(form.interlocuteurs.vars.prototype.children['interlocuteur']) }}#}
 
             {% set interlocuteurs %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur} %}
@@ -1314,6 +1347,40 @@
                 });
                 return false;
             }
+        }
+
+        function updatePrestationAnnexe(element){
+            $element = $(element);
+            $(element).find('input:checkbox').each(function(){
+                var famillePrestationAnnexeId = $(this).val();
+                var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
+                if($(this).is(':checked')){
+                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
+                    path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
+//                    if($famillePrestationAnnexe.is(':hidden')) {
+                    if($famillePrestationAnnexe.css('display') == 'none') {
+                        $.ajax(path,
+                            {
+                                method: 'GET'
+                            }
+                        ).done(function (data) {
+                            $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
+                            $famillePrestationAnnexe.show();
+                        });
+                    }
+                }
+                else{
+                    $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
+                    $famillePrestationAnnexe.hide();
+                    $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
+                }
+            });
+        }
+
+        function checkPrestatioAnnexe(element , test){
+            var $element = $(element);
+            $test = $('#' + test);
+            $test.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
     </script>

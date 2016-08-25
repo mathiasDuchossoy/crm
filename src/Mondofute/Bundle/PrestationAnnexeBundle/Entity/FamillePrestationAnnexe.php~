@@ -21,10 +21,6 @@ class FamillePrestationAnnexe
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $prestationAnnexes;
 
     /**
      * Constructor
@@ -111,39 +107,5 @@ class FamillePrestationAnnexe
     public function getTraductions()
     {
         return $this->traductions;
-    }
-
-    /**
-     * Add prestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
-     *
-     * @return FamillePrestationAnnexe
-     */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes[] = $prestationAnnex;
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
-     */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes->removeElement($prestationAnnex);
-    }
-
-    /**
-     * Get prestationAnnexes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPrestationAnnexes()
-    {
-        return $this->prestationAnnexes;
     }
 }
