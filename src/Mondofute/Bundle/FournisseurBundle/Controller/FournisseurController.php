@@ -111,10 +111,11 @@ class FournisseurController extends Controller
         /** @var FournisseurInterlocuteur $interlocuteur */
         /** @var Site $site */
         /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-        $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
-        $fournisseur = new Fournisseur();
+        $em                         = $this->getDoctrine()->getManager();
+        $langues                    = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+        $serviceInterlocuteurs      = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
+        $famillePrestationAnnexes    = $em->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->findAll();
+        $fournisseur                = new Fournisseur();
 
         // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
         $adresse = new Adresse();
@@ -243,10 +244,11 @@ class FournisseurController extends Controller
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
-            'serviceInterlocuteurs' => $serviceInterlocuteurs,
-            'fournisseur' => $fournisseur,
-            'form' => $form->createView(),
-            'langues' => $langues,
+            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
+            'fournisseur'               => $fournisseur,
+            'form'                      => $form->createView(),
+            'langues'                   => $langues,
+            'famillePrestationAnnexes'  => $famillePrestationAnnexes
         ));
     }
 
