@@ -231,36 +231,6 @@ class StationType extends AbstractType
                 },
                 'multiple' => true
             ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
             ->add('departement', EntityType::class, array(
                 'class' => Departement::class,
                 'required' => true,
@@ -279,10 +249,10 @@ class StationType extends AbstractType
             ->add('stationCarteIdentite', StationCarteIdentiteType::class, array(
                 'by_reference' => true,
             ))
-<<<<<<< HEAD
             ->add('stationCommentVenir', StationCommentVenirType::class, array(
                 'by_reference' => true,
             ))
+<<<<<<< HEAD
             ->add('stationDescription', StationDescriptionType::class, array(
                 'by_reference' => true,
             ))
@@ -298,12 +268,12 @@ class StationType extends AbstractType
             ))
             ->add('photosParent')
             ->add('videosParent')
-||||||| parent of 5bf8aad... CRM-61 Station - Liaison CommentVenir
+||||||| parent of 2389b0f... CRM-62 station - liaison description
 =======
-            ->add('stationCommentVenir', StationCommentVenirType::class, array(
+            ->add('stationDescription', StationDescriptionType::class, array(
                 'by_reference' => true,
             ))
->>>>>>> 5bf8aad... CRM-61 Station - Liaison CommentVenir
+>>>>>>> 2389b0f... CRM-62 station - liaison description
         ;
     }
 
