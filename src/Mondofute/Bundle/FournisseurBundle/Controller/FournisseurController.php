@@ -114,7 +114,12 @@ class FournisseurController extends Controller
         $em                         = $this->getDoctrine()->getManager();
         $langues                    = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs      = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
-        $famillePrestationAnnexes    = $em->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->findAll();
+        $locale  = $request->getLocale();
+        $famillePrestationAnnexes    = $em
+            ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
+            ->getQuery()
+            ->getResult()
+        ;
         $fournisseur                = new Fournisseur();
 
         // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
@@ -122,23 +127,14 @@ class FournisseurController extends Controller
         $adresse->setCoordonneeGps(new CoordonneesGPS());
         $fournisseur->addMoyenCom($adresse);
 
-        // **** gestion des prestations annexes ****
-//        $famillePrestationAnnexes = $em->getRepository(FamillePrestationAnnexe::class)->findAll();
-//        $fou
-        // **** fin gestion des prestations annexes ****
-
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
-            array('locale' => $request->getLocale()));
+            array('locale' => $locale));
 
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
 
         $form->handleRequest($request);
 
         $errorType = false;
-        if ($form->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
-            $errorType = true;
-            $this->addFlash('error', 'Vous devez choisir au moins un type.');
-        }
 
         $errorInterlocuteur = false;
         $interlocuteurController = new InterlocuteurController();
@@ -151,15 +147,6 @@ class FournisseurController extends Controller
         }
 
         if ($form->isSubmitted() && $form->isValid() && !$errorType && !$errorInterlocuteur) {
-            // ***** GESTION DES TYPES DU FOURNISSEUR *****
-            if (!empty($request->get('fournisseur')['typeFournisseurs'])) {
-                foreach ($request->get('fournisseur')['typeFournisseurs'] as $type) {
-                    $typeFournisseur = new TypeFournisseur();
-                    $typeFournisseur->setTypeFournisseur($type);
-                    $fournisseur->addType($typeFournisseur);
-                }
-            }
-            // ***** FIN GESTION DES TYPES DU FOURNISSEUR *****
 
             /** @var ListeService $listeService */
             foreach ($fournisseur->getListeServices() as $listeService) {
@@ -270,11 +257,17 @@ class FournisseurController extends Controller
 
             /** @var TypeFournisseur $typeFournisseur */
             foreach ($fournisseur->getTypes() as $typeFournisseur) {
-                $typeFournisseurSite = new TypeFournisseur();
-                $typeFournisseurSite->setFournisseur($fournisseurSite);
-                $typeFournisseurSite->setTypeFournisseur($typeFournisseur->getTypeFournisseur());
+                $typeFournisseurSite = $emSite->find(FamillePrestationAnnexe::class , $typeFournisseur);
                 $fournisseurSite->addType($typeFournisseurSite);
             }
+
+            // *** GESTION PRESTATION ANNEXE ***
+            /** @var PrestationAnnexe $prestationAnnex */
+            foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
+                $prestationAnnexSite = $emSite->getRepository(PrestationAnnexe::class )->findOneBy(array('prestationAnnexeUnifie' => $prestationAnnex->getPrestationAnnexeUnifie()));
+                $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
+            }
+            // *** FIN GESTION PRESTATION ANNEXE ***
 
             if (!empty($fournisseurSite->getFournisseurParent())) {
                 $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
@@ -572,21 +565,25 @@ class FournisseurController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $locale = $request->getLocale();
+        $famillePrestationAnnexes    = $em
+            ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
+            ->getQuery()
+            ->getResult()
+        ;
+
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $deleteForm = $this->createDeleteForm($fournisseur);
         $fournisseur->triReceptions();
         $fournisseur->triRemiseClefs();
         $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
-            array('locale' => $request->getLocale()))
+            array('locale' => $locale))
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
         $errorType = false;
-        if ($editForm->isSubmitted() && empty($request->request->get('fournisseur')['typeFournisseurs'])) {
-            $errorType = true;
-            $this->addFlash('error', 'Vous devez choisir au moins un type.');
-        }
 
         $errorInterlocuteur = false;
         $interlocuteurController = new InterlocuteurController();
@@ -599,37 +596,6 @@ class FournisseurController extends Controller
         }
 
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur) {
-            // ***** GESTION DES TYPES DU FOURNISSEUR ****
-            // *** on récupère les types de fournisseus coché dans le formulaires via la reqête ***
-            $arrayTypeFournisseur = new ArrayCollection();
-
-            if (!empty($request->request->get('fournisseur')['typeFournisseurs'])) {
-                foreach ($request->request->get('fournisseur')['typeFournisseurs'] as $type) {
-                    $arrayTypeFournisseur->add(intval($type));
-                }
-            }
-
-            /** @var TypeFournisseur $type */
-            foreach ($originalTypeFournisseurs as $type) {
-                if (!$arrayTypeFournisseur->contains($type->getTypeFournisseur())) {
-                    $fournisseur->getTypes()->removeElement($type);
-                    $this->deleteTypeFournisseurSites($type);
-                    $em->remove($type);
-                }
-            }
-
-            /** @var integer $type */
-            foreach ($arrayTypeFournisseur as $type) {
-                if (!$originalTypeFournisseurs->filter(function (TypeFournisseur $element) use ($type) {
-                    return $element->getTypeFournisseur() == $type;
-                })->first()
-                ) {
-                    $typeFournisseur = new TypeFournisseur();
-                    $typeFournisseur->setTypeFournisseur($type);
-                    $fournisseur->addType($typeFournisseur);
-                }
-            }
-            // ***** FIN GESTION DES TYPES DU FOURNISSEUR ****
 
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -779,11 +745,12 @@ class FournisseurController extends Controller
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(
-            'serviceInterlocuteurs' => $serviceInterlocuteurs,
-            'fournisseur' => $fournisseur,
-            'form' => $editForm->createView(),
-            'langues' => $langues,
-            'delete_form' => $deleteForm->createView(),
+            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
+            'fournisseur'               => $fournisseur,
+            'form'                      => $editForm->createView(),
+            'langues'                   => $langues,
+            'delete_form'               => $deleteForm->createView(),
+            'famillePrestationAnnexes'  => $famillePrestationAnnexes
         ));
     }
 
@@ -983,21 +950,52 @@ class FournisseurController extends Controller
             if (!empty($fournisseurSite)) {
                 $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
                 $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
-                foreach ($fournisseur->getTypes() as $type) {
-                    $typeSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
-                        'fournisseur' => $fournisseurSite,
-                        "typeFournisseur" => $type->getTypeFournisseur()
-                    ));
-                    if (empty($typeSite)) {
-                        $typeFournisseur = new TypeFournisseur();
-                        $typeFournisseur->setTypeFournisseur($type->getTypeFournisseur());
-                        $fournisseurSite->addType($typeFournisseur);
+
+                // remove the relationship between the sousFamillePrestationAnnexeSite and the famillePrestationAnnexeSite
+                foreach ($fournisseurSite->getTypes() as $typeSite) {
+                    $type = $fournisseur->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($typeSite) {
+                        return $element->getId() == $typeSite->getId();
+                    })->first();
+                    if (false === $type) {
+                        // On doit le supprimer de l'entité parent
+                        $fournisseurSite->removeType($typeSite);
                     }
                 }
 
-                $fournisseurSite->setContient($fournisseur->getContient());
-//            $fournisseurSite->setDateModification(new DateTime());
+                foreach ($fournisseur->getTypes() as $type) {
+                    $typeSite = $fournisseurSite->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($type) {
+                        return $element->getId() == $type->getId();
+                    })->first();
+                    if (false === $typeSite) {
+                        $typeSite = $emSite->find(FamillePrestationAnnexe::class,$type);
+                        $fournisseurSite->addType($typeSite);
+                    }
+                }
 
+
+                // *** GESTION PRESTATION ANNEXE ***
+                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
+                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexeSite) {
+                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexeSite->getPrestationAnnexeUnifie()->getId();
+                    })->first();
+                    if (false === $prestationAnnexe) {
+                        // On doit le supprimer de l'entité parent
+                        $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
+                    }
+                }
+
+                foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnexe) {
+                    $prestationAnnexeSite = $fournisseurSite->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexe) {
+                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexe->getPrestationAnnexeUnifie()->getId();
+                    })->first();
+                    if (false === $prestationAnnexeSite) {
+                        $prestationAnnexSite = $emSite->getRepository(PrestationAnnexe::class )->findOneBy(array('prestationAnnexeUnifie' => $prestationAnnexe->getPrestationAnnexeUnifie()));
+                        $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
+                    }
+                }
+                // *** FIN GESTION PRESTATION ANNEXE ***
+
+                $fournisseurSite->setContient($fournisseur->getContient());
 
                 foreach ($fournisseur->getMoyenComs() as $key => $moyenCom) {
                     $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -1522,18 +1520,23 @@ class FournisseurController extends Controller
 //        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
         $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId, 'site' => 1 ));
         $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-        foreach ($prestationAnnexes as $prestationAnnex){
-            $fournisseur->addPrestationAnnex($prestationAnnex);
-        }
+//        $sousFamillePrestationAnnexe    = $em->find(SousFamillePrestationAnnexe::class, $famillePrestationAnnexeId);
+//        foreach ($prestationAnnexes as $prestationAnnex){
+//            $fournisseur->addPrestationAnnex($prestationAnnex);
+//        }
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
-            array('locale' => 'fr_FR'));
+            array(
+                'locale'                    => 'fr_FR',
+                'famillePrestationAnnexeId' => $famillePrestationAnnexeId
+            ));
 
 //        dump($form);die;
 
         return $this->render('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig', array(
-            'formFournisseurPrestationAnnexe'   => $form->createView(),
-            'prestationAnnexes'                 => $prestationAnnexes,
-            'famillePrestationAnnexe'           => $famillePrestationAnnexe
+            'form'                      => $form->createView(),
+//            'prestationAnnexes'         => $prestationAnnexes,
+            'famillePrestationAnnexe'   => $famillePrestationAnnexe,
+            'formAjax'                  => true
         ));
     }
 

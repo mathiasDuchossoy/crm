@@ -38,16 +38,25 @@ class PrestationAnnexeType extends AbstractType
                     'onchange' => 'javascript:sortSousFamilleByFamille(this);'
                 )
             ))
-            ->add('sousFamillePrestationAnnexes', EntityType::class, array(
+            ->add('sousFamillePrestationAnnexe', EntityType::class, array(
                 'class' => SousFamillePrestationAnnexe::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir une/des sous-famille(s) ---",
-                'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
+                'query_builder' => function (SousFamillePrestationAnnexeRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                }
             ))
+//            ->add('sousFamillePrestationAnnexes', EntityType::class, array(
+//                'class' => SousFamillePrestationAnnexe::class,
+//                'required' => false,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir une/des sous-famille(s) ---",
+//                'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
+//                    return $rr->getTraductionsByLocale($locale);
+//                },
+//                'multiple' => true
+//            ))
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
                     Type::getLibelle(Type::Individuelle) => Type::Individuelle,
