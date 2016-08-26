@@ -3,6 +3,8 @@
 namespace Mondofute\Bundle\PeriodeBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 
 /**
  * PeriodeRepository
@@ -32,4 +34,39 @@ class PeriodeRepository extends \Doctrine\ORM\EntityRepository
         }
         return $this->matching($criteres);
     }
+
+    /**
+     * @return mixed
+     */
+    public function countTotalByTypePeriode($typePeriode)
+    {
+        return $this->createQueryBuilder('entity')
+            ->select('COUNT(entity)')
+            ->where('entity.type = :typePeriode')
+            ->setParameter('typePeriode', $typePeriode)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Get the paginated list of published secteurs
+     *
+     * @param int $page
+     * @param int $maxperpage
+     * @param array $sortbyArray
+     * @return Paginator
+     */
+    public function getList($page = 1, $maxperpage, $sortbyArray = array(), $typePeriode = null)
+    {
+        $q = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->where('entity.type = :type')
+            ->setParameter('type', $typePeriode)
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
+
+        $pag = new Paginator($q);
+        return $pag;
+    }
+
 }

@@ -1,6 +1,6 @@
 domaine_domaine_index:
-    path:     /
-    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 domaine_domaine_show:

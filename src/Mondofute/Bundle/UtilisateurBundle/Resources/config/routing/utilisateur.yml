@@ -1,6 +1,6 @@
 utilisateur_index:
-    path:     /
-    defaults: { _controller: "MondofuteUtilisateurBundle:Utilisateur:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteUtilisateurBundle:Utilisateur:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 utilisateur_show:

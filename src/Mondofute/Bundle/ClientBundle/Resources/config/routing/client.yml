@@ -1,6 +1,6 @@
 client_index:
-    path:     /
-    defaults: { _controller: "MondofuteClientBundle:Client:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteClientBundle:Client:index" , page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
 
 client_show:

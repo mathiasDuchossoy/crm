@@ -45,27 +45,31 @@ class DomaineUnifieController extends Controller
      * Lists all DomaineUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-//        $sites = $em->getRepository(Site::class)->findAll();
-//        foreach ($sites as $site){
-//            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-//            $domaineUnifies = $emSite->getRepository(DomaineUnifie::class)->findAll();
-//            foreach ($domaineUnifies as $domaineUnify){
-//                $emSite->remove($domaineUnify);
-//            }
-//            $domaineCIUnifies = $emSite->getRepository(DomaineCarteIdentiteUnifie::class)->findAll();
-//            foreach ($domaineCIUnifies as $domaineCIUnify){
-//                $emSite->remove($domaineCIUnify);
-//            }
-//            $emSite->flush();
-//        }
+        $count = $em
+            ->getRepository('MondofuteDomaineBundle:DomaineUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'domaine_domaine_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
 
-        $domaineUnifies = $em->getRepository(DomaineUnifie::class)->findAll();
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteDomaineBundle:DomaineUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
+
         return $this->render('@MondofuteDomaine/domaineunifie/index.html.twig', array(
-            'domaineUnifies' => $domaineUnifies,
+            'domaineUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 
@@ -95,7 +99,7 @@ class DomaineUnifieController extends Controller
             // Récupérer le controleur et lui donner le container de celui dans lequel on est
             $domaineCarteIdentiteController = new DomaineCarteIdentiteUnifieController();
             $domaineCarteIdentiteController->setContainer($this->container);
-            
+
             $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
 
             // ***** Carte d'identité *****
@@ -391,7 +395,7 @@ class DomaineUnifieController extends Controller
 
                 $domaine->setDomaineCarteIdentite($domaineCarteIdentite);
                 // fin carte identite
-                
+
             }
         }
     }
@@ -1145,7 +1149,7 @@ class DomaineUnifieController extends Controller
                     }
                 }
                 // ************* fin suppression photos *************
-                
+
                 $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
 
                 // Supprimer la relation entre la domaine et domaineUnifie
@@ -1180,7 +1184,7 @@ class DomaineUnifieController extends Controller
                             }
                             $emSite->flush();
                         }
-                        
+
                         $emSite->remove($domaineSite);
                         $emSite->flush();
 
@@ -1412,7 +1416,7 @@ class DomaineUnifieController extends Controller
                     }
                 }
                 // ***** Fin Gestion des Medias *****
-                
+
 
                 $em->persist($domaineUnifie);
                 $em->flush();
@@ -1439,7 +1443,7 @@ class DomaineUnifieController extends Controller
                     }
                     $em->flush();
                 }
-                
+
             } catch (ForeignKeyConstraintViolationException $except) {
                 switch ($except->getCode()) {
                     case 0:
@@ -1622,7 +1626,7 @@ class DomaineUnifieController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             try {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
@@ -1658,7 +1662,7 @@ class DomaineUnifieController extends Controller
                                 }
                             }
                         }
-                        
+
                         $emSite->flush();
                     }
                 }
@@ -1688,15 +1692,15 @@ class DomaineUnifieController extends Controller
                             $em->remove($photo);
                         }
                     }
-                    
+
                 }
-             
+
                 $em->remove($domaineUnifie);
 
                 foreach ($arrayDomaineCarteIdentiteUnifies as $domaineCarteIdentiteUnify) {
                     $domaineCarteIdentiteUnifieController->deleteEntity($domaineCarteIdentiteUnify);
                 }
-                
+
                 $em->flush();
             } catch (ForeignKeyConstraintViolationException $except) {
 //                dump($except);
