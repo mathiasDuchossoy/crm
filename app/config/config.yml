@@ -628,6 +628,27 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        station_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        station_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        station_visuel_crm:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
     providers:
         file:
             service:    sonata.media.provider.file

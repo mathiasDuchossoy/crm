@@ -72,6 +72,18 @@ class Station
      * @var \Doctrine\Common\Collections\Collection
      */
     private $hebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $visuels;
+    /**
+     * @var boolean
+     */
+    private $videosParent = false;
+    /**
+     * @var boolean
+     */
+    private $photosParent = false;
 
     /**
      * Constructor
@@ -567,5 +579,87 @@ class Station
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Add visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     *
+     * @return Station
+     */
+    public function addVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels[] = $visuel->setStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     */
+    public function removeVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels->removeElement($visuel);
+    }
+
+    /**
+     * Get visuels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVisuels()
+    {
+        return $this->visuels;
+    }
+
+    /**
+     * Get videosParent
+     *
+     * @return boolean
+     */
+    public function getVideosParent()
+    {
+        return $this->videosParent;
+    }
+
+    /**
+     * Set videosParent
+     *
+     * @param boolean $videosParent
+     *
+     * @return Station
+     */
+    public function setVideosParent($videosParent)
+    {
+        $this->videosParent = $videosParent;
+
+        return $this;
+    }
+
+    /**
+     * Get photosParent
+     *
+     * @return boolean
+     */
+    public function getPhotosParent()
+    {
+        return $this->photosParent;
+    }
+
+    /**
+     * Set photosParent
+     *
+     * @param boolean $photosParent
+     *
+     * @return Station
+     */
+    public function setPhotosParent($photosParent)
+    {
+        $this->photosParent = $photosParent;
+
+        return $this;
     }
 }

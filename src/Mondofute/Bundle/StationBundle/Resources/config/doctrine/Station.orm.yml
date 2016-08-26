@@ -10,6 +10,15 @@ Mondofute\Bundle\StationBundle\Entity\Station:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        videosParent:
+            type: boolean
+            options:
+                default: false
+        photosParent:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -43,9 +52,13 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationMere
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: station
+        visuels:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuel
+            mappedBy: station
+            cascade: ['persist','remove']
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
