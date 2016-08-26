@@ -1,0 +1,24 @@
+familleprestationannexe_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:FamillePrestationAnnexe:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+familleprestationannexe_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:FamillePrestationAnnexe:show" }
+    methods:  GET
+
+familleprestationannexe_new:
+    path:     /new
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:FamillePrestationAnnexe:new" }
+    methods:  [GET, POST]
+
+familleprestationannexe_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:FamillePrestationAnnexe:edit" }
+    methods:  [GET, POST]
+
+familleprestationannexe_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:FamillePrestationAnnexe:delete" }
+    methods:  DELETE
