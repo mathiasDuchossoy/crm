@@ -1,0 +1,1 @@
+ALTER TABLE domaine ADD images_parent TINYINT(1) DEFAULT '0' NOT NULL, ADD photos_parent TINYINT(1) DEFAULT '0' NOT NULL;

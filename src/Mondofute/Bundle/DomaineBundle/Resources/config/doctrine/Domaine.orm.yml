@@ -10,6 +10,15 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        imagesParent:
+            type: boolean
+            options:
+                default: false
+        photosParent:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -33,4 +42,12 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: domaine
+        images:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineImage
+            mappedBy: domaine
+            cascade: ['persist' , 'remove']
+        photos:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto
+            mappedBy: domaine
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

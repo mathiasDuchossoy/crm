@@ -1,0 +1,30 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineImage:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineImageRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        domaine:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            inversedBy: images
+        image:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist' , 'remove']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineImageTraduction
+            mappedBy: image
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
