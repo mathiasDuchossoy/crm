@@ -84,36 +84,6 @@ class StationType extends AbstractType
                 },
                 'multiple' => true
             ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
-            ->add('profils', EntityType::class, array(
-                'class' => Profil::class,
-                'required' => false,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un secteur ---",
-                'query_builder' => function (ProfilRepository $rr) use ($locale) {
-                    return $rr->getTraductionsByLocale($locale);
-                },
-                'multiple' => true
-            ))
             ->add('departement', EntityType::class, array(
                 'class' => Departement::class,
                 'required' => true,
@@ -138,6 +108,18 @@ class StationType extends AbstractType
             ->add('stationDescription', StationDescriptionType::class, array(
                 'by_reference' => true,
             ))
+            ->add('visuels', 'Infinite\FormBundle\Form\Type\PolyCollectionType', array(
+                'types' => array(
+                    'Mondofute\Bundle\StationBundle\Form\StationVideoType',
+                    'Mondofute\Bundle\StationBundle\Form\StationPhotoType',
+                ),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+            ))
+            ->add('photosParent')
+            ->add('videosParent')
         ;
     }
 

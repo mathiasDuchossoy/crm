@@ -593,13 +593,15 @@ class StationCarteIdentiteUnifieController extends Controller
 //                            $emSite->flush();
 //                        }
 //                        $em->remove($stationCarteIdentite->getAltitudeVillage());
+
+                    if ($stationCarteIdentiteSite->getStations()->count() <= 1 ){
                         $emSite->remove($stationCarteIdentiteSite);
-//                    } else $delete = false;
+                    } else $delete = false;
                 }
-//                if ($delete) {
-                $emSite->remove($stationCarteIdentiteUnifieSite);
+                if ($delete) {
+                    $emSite->remove($stationCarteIdentiteUnifieSite);
                     $emSite->flush();
-//                }
+                }
             }
         }
 //        $em = $this->getDoctrine()->getManager();
@@ -611,10 +613,11 @@ class StationCarteIdentiteUnifieController extends Controller
 //                    $em->remove($moyenCom);
 ////                    $em->flush();
 //                }
-                $em->remove($stationCarteIdentite);
-//            } else {
-//                $delete = false;
-//            }
+                if ($stationCarteIdentite->getStations()->count() <= 1 ){
+                    $em->remove($stationCarteIdentite);
+                } else {
+                    $delete = false;
+                }
         }
 //        $em->clear($stationCarteIdentiteUnifie->getStationCarteIdentites());
 //        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)

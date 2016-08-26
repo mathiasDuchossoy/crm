@@ -102,6 +102,23 @@ class StationUnifieType extends AbstractType
             $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
         }
 
+
+        $stationCrm = null;
+        foreach ($view->children['stations'] as $station) {
+            if ($station->vars['value']->getSite()->getCrm() == 1) {
+                $stationCrm = $station;
+//                dump($stationCrm);
+            } else {
+                foreach ($station->children['visuels'] as $key => $image) {
+                    if ($image->vars['value']->getActif() == true) {
+
+                        $siteId = $station->vars['value']->getSite()->getId();
+                        $stationCrm->children['visuels']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
+            }
+        }
+
 //        die;
     }
 }
