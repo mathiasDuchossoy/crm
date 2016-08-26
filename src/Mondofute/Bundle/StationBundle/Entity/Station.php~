@@ -1,9 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -29,14 +29,6 @@ class Station
      */
     private $stationUnifie;
     /**
-     * @var ZoneTouristique
-     */
-    private $zoneTouristique;
-    /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Secteur
-     */
-    private $secteur;
-    /**
      * @var \Mondofute\Bundle\GeographieBundle\Entity\Departement
      */
     private $departement;
@@ -56,6 +48,42 @@ class Station
      * @var \Mondofute\Bundle\StationBundle\Entity\StationDescription
      */
     private $stationDescription;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $secteurs;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $zoneTouristiques;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $profils;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $stations;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    private $stationMere;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $hebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $visuels;
+    /**
+     * @var boolean
+     */
+    private $videosParent = false;
+    /**
+     * @var boolean
+     */
+    private $photosParent = false;
 
     /**
      * Constructor
@@ -157,6 +185,10 @@ class Station
         return $this->traductions;
     }
 
+    /**
+     * @param $traductions
+     * @return $this
+     */
     public function setTraductions($traductions)
     {
         $this->getTraductions()->clear();
@@ -177,54 +209,6 @@ class Station
     public function addTraduction(StationTraduction $traduction)
     {
         $this->traductions[] = $traduction->setStation($this);
-
-        return $this;
-    }
-
-    /**
-     * Get zoneTouristique
-     *
-     * @return ZoneTouristique
-     */
-    public function getZoneTouristique()
-    {
-        return $this->zoneTouristique;
-    }
-
-    /**
-     * Set zoneTouristique
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
-     *
-     * @return Station
-     */
-    public function setZoneTouristique(ZoneTouristique $zoneTouristique = null)
-    {
-        $this->zoneTouristique = $zoneTouristique;
-
-        return $this;
-    }
-
-    /**
-     * Get secteur
-     *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Secteur
-     */
-    public function getSecteur()
-    {
-        return $this->secteur;
-    }
-
-    /**
-     * Set secteur
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
-     *
-     * @return Station
-     */
-    public function setSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur = null)
-    {
-        $this->secteur = $secteur;
 
         return $this;
     }
@@ -296,6 +280,9 @@ class Station
      */
     public function setStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite = null)
     {
+//        if($stationCarteIdentite == null){
+//            $this->getStationCarteIdentite()->removeStation($this);
+//        }
         $this->stationCarteIdentite = $stationCarteIdentite;
 
         return $this;
@@ -348,11 +335,217 @@ class Station
 
         return $this;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $hebergements;
 
+    /**
+     * Remove secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     */
+    public function removeSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    {
+        $this->secteurs->removeElement($secteur);
+    }
+
+    /**
+     * Get secteurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSecteurs()
+    {
+        return $this->secteurs;
+    }
+
+    /**
+     * @param $secteurs
+     * @return $this
+     */
+    public function setSecteurs($secteurs)
+    {
+        if (!empty($this->getSecteurs())) {
+            $this->getSecteurs()->clear();
+        }
+        if (!empty($secteurs)) {
+            foreach ($secteurs as $secteur) {
+                $this->addSecteur($secteur);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add secteur
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur
+     *
+     * @return Station
+     */
+    public function addSecteur(\Mondofute\Bundle\GeographieBundle\Entity\Secteur $secteur)
+    {
+        $this->secteurs[] = $secteur->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     */
+    public function removeZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    {
+        $this->zoneTouristiques->removeElement($zoneTouristique);
+    }
+
+    /**
+     * Get zoneTouristiques
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getZoneTouristiques()
+    {
+        return $this->zoneTouristiques;
+    }
+
+    /**
+     * @param $zoneTouristiques
+     * @return $this
+     */
+    public function setZoneTouristiques($zoneTouristiques)
+    {
+        if (!empty($this->getZoneTouristiques())) {
+            $this->getZoneTouristiques()->clear();
+        }
+        if (!empty($zoneTouristiques)) {
+            foreach ($zoneTouristiques as $zoneTouristique) {
+                $this->addZoneTouristique($zoneTouristique);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add zoneTouristique
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     *
+     * @return Station
+     */
+    public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    {
+        $this->zoneTouristiques[] = $zoneTouristique->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove profil
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     */
+    public function removeProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    {
+        $this->profils->removeElement($profil);
+    }
+
+    /**
+     * Get profils
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProfils()
+    {
+        return $this->profils;
+    }
+
+    /**
+     * @param $profils
+     * @return $this
+     */
+    public function setProfils($profils)
+    {
+        if (!empty($this->getProfils())) {
+            $this->getProfils()->clear();
+        }
+        if (!empty($profils)) {
+            foreach ($profils as $profil) {
+                $this->addProfil($profil);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Add profil
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Profil $profil
+     *
+     * @return Station
+     */
+    public function addProfil(\Mondofute\Bundle\GeographieBundle\Entity\Profil $profil)
+    {
+        $this->profils[] = $profil->addStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Add station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return Station
+     */
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations[] = $station;
+
+        return $this;
+    }
+
+    /**
+     * Remove station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     */
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    {
+        $this->stations->removeElement($station);
+    }
+
+    /**
+     * Get stations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStations()
+    {
+        return $this->stations;
+    }
+
+    /**
+     * Get stationMere
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    public function getStationMere()
+    {
+        return $this->stationMere;
+    }
+
+    /**
+     * Set stationMere
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $stationMere
+     *
+     * @return Station
+     */
+    public function setStationMere(\Mondofute\Bundle\StationBundle\Entity\Station $stationMere = null)
+    {
+        $this->stationMere = $stationMere;
+
+        return $this;
+    }
 
     /**
      * Add hebergement
@@ -363,7 +556,7 @@ class Station
      */
     public function addHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement)
     {
-        $this->hebergements[] = $hebergement;
+        $this->hebergements[] = $hebergement->setStation($this);
 
         return $this;
     }
@@ -386,5 +579,87 @@ class Station
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Add visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     *
+     * @return Station
+     */
+    public function addVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels[] = $visuel->setStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove visuel
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel
+     */
+    public function removeVisuel(\Mondofute\Bundle\StationBundle\Entity\StationVisuel $visuel)
+    {
+        $this->visuels->removeElement($visuel);
+    }
+
+    /**
+     * Get visuels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVisuels()
+    {
+        return $this->visuels;
+    }
+
+    /**
+     * Get videosParent
+     *
+     * @return boolean
+     */
+    public function getVideosParent()
+    {
+        return $this->videosParent;
+    }
+
+    /**
+     * Set videosParent
+     *
+     * @param boolean $videosParent
+     *
+     * @return Station
+     */
+    public function setVideosParent($videosParent)
+    {
+        $this->videosParent = $videosParent;
+
+        return $this;
+    }
+
+    /**
+     * Get photosParent
+     *
+     * @return boolean
+     */
+    public function getPhotosParent()
+    {
+        return $this->photosParent;
+    }
+
+    /**
+     * Set photosParent
+     *
+     * @param boolean $photosParent
+     *
+     * @return Station
+     */
+    public function setPhotosParent($photosParent)
+    {
+        $this->photosParent = $photosParent;
+
+        return $this;
     }
 }

@@ -59,6 +59,9 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuel
             mappedBy: station
             cascade: ['persist','remove']
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            mappedBy: station
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
