@@ -171,21 +171,6 @@ class FournisseurController extends Controller
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
-
-//            foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
-//                foreach ($interlocuteur->getInterlocuteur()->getMoyenComs() as $moyenCom) {
-//
-//                    $typeComm = (new ReflectionClass($moyenCom))->getShortName();
-//                    switch ($typeComm) {
-//                        case "Adresse":
-//                            /** @var Adresse $moyenComSite */
-//                            $moyenCom->setPays($em->find(Pays::class, $moyenCom->getPays()));
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                }
-//            }
             // ***** FIN GESTION DES INTERLOCUTEURS *****
 
             foreach ($fournisseur->getMoyenComs() as $moyenCom) {
