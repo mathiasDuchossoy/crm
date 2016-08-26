@@ -7,6 +7,11 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\PrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
@@ -29,6 +34,7 @@ class FournisseurType extends AbstractType
     {
         $fournisseurId = $builder->getData()->getId();
         $locale = $options["locale"];
+        $famillePrestationAnnexeId = $options["famillePrestationAnnexeId"];
 
 
 
@@ -42,57 +48,19 @@ class FournisseurType extends AbstractType
 
         $builder
             ->add('raisonSociale')
-//            ->add('type', EntityType::class, array(
-//                'choice_label' => 'libelle',
-//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-//                'placeholder' => ' ----- Choisir un type de fournisseur ----- '
-//            ))
-//            ->add('type', EntityType::class, array(
-//                'class' => 'Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur',
-//                'required' => true,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un type de fournisseur ---",
-//                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsByLocale($locale);
-//                },
-//            ))
-//            ->add('types', CollectionType::class, array(
-//                'entry_type' => 'Mondofute\Bundle\FournisseurBundle\Form\TypeFournisseurType',
-////                'required' => true,
-////                "choice_label" => "traductions[0].libelle",
-////                "placeholder" => " --- choisir un type de fournisseur ---",
-////                'query_builder' => function (TypeFournisseurRepository $rr) use ($locale) {
-////                    return $rr->getTraductionsByLocale($locale);
-////                },
-////                'expanded'  => true,
-////                'multiple'  => true
-//            ))
-            ->add('types', CollectionType::class, array(
-                'mapped' => false,
-            ))
-            ->add('typeFournisseurs', ChoiceType::class, array(
-//            ->add('types', ChoiceType::class, array(
-                'choices' => array(
-                    TypeFournisseur::getLibelle(TypeFournisseur::Hebergement) => TypeFournisseur::Hebergement,
-                    TypeFournisseur::getLibelle(TypeFournisseur::RemonteesMecaniques) => TypeFournisseur::RemonteesMecaniques,
-                    TypeFournisseur::getLibelle(TypeFournisseur::LocationMaterielDeSki) => TypeFournisseur::LocationMaterielDeSki,
-                    TypeFournisseur::getLibelle(TypeFournisseur::ESF) => TypeFournisseur::ESF,
-                    TypeFournisseur::getLibelle(TypeFournisseur::Assurance) => TypeFournisseur::Assurance,
-//                    new TypeFournisseur(TypeFournisseur::Hebergement),
-//                    new TypeFournisseur(TypeFournisseur::RemonteesMecaniques) ,
-//                    new TypeFournisseur(TypeFournisseur::LocationMaterielDeSki) ,
-//                    new TypeFournisseur(TypeFournisseur::ESF),
-//                    new TypeFournisseur(TypeFournisseur::Assurance) ,
-                ),
-                'choices_as_values' => true,
-                'label' => 'types',
-                'translation_domain' => 'messages',
-                'mapped' => false,
-                'expanded' => true,
-                'multiple' => true,
-//                'choice_label' => 'libelle',
-//                'property_path' => 'libelle',
+            ->add('types', EntityType::class, array(
+                'class' => FamillePrestationAnnexe::class,
                 'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'multiple'  => true,
+                'expanded'  => true,
+                'attr'      => array(
+                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+                )
             ))
             ->add('enseigne', null, array(
                 'label' => 'enseigne',
@@ -178,7 +146,22 @@ class FournisseurType extends AbstractType
                 'label' => 'liste_service',
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
-            ));
+            ))
+            ->add('prestationAnnexes', EntityType::class, array(
+                'class' => PrestationAnnexe::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (PrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
+                    return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
+                },
+                'multiple'  => true,
+                'expanded'  => true,
+                'attr'      => array(
+                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+                )
+            ))
+        ;
     }
 
     /**
@@ -189,6 +172,7 @@ class FournisseurType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur',
             'locale' => 'fr_FR',
+            'famillePrestationAnnexeId' => null,
         ));
     }
 
@@ -198,17 +182,17 @@ class FournisseurType extends AbstractType
         $arrayType = new ArrayCollection();
         $view->children['logo']->children['binaryContent']->vars['attr'] = array('accept' => "image/x-png, image/gif, image/jpeg");
 
-        if (!empty($view->vars['value']->getTypes())) {
-            foreach ($view->vars['value']->getTypes() as $type) {
-                $arrayType->add($type->getTypeFournisseur());
-            }
-
-            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
-                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
-                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
-                }
-            }
-        }
+//        if (!empty($view->vars['value']->getTypes())) {
+//            foreach ($view->vars['value']->getTypes() as $type) {
+//                $arrayType->add($type->getTypeFournisseur());
+//            }
+//
+//            foreach ($view->children['typeFournisseurs']->children as $checkBoxTypeFournisseur) {
+//                if ($arrayType->contains(intval($checkBoxTypeFournisseur->vars['value']))) {
+//                    $checkBoxTypeFournisseur->vars['attr']['checked'] = "checked";
+//                }
+//            }
+//        }
 
         // ordre d'affichage: Adresse , Email, Téléphone 1, Téléphone 2, Mobile
         $interlocuteurs = $view->children['interlocuteurs']->children;
