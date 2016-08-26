@@ -1,0 +1,24 @@
+stationdescription_index:
+    path:     /
+    defaults: { _controller: "MondofuteStationBundle:StationDescriptionUnifie:index" }
+    methods:  GET
+
+stationdescription_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteStationBundle:StationDescriptionUnifie:show" }
+    methods:  GET
+
+stationdescription_new:
+    path:     /new
+    defaults: { _controller: "MondofuteStationBundle:StationDescriptionUnifie:new" }
+    methods:  [GET, POST]
+
+stationdescription_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteStationBundle:StationDescriptionUnifie:edit" }
+    methods:  [GET, POST]
+
+stationdescription_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteStationBundle:StationDescriptionUnifie:delete" }
+    methods:  DELETE

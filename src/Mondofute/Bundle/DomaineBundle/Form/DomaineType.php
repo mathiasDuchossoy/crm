@@ -20,7 +20,7 @@ class DomaineType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $locale             = $options['locale'];
-        $domaineUnifieId          = $options['domaineUnifieId'];
+        $domaineUnifieId = $options['domaineUnifieId'];
         $builder
             ->add('domaineParent' , EntityType::class , array(
                 'class' => Domaine::class ,

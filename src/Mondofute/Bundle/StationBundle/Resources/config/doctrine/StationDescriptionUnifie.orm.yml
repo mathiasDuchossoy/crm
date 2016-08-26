@@ -13,6 +13,6 @@ Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie:
     oneToMany:
         stationDescriptions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescription
-            mappedBy: stationDescription
+            mappedBy: stationDescriptionUnifie
             cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

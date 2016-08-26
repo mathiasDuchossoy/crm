@@ -10,17 +10,20 @@ Mondofute\Bundle\StationBundle\Entity\Station:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        videosParent:
+            type: boolean
+            options:
+                default: false
+        photosParent:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         stationUnifie:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationUnifie
-            inversedBy: stations
-        zoneTouristique:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
-            inversedBy: stations
-        secteur:
-            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
             inversedBy: stations
         domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
@@ -31,18 +34,39 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stationCarteIdentite:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite
             inversedBy: stations
+#            cascade:  ['detach']
         stationCommentVenir:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
             inversedBy: stations
         stationDescription:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDescription
             inversedBy: stations
+        stationMere:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: stations
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
             mappedBy: station
             cascade:  ['persist' , 'remove']
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            mappedBy: stationMere
+        stations:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: station
+        visuels:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuel
+            mappedBy: station
+            cascade: ['persist','remove']
+    manyToMany:
+        secteurs:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur
+            inversedBy: stations
+        zoneTouristiques:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+            inversedBy: stations
+        profils:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
+            inversedBy: stations
     lifecycleCallbacks: {  }

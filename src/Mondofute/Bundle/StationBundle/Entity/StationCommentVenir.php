@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * StationCommentVenir
@@ -31,6 +32,10 @@ class StationCommentVenir
      * @var \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie
      */
     private $stationCommentVenirUnifie;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $grandeVilles;
 
     /**
      * Constructor
@@ -86,20 +91,6 @@ class StationCommentVenir
     }
 
     /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction
-     *
-     * @return StationCommentVenir
-     */
-    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction)
-    {
-        $this->traductions[] = $traduction;
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction
@@ -107,16 +98,6 @@ class StationCommentVenir
     public function removeTraduction(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
     }
 
     /**
@@ -165,5 +146,92 @@ class StationCommentVenir
         $this->stationCommentVenirUnifie = $stationCommentVenirUnifie;
 
         return $this;
+    }
+
+    public function __clone()
+    {
+        /** @var StationCommentVenirTraduction $traduction */
+        $this->id = null;
+        $traductions = $this->getTraductions();
+        $this->traductions = new ArrayCollection();
+        if (count($traductions) > 0) {
+            foreach ($traductions as $traduction) {
+                $cloneTraduction = clone $traduction;
+                $this->traductions->add($cloneTraduction);
+                $cloneTraduction->setStationCommentVenir($this);
+            }
+        }
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * @param $traductions
+     * @return $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction
+     *
+     * @return StationCommentVenir
+     */
+    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setStationCommentVenir($this);
+
+        return $this;
+    }
+
+    /**
+     * Add grandeVille
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     *
+     * @return StationCommentVenir
+     */
+    public function addGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    {
+        $this->grandeVilles[] = $grandeVille->setStationCommentVenir($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove grandeVille
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     */
+    public function removeGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    {
+        $this->grandeVilles->removeElement($grandeVille);
+    }
+
+    /**
+     * Get grandeVilles
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGrandeVilles()
+    {
+        return $this->grandeVilles;
     }
 }
