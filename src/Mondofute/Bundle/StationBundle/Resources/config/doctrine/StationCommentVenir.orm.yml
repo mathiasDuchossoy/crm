@@ -19,9 +19,13 @@ Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
     oneToMany:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
-            mappedBy: stationCarteIdentite
+            mappedBy: stationCommentVenir
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction
             mappedBy: stationCommentVenir
             cascade:  ['persist' , 'remove']
+        grandeVilles:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille
+            mappedBy: stationCommentVenir
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

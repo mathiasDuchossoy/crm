@@ -207,10 +207,6 @@ class HebergementUnifieController extends Controller
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
                 $error = true;
-//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
-//                {
-//
-//                }
             }
             if (!$error) {
                 $this->copieVersSites($hebergementUnifie);
@@ -1035,12 +1031,9 @@ class HebergementUnifieController extends Controller
             foreach ($serviceHebergement->getTarifs() as $originalTarif) {
                 $originalTarifs->add($originalTarif);
             }
-//            dump($serviceHebergement->getService());
-////            dump($hebergementUnifie->getServices()->contains($originalService));
-////            dump($hebergementUnifie->getServices());
             $originalServices->add($serviceHebergement);
         }
-//        die;
+
         $this->genererServiceHebergements($hebergementUnifie);
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -1402,10 +1395,6 @@ class HebergementUnifieController extends Controller
             } catch (\Exception $e) {
                 $this->addFlash('error', $e->getMessage());
                 $error = true;
-//                foreach ($hebergementUnifie->getHebergements() as $hebergement)
-//                {
-//
-//                }
             }
             if (!$error) {
                 $this->copieVersSites($hebergementUnifie, $originalHebergementVisuels);
@@ -1553,10 +1542,8 @@ class HebergementUnifieController extends Controller
                         }
                         $em->flush();
                     }
-//                    $emSite->remove($hebergementUnifieSite);
-//                    $emSite->flush();
                 }
-//                $em = $this->getDoctrine()->getManager();
+
                 $em->remove($hebergementUnifie);
                 $em->flush();
             }

@@ -1,0 +1,26 @@
+Mondofute\Bundle\GeographieBundle\Entity\GrandeVille:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\GrandeVilleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction
+            mappedBy: grandeVille
+            cascade:  ['persist' , 'remove']
+#        stationCommentVenirs:
+#            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+#            mappedBy: grandeVille
+    oneToOne:
+        coordonneesGps:
+            targetEntity: Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+#            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
+
+    lifecycleCallbacks: {  }

@@ -1,0 +1,20 @@
+Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCommentVenirGrandeVilleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        stationCommentVenir:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
+            inversedBy: grandeVilles
+        grandeVille:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\GrandeVille
+#            inversedBy: stationCommentVenirs
+    lifecycleCallbacks: {  }

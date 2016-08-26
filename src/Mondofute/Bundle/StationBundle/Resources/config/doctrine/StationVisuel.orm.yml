@@ -1,0 +1,39 @@
+Mondofute\Bundle\StationBundle\Entity\StationVisuel:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationVisuelRepository
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: discr
+        type: integer
+    discriminatorMap:
+      1: StationVideo
+      2: StationPhoto
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: visuels
+        visuel:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+#            cascade: ['persist','remove']
+            cascade: ['persist']
+#            orphanRemoval: true
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction
+            mappedBy: stationVisuel
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

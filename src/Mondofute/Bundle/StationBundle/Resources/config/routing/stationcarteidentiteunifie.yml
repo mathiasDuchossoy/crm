@@ -1,0 +1,24 @@
+stationcarteidentite_index:
+    path:     /
+    defaults: { _controller: "MondofuteStationBundle:StationCarteIdentiteUnifie:index" }
+    methods:  GET
+
+stationcarteidentite_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteStationBundle:StationCarteIdentiteUnifie:show" }
+    methods:  GET
+
+stationcarteidentite_new:
+    path:     /new
+    defaults: { _controller: "MondofuteStationBundle:StationCarteIdentiteUnifie:new" }
+    methods:  [GET, POST]
+
+stationcarteidentite_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteStationBundle:StationCarteIdentiteUnifie:edit" }
+    methods:  [GET, POST]
+
+stationcarteidentite_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteStationBundle:StationCarteIdentiteUnifie:delete" }
+    methods:  DELETE

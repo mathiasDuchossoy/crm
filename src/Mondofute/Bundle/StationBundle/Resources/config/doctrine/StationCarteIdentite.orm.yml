@@ -2,6 +2,16 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationCarteIdentiteRepository
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: station_carte_identite_moyenscom
+#                joinColumns:
+#                    station_carte_identite__id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyencom_id:
+#                        referencedColumnName: id
     id:
         id:
             type: integer
@@ -11,8 +21,8 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
             options:
                 unsigned: true
     fields:
-        codePostal:
-            type: integer
+#        codePostal:
+#            type: integer
         moisOuverture:
             type: string
             length: '2'
@@ -29,10 +39,6 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
             type: string
             length: '2'
             nullable: true
-        lienMeteo:
-            type: string
-            length: 255
-            nullable: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
@@ -43,11 +49,11 @@ Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationCarteIdentite
-        traductions:
-            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
-            mappedBy: station
-            cascade:  ['persist' , 'remove']
     oneToOne:
         altitudeVillage:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Distance
+            cascade: ['persist', 'remove' ]
+        adresse:
+            targetEntity: Nucleus\MoyenComBundle\Entity\Adresse
+            cascade: ['persist', 'remove' ]
     lifecycleCallbacks: {  }
