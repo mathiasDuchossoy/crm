@@ -1559,10 +1559,18 @@ class StationUnifieController extends Controller
         $stationDescriptionUnifieController = new StationDescriptionUnifieController();
         $stationDescriptionUnifieController->setContainer($this->container);
 
+        $referer = $request->headers->get('referer');
+
         foreach ($stationUnifie->getStations() as $station){
             if(!$station->getStations()->isEmpty()){
                 $this->addFlash('error', 'Impossible de supprimer cette station car elle est une station mère.');
-                $referer = $request->headers->get('referer');
+                return $this->redirect($referer);
+            }
+        }
+
+        foreach ($stationUnifie->getStations() as $station){
+            if(!$station->getHebergements()->isEmpty()){
+                $this->addFlash('error', 'Impossible de supprimer cette station car elle est lié à un hébergement.');
                 return $this->redirect($referer);
             }
         }
