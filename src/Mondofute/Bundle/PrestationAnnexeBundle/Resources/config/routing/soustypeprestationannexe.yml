@@ -1,0 +1,24 @@
+soustypeprestationannexe_index:
+    path:     /
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousTypePrestationAnnexe:index" }
+    methods:  GET
+
+soustypeprestationannexe_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousTypePrestationAnnexe:show" }
+    methods:  GET
+
+soustypeprestationannexe_new:
+    path:     /new
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousTypePrestationAnnexe:new" }
+    methods:  [GET, POST]
+
+soustypeprestationannexe_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousTypePrestationAnnexe:edit" }
+    methods:  [GET, POST]
+
+soustypeprestationannexe_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:SousTypePrestationAnnexe:delete" }
+    methods:  DELETE
