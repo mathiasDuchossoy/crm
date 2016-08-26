@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Knp\Component\Pager\Paginator;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImageTraduction;
@@ -32,14 +33,31 @@ class SecteurUnifieController extends Controller
      * Lists all SecteurUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $secteurUnifies = $em->getRepository('MondofuteGeographieBundle:SecteurUnifie')->findAll();
+        $count = $em
+            ->getRepository('MondofuteGeographieBundle:SecteurUnifie')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'geographie_secteur_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.libelle' => 'ASC'
+        );
+
+        $unifies = $this->getDoctrine()->getRepository('MondofuteGeographieBundle:SecteurUnifie')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteGeographie/secteurunifie/index.html.twig', array(
-            'secteurUnifies' => $secteurUnifies,
+            'secteurUnifies' => $unifies,
+            'pagination' => $pagination
         ));
     }
 
@@ -155,7 +173,6 @@ class SecteurUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($secteurUnifie);
-
             $em->flush();
 
             $this->copieVersSites($secteurUnifie);
@@ -907,7 +924,7 @@ class SecteurUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-            
+
             $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
 //            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
 //            $em->persist($secteurCrm);
@@ -917,7 +934,7 @@ class SecteurUnifieController extends Controller
                 if (!$secteurUnifie->getSecteurs()->contains($secteur)) {
 
                     //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($secteur->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($secteur->getSite()->getLibelle());
                     $entitySite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
                     $secteurSite = $entitySite->getSecteurs()->first();
 
@@ -944,7 +961,7 @@ class SecteurUnifieController extends Controller
                         }
                         $emSite->flush();
                     }
-                    
+
                     $emSite->remove($secteurSite);
                     $emSite->flush();
                     $secteur->setSecteurUnifie(null);
@@ -974,7 +991,7 @@ class SecteurUnifieController extends Controller
                         $em->flush();
                     }
                     // *** fin suppression des secteurPhotos de l'secteur à supprimer ***
-                    
+
                     $em->remove($secteur);
                 }
             }
@@ -1056,6 +1073,8 @@ class SecteurUnifieController extends Controller
                                     in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $secteurImageSite->setActif(true);
+                                } else {
+                                    $secteurImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1144,6 +1163,8 @@ class SecteurUnifieController extends Controller
                                     in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $secteurPhotoSite->setActif(true);
+                                } else {
+                                    $secteurPhotoSite->setActif(false);
                                 }
                             }
                         }
@@ -1179,7 +1200,7 @@ class SecteurUnifieController extends Controller
                 }
                 $em->flush();
             }
-            
+
             $this->addFlash('success', 'le secteur a bien été modifié');
 
             return $this->redirectToRoute('geographie_secteur_edit', array('id' => $secteurUnifie->getId()));
@@ -1205,81 +1226,96 @@ class SecteurUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
 
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $secteurUnifieSite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
-                if (!empty($secteurUnifieSite)) {
-                    $emSite->remove($secteurUnifieSite);
-                    $secteurSite = $secteurUnifieSite->getSecteurs()->first();
-
-                    // si il y a des images pour l'entité, les supprimer
-                    if (!empty($secteurSite->getImages())) {
-                        /** @var SecteurImage $secteurImageSite */
-                        foreach ($secteurSite->getImages() as $secteurImageSite) {
-                            $imageSite = $secteurImageSite->getImage();
-                            $secteurImageSite->setImage(null);
-                            if (!empty($imageSite)) {
-                                $emSite->remove($imageSite);
-                            }
-                        }
-                    }
-                    // si il y a des photos pour l'entité, les supprimer
-                    if (!empty($secteurSite->getPhotos())) {
-                        /** @var SecteurPhoto $secteurPhotoSite */
-                        foreach ($secteurSite->getPhotos() as $secteurPhotoSite) {
-                            $photoSite = $secteurPhotoSite->getPhoto();
-                            $secteurPhotoSite->setPhoto(null);
-                            if (!empty($photoSite)) {
-                                $emSite->remove($photoSite);
-                            }
-                        }
-                    }
-                    
-                    $emSite->flush();
+            /** @var Secteur $secteur */
+            $erreurStation = false;
+            foreach ($secteurUnifie->getSecteurs() as $secteur) {
+                if (!$secteur->getStations()->isEmpty() && !$erreurStation) {
+                    $erreurStation = true;
+                    $this->addFlash('error', 'Le secteur est lié à une station.');
                 }
             }
+            if (!$erreurStation) {
 
+                $em = $this->getDoctrine()->getManager();
 
-            if (!empty($secteurUnifie)) {
-                if (!empty($secteurUnifie->getSecteurs())) {
-                    /** @var Secteur $secteur */
-                    foreach ($secteurUnifie->getSecteurs() as $secteur) {
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $secteurUnifieSite = $emSite->find(SecteurUnifie::class, $secteurUnifie->getId());
+                    if (!empty($secteurUnifieSite)) {
+                        $emSite->remove($secteurUnifieSite);
+                        $secteurSite = $secteurUnifieSite->getSecteurs()->first();
 
                         // si il y a des images pour l'entité, les supprimer
-                        if (!empty($secteur->getImages())) {
-                            /** @var SecteurImage $secteurImage */
-                            foreach ($secteur->getImages() as $secteurImage) {
-                                $image = $secteurImage->getImage();
-                                $secteurImage->setImage(null);
-                                $em->remove($image);
+                        if (!empty($secteurSite->getImages())) {
+                            /** @var SecteurImage $secteurImageSite */
+                            foreach ($secteurSite->getImages() as $secteurImageSite) {
+                                $imageSite = $secteurImageSite->getImage();
+                                $secteurImageSite->setImage(null);
+                                if (!empty($imageSite)) {
+                                    $emSite->remove($imageSite);
+                                }
                             }
                         }
                         // si il y a des photos pour l'entité, les supprimer
-                        if (!empty($secteur->getPhotos())) {
-                            /** @var SecteurPhoto $secteurPhoto */
-                            foreach ($secteur->getPhotos() as $secteurPhoto) {
-                                $photo = $secteurPhoto->getPhoto();
-                                $secteurPhoto->setPhoto(null);
-                                $em->remove($photo);
+                        if (!empty($secteurSite->getPhotos())) {
+                            /** @var SecteurPhoto $secteurPhotoSite */
+                            foreach ($secteurSite->getPhotos() as $secteurPhotoSite) {
+                                $photoSite = $secteurPhotoSite->getPhoto();
+                                $secteurPhotoSite->setPhoto(null);
+                                if (!empty($photoSite)) {
+                                    $emSite->remove($photoSite);
+                                }
                             }
                         }
+
+                        $emSite->flush();
                     }
-                    $em->flush();
                 }
-//                    $emSite->remove($secteurUnifieSite);
-//                    $emSite->flush();
+
+
+                if (!empty($secteurUnifie)) {
+                    if (!empty($secteurUnifie->getSecteurs())) {
+                        /** @var Secteur $secteur */
+                        foreach ($secteurUnifie->getSecteurs() as $secteur) {
+
+                            // si il y a des images pour l'entité, les supprimer
+                            if (!empty($secteur->getImages())) {
+                                /** @var SecteurImage $secteurImage */
+                                foreach ($secteur->getImages() as $secteurImage) {
+                                    $image = $secteurImage->getImage();
+                                    $secteurImage->setImage(null);
+                                    if (!empty($image)) {
+                                        $em->remove($image);
+                                    }
+                                }
+                            }
+                            // si il y a des photos pour l'entité, les supprimer
+                            if (!empty($secteur->getPhotos())) {
+                                /** @var SecteurPhoto $secteurPhoto */
+                                foreach ($secteur->getPhotos() as $secteurPhoto) {
+                                    $photo = $secteurPhoto->getPhoto();
+                                    $secteurPhoto->setPhoto(null);
+                                    if (!empty($image)) {
+                                        $em->remove($photo);
+                                    }
+                                }
+                            }
+                        }
+                        $em->flush();
+                    }
+                }
+
+                $em->remove($secteurUnifie);
+                $em->flush();
+
+                $this->addFlash('success', 'le secteur a bien été supprimé');
             }
-            
-            $em->remove($secteurUnifie);
-            $em->flush();
         }
-        $this->addFlash('success', 'le secteur a bien été supprimé');
         return $this->redirectToRoute('geographie_secteur_index');
     }
 

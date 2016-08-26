@@ -29,6 +29,81 @@ class LogementUnifieController extends Controller
      * Lists all LogementUnifie entities.
      *
      */
+    public function indexPopupAction($idFournisseurHebergement, $page, $maxPerPage)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
+
+        $locale = $this->container->getParameter('locale');
+
+        $count = $em
+            ->getRepository('MondofuteLogementBundle:LogementUnifie')
+            ->countTotalToFournisseur($idFournisseurHebergement);
+
+        $pagination = array(
+            'page' => $page,
+            'route' => 'fournisseur_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.nom' => 'ASC'
+        );
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteLogementBundle:LogementUnifie')
+            ->getListToFournisseur($page, $maxPerPage, $locale, $sortbyArray, $idFournisseurHebergement);
+
+        return $this->render('@MondofuteLogement/logementunifie/index_popup.html.twig', array(
+            'logementUnifies' => $entities,
+            'pagination' => $pagination,
+            'fournisseurHebergement' => $fournisseurHebergement
+        ));
+    }
+
+    /**
+     * Lists all LogementUnifie entities.
+     *
+     */
+    public function listAction($idFournisseurHebergement, $page, $maxPerPage)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
+
+        $locale = $this->container->getParameter('locale');
+
+        $count = $em
+            ->getRepository('MondofuteLogementBundle:LogementUnifie')
+            ->countTotalToFournisseur($idFournisseurHebergement);
+        $pagination = array(
+            'page' => $page,
+            'route' => 'fournisseur_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array(
+            'traductions.nom' => 'ASC'
+        );
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteLogementBundle:LogementUnifie')
+            ->getListToFournisseur($page, $maxPerPage, $locale, $sortbyArray, $idFournisseurHebergement);
+
+        return $this->render('@MondofuteLogement/logementunifie/logement.html.twig', array(
+            'logementUnifies' => $entities,
+            'pagination' => $pagination,
+            'fournisseurHebergement' => $fournisseurHebergement
+        ));
+    }
+
+    /**
+     * Lists all LogementUnifie entities.
+     *
+     */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -40,21 +115,21 @@ class LogementUnifieController extends Controller
         ));
     }
 
-    /**
-     * Lists all LogementUnifie entities.
-     *
-     */
-    public function indexPopupAction($idFournisseurHebergement)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
-        $logementUnifies = $em->getRepository('MondofuteLogementBundle:LogementUnifie')->rechercherParFournisseurHebergement($fournisseurHebergement);
-
-        return $this->render('@MondofuteLogement/logementunifie/index_popup.html.twig', array(
-            'logementUnifies' => $logementUnifies,
-            'fournisseurHebergement' => $fournisseurHebergement,
-        ));
-    }
+//    /**
+//     * Lists all LogementUnifie entities.
+//     *
+//     */
+//    public function indexPopupAction($idFournisseurHebergement)
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
+//        $logementUnifies = $em->getRepository('MondofuteLogementBundle:LogementUnifie')->rechercherParFournisseurHebergement($fournisseurHebergement);
+//
+//        return $this->render('@MondofuteLogement/logementunifie/index_popup.html.twig', array(
+//            'logementUnifies' => $logementUnifies,
+//            'fournisseurHebergement' => $fournisseurHebergement,
+//        ));
+//    }
 
     /**
      * Creates a new LogementUnifie entity.
@@ -758,7 +833,7 @@ class LogementUnifieController extends Controller
                 if (!$logementUnifie->getLogements()->contains($logement)) {
 
 //                    //  suppression de la station sur le site
-//                    $emSite = $this->getDoctrine()->getEntityManager($logement->getSite()->getLibelle());
+//                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
 //                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
 //                    $departementSite = $entitySite->getDepartements()->first();
 //                    $emSite->remove($departementSite);
@@ -920,7 +995,7 @@ class LogementUnifieController extends Controller
                 if (!$logementUnifie->getLogements()->contains($logement)) {
 
 //                    //  suppression de la station sur le site
-//                    $emSite = $this->getDoctrine()->getEntityManager($logement->getSite()->getLibelle());
+//                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
 //                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
 //                    $departementSite = $entitySite->getDepartements()->first();
 //                    $emSite->remove($departementSite);
@@ -1041,6 +1116,8 @@ class LogementUnifieController extends Controller
                                     in_array($site->getId(), $request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $logementPhotoSite->setActif(true);
+                                } else {
+                                    $logementPhotoSite->setActif(false);
                                 }
                             }
                         }

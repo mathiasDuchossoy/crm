@@ -1,5 +1,9 @@
 {% extends '@MondofuteStation/stationunifie/fiche.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
 {% block title %}
     {{ 'création d\une station' | capitalize }}
 {% endblock %}
@@ -16,3 +20,8 @@
         </ul>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

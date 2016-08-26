@@ -1,6 +1,6 @@
 geographie_profil_index:
-    path:     /
-    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteGeographieBundle:ProfilUnifie:index" , page: 1 , maxPerPage: %max_per_page% }
     methods:  GET
 
 geographie_profil_show:

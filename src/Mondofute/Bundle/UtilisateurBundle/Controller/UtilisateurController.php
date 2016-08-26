@@ -5,14 +5,13 @@ namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 use FOS\UserBundle\Model\UserInterface;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
 use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 
 /**
  * Utilisateur controller.
@@ -21,17 +20,32 @@ use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 class UtilisateurController extends Controller
 {
     /**
-     * Lists all Utilisateur entities.
+     * Lists all UtilisateurUser entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $utilisateurs = $em->getRepository('MondofuteUtilisateurBundle:UtilisateurUser')->findAll();
+        $count = $em
+            ->getRepository('MondofuteUtilisateurBundle:UtilisateurUser')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'fournisseur_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array();
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteUtilisateurBundle:UtilisateurUser')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteUtilisateur/utilisateur/index.html.twig', array(
-            'utilisateurs' => $utilisateurs,
+            'utilisateurs' => $entities,
+            'pagination' => $pagination
         ));
     }
 
@@ -62,7 +76,7 @@ class UtilisateurController extends Controller
             $utilisateurUser->setEnabled(true);
             $utilisateurUser->setRoles(array(UserInterface::ROLE_SUPER_ADMIN));
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
 //                $moyenCom->setDateCreation();
@@ -82,7 +96,7 @@ class UtilisateurController extends Controller
                 foreach ($sites as $site) {
                     $utilisateurUserClone = clone $utilisateurUser;
                     $utilisateurClone = clone $utilisateur;
-                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
                     $this->dupliquerMoyenComs($utilisateur);
 
@@ -134,7 +148,7 @@ class UtilisateurController extends Controller
     private function loginExist(UtilisateurUser $utilisateurUser)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $utilisateurUserByUsername = $em->getRepository(UtilisateurUser::class)->findOneBy(array('username' => $utilisateurUser->getUsername()));
         $utilisateurUserByMail = $em->getRepository(UtilisateurUser::class)->findOneBy(array('email' => $utilisateurUser->getEmail()));
         if ((!empty($utilisateurUserByUsername) && $utilisateurUser != $utilisateurUserByUsername)
@@ -275,21 +289,26 @@ class UtilisateurController extends Controller
 
     private function majSites(UtilisateurUser $utilisateurUser)
     {
+        /** @var UtilisateurUser $utilisateurUserSite */
         $utilisateur = $utilisateurUser->getUtilisateur();
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updatePassword($utilisateurUser);
+
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
             $utilisateurSite = $utilisateurUserSite->getUtilisateur();
             $utilisateurSite
-//                ->setPassword($utilisateur->getPassword())
-//                ->setLogin($utilisateur->getPassword())
                 ->setNom($utilisateur->getNom())
                 ->setPrenom($utilisateur->getPrenom());
-//            $utilisateurSite->setDateModification($utilisateur->getDateModification());
+//            $utilisateurUserSite->setPlainPassword($utilisateurUser->getPlainPassword());
             $utilisateurUserSite->setPassword($utilisateurUser->getPassword());
+//            $userManager->updatePassword($utilisateurUserSite);
+
             $utilisateurUserSite->setEnabled($utilisateurUser->isEnabled());
 
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
@@ -352,7 +371,7 @@ class UtilisateurController extends Controller
 
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
                 $utilisateurUserSite = $emSite->find(UtilisateurUser::class, $utilisateurUser);
 

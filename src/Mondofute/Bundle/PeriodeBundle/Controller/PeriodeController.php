@@ -12,15 +12,93 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class PeriodeController extends Controller
 {
+    /**
+     * @return Response
+     */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $typePeriodes = $em->getRepository(TypePeriode::class)->chargerParDates();
-        return $this->render('@MondofutePeriode/Periode/index.html.twig', array('typePeriodes' => $typePeriodes));
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->chargerParDates();
+        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+        $paginations = new ArrayCollection();
+        $entitiesByPeriode = new ArrayCollection();
+        $maxPerPage = $this->container->getParameter('max_per_page');
+        $page = 1;
+
+        $sortbyArray = array(
+            'entity.id' => 'ASC',
+            'periodes.debut' => 'ASC',
+            'periodes.fin' => 'ASC'
+        );
+
+        /** @var TypePeriode $typePeriode */
+        foreach ($typePeriodes as $typePeriode) {
+            $count = $em
+                ->getRepository('MondofutePeriodeBundle:Periode')
+                ->countTotalByTypePeriode($typePeriode->getId());
+            $pagination = array(
+                'page' => $page,
+                'route' => 'periode_periode_index',
+                'pages_count' => ceil($count / $maxPerPage),
+                'route_params' => array(),
+                'max_per_page' => $maxPerPage
+            );
+
+            $paginations->add($pagination);
+
+            $entities = $this->getDoctrine()->getRepository('MondofutePeriodeBundle:Periode')
+                ->getList($page, $maxPerPage, $sortbyArray, $typePeriode);
+
+            $entitiesByPeriode->add($entities);
+        }
+        return $this->render('@MondofutePeriode/Periode/index.html.twig', array(
+            'typePeriodes' => $typePeriodes,
+            'paginations' => $paginations,
+            'periodes' => $entitiesByPeriode
+        ));
+    }
+
+    /**
+     * @param $typePeriodeId
+     * @param $page
+     * @param $maxPerPage
+     * @return Response
+     */
+    public function listeAction($typePeriodeId, $page, $maxPerPage)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $sortbyArray = array(
+            'entity.id' => 'ASC',
+            'periodes.debut' => 'ASC',
+            'periodes.fin' => 'ASC'
+        );
+
+        /** @var TypePeriode $typePeriode */
+        $count = $em
+            ->getRepository('MondofutePeriodeBundle:Periode')
+            ->countTotalByTypePeriode($typePeriodeId);
+        $pagination = array(
+            'page' => $page,
+            'route' => 'periode_periode_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $entities = $this->getDoctrine()->getRepository('MondofutePeriodeBundle:Periode')
+            ->getList($page, $maxPerPage, $sortbyArray, $typePeriodeId);
+
+        return $this->render('@MondofutePeriode/Periode/periode.html.twig', array(
+            'typePeriodeId' => $typePeriodeId,
+            'pagination' => $pagination,
+            'periodes' => $entities
+        ));
     }
 
     public function newAction(Request $request)

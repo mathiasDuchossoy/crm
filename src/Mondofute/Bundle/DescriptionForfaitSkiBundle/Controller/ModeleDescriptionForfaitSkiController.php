@@ -7,15 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiTraduction;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSkiType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Age;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki;
-use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSkiType;
 
 /**
  * ModeleDescriptionForfaitSki controller.
@@ -24,17 +23,31 @@ use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSk
 class ModeleDescriptionForfaitSkiController extends Controller
 {
     /**
-     * Lists all ModeleDescriptionForfaitSki entities.
+     * Lists all ModeleDescriptionForfaitSkiUnifie entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
+        $count = $em
+            ->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'modeledescriptionforfaitski_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
 
-        $modeleDescriptionForfaitSkis = $em->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')->findAll();
+        $sortbyArray = array();
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteDescriptionForfaitSki/modeledescriptionforfaitski/index.html.twig', array(
-            'modeleDescriptionForfaitSkis' => $modeleDescriptionForfaitSkis,
+            'modeleDescriptionForfaitSkis' => $entities,
+            'pagination' => $pagination
         ));
     }
 
@@ -129,10 +142,10 @@ class ModeleDescriptionForfaitSkiController extends Controller
         /** @var DescriptionForfaitSkiTraduction $traduction */
         /** @var DescriptionForfaitSki $descriptionForfaitSki */
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
 
             $modeleDescriptionForfaitSkiSite = clone $modeleDescriptionForfaitSki;
@@ -231,10 +244,10 @@ class ModeleDescriptionForfaitSkiController extends Controller
         /** @var DescriptionForfaitSki $descriptionForfaitSkiSite */
         /** @var DescriptionForfaitSki $descriptionForfaitSki */
         /** @var Site $site */
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
             $modeleDescriptionForfaitSkiSite = $emSite->find('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki', $modeleDescriptionForfaitSki->getId());
             if (!empty($modeleDescriptionForfaitSkiSite)) {
@@ -296,7 +309,7 @@ class ModeleDescriptionForfaitSkiController extends Controller
             $em = $this->getDoctrine()->getManager();
             $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
             foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                 $modeleDescriptionForfaitSkiSite = $emSite->find('MondofuteDescriptionForfaitSkiBundle:ModeleDescriptionForfaitSki', $modeleDescriptionForfaitSki->getId());
                 $emSite->remove($modeleDescriptionForfaitSkiSite);
                 $emSite->flush();

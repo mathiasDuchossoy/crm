@@ -1246,7 +1246,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 if (!$domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->contains($domaineCarteIdentite)) {
 
                     //  suppression de la domaineCarteIdentite sur le site
-                    $emSite = $this->getDoctrine()->getEntityManager($domaineCarteIdentite->getSite()->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($domaineCarteIdentite->getSite()->getLibelle());
                     $entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
                     $domaineCarteIdentiteSite = $entitySite->getDomaineCarteIdentites()->first();
 
@@ -1386,6 +1386,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                                     in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $domaineCarteIdentiteImageSite->setActif(true);
+                                } else {
+                                    $domaineCarteIdentiteImageSite->setActif(false);
                                 }
                             }
                         }
@@ -1474,6 +1476,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                                     in_array($site->getId(), $request->get('domaineCarteIdentite_unifie')['domaineCarteIdentites'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $domaineCarteIdentitePhotoSite->setActif(true);
+                                } else {
+                                    $domaineCarteIdentitePhotoSite->setActif(false);
                                 }
                             }
                         }
@@ -1540,7 +1544,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             // Parcourir les sites non CRM

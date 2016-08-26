@@ -4,10 +4,11 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
-use Nucleus\ContactBundle\Entity\Moral;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Nucleus\ContactBundle\Entity\Moral;
 
 class FournisseurContient
 {
@@ -32,18 +33,6 @@ class FournisseurContient
 class Fournisseur extends Moral
 {
     use FournisseurTrait;
-
-//    const PRODUIT = 1; // 1
-//    const FOURNISSEUR = 2; // 10
-//    /**
-//     * @var integer
-//     */
-//    private $id;
-
-//    /**
-//     * @var string
-//     */
-//    private $enseigne;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -80,6 +69,16 @@ class Fournisseur extends Moral
     private $receptions;
 
     /**
+     * @var \Application\Sonata\MediaBundle\Entity\Media
+     */
+    private $logo;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $listeServices;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $types;
@@ -93,6 +92,7 @@ class Fournisseur extends Moral
         $this->interlocuteurs = new ArrayCollection();
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
+        $this->listeServices = new ArrayCollection();
     }
 
     /**
@@ -149,15 +149,15 @@ class Fournisseur extends Moral
     {
         /** @var FournisseurInterlocuteur $interlocuteur */
 //        $this->id = null;
-        $interlocuteurs = $this->getInterlocuteurs();
-        $this->interlocuteurs = new ArrayCollection();
-        if (count($interlocuteurs) > 0) {
-            foreach ($interlocuteurs as $interlocuteur) {
-                $cloneInterlocuteur = clone $interlocuteur;
-                $this->interlocuteurs->add($cloneInterlocuteur);
-                $cloneInterlocuteur->setFournisseur($this);
-            }
-        }
+//        $interlocuteurs = $this->getInterlocuteurs();
+//        $this->interlocuteurs = new ArrayCollection();
+//        if (count($interlocuteurs) > 0) {
+//            foreach ($interlocuteurs as $interlocuteur) {
+//                $cloneInterlocuteur = clone $interlocuteur;
+//                $this->interlocuteurs->add($cloneInterlocuteur);
+//                $cloneInterlocuteur->setFournisseur($this);
+//            }
+//        }
         $remiseClefs = $this->getRemiseClefs();
         $this->remiseClefs = new ArrayCollection();
         if (count($remiseClefs) > 0) {
@@ -177,28 +177,27 @@ class Fournisseur extends Moral
                 $cloneReception->setFournisseur($this);
             }
         }
-        $types = $this->getTypes();
-        $this->types = new ArrayCollection();
-        if (count($types) > 0) {
-            /** @var TypeFournisseur $type */
-            foreach ($types as $type) {
-                $cloneType = clone $type;
-                $this->types->add($cloneType);
-                $cloneType->setFournisseur($this);
+//        $types = $this->getTypes();
+//        $this->types = new ArrayCollection();
+//        if (count($types) > 0) {
+//            /** @var TypeFournisseur $type */
+//            foreach ($types as $type) {
+//                $cloneType = clone $type;
+//                $this->types->add($cloneType);
+//                $cloneType->setFournisseur($this);
+//            }
+//        }
+        $listeServices = $this->getListeServices();
+        $this->listeServices = new ArrayCollection();
+        if (count($listeServices) > 0) {
+            /** @var ListeService $listeService */
+            foreach ($listeServices as $listeService) {
+                $cloneListeService = clone $listeService;
+                $this->listeServices->add($cloneListeService);
+                $cloneListeService->setFournisseur($this);
             }
         }
-
         return $this;
-    }
-
-    /**
-     * Get interlocuteurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getInterlocuteurs()
-    {
-        return $this->interlocuteurs;
     }
 
     /**
@@ -222,13 +221,23 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Get types
+     * Get listeServices
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTypes()
+    public function getListeServices()
     {
-        return $this->types;
+        return $this->listeServices;
+    }
+
+    /**
+     * Get interlocuteurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInterlocuteurs()
+    {
+        return $this->interlocuteurs;
     }
 
     public function triRemiseClefs()
@@ -447,15 +456,63 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Add type
+     * Add listeService
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
      *
      * @return Fournisseur
      */
-    public function addType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
+    public function addListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
     {
-        $this->types[] = $type->setFournisseur($this);
+        $this->listeServices[] = $listeService;
+
+        return $this;
+    }
+
+    /**
+     * Remove listeService
+     *
+     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     */
+    public function removeListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    {
+        $this->listeServices->removeElement($listeService);
+    }
+
+    /**
+     * Get logo
+     *
+     * @return \Application\Sonata\MediaBundle\Entity\Media
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param \Application\Sonata\MediaBundle\Entity\Media $logo
+     *
+     * @return Fournisseur
+     */
+    public function setLogo(\Application\Sonata\MediaBundle\Entity\Media $logo = null)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Add type
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
+     *
+     * @return Fournisseur
+     */
+    public function addType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
+    {
+        $this->types[] = $type;
 
         return $this;
     }
@@ -463,11 +520,20 @@ class Fournisseur extends Moral
     /**
      * Remove type
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
      */
-    public function removeType(\Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur $type)
+    public function removeType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
     {
         $this->types->removeElement($type);
     }
 
+    /**
+     * Get types
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTypes()
+    {
+        return $this->types;
+    }
 }

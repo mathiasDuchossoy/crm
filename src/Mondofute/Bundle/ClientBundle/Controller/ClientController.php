@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\ClientBundle\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\ContactBundle\Entity\Civilite;
@@ -13,11 +14,9 @@ use Nucleus\MoyenComBundle\Entity\Pays;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\ClientBundle\Entity\Client;
 
 /**
  * Client controller.
@@ -29,14 +28,29 @@ class ClientController extends Controller
      * Lists all Client entities.
      *
      */
-    public function indexAction()
+    public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $clients = $em->getRepository('MondofuteClientBundle:ClientUser')->findAll();
+        $count = $em
+            ->getRepository('MondofuteClientBundle:ClientUser')
+            ->countTotal();
+        $pagination = array(
+            'page' => $page,
+            'route' => 'client_index',
+            'pages_count' => ceil($count / $maxPerPage),
+            'route_params' => array(),
+            'max_per_page' => $maxPerPage
+        );
+
+        $sortbyArray = array();
+
+        $entities = $this->getDoctrine()->getRepository('MondofuteClientBundle:ClientUser')
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofuteClient/client/index.html.twig', array(
-            'clientUsers' => $clients,
+            'clientUsers' => $entities,
+            'pagination' => $pagination
         ));
     }
 
@@ -61,7 +75,7 @@ class ClientController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $clientUser->setEnabled(true);
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
 
             foreach ($client->getMoyenComs() as $moyenCom) {
@@ -83,7 +97,7 @@ class ClientController extends Controller
                     $clientUserClone = clone $clientUser;
 
                     $clientClone = clone $client;
-                    $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 
                     $clientClone->setCivilite($emSite->find(Civilite::class, $client->getCivilite()->getId()));
                     $this->dupliquerMoyenComs($client, $emSite);
@@ -135,7 +149,7 @@ class ClientController extends Controller
     private function loginExist(ClientUser $clientUser)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $clientUserByUsername = $em->getRepository(ClientUser::class)->findOneBy(array('username' => $clientUser->getUsername()));
         $clientUserByMail = $em->getRepository(ClientUser::class)->findOneBy(array('email' => $clientUser->getEmail()));
 
@@ -298,7 +312,7 @@ class ClientController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $clientUserSite = $emSite->find(ClientUser::class, $clientUser);
             $clientSite = $clientUserSite->getClient();
             $clientSite
@@ -387,7 +401,7 @@ class ClientController extends Controller
 
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             foreach ($sites as $site) {
-                $emSite = $this->getDoctrine()->getEntityManager($site->getLibelle());
+                $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                 $clientUserSite = $emSite->find(ClientUser::class, $clientUser->getId());
                 
                 if (!empty($clientUserSite)) {
