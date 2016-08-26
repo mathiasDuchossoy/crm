@@ -43,6 +43,22 @@ class Domaine
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
+    /**
+     * @var boolean
+     */
+    private $imagesParent = false;
+    /**
+     * @var boolean
+     */
+    private $photosParent = false;
 
     /**
      * Constructor
@@ -282,5 +298,121 @@ class Domaine
     public function getStations()
     {
         return $this->stations;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image
+     *
+     * @return Domaine
+     */
+    public function addImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image)
+    {
+        $this->images[] = $image->setDomaine($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo
+     *
+     * @return Domaine
+     */
+    public function addPhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo)
+    {
+        $this->photos[] = $photo->setDomaine($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
+    }
+
+    /**
+     * Get imagesParent
+     *
+     * @return boolean
+     */
+    public function getImagesParent()
+    {
+        return $this->imagesParent;
+    }
+
+    /**
+     * Set imagesParent
+     *
+     * @param boolean $imagesParent
+     *
+     * @return Domaine
+     */
+    public function setImagesParent($imagesParent)
+    {
+        $this->imagesParent = $imagesParent;
+
+        return $this;
+    }
+
+    /**
+     * Get photosParent
+     *
+     * @return boolean
+     */
+    public function getPhotosParent()
+    {
+        return $this->photosParent;
+    }
+
+    /**
+     * Set photosParent
+     *
+     * @param boolean $photosParent
+     *
+     * @return Domaine
+     */
+    public function setPhotosParent($photosParent)
+    {
+        $this->photosParent = $photosParent;
+
+        return $this;
     }
 }

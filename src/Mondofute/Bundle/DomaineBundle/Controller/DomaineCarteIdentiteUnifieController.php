@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage;
@@ -177,7 +178,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($domaineCarteIdentiteUnifie);
             $em->flush();
 
@@ -434,7 +435,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
      * Copie dans la base de données site l'entité domaineCarteIdentite
      * @param DomaineCarteIdentiteUnifie $entity
      */
-    private function copieVersSites(DomaineCarteIdentiteUnifie $entity, $originalDomaineCarteIdentiteImages = null, $originalDomaineCarteIdentitePhotos = null)
+    public function copieVersSites(DomaineCarteIdentiteUnifie $entity, $originalDomaineCarteIdentiteImages = null, $originalDomaineCarteIdentitePhotos = null)
     {
         /** @var SnowparkTraduction $snowparkTraductionSite */
         /** @var HandiskiTraduction $handiskiTraductionSite */
@@ -453,7 +454,9 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //                if (is_null(($entitySite = $emSite->getRepository(DomaineCarteIdentiteUnifie::class)->findOneById(array($entity->getId()))))) {
 //                    $entitySite = new DomaineCarteIdentiteUnifie();
 //                }
-                if (is_null(($entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId())))) {
+
+                $entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId());
+                if (empty($entitySite)) {
                     $entitySite = new DomaineCarteIdentiteUnifie();
                 }
 
@@ -465,7 +468,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //            copie des données domaineCarteIdentite
                 // ***** Snowpark *****
                 $snowparkSite = !empty($domaineCarteIdentiteSite->getSnowpark()) ? $domaineCarteIdentiteSite->getSnowpark() : clone $domaineCarteIdentite->getSnowpark();
-                $snowparkSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $snowparkSite->getPresent()));
+                $snowparkSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $domaineCarteIdentite->getSnowpark()->getPresent()));
                 foreach ($snowparkSite->getTraductions() as $snowparkTraductionSite) {
                     /** @var SnowparkTraduction $snowparkTraduction */
                     $snowparkTraduction = $domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($snowparkTraductionSite) {
@@ -476,7 +479,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
                 // ***** Handiski *****
                 $handiskiSite = !empty($domaineCarteIdentiteSite->getHandiski()) ? $domaineCarteIdentiteSite->getHandiski() : clone $domaineCarteIdentite->getHandiski();
-                $handiskiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $handiskiSite->getPresent()));
+                $handiskiSite->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $domaineCarteIdentite->getHandiski()->getPresent()));
                 foreach ($handiskiSite->getTraductions() as $handiskiTraductionSite) {
                     /** @var HandiskiTraduction $handiskiTraduction */
                     $handiskiTraduction = $domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($handiskiTraductionSite) {
@@ -943,6 +946,73 @@ class DomaineCarteIdentiteUnifieController extends Controller
     }
 
     /**
+     * Creates a new DomaineCarteIdentiteUnifie entity.
+     *
+     */
+    public function newEntity(Domaine $domaine, Request $request)
+    {
+
+        /** @var Domaine $domaine */
+        $em = $this->getDoctrine()->getManager();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+
+        $domaineCarteIdentiteUnifie = new  DomaineCarteIdentiteUnifie();
+        $domaineCarteIdentite = $domaine->getDomaineCarteIdentite();
+        $domaineCarteIdentiteUnifie->addDomaineCarteIdentite($domaineCarteIdentite);
+
+
+//        // ***** Gestion des Medias *****
+//        if ($domaine->getSite()->getCrm()) {
+//            foreach ($request->get('domaine_unifie')['domaines'] as $domaineRequest) {
+//                if (!empty($domaineRequest['domaineCarteIdentite']['images'])) {
+//                    $domaineCarteIdentiteCrm = $domaine->getDomaineCarteIdentite();
+//                    foreach ($domaineRequest['domaineCarteIdentite']['images'] as $keyImage => $image) {
+//                        /** @var DomaineCarteIdentiteImage $imageCrm */
+//                        $imageCrm = $domaineCarteIdentiteCrm->getImages()[$keyImage];
+//                        $imageCrm->setActif(true);
+//                        $imageCrm->setDomaineCarteIdentite($domaineCarteIdentiteCrm);
+//                        foreach ($sites as $site) {
+//                            if ($site->getCrm() == 0) {
+//                                /** @var Domaine $domaineSite */
+//                                $domaineSite = $domaine->getDomaineUnifie()->getDomaines()->filter(function (Domaine $element) use ($site) {
+//                                    return $element->getSite() == $site;
+//                                })->first();
+//                                /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+//                                $domaineCarteIdentiteSite = $domaineSite->getDomaineCarteIdentite();
+//                                if (!empty($domaineCarteIdentiteSite)) {
+//                                    $typeImage = (new ReflectionClass($imageCrm))->getName();
+//
+//                                    /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+//                                    $domaineCarteIdentiteImage = new $typeImage();
+//                                    $domaineCarteIdentiteImage->setDomaineCarteIdentite($domaineCarteIdentiteSite);
+//                                    $domaineCarteIdentiteImage->setImage($imageCrm->getImage());
+//                                    $domaineCarteIdentiteSite->addImage($domaineCarteIdentiteImage);
+//                                    foreach ($imageCrm->getTraductions() as $traduction) {
+//                                        $traductionSite = new DomaineCarteIdentiteImageTraduction();
+//                                        /** @var DomaineCarteIdentiteImageTraduction $traduction */
+//                                        $traductionSite->setLibelle($traduction->getLibelle());
+//                                        $traductionSite->setLangue($traduction->getLangue());
+//                                        $domaineCarteIdentiteImage->addTraduction($traductionSite);
+//                                    }
+//                                    if (!empty($image['sites']) && in_array($site->getId(), $image['sites'])) {
+//                                        $domaineCarteIdentiteImage->setActif(true);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // ***** Fin Gestion des Medias *****
+
+        $em->persist($domaineCarteIdentiteUnifie);
+
+        return $domaineCarteIdentiteUnifie;
+    }
+
+    /**
      * Finds and displays a DomaineCarteIdentiteUnifie entity.
      *
      */
@@ -1168,7 +1238,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-            
+
             $this->supprimerDomaineCarteIdentites($domaineCarteIdentiteUnifie, $sitesAEnregistrer);
 
             // Supprimer la relation entre la domaineCarteIdentite et domaineCarteIdentiteUnifie
@@ -1202,8 +1272,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                         }
                         $emSite->flush();
                     }
-                    
-                    
+
+
                     $emSite->remove($domaineCarteIdentiteSite);
                     $emSite->flush();
                     $domaineCarteIdentite->setDomaineCarteIdentiteUnifie(null);
@@ -1233,8 +1303,8 @@ class DomaineCarteIdentiteUnifieController extends Controller
                         $em->flush();
                     }
                     // *** fin suppression des domaineCarteIdentitePhotos de l'domaineCarteIdentite à supprimer ***
-                    
-                    
+
+
                     $em->remove($domaineCarteIdentite);
                 }
             }
@@ -1546,7 +1616,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //                    $emSite->remove($domaineCarteIdentiteUnifieSite);
 //                    $emSite->flush();
             }
-            
+
             $em->remove($domaineCarteIdentiteUnifie);
             $em->flush();
 
@@ -1555,6 +1625,93 @@ class DomaineCarteIdentiteUnifieController extends Controller
         }
 
         return $this->redirectToRoute('domaine_domaineCarteIdentite_index');
+    }
+
+    public function deleteEntity(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
+    {
+        /** @var DomaineCarteIdentite $domaineCarteIdentiteSite */
+        /** @var DomaineCarteIdentite $domaineCarteIdentite */
+        $em = $this->getDoctrine()->getEntityManager();
+        $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+        // Parcourir les sites non CRM
+        foreach ($sitesDistants as $siteDistant) {
+            // Récupérer le manager du site.
+            $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+            // Récupérer l'entité sur le site distant puis la suprrimer.
+            $domaineCarteIdentiteUnifieSite = $emSite->find(DomaineCarteIdentiteUnifie::class, $domaineCarteIdentiteUnifie->getId());
+            if (!empty($domaineCarteIdentiteUnifieSite)) {
+                foreach ($domaineCarteIdentiteUnifieSite->getDomaineCarteIdentites() as $domaineCarteIdentiteSite) {
+
+//                    $domaineCarteIdentiteSite = $domaineCarteIdentiteUnifieSite->getDomaineCarteIdentites()->first();
+
+                    if (!empty($domaineCarteIdentiteSite)) {
+                        // si il y a des images pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentiteSite->getImages())) {
+                            /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImageSite */
+                            foreach ($domaineCarteIdentiteSite->getImages() as $domaineCarteIdentiteImageSite) {
+                                $imageSite = $domaineCarteIdentiteImageSite->getImage();
+                                $domaineCarteIdentiteImageSite->setImage(null);
+                                if (!empty($imageSite)) {
+                                    $emSite->remove($imageSite);
+                                }
+                            }
+                        }
+                        // si il y a des photos pour l'entité, les supprimer
+                        if (!empty($domaineCarteIdentiteSite->getPhotos())) {
+                            /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhotoSite */
+                            foreach ($domaineCarteIdentiteSite->getPhotos() as $domaineCarteIdentitePhotoSite) {
+                                $photoSite = $domaineCarteIdentitePhotoSite->getPhoto();
+                                $domaineCarteIdentitePhotoSite->setPhoto(null);
+                                if (!empty($photoSite)) {
+                                    $emSite->remove($photoSite);
+                                }
+                            }
+                        }
+                    }
+
+                    $emSite->remove($domaineCarteIdentiteSite);
+                }
+                $emSite->remove($domaineCarteIdentiteUnifieSite);
+                $emSite->flush();
+            }
+        }
+        foreach ($domaineCarteIdentiteUnifie->getDomaineCarteIdentites() as $domaineCarteIdentite) {
+
+            // si il y a des images pour l'entité, les supprimer
+            if (!empty($domaineCarteIdentite->getImages())) {
+                /** @var DomaineCarteIdentiteImage $domaineCarteIdentiteImage */
+                foreach ($domaineCarteIdentite->getImages() as $domaineCarteIdentiteImage) {
+                    $image = $domaineCarteIdentiteImage->getImage();
+                    $domaineCarteIdentiteImage->setImage(null);
+                    $em->remove($image);
+                }
+            }
+            // si il y a des photos pour l'entité, les supprimer
+            if (!empty($domaineCarteIdentite->getPhotos())) {
+                /** @var DomaineCarteIdentitePhoto $domaineCarteIdentitePhoto */
+                foreach ($domaineCarteIdentite->getPhotos() as $domaineCarteIdentitePhoto) {
+                    $photo = $domaineCarteIdentitePhoto->getPhoto();
+                    $domaineCarteIdentitePhoto->setPhoto(null);
+                    $em->remove($photo);
+                }
+            }
+
+            $em->remove($domaineCarteIdentite);
+        }
+        $em->remove($domaineCarteIdentiteUnifie);
+    }
+
+
+    /**
+     * Displays a form to edit an existing DomaineCarteIdentiteUnifie entity.
+     *
+     */
+    public function editEntity(DomaineCarteIdentiteUnifie $domaineCarteIdentiteUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($domaineCarteIdentiteUnifie);
+//      $em->flush();
     }
 
 

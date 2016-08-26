@@ -70,6 +70,21 @@
                     </ul>
                 </li>
                 {# *** FIN ZONE TOURISTIQUE *** #}
+                {# *** MODELE DESCRIPTION FORFAIT SKI *** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'modeledescriptionforfaitski' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">ModeleDescriptionForfaitSki</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'dmodeledescriptionforfaitski_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('modeledescriptionforfaitski_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'modeledescriptionforfaitski_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('modeledescriptionforfaitski_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN MODELE DESCRIPTION FORFAIT SKI *** #}
             </ul>
         </li>
         {# ***** FIN GEOGRAPHIE ***** #}

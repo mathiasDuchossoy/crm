@@ -28,7 +28,13 @@
                         {#{{ form_row(domaine.enneige) }}#}
                         {{ form_row(domaine.site) }}
                         <ul class="nav nav-tabs">
-                            {{ form_row(domaine.domaineParent, { 'attr' : { 'data-unique_block_prefix' : domaine.domaineParent.vars['unique_block_prefix']  }}) }}
+                            {#{{ form_row(domaine.domaineParent, { 'attr' : { 'data-unique_block_prefix' : domaine.domaineParent.vars['unique_block_prefix']  }}) }}#}
+                            {{ form_row( domaine.domaineParent, { 'attr' : {
+                                'data-unique_block_prefix' : domaine.domaineParent.vars['unique_block_prefix'] ,
+                                'onchange' : 'displayCheckbox(this ,  "' ~ domaine.vars.value.site.id ~'")',
+                                'onkeyup' : 'displayCheckbox(this ,  "' ~ domaine.vars.value.site.id ~'")',
+                                'data-site' : domaine.vars.value.site.id
+                            }}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in domaine.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
@@ -56,6 +62,214 @@
                                 </div>
                             {% endfor %}
                         </div>
+
+                        <div id="cbox_medias_parent_{{ domaine.vars.value.site.id }}">
+                            {{ form_widget(domaine.imagesParent) }}
+                            {{ form_widget(domaine.photosParent) }}
+                        </div>
+                        <br/>
+
+                        {# Medias Domaine #}
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if domaine.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Images
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des images #}
+                                    <ul class="image" data-prototype_image="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for image in domaine.images %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Photos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des photos#}
+                                    <ul class="photo" data-prototype_photo="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for photo in domaine.photos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                        {# Fin Medias Domaine #}
+
+
+                        <label id="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}">
+                            <input type="checkbox" id="inputcboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
+                                   name="cboxDomaineCarteIdentite_{{ domaine.vars.value.site.id }}"
+                                    {% if  domaine.vars.value.domaineParent is not empty %}
+                                        {% if domaine.vars.value.domaineParent.domaineCarteIdentite.id == domaine.vars.value.domaineCarteIdentite.id %}
+                                            checked
+                                        {% endif %}
+                                    {% endif %}
+                                   onclick="displayChild(this , 'domaineCarteIdentite_{{ domaine.vars.value.site.id }}')">
+                            Utiliser la carte d'identité du domaine parent
+                        </label>
+                        <br>
+                        {#{% endif %}#}
+                        <div id="domaineCarteIdentite_{{ domaine.vars.value.site.id }}"
+                                {% if  domaine.vars.value.domaineParent is not empty %}
+                                    {% if domaine.vars.value.domaineParent.domaineCarteIdentite.id == domaine.vars.value.domaineCarteIdentite.id %}
+                                        style="display: none"
+                                    {% endif %}
+                                {% endif %}
+                        >
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Carte identité
+                                    </h3></div>
+                                <div class="panel-body">
+
+                                    {{ form_row( domaine.domaineCarteIdentite.altitudeMini , { 'attr' : { 'class' : 'form-inline'}}) }}
+                                    {{ form_row( domaine.domaineCarteIdentite.altitudeMaxi , { 'attr' : { 'class' : 'form-inline'}}) }}
+                                    {{ form_row( domaine.domaineCarteIdentite.kmPistesSkiAlpin.children['longueur'] , { 'label' : domaine.domaineCarteIdentite.kmPistesSkiAlpin.vars['name'] | humanize  ,  'attr' : { 'class' : 'form-inline'  }}) }}
+                                    {{ form_row( domaine.domaineCarteIdentite.kmPistesSkiNordique.children['longueur'] , { 'label' : domaine.domaineCarteIdentite.kmPistesSkiNordique.vars['name'] | humanize  ,  'attr' : { 'class' : 'form-inline'  }}) }}
+                                    {{ form_row( domaine.domaineCarteIdentite.remonteeMecanique.nombre , { 'label' :   domaine.domaineCarteIdentite.remonteeMecanique.vars.name | humanize  , 'attr' : { 'data-unique_block_prefix' : domaine.domaineCarteIdentite.remonteeMecanique.nombre.vars['unique_block_prefix']  }}) }}
+                                    {{ form_row( domaine.domaineCarteIdentite.niveauSkieur , { 'attr' : { 'data-unique_block_prefix' : domaine.domaineCarteIdentite.niveauSkieur.vars['unique_block_prefix']  }}) }}
+                                    {% for piste in domaine.domaineCarteIdentite.pistes %}
+                                        {% for traductionLangue in  piste.vars.value.typePiste.traductions %}
+                                            {% if(traductionLangue.langue.code == app.request.locale) %}
+                                                {{ form_row(piste.nombre , { 'label' :   (domaine.domaineCarteIdentite.pistes.vars.name | title ~ ' '~ traductionLangue.libelle) ,'attr' : { 'data-unique_block_prefix' : piste.nombre.vars['unique_block_prefix'] ~ '_' ~ piste.vars['value'].typePiste.id  }  }) }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {{ form_row(domaine.domaineCarteIdentite.snowpark.present , { 'attr' : { 'data-unique_block_prefix' : domaine.domaineCarteIdentite.snowpark.present.vars['unique_block_prefix']  }}) }}
+                                    {{ form_row(domaine.domaineCarteIdentite.handiski.present , { 'attr' : { 'data-unique_block_prefix' : domaine.domaineCarteIdentite.handiski.present.vars['unique_block_prefix']  }}) }}
+
+                                    <ul class="nav nav-tabs">
+                                        {% set iTraduc = 0 %}
+                                        {% for traduction in domaine.domaineCarteIdentite.traductions %}
+                                            <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                                <a data-toggle="tab"
+                                                   href="#domaine_carte_identite_{{ domaine.domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                                    {# affiche la langue en fonction de la locale#}
+                                                    {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                                        {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                            {{ traductionLangue.libelle }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content">
+                                        {% set iTraduc = 0 %}
+                                        {% for traduction in domaine.domaineCarteIdentite.traductions %}
+                                            <div id="domaine_carte_identite_{{ domaine.domaineCarteIdentite.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                                                 class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                                {% for element in traduction.children %}
+                                                    {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                                {% endfor %}
+                                                {% set break = false %}
+                                                {% for snowparkTraduction in domaine.domaineCarteIdentite.snowpark.traductions if not break %}
+                                                    {% if traduction.vars.value.langue.id == snowparkTraduction.vars.value.langue.id %}
+
+                                                        {#{% for element in snowparkTraduction.children %}#}
+                                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
+                                                        {#{% endfor %}#}
+                                                        {{ form_row(snowparkTraduction.description , { 'label' : domaine.domaineCarteIdentite.snowpark.vars.name | humanize , 'attr' : { 'data-unique_block_prefix' : snowparkTraduction.description.vars['unique_block_prefix']~ '_' ~ snowparkTraduction.vars['value'].langue.code}}  ) }}
+                                                        {#{{ form_errors(snowparkTraduction) }}#}
+                                                        {% set break = true %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% set break = false %}
+                                                {% for handiskiTraduction in domaine.domaineCarteIdentite.handiski.traductions if not break %}
+                                                    {% if traduction.vars.value.langue.id == handiskiTraduction.vars.value.langue.id %}
+                                                        {{ form_row(handiskiTraduction.description , { 'label' : domaine.domaineCarteIdentite.handiski.vars.name | humanize , 'attr' : { 'data-unique_block_prefix' : handiskiTraduction.description.vars['unique_block_prefix']~ '_' ~ handiskiTraduction.vars['value'].langue.code}}  ) }}
+                                                        {#{{ form_errors(handiskiTraduction) }}#}
+                                                        {% set break = true %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {{ form_row( domaine.domaineCarteIdentite.site ) }}
+
+                                    {# si le site est le crm on affiche le panel des medias #}
+                                    {#{% if domaine.domaineCarteIdentite.vars.value.site.crm == 1 %}#}
+                                    {#<div class="panel panel-primary">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">#}
+                                    {#Images#}
+                                    {#</h3>#}
+                                    {#</div>#}
+                                    {#<div class="panel-body">#}
+                                                {# liste des images #}
+                                    {#<ul class="image" data-prototype_image="#}
+                                    {#{% filter escape %}#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}#}
+                                    {#{% endfilter %}#}
+                                    {#">#}
+                                    {#{% set i = 0 %}#}
+                                    {#{% for image in domaine.domaineCarteIdentite.images %}#}
+                                    {#<li class="element">#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}#}
+                                    {#</li>#}
+                                    {#{% set i = i + 1 %}#}
+                                    {#{% endfor %}#}
+                                    {#</ul>#}
+
+                                    {#</div>#}
+                                    {#</div>#}
+                                    {#<div class="panel panel-primary">#}
+                                    {#<div class="panel-heading"><h3 class="panel-title">#}
+                                    {#Photos#}
+                                    {#</h3>#}
+                                    {#</div>#}
+                                    {#<div class="panel-body">#}
+                                                {#liste des photos#}
+                                    {#<ul class="photo" data-prototype_photo="#}
+                                    {#{% filter escape %}#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}#}
+                                    {#{% endfilter %}#}
+                                    {#">#}
+                                    {#{% set i = 0 %}#}
+                                    {#{% for photo in domaine.domaineCarteIdentite.photos %}#}
+                                    {#<li class="element">#}
+                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}#}
+                                    {#</li>#}
+                                    {#{% set i = i + 1 %}#}
+                                    {#{% endfor %}#}
+                                    {#</ul>#}
+
+                                    {#</div>#}
+                                    {#</div>#}
+                                    {#{% endif %}#}
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 {% endfor %}
             </div>
@@ -96,7 +310,30 @@
         {% for langue in langues %}
         items.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");
         items.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");
+
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_traductions_entry_accroche_{{ langue.code }}");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_traductions_entry_description_{{ langue.code }}");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_snowpark_traductions_entry_description_{{ langue.code }}");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_handiski_traductions_entry_description_{{ langue.code }}");
         {% endfor %}
+
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_altitudeMini_valeur");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_altitudeMini_unite");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_altitudeMaxi_valeur");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_altitudeMaxi_unite");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_kmPistesSkiAlpin_longueur_valeur");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_kmPistesSkiAlpin_longueur_unite");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_kmPistesSkiNordique_longueur_valeur");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_kmPistesSkiNordique_longueur_unite");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_remonteeMecanique_nombre");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_niveauSkieur");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_pistes_entry_nombre_1");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_pistes_entry_nombre_2");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_pistes_entry_nombre_3");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_pistes_entry_nombre_4");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_snowpark_present");
+        items.push("_domaine_unifie_domaines_entry_domaineCarteIdentite_handiski_present");
+
     </script>
     {{ parent() }}
     <script type="text/javascript">
@@ -177,5 +414,104 @@
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
+
+        $('[data-unique_block_prefix="_domaine_unifie_domaines_entry_domaineParent"]').each(function (index, element) {
+            if (!$(element).val()) {
+                $('#cboxDomaineCarteIdentite_' + $(element).data('site')).hide();
+                $('#cbox_medias_parent_' + $(element).data('site')).hide();
+            }
+            else {
+                var $inputcboxDomaineCarteIdentite = $('#inputcboxDomaineCarteIdentite_' + $(element).data('site'));
+                if ($inputcboxDomaineCarteIdentite.is(':checked')) {
+                    $('#domaineCarteIdentite_' + $(element).data('site')).hide();
+                    $('#cboxDomaineCarteIdentite_' + $(element).data('site')).show();
+                    displayChild($inputcboxDomaineCarteIdentite, 'domaineCarteIdentite_' + $(element).data('site'));
+                }
+            }
+        });
+
+
     </script>
+
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% set elements = ['image' , 'photo'] %}
+        {% for element in elements %}
+
+
+        var ${{ element }}CollectionHolder;
+
+        // setup an "add a image" link
+        var ${{ element }}AddLinkImage = $('<a href="#" class="add_{{ element }}_image_link_image">Ajouter {{ element }}</a>');
+        var ${{ element }}_newLinkLiImageImage = $('<li></li>').append(${{ element }}AddLinkImage);
+
+        link.{{ element }} = ${{ element }}_newLinkLiImageImage;
+
+        elements.push('{{ element }}');
+        {% endfor %}
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of images
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing image form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a image" anchor and li to the images ul
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input[id$=_binaryContent]').length);
+
+                window['$' + element + 'AddLinkImage'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new image form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], element);
+                });
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype_' + type);
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
 {% endblock %}
