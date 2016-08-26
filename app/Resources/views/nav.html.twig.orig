@@ -288,21 +288,33 @@
                     </ul>
                 </li>
                 {# ***** FIN FAMILLE PRESTATION ANNEXE ***** #}
-                {# ***** TYPE PRESTATION ANNEWE ***** #}
-                <li role="presentation"
-                    class="dropdown-submenu {% if 'typeprestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" href="">{{ 'type prestation annexe' | trans |capitalize }}</a>
-                    <ul class="dropdown-menu">
-                        <li class="{% if 'typeprestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
-                            <a href="{{ path('typeprestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
-                        </li>
-                    </ul>
-                </li>
-                {# ***** FIN TYPE PRESTATION ANNEWE ***** #}
             </ul>
         </li>
+<<<<<<< d37f3d68f0a7fd4ab8eb8cdd03fe26492686975a
         {# ***** FIN PARAMETRAGE ***** #}
+||||||| merged common ancestors
+        {#<li role="presentation"#}
+        {#class="dropdown {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+        {#Logement <span class="caret"></span>#}
+        {#</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li role="presentation"#}
+        {#class="dropdown-submenu {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
+        {#aria-expanded="false" href="">Logement</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li class="{% if 'logement_logement_index' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_index') }}">{{ 'liste' |capitalize }}</a>#}
+        {#</li>#}
+        {#<li class="{% if 'logement_logement_new' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_new') }}">{{ 'ajouter' | capitalize }}</a>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
+=======
         {# ***** PRESTATION ANNEXE ***** #}
         <li role="presentation"
             class="dropdown {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
@@ -326,6 +338,28 @@
             </ul>
         </li>
         {# ***** FIN PRESTATION ANNEXE ***** #}
+        {#<li role="presentation"#}
+        {#class="dropdown {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">#}
+        {#Logement <span class="caret"></span>#}
+        {#</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li role="presentation"#}
+        {#class="dropdown-submenu {% if 'logement' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"#}
+        {#aria-expanded="false" href="">Logement</a>#}
+        {#<ul class="dropdown-menu">#}
+        {#<li class="{% if 'logement_logement_index' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_index') }}">{{ 'liste' |capitalize }}</a>#}
+        {#</li>#}
+        {#<li class="{% if 'logement_logement_new' in app.request.attributes.get('_route') %} active {% endif %}">#}
+        {#<a href="{{ path('logement_logement_new') }}">{{ 'ajouter' | capitalize }}</a>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
+        {#</ul>#}
+        {#</li>#}
+>>>>>>> PrestationAnnexeUnifie
     </ul>
     {# ***** LOGIN ***** #}
     <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">

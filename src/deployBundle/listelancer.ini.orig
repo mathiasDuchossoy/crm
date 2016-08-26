@@ -5,9 +5,9 @@
 ; maj/2016-04-02_c_dc_nom_de_ma_table2.php
 ;maj\crm_75\2016-07-21a_sls_periode.sql
 ;maj\crm_71\2016-08-02a_md_medias.sql
-<<<<<<< 82793b8b68e101afd4dc47509b26c6f1df739c20
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
+<<<<<<< d37f3d68f0a7fd4ab8eb8cdd03fe26492686975a
 ;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
 
@@ -18,9 +18,10 @@ maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
 
 maj\crm_65\2016-08-26a_md_station.sql
-||||||| merged common ancestors
-maj\fos-user\2016-08-10a_md_fos_user_maj.sql
-=======
-;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
+
 maj\crm_94\2016-08-22a_md_prestation_annexe.sql
->>>>>>> CRM-94: Gestion Familles et sous-familles
+||||||| merged common ancestors
+maj\crm_94\2016-08-22a_md_prestation_annexe.sql
+=======
+maj\crm_93\2016-08-23a_md_prestation_annexe.sql
+>>>>>>> PrestationAnnexeUnifie
