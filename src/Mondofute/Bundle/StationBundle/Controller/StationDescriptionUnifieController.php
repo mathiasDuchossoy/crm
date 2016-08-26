@@ -508,8 +508,9 @@ class StationDescriptionUnifieController extends Controller
      */
     public function deleteEntity(StationDescriptionUnifie $stationDescriptionUnifie)
     {
+        /** @var Site $siteDistant */
         $em = $this->getDoctrine()->getEntityManager();
-
+        $delete = true;
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
         foreach ($sitesDistants as $siteDistant) {
@@ -518,11 +519,26 @@ class StationDescriptionUnifieController extends Controller
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class, $stationDescriptionUnifie->getId());
             if (!empty($stationDescriptionUnifieSite)) {
-                $emSite->remove($stationDescriptionUnifieSite);
-                $emSite->flush();
+                foreach ($stationDescriptionUnifieSite->getStationDescriptions() as $stationDescriptionSite){
+                    if ($stationDescriptionSite->getStations()->count() <= 1 ){
+                        $emSite->remove($stationDescriptionSite);
+                    } else $delete = false;
+                }
+                if ($delete) {
+                    $emSite->remove($stationDescriptionUnifieSite);
+                    $emSite->flush();
+                }
             }
         }
-        $em->remove($stationDescriptionUnifie);
+        foreach ($stationDescriptionUnifie->getStationDescriptions() as $stationDescription) {
+            if ($stationDescription->getStations()->count() <= 1) {
+                $em->remove($stationDescription);
+            } else $delete = false;
+        }
+
+        if ($delete) {
+            $em->remove($stationDescriptionUnifie);
+        }
     }
 
 }

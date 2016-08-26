@@ -588,8 +588,9 @@ class StationCommentVenirUnifieController extends Controller
      */
     public function deleteEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
+        /** @var Site $siteDistant */
+        $em     = $this->getDoctrine()->getEntityManager();
+        $delete = true;
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
         foreach ($sitesDistants as $siteDistant) {
@@ -598,13 +599,26 @@ class StationCommentVenirUnifieController extends Controller
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $stationCommentVenirUnifieSite = $emSite->find(StationCommentVenirUnifie::class, $stationCommentVenirUnifie->getId());
             if (!empty($stationCommentVenirUnifieSite)) {
-                $emSite->remove($stationCommentVenirUnifieSite);
-                $emSite->flush();
+                foreach ($stationCommentVenirUnifieSite->getStationCommentVenirs() as $stationCommentVenirSite){
+                    if ($stationCommentVenirSite->getStations()->count() <= 1 ){
+                        $emSite->remove($stationCommentVenirSite);
+                    } else $delete = false;
+                }
+                if ($delete) {
+                    $emSite->remove($stationCommentVenirUnifieSite);
+                    $emSite->flush();
+                }
             }
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($stationCommentVenirUnifie);
-//        $em->flush();
+        foreach ($stationCommentVenirUnifie->getStationCommentVenirs() as $stationCommentVenir){
+            if ($stationCommentVenir->getStations()->count() <= 1 ){
+                $em->remove($stationCommentVenir);
+            } else $delete = false;
+        }
+
+        if ($delete) {
+            $em->remove($stationCommentVenirUnifie);
+        }
     }
 
 }

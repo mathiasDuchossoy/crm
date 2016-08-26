@@ -14,6 +14,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
+use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
@@ -51,6 +52,27 @@ class StationUnifieController extends Controller
     public function indexAction($page, $maxPerPage)
     {
         $em = $this->getDoctrine()->getManager();
+//        $sites = $em->getRepository(Site::class)->findAll();
+//        foreach ($sites as $site){
+//            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $ciUnifies = $emSite->getRepository(StationCarteIdentiteUnifie::class)->findAll();
+//            foreach ($ciUnifies as $ciUnify){
+//                $emSite->remove($ciUnify);
+//            }
+//            $ciUnifies = $emSite->getRepository(StationCommentVenirUnifie::class)->findAll();
+//            foreach ($ciUnifies as $ciUnify){
+//                $emSite->remove($ciUnify);
+//            }
+//            $ciUnifies = $emSite->getRepository(StationDescriptionUnifie::class)->findAll();
+//            foreach ($ciUnifies as $ciUnify){
+//                $emSite->remove($ciUnify);
+//            }
+//            $ciUnifies = $emSite->getRepository(StationUnifie::class)->findAll();
+//            foreach ($ciUnifies as $ciUnify){
+//                $emSite->remove($ciUnify);
+//            }
+//            $emSite->flush();
+//        }
 
         $count = $em
             ->getRepository('MondofuteStationBundle:StationUnifie')
@@ -1527,6 +1549,7 @@ class StationUnifieController extends Controller
      */
     public function deleteAction(Request $request, StationUnifie $stationUnifie)
     {
+        /** @var Station $station */
         $form = $this->createDeleteForm($stationUnifie);
         $form->handleRequest($request);
         $stationCarteIdentiteUnifieController = new StationCarteIdentiteUnifieController();
@@ -1536,14 +1559,23 @@ class StationUnifieController extends Controller
         $stationDescriptionUnifieController = new StationDescriptionUnifieController();
         $stationDescriptionUnifieController->setContainer($this->container);
 
+        foreach ($stationUnifie->getStations() as $station){
+            if(!$station->getStations()->isEmpty()){
+                $this->addFlash('error', 'Impossible de supprimer cette station car elle est une station mère.');
+                $referer = $request->headers->get('referer');
+                return $this->redirect($referer);
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var Station $station */
             $erreurHebergement = false;
             foreach ($stationUnifie->getStations() as $station) {
-                if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
-                    $erreurHebergement = true;
-                    $this->addFlash('error', 'La station est lié à un hébergement.');
+                if(!empty($station->getHebergements())){
+                    if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
+                        $erreurHebergement = true;
+                        $this->addFlash('error', 'La station est lié à un hébergement.');
+                    }
                 }
             }
             if (!$erreurHebergement) {
@@ -1576,7 +1608,7 @@ class StationUnifieController extends Controller
                                     }
                                 }
                             }
-                            $emSite->flush();
+//                            $emSite->flush();
                         }
                         $emSite->remove($stationUnifieSite);
                         $emSite->flush();
@@ -1587,14 +1619,20 @@ class StationUnifieController extends Controller
                 $arrayStationDescriptionUnifies = new ArrayCollection();
                 /** @var Station $station */
                 foreach ($stationUnifie->getStations() as $station) {
-                    if (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite())) {
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite())) && !empty($station->getStationCarteIdentite())) {
                         $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                        $station->getStationCarteIdentite()->removeStation($station);
+                        $station->setStationCarteIdentite(null);
                     }
-                    if (empty($station->getStationMere()) || !empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()) {
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir())) && !empty($station->getStationCommentVenir())) {
                         $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                        $station->getStationCommentVenir()->removeStation($station);
+                        $station->setStationCommentVenir(null);
                     }
-                    if (empty($station->getStationMere()) || !empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription()) {
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription())) && !empty($station->getStationDescription()) ) {
                         $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
+                        $station->getStationDescription()->removeStation($station);
+                        $station->setStationDescription(null);
                     }
                 }
 
@@ -1613,7 +1651,7 @@ class StationUnifieController extends Controller
                                 }
                             }
                         }
-                        $em->flush();
+//                        $em->flush();
                     }
                 }
 
