@@ -148,6 +148,11 @@ class FamillePrestationAnnexeController extends Controller
             foreach ($originalSousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
                 if (false === $famillePrestationAnnexe->getSousFamillePrestationAnnexes()->contains($sousFamillePrestationAnnexe)) {
                     // if you wanted to delete the Tag entirely, you can also do that
+                    if(!$sousFamillePrestationAnnexe->getFamillePrestationAnnexe()->getPrestationAnnexes()->isEmpty()){
+                        $this->addFlash('error', 'Impossible de supprimer cette sous-famille car elle est lié à une prestation annexe.');
+                        $referer = $request->headers->get('referer');
+                        return $this->redirect($referer);
+                    }
                     $em->remove($sousFamillePrestationAnnexe);
                 }
             }
