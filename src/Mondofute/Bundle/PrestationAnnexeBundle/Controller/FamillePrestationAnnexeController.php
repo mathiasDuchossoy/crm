@@ -210,7 +210,7 @@ class FamillePrestationAnnexeController extends Controller
                 })->first();
                 if (false === $sousFamillePrestationAnnexe) {
                     // On doit le supprimer de l'entité parent
-                    $famillePrestationAnnexeSite->removeSousFamillePrestationAnnex($sousFamillePrestationAnnexeSite);
+                    $famillePrestationAnnexeSite->removeSousFamillePrestationAnnexe($sousFamillePrestationAnnexeSite);
                     // if you wanted to delete the sousFamillePrestationAnnexeSite entirely, you can also do that
                     $emSite->remove($sousFamillePrestationAnnexeSite);
                 }
@@ -222,7 +222,7 @@ class FamillePrestationAnnexeController extends Controller
                 })->first();
                 if (false === $sousFamillePrestationAnnexeSite) {
                     $sousFamillePrestationAnnexeSite = new SousFamillePrestationAnnexe();
-                    $famillePrestationAnnexeSite->addSousFamillePrestationAnnex($sousFamillePrestationAnnexeSite);
+                    $famillePrestationAnnexeSite->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexeSite);
                 }
                 foreach ($sousFamillePrestationAnnexe->getTraductions() as $traduction) {
                     $traductionSite = $sousFamillePrestationAnnexeSite->getTraductions()->filter(function (SousFamillePrestationAnnexeTraduction $element) use ($traduction) {
