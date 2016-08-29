@@ -89,12 +89,13 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");#}
-        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");#}
-        {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe");#}
-        {#itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");#}
+//        itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");
+//        itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe");
+//        itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe");
+//        itemNonPersonalisable.push("_prestationAnnexe_unifie_prestationAnnexes_entry_departement");
         {#{% for langue in langues %}#}
         {#itemNonPersonalisable.push("_prestation_annexe_unifie_prestationAnnexes_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#{% endfor %}#}
 
         var items = [];
         items.push("_prestation_annexe_unifie_prestationAnnexes_entry_type");

@@ -19,6 +19,16 @@ class PrestationAnnexeUnifie
     private $prestationAnnexes;
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id){
+        $this->id   = $id;
+
+        return $this;
+    }
+
+    /**
      * Constructor
      */
     public function __construct()

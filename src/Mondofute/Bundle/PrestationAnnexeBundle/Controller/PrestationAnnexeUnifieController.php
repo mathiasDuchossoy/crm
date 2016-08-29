@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction;
@@ -83,7 +84,11 @@ class PrestationAnnexeUnifieController extends Controller
         $this->prestationAnnexesSortByAffichage($prestationAnnexeUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeUnifieType', $prestationAnnexeUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->add('submit', SubmitType::class, array(
+            'label' => $this->get('translator')->trans('Enregistrer'),
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')))
+        ;
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -116,43 +121,33 @@ class PrestationAnnexeUnifieController extends Controller
 
     /**
      * Ajouter les prestationAnnexes qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
-     * @param PrestationAnnexeUnifie $entity
+     * @param PrestationAnnexeUnifie $entityUnifie
      */
-    private function ajouterPrestationAnnexesDansForm(PrestationAnnexeUnifie $entity)
+    private function ajouterPrestationAnnexesDansForm(PrestationAnnexeUnifie $entityUnifie)
     {
+        /** @var PrestationAnnexe $entity */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository('MondofuteLangueBundle:Langue')->findAll();
         foreach ($sites as $site) {
-            $siteExiste = false;
-            foreach ($entity->getPrestationAnnexes() as $prestationAnnexe) {
-                if ($prestationAnnexe->getSite() == $site) {
-                    $siteExiste = true;
-                    foreach ($langues as $langue) {
-
-//                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($prestationAnnexe->getTraductions()->filter(function (PrestationAnnexeTraduction $element) use ($langue) {
-                            return $element->getLangue() == $langue;
-                        })->isEmpty()
-                        ) {
-                            $traduction = new PrestationAnnexeTraduction();
-                            $traduction->setLangue($langue);
-                            $prestationAnnexe->addTraduction($traduction);
-                        }
-                    }
-                }
+            $entity = $entityUnifie->getPrestationAnnexes()->filter(function (PrestationAnnexe $element)use($site){
+                return $element->getSite() == $site;
+            })->first();
+            if (false === $entity){
+                $entity = new PrestationAnnexe();
+                $entityUnifie->addPrestationAnnexe($entity);
+                $entity->setSite($site);
             }
-            if (!$siteExiste) {
-                $prestationAnnexe = new PrestationAnnexe();
-                $prestationAnnexe->setSite($site);
-
-                // ajout des traductions
-                foreach ($langues as $langue) {
+            foreach ($langues as $langue){
+                //  vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la prestationAnnexe
+                $traduction = $entity->getTraductions()->filter(function (PrestationAnnexeTraduction $element) use ($langue) {
+                    return $element->getLangue() == $langue;
+                })->first();
+                if (false === $traduction){
                     $traduction = new PrestationAnnexeTraduction();
+                    $entity->addTraduction($traduction);
                     $traduction->setLangue($langue);
-                    $prestationAnnexe->addTraduction($traduction);
                 }
-                $entity->addPrestationAnnexe($prestationAnnexe);
             }
         }
     }
@@ -208,39 +203,40 @@ class PrestationAnnexeUnifieController extends Controller
 
     /**
      * Copie dans la base de données site l'entité prestationAnnexe
-     * @param PrestationAnnexeUnifie $entity
+     * @param PrestationAnnexeUnifie $entityUnifie
      */
-    private function copieVersSites(PrestationAnnexeUnifie $entity)
+    private function copieVersSites(PrestationAnnexeUnifie $entityUnifie)
     {
-        /** @var PrestationAnnexe $prestationAnnexe */
-        /** @var PrestationAnnexeTraduction $prestationAnnexeTraduc */
+        /** @var EntityManager $emSite */
+        /** @var PrestationAnnexe $entity */
+        /** @var PrestationAnnexeTraduction $entityTraduc */
 //        Boucle sur les prestationAnnexes afin de savoir sur quel site nous devons l'enregistrer
-        foreach ($entity->getPrestationAnnexes() as $prestationAnnexe) {
-            if ($prestationAnnexe->getSite()->getCrm() == false) {
+        foreach ($entityUnifie->getPrestationAnnexes() as $entity) {
+            if ($entity->getSite()->getCrm() == false) {
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $emSite = $this->getDoctrine()->getManager($prestationAnnexe->getSite()->getLibelle());
-                $site = $emSite->find(Site::class , $prestationAnnexe->getSite());
+                $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
+                $site = $emSite->find(Site::class , $entity->getSite());
 
                 // *** gestion du type ***
-                if (!empty($prestationAnnexe->getType())) {
-                    $type = $prestationAnnexe->getType();
+                if (!empty($entity->getType())) {
+                    $type = $entity->getType();
                 } else {
                     $type = null;
                 }
                 // *** fin gestion du type ***
 
                 // *** gestion famille prestation annexe ***
-                if (!empty($prestationAnnexe->getFamillePrestationAnnexe())){
-                    $famille    = $emSite->find(FamillePrestationAnnexe::class,$prestationAnnexe->getFamillePrestationAnnexe());
+                if (!empty($entity->getFamillePrestationAnnexe())){
+                    $famille    = $emSite->find(FamillePrestationAnnexe::class,$entity->getFamillePrestationAnnexe());
                 }else{
                     $famille    = null;
                 }
                 // *** fin gestion famille prestation annexe ***
 
                 // *** gestion sous-famille prestation annexe ***
-                if (!empty($prestationAnnexe->getSousFamillePrestationAnnexe())){
-                    $sousFamille    = $emSite->find(SousFamillePrestationAnnexe::class,$prestationAnnexe->getSousFamillePrestationAnnexe());
+                if (!empty($entity->getSousFamillePrestationAnnexe())){
+                    $sousFamille    = $emSite->find(SousFamillePrestationAnnexe::class,$entity->getSousFamillePrestationAnnexe());
                 }else{
                     $sousFamille    = null;
                 }
@@ -248,51 +244,59 @@ class PrestationAnnexeUnifieController extends Controller
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (empty(($entitySite = $emSite->find(PrestationAnnexeUnifie::class , $entity)))) {
-                    $entitySite = new PrestationAnnexeUnifie();
+                if (empty($entityUnifieSite = $emSite->find(PrestationAnnexeUnifie::class , $entityUnifie))) {
+                    $entityUnifieSite = new PrestationAnnexeUnifie();
+                    $entityUnifieSite->setId($entityUnifie->getId());
                 }
 
                 //  Récupération de la prestationAnnexe sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty(($prestationAnnexeSite = $emSite->getRepository(PrestationAnnexe::class)->findOneBy(array('prestationAnnexeUnifie' => $entitySite))))) {
-                    $prestationAnnexeSite = new PrestationAnnexe();
-                    $entitySite->addPrestationAnnexe($prestationAnnexeSite);
+                if (empty($entitySite = $emSite->getRepository(PrestationAnnexe::class)->findOneBy(array('prestationAnnexeUnifie' => $entityUnifieSite)))) {
+                    $entitySite = new PrestationAnnexe();
+                    $entitySite
+                        ->setSite($site)
+                        ->setPrestationAnnexeUnifie($entityUnifieSite)
+                    ;
+
+                    $entityUnifieSite->addPrestationAnnexe($entitySite);
                 }
 
                 //  copie des données prestationAnnexe
-                $prestationAnnexeSite
-                    ->setSite($site)
-                    ->setPrestationAnnexeUnifie($entitySite)
+                $entitySite
                     ->setType($type)
                     ->setFamillePrestationAnnexe($famille)
                     ->setSousFamillePrestationAnnexe($sousFamille)
-                    ->setActif($prestationAnnexe->getActif())
+                    ->setActif($entity->getActif())
                 ;
 
                 //  Gestion des traductions
-                foreach ($prestationAnnexe->getTraductions() as $prestationAnnexeTraduc) {
+                foreach ($entity->getTraductions() as $entityTraduc) {
 
                     //  récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($prestationAnnexeTraducSite = $emSite->getRepository(PrestationAnnexeTraduction::class)->findOneBy(array(
-                        'prestationAnnexe' => $prestationAnnexeSite,
-                        'langue' => $prestationAnnexeTraduc->getLangue()
+                    if (empty(($entityTraducSite = $emSite->getRepository(PrestationAnnexeTraduction::class)->findOneBy(array(
+                        'prestationAnnexe' => $entitySite,
+                        'langue' => $entityTraduc->getLangue()
                     ))))
                     ) {
                         //  récupération de la langue sur le site distant
-                        $langue = $emSite->find(Langue::class , $prestationAnnexeTraduc->getLangue());
-                        $prestationAnnexeTraducSite = new PrestationAnnexeTraduction();
-                        $prestationAnnexeSite->addTraduction($prestationAnnexeTraducSite);
-                        $prestationAnnexeTraducSite
+                        $langue = $emSite->find(Langue::class , $entityTraduc->getLangue());
+                        $entityTraducSite = new PrestationAnnexeTraduction();
+                        $entitySite->addTraduction($entityTraducSite);
+                        $entityTraducSite
                             ->setLangue($langue)
                         ;
                     }
 
                     //  copie des données traductions
-                    $prestationAnnexeTraducSite
-                        ->setLibelle($prestationAnnexeTraduc->getLibelle())
+                    $entityTraducSite
+                        ->setLibelle($entityTraduc->getLibelle())
                     ;
                 }
 
-                $emSite->persist($entitySite);
+                $emSite->persist($entityUnifieSite);
+
+                $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
+                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+
                 $emSite->flush();
             }
         }
@@ -419,7 +423,7 @@ class PrestationAnnexeUnifieController extends Controller
                     $emSite->flush();
                 }
             }
-            $em = $this->getDoctrine()->getManager();
+
             $em->remove($prestationAnnexeUnifie);
             $em->flush();
 

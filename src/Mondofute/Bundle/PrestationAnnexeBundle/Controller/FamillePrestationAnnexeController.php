@@ -45,37 +45,12 @@ class FamillePrestationAnnexeController extends Controller
         );
 
         $entities = $this->getDoctrine()->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')
-            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
-
-//        $famillePrestationAnnexes = $em->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->findAll();
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray)
+        ;
 
         return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/index.html.twig', array(
             'famillePrestationAnnexes' => $entities,
             'pagination' => $pagination
-        ));
-    }
-
-    /**
-     * Creates a new FamillePrestationAnnexe entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $famillePrestationAnnexe = new FamillePrestationAnnexe();
-        $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\FamillePrestationAnnexeType', $famillePrestationAnnexe);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($famillePrestationAnnexe);
-            $em->flush();
-
-            return $this->redirectToRoute('familleprestationannexe_show', array('id' => $famillePrestationAnnexe->getId()));
-        }
-
-        return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/new.html.twig', array(
-            'famillePrestationAnnexe' => $famillePrestationAnnexe,
-            'form' => $form->createView(),
         ));
     }
 
@@ -139,7 +114,8 @@ class FamillePrestationAnnexeController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\FamillePrestationAnnexeType', $famillePrestationAnnexe);
         $editForm
-            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
+            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'))
+        ;
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -215,7 +191,7 @@ class FamillePrestationAnnexeController extends Controller
                 })->first();
                 if (false === $sousFamillePrestationAnnexe) {
                     // On doit le supprimer de l'entité parent
-                    $famillePrestationAnnexeSite->removeSousFamillePrestationAnnexe($sousFamillePrestationAnnexeSite);
+                    $famillePrestationAnnexeSite->removeSousFamillePrestationAnnex($sousFamillePrestationAnnexeSite);
                     // if you wanted to delete the sousFamillePrestationAnnexeSite entirely, you can also do that
                     $emSite->remove($sousFamillePrestationAnnexeSite);
                 }
@@ -227,7 +203,7 @@ class FamillePrestationAnnexeController extends Controller
                 })->first();
                 if (false === $sousFamillePrestationAnnexeSite) {
                     $sousFamillePrestationAnnexeSite = new SousFamillePrestationAnnexe();
-                    $famillePrestationAnnexeSite->addSousFamillePrestationAnnexe($sousFamillePrestationAnnexeSite);
+                    $famillePrestationAnnexeSite->addSousFamillePrestationAnnex($sousFamillePrestationAnnexeSite);
                 }
                 foreach ($sousFamillePrestationAnnexe->getTraductions() as $traduction) {
                     $traductionSite = $sousFamillePrestationAnnexeSite->getTraductions()->filter(function (SousFamillePrestationAnnexeTraduction $element) use ($traduction) {
@@ -247,23 +223,5 @@ class FamillePrestationAnnexeController extends Controller
             $emSite->persist($famillePrestationAnnexeSite);
             $emSite->flush();
         }
-    }
-
-    /**
-     * Deletes a FamillePrestationAnnexe entity.
-     *
-     */
-    public function deleteAction(Request $request, FamillePrestationAnnexe $famillePrestationAnnexe)
-    {
-        $form = $this->createDeleteForm($famillePrestationAnnexe);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($famillePrestationAnnexe);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('familleprestationannexe_index');
     }
 }
