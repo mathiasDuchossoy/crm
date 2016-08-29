@@ -288,6 +288,18 @@
                     </ul>
                 </li>
                 {# ***** FIN FAMILLE PRESTATION ANNEXE ***** #}
+                {# ***** TYPE PRESTATION ANNEWE ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'typeprestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'type prestation annexe' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'typeprestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('typeprestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN TYPE PRESTATION ANNEWE ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
