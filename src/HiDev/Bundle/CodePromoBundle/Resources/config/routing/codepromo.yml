@@ -1,0 +1,24 @@
+codepromo_index:
+    path:     /
+    defaults: { _controller: "HiDevCodePromoBundle:CodePromo:index" }
+    methods:  GET
+
+codepromo_show:
+    path:     /{id}/show
+    defaults: { _controller: "HiDevCodePromoBundle:CodePromo:show" }
+    methods:  GET
+
+codepromo_new:
+    path:     /new
+    defaults: { _controller: "HiDevCodePromoBundle:CodePromo:new" }
+    methods:  [GET, POST]
+
+codepromo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "HiDevCodePromoBundle:CodePromo:edit" }
+    methods:  [GET, POST]
+
+codepromo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "HiDevCodePromoBundle:CodePromo:delete" }
+    methods:  DELETE
