@@ -1,0 +1,16 @@
+{% extends '@HiDevCodePromo/codepromo/fiche.html.twig' %}
+{% block title %}
+    Edition d'un code promo
+{% endblock %}
+{% block titre %}
+    Edition d'un code promo
+{% endblock %}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('codepromo_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+{% endblock %}

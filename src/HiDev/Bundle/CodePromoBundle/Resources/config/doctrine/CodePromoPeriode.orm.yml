@@ -1,0 +1,18 @@
+HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: HiDev\Bundle\CodePromoBundle\Repository\CodePromoPeriodeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        dateDebut:
+            type: datetime
+        dateFin:
+            type: datetime
+    lifecycleCallbacks: {  }
