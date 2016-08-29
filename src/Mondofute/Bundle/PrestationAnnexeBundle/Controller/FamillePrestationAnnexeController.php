@@ -60,28 +60,9 @@ class FamillePrestationAnnexeController extends Controller
      */
     public function showAction(FamillePrestationAnnexe $famillePrestationAnnexe)
     {
-        $deleteForm = $this->createDeleteForm($famillePrestationAnnexe);
-
         return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/show.html.twig', array(
-            'famillePrestationAnnexe' => $famillePrestationAnnexe,
-            'delete_form' => $deleteForm->createView(),
+            'famillePrestationAnnexe' => $famillePrestationAnnexe
         ));
-    }
-
-    /**
-     * Creates a form to delete a FamillePrestationAnnexe entity.
-     *
-     * @param FamillePrestationAnnexe $famillePrestationAnnexe The FamillePrestationAnnexe entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(FamillePrestationAnnexe $famillePrestationAnnexe)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('familleprestationannexe_delete', array('id' => $famillePrestationAnnexe->getId())))
-            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 
     /**
