@@ -27,8 +27,6 @@
 
     jQuery(document).ready(function () {
         $_collectionHolder_{{ name }} = $('div.{{ entity }}s_{{ name }}');
-        console.log($_collectionHolder_{{ name }});
-        console.log('div.{{ entity }}s_{{ name }}');
 
         $_collectionHolder_{{ name }}.data('index', $_collectionHolder_{{ name }}.find(':input').length);
 
@@ -60,7 +58,6 @@
         $_collectionHolder_{{ name }}.append($newFormLi);
 
         $newFormLi.find('[id$=langue]').val(langue);
-        console.log($newFormLi.find('[id$=langue]').val(langue));
     }
 
 </script>
