@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * CodePromo
  */
-class CodePromo
+abstract class CodePromo
 {
     /**
      * @var int

@@ -1,0 +1,21 @@
+Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToMany:
+        codePromoPeriodeSejours:
+            targetEntity: CodePromoPeriodeSejour
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_sejour_id:
+                        unique: true
+    lifecycleCallbacks: {  }
