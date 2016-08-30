@@ -1,3 +1,7 @@
+mondofute_code_promo:
+    resource: "@MondofuteCodePromoBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_core:
     resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
     prefix:   /

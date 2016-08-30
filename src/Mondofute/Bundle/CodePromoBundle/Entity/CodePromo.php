@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
+
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 
 /**
@@ -12,7 +13,14 @@ class CodePromo extends BaseCodePromo
      * @var int
      */
     protected $id;
-
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoPeriodeSejours;
+    /**
+     * @var \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     */
+    private $codePromoUnifie;
 
     /**
      * Get id
@@ -23,11 +31,6 @@ class CodePromo extends BaseCodePromo
     {
         return $this->id;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $codePromoPeriodeSejours;
-
 
     /**
      * Add codePromoPeriodeSejour
@@ -61,5 +64,29 @@ class CodePromo extends BaseCodePromo
     public function getCodePromoPeriodeSejours()
     {
         return $this->codePromoPeriodeSejours;
+    }
+
+    /**
+     * Get codePromoUnifie
+     *
+     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     */
+    public function getCodePromoUnifie()
+    {
+        return $this->codePromoUnifie;
+    }
+
+    /**
+     * Set codePromoUnifie
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie
+     *
+     * @return CodePromo
+     */
+    public function setCodePromoUnifie(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie = null)
+    {
+        $this->codePromoUnifie = $codePromoUnifie;
+
+        return $this;
     }
 }
