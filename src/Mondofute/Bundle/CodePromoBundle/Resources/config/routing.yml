@@ -1,3 +1,0 @@
-mondofute_code_promo_codepromo:
-    resource: "@MondofuteCodePromoBundle/Resources/config/routing/codepromo.yml"
-    prefix:   /codepromo
