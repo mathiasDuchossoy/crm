@@ -1,0 +1,5 @@
+HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidate:
+    type: entity
+    table: null
+    repositoryClass: HiDev\Bundle\CodePromoBundle\Repository\CodePromoPeriodeValidateRepository
+    lifecycleCallbacks: {  }

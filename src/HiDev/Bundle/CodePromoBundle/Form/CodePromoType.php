@@ -50,8 +50,8 @@ class CodePromoType extends AbstractType
                 'label'         => 'Usage'
             ))
             ->add('actif')
-            ->add('codePromoPeriodeValidites', CollectionType::class, array(
-                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType',
+            ->add('codePromoPeriodeValidates', CollectionType::class, array(
+                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValidateType',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Périodes de validité',
