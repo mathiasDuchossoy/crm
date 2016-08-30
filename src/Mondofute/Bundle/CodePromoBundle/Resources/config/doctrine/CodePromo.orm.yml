@@ -10,8 +10,15 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_sejour_id:
                         unique: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
     manyToOne:
         codePromoUnifie:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
             inversedBy: codePromos
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
     lifecycleCallbacks: {  }

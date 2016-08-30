@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
@@ -38,15 +39,12 @@ class CodePromoUnifie
     }
 
     /**
-     * Add codePromo
-     *
-     * @param CodePromo $codePromo
-     *
-     * @return CodePromoUnifie
+     * @param $id
+     * @return $this
      */
-    public function addCodePromo(CodePromo $codePromo)
+    public function setId($id)
     {
-        $this->codePromos[] = $codePromo->setCodePromoUnifie($this);
+        $this->id = $id;
 
         return $this;
     }
@@ -69,5 +67,33 @@ class CodePromoUnifie
     public function getCodePromos()
     {
         return $this->codePromos;
+    }
+
+    /**
+     * @param $codePromos
+     * @return $this
+     */
+    public function setCodePromos($codePromos)
+    {
+        $this->getCodePromos()->clear();
+
+        foreach ($codePromos as $codePromo) {
+            $this->addCodePromo($codePromo);
+        }
+        return $this;
+    }
+
+    /**
+     * Add codePromo
+     *
+     * @param CodePromo $codePromo
+     *
+     * @return CodePromoUnifie
+     */
+    public function addCodePromo(CodePromo $codePromo)
+    {
+        $this->codePromos[] = $codePromo->setCodePromoUnifie($this);
+
+        return $this;
     }
 }
