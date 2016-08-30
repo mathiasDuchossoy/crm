@@ -1,16 +1,28 @@
-{% extends 'base.html.twig' %}
+{% extends '@MondofuteCodePromo/codePromounifie/fiche.html.twig' %}
 
-{% block body %}
-    <h1>CodePromoUnifie creation</h1>
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('codepromo_index') }}">Back to the list</a>
-        </li>
-    </ul>
+{% block stylesheets %}
+    {{ parent() }}
 {% endblock %}
+
+{% block title %}
+    {{ 'création d\un code promo' | capitalize }}
+{% endblock %}
+
+{% block titre %}
+    Création d'un code promo
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('codepromo_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+        </ul>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
