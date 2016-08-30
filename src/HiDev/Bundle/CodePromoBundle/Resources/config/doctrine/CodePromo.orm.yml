@@ -35,14 +35,13 @@ HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
         actif:
             type: boolean
     manyToMany:
-        codePromoPeriodeValidites:
-            targetEntity: CodePromoPeriodeValidite
+        codePromoPeriodeValidates:
+            targetEntity: CodePromoPeriodeValidate
+            cascade: ['persist','remove']
             joinTable:
                 name: ~
                 inverseJoinColumns:
-                    code_promo_periode_validite_id:
+                    code_promo_periode_validate_id:
                         unique: true
-                        cascade: ['persist','remove']
-            cascade: ['persist','remove']
-#            onDelete: 'cascade'
+                        onDelete: cascade
     lifecycleCallbacks: {  }

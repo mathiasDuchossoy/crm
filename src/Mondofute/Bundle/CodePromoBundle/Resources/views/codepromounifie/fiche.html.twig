@@ -38,14 +38,14 @@
                             {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
                             <h4>Periodes de validité</h4>
-                            <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
-                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
+                            <ul class="code_promo_periode_validate_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidates.vars.prototype)|e('html_attr') }}">
                                 {# iterate over each existing tag and render its only field: name #}
-                                {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
+                                {% for codePromoPeriodeValidate in codePromo.codePromoPeriodeValidates %}
                                     <li class="element">
-                                        {{ form_widget(codePromoPeriodeValidite) }}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+                                        {{ form_widget(codePromoPeriodeValidate) }}
+                                        {#{{ form_row(codePromoPeriodeValidate.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeValidate.dateFin) }}#}
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -252,9 +252,9 @@
         var link = {};
         {% set elements = {} %}
         {% for site in sites %}
-            {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+            {% set elements = elements|merge( ['code_promo_periode_validate_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
         {% endfor %}
-        {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
+        {#{% set elements = ['code_promo_periode_validate' , 'code_promo_periode_sejour'] %}#}
 
         {% for element in elements %}
 

@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CodePromoPeriodeValiditeType extends AbstractType
+class CodePromoPeriodeValidateType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -47,7 +47,7 @@ class CodePromoPeriodeValiditeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite'
+            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidate'
         ));
     }
 }
