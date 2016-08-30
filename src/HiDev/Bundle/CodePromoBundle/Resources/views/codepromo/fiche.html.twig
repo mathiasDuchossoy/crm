@@ -20,14 +20,14 @@
             {{ form_row(form.actif) }}
             {#<h3>Periodes de validité</h3>#}
             {#{{ form_widget(form.submit) }}#}
-            <ul class="code_promo_periode_validites"
-                data-prototype="{{ form_widget(form.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
+            <ul class="code_promo_periode_validates"
+                data-prototype="{{ form_widget(form.codePromoPeriodeValidates.vars.prototype)|e('html_attr') }}">
                 {# iterate over each existing tag and render its only field: name #}
-                {% for codePromoPeriodeValidite in form.codePromoPeriodeValidites %}
+                {% for codePromoPeriodeValidate in form.codePromoPeriodeValidates %}
                     <li>
-                        {{ form_widget(form.codePromoPeriodeValidites) }}
-                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
-                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+                        {{ form_widget(form.codePromoPeriodeValidates) }}
+                        {#{{ form_row(codePromoPeriodeValidate.dateDebut) }}#}
+                        {#{{ form_row(codePromoPeriodeValidate.dateFin) }}#}
                     </li>
                 {% endfor %}
             </ul>
@@ -48,12 +48,12 @@
         var $collectionHolder;
 
         // setup an "add a tag" link
-        var $addTagLink = $('<a href="#" class="add_code_promo_periode_validites_link">Ajouter</a>');
+        var $addTagLink = $('<a href="#" class="add_code_promo_periode_validates_link">Ajouter</a>');
         var $newLinkLi = $('<li></li>').append($addTagLink);
 
         jQuery(document).ready(function () {
             // Get the ul that holds the collection of tags
-            $collectionHolder = $('ul.code_promo_periode_validites');
+            $collectionHolder = $('ul.code_promo_periode_validates');
 
             // add a delete link to all of the existing tag form li elements
             $collectionHolder.find('li').each(function () {

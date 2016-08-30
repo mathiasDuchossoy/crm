@@ -10,6 +10,7 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_sejour_id:
                         unique: true
+                        onDelete: cascade
             cascade: ['persist','remove']
     fields:
         actifSite:
