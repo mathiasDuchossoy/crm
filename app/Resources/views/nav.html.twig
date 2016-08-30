@@ -279,6 +279,29 @@
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
+        {# ***** CODE PROMO ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'codepromo' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Code promo <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'codepromo' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Code promo</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'codepromo_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('codepromo_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'codepromo_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('codepromo_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN CODE PROMO ***** #}
     </ul>
     {# ***** LOGIN ***** #}
     <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">

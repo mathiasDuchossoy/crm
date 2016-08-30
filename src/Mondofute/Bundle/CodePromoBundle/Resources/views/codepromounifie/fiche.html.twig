@@ -1,0 +1,336 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.codePromos %}
+            {% include '::onglets_sites.html.twig' %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for codePromo in form.codePromos %}
+                    <div id="data_site_{{ codePromo.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ codePromo.vars.value.site.crm | number_format }}">
+                        {{ form_row(codePromo.site) }}
+                        <ul class="nav nav-tabs">
+
+                            {{ form_row(codePromo.libelle, { 'attr' : { 'data-unique_block_prefix' : codePromo.libelle.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.code, { 'attr' : { 'data-unique_block_prefix' : codePromo.code.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.typeRemise, { 'attr' : { 'data-unique_block_prefix' : codePromo.typeRemise.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : codePromo.valeurRemise.vars['unique_block_prefix'] }}) }}
+                            {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
+                            <h4>Periodes de validité</h4>
+                            <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
+                                {# iterate over each existing tag and render its only field: name #}
+                                {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
+                                    <li class="element">
+                                        {{ form_widget(codePromoPeriodeValidite) }}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <h4>Periodes de séjour</h4>
+                            <ul class="code_promo_periode_sejour_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeSejours.vars.prototype)|e('html_attr') }}">
+                                {# iterate over each existing tag and render its only field: name #}
+                                {% for codePromoPeriodeSejour in codePromo.codePromoPeriodeSejours %}
+                                    <li class="element">
+                                        {{ form_widget(codePromoPeriodeSejour) }}
+                                        {#{{ form_row(codePromoPeriodeSejour.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeSejour.dateFin) }}#}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            {#{{ form_row( codePromo.type, { 'attr' : { 'data-unique_block_prefix' : codePromo.type.vars['unique_block_prefix']}}) }}#}
+                            {#{{ form_row( codePromo.familleCodePromo, { 'attr' : { 'data-index' : index,'data-unique_block_prefix' : codePromo.familleCodePromo.vars['unique_block_prefix']}}) }}#}
+                            {#{{ form_row( codePromo.sousFamilleCodePromo , { 'attr' : { 'data-index' : index, 'data-unique_block_prefix' : codePromo.sousFamilleCodePromo.vars['unique_block_prefix']}}) }}#}
+                            {#{% set iTraduc = 0 %}#}
+                            {#{% for traduction in codePromo.traductions %}#}
+                                {#<li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>#}
+                                    {#<a data-toggle="tab"#}
+                                       {#href="#{{ codePromo.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">#}
+                                        {# affiche la langue en fonction de la locale#}
+                                        {#{% for traductionLangue in  traduction.vars.value.langue.traductions %}#}
+                                            {#{% if(traductionLangue.langueTraduction.code == app.request.locale) %}#}
+                                                {#{{ traductionLangue.libelle }}#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
+                                    {#</a>#}
+                                {#</li>#}
+                            {#{% endfor %}#}
+                        </ul>
+                        {#<div class="tab-content">#}
+                            {#{% set iTraduc = 0 %}#}
+                            {#{% for traduction in codePromo.traductions %}#}
+                                {#<div id="{{ codePromo.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
+                                     {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
+                                    {#{% for element in traduction.children %}#}
+                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
+                                    {#{% endfor %}#}
+                                {#</div>#}
+                            {#{% endfor %}#}
+                        {#</div>#}
+                    </div>
+
+                    {% set index = (index + 1) %}
+                {% endfor %}
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_type");
+        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
+        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
+        //        itemNonPersonalisable.push("_codePromo_unifie_codePromos_entry_departement");
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#{% endfor %}#}
+
+        var items = [];
+//        items.push("_prestation_annexe_unifie_codePromos_entry_type");
+//        items.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
+//        items.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
+//        items.push("_codePromo_unifie_codePromos_entry_departement");
+
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+
+        function sortSousFamilleByFamille(element) {
+            $element = $(element);
+            var familleCodePromoId = $element.val();
+            $('[data-unique_block_prefix="_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo"]').each(function (index, select) {
+                $select = $(select);
+                if ($select.data('index') == $element.data('index')) {
+                    $select.find('option').each(function (index, option) {
+                        $option = $(option);
+                        if ($option.data('famille_prestation_annexe_id')) {
+                            if ($option.data('famille_prestation_annexe_id') != familleCodePromoId) {
+                                $option.hide();
+                                $option.prop("selected", false);
+                            }
+                            else {
+                                $option.show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        $('[data-unique_block_prefix="_prestation_annexe_unifie_codePromos_entry_familleCodePromo"]').each(function (index, select) {
+            sortSousFamilleByFamille(select);
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% set elements = {} %}
+        {% for site in sites %}
+            {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+        {% endfor %}
+        {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
+
+        {% for element in elements %}
+
+        var ${{ element }}CollectionHolder;
+
+        // setup an "add a image" link
+        var ${{ element }}AddLink = $('<a href="#" class="add_{{ element }}_link">Ajouter</a>');
+        var ${{ element }}_newLinkLi = $('<li></li>').append(${{ element }}AddLink);
+
+        link.{{ element }} = ${{ element }}_newLinkLi;
+
+        elements.push('{{ element }}');
+        {% endfor %}
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of images
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing image form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a image" anchor and li to the images ul
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input').length);
+
+                window['$' + element + 'AddLink'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new image form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element]);
+                });
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+
+            $('.datepicker ').datepicker();
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
+{% endblock %}

@@ -122,6 +122,8 @@ doctrine:
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -163,6 +165,8 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -201,6 +205,8 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
