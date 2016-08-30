@@ -30,7 +30,7 @@ HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
             type: decimal
             precision: 10
             scale: 2
-        usage:
+        usageCodePromo:
             type: smallint
         actif:
             type: boolean
@@ -42,4 +42,7 @@ HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_validite_id:
                         unique: true
+                        cascade: ['persist','remove']
+            cascade: ['persist','remove']
+#            onDelete: 'cascade'
     lifecycleCallbacks: {  }

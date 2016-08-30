@@ -2,10 +2,13 @@
 
 namespace HiDev\Bundle\CodePromoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * CodePromo
  */
-class CodePromo
+abstract class CodePromo
 {
     /**
      * @var int
@@ -49,6 +52,18 @@ class CodePromo
      * @var boolean
      */
     private $actif;
+    /**
+     * @var Collection
+     */
+    private $codePromoPeriodeValidites;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->codePromoPeriodeValidites = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -250,5 +265,39 @@ class CodePromo
         $this->actif = $actif;
 
         return $this;
+    }
+
+    /**
+     * Add codePromoPeriodeValidite
+     *
+     * @param CodePromoPeriodeValidite $codePromoPeriodeValidite
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoPeriodeValidite(CodePromoPeriodeValidite $codePromoPeriodeValidite)
+    {
+        $this->codePromoPeriodeValidites[] = $codePromoPeriodeValidite;
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoPeriodeValidite
+     *
+     * @param CodePromoPeriodeValidite $codePromoPeriodeValidite
+     */
+    public function removeCodePromoPeriodeValidite(CodePromoPeriodeValidite $codePromoPeriodeValidite)
+    {
+        $this->codePromoPeriodeValidites->removeElement($codePromoPeriodeValidite);
+    }
+
+    /**
+     * Get codePromoPeriodeValidites
+     *
+     * @return Collection
+     */
+    public function getCodePromoPeriodeValidites()
+    {
+        return $this->codePromoPeriodeValidites;
     }
 }

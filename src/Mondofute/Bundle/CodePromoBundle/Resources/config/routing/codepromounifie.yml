@@ -1,6 +1,6 @@
 codepromo_index:
-    path:     /
-    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:index" }
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:index", page: 1 , maxPerPage: %max_per_page% }
     methods:  GET
 
 codepromo_show:

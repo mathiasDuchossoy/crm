@@ -8,6 +8,8 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     oneToMany:
         codePromos:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo

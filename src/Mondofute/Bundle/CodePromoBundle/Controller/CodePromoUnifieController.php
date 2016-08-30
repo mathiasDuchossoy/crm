@@ -5,9 +5,12 @@ namespace Mondofute\Bundle\CodePromoBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Exception;
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -40,7 +43,7 @@ class CodePromoUnifieController extends Controller
             ->countTotal();
         $pagination = array(
             'page' => $page,
-            'route' => 'codePromo_index',
+            'route' => 'codepromo_index',
             'pages_count' => ceil($count / $maxPerPage),
             'route_params' => array(),
             'max_per_page' => $maxPerPage
@@ -87,13 +90,21 @@ class CodePromoUnifieController extends Controller
             /** @var CodePromo $codePromo */
             foreach ($codePromoUnifie->getCodePromos() as $codePromo){
                 if(false === in_array($codePromo->getSite()->getId(),$sitesAEnregistrer)){
-                    $codePromo->setActif(false);
+                    $codePromo->setActifSite(false);
                 }
             }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($codePromoUnifie);
-            $em->flush();
+
+            try {
+                $em->flush();
+            } catch (Exception $e) {
+                $this->addFlash('error', "Add not done: " . $e->getMessage());
+                $referer = $request->headers->get('referer');
+
+                return $this->redirect($referer);
+            }
 
             $this->copieVersSites($codePromoUnifie);
 
@@ -173,30 +184,6 @@ class CodePromoUnifieController extends Controller
                 $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
                 $site = $emSite->find(Site::class , $entity->getSite());
 
-                // *** gestion du type ***
-                if (!empty($entity->getType())) {
-                    $type = $entity->getType();
-                } else {
-                    $type = null;
-                }
-                // *** fin gestion du type ***
-
-                // *** gestion famille prestation annexe ***
-                if (!empty($entity->getFamilleCodePromo())){
-                    $famille    = $emSite->find(FamilleCodePromo::class,$entity->getFamilleCodePromo());
-                }else{
-                    $famille    = null;
-                }
-                // *** fin gestion famille prestation annexe ***
-
-                // *** gestion sous-famille prestation annexe ***
-                if (!empty($entity->getSousFamilleCodePromo())){
-                    $sousFamille    = $emSite->find(SousFamilleCodePromo::class,$entity->getSousFamilleCodePromo());
-                }else{
-                    $sousFamille    = null;
-                }
-                // *** fin gestion sous-famille prestation annexe ***
-
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (empty($entityUnifieSite = $emSite->find(CodePromoUnifie::class , $entityUnifie))) {
@@ -215,18 +202,99 @@ class CodePromoUnifieController extends Controller
                     $entityUnifieSite->addCodePromo($entitySite);
                 }
 
+//                 *** gestion code promo periode validité ***
+                if (!empty($entity->getCodePromoPeriodeValidites()) && !$entity->getCodePromoPeriodeValidites()->isEmpty()){
+                    /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
+                    foreach ($entity->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                        $codePromoPeriodeValiditeSite = $entitySite->getCodePromoPeriodeValidites()->filter(function (CodePromoPeriodeValidite $element) use ($codePromoPeriodeValidite){
+                            return $element->getId() == $codePromoPeriodeValidite->getId();
+                        })->first();
+                        if(false === $codePromoPeriodeValiditeSite){
+                            $codePromoPeriodeValiditeSite = new CodePromoPeriodeValidite();
+                            $entitySite->addCodePromoPeriodeValidite($codePromoPeriodeValiditeSite);
+                            $codePromoPeriodeValiditeSite
+                                ->setId($codePromoPeriodeValidite->getId())
+                            ;
+
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoPeriodeValiditeSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $codePromoPeriodeValiditeSite
+                            ->setDateDebut($codePromoPeriodeValidite->getDateDebut())
+                            ->setDateFin($codePromoPeriodeValidite->getDateFin())
+                        ;
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoPeriodeValidites()) && !$entitySite->getCodePromoPeriodeValidites()->isEmpty()){
+                    /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
+                    foreach ($entitySite->getCodePromoPeriodeValidites() as $codePromoPeriodeValiditeSite){
+                        $codePromoPeriodeValidite = $entity->getCodePromoPeriodeValidites()->filter(function (CodePromoPeriodeValidite $element) use ($codePromoPeriodeValiditeSite){
+                            return $element->getId() == $codePromoPeriodeValiditeSite->getId();
+                        })->first();
+                        if(false === $codePromoPeriodeValidite){
+                            $entitySite->removeCodePromoPeriodeValidite($codePromoPeriodeValiditeSite);
+                            $emSite->remove($codePromoPeriodeValiditeSite);
+                        }
+                    }
+                }
+//                 *** fin code promo periode validité ***
+
+                // *** gestion code promo periode séjour ***
+                if (!empty($entity->getCodePromoPeriodeSejours()) && !$entity->getCodePromoPeriodeSejours()->isEmpty()){
+                    /** @var CodePromoPeriodeSejour $codePromoPeriodeSejour */
+                    foreach ($entity->getCodePromoPeriodeSejours() as $codePromoPeriodeSejour){
+                        $codePromoPeriodeSejourSite = $entitySite->getCodePromoPeriodeSejours()->filter(function (CodePromoPeriodeSejour $element) use ($codePromoPeriodeSejour){
+                            return $element->getId() == $codePromoPeriodeSejour->getId();
+                        })->first();
+                        if(false === $codePromoPeriodeSejourSite){
+                            $codePromoPeriodeSejourSite = new CodePromoPeriodeSejour();
+                            $entitySite->addCodePromoPeriodeSejour($codePromoPeriodeSejourSite);
+                            $codePromoPeriodeSejourSite
+                                ->setId($codePromoPeriodeSejour->getId())
+                            ;
+
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoPeriodeSejourSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $codePromoPeriodeSejourSite
+                            ->setDateDebut($codePromoPeriodeSejour->getDateDebut())
+                            ->setDateFin($codePromoPeriodeSejour->getDateFin())
+                        ;
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoPeriodeSejours()) && !$entitySite->getCodePromoPeriodeSejours()->isEmpty()){
+                    /** @var CodePromoPeriodeSejour $codePromoPeriodeSejour */
+                    foreach ($entitySite->getCodePromoPeriodeSejours() as $codePromoPeriodeSejourSite){
+                        $codePromoPeriodeSejour = $entity->getCodePromoPeriodeSejours()->filter(function (CodePromoPeriodeSejour $element) use ($codePromoPeriodeSejourSite){
+                            return $element->getId() == $codePromoPeriodeSejourSite->getId();
+                        })->first();
+                        if(false === $codePromoPeriodeSejour){
+                            $entitySite->removeCodePromoPeriodeSejour($codePromoPeriodeSejourSite);
+                            $emSite->remove($codePromoPeriodeSejourSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo periode séjour ***
+
                 //  copie des données codePromo
                 $entitySite
-                    ->setType($type)
-                    ->setFamilleCodePromo($famille)
-                    ->setSousFamilleCodePromo($sousFamille)
+                    ->setActifSite($entity->getActifSite())
+                    ->setLibelle($entity->getLibelle())
+                    ->setCode($entity->getCode())
+                    ->setValeurRemise($entity->getValeurRemise())
+                    ->setPrixMini($entity->getPrixMini())
                     ->setActif($entity->getActif())
+                    ->setClientAffectation($entity->getClientAffectation())
+                    ->setTypeRemise($entity->getTypeRemise())
+                    ->setUsageCodePromo($entity->getUsageCodePromo())
                 ;
 
                 $emSite->persist($entityUnifieSite);
 
                 $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
-                $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
                 $emSite->flush();
             }
@@ -278,7 +346,7 @@ class CodePromoUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var CodePromo $codePromo */
             foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
-                if ($codePromo->getActif()){
+                if ($codePromo->getActifSite()){
                     array_push($sitesAEnregistrer, $codePromo->getSite()->getId());
                 }
             }
@@ -292,6 +360,18 @@ class CodePromoUnifieController extends Controller
         $this->codePromosSortByAffichage($codePromoUnifie);
         $deleteForm = $this->createDeleteForm($codePromoUnifie);
 
+        $originalCodePromoPeriodeValidites   = new ArrayCollection();
+        $originalCodePromoPeriodeSejours   = new ArrayCollection();
+
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo){
+            foreach ($codePromo->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                $originalCodePromoPeriodeValidites->add($codePromoPeriodeValidite);
+            }
+            foreach ($codePromo->getCodePromoPeriodeSejours() as $codePromoPeriodeSejour){
+                $originalCodePromoPeriodeSejours->add($codePromoPeriodeSejour);
+            }
+        }
+
         $editForm = $this->createForm('Mondofute\Bundle\CodePromoBundle\Form\CodePromoUnifieType',
             $codePromoUnifie)
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
@@ -301,11 +381,49 @@ class CodePromoUnifieController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($codePromoUnifie->getCodePromos() as $codePromo){
                 if(false === in_array($codePromo->getSite()->getId(),$sitesAEnregistrer)){
-                    $codePromo->setActif(false);
+                    $codePromo->setActifSite(false);
                 }else{
-                    $codePromo->setActif(true);
+                    $codePromo->setActifSite(true);
                 }
             }
+
+            // *** gestion de code promo periode sejour ***
+            $editCodePromoPeriodeValidites   = new ArrayCollection();
+
+            foreach ($codePromoUnifie->getCodePromos() as $codePromo){
+                foreach ($codePromo->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                    $editCodePromoPeriodeValidites->add($codePromoPeriodeValidite);
+                }
+            }
+
+            foreach ($originalCodePromoPeriodeValidites as $originalCodePromoPeriodeValidite){
+                $editCodePromoPeriodeValidite   = $editCodePromoPeriodeValidites->filter(function (CodePromoPeriodeValidite $element)use ($originalCodePromoPeriodeValidite){
+                    return $element == $originalCodePromoPeriodeValidite;
+                })->first();
+                if(false === $editCodePromoPeriodeValidite){
+                    $em->remove($originalCodePromoPeriodeValidite);
+                }
+            }
+            // *** fin gestion de code promo periode validite ***
+
+            // *** gestion de code promo periode sejour ***
+            $editCodePromoPeriodeSejours   = new ArrayCollection();
+
+            foreach ($codePromoUnifie->getCodePromos() as $codePromo){
+                foreach ($codePromo->getCodePromoPeriodeSejours() as $codePromoPeriodeSejour){
+                    $editCodePromoPeriodeSejours->add($codePromoPeriodeSejour);
+                }
+            }
+
+            foreach ($originalCodePromoPeriodeSejours as $originalCodePromoPeriodeSejour){
+                $editCodePromoPeriodeSejour   = $editCodePromoPeriodeSejours->filter(function (CodePromoPeriodeSejour $element)use ($originalCodePromoPeriodeSejour){
+                    return $element == $originalCodePromoPeriodeSejour;
+                })->first();
+                if(false === $editCodePromoPeriodeSejour){
+                    $em->remove($originalCodePromoPeriodeSejour);
+                }
+            }
+            // *** fin gestion de code promo periode sejour ***
 
             $em->persist($codePromoUnifie);
             $em->flush();
