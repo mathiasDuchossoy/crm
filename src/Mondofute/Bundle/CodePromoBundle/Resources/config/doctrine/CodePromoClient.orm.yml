@@ -17,7 +17,8 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient:
                 default: false
     manyToOne:
         codePromo:
-            targetEntity: HiDev\Bundle\CodePromoBundle\Entity\CodePromo
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+            inversedBy: codePromoClients
         client:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
         codePromoPeriodeValidite:

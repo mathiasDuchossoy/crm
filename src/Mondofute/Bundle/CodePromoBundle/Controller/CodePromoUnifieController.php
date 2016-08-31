@@ -104,18 +104,23 @@ class CodePromoUnifieController extends Controller
 
             try {
                 $em->flush();
-            } catch (Exception $e) {
-                $this->addFlash('error', "Add not done: " . $e->getMessage());
-                $referer = $request->headers->get('referer');
 
-                return $this->redirect($referer);
+                $this->copieVersSites($codePromoUnifie);
+
+                $this->addFlash('success','Le code promo a bien été créé.');
+
+                return $this->redirectToRoute('codepromo_edit', array('id' => $codePromoUnifie->getId()));
+            } catch (Exception $e) {
+                switch ($e->getCode()){
+                    case 0:
+                        $this->addFlash('error', "Le code " . $codePromoUnifie->getCode() . " existe déjà.");
+                        break;
+                    default:
+                        $this->addFlash('error', "Add not done: " . $e->getMessage());
+                        break;
+                }
             }
 
-            $this->copieVersSites($codePromoUnifie);
-
-            $this->addFlash('success','Le code promo a bien été créé.');
-
-            return $this->redirectToRoute('codepromo_edit', array('id' => $codePromoUnifie->getId()));
         }
 
         return $this->render('@MondofuteCodePromo/codepromounifie/new.html.twig', array(
