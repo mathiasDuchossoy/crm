@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
-use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidate;
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class CodePromoUnifieController extends Controller
 {
-    const CodePromoPeriodeValidate = "HiDev\\Bundle\\CodePromoBundle\\Entity\\CodePromoPeriodeValidate";
+    const CodePromoPeriodeValidite = "HiDev\\Bundle\\CodePromoBundle\\Entity\\CodePromoPeriodeValidite";
     /**
      * Lists all CodePromoUnifie entities.
      *
@@ -97,7 +97,7 @@ class CodePromoUnifieController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $this->addCodePromoPeriode($codePromoUnifie , 'Validate' , CodePromoPeriodeValidate::class );
+            $this->addCodePromoPeriode($codePromoUnifie , 'Validite' , CodePromoPeriodeValidite::class );
             $this->addCodePromoPeriode($codePromoUnifie , 'Sejour' , CodePromoPeriodeSejour::class );
 
             $em->persist($codePromoUnifie);
@@ -209,38 +209,38 @@ class CodePromoUnifieController extends Controller
                 }
 
 //                 *** gestion code promo periode validité ***
-                if (!empty($entity->getCodePromoPeriodeValidates()) && !$entity->getCodePromoPeriodeValidates()->isEmpty()){
-                    /** @var CodePromoPeriodeValidate $codePromoPeriodeValidate */
-                    foreach ($entity->getCodePromoPeriodeValidates() as $codePromoPeriodeValidate){
-                        $codePromoPeriodeValidateSite = $entitySite->getCodePromoPeriodeValidates()->filter(function (CodePromoPeriodeValidate $element) use ($codePromoPeriodeValidate){
-                            return $element->getId() == $codePromoPeriodeValidate->getId();
+                if (!empty($entity->getCodePromoPeriodeValidites()) && !$entity->getCodePromoPeriodeValidites()->isEmpty()){
+                    /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
+                    foreach ($entity->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                        $codePromoPeriodeValiditeSite = $entitySite->getCodePromoPeriodeValidites()->filter(function (CodePromoPeriodeValidite $element) use ($codePromoPeriodeValidite){
+                            return $element->getId() == $codePromoPeriodeValidite->getId();
                         })->first();
-                        if(false === $codePromoPeriodeValidateSite){
-                            $codePromoPeriodeValidateSite = new CodePromoPeriodeValidate();
-                            $entitySite->addCodePromoPeriodeValidate($codePromoPeriodeValidateSite);
-                            $codePromoPeriodeValidateSite
-                                ->setId($codePromoPeriodeValidate->getId())
+                        if(false === $codePromoPeriodeValiditeSite){
+                            $codePromoPeriodeValiditeSite = new CodePromoPeriodeValidite();
+                            $entitySite->addCodePromoPeriodeValidite($codePromoPeriodeValiditeSite);
+                            $codePromoPeriodeValiditeSite
+                                ->setId($codePromoPeriodeValidite->getId())
                             ;
 
-                            $metadata = $emSite->getClassMetadata(get_class($codePromoPeriodeValidateSite));
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoPeriodeValiditeSite));
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
-                        $codePromoPeriodeValidateSite
-                            ->setDateDebut($codePromoPeriodeValidate->getDateDebut())
-                            ->setDateFin($codePromoPeriodeValidate->getDateFin())
+                        $codePromoPeriodeValiditeSite
+                            ->setDateDebut($codePromoPeriodeValidite->getDateDebut())
+                            ->setDateFin($codePromoPeriodeValidite->getDateFin())
                         ;
                     }
                 }
 
-                if (!empty($entitySite->getCodePromoPeriodeValidates()) && !$entitySite->getCodePromoPeriodeValidates()->isEmpty()){
-                    /** @var CodePromoPeriodeValidate $codePromoPeriodeValidate */
-                    foreach ($entitySite->getCodePromoPeriodeValidates() as $codePromoPeriodeValidateSite){
-                        $codePromoPeriodeValidate = $entity->getCodePromoPeriodeValidates()->filter(function (CodePromoPeriodeValidate $element) use ($codePromoPeriodeValidateSite){
-                            return $element->getId() == $codePromoPeriodeValidateSite->getId();
+                if (!empty($entitySite->getCodePromoPeriodeValidites()) && !$entitySite->getCodePromoPeriodeValidites()->isEmpty()){
+                    /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
+                    foreach ($entitySite->getCodePromoPeriodeValidites() as $codePromoPeriodeValiditeSite){
+                        $codePromoPeriodeValidite = $entity->getCodePromoPeriodeValidites()->filter(function (CodePromoPeriodeValidite $element) use ($codePromoPeriodeValiditeSite){
+                            return $element->getId() == $codePromoPeriodeValiditeSite->getId();
                         })->first();
-                        if(false === $codePromoPeriodeValidate){
-//                            $entitySite->removeCodePromoPeriodeValidate($codePromoPeriodeValidateSite);
-                            $emSite->remove($codePromoPeriodeValidateSite);
+                        if(false === $codePromoPeriodeValidite){
+//                            $entitySite->removeCodePromoPeriodeValidite($codePromoPeriodeValiditeSite);
+                            $emSite->remove($codePromoPeriodeValiditeSite);
                         }
                     }
                 }
@@ -367,12 +367,12 @@ class CodePromoUnifieController extends Controller
         $this->codePromosSortByAffichage($codePromoUnifie);
         $deleteForm = $this->createDeleteForm($codePromoUnifie);
 
-        $originalCodePromoPeriodeValidates   = new ArrayCollection();
+        $originalCodePromoPeriodeValidites   = new ArrayCollection();
         $originalCodePromoPeriodeSejours   = new ArrayCollection();
 
         foreach ($codePromoUnifie->getCodePromos() as $codePromo){
-            foreach ($codePromo->getCodePromoPeriodeValidates() as $codePromoPeriodeValidate){
-                $originalCodePromoPeriodeValidates->add($codePromoPeriodeValidate);
+            foreach ($codePromo->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                $originalCodePromoPeriodeValidites->add($codePromoPeriodeValidite);
             }
             foreach ($codePromo->getCodePromoPeriodeSejours() as $codePromoPeriodeSejour){
                 $originalCodePromoPeriodeSejours->add($codePromoPeriodeSejour);
@@ -394,26 +394,26 @@ class CodePromoUnifieController extends Controller
                 }
             }
 
-            // *** gestion de code promo periode validate ***
-            $editCodePromoPeriodeValidates   = new ArrayCollection();
+            // *** gestion de code promo periode validite ***
+            $editCodePromoPeriodeValidites   = new ArrayCollection();
 
             foreach ($codePromoUnifie->getCodePromos() as $codePromo){
-                foreach ($codePromo->getCodePromoPeriodeValidates() as $codePromoPeriodeValidate){
-                    $editCodePromoPeriodeValidates->add($codePromoPeriodeValidate);
+                foreach ($codePromo->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                    $editCodePromoPeriodeValidites->add($codePromoPeriodeValidite);
                 }
             }
 
-            foreach ($originalCodePromoPeriodeValidates as $originalCodePromoPeriodeValidate){
-                $editCodePromoPeriodeValidate   = $editCodePromoPeriodeValidates->filter(function (CodePromoPeriodeValidate $element)use ($originalCodePromoPeriodeValidate){
-                    return $element == $originalCodePromoPeriodeValidate;
+            foreach ($originalCodePromoPeriodeValidites as $originalCodePromoPeriodeValidite){
+                $editCodePromoPeriodeValidite   = $editCodePromoPeriodeValidites->filter(function (CodePromoPeriodeValidite $element)use ($originalCodePromoPeriodeValidite){
+                    return $element == $originalCodePromoPeriodeValidite;
                 })->first();
-                if(false === $editCodePromoPeriodeValidate){
-                    $em->remove($originalCodePromoPeriodeValidate);
+                if(false === $editCodePromoPeriodeValidite){
+                    $em->remove($originalCodePromoPeriodeValidite);
                 }
             }
 
-            $this->addCodePromoPeriode($codePromoUnifie , 'Validate' , CodePromoPeriodeValidate::class );
-            // *** fin gestion de code promo periode validate ***
+            $this->addCodePromoPeriode($codePromoUnifie , 'Validite' , CodePromoPeriodeValidite::class );
+            // *** fin gestion de code promo periode validite ***
 
             // *** gestion de code promo periode sejour ***
             $editCodePromoPeriodeSejours   = new ArrayCollection();
@@ -510,7 +510,7 @@ class CodePromoUnifieController extends Controller
                     (empty($codePromo->$getCodePromoPeriodes()) ||
                         $codePromo->$getCodePromoPeriodes()->isEmpty())
                 ){
-//                    /** @var CodePromoPeriode $codePromoPeriodeValidate */
+//                    /** @var CodePromoPeriode $codePromoPeriodeValidite */
                     foreach ($entityCrm->$getCodePromoPeriodes() as $codePromoPeriode){
                         $codePromoPeriodeSite = new $CodePromoPeriode();
                         $codePromo->$addCodePromoPeriode($codePromoPeriodeSite);

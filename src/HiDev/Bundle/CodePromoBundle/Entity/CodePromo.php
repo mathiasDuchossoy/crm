@@ -51,14 +51,14 @@ abstract class CodePromo
     /**
      * @var Collection
      */
-    private $codePromoPeriodeValidates;
+    private $codePromoPeriodeValidites;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->codePromoPeriodeValidates = new ArrayCollection();
+        $this->codePromoPeriodeValidites = new ArrayCollection();
     }
 
     /**
@@ -240,37 +240,37 @@ abstract class CodePromo
     }
 
     /**
-     * Add codePromoPeriodeValidate
+     * Add codePromoPeriodeValidite
      *
-     * @param CodePromoPeriodeValidate $codePromoPeriodeValidate
+     * @param CodePromoPeriodeValidite $codePromoPeriodeValidite
      *
      * @return CodePromo
      */
-    public function addCodePromoPeriodeValidate(CodePromoPeriodeValidate $codePromoPeriodeValidate)
+    public function addCodePromoPeriodeValidite(CodePromoPeriodeValidite $codePromoPeriodeValidite)
     {
-        $this->codePromoPeriodeValidates[] = $codePromoPeriodeValidate;
+        $this->codePromoPeriodeValidites[] = $codePromoPeriodeValidite;
 
         return $this;
     }
 
     /**
-     * Remove codePromoPeriodeValidate
+     * Remove codePromoPeriodeValidite
      *
-     * @param CodePromoPeriodeValidate $codePromoPeriodeValidate
+     * @param CodePromoPeriodeValidite $codePromoPeriodeValidite
      */
-    public function removeCodePromoPeriodeValidate(CodePromoPeriodeValidate $codePromoPeriodeValidate)
+    public function removeCodePromoPeriodeValidite(CodePromoPeriodeValidite $codePromoPeriodeValidite)
     {
-        $this->codePromoPeriodeValidates->removeElement($codePromoPeriodeValidate);
+        $this->codePromoPeriodeValidites->removeElement($codePromoPeriodeValidite);
     }
 
     /**
-     * Get codePromoPeriodeValidates
+     * Get codePromoPeriodeValidites
      *
      * @return Collection
      */
-    public function getCodePromoPeriodeValidates()
+    public function getCodePromoPeriodeValidites()
     {
-        return $this->codePromoPeriodeValidates;
+        return $this->codePromoPeriodeValidites;
     }
     /**
      * @var integer
