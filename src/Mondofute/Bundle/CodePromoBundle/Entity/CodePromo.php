@@ -17,6 +17,10 @@ class CodePromo extends BaseCodePromo
      */
     protected $id;
     /**
+     * @var string
+     */
+    protected $code;
+    /**
      * @var Collection
      */
     private $codePromoPeriodeSejours;
@@ -32,11 +36,34 @@ class CodePromo extends BaseCodePromo
      * @var boolean
      */
     private $actifSite = true;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoClients;
 
     public function __construct()
     {
         parent::__construct();
         $this->codePromoPeriodeSejours = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
     }
 
     /**
@@ -153,5 +180,39 @@ class CodePromo extends BaseCodePromo
         $this->actifSite = $actifSite;
 
         return $this;
+    }
+
+    /**
+     * Add codePromoClient
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients[] = $codePromoClient;
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoClient
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     */
+    public function removeCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients->removeElement($codePromoClient);
+    }
+
+    /**
+     * Get codePromoClients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoClients()
+    {
+        return $this->codePromoClients;
     }
 }
