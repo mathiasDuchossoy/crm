@@ -17,6 +17,7 @@
             {% include '::coches_sites.html.twig' %}
 
             {% set mesSites = form.codePromos %}
+            {{ form_row(form.code) }}
             {% include '::onglets_sites.html.twig' %}
 
             <div class="tab-content" style="padding:20px;">
@@ -28,9 +29,7 @@
                          data-crm="{{ codePromo.vars.value.site.crm | number_format }}">
                         {{ form_row(codePromo.site) }}
                         <ul class="nav nav-tabs">
-
                             {{ form_row(codePromo.libelle, { 'attr' : { 'data-unique_block_prefix' : codePromo.libelle.vars['unique_block_prefix']}}) }}
-                            {{ form_row(codePromo.code, { 'attr' : { 'data-unique_block_prefix' : codePromo.code.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.typeRemise, { 'attr' : { 'data-unique_block_prefix' : codePromo.typeRemise.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : codePromo.valeurRemise.vars['unique_block_prefix'] }}) }}
@@ -38,14 +37,14 @@
                             {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
                             <h4>Periodes de validité</h4>
-                            <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
-                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
+                            <ul class="code_promo_periode_validate_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidates.vars.prototype)|e('html_attr') }}">
                                 {# iterate over each existing tag and render its only field: name #}
-                                {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
+                                {% for codePromoPeriodeValidate in codePromo.codePromoPeriodeValidates %}
                                     <li class="element">
-                                        {{ form_widget(codePromoPeriodeValidite) }}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+                                        {{ form_widget(codePromoPeriodeValidate) }}
+                                        {#{{ form_row(codePromoPeriodeValidate.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeValidate.dateFin) }}#}
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -62,36 +61,7 @@
                                     </li>
                                 {% endfor %}
                             </ul>
-
-                            {#{{ form_row( codePromo.type, { 'attr' : { 'data-unique_block_prefix' : codePromo.type.vars['unique_block_prefix']}}) }}#}
-                            {#{{ form_row( codePromo.familleCodePromo, { 'attr' : { 'data-index' : index,'data-unique_block_prefix' : codePromo.familleCodePromo.vars['unique_block_prefix']}}) }}#}
-                            {#{{ form_row( codePromo.sousFamilleCodePromo , { 'attr' : { 'data-index' : index, 'data-unique_block_prefix' : codePromo.sousFamilleCodePromo.vars['unique_block_prefix']}}) }}#}
-                            {#{% set iTraduc = 0 %}#}
-                            {#{% for traduction in codePromo.traductions %}#}
-                                {#<li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>#}
-                                    {#<a data-toggle="tab"#}
-                                       {#href="#{{ codePromo.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">#}
-                                        {# affiche la langue en fonction de la locale#}
-                                        {#{% for traductionLangue in  traduction.vars.value.langue.traductions %}#}
-                                            {#{% if(traductionLangue.langueTraduction.code == app.request.locale) %}#}
-                                                {#{{ traductionLangue.libelle }}#}
-                                            {#{% endif %}#}
-                                        {#{% endfor %}#}
-                                    {#</a>#}
-                                {#</li>#}
-                            {#{% endfor %}#}
                         </ul>
-                        {#<div class="tab-content">#}
-                            {#{% set iTraduc = 0 %}#}
-                            {#{% for traduction in codePromo.traductions %}#}
-                                {#<div id="{{ codePromo.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
-                                     {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
-                                    {#{% for element in traduction.children %}#}
-                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
-                                    {#{% endfor %}#}
-                                {#</div>#}
-                            {#{% endfor %}#}
-                        {#</div>#}
                     </div>
 
                     {% set index = (index + 1) %}
@@ -252,9 +222,9 @@
         var link = {};
         {% set elements = {} %}
         {% for site in sites %}
-            {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+            {% set elements = elements|merge( ['code_promo_periode_validate_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
         {% endfor %}
-        {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
+        {#{% set elements = ['code_promo_periode_validate' , 'code_promo_periode_sejour'] %}#}
 
         {% for element in elements %}
 

@@ -19,6 +19,10 @@ class CodePromoUnifie
      * @var Collection
      */
     private $codePromos;
+    /**
+     * @var string
+     */
+    private $code;
 
     /**
      * Constructor
@@ -93,6 +97,30 @@ class CodePromoUnifie
     public function addCodePromo(CodePromo $codePromo)
     {
         $this->codePromos[] = $codePromo->setCodePromoUnifie($this);
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return CodePromoUnifie
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
 
         return $this;
     }

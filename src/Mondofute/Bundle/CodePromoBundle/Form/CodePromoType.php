@@ -24,7 +24,6 @@ class CodePromoType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('code')
             ->add('clientAffectation', ChoiceType::class, array(
                 'choices'       => array(
                     ClientAffectation::tous      => ClientAffectation::getLibelle(ClientAffectation::tous),
@@ -53,8 +52,8 @@ class CodePromoType extends AbstractType
                 'label'         => 'Usage'
             ))
             ->add('actif')
-            ->add('codePromoPeriodeValidites', CollectionType::class, array(
-                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType',
+            ->add('codePromoPeriodeValidates', CollectionType::class, array(
+                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValidateType',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Périodes de validité',
