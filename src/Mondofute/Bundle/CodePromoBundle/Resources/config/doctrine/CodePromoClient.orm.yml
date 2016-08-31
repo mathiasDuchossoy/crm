@@ -1,0 +1,25 @@
+Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoClientRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        utilise:
+            type: boolean
+            options:
+                default: false
+    manyToOne:
+        codePromo:
+            targetEntity: HiDev\Bundle\CodePromoBundle\Entity\CodePromo
+        client:
+            targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
+        codePromoPeriodeValidite:
+            targetEntity: HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite
+    lifecycleCallbacks: {  }
