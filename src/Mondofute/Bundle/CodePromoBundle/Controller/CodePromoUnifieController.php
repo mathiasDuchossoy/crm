@@ -283,12 +283,13 @@ class CodePromoUnifieController extends Controller
                     }
                 }
                 // *** fin gestion code promo periode séjour ***
-
+                $entityUnifieSite
+                    ->setCode($entityUnifie->getCode())
+                ;
                 //  copie des données codePromo
                 $entitySite
                     ->setActifSite($entity->getActifSite())
                     ->setLibelle($entity->getLibelle())
-                    ->setCode($entity->getCode())
                     ->setValeurRemise($entity->getValeurRemise())
                     ->setPrixMini($entity->getPrixMini())
                     ->setActif($entity->getActif())
