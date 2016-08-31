@@ -24,7 +24,6 @@ class CodePromoType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('code')
             ->add('clientAffectation', ChoiceType::class, array(
                 'choices'       => array(
                     ClientAffectation::tous      => ClientAffectation::getLibelle(ClientAffectation::tous),

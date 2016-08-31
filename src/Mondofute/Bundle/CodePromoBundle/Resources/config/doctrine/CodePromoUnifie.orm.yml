@@ -10,6 +10,11 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        code:
+            type: string
+            length: 255
+            unique: true
     oneToMany:
         codePromos:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
