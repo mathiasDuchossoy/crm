@@ -5,6 +5,10 @@ namespace Mondofute\Bundle\CodePromoBundle\Form;
 use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
 use HiDev\Bundle\CodePromoBundle\Entity\TypeRemise;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\ClientBundle\Repository\ClientRepository;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,6 +26,7 @@ class CodePromoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $clients = $options['clients'];
         $builder
             ->add('libelle')
             ->add('clientAffectation', ChoiceType::class, array(
@@ -68,6 +73,16 @@ class CodePromoType extends AbstractType
                     'by_reference' => false,
                 )
             )
+
+            ->add('codePromoClients', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoClientType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => " --- choisir un client ---",
+                    'by_reference' => false,
+                    'mapped'    => false
+                )
+            )
             ->add('site', HiddenType::class, array('mapped' => false))
         ;
     }
@@ -78,7 +93,8 @@ class CodePromoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromo'
+            'data_class'    => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromo',
+            'clients'       => array()
         ));
     }
 }
