@@ -212,30 +212,35 @@ class CodePromoUnifieController extends Controller
                 if($entity->getUsageCodePromo() == Usage::uniqueParPeriode){
                     foreach ($entity->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
                         foreach ($clients as $client){
-                            $codePromoClientExists = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
+                            $codePromoClient = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
                                 return $element->getClient()->getId() == $client;
                             })->first();
-                            if(false === $codePromoClientExists){
+                            if(false === $codePromoClient){
                                 $codePromoClient = new CodePromoClient();
                                 $entity->addCodePromoClient($codePromoClient);
                                 $codePromoClient
                                     ->setClient($em->find(Client::class, $client))
-                                    ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
                                 ;
                             }
+                            $codePromoClient
+                                ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
+                            ;
                         }
                     }
                 }
                 else{
                     foreach ($clients as $client){
-                        $codePromoClientExists = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
+                        $codePromoClient = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
                             return $element->getClient()->getId() == $client;
                         })->first();
-                        if(false === $codePromoClientExists) {
+                        if(false === $codePromoClient) {
                             $codePromoClient = new CodePromoClient();
                             $entity->addCodePromoClient($codePromoClient);
                             $codePromoClient->setClient($em->find(Client::class, $client));
                         }
+                        $codePromoClient
+                            ->setCodePromoPeriodeValidite(null)
+                        ;
                     }
                 }
             }
