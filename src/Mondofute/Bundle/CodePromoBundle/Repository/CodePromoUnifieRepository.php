@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Repository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
 
 /**
  * CodePromoUnifieRepository
@@ -49,4 +50,32 @@ class CodePromoUnifieRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+    /**
+     * @param CodePromoUnifie $codePromoUnifie
+     * @return mixed
+     */
+    public function getCodePromoUnifieByCode($codePromoUnifie){
+        $qb = $this->createQueryBuilder('entity')
+            ->select('COUNT(entity)')
+            ->where('entity.code = :code')
+            ->setParameter('code' , $codePromoUnifie->getCode())
+        ;
+
+        if (!empty($codePromoUnifie->getId())){
+            $qb
+                ->andWhere('entity.id != :codePromoUnifieId')
+                ->setParameter('codePromoUnifieId' , $codePromoUnifie->getId())
+            ;
+        }
+
+//        $qb
+//            ->getQuery()
+//            ->getSingleScalarResult()
+//        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
 }

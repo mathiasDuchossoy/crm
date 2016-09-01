@@ -2,16 +2,9 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoRepository
-    manyToMany:
-        codePromoPeriodeSejours:
-            targetEntity: CodePromoPeriodeSejour
-            joinTable:
-                name: ~
-                inverseJoinColumns:
-                    code_promo_periode_sejour_id:
-                        unique: true
-                        onDelete: cascade
-            cascade: ['persist','remove']
+    attributeOverride:
+        code:
+            nullable: true
     fields:
         actifSite:
             type: boolean
@@ -23,4 +16,19 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
             inversedBy: codePromos
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+    oneToMany:
+        codePromoClients:
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient
+            mappedBy: codePromo
+            cascade: ['persist','remove']
+    manyToMany:
+        codePromoPeriodeSejours:
+            targetEntity: CodePromoPeriodeSejour
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_sejour_id:
+                        unique: true
+                        onDelete: cascade
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
 
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
+
 /**
  * CodePromoClient
  */
@@ -16,15 +19,15 @@ class CodePromoClient
      */
     private $utilise = false;
     /**
-     * @var \HiDev\Bundle\CodePromoBundle\Entity\CodePromo
+     * @var CodePromo
      */
     private $codePromo;
     /**
-     * @var \Mondofute\Bundle\ClientBundle\Entity\Client
+     * @var Client
      */
     private $client;
     /**
-     * @var \HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite
+     * @var CodePromoPeriodeValidite
      */
     private $codePromoPeriodeValidite;
 
@@ -36,6 +39,12 @@ class CodePromoClient
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id){
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -65,7 +74,7 @@ class CodePromoClient
     /**
      * Get codePromo
      *
-     * @return \HiDev\Bundle\CodePromoBundle\Entity\CodePromo
+     * @return CodePromo
      */
     public function getCodePromo()
     {
@@ -75,11 +84,11 @@ class CodePromoClient
     /**
      * Set codePromo
      *
-     * @param \HiDev\Bundle\CodePromoBundle\Entity\CodePromo $codePromo
+     * @param CodePromo $codePromo
      *
      * @return CodePromoClient
      */
-    public function setCodePromo(\HiDev\Bundle\CodePromoBundle\Entity\CodePromo $codePromo = null)
+    public function setCodePromo(CodePromo $codePromo = null)
     {
         $this->codePromo = $codePromo;
 
@@ -89,7 +98,7 @@ class CodePromoClient
     /**
      * Get client
      *
-     * @return \Mondofute\Bundle\ClientBundle\Entity\Client
+     * @return Client
      */
     public function getClient()
     {
@@ -99,11 +108,11 @@ class CodePromoClient
     /**
      * Set client
      *
-     * @param \Mondofute\Bundle\ClientBundle\Entity\Client $client
+     * @param Client $client
      *
      * @return CodePromoClient
      */
-    public function setClient(\Mondofute\Bundle\ClientBundle\Entity\Client $client = null)
+    public function setClient(Client $client = null)
     {
         $this->client = $client;
 
@@ -113,7 +122,7 @@ class CodePromoClient
     /**
      * Get codePromoPeriodeValidite
      *
-     * @return \HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite
+     * @return CodePromoPeriodeValidite
      */
     public function getCodePromoPeriodeValidite()
     {
@@ -123,11 +132,11 @@ class CodePromoClient
     /**
      * Set codePromoPeriodeValidite
      *
-     * @param \HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite $codePromoPeriodeValidite
+     * @param CodePromoPeriodeValidite $codePromoPeriodeValidite
      *
      * @return CodePromoClient
      */
-    public function setCodePromoPeriodeValidite(\HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite $codePromoPeriodeValidite = null)
+    public function setCodePromoPeriodeValidite(CodePromoPeriodeValidite $codePromoPeriodeValidite = null)
     {
         $this->codePromoPeriodeValidite = $codePromoPeriodeValidite;
 

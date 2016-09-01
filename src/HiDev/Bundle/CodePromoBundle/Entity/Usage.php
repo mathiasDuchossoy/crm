@@ -11,13 +11,13 @@ namespace HiDev\Bundle\CodePromoBundle\Entity;
 
 class Usage
 {
-    const unique            = 1;
-    const uniqueParPeriode  = 2;
-    const multiple          = 3;
+    const unique = 1;
+    const uniqueParPeriode = 2;
+    const multiple = 3;
 
     public static $libelles = array(
-        Usage::unique      => 'Unique',
-        Usage::uniqueParPeriode      => 'unique par période de validité',
+        Usage::unique => 'Unique',
+        Usage::uniqueParPeriode => 'Unique par période de validité',
         Usage::multiple => 'Multiple',
     );
 

@@ -10,21 +10,6 @@ use Nucleus\ContactBundle\Entity\Physique;
  */
 class Client extends Physique
 {
-//    /**
-//     * @var int
-//     */
-//    private $id;
-
-
-//    /**
-//     * Get id
-//     *
-//     * @return int
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
     /**
      * @var boolean
      */
@@ -80,6 +65,11 @@ class Client extends Physique
         $this->dateNaissance = $dateNaissance;
 
         return $this;
+    }
+
+    public function getLabel()
+    {
+        return $this->getNom() .', '. $this->getPrenom();
     }
 
 }

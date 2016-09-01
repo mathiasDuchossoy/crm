@@ -12,10 +12,14 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
  */
 class CodePromo extends BaseCodePromo
 {
+//    /**
+//     * @var int
+//     */
+//    protected $id;
     /**
-     * @var int
+     * @var string
      */
-    protected $id;
+    protected $code;
     /**
      * @var Collection
      */
@@ -32,6 +36,10 @@ class CodePromo extends BaseCodePromo
      * @var boolean
      */
     private $actifSite = true;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoClients;
 
     public function __construct()
     {
@@ -40,14 +48,33 @@ class CodePromo extends BaseCodePromo
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getCode()
     {
-        return $this->id;
+        return $this->code;
     }
+
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Add codePromoPeriodeSejour
@@ -153,5 +180,39 @@ class CodePromo extends BaseCodePromo
         $this->actifSite = $actifSite;
 
         return $this;
+    }
+
+    /**
+     * Add codePromoClient
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients[] = $codePromoClient->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoClient
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     */
+    public function removeCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients->removeElement($codePromoClient);
+    }
+
+    /**
+     * Get codePromoClients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoClients()
+    {
+        return $this->codePromoClients;
     }
 }
