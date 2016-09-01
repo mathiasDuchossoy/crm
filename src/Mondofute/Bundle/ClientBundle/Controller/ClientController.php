@@ -441,7 +441,8 @@ class ClientController extends Controller
             $em->remove($clientUser);
             $em->flush();
 
-            $this->addFlash('success','Le client a bien été modifié.');
+            $this->addFlash('success','Le client a bien été suppimé
+            .');
         }
 
         return $this->redirectToRoute('client_index');
