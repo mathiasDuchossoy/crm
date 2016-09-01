@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
@@ -411,11 +412,15 @@ class ClientController extends Controller
                         $emSite->remove($moyenComSite);
                     }
 
+                    $codePromoClients = $emSite->getRepository(CodePromoClient::class)->findBy(array('client' => $clientSite));
+                    foreach ($codePromoClients as $codePromoClient){
+                        $emSite->remove($codePromoClient);
+                    }
+
                     $emSite->flush();
                     $emSite->remove($clientSite);
                     $emSite->remove($clientUserSite);
                     $emSite->flush();
-
                 }
             }
 
@@ -425,11 +430,18 @@ class ClientController extends Controller
                 $em->remove($moyenCom);
             }
 
+            $codePromoClients = $em->getRepository(CodePromoClient::class)->findBy(array('client' => $client));
+            foreach ($codePromoClients as $codePromoClient){
+                $em->remove($codePromoClient);
+            }
+
             $em->flush();
 
             $em->remove($client);
             $em->remove($clientUser);
             $em->flush();
+
+            $this->addFlash('success','Le client a bien été modifié.');
         }
 
         return $this->redirectToRoute('client_index');
