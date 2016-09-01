@@ -12,10 +12,10 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
  */
 class CodePromo extends BaseCodePromo
 {
-    /**
-     * @var int
-     */
-    protected $id;
+//    /**
+//     * @var int
+//     */
+//    protected $id;
     /**
      * @var string
      */
@@ -67,14 +67,14 @@ class CodePromo extends BaseCodePromo
     }
 
     /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Add codePromoPeriodeSejour
@@ -191,7 +191,7 @@ class CodePromo extends BaseCodePromo
      */
     public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
     {
-        $this->codePromoClients[] = $codePromoClient;
+        $this->codePromoClients[] = $codePromoClient->setCodePromo($this);
 
         return $this;
     }

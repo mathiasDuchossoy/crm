@@ -22,3 +22,8 @@ codepromo_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:delete" }
     methods:  DELETE
+
+codepromo_get_clients:
+    path:     /getclient/{clientName}/{siteId}/{codePromoId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getClients" , codePromoId: null }
+    methods:  GET

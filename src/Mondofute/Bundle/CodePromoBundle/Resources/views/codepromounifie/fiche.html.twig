@@ -66,23 +66,70 @@
                             <!-- Default panel contents -->
                             <div class="panel-heading">Client</div>
                             <div class="panel-body">
-                                <div class="col-lg-6">
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" aria-label="Left Align"
-                                            onclick="searchClient('{{ codePromo.vars.value.site.id }}');"
-                                            >
-                                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                            </button>
-                                        </span>
-                                        <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text" class="form-control" placeholder="Rechercher...">
-                                    </div><!-- /input-group -->
-                                </div><!-- /.col-lg-6 -->
+                                <div class="col-sm-12">
+                                    <div class="form-group" >
+                                        <div class="panel panel-default">
+                                            <!-- Default panel contents -->
+                                            <div class="panel-heading">Liste</div>
+                                            <div class="panel-body">
+                                                <div id="list_client_{{ codePromo.vars.value.site.id }}">
+                                                    {% if codePromoClients is defined %}
+                                                        {% for codePromoClient in codePromoClients %}
+                                                            {% if codePromoClient.codePromo.site.id == codePromo.vars.value.site.id %}
+                                                                <div class="col-sm-2"></div>
+                                                                <div class="col-sm-10">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox"
+                                                                                   checked="checked"
+                                                                                   value="{{ codePromoClient.client.id }}"
+                                                                                   name="client_{{ codePromo.vars.value.site.id }}[]"
+                                                                                   id="code_promo_unifie_codePromos_0_actif">
+                                                                            {#{{ dump(codePromoClient.client) }}#}
+                                                                            {{ codePromoClient.client.nom }} {{ codePromoClient.client.prenom }}
+                                                                        </label></div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <!-- Default panel contents -->
+                                            <div class="panel-heading">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="input-group">
+                                                            <div class="input-group-btn">
+                                                                <button type="button" class="btn btn-default" aria-label="Left Align"
+                                                                        onclick="searchClient('{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}');"
+                                                                >
+                                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                                </button>
+                                                            </div>
+                                                            <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text"
+                                                                   class="form-control" placeholder="Rechercher...">
+                                                        </div><!-- /input-group -->
+                                                    </div><!-- /.col-lg-6 -->
+                                                    <div class="col-sm-6">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="result_search_{{ codePromo.vars.value.site.id }}">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Table -->
                             <table class="table">
                                 ...
                             </table>
+
                         </div>
                     </div>
 
@@ -116,19 +163,20 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_type");
-        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
-        //        itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
-        //        itemNonPersonalisable.push("_codePromo_unifie_codePromos_entry_departement");
-        {#{% for langue in langues %}#}
-        {#itemNonPersonalisable.push("_prestation_annexe_unifie_codePromos_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#{% endfor %}#}
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_typeRemise");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_prixMini");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_actif");
 
         var items = [];
-        //        items.push("_prestation_annexe_unifie_codePromos_entry_type");
-        //        items.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
-        //        items.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
-        //        items.push("_codePromo_unifie_codePromos_entry_departement");
+                items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+                items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+                items.push("_code_promo_unifie_codePromos_entry_typeRemise");
+                items.push("_code_promo_unifie_codePromos_entry_prixMini");
+                items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
+                items.push("_code_promo_unifie_codePromos_entry_actif");
 
     </script>
     {{ parent() }}
@@ -322,6 +370,51 @@
                 // remove the li for the diaporama form
                 $FormLi.remove();
             });
+        }
+    </script>
+
+    <script type="text/javascript">
+        function searchClient(codePromoId, siteId) {
+            var clienVal = $("#input_search_client_" + siteId).val();
+            if (clienVal) {
+                var path;
+                if(codePromoId != ''){
+                    path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_', 'codePromoId':'_codePromoId_' }) }}";
+                    path = path.replace(/_codePromoId_/g, codePromoId);
+                }else{
+                    path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_' }) }}";
+                }
+                path = path.replace(/_clientName_/g, clienVal);
+                path = path.replace(/_siteId_/g, siteId);
+                $.ajax(path,
+                        {
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+//                    $("#list_client_" + siteId).html(data);
+                    $("#result_search_" + siteId).html(data);
+//                    $("#list_client_" + siteId).append(data);
+//                    $famillePrestationAnnexe.show();
+                });
+            }
+        }
+
+        function moveInputClient(element, clientId , siteId){
+            $element = $(element);
+            console.log($element.is(":checked"));
+            if($element.is(":checked")){
+                var $listeClient = $("#list_client_" + siteId);
+                $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
+//                console.log($div.length);
+                if($div.length > 0){
+//                    $("#client_"+ clientId +"_"+siteId ).remove();
+                    $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
+                }
+                else {
+                    $listeClient.append($("#client_"+ clientId +"_"+siteId ));
+                }
+//                console.log($div);
+            }
         }
     </script>
 
