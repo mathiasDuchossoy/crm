@@ -30,7 +30,10 @@ class CodePromoType extends AbstractType
                     ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
                 ),
                 'placeholder'   => " --- Choisir l'affection --- ",
-                'label'         => 'Affection'
+                'label'         => 'Affection',
+                'attr'          => array(
+                    'onchange'  => 'displayPanelClient(this);',
+                )
             ))
             ->add('typeRemise', ChoiceType::class, array(
                 'choices'       => array(
