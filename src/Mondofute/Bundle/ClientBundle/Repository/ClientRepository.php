@@ -19,9 +19,9 @@ class ClientRepository extends \Doctrine\ORM\EntityRepository
         $q = $this->createQueryBuilder('client')
             ->select('client')
             ->where('client.prenom LIKE :val')
-            ->setParameter('val', $clientName)
+            ->setParameter('val', '%'.$clientName.'%')
             ->orWhere('client.nom LIKE :val2')
-            ->setParameter('val2', $clientName)
+            ->setParameter('val2', '%'.$clientName.'%')
         ;
 
         return $q->getQuery()->getResult();
