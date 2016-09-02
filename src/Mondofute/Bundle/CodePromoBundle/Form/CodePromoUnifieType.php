@@ -15,6 +15,7 @@ class CodePromoUnifieType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+//        dump($builder->getData());die;
         $builder
             ->add('codePromos', CollectionType::class, array('entry_type' => CodePromoType::class , 'options' => array('clients' => $options['clients'])))
             ->add('code')

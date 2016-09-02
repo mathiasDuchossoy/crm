@@ -204,38 +204,60 @@ class CodePromoUnifieController extends Controller
      * @param $clientsBySites
      */
     private function gestionCodePromoClient($codePromoUnifie, $clientsBySites){
+        /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         /** @var CodePromo $entity */
+        // parcourir les codePromos
         foreach ($codePromoUnifie->getCodePromos() as $entity){
+            // si
             if($entity->getClientAffectation() == ClientAffectation::existants){
                 $clients = $clientsBySites[$entity->getSite()->getId()];
                 if($entity->getUsageCodePromo() == Usage::uniqueParPeriode){
+                    $codePromoClients = $entity->getCodePromoClients()->filter(function (CodePromoClient $element){
+                        return empty($element->getCodePromoPeriodeValidite());
+                    });
+                    foreach ($codePromoClients as $codePromoClient){
+                        $entity->getCodePromoClients()->removeElement($codePromoClient);
+                        $em->remove($codePromoClient);
+                    }
                     foreach ($entity->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
                         foreach ($clients as $client){
-                            $codePromoClientExists = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
-                                return $element->getClient()->getId() == $client;
+                            $codePromoClient = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($codePromoPeriodeValidite, $client){
+                                return ($element->getClient()->getId() == $client && $element->getCodePromoPeriodeValidite() == $codePromoPeriodeValidite);
                             })->first();
-                            if(false === $codePromoClientExists){
+                            if(false === $codePromoClient){
                                 $codePromoClient = new CodePromoClient();
                                 $entity->addCodePromoClient($codePromoClient);
                                 $codePromoClient
                                     ->setClient($em->find(Client::class, $client))
-                                    ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
                                 ;
                             }
+                            $codePromoClient
+                                ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
+                            ;
                         }
                     }
                 }
                 else{
+                    $codePromoClients = $entity->getCodePromoClients()->filter(function (CodePromoClient $element){
+                        return !empty($element->getCodePromoPeriodeValidite());
+                    });
+                    foreach ($codePromoClients as $codePromoClient){
+                        $entity->getCodePromoClients()->removeElement($codePromoClient);
+                        $em->remove($codePromoClient);
+                    }
                     foreach ($clients as $client){
-                        $codePromoClientExists = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
+                        $codePromoClient = $entity->getCodePromoClients()->filter(function(CodePromoClient $element) use ($client){
                             return $element->getClient()->getId() == $client;
                         })->first();
-                        if(false === $codePromoClientExists) {
+                        if(false === $codePromoClient) {
                             $codePromoClient = new CodePromoClient();
                             $entity->addCodePromoClient($codePromoClient);
                             $codePromoClient->setClient($em->find(Client::class, $client));
                         }
+                        $codePromoClient
+                            ->setCodePromoPeriodeValidite(null)
+                        ;
                     }
                 }
             }
@@ -324,6 +346,52 @@ class CodePromoUnifieController extends Controller
                     $entityUnifieSite->addCodePromo($entitySite);
                 }
 
+
+
+                // *** gestion code promo client ***
+                if (!empty($entity->getCodePromoClients()) && !$entity->getCodePromoClients()->isEmpty()){
+                    /** @var CodePromoClient $codePromoClient */
+                    foreach ($entity->getCodePromoClients() as $codePromoClient){
+                        $codePromoClientSite = $entitySite->getCodePromoClients()->filter(function (CodePromoClient $element) use ($codePromoClient){
+                            return $element->getId() == $codePromoClient->getId();
+                        })->first();
+                        if(false === $codePromoClientSite){
+
+                            $codePromoClientSite = new CodePromoClient();
+                            $entitySite->addCodePromoClient($codePromoClientSite);
+                            $codePromoClientSite
+                                ->setId($codePromoClient->getId())
+                            ;
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoClientSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $codePromoPeriodeValidite = null;
+                        if(!empty($codePromoClient->getCodePromoPeriodeValidite())){
+                            $codePromoPeriodeValidite   = $emSite->find(CodePromoPeriodeValidite::class, $codePromoClient->getCodePromoPeriodeValidite());
+                        }
+                        $codePromoClientSite
+                            ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
+                            ->setClient($emSite->find(Client::class,$codePromoClient->getClient()))
+                            ->setUtilise($codePromoClient->getUtilise())
+                        ;
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoClients()) && !$entitySite->getCodePromoClients()->isEmpty()){
+                    /** @var CodePromoClient $codePromoClient */
+                    /** @var CodePromoClient $codePromoClientSite */
+                    foreach ($entitySite->getCodePromoClients() as $codePromoClientSite){
+                        $codePromoClient = $entity->getCodePromoClients()->filter(function (CodePromoClient $element) use ($codePromoClientSite){
+                            return $element->getId() == $codePromoClientSite->getId();
+                        })->first();
+                        if(false === $codePromoClient){
+//                            $entitySite->removeCodePromoClient($codePromoClientSite);
+                            $emSite->remove($codePromoClientSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo client ***
+
 //                 *** gestion code promo periode validité ***
                 if (!empty($entity->getCodePromoPeriodeValidites()) && !$entity->getCodePromoPeriodeValidites()->isEmpty()){
                     /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
@@ -337,7 +405,6 @@ class CodePromoUnifieController extends Controller
                             $codePromoPeriodeValiditeSite
                                 ->setId($codePromoPeriodeValidite->getId())
                             ;
-
                             $metadata = $emSite->getClassMetadata(get_class($codePromoPeriodeValiditeSite));
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
@@ -350,11 +417,22 @@ class CodePromoUnifieController extends Controller
 
                 if (!empty($entitySite->getCodePromoPeriodeValidites()) && !$entitySite->getCodePromoPeriodeValidites()->isEmpty()){
                     /** @var CodePromoPeriodeValidite $codePromoPeriodeValidite */
+                    /** @var CodePromoPeriodeValidite $codePromoPeriodeValiditeSite */
                     foreach ($entitySite->getCodePromoPeriodeValidites() as $codePromoPeriodeValiditeSite){
                         $codePromoPeriodeValidite = $entity->getCodePromoPeriodeValidites()->filter(function (CodePromoPeriodeValidite $element) use ($codePromoPeriodeValiditeSite){
                             return $element->getId() == $codePromoPeriodeValiditeSite->getId();
                         })->first();
                         if(false === $codePromoPeriodeValidite){
+                            $codePromoClientSite = $entitySite->getCodePromoClients()->filter(function (CodePromoClient $element) use($codePromoPeriodeValiditeSite){
+                                return $element->getCodePromoPeriodeValidite() == $codePromoPeriodeValiditeSite;
+                            })->first();
+                            dump($entitySite->getCodePromoClients());
+                            if (!empty($codePromoClientSite)){
+
+                                dump('suppression');
+                                $codePromoClientSite->setCodePromoPeriodeValidite(null);
+                                $emSite->remove($codePromoClientSite);
+                            }
 //                            $entitySite->removeCodePromoPeriodeValidite($codePromoPeriodeValiditeSite);
                             $emSite->remove($codePromoPeriodeValiditeSite);
                         }
@@ -400,47 +478,7 @@ class CodePromoUnifieController extends Controller
                 }
                 // *** fin gestion code promo periode séjour ***
 
-                // *** gestion code promo client ***
-                if (!empty($entity->getCodePromoClients()) && !$entity->getCodePromoClients()->isEmpty()){
-                    /** @var CodePromoClient $codePromoClient */
-                    foreach ($entity->getCodePromoClients() as $codePromoClient){
-                        $codePromoClientSite = $entitySite->getCodePromoClients()->filter(function (CodePromoClient $element) use ($codePromoClient){
-                            return $element->getId() == $codePromoClient->getId();
-                        })->first();
-                        if(false === $codePromoClientSite){
-                            $codePromoClientSite = new CodePromoClient();
-                            $entitySite->addCodePromoClient($codePromoClientSite);
-                            $codePromoClientSite
-                                ->setId($codePromoClient->getId())
-                            ;
-                            $metadata = $emSite->getClassMetadata(get_class($codePromoClientSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $codePromoPeriodeValidite = null;
-                        if(!empty($codePromoClient->getCodePromoPeriodeValidite())){
-                            $codePromoPeriodeValidite   = $emSite->find(CodePromoPeriodeValidite::class, $codePromoClient->getCodePromoPeriodeValidite());
-                        }
-                        $codePromoClientSite
-                            ->setCodePromoPeriodeValidite($codePromoPeriodeValidite)
-                            ->setClient($emSite->find(Client::class,$codePromoClient->getClient()))
-                            ->setUtilise($codePromoClient->getUtilise())
-                        ;
-                    }
-                }
 
-                if (!empty($entitySite->getCodePromoClients()) && !$entitySite->getCodePromoClients()->isEmpty()){
-                    /** @var CodePromoClient $codePromoClient */
-                    foreach ($entitySite->getCodePromoClients() as $codePromoClientSite){
-                        $codePromoClient = $entity->getCodePromoClients()->filter(function (CodePromoClient $element) use ($codePromoClientSite){
-                            return $element->getId() == $codePromoClientSite->getId();
-                        })->first();
-                        if(false === $codePromoClient){
-//                            $entitySite->removeCodePromoClient($codePromoClientSite);
-                            $emSite->remove($codePromoClientSite);
-                        }
-                    }
-                }
-                // *** fin gestion code promo client ***
 
                 $entityUnifieSite
                     ->setCode($entityUnifie->getCode())
@@ -503,6 +541,7 @@ class CodePromoUnifieController extends Controller
      */
     public function editAction(Request $request, CodePromoUnifie $codePromoUnifie)
     {
+        /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
 
@@ -530,11 +569,23 @@ class CodePromoUnifieController extends Controller
         $this->codePromosSortByAffichage($codePromoUnifie);
         $deleteForm = $this->createDeleteForm($codePromoUnifie);
 
-        $originalCodePromoClients           = new ArrayCollection();
+        $originalCodePromoClients               = new ArrayCollection();
+        $originalCodePromoPeriodeValidites      = array();
 
         foreach ($codePromoUnifie->getCodePromos() as $codePromo){
             foreach ($codePromo->getCodePromoClients() as $codePromoClient){
-                $originalCodePromoClients->add($codePromoClient);
+                $client = $originalCodePromoClients->filter(function (CodePromoClient $element)use($codePromoClient){
+                    return ($element->getClient() == $codePromoClient->getClient() && $element->getCodePromo()->getSite() == $codePromoClient->getCodePromo()->getSite() );
+                })->first();
+                if(false === $client){
+                    $originalCodePromoClients->add($codePromoClient);
+                }
+            }
+            foreach ($codePromo->getCodePromoPeriodeValidites() as $codePromoPeriodeValidite){
+                if(empty($originalCodePromoPeriodeValidites[$codePromo->getSite()->getId()])){
+                    $originalCodePromoPeriodeValidites[$codePromo->getSite()->getId()] = new ArrayCollection();
+                }
+                $originalCodePromoPeriodeValidites[$codePromo->getSite()->getId()]->add($codePromoPeriodeValidite);
             }
         }
 
@@ -561,10 +612,24 @@ class CodePromoUnifieController extends Controller
                 /** @var CodePromoClient $codePromoClient */
                 foreach ($codePromo->getCodePromoClients() as $codePromoClient){
                     $exist = in_array($codePromoClient->getClient()->getId() , $clientsBySites[$codePromo->getSite()->getId()]);
-                    if (!$exist) {
+                    if (!$exist || $codePromo->getClientAffectation() != ClientAffectation::existants) {
                         // remove the Task from the Tag
                         $codePromo->getCodePromoClients()->removeElement($codePromoClient);
                         $em->remove($codePromoClient);
+                    }
+                }
+
+                if(!empty($originalCodePromoPeriodeValidites[$codePromo->getSite()->getId()])){
+                    foreach ($originalCodePromoPeriodeValidites[$codePromo->getSite()->getId()] as $codePromoPeriodeValidite){
+                        $codePromoClient = $codePromo->getCodePromoClients()->filter(function (CodePromoClient $element) use ($codePromoPeriodeValidite){
+                            return $element->getCodePromoPeriodeValidite() == $codePromoPeriodeValidite;
+                        })->first();
+                        if(false === $codePromo->getCodePromoPeriodeValidites()->contains($codePromoPeriodeValidite)){
+                            if(!empty($codePromoClient)){
+                                $codePromoClient->setCodePromoPeriodeValidite(null);
+                            }
+                            $em->remove($codePromoPeriodeValidite);
+                        }
                     }
                 }
             }
@@ -688,22 +753,11 @@ class CodePromoUnifieController extends Controller
         $clientForm = new ArrayCollection();
         foreach ($clients as $client){
 
-//            dump($client);
-//            dump($codePromoClients);
             $clientExist = $codePromoClients->filter(function (CodePromoClient $element )use($client){
                 return $element->getClient()->getId() == $client->getId();
             })->first();
-//            dump($clientExist);
             if(false === $clientExist){
                 $clientForm->add($client) ;
-//                dump($clientExist);
-//                $codePromo = $entityUnifie->getCodePromos()->filter(function (CodePromo $element) use ($siteId){
-//                    return $element->getSite()->getId() == $siteId;
-//                })->first();
-//
-//                $codePromoClient = new CodePromoClient();
-//                $codePromo->addCodePromoClient($codePromoClient);
-//                $codePromoClient->setClient($client);
             }
         }
 

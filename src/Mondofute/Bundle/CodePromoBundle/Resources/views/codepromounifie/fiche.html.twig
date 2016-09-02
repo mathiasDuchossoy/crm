@@ -30,7 +30,7 @@
                         {{ form_row(codePromo.site) }}
                         <ul class="nav nav-tabs">
                             {{ form_row(codePromo.libelle, { 'attr' : { 'data-unique_block_prefix' : codePromo.libelle.vars['unique_block_prefix']}}) }}
-                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-site' : codePromo.vars.value.site.id , 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.typeRemise, { 'attr' : { 'data-unique_block_prefix' : codePromo.typeRemise.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : codePromo.valeurRemise.vars['unique_block_prefix'] }}) }}
                             {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
@@ -62,7 +62,11 @@
                                 {% endfor %}
                             </ul>
                         </ul>
-                        <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}">
+                        <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}"
+                            {% if codePromo.vars.value.clientAffectation != 2 %}
+                                style="display: none"
+                            {% endif %}
+                        >
                             <!-- Default panel contents -->
                             <div class="panel-heading">Client</div>
                             <div class="panel-body">
@@ -85,7 +89,6 @@
                                                                                    value="{{ codePromoClient.client.id }}"
                                                                                    name="client_{{ codePromo.vars.value.site.id }}[]"
                                                                                    id="code_promo_unifie_codePromos_0_actif">
-                                                                            {#{{ dump(codePromoClient.client) }}#}
                                                                             {{ codePromoClient.client.nom }} {{ codePromoClient.client.prenom }}
                                                                         </label></div>
                                                                 </div>
@@ -163,17 +166,19 @@
 {% block javascripts %}
     <script type="text/javascript">
         var itemNonPersonalisable = [];
-        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_libelle");
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_clientAffectation");
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_typeRemise");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_valeurRemise");
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_prixMini");
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_actif");
 
         var items = [];
-                items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+                items.push("_code_promo_unifie_codePromos_entry_libelle");
                 items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
                 items.push("_code_promo_unifie_codePromos_entry_typeRemise");
+                items.push("_code_promo_unifie_codePromos_entry_valeurRemise");
                 items.push("_code_promo_unifie_codePromos_entry_prixMini");
                 items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
                 items.push("_code_promo_unifie_codePromos_entry_actif");
@@ -401,21 +406,29 @@
 
         function moveInputClient(element, clientId , siteId){
             $element = $(element);
-            console.log($element.is(":checked"));
             if($element.is(":checked")){
                 var $listeClient = $("#list_client_" + siteId);
                 $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
-//                console.log($div.length);
                 if($div.length > 0){
-//                    $("#client_"+ clientId +"_"+siteId ).remove();
                     $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
                 }
                 else {
                     $listeClient.append($("#client_"+ clientId +"_"+siteId ));
                 }
-//                console.log($div);
             }
         }
+
+        function displayPanelClient(element){
+            var $element = $(element);
+            var site = $element.data('site');
+            if($element.val() == 2){
+                $('#panel_client_' + site).show();
+            }
+            else {
+                $('#panel_client_' + site).hide();
+            }
+        }
+
     </script>
 
 {% endblock %}

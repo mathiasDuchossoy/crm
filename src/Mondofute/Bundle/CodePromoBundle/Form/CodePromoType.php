@@ -5,16 +5,11 @@ namespace Mondofute\Bundle\CodePromoBundle\Form;
 use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
 use HiDev\Bundle\CodePromoBundle\Entity\TypeRemise;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
-use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\ClientBundle\Repository\ClientRepository;
-use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +30,10 @@ class CodePromoType extends AbstractType
                     ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
                 ),
                 'placeholder'   => " --- Choisir l'affection --- ",
-                'label'         => 'Affection'
+                'label'         => 'Affection',
+                'attr'          => array(
+                    'onchange'  => 'displayPanelClient(this);',
+                )
             ))
             ->add('typeRemise', ChoiceType::class, array(
                 'choices'       => array(
@@ -45,8 +43,8 @@ class CodePromoType extends AbstractType
                 'placeholder'   => ' --- Choisir le type de remise --- ',
                 'label'         => 'Type de remise'
             ))
-            ->add('valeurRemise')
-            ->add('prixMini')
+            ->add('valeurRemise' , TextType::class)
+            ->add('prixMini', TextType::class)
             ->add('usageCodePromo', ChoiceType::class, array(
                 'choices'       => array(
                     Usage::unique           => Usage::getLibelle(Usage::unique),
