@@ -310,7 +310,7 @@ class PrestationAnnexeUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($prestationAnnexeUnifie);
 
-        return $this->render('@MondofutePrestationAnnexe/prestationAnnexeunifie/show.html.twig', array(
+        return $this->render('@MondofutePrestationAnnexe/prestationannexeunifie/show.html.twig', array(
             'prestationAnnexeUnifie' => $prestationAnnexeUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
