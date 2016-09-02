@@ -513,7 +513,7 @@ class CodePromoUnifieController extends Controller
     {
         $deleteForm = $this->createDeleteForm($codePromoUnifie);
 
-        return $this->render('@MondofuteCodePromo/codePromounifie/show.html.twig', array(
+        return $this->render('@MondofuteCodePromo/codepromounifie/show.html.twig', array(
             'codePromoUnifie' => $codePromoUnifie,
             'delete_form' => $deleteForm->createView(),
         ));
