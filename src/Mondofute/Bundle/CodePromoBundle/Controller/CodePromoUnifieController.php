@@ -658,7 +658,7 @@ class CodePromoUnifieController extends Controller
             return $this->redirectToRoute('codepromo_edit', array('id' => $codePromoUnifie->getId()));
         }
 
-        return $this->render('@MondofuteCodePromo/codePromounifie/edit.html.twig', array(
+        return $this->render('@MondofuteCodePromo/codepromounifie/edit.html.twig', array(
             'entity' => $codePromoUnifie,
             'sites' => $sites,
             'sitesAEnregistrer' => $sitesAEnregistrer,
