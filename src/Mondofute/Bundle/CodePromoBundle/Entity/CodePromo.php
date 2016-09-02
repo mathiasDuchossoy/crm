@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\CodePromoBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -45,6 +46,7 @@ class CodePromo extends BaseCodePromo
     {
         parent::__construct();
         $this->codePromoPeriodeSejours = new ArrayCollection();
+        $this->codePromoClients = new ArrayCollection();
     }
 
     /**
@@ -66,11 +68,11 @@ class CodePromo extends BaseCodePromo
         return $this;
     }
 
-    /**
-//     * Get id
-//     *
-//     * @return int
-//     */
+//    /**
+//     * //     * Get id
+//     * //     *
+//     * //     * @return int
+//     * //     */
 //    public function getId()
 //    {
 //        return $this->id;
@@ -185,11 +187,11 @@ class CodePromo extends BaseCodePromo
     /**
      * Add codePromoClient
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     * @param CodePromoClient $codePromoClient
      *
      * @return CodePromo
      */
-    public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    public function addCodePromoClient(CodePromoClient $codePromoClient)
     {
         $this->codePromoClients[] = $codePromoClient->setCodePromo($this);
 
@@ -199,9 +201,9 @@ class CodePromo extends BaseCodePromo
     /**
      * Remove codePromoClient
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     * @param CodePromoClient $codePromoClient
      */
-    public function removeCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    public function removeCodePromoClient(CodePromoClient $codePromoClient)
     {
         $this->codePromoClients->removeElement($codePromoClient);
     }
