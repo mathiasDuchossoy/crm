@@ -112,6 +112,7 @@
                                                                 </button>
                                                             </div>
                                                             <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text"
+                                                                   onkeypress="test(event,'{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}')"
                                                                    class="form-control" placeholder="Rechercher...">
                                                         </div><!-- /input-group -->
                                                     </div><!-- /.col-lg-6 -->
@@ -430,6 +431,17 @@
             }
         }
 
+        function test(event,codePromoId, siteId){
+//            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+            var eCode = event.keyCode
+//            alert ("The Unicode character code is: " + chCode);
+//            alert ("The Unicode character code is: " + eCode);
+            if(eCode == 13 ){
+                searchClient(codePromoId, siteId)
+            }
+            event.preventDefault();
+            return false;
+        }
     </script>
 
 {% endblock %}
