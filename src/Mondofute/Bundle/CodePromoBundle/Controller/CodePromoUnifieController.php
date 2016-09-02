@@ -653,7 +653,7 @@ class CodePromoUnifieController extends Controller
 
             // add flash messages
             /** @var Session $session */
-            $this->addFlash('success','La codePromo a bien été modifié.');
+            $this->addFlash('success','La code promo a bien été modifié.');
 
             return $this->redirectToRoute('codepromo_edit', array('id' => $codePromoUnifie->getId()));
         }
