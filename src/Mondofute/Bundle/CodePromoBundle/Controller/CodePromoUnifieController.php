@@ -649,7 +649,7 @@ class CodePromoUnifieController extends Controller
             $em->persist($codePromoUnifie);
             $em->flush();
 
-            $this->copieVersSites($codePromoUnifie);
+//            $this->copieVersSites($codePromoUnifie);
 
             // add flash messages
             /** @var Session $session */
