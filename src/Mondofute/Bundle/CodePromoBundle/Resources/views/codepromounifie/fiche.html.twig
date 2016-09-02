@@ -367,7 +367,19 @@
 
             addFormDeleteLink($newFormLi);
 
-            $('.datepicker ').datepicker();
+//            $('.datepicker ').datepicker();
+
+            $('.datepicker').datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            });
         }
 
         function addFormDeleteLink($FormLi) {
