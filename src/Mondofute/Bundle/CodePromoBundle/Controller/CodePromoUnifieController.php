@@ -210,9 +210,9 @@ class CodePromoUnifieController extends Controller
         // parcourir les codePromos
         foreach ($codePromoUnifie->getCodePromos() as $entity){
             // si
-            if($entity->getClientAffectation() == ClientAffectation::existants){
+            if($entity->getClientAffectation() == ClientAffectation::existants ){
                 $clients = $clientsBySites[$entity->getSite()->getId()];
-                if($entity->getUsageCodePromo() == Usage::uniqueParPeriode){
+                if($entity->getUsageCodePromo() == Usage::uniqueParPeriode && !$entity->getCodePromoPeriodeValidites()->isEmpty()){
                     $codePromoClients = $entity->getCodePromoClients()->filter(function (CodePromoClient $element){
                         return empty($element->getCodePromoPeriodeValidite());
                     });

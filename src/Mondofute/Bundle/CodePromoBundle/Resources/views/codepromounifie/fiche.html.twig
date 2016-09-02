@@ -88,7 +88,7 @@
                                                                                    checked="checked"
                                                                                    value="{{ codePromoClient.client.id }}"
                                                                                    name="client_{{ codePromo.vars.value.site.id }}[]"
-                                                                                   id="code_promo_unifie_codePromos_0_actif">
+                                                                                   id="checkbox_client_{{ codePromoClient.client.id }}_{{ codePromo.vars.value.site.id }}">
                                                                             {{ codePromoClient.client.nom }} {{ codePromoClient.client.prenom }}
                                                                         </label></div>
                                                                 </div>
@@ -410,6 +410,7 @@
                 var $listeClient = $("#list_client_" + siteId);
                 $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
                 if($div.length > 0){
+                    $listeClient.find("#checkbox_client_"+ clientId +"_"+siteId).prop( "checked" , true);
                     $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
                 }
                 else {
