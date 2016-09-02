@@ -9,6 +9,7 @@
         <thead>
         <tr>
             <th>Id</th>
+            <th>Code</th>
             <th>{{ 'libelle' | capitalize }}</th>
             <th>Actions</th>
         </tr>
@@ -18,6 +19,9 @@
             <tr>
                 <td>
                     <a href="{{ path('codepromo_show', { 'id': codePromoUnifie.id }) }}">{{ codePromoUnifie.id }}</a>
+                </td>
+                <td>
+                    {{ codePromoUnifie.code }}
                 </td>
                 <td>
                     {% for codePromo in codePromoUnifie.codePromos %}
