@@ -406,7 +406,6 @@
 
         function moveInputClient(element, clientId , siteId){
             $element = $(element);
-            console.log($element.is(":checked"));
             if($element.is(":checked")){
                 var $listeClient = $("#list_client_" + siteId);
                 $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
@@ -422,16 +421,14 @@
         function displayPanelClient(element){
             var $element = $(element);
             var site = $element.data('site');
-            console.log($element.val());
-            console.log(site);
             if($element.val() == 2){
                 $('#panel_client_' + site).show();
             }
             else {
                 $('#panel_client_' + site).hide();
-                console.log( $('#panel_client_' + site));
             }
         }
+
     </script>
 
 {% endblock %}
