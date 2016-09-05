@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'visualisation de la famille de prestation annexe' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation de la famille de prestation annexe' | capitalize }}</h1>
+
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ famillePrestationAnnexe.id }}</td>
+        </tr>
+        {% for traduction in famillePrestationAnnexe.traductions %}
+            {% if traduction.langue.code == app.request.locale %}
+                <tr class="row">
+                    <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+                    <td>
+                        {{ traduction.libelle }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">
+                Sous-familles
+            </h3>
+        </div>
+        <div class="panel-body">
+
+            {% if  famillePrestationAnnexe.sousFamillePrestationAnnexes is not empty %}
+            <ul class="sous_famille_prestation_annexe"
+                    {#style="list-style-type: none;"#}
+            >
+                {% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}
+                    {% for traduction in sousFamillePrestationAnnexe.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            <li class="element">
+                                {{ traduction.libelle }}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            {% else %}
+                <div class="alert alert-info" role="alert">Pas de sous-familles.</div>
+            {% endif %}
+        </div>
+    </div>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('familleprestationannexe_index') }}">Retour à la liste</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('familleprestationannexe_edit', { 'id': famillePrestationAnnexe.id }) }}">Modifier</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

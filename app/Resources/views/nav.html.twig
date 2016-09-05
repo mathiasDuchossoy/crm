@@ -130,13 +130,13 @@
         {# ***** FIN DOMAINE ***** #}
         {# ***** STATION ***** #}
         <li role="presentation"
-            class="dropdown {% if 'station' in app.request.attributes.get('_route') %} active {% endif %}">
+            class="dropdown {% if 'station_station' in app.request.attributes.get('_route') %} active {% endif %}">
             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 Station <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
                 <li role="presentation"
-                    class="dropdown-submenu {% if 'station' in app.request.attributes.get('_route') %} active {% endif %}">
+                    class="dropdown-submenu {% if 'station_station' in app.request.attributes.get('_route') %} active {% endif %}">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false" href="">Station</a>
                     <ul class="dropdown-menu">
@@ -276,9 +276,44 @@
                         </li>
                     </ul>
                 </li>
+                {# ***** FAMILLE PRESTATION ANNEXE ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'familleprestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'famille prestation annexe' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'familleprestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('familleprestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN FAMILLE PRESTATION ANNEXE ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
+        {# ***** PRESTATION ANNEXE ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Prestation annexe <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Prestation annexe</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'prestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('prestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'prestationannexe_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('prestationannexe_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN PRESTATION ANNEXE ***** #}
     </ul>
     {# ***** LOGIN ***** #}
     <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">
