@@ -3,6 +3,6 @@ mondofute_prestation_annexe_familleprestationannexe:
     prefix:   /familleprestationannexe
 
 mondofute_prestation_annexe_prestationannexe:
-    resource: "@MondofutePrestationAnnexeBundle/Resources/config/routing/prestationannexeunifie.yml"
+    resource: "@MondofutePrestationAnnexeBundle/Resources/config/routing/prestationannexe.yml"
     prefix:   /prestationannexe
 
