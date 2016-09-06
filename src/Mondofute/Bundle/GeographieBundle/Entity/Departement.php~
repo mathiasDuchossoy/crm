@@ -33,6 +33,14 @@ class Departement
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -157,7 +165,8 @@ class Departement
      */
     public function setDepartementUnifie(
         \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null
-    ) {
+    )
+    {
         $this->departementUnifie = $departementUnifie;
 
         return $this;
@@ -219,5 +228,73 @@ class Departement
     public function getStations()
     {
         return $this->stations;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image
+     *
+     * @return Departement
+     */
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image)
+    {
+        $this->images[] = $image->setDepartement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo
+     *
+     * @return Departement
+     */
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo)
+    {
+        $this->photos[] = $photo->setDepartement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }
