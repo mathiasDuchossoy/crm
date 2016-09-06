@@ -23,20 +23,9 @@
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ logement.vars.value.site.crm | number_format }}">
 
-                        {#{{ form_row(departement.region, { 'attr' : { 'data-unique_block_prefix' : departement.region.vars['unique_block_prefix']  }}) }}#}
-
-                        {#{% for choix in departement.region %}#}
-                        {#{{ dump(choix) }}#}
-                        {#{{ form_widget(choix) }}#}
-                        {#{{ form_label(choix) }}#}
-                        {#{% endfor %}#}
-                        {{ form_row(logement.actif) }}
                         <div style="display: none">
                             {{ form_row(logement.fournisseurHebergement) }}
                         </div>
-                        {#{{ form_row(logement.hebergement) }}#}
-                        {#{{ form_row(logement.hebergements) }}#}
-                        {#{{ form_row(logement.fournisseur) }}#}
                         {{ form_row(logement.nbChambre) }}
                         {{ form_row(logement.capacite) }}
                         {{ form_row(logement.superficieMin) }}
@@ -57,7 +46,6 @@
                                         {% endfor %}
                                     </a>
                                 </li>
-                                {#{{ form_row(traduction) }}#}
                             {% endfor %}
                         </ul>
                         <div class="tab-content">

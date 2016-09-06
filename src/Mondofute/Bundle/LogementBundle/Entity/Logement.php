@@ -3,6 +3,11 @@
 namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
+use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * Logement
@@ -13,10 +18,6 @@ class Logement
      * @var int
      */
     private $id;
-    /**
-     * @var boolean
-     */
-    private $actif;
     /**
      * @var boolean
      */
@@ -38,32 +39,36 @@ class Logement
      */
     private $superficieMax;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\LogementBundle\Entity\LogementUnifie
+     * @var LogementUnifie
      */
     private $logementUnifie;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+     * @var FournisseurHebergement
      */
     private $fournisseurHebergement;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $photos;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -74,30 +79,6 @@ class Logement
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Get actif
-     *
-     * @return boolean
-     */
-    public function getActif()
-    {
-        return $this->actif;
-    }
-
-    /**
-     * Set actif
-     *
-     * @param boolean $actif
-     *
-     * @return Logement
-     */
-    public function setActif($actif)
-    {
-        $this->actif = $actif;
-
-        return $this;
     }
 
     /**
@@ -223,9 +204,9 @@ class Logement
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction
+     * @param LogementTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction)
+    public function removeTraduction(LogementTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
         $traduction->setLogement(null);
@@ -234,7 +215,7 @@ class Logement
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -258,11 +239,11 @@ class Logement
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction
+     * @param LogementTraduction $traduction
      *
      * @return Logement
      */
-    public function addTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementTraduction $traduction)
+    public function addTraduction(LogementTraduction $traduction)
     {
         $this->traductions[] = $traduction->setLogement($this);
 
@@ -272,7 +253,7 @@ class Logement
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -282,11 +263,11 @@ class Logement
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return Logement
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -296,7 +277,7 @@ class Logement
     /**
      * Get logementUnifie
      *
-     * @return \Mondofute\Bundle\LogementBundle\Entity\LogementUnifie
+     * @return LogementUnifie
      */
     public function getLogementUnifie()
     {
@@ -306,11 +287,11 @@ class Logement
     /**
      * Set logementUnifie
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementUnifie $logementUnifie
+     * @param LogementUnifie $logementUnifie
      *
      * @return Logement
      */
-    public function setLogementUnifie(\Mondofute\Bundle\LogementBundle\Entity\LogementUnifie $logementUnifie = null)
+    public function setLogementUnifie(LogementUnifie $logementUnifie = null)
     {
         $this->logementUnifie = $logementUnifie;
 
@@ -320,7 +301,7 @@ class Logement
     /**
      * Get fournisseurHebergement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+     * @return FournisseurHebergement
      */
     public function getFournisseurHebergement()
     {
@@ -330,12 +311,12 @@ class Logement
     /**
      * Set fournisseurHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
+     * @param FournisseurHebergement $fournisseurHebergement
      *
      * @return Logement
      */
     public function setFournisseurHebergement(
-        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement = null
+        FournisseurHebergement $fournisseurHebergement = null
     )
     {
         $this->fournisseurHebergement = $fournisseurHebergement;
@@ -346,11 +327,11 @@ class Logement
     /**
      * Add photo
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo
+     * @param LogementPhoto $photo
      *
      * @return Logement
      */
-    public function addPhoto(\Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo)
+    public function addPhoto(LogementPhoto $photo)
     {
         $this->photos[] = $photo->setLogement($this);
 
@@ -360,9 +341,9 @@ class Logement
     /**
      * Remove photo
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo
+     * @param LogementPhoto $photo
      */
-    public function removePhoto(\Mondofute\Bundle\LogementBundle\Entity\LogementPhoto $photo)
+    public function removePhoto(LogementPhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -370,10 +351,34 @@ class Logement
     /**
      * Get photos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Logement
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }

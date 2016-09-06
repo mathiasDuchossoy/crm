@@ -21,7 +21,6 @@ class LogementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('actif')
             ->add('accesPMR', null, array('label' => 'Acces.PMR', 'translation_domain' => 'messages'))
             ->add('capacite')
             ->add('nbChambre', null, array('label' => 'Nb.Chambre', 'translation_domain' => 'messages'))
@@ -33,19 +32,11 @@ class LogementType extends AbstractType
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('fournisseurHebergement', EntityType::class,
                 array('class' => FournisseurHebergement::class, 'choice_label' => 'id'))
-//            ->add('logementUnifie')
-//            ->add('hebergement', EntityType::class,
-//                array('class' => FournisseurHebergement::class, 'choice_label' => 'id'))
-//            ->add('hebergements', EntityType::class,
-//                array('class' => Hebergement::class, 'choice_label' => 'id', 'mapped' => false))
-//            ->add('fournisseur', EntityType::class,
-//                array('class' => Fournisseur::class, 'choice_label' => 'id', 'mapped' => false))
             ->add('photos', CollectionType::class, array(
                 'entry_type' => LogementPhotoType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-//                'required' => false,
             ))
         ;
     }
@@ -61,12 +52,4 @@ class LogementType extends AbstractType
         ));
     }
 
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-//        foreach ($view->children['hebergement']->vars['choices'] as $choice) {
-//            $choice->attr['data-fournisseur'] = $choice->data->getFournisseur()->getId();
-//            $choice->attr['data-hebergement'] = $choice->data->getHebergement()->getId();
-//        }
-//        dump($view->children['hebergement']->vars['choices']); die;
-    }
 }

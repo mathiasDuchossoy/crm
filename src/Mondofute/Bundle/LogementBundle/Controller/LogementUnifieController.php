@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\LogementBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -17,7 +18,9 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * LogementUnifie controller.
@@ -302,10 +305,14 @@ class LogementUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
-            $em = $this->getDoctrine()->getManager();
-//            $this->copieVersSites($logementUnifie);
+            /** @var Logement $entity */
+            foreach ($logementUnifie->getLogements() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
+            $em = $this->getDoctrine()->getManager();
 
             // ***** Gestion des Medias *****
             foreach ($request->get('logement_unifie')['logements'] as $key => $logement) {
@@ -369,24 +376,6 @@ class LogementUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les departements qui ne doivent pas être enregistrer
-     * @param LogementUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerLogements(LogementUnifie $entity, array $sitesAEnregistrer)
-    {
-        /** @var Logement $logement */
-        foreach ($entity->getLogements() as $logement) {
-            if (!in_array($logement->getSite()->getId(), $sitesAEnregistrer)) {
-                $entity->removeLogement($logement);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité hébergement
      * @param LogementUnifie $entity
      */
@@ -403,6 +392,9 @@ class LogementUnifieController extends Controller
                 $site = $emSite->getRepository(Site::class)->findOneBy(array('id' => $logement->getSite()->getId()));
                 if (empty($entity->getId()) || is_null(($entitySite = $emSite->getRepository(LogementUnifie::class)->find($entity->getId())))) {
                     $entitySite = new LogementUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
                 $fournisseurHebergementSite = $emSite->getRepository(FournisseurHebergement::class)->findOneBy(array(
                     'fournisseur' => $logement->getFournisseurHebergement()->getFournisseur(),
@@ -786,7 +778,7 @@ class LogementUnifieController extends Controller
      * Displays a form to edit an existing LogementUnifie entity.
      * @param Request $request
      * @param LogementUnifie $logementUnifie
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, LogementUnifie $logementUnifie)
     {
@@ -795,19 +787,21 @@ class LogementUnifieController extends Controller
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
-        //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
+//        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($logementUnifie->getLogements() as $logement) {
-                array_push($sitesAEnregistrer, $logement->getSite()->getId());
+            /** @var Logement $entity */
+            foreach ($logementUnifie->getLogements() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
+
         $originalLogements = new ArrayCollection();
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         foreach ($logementUnifie->getLogements() as $logement) {
@@ -827,7 +821,6 @@ class LogementUnifieController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalLogements as $logement) {
                 if (!$logementUnifie->getLogements()->contains($logement)) {
@@ -864,7 +857,7 @@ class LogementUnifieController extends Controller
      * Displays a form to edit an existing LogementUnifie entity.
      * @param Request $request
      * @param LogementUnifie $logementUnifie
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editPopupAction(Request $request, LogementUnifie $logementUnifie)
     {
@@ -873,21 +866,22 @@ class LogementUnifieController extends Controller
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
-        //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
+//        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($logementUnifie->getLogements() as $logement) {
-                array_push($sitesAEnregistrer, $logement->getSite()->getId());
+            /** @var Logement $entity */
+            foreach ($logementUnifie->getLogements() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
-        $originalLogements = new ArrayCollection();
 
+        $originalLogements = new ArrayCollection();
 
         $originalLogementPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
@@ -924,8 +918,13 @@ class LogementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            $em = $this->getDoctrine()->getManager();
-
+            foreach ($logementUnifie->getLogements() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }else{
+                    $entity->setActif(true);
+                }
+            }
 
             // ************* suppression photos *************
             // ** CAS OU L'ON SUPPRIME UN "LOGEMENT PHOTO" **
@@ -989,59 +988,6 @@ class LogementUnifieController extends Controller
             }
             // ************* fin suppression photos *************
             
-            $this->supprimerLogements($logementUnifie, $sitesAEnregistrer);
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalLogements as $logement) {
-                if (!$logementUnifie->getLogements()->contains($logement)) {
-
-//                    //  suppression de la station sur le site
-//                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
-//                    $entitySite = $emSite->find(DepartementUnifie::class, $logementUnifie->getId());
-//                    $departementSite = $entitySite->getDepartements()->first();
-//                    $emSite->remove($departementSite);
-//
-//                    $emSite->flush();
-////                    dump($departement);
-//                    $departement->setDepartementUnifie(null);
-                    $emSite = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
-                    $logementSite = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logementUnifie));
-
-
-                    /** @var LogementPhoto $logementPhotoSite */
-                    if (!empty($logementSite->getPhotos())) {
-                        foreach ($logementSite->getPhotos() as $logementPhotoSite) {
-                            $logementSite->removePhoto($logementPhotoSite);
-//                                        $logementPhotoSite->setLogement(null);
-//                                        $logementPhotoSite->setPhoto(null);
-                            $emSite->remove($logementPhotoSite);
-                            $emSite->remove($logementPhotoSite->getPhoto());
-                        }
-                        $emSite->flush();
-                    }
-                    
-                    $emSite->remove($logementSite);
-                    $emSite->flush();
-
-
-                    // *** suppression des logementPhotos de l'logement à supprimer ***
-                    /** @var LogementPhoto $logementPhoto */
-                    $logementPhotoSites = $em->getRepository(LogementPhoto::class)->findBy(array('logement' => $logement));
-                    if (!empty($logementPhotoSites)) {
-                        foreach ($logementPhotoSites as $logementPhoto) {
-                            $logementPhoto->setPhoto(null);
-                            $logementPhoto->setLogement(null);
-                            $em->remove($logementPhoto);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des logementPhotos de l'logement à supprimer ***
-                    
-                    $em->remove($logement);
-                }
-            }
-//            $this->copieVersSites($logementUnifie);
-
-
             // CAS D'UN NOUVEAU 'LOGEMENT PHOTO' OU DE MODIFICATION D'UN "LOGEMENT PHOTO"
             /** @var LogementPhoto $logementPhoto */
             // tableau pour la suppression des anciens photos
