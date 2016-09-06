@@ -29,6 +29,14 @@ class ZoneTouristique
      * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -165,7 +173,7 @@ class ZoneTouristique
      */
     public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
-        $this->stations[] = $station->setZoneTouristique($this);
+        $this->stations[] = $station;
 
         return $this;
     }
@@ -188,5 +196,73 @@ class ZoneTouristique
     public function getStations()
     {
         return $this->stations;
+    }
+
+    /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image
+     *
+     * @return ZoneTouristique
+     */
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image)
+    {
+        $this->images[] = $image->setZoneTouristique($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image
+     */
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image)
+    {
+        $this->images->removeElement($image);
+    }
+
+    /**
+     * Get images
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Add photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo
+     *
+     * @return ZoneTouristique
+     */
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo)
+    {
+        $this->photos[] = $photo->setZoneTouristique($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove photo
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo
+     */
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo)
+    {
+        $this->photos->removeElement($photo);
+    }
+
+    /**
+     * Get photos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
     }
 }
