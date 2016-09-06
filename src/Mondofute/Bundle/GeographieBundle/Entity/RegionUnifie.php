@@ -37,6 +37,17 @@ class RegionUnifie
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Remove region
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
