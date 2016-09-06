@@ -1,0 +1,3 @@
+hi_dev_code_promo_homepage:
+    path:     /
+    defaults: { _controller: HiDevCodePromoBundle:Default:index }
