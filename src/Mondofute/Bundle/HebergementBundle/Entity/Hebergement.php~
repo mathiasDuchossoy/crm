@@ -52,6 +52,10 @@ class Hebergement
      * @var \Doctrine\Common\Collections\Collection
      */
     private $emplacements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $visuels;
 
     /**
      * Constructor
@@ -81,7 +85,8 @@ class Hebergement
      */
     public function setHebergementUnifie(
         HebergementUnifie $hebergementUnifie = null
-    ) {
+    )
+    {
         $this->hebergementUnifie = $hebergementUnifie;
 
         return $this;
@@ -283,7 +288,8 @@ class Hebergement
      */
     public function setTypeHebergement(
         TypeHebergement $typeHebergement = null
-    ) {
+    )
+    {
         $this->typeHebergement = $typeHebergement;
 
         return $this;
@@ -346,5 +352,39 @@ class Hebergement
     public function removeEmplacement(EmplacementHebergement $emplacement)
     {
         $this->emplacements->removeElement($emplacement);
+    }
+
+    /**
+     * Add visuel
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel
+     *
+     * @return Hebergement
+     */
+    public function addVisuel(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel)
+    {
+        $this->visuels[] = $visuel->setHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove visuel
+     *
+     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel
+     */
+    public function removeVisuel(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel)
+    {
+        $this->visuels->removeElement($visuel);
+    }
+
+    /**
+     * Get visuels
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getVisuels()
+    {
+        return $this->visuels;
     }
 }
