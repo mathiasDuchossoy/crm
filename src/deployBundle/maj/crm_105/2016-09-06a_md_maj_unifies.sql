@@ -1,2 +1,3 @@
 ALTER TABLE hebergement ADD actif TINYINT(1) DEFAULT '1' NOT NULL;
 ALTER TABLE logement CHANGE actif actif TINYINT(1) DEFAULT '1' NOT NULL;
+ALTER TABLE zone_touristique ADD actif TINYINT(1) DEFAULT '1' NOT NULL;

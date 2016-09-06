@@ -37,6 +37,10 @@ class ZoneTouristique
      * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
@@ -264,5 +268,29 @@ class ZoneTouristique
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return ZoneTouristique
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }
