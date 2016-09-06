@@ -454,12 +454,13 @@
         {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
         {#{% endfor %}#}
         var items = [];
+        items.push('_hebergement_unifie_hebergements_entry_typeHebergement');
         items.push('_hebergement_unifie_hebergements_entry_station');
-        {#items.push("_domaine_unifie_domaines_entry_domaineParent");#}
-        {#{% for langue in langues %}#}
-        {#items.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#items.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
-        {#{% endfor %}#}
+        items.push('_hebergement_unifie_hebergements_entry_classement_valeur');
+        items.push('_hebergement_unifie_hebergements_entry_classement_unite');
+        {% for langue in langues %}
+        items.push("_hebergement_unifie_hebergements_entry_traductions_entry_nom_{{ langue.code }}");
+        {% endfor %}
     </script>
 
     {{ parent() }}
