@@ -1,0 +1,27 @@
+<?php
+
+namespace Mondofute\Bundle\CodePromoBundle\Entity;
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+
+/**
+ * CodePromo
+ */
+class CodePromo extends BaseCodePromo
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

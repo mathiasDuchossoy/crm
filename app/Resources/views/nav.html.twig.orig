@@ -291,6 +291,7 @@
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
+<<<<<<< 238d1e8a8f6f982aa75033266de0d7a4efc11506
         {# ***** PRESTATION ANNEXE ***** #}
         <li role="presentation"
             class="dropdown {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
@@ -314,6 +315,8 @@
             </ul>
         </li>
         {# ***** FIN PRESTATION ANNEXE ***** #}
+||||||| merged common ancestors
+=======
         {# ***** CODE PROMO ***** #}
         <li role="presentation"
             class="dropdown {% if 'codepromo' in app.request.attributes.get('_route') %} active {% endif %}">
@@ -337,6 +340,7 @@
             </ul>
         </li>
         {# ***** FIN CODE PROMO ***** #}
+>>>>>>> mis en place crud MondofuteCodePromoBundle
     </ul>
     {# ***** LOGIN ***** #}
     <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">
