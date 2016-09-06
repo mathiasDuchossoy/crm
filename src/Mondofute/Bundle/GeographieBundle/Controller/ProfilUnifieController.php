@@ -82,8 +82,12 @@ class ProfilUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->supprimerProfils($profilUnifie, $sitesAEnregistrer);
-
+            /** @var Profil $entity */
+            foreach ($profilUnifie->getProfils() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
             // ***** Gestion des Medias *****
             foreach ($request->get('profil_unifie')['profils'] as $key => $profil) {
@@ -316,6 +320,9 @@ class ProfilUnifieController extends Controller
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $emSite->find(ProfilUnifie::class, $entity->getId())))) {
                     $entitySite = new ProfilUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
@@ -326,7 +333,9 @@ class ProfilUnifieController extends Controller
 //            copie des données station
                 $profilSite
                     ->setSite($site)
-                    ->setProfilUnifie($entitySite);
+                    ->setProfilUnifie($entitySite)
+                    ->setActif($profil->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($profil->getTraductions() as $profilTraduc) {
@@ -745,22 +754,23 @@ class ProfilUnifieController extends Controller
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($profilUnifie->getProfils() as $profil) {
-                array_push($sitesAEnregistrer, $profil->getSite()->getId());
+            /** @var Profil $entity */
+            foreach ($profilUnifie->getProfils() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $originalProfils = new ArrayCollection();
         $originalProfilImages = new ArrayCollection();
         $originalImages = new ArrayCollection();
         $originalProfilPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($profilUnifie->getProfils() as $profil) {
-            $originalProfils->add($profil);
             // si l'profil est celui du CRM
             if ($profil->getSite()->getCrm() == 1) {
                 // on parcourt les profilImage pour les comparer ensuite
@@ -780,9 +790,7 @@ class ProfilUnifieController extends Controller
             }
         }
 
-
         $this->ajouterProfilsDansForm($profilUnifie);
-//        $this->dispacherDonneesCommune($profilUnifie);
         $this->profilsSortByAffichage($profilUnifie);
         $deleteForm = $this->createDeleteForm($profilUnifie);
 
@@ -792,7 +800,13 @@ class ProfilUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
+            foreach ($profilUnifie->getProfils() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }else{
+                    $entity->setActif(true);
+                }
+            }
 
             // ************* suppression images *************
             // ** CAS OU L'ON SUPPRIME UN "PROFIL IMAGE" **
@@ -919,75 +933,7 @@ class ProfilUnifieController extends Controller
             }
             // ************* fin suppression photos *************
 
-            
-
-            $this->supprimerProfils($profilUnifie, $sitesAEnregistrer);
-
             // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalProfils as $profil) {
-                if (!$profilUnifie->getProfils()->contains($profil)) {
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getManager($profil->getSite()->getLibelle());
-                    $entitySite = $emSite->find(ProfilUnifie::class, $profilUnifie->getId());
-                    $profilSite = $entitySite->getProfils()->first();
-
-
-                    /** @var ProfilImage $profilImageSite */
-                    if (!empty($profilSite->getImages())) {
-                        foreach ($profilSite->getImages() as $profilImageSite) {
-                            $profilSite->removeImage($profilImageSite);
-//                                        $profilImageSite->setProfil(null);
-//                                        $profilImageSite->setImage(null);
-                            $emSite->remove($profilImageSite);
-                            $emSite->remove($profilImageSite->getImage());
-                        }
-                        $emSite->flush();
-                    }
-                    /** @var ProfilPhoto $profilPhotoSite */
-                    if (!empty($profilSite->getPhotos())) {
-                        foreach ($profilSite->getPhotos() as $profilPhotoSite) {
-                            $profilSite->removePhoto($profilPhotoSite);
-//                                        $profilPhotoSite->setProfil(null);
-//                                        $profilPhotoSite->setPhoto(null);
-                            $emSite->remove($profilPhotoSite);
-                            $emSite->remove($profilPhotoSite->getPhoto());
-                        }
-                        $emSite->flush();
-                    }
-                    
-                    $emSite->remove($profilSite);
-                    $emSite->flush();
-                    $profil->setProfilUnifie(null);
-
-
-                    // *** suppression des profilImages de l'profil à supprimer ***
-                    /** @var ProfilImage $profilImage */
-                    $profilImageSites = $em->getRepository(ProfilImage::class)->findBy(array('profil' => $profil));
-                    if (!empty($profilImageSites)) {
-                        foreach ($profilImageSites as $profilImage) {
-                            $profilImage->setImage(null);
-                            $profilImage->setProfil(null);
-                            $em->remove($profilImage);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des profilImages de l'profil à supprimer ***
-                    // *** suppression des profilPhotos de l'profil à supprimer ***
-                    /** @var ProfilPhoto $profilPhoto */
-                    $profilPhotoSites = $em->getRepository(ProfilPhoto::class)->findBy(array('profil' => $profil));
-                    if (!empty($profilPhotoSites)) {
-                        foreach ($profilPhotoSites as $profilPhoto) {
-                            $profilPhoto->setPhoto(null);
-                            $profilPhoto->setProfil(null);
-                            $em->remove($profilPhoto);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des profilPhotos de l'profil à supprimer ***
-                    
-                    $em->remove($profil);
-                }
-            }
 
 
             // ***** Gestion des Medias *****
