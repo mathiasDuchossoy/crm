@@ -19,6 +19,10 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             type: boolean
             options:
                 default: false
+        actif:
+            type: boolean
+            options:
+                default: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
