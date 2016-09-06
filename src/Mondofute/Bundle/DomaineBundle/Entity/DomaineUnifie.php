@@ -38,6 +38,17 @@ class DomaineUnifie
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Remove domaine
      *
      * @param Domaine $domaine

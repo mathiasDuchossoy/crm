@@ -59,6 +59,10 @@ class Domaine
      * @var boolean
      */
     private $photosParent = false;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
@@ -412,6 +416,30 @@ class Domaine
     public function setPhotosParent($photosParent)
     {
         $this->photosParent = $photosParent;
+
+        return $this;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Domaine
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
 
         return $this;
     }
