@@ -37,6 +37,10 @@ class Profil
      * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
@@ -180,7 +184,6 @@ class Profil
         return $this;
     }
 
-
     /**
      * Add image
      *
@@ -267,5 +270,29 @@ class Profil
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Profil
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }
