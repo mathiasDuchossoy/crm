@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Knp\Component\Pager\Paginator;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\SecteurImage;
@@ -84,7 +85,13 @@ class SecteurUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
+            /** @var Secteur $entity */
+            foreach ($secteurUnifie->getSecteurs() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
+
             /** @var Secteur $secteur */
 
             // ***** Gestion des Medias *****
@@ -285,24 +292,6 @@ class SecteurUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les secteurs qui ne doivent pas être enregistrer
-     * @param SecteurUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerSecteurs(SecteurUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getSecteurs() as $secteur) {
-            if (!in_array($secteur->getSite()->getId(), $sitesAEnregistrer)) {
-                $secteur->setSecteurUnifie(null);
-                $entity->removeSecteur($secteur);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité secteur
      * @param SecteurUnifie $entity
      */
@@ -322,6 +311,9 @@ class SecteurUnifieController extends Controller
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $emSite->find(SecteurUnifie::class, $entity->getId())))) {
                     $entitySite = new SecteurUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération du secteur sur le site distant si elle existe sinon créer une nouvelle entité
@@ -331,7 +323,9 @@ class SecteurUnifieController extends Controller
 //            copie des données secteur
                 $secteurSite
                     ->setSite($site)
-                    ->setSecteurUnifie($entitySite);
+                    ->setSecteurUnifie($entitySite)
+                    ->setActif($secteur->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($secteur->getTraductions() as $secteurTraduc) {
@@ -745,13 +739,14 @@ class SecteurUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($secteurUnifie->getSecteurs() as $secteur) {
-                array_push($sitesAEnregistrer, $secteur->getSite()->getId());
+            /** @var Secteur $entity */
+            foreach ($secteurUnifie->getSecteurs() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
@@ -794,11 +789,14 @@ class SecteurUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
-
-//        dump($editForm);die;
-
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
+            foreach ($secteurUnifie->getSecteurs() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }else{
+                    $entity->setActif(true);
+                }
+            }
 
             // ************* suppression images *************
             // ** CAS OU L'ON SUPPRIME UN "SECTEUR IMAGE" **
@@ -924,10 +922,6 @@ class SecteurUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-
-            $this->supprimerSecteurs($secteurUnifie, $sitesAEnregistrer);
-//            $this->mettreAJourSecteurCrm($secteurUnifie, $secteurCrm);
-//            $em->persist($secteurCrm);
 
             // Supprimer la relation entre la station et stationUnifie
             foreach ($originalSecteurs as $secteur) {
