@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
@@ -96,11 +97,16 @@ class DomaineUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Domaine $entity */
+            foreach ($domaineUnifie->getDomaines() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
+
             // Récupérer le controleur et lui donner le container de celui dans lequel on est
             $domaineCarteIdentiteController = new DomaineCarteIdentiteUnifieController();
             $domaineCarteIdentiteController->setContainer($this->container);
-
-            $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
 
             // ***** Carte d'identité *****
             /** @var Domaine $domaine */
@@ -451,24 +457,6 @@ class DomaineUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les domaines qui ne doivent pas être enregistrer
-     * @param DomaineUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerDomaines(DomaineUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getDomaines() as $domaine) {
-            if (!in_array($domaine->getSite()->getId(), $sitesAEnregistrer)) {
-                $domaine->setDomaineUnifie(null);
-                $entity->removeDomaine($domaine);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * @param Request $request
      * @param DomaineUnifie $domaineUnifie
      */
@@ -534,6 +522,9 @@ class DomaineUnifieController extends Controller
 //                    $emSite->find( DomaineUnifie::class, $entity->getId());
                 if (is_null(($entitySite = $emSite->find(DomaineUnifie::class, $entity->getId())))) {
                     $entitySite = new DomaineUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la domaine sur le site distant si elle existe sinon créer une nouvelle entité
@@ -548,7 +539,9 @@ class DomaineUnifieController extends Controller
                     ->setDomaineParent($domaineParent)
                     ->setDomaineCarteIdentite($domaineCarteIdentite)
                     ->setImagesParent($imagesParent)
-                    ->setPhotosParent($photosParent);
+                    ->setPhotosParent($photosParent)
+                    ->setActif($domaine->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($domaine->getTraductions() as $domaineTraduc) {
@@ -964,24 +957,24 @@ class DomaineUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($domaineUnifie->getDomaines() as $domaine) {
-                array_push($sitesAEnregistrer, $domaine->getSite()->getId());
+            /** @var Domaine $entity */
+            foreach ($domaineUnifie->getDomaines() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $originalDomaines = new ArrayCollection();
         $originalDomaineImages = new ArrayCollection();
         $originalImages = new ArrayCollection();
         $originalDomainePhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($domaineUnifie->getDomaines() as $domaine) {
-            $originalDomaines->add($domaine);
             // si l'domaine est celui du CRM
             if ($domaine->getSite()->getCrm() == 1) {
                 // on parcourt les domaineImage pour les comparer ensuite
@@ -1014,6 +1007,13 @@ class DomaineUnifieController extends Controller
             $domaineCarteIdentiteUnifieController = new DomaineCarteIdentiteUnifieController();
             $domaineCarteIdentiteUnifieController->setContainer($this->container);
             try {
+                foreach ($domaineUnifie->getDomaines() as $entity){
+                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                        $entity->setActif(false);
+                    }else{
+                        $entity->setActif(true);
+                    }
+                }
 
                 // on vérifie si les domaines on un parent,
                 // s'il le domaine n'a pas de parent on lui met dans tous les cas la liaison aux medias parent à false
@@ -1150,91 +1150,9 @@ class DomaineUnifieController extends Controller
                 }
                 // ************* fin suppression photos *************
 
-                $this->supprimerDomaines($domaineUnifie, $sitesAEnregistrer);
-
-                // Supprimer la relation entre la domaine et domaineUnifie
-                foreach ($originalDomaines as $domaine) {
-                    if (!$domaineUnifie->getDomaines()->contains($domaine)) {
-
-                        //  suppression de la domaine sur le site
-                        $emSite = $this->getDoctrine()->getEntityManager($domaine->getSite()->getLibelle());
-                        $entitySite = $emSite->find(DomaineUnifie::class, $domaineUnifie->getId());
-                        $domaineSite = $entitySite->getDomaines()->first();
-
-
-                        /** @var DomaineImage $domaineImageSite */
-                        if (!empty($domaineSite->getImages())) {
-                            foreach ($domaineSite->getImages() as $domaineImageSite) {
-                                $domaineSite->removeImage($domaineImageSite);
-//                                        $domaineImageSite->setDomaine(null);
-//                                        $domaineImageSite->setImage(null);
-                                $emSite->remove($domaineImageSite);
-                                $emSite->remove($domaineImageSite->getImage());
-                            }
-                            $emSite->flush();
-                        }
-                        /** @var DomainePhoto $domainePhotoSite */
-                        if (!empty($domaineSite->getPhotos())) {
-                            foreach ($domaineSite->getPhotos() as $domainePhotoSite) {
-                                $domaineSite->removePhoto($domainePhotoSite);
-//                                        $domainePhotoSite->setDomaine(null);
-//                                        $domainePhotoSite->setPhoto(null);
-                                $emSite->remove($domainePhotoSite);
-                                $emSite->remove($domainePhotoSite->getPhoto());
-                            }
-                            $emSite->flush();
-                        }
-
-                        $emSite->remove($domaineSite);
-                        $emSite->flush();
-
-                        $domaineUnifie->removeDomaine($domaine);
-                        $domaine->setDomaineUnifie(null);
-                        $domaineParent = $domaine->getDomaineParent();
-
-
-                        $domaineCI = $domaine->getDomaineCarteIdentite();
-                        $domaine->getDomaineCarteIdentite()->removeDomaine($domaine);
-
-
-                        // *** suppression des domaineImages de l'domaine à supprimer ***
-                        /** @var DomaineImage $domaineImage */
-                        $domaineImageSites = $em->getRepository(DomaineImage::class)->findBy(array('domaine' => $domaine));
-                        if (!empty($domaineImageSites)) {
-                            foreach ($domaineImageSites as $domaineImage) {
-                                $domaineImage->setImage(null);
-                                $domaineImage->setDomaine(null);
-                                $em->remove($domaineImage);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des domaineImages de l'domaine à supprimer ***
-                        // *** suppression des domainePhotos de l'domaine à supprimer ***
-                        /** @var DomainePhoto $domainePhoto */
-                        $domainePhotoSites = $em->getRepository(DomainePhoto::class)->findBy(array('domaine' => $domaine));
-                        if (!empty($domainePhotoSites)) {
-                            foreach ($domainePhotoSites as $domainePhoto) {
-                                $domainePhoto->setPhoto(null);
-                                $domainePhoto->setDomaine(null);
-                                $em->remove($domainePhoto);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des domainePhotos de l'domaine à supprimer ***
-
-
-                        $em->remove($domaine);
-
-                        if (empty($domaineParent) || $domaineCI != $domaineParent->getDomaineCarteIdentite()) {
-                            $domaineCarteIdentiteUnifieController->deleteEntity($domaineCI->getDomaineCarteIdentiteUnifie());
-                        }
-                    }
-                }
-
                 // ***** carte d'identité *****
                 $this->carteIdentiteEdit($request, $domaineUnifie);
                 // ***** fin carte d'identité *****
-
 
                 // ***** Gestion des Medias *****
                 // CAS D'UN NOUVEAU 'DOMAINE IMAGE' OU DE MODIFICATION D'UN "DOMAINE IMAGE"
