@@ -35,6 +35,10 @@ class Secteur
      * @var \Doctrine\Common\Collections\Collection
      */
     private $images;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $photos;
 
     /**
      * Constructor
@@ -227,11 +231,6 @@ class Secteur
     {
         return $this->images;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $photos;
-
 
     /**
      * Add photo
@@ -242,7 +241,7 @@ class Secteur
      */
     public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
     {
-        $this->photos[] = $photo;
+        $this->photos[] = $photo->setSecteur($this);
 
         return $this;
     }
