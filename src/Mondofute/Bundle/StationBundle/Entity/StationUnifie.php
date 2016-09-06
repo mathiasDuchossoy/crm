@@ -38,6 +38,17 @@ class StationUnifie
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Remove station
      *
      * @param Station $station
