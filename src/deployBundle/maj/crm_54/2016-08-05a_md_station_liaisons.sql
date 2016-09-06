@@ -1,4 +1,4 @@
-CREATE TABLE grande_ville_traduction (
+CREATE TABLE IF NOT EXISTS grande_ville_traduction (
   id              INT UNSIGNED AUTO_INCREMENT NOT NULL,
   grande_ville_id INT UNSIGNED DEFAULT NULL,
   langue_id       INT UNSIGNED DEFAULT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE grande_ville_traduction (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE grande_ville (
+CREATE TABLE IF NOT EXISTS grande_ville (
   id                 INT UNSIGNED AUTO_INCREMENT NOT NULL,
   coordonnees_gps_id INT UNSIGNED DEFAULT NULL,
   UNIQUE INDEX UNIQ_DEC3C45D63A2FADA (coordonnees_gps_id),
@@ -19,7 +19,7 @@ CREATE TABLE grande_ville (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE station_secteur (
+CREATE TABLE IF NOT EXISTS station_secteur (
   station_id INT UNSIGNED NOT NULL,
   secteur_id INT UNSIGNED NOT NULL,
   INDEX IDX_C9E3804121BDB235 (station_id),
@@ -29,7 +29,7 @@ CREATE TABLE station_secteur (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE station_zone_touristique (
+CREATE TABLE IF NOT EXISTS station_zone_touristique (
   station_id          INT UNSIGNED NOT NULL,
   zone_touristique_id INT UNSIGNED NOT NULL,
   INDEX IDX_46AD805C21BDB235 (station_id),
@@ -39,7 +39,7 @@ CREATE TABLE station_zone_touristique (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE station_profil (
+CREATE TABLE IF NOT EXISTS station_profil (
   station_id INT UNSIGNED NOT NULL,
   profil_id  INT UNSIGNED NOT NULL,
   INDEX IDX_2934A17121BDB235 (station_id),
@@ -49,7 +49,7 @@ CREATE TABLE station_profil (
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_unicode_ci
   ENGINE = InnoDB;
-CREATE TABLE station_comment_venir_grande_ville (
+CREATE TABLE IF NOT EXISTS station_comment_venir_grande_ville (
   id                       INT UNSIGNED AUTO_INCREMENT NOT NULL,
   station_comment_venir_id INT UNSIGNED DEFAULT NULL,
   grande_ville_id          INT UNSIGNED DEFAULT NULL,
