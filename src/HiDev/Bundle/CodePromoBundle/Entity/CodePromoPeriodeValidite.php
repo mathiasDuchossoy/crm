@@ -1,0 +1,10 @@
+<?php
+
+namespace HiDev\Bundle\CodePromoBundle\Entity;
+
+/**
+ * CodePromoPeriodeValidite
+ */
+class CodePromoPeriodeValidite extends CodePromoPeriode
+{
+}

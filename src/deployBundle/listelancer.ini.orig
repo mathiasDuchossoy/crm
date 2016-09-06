@@ -7,21 +7,34 @@
 ;maj\crm_71\2016-08-02a_md_medias.sql
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
-<<<<<<< d37f3d68f0a7fd4ab8eb8cdd03fe26492686975a
 ;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
+<<<<<<< fbe8971f6db5c1485aaf43f136c0751c6b7d85b7
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+||||||| merged common ancestors
 
 maj\crm_54\2016-08-08a_md_grande_ville.sql
 maj\crm_88\2016-08-09a_md_medias_domaine.sql
 maj\crm_88\2016-08-09b_md_medias_domaines.sql
 maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
-
-maj\crm_65\2016-08-26a_md_station.sql
-
-maj\crm_94\2016-08-22a_md_prestation_annexe.sql
-||||||| merged common ancestors
-maj\crm_94\2016-08-22a_md_prestation_annexe.sql
 =======
-maj\crm_93\2016-08-23a_md_prestation_annexe.sql
->>>>>>> PrestationAnnexeUnifie
+
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;maj\crm_54\2016-08-09a_md_visuels_station.sql
+;maj\crm_54\2016-08-09b_md_visuels_station.sql
+;
+;maj\crm_65\2016-08-26a_md_station.sql
+>>>>>>> Création des différentes entités pour codePromoGénérale
+
+<<<<<<< fbe8971f6db5c1485aaf43f136c0751c6b7d85b7
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+
+||||||| merged common ancestors
+maj\crm_65\2016-08-26a_md_station.sql
+=======
+maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+>>>>>>> Création des différentes entités pour codePromoGénérale
