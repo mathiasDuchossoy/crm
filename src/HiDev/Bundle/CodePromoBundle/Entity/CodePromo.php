@@ -45,10 +45,6 @@ abstract class CodePromo
      */
     private $prixMini;
     /**
-     * @var integer
-     */
-    private $usage;
-    /**
      * @var boolean
      */
     private $actif;
@@ -220,30 +216,6 @@ abstract class CodePromo
     }
 
     /**
-     * Get usage
-     *
-     * @return integer
-     */
-    public function getUsage()
-    {
-        return $this->usage;
-    }
-
-    /**
-     * Set usage
-     *
-     * @param integer $usage
-     *
-     * @return CodePromo
-     */
-    public function setUsage($usage)
-    {
-        $this->usage = $usage;
-
-        return $this;
-    }
-
-    /**
      * Get actif
      *
      * @return boolean
@@ -299,5 +271,34 @@ abstract class CodePromo
     public function getCodePromoPeriodeValidites()
     {
         return $this->codePromoPeriodeValidites;
+    }
+    /**
+     * @var integer
+     */
+    private $usageCodePromo;
+
+
+    /**
+     * Set usageCodePromo
+     *
+     * @param integer $usageCodePromo
+     *
+     * @return CodePromo
+     */
+    public function setUsageCodePromo($usageCodePromo)
+    {
+        $this->usageCodePromo = $usageCodePromo;
+
+        return $this;
+    }
+
+    /**
+     * Get usageCodePromo
+     *
+     * @return integer
+     */
+    public function getUsageCodePromo()
+    {
+        return $this->usageCodePromo;
     }
 }

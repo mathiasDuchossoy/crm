@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -24,13 +25,19 @@ class CodePromo extends BaseCodePromo
      */
     private $codePromoUnifie;
     /**
-     * @var boolean
-     */
-    private $actif = true;
-    /**
      * @var Site
      */
     private $site;
+    /**
+     * @var boolean
+     */
+    private $actifSite = true;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->codePromoPeriodeSejours = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -120,6 +127,30 @@ class CodePromo extends BaseCodePromo
     public function setSite(Site $site = null)
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get actifSite
+     *
+     * @return boolean
+     */
+    public function getActifSite()
+    {
+        return $this->actifSite;
+    }
+
+    /**
+     * Set actifSite
+     *
+     * @param boolean $actifSite
+     *
+     * @return CodePromo
+     */
+    public function setActifSite($actifSite)
+    {
+        $this->actifSite = $actifSite;
 
         return $this;
     }

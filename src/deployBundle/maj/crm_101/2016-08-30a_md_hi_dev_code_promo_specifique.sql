@@ -1,0 +1,10 @@
+CREATE TABLE code_promo_code_promo_periode_sejour (code_promo_id INT UNSIGNED NOT NULL, code_promo_periode_sejour_id INT UNSIGNED NOT NULL, INDEX IDX_9ECA6D23294102D4 (code_promo_id), UNIQUE INDEX UNIQ_9ECA6D23488CD340 (code_promo_periode_sejour_id), PRIMARY KEY(code_promo_id, code_promo_periode_sejour_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE code_promo_periode_sejour (id INT UNSIGNED AUTO_INCREMENT NOT NULL, date_debut DATETIME NOT NULL, date_fin DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE code_promo_unifie (id INT AUTO_INCREMENT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE code_promo_code_promo_periode_sejour ADD CONSTRAINT FK_9ECA6D23294102D4 FOREIGN KEY (code_promo_id) REFERENCES code_promo (id) ON DELETE CASCADE;
+ALTER TABLE code_promo_code_promo_periode_sejour ADD CONSTRAINT FK_9ECA6D23488CD340 FOREIGN KEY (code_promo_periode_sejour_id) REFERENCES code_promo_periode_sejour (id);
+ALTER TABLE code_promo ADD code_promo_unifie_id INT DEFAULT NULL, ADD site_id INT UNSIGNED DEFAULT NULL, ADD actif_site TINYINT(1) DEFAULT '1' NOT NULL;
+ALTER TABLE code_promo ADD CONSTRAINT FK_5C4683B72DEC8E9D FOREIGN KEY (code_promo_unifie_id) REFERENCES code_promo_unifie (id);
+ALTER TABLE code_promo ADD CONSTRAINT FK_5C4683B7F6BD1646 FOREIGN KEY (site_id) REFERENCES site (id);
+CREATE INDEX IDX_5C4683B72DEC8E9D ON code_promo (code_promo_unifie_id);
+CREATE INDEX IDX_5C4683B7F6BD1646 ON code_promo (site_id);

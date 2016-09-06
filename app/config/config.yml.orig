@@ -122,9 +122,13 @@ doctrine:
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
+<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
+||||||| merged common ancestors
+=======
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -166,9 +170,13 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
+<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
+||||||| merged common ancestors
+=======
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -207,9 +215,13 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
+<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
+||||||| merged common ancestors
+=======
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
 
 # Swiftmailer Configuration
 swiftmailer:
