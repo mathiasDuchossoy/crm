@@ -10,6 +10,11 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
