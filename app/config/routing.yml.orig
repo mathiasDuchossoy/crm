@@ -1,23 +1,18 @@
-<<<<<<< 238d1e8a8f6f982aa75033266de0d7a4efc11506
+<<<<<<< 127c890c500bd5ae385293f8ddc6d151ab7584a1
 mondofute_prestationannexe:
     resource: "@MondofutePrestationAnnexeBundle/Resources/config/routing.yml"
+
+mondofute_code_promo:
+    resource: "@MondofuteCodePromoBundle/Resources/config/routing.yml"
     prefix:   /
 
-hi_dev_code_promo:
-    resource: "@HiDevCodePromoBundle/Resources/config/routing.yml"
 ||||||| merged common ancestors
-hi_dev_code_promo:
-    resource: "@HiDevCodePromoBundle/Resources/config/routing.yml"
 =======
 mondofute_code_promo:
     resource: "@MondofuteCodePromoBundle/Resources/config/routing.yml"
->>>>>>> mis en place crud MondofuteCodePromoBundle
     prefix:   /
 
-#hi_dev_code_promo:
-#    resource: "@HiDevCodePromoBundle/Resources/config/routing.yml"
-#    prefix:   /
-
+>>>>>>> mise en place du crud pour codePromoUnifie
 mondofute_core:
     resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
     prefix:   /
