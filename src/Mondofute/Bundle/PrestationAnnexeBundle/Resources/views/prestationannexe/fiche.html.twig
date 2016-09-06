@@ -68,28 +68,22 @@
         function sortSousFamilleByFamille(element) {
             $element = $(element);
             var famillePrestationAnnexeId = $element.val();
-            $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_sousFamillePrestationAnnexe"]').each(function (index, select) {
-                $select = $(select);
-//                if ($select.data('index') == $element.data('index')) {
-                    $select.find('option').each(function (index, option) {
-                        $option = $(option);
-                        if ($option.data('famille_prestation_annexe_id')) {
-                            if ($option.data('famille_prestation_annexe_id') != famillePrestationAnnexeId) {
-                                $option.hide();
-                                $option.prop("selected", false);
-                            }
-                            else {
-                                $option.show();
-                            }
-                        }
-                    });
-//                }
+            $prestation_annexe_sousFamillePrestationAnnexe = $('#prestation_annexe_sousFamillePrestationAnnexe');
+            $prestation_annexe_sousFamillePrestationAnnexe.find('option').each(function (index, option) {
+                $option = $(option);
+                if ($option.data('famille_prestation_annexe_id')) {
+                    if ($option.data('famille_prestation_annexe_id') != famillePrestationAnnexeId) {
+                        $option.hide();
+                        $option.prop("selected", false);
+                    }
+                    else {
+                        $option.show();
+                    }
+                }
             });
         }
 
-        $('[data-unique_block_prefix="_prestation_annexe_unifie_prestationAnnexes_entry_famillePrestationAnnexe"]').each(function (index, select) {
-            sortSousFamilleByFamille(select);
-        });
+        sortSousFamilleByFamille($('#prestation_annexe_famillePrestationAnnexe'));
 
     </script>
 {% endblock %}
