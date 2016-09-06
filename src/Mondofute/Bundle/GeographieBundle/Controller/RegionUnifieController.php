@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\GeographieBundle\Entity\Region;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionImage;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionImageTraduction;
@@ -83,10 +84,12 @@ class RegionUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-//            $this->supprimerRegions($regionUnifie, $sitesAEnregistrer)
-//                ->ajouterCrm($regionUnifie);
-            $this->supprimerRegions($regionUnifie, $sitesAEnregistrer);
-
+            /** @var Region $entity */
+            foreach ($regionUnifie->getRegions() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
             // ***** Gestion des Medias *****
             foreach ($request->get('region_unifie')['regions'] as $key => $region) {
@@ -287,24 +290,6 @@ class RegionUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les regions qui ne doivent pas être enregistrer
-     * @param RegionUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerRegions(RegionUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getRegions() as $region) {
-            if (!in_array($region->getSite()->getId(), $sitesAEnregistrer)) {
-                $region->setRegionUnifie(null);
-                $entity->removeRegion($region);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité station
      * @param RegionUnifie $entity
      */
@@ -324,6 +309,9 @@ class RegionUnifieController extends Controller
 //                if (is_null(($entitySite = $emSite->getRepository(RegionUnifie::class)->findOneById(array($entity->getId()))))) {
                 if (is_null($entitySite = $emSite->find(RegionUnifie::class, $entity->getId()))) {
                     $entitySite = new RegionUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
@@ -334,7 +322,9 @@ class RegionUnifieController extends Controller
 //            copie des données station
                 $regionSite
                     ->setSite($site)
-                    ->setRegionUnifie($entitySite);
+                    ->setRegionUnifie($entitySite)
+                    ->setActif($region->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($region->getTraductions() as $regionTraduc) {
@@ -354,7 +344,8 @@ class RegionUnifieController extends Controller
                     $regionTraducSite->setLangue($langue)
                         ->setLibelle($regionTraduc->getLibelle())
                         ->setDescription($regionTraduc->getDescription())
-                        ->setRegion($regionSite);
+                        ->setRegion($regionSite)
+                    ;
 
 //                ajout a la collection de traduction de la station distante
                     $regionSite->addTraduction($regionTraducSite);
@@ -750,15 +741,14 @@ class RegionUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($regionUnifie->getRegions() as $region) {
-//                if (empty($region->getSite()->getCrm())) {
-                array_push($sitesAEnregistrer, $region->getSite()->getId());
-//                }
+            /** @var Region $entity */
+            foreach ($regionUnifie->getRegions() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
@@ -805,8 +795,13 @@ class RegionUnifieController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             try {
-                $this->supprimerRegions($regionUnifie, $sitesAEnregistrer);
-
+                foreach ($regionUnifie->getRegions() as $entity){
+                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                        $entity->setActif(false);
+                    }else{
+                        $entity->setActif(true);
+                    }
+                }
 
                 // ************* suppression images *************
                 // ** CAS OU L'ON SUPPRIME UN "REGION IMAGE" **
@@ -932,75 +927,6 @@ class RegionUnifieController extends Controller
                     }
                 }
                 // ************* fin suppression photos *************
-                
-//                $this->mettreAJourRegionCrm($regionUnifie, $regionCrm);
-//                $em->persist($regionCrm);
-                // Supprimer la relation entre la station et stationUnifie
-                foreach ($originalRegions as $region) {
-                    if (!$regionUnifie->getRegions()->contains($region)) {
-
-                        //  suppression de la station sur le site
-                        $emSite = $this->getDoctrine()->getManager($region->getSite()->getLibelle());
-                        $entitySite = $emSite->find(RegionUnifie::class, $regionUnifie->getId());
-                        $regionSite = $entitySite->getRegions()->first();
-
-                        /** @var RegionImage $regionImageSite */
-                        if (!empty($regionSite->getImages())) {
-                            foreach ($regionSite->getImages() as $regionImageSite) {
-                                $regionSite->removeImage($regionImageSite);
-//                                        $regionImageSite->setRegion(null);
-//                                        $regionImageSite->setImage(null);
-                                $emSite->remove($regionImageSite);
-                                $emSite->remove($regionImageSite->getImage());
-                            }
-                            $emSite->flush();
-                        }
-                        /** @var RegionPhoto $regionPhotoSite */
-                        if (!empty($regionSite->getPhotos())) {
-                            foreach ($regionSite->getPhotos() as $regionPhotoSite) {
-                                $regionSite->removePhoto($regionPhotoSite);
-//                                        $regionPhotoSite->setRegion(null);
-//                                        $regionPhotoSite->setPhoto(null);
-                                $emSite->remove($regionPhotoSite);
-                                $emSite->remove($regionPhotoSite->getPhoto());
-                            }
-                            $emSite->flush();
-                        }
-
-                        $emSite->remove($regionSite);
-                        $emSite->flush();
-                        $region->setRegionUnifie(null);
-
-
-                        // *** suppression des regionImages de l'region à supprimer ***
-                        /** @var RegionImage $regionImage */
-                        $regionImageSites = $em->getRepository(RegionImage::class)->findBy(array('region' => $region));
-                        if (!empty($regionImageSites)) {
-                            foreach ($regionImageSites as $regionImage) {
-                                $regionImage->setImage(null);
-                                $regionImage->setRegion(null);
-                                $em->remove($regionImage);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des regionImages de l'region à supprimer ***
-                        // *** suppression des regionPhotos de l'region à supprimer ***
-                        /** @var RegionPhoto $regionPhoto */
-                        $regionPhotoSites = $em->getRepository(RegionPhoto::class)->findBy(array('region' => $region));
-                        if (!empty($regionPhotoSites)) {
-                            foreach ($regionPhotoSites as $regionPhoto) {
-                                $regionPhoto->setPhoto(null);
-                                $regionPhoto->setRegion(null);
-                                $em->remove($regionPhoto);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des regionPhotos de l'region à supprimer ***
-                        
-                        $em->remove($region);
-
-                    }
-                }
 
                 // ***** Gestion des Medias *****
 //            dump($regionUnifie);die;
@@ -1240,7 +1166,6 @@ class RegionUnifieController extends Controller
      */
     public function deleteAction(Request $request, RegionUnifie $regionUnifie)
     {
-//        dump($request->headers->get('referer')).die();
         try {
 
 
