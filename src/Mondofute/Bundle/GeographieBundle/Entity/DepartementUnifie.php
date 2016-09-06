@@ -37,6 +37,17 @@ class DepartementUnifie
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Remove departement
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
