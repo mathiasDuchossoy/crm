@@ -31,7 +31,11 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
                 unsigned: true
             generator:
                 strategy: AUTO
-
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
