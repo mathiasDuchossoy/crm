@@ -13,6 +13,8 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
     fields:
         actif:
             type: boolean
+            options:
+                default: true
         accesPMR:
             type: boolean
         capacite:
