@@ -1,0 +1,6 @@
+CREATE TABLE logement_periode_locatif (periode_id INT NOT NULL, logement_id INT UNSIGNED NOT NULL, prix_public NUMERIC(10, 2) NOT NULL, stock INT NOT NULL, INDEX IDX_505E2A4AF384C1CF (periode_id), INDEX IDX_505E2A4A58ABF955 (logement_id), PRIMARY KEY(periode_id, logement_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE logement_periode (periode_id INT NOT NULL, logement_id INT UNSIGNED NOT NULL, actif TINYINT(1) NOT NULL, INDEX IDX_E9143DA1F384C1CF (periode_id), INDEX IDX_E9143DA158ABF955 (logement_id), PRIMARY KEY(periode_id, logement_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE logement_periode_locatif ADD CONSTRAINT FK_505E2A4AF384C1CF FOREIGN KEY (periode_id) REFERENCES logement_periode (periode_id);
+ALTER TABLE logement_periode_locatif ADD CONSTRAINT FK_505E2A4A58ABF955 FOREIGN KEY (logement_id) REFERENCES logement_periode (logement_id);
+ALTER TABLE logement_periode ADD CONSTRAINT FK_E9143DA1F384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+ALTER TABLE logement_periode ADD CONSTRAINT FK_E9143DA158ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id);

@@ -1,0 +1,32 @@
+Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CatalogueBundle\Repository\LogementPeriodeLocatifRepository
+    id:
+#        periodeLogement:
+#            associationKey: true
+        periode:
+            associationKey: true
+        logement:
+            associationKey: true
+    fields:
+        prixPublic:
+            type: decimal
+            precision: 10
+            scale: '2'
+        stock:
+            type: integer
+    oneToOne:
+        periode:
+            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+            inverseBy: periode
+            joinColumn:
+                name: periode_id
+                referencedColumnName: periode_id
+        logement:
+            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+            inversedBy: logement
+            joinColumn:
+                name: logement_id
+                referencedColumnName: logement_id
+    lifecycleCallbacks: {  }
