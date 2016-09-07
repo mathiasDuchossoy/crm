@@ -1,3 +1,7 @@
+#mondofute_logement_periode:
+#    resource: "@MondofuteLogementPeriodeBundle/Resources/config/routing.yml"
+#    prefix:   /
+
 mondofute_core:
     resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
     prefix:   /
