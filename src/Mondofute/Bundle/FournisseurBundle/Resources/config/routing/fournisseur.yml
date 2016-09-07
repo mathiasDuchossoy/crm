@@ -33,3 +33,8 @@ fournisseur_get_prestation_annexes:
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getPrestationAnnexes" }
     methods:  GET
 
+fournisseur_get_fournisseur_prestation_annexe_form:
+    path:     /getfournisseurprestationannexeform/{prestationAnnexeId}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeForm" }
+    methods:  GET
+
