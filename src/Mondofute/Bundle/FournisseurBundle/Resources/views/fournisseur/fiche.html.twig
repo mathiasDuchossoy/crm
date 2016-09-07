@@ -282,6 +282,7 @@
                     </div>
                 {% endif %}
             </div>
+
             {{ form_row(form.submit) }}
 
             {% set interlocuteurs %}
@@ -313,6 +314,7 @@
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
                 {% endfor %}
             </div>
+
             <div id="values_prestation_annexe" >
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
@@ -1362,7 +1364,7 @@
             }
         }
     </script>
-<script type="text/javascript">
+    <script type="text/javascript">
         function updatePrestationAnnexe(element) {
             $element = $(element);
             $(element).find('input:checkbox').each(function () {
@@ -1403,16 +1405,18 @@
             var fournisseurId = $element.data('fournisseur_id');
             $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
             if ($element.is(':checked')) {
-                var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-
-                $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
-                ).done(function (data) {
-                    $("#values_prestation_annexe").html(data);
-                });
+                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
+                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+//
+                    $.ajax(path,
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
+                    ).done(function (data) {
+                        $("#values_prestation_annexe").append(data);
+                    });
+                }
                 $editPrestationAnnexe.show();
             }else{
                 $editPrestationAnnexe.hide();
@@ -1457,7 +1461,7 @@
 
         function enregisterPrestationAnnexe(prestationAnnexeId){
             $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $prestationAnnexeModal.modal('hide');
+            $('#prestationAnnexeModal').modal('hide');
         }
 
     </script>

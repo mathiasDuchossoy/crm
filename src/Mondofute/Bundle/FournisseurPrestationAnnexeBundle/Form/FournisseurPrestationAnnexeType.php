@@ -38,6 +38,7 @@ class FournisseurPrestationAnnexeType extends AbstractType
             ->add('dureeSejour', FournisseurPrestationAnnexeDureeSejourType::class, array('required' => false,))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => FournisseurPrestationAnnexeTraductionType::class,
+                'allow_add' => true,
             ))
 //            ->add('prestationAnnexe', EntityType::class, array(
 //                'class' => PrestationAnnexe::class,
