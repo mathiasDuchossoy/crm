@@ -5,7 +5,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\Type;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\SousFamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

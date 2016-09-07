@@ -1,0 +1,27 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\PrestationAnnexeTarifRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        prixPublic:
+            type: decimal
+            precision: 10
+            scale: '2'
+    oneToMany:
+        periodeValidite:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
+            mappedBy: tarif
+            cascade: ['persist','remove']
+    manyToOne:
+        prestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            inversedBy: tarifs
+    lifecycleCallbacks: {  }

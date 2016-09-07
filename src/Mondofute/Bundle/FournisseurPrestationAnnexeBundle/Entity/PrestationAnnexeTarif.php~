@@ -1,0 +1,55 @@
+<?php
+
+namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
+
+/**
+ * PrestationAnnexeTarif
+ */
+class PrestationAnnexeTarif
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $prixPublic;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set prixPublic
+     *
+     * @param string $prixPublic
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function setPrixPublic($prixPublic)
+    {
+        $this->prixPublic = $prixPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get prixPublic
+     *
+     * @return string
+     */
+    public function getPrixPublic()
+    {
+        return $this->prixPublic;
+    }
+}
+

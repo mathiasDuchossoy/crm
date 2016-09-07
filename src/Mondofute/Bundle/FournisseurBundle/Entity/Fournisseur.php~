@@ -536,4 +536,5 @@ class Fournisseur extends Moral
     {
         return $this->types;
     }
+
 }
