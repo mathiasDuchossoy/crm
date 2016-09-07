@@ -2,7 +2,13 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,11 +21,29 @@ class FournisseurPrestationAnnexeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle')
-            ->add('type')
-            ->add('capacite')
-            ->add('dureeSejour')
-            ->add('fournisseur')
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
+                    Type::getLibelle(Type::Quantite) => Type::Quantite,
+                    Type::getLibelle(Type::Forfait) => Type::Forfait,
+                ),
+                "placeholder" => " --- choisir un type ---",
+                'choices_as_values' => true,
+                'label' => 'type',
+                'translation_domain' => 'messages',
+//                'expanded' => true,
+                'required' => true,
+            ))
+            ->add('capacite', FournisseurPrestationAnnexeCapaciteType::class, array('required' => false,))
+            ->add('dureeSejour', FournisseurPrestationAnnexeDureeSejourType::class, array('required' => false,))
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => FournisseurPrestationAnnexeTraductionType::class,
+            ))
+            ->add('prestationAnnexe', EntityType::class, array(
+                'class' => PrestationAnnexe::class,
+                'required' => true,
+                "choice_label" => "id",
+            ))
         ;
     }
     
@@ -29,7 +53,8 @@ class FournisseurPrestationAnnexeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe'
+            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe',
+            'famillePrestationAnnexeId' => null,
         ));
     }
 }

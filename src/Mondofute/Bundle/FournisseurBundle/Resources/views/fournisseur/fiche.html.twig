@@ -16,7 +16,10 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
-                <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
+                {% if edit is defined %}
+                    <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a>
+                {% endif %}
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="fiche" class="tab-pane fade in active">
@@ -32,12 +35,12 @@
                     {#{{ form_label(form.moyenComs[0]) }}#}
                     {#{{ dump(form.moyenComs[0]) }}#}
                     {% if form.moyenComs[0] is defined %}
-                    {{ form_row(form.moyenComs[0].code_postal) }}
-                    {{ form_row(form.moyenComs[0].adresse1) }}
-                    {{ form_row(form.moyenComs[0].adresse2) }}
-                    {{ form_row(form.moyenComs[0].adresse3) }}
-                    {{ form_row(form.moyenComs[0].ville) }}
-                    {{ form_row(form.moyenComs[0].pays) }}
+                        {{ form_row(form.moyenComs[0].code_postal) }}
+                        {{ form_row(form.moyenComs[0].adresse1) }}
+                        {{ form_row(form.moyenComs[0].adresse2) }}
+                        {{ form_row(form.moyenComs[0].adresse3) }}
+                        {{ form_row(form.moyenComs[0].ville) }}
+                        {{ form_row(form.moyenComs[0].pays) }}
                     {% endif %}
 
                     {#{{ form_row(form.remiseClefs) }}#}
@@ -240,39 +243,44 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
-                <div id="prestationannexe" class="tab-pane fade in">
-                    {% for famillePrestationAnnexe in famillePrestationAnnexes %}
-                        {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
-                        <div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
-                            {% set displayType = false %}
-                            {% for type in fournisseur.types %}
-                                {% if famillePrestationAnnexe.id == type.id %}
-                                    {% set displayType = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if displayType == false %}
-                                style="display: none"
-                            {% endif %}
-                        >
-                            <div class="panel-heading">
-                                {% for traduction in famillePrestationAnnexe.traductions %}
-                                    {% if traduction.langue.code == app.request.locale %}
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"
-                                                       onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
-                                                ><h3 class="panel-title"> {{ traduction.libelle }}</h3>
-                                            </label>
-                                        </div>
+                {% if edit is defined %}
+                    <div id="prestationannexe" class="tab-pane fade in">
+                        {% for famillePrestationAnnexe in famillePrestationAnnexes %}
+                            {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
+                            <div class="panel panel-primary"
+                                 id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
+                                    {% set displayType = false %}
+                                    {% for type in fournisseur.types %}
+                                        {% if famillePrestationAnnexe.id == type.id %}
+                                            {% set displayType = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if displayType == false %}
+                                        style="display: none"
                                     {% endif %}
-                                {% endfor %}
+                            >
+                                <div class="panel-heading">
+                                    {% for traduction in famillePrestationAnnexe.traductions %}
+                                        {% if traduction.langue.code == app.request.locale %}
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox"
+                                                           onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
+                                                    >
+                                                    <h3 class="panel-title"> {{ traduction.libelle }}</h3>
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="panel-body"
+                                     id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
+                                    {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                                </div>
                             </div>
-                            <div class="panel-body" id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
-                                {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             {{ form_row(form.submit) }}
 
@@ -300,35 +308,15 @@
             {% set moyenComsAdresse %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_adresse.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse} %}
             {% endset %}
-            {#{% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile , { 'label' : 'Mobile' }) %}#}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
-            {#<div id="values-interlocuteurs" style="">#}
-            {#{{ dump(form.interlocuteurs) }}#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
-                    {#{% for element in interlocuteur.children %}#}
-                    {#{{ form_widget(element) }}#}
-
-
-                        {#{% for child in element.children %}#}
-                        {#{{ dump(child.vars.name) }}#}
-                        {#{%  if child.vars.name == 'moyenComs' %}#}
-                        {#{{ dump(element.moyenComs) }}#}
-                        {#{% for key , moyenCom in element.moyenComs %}#}
-                        {#{{ dump(   moyenCom.vars.value) }}#}
-                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
-                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
-                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
-                        {#{% endfor %}#}
-                        {#{% else %}#}
-                        {#{{ form_row(child) }}#}
-                        {#{% endif %}#}
-                        {#{% endfor %}#}
-
-
-                    {#{% endfor %}#}
                 {% endfor %}
+            </div>
+            <div id="values_prestation_annexe" >
+                {#{% for prestationAnnexe in form.prestationAnnexes %}#}
+                    {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') with {'form': form} %}
+                {#{% endfor %}#}
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -491,6 +479,31 @@
                             <button onclick="modifierReception();" data-index="" id="modifierReception" type="button"
                                     class="btn btn-primary">
                                 {{ 'modifier' | trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="prestationAnnexeModal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span
+                                        aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel"></h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form_prestation_annexe" data-prestation_annexe_index="{{ countInterlocuteur }}"
+                                  class="form-horizontal">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
+                            <button id="enregistrer_prestation_annexe" type="button"
+                                    class="btn btn-primary">
+                                Enregistrer
                             </button>
                         </div>
                     </div>
@@ -1348,28 +1361,29 @@
                 return false;
             }
         }
-
-        function updatePrestationAnnexe(element){
+    </script>
+<script type="text/javascript">
+        function updatePrestationAnnexe(element) {
             $element = $(element);
-            $(element).find('input:checkbox').each(function(){
+            $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
-                if($(this).is(':checked')){
+                if ($(this).is(':checked')) {
                     var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
 //                    if($famillePrestationAnnexe.is(':hidden')) {
-                    if($famillePrestationAnnexe.css('display') == 'none') {
+                    if ($famillePrestationAnnexe.css('display') == 'none') {
                         $.ajax(path,
-                            {
-                                method: 'GET'
-                            }
+                                {
+                                    method: 'GET'
+                                }
                         ).done(function (data) {
                             $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
                             $famillePrestationAnnexe.show();
                         });
                     }
                 }
-                else{
+                else {
                     $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
                     $famillePrestationAnnexe.hide();
                     $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
@@ -1377,10 +1391,50 @@
             });
         }
 
-        function checkPrestatioAnnexe(element , test){
+        function checkPrestatioAnnexe(element, test) {
             var $element = $(element);
             $test = $('#' + test);
             $test.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function displayEditPrestationAnnexe(element){
+            var $element = $(element);
+            var prestationAnnexeId = $element.val();
+            $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
+            if ($element.is(':checked')) {
+                $editPrestationAnnexe.show();
+            }else{
+                $editPrestationAnnexe.hide();
+                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+            }
+        }
+
+        function getFournisseurPrestationAnnexeForm(prestationAnnexeId){
+            var $fournisseurPrestationAnnexe = $('#fournisseurPrestationAnnexe_' + prestationAnnexeId);
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_'}) }}";
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length > 0){
+                $("#form_prestation_annexe").html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+            }else{
+                $.ajax(path,
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
+                ).done(function (data) {
+                    $("#form_prestation_annexe").html(data);
+                });
+            }
+            $('#prestationAnnexeModal').modal();
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $('#prestationAnnexeModal').on('hidden.bs.modal', function (e) {
+                enregisterPrestationAnnexe(prestationAnnexeId);
+            })
+        }
+
+        function enregisterPrestationAnnexe(prestationAnnexeId){
+            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+            $('#prestationAnnexeModal').modal('hide');
         }
 
     </script>
