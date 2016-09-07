@@ -36,6 +36,10 @@ class FournisseurPrestationAnnexe
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseur;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $traductions;
 
     /**
      * Constructor
@@ -43,6 +47,7 @@ class FournisseurPrestationAnnexe
     public function __construct()
     {
         $this->tarifs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -207,5 +212,39 @@ class FournisseurPrestationAnnexe
         $this->fournisseur = $fournisseur;
 
         return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
+     */
+    public function removeTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }
