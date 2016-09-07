@@ -3,23 +3,29 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
     attributeOverride:
-        id: ~
-#    associationOverride:
-#        moyenComs:
-#            joinTable:
-#                name: fournisseur_moyenscomm
-#                joinColumns:
-#                    fournisseur_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    moyenComm_id:
-#                        referencedColumnName: id
-#                orphanRemoval: true
-#                onDelete: CASCADE
-#                cascade: [ "persist", "remove" ]
-#            cascade: [ "persist", "remove" ]
-#            onDelete: CASCADE
-#            orphanRemoval: true
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
     fields:
         contient:
             type: integer

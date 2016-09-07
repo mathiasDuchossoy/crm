@@ -39,14 +39,23 @@ class FournisseurPrestationAnnexeType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => FournisseurPrestationAnnexeTraductionType::class,
             ))
+//            ->add('prestationAnnexe', EntityType::class, array(
+//                'class' => PrestationAnnexe::class,
+//                'required' => true,
+//                "choice_label" => "id",
+//            ))
             ->add('prestationAnnexe', EntityType::class, array(
                 'class' => PrestationAnnexe::class,
-                'required' => true,
-                "choice_label" => "id",
-            ))
-        ;
+                'choice_label' => 'id',
+                'label_attr' => [
+                    'style' => 'display:none',
+                ],
+                'attr' => [
+                    'style' => 'display:none',
+                ],
+            ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +19,17 @@ class FournisseurPrestationAnnexeTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('langue', HiddenType::class, array('mapped' => false))
+//            ->add('langue', HiddenType::class, array('mapped' => false))
+            ->add('langue', EntityType::class, array(
+                'class' => Langue::class,
+                'choice_label' => 'id',
+                'label_attr' => [
+                    'style' => 'display:none',
+                ],
+                'attr' => [
+                    'style' => 'display:none',
+                ],
+            ))
         ;
     }
     
