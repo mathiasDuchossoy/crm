@@ -1,0 +1,41 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        type:
+            type: integer
+            options:
+                unsigned: true
+    oneToOne:
+        capacite:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
+            options:
+                nullable: true
+            cascade: ['persist','remove']
+        dureeSejour:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour
+            options:
+                nullable: true
+            cascade: ['persist','remove']
+    oneToMany:
+        tarifs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
+            mappedBy: prestationAnnexe
+            cascade: ['persist','remove']
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: prestationAnnexes
+    lifecycleCallbacks: {  }
