@@ -1600,22 +1600,12 @@ class FournisseurController extends Controller
         $fournisseur = new Fournisseur();
         $em = $this->getDoctrine()->getManager();
 
-//        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
-//        $fournisseurPrestationAnnexe->setPrestationAnnexe()
-//        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
-//        $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId ));
         $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        $sousFamillePrestationAnnexe    = $em->find(SousFamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        foreach ($prestationAnnexes as $prestationAnnex){
-//            $fournisseur->addPrestationAnnex($prestationAnnex);
-//        }
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
                 'locale'                    => 'fr_FR',
                 'famillePrestationAnnexeId' => $famillePrestationAnnexeId
             ));
-
-//        dump($form);die;
 
         return $this->render('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig', array(
             'form'                      => $form->createView(),
@@ -1634,15 +1624,14 @@ class FournisseurController extends Controller
             // *** gestion prestations annexe ***
             $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
 //        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
-            $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
             $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
         }
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
         foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction){
             $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element)use($traduction){
                 return $element->getLangue() == $traduction->getLangue();
             })->first();
             if(false === $traductionFPA ){
-
                 $traductionFPA = new FournisseurPrestationAnnexeTraduction();
                 $fournisseurPrestationAnnexe->addTraduction($traductionFPA);
                 $traductionFPA->setLangue($traduction->getLangue());
@@ -1650,14 +1639,14 @@ class FournisseurController extends Controller
             }
         }
 
-//        // traductions
+        // traductions
         $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
 
         // *** fin gestion prestations annexe ***
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
-                'locale'    => 'fr_FR',
+                'locale'    => $this->container->getParameter('locale'),
             ))
         ;
 
