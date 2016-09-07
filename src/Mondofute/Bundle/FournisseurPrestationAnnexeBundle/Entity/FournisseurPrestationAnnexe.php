@@ -11,7 +11,6 @@ class FournisseurPrestationAnnexe
      * @var int
      */
     private $id;
-
     /**
      * @var string
      */
@@ -62,6 +61,14 @@ class FournisseurPrestationAnnexe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**

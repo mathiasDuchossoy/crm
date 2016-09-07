@@ -8,7 +8,9 @@
             {{ form_row(prestationAnnexe.capacite) }}
 
             {{ form_row(prestationAnnexe.dureeSejour) }}
-            {{ form_row(prestationAnnexe.traductions) }}
             {{ form_row(prestationAnnexe.prestationAnnexe) }}
+        <div>
+            {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+        </div>
     </div>
 {% endfor %}
