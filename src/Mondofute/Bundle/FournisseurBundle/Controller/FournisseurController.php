@@ -23,6 +23,7 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
@@ -1624,23 +1625,33 @@ class FournisseurController extends Controller
         ));
     }
 
-    public function getFournisseurPrestationAnnexeFormAction($prestationAnnexeId){
+    public function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId){
         $em = $this->getDoctrine()->getManager();
         $fournisseur = new Fournisseur();
 
-        // *** gestion prestations annexe ***
-        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
+        $fournisseurPrestationAnnexe = $em->getRepository(FournisseurPrestationAnnexe::class)->findOneBy(array('fournisseur' => $fournisseurId , 'prestationAnnexe' => $prestationAnnexeId));
+        if (empty($fournisseurPrestationAnnexe)){
+            // *** gestion prestations annexe ***
+            $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
 //        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
-        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
-        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
-
-        // traductions
-        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
-        foreach ($langues as $langue){
-            $traduction = new FournisseurPrestationAnnexeTraduction();
-            $fournisseurPrestationAnnexe->addTraduction($traduction);
-            $traduction->setLangue($langue);
+            $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+            $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
         }
+        foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction){
+            $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element)use($traduction){
+                return $element->getLangue() == $traduction->getLangue();
+            })->first();
+            if(false === $traductionFPA ){
+
+                $traductionFPA = new FournisseurPrestationAnnexeTraduction();
+                $fournisseurPrestationAnnexe->addTraduction($traductionFPA);
+                $traductionFPA->setLangue($traduction->getLangue());
+                $traductionFPA->setLibelle($traduction->getLibelle());
+            }
+        }
+
+//        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
 
         // *** fin gestion prestations annexe ***
 

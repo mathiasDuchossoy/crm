@@ -30,8 +30,17 @@
                             <div class="col-md-10">
                                 <div class="checkbox">
                                     <label class="">
+                                        {#{{ dump(form.prestationAnnexes) }}#}
+                                        {#{{ dump(prestationAnnexe.id) }}#}
                                         <input type="checkbox" value="{{ prestationAnnexe.id }}"
                                                name="prestation_annexe[]"
+                                               class="chekbox_prestation_annexe"
+                                               data-fournisseur_id="{{ form.vars.value.id }}"
+                                                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                                                    {% if formPrestationAnnexe.vars.value.prestationAnnexe.id == prestationAnnexe.id %}
+                                                        checked=""
+                                                    {% endif %}
+                                                {% endfor %}
                                                onclick="displayEditPrestationAnnexe(this);"
                                                id="prestation_annexe_{{ prestationAnnexe.id }}">
                                         {% for traduction in prestationAnnexe.traductions %}
@@ -43,9 +52,10 @@
                                 </div>
                             </div>
                             <div class="col-md-1">
-                                <div class="btn-group" role="group" aria-label="..." id="edit_prestation_annexe_{{ prestationAnnexe.id }}">
-                                    <button style="text-align: right" type="button" class="btn btn-default"
-                                            onclick="getFournisseurPrestationAnnexeForm('{{ prestationAnnexe.id }}');"
+                                <div class="btn-group" role="group" aria-label="..."
+                                     id="edit_prestation_annexe_{{ prestationAnnexe.id }}">
+                                    <button type="button" class="btn btn-default"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
                                     >
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </button>
@@ -59,20 +69,45 @@
     {% endif %}
 {% endfor %}
 
-{% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
-    {% if prestationAnnexe.sousFamillePrestationAnnexe is empty %}
-        <li class="list-group-item">
-            <div class="checkbox">
-                <label class="">
-                    <input type="checkbox" value="{{ prestationAnnexe.id }}" name="prestation_annexe[]"
-                           id="prestation_annexe_{{ prestationAnnexe.id }}">
-                    {% for traduction in prestationAnnexe.traductions %}
-                        {% if traduction.langue.code == app.request.locale %}
-                            {{ traduction.libelle }}
-                        {% endif %}
-                    {% endfor %}
-                </label>
-            </div>
-        </li>
-    {% endif %}
-{% endfor %}
+            {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+                {% if prestationAnnexe.sousFamillePrestationAnnexe is empty %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    <label class="">
+                                        <input type="checkbox" value="{{ prestationAnnexe.id }}"
+                                               name="prestation_annexe[]"
+                                               class="chekbox_prestation_annexe"
+                                               date-fournisseur_id="{{ form.vars.value.id }}"
+                                                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                                                    {% if formPrestationAnnexe.vars.value.prestationAnnexe.id == prestationAnnexe.id %}
+                                                        checked=""
+                                                    {% endif %}
+                                                {% endfor %}
+                                               onclick="displayEditPrestationAnnexe(this);"
+                                               id="prestation_annexe_{{ prestationAnnexe.id }}">
+                                        {% for traduction in prestationAnnexe.traductions %}
+                                            {% if traduction.langue.code == app.request.locale %}
+                                                {{ traduction.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="btn-group" role="group" aria-label="..."
+                                     id="edit_prestation_annexe_{{ prestationAnnexe.id }}">
+                                    <button type="button" class="btn btn-default"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ prestationAnnexe.id }}');"
+                                    >
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
