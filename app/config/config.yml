@@ -126,6 +126,7 @@ doctrine:
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
                     MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -171,6 +172,7 @@ doctrine:
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
                     MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -213,6 +215,7 @@ doctrine:
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
                     MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
