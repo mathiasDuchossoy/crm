@@ -12,10 +12,6 @@ class FournisseurPrestationAnnexe
      */
     private $id;
     /**
-     * @var string
-     */
-    private $libelle;
-    /**
      * @var integer
      */
     private $type;
@@ -69,30 +65,6 @@ class FournisseurPrestationAnnexe
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
     }
 
     /**
