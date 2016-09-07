@@ -6,9 +6,12 @@
  * Time: 13:55
  */
 
-namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 
-
+/**
+ * Class Type
+ * @package Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity
+ */
 class Type
 {
     const Individuelle = 1;
@@ -21,13 +24,21 @@ class Type
         Type::Forfait => 'Forfait'
     );
 
-
+    /**
+     * @param $id
+     * @return mixed
+     */
     static public function getLibelle($id)
     {
         return self::$libelles[$id];
     }
 
-    public function getType($type){
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function getType($type)
+    {
         return constant($type);
     }
 }
