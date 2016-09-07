@@ -7,6 +7,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType;
@@ -148,11 +150,11 @@ class FournisseurType extends AbstractType
                 'prototype_name' => '__liste_service_name__',
             ))
             ->add('prestationAnnexes', EntityType::class, array(
-                'class' => PrestationAnnexe::class,
+                'class' => FournisseurPrestationAnnexe::class,
                 'required' => true,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir un type ---",
-                'query_builder' => function (PrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
+                'query_builder' => function (FournisseurPrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
                     return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
                 },
                 'multiple'  => true,

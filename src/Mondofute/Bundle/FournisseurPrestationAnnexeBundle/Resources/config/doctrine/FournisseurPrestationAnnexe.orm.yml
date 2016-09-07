@@ -11,9 +11,6 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             options:
                 unsigned: true
     fields:
-        libelle:
-            type: string
-            length: 255
         type:
             type: integer
             options:
@@ -32,6 +29,10 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
     oneToMany:
         tarifs:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
+            mappedBy: prestationAnnexe
+            cascade: ['persist','remove']
+        traductions:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction
             mappedBy: prestationAnnexe
             cascade: ['persist','remove']
     manyToOne:
