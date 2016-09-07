@@ -40,6 +40,10 @@ class FournisseurPrestationAnnexe
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     */
+    private $prestationAnnexe;
 
     /**
      * Constructor
@@ -246,5 +250,29 @@ class FournisseurPrestationAnnexe
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Get prestationAnnexe
+     *
+     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     */
+    public function getPrestationAnnexe()
+    {
+        return $this->prestationAnnexe;
+    }
+
+    /**
+     * Set prestationAnnexe
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function setPrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe = null)
+    {
+        $this->prestationAnnexe = $prestationAnnexe;
+
+        return $this;
     }
 }

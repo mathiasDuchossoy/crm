@@ -22,10 +22,8 @@ class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
         $qb->select('s , st')
             ->from('MondofutePrestationAnnexeBundle:PrestationAnnexe', 's')
             ->join('s.traductions', 'st')
-            ->join('s.site', 'site')
             ->join('st.langue', 'l')
             ->where("l.code = '$locale'")
-            ->andWhere('site.crm = 1')
         ;
         if(!empty($famillePrestationAnnexeId)){
             $qb
