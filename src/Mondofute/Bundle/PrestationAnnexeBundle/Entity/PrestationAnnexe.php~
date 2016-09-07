@@ -21,19 +21,6 @@ class PrestationAnnexe
      * @var Collection
      */
     private $traductions;
-
-    /**
-     * @var boolean
-     */
-    private $actif = true;
-    /**
-     * @var PrestationAnnexeUnifie
-     */
-    private $prestationAnnexeUnifie;
-    /**
-     * @var Site
-     */
-    private $site;
     /**
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
      */
@@ -42,6 +29,10 @@ class PrestationAnnexe
      * @var integer
      */
     private $type;
+    /**
+     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+     */
+    private $sousFamillePrestationAnnexe;
 
     /**
      * Constructor
@@ -59,6 +50,17 @@ class PrestationAnnexe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -106,78 +108,6 @@ class PrestationAnnexe
     }
 
     /**
-     * Get actif
-     *
-     * @return boolean
-     */
-    public function getActif()
-    {
-        return $this->actif;
-    }
-
-    /**
-     * Set actif
-     *
-     * @param boolean $actif
-     *
-     * @return PrestationAnnexe
-     */
-    public function setActif($actif)
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    /**
-     * Get prestationAnnexeUnifie
-     *
-     * @return PrestationAnnexeUnifie
-     */
-    public function getPrestationAnnexeUnifie()
-    {
-        return $this->prestationAnnexeUnifie;
-    }
-
-    /**
-     * Set prestationAnnexeUnifie
-     *
-     * @param PrestationAnnexeUnifie $prestationAnnexeUnifie
-     *
-     * @return PrestationAnnexe
-     */
-    public function setPrestationAnnexeUnifie(PrestationAnnexeUnifie $prestationAnnexeUnifie = null)
-    {
-        $this->prestationAnnexeUnifie = $prestationAnnexeUnifie;
-
-        return $this;
-    }
-
-    /**
-     * Get site
-     *
-     * @return Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
-
-    /**
-     * Set site
-     *
-     * @param Site $site
-     *
-     * @return PrestationAnnexe
-     */
-    public function setSite(Site $site = null)
-    {
-        $this->site = $site;
-
-        return $this;
-    }
-
-    /**
      * Get famillePrestationAnnexe
      *
      * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
@@ -202,25 +132,25 @@ class PrestationAnnexe
     }
 
     /**
-     * Get type
+     * Get sousFamillePrestationAnnexe
      *
-     * @return integer
+     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
      */
-    public function getType()
+    public function getSousFamillePrestationAnnexe()
     {
-        return $this->type;
+        return $this->sousFamillePrestationAnnexe;
     }
 
     /**
-     * Set type
+     * Set sousFamillePrestationAnnexe
      *
-     * @param integer $type
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      *
      * @return PrestationAnnexe
      */
-    public function setType($type)
+    public function setSousFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe = null)
     {
-        $this->type = $type;
+        $this->sousFamillePrestationAnnexe = $sousFamillePrestationAnnexe;
 
         return $this;
     }
