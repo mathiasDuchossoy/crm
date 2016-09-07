@@ -81,7 +81,7 @@
                                         <input type="checkbox" value="{{ prestationAnnexe.id }}"
                                                name="prestation_annexe[]"
                                                class="chekbox_prestation_annexe"
-                                               date-fournisseur_id="{{ form.vars.value.id }}"
+                                               data-fournisseur_id="{{ form.vars.value.id }}"
                                                 {% for formPrestationAnnexe in form.prestationAnnexes %}
                                                     {% if formPrestationAnnexe.vars.value.prestationAnnexe.id == prestationAnnexe.id %}
                                                         checked=""
@@ -101,7 +101,7 @@
                                 <div class="btn-group" role="group" aria-label="..."
                                      id="edit_prestation_annexe_{{ prestationAnnexe.id }}">
                                     <button type="button" class="btn btn-default"
-                                            onclick="getFournisseurPrestationAnnexeForm('{{ prestationAnnexe.id }}');"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
                                     >
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </button>

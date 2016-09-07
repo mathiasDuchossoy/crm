@@ -1,8 +1,8 @@
 {% if formAjax is defined %}
     {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% endif %}
+    {#{{ dump(form.prestationAnnexes) }}#}
 {% for prestationAnnexe in form.prestationAnnexes %}
-    {#{{ dump(prestationAnnexe) }}#}
     <div id="{{ prestationAnnexe.vars.id }}">
             {{ form_row(prestationAnnexe.type) }}
             {{ form_row(prestationAnnexe.capacite) }}
