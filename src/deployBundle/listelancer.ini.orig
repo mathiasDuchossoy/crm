@@ -9,7 +9,6 @@
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
-<<<<<<< 4e6bd61538076c80b9d62f5a8c5a468ad3d3873e
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
@@ -19,19 +18,7 @@
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 ;maj\crm_54\2016-08-09a_md_visuels_station.sql
 ;maj\crm_54\2016-08-09b_md_visuels_station.sql
-||||||| merged common ancestors
-maj\crm_88\2016-08-09a_md_medias_domaine.sql
-maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
-maj\crm_54\2016-08-08a_md_grande_ville.sql
-=======
-;maj\crm_88\2016-08-09a_md_medias_domaine.sql
-;maj\crm_88\2016-08-09b_md_medias_domaines.sql
-;
-;maj\crm_54\2016-08-08a_md_grande_ville.sql
->>>>>>> transformation de prestationAnnexeUnifie en prestationAnnexe en cours
-
-<<<<<<< 4e6bd61538076c80b9d62f5a8c5a468ad3d3873e
 ; *** prestation annexe ***
 ;maj\crm_93\2016-09-06a_md_prestation_annexe.sql
 ; *** fin prestation annexe ***
@@ -63,12 +50,23 @@ maj\crm_93\2016-09-06a_md_prestation_annexe.sql
 ;maj\crm_101\2016-08-30a_code_promo.sql
 maj\crm_101\2016-09-01a_md_code_promo.sql
 
+<<<<<<< b3e6efcc1a3e7e0ecbaf9e94a42294bf698c4f07
 ; *** crm_101 ***
 maj\crm_101\2016-09-09a_md_maj_client.sql
 ; *** fin crm_101 ***
 ;maj\crm_65\2016-08-26a_md_station.sql
 maj\crm_84\2016-08-31a_sls_logement_periode.sql
 ||||||| merged common ancestors
-=======
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
->>>>>>> transformation de prestationAnnexeUnifie en prestationAnnexe en cours
+=======
+
+; *** crm-116 ***
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+; *** fin crm-116 ***
+>>>>>>> maj listelancer
