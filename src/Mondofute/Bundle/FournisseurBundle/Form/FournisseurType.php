@@ -8,6 +8,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form\FournisseurPrestationAnnexeType;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
@@ -149,18 +150,30 @@ class FournisseurType extends AbstractType
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
             ))
-            ->add('prestationAnnexes', EntityType::class, array(
-                'class' => FournisseurPrestationAnnexe::class,
-                'required' => true,
-                "choice_label" => "traductions[0].libelle",
-                "placeholder" => " --- choisir un type ---",
-                'query_builder' => function (FournisseurPrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
-                    return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
-                },
-                'multiple'  => true,
-                'expanded'  => true,
-                'attr'      => array(
-                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+//            ->add('prestationAnnexes', EntityType::class, array(
+//                'class' => FournisseurPrestationAnnexe::class,
+//                'required' => true,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un type ---",
+//                'query_builder' => function (FournisseurPrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
+//                    return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
+//                },
+//                'multiple'  => true,
+//                'expanded'  => true,
+//                'attr'      => array(
+//                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+//                )
+//            ))
+            ->add('prestationAnnexes', CollectionType::class, array(
+                'entry_type' => FournisseurPrestationAnnexeType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'prestation.annexe',
+                'translation_domain' => 'messages',
+                'prototype_name' => '__prestation_annexe_name__',
+                'options'   => array(
+                    'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
                 )
             ))
         ;

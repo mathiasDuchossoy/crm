@@ -18,21 +18,24 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
     public function getTraductionsByLocale($locale, $famillePrestationAnnexeId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('s , st')
+        $qb->select('s , st, prestationAnnexe')
             ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe', 's')
             ->join('s.traductions', 'st')
             ->join('st.langue', 'l')
             ->where("l.code = '$locale'")
+            ->join('s.prestationAnnexe' , 'prestationAnnexe')
         ;
-//        if(!empty($famillePrestationAnnexeId)){
-//            $qb
-//                ->andWhere('s.famillePrestationAnnexe = :famillePrestationAnnexeId ')
-//                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
-//            ;
-//        }
+        if(!empty($famillePrestationAnnexeId)){
+            $qb
+                ->andWhere('prestationAnnexe.famillePrestationAnnexe = :famillePrestationAnnexeId ')
+                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
+            ;
+        }
 
 //        ->setParameter('code' , $locale)
         $qb->orderBy('s.id', 'ASC');
+
+
 
         return $qb;
     }

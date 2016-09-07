@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -99,6 +100,10 @@ class Fournisseur extends Moral
         $this->listeServices = new ArrayCollection();
         $this->prestationAnnexes = new ArrayCollection();
     }
+
+//    public function setId($id){
+//        $this->id =
+//    }
 
     /**
      * Add interlocuteur
@@ -543,20 +548,6 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Add prestationAnnex
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
-     *
-     * @return Fournisseur
-     */
-    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
-
-        return $this;
-    }
-
-    /**
      * Remove prestationAnnex
      *
      * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
@@ -574,5 +565,40 @@ class Fournisseur extends Moral
     public function getPrestationAnnexes()
     {
         return $this->prestationAnnexes;
+    }
+
+    /**
+     * @param $prestationAnnexes
+     * @return $this
+     */
+    public function setPrestationAnnexes()
+    {
+
+        $newPrestationAnnexes = new ArrayCollection();
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
+        foreach ($this->getPrestationAnnexes() as $prestationAnnex) {
+            $newPrestationAnnexes->set($prestationAnnex->getPrestationAnnexe()->getId(), $prestationAnnex);
+        }
+
+        $this->getPrestationAnnexes()->clear();
+
+        foreach ($newPrestationAnnexes as $prestationAnnex) {
+            $this->addPrestationAnnex($prestationAnnex);
+        }
+        return $this;
+    }
+
+    /**
+     * Add prestationAnnex
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
+     *
+     * @return Fournisseur
+     */
+    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
+
+        return $this;
     }
 }

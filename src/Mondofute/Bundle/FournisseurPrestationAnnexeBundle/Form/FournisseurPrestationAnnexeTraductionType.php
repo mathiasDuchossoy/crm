@@ -3,11 +3,11 @@
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FournisseurPrestationAnnexeCapaciteType extends AbstractType
+class FournisseurPrestationAnnexeTraductionType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,8 +16,8 @@ class FournisseurPrestationAnnexeCapaciteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('min' , IntegerType::class)
-            ->add('max' , IntegerType::class)
+            ->add('libelle')
+            ->add('langue', HiddenType::class, array('mapped' => false))
         ;
     }
     
@@ -27,7 +27,7 @@ class FournisseurPrestationAnnexeCapaciteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite'
+            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction'
         ));
     }
 }
