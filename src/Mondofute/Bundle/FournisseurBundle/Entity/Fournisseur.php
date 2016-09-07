@@ -97,6 +97,7 @@ class Fournisseur extends Moral
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
+        $this->prestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -544,13 +545,13 @@ class Fournisseur extends Moral
     /**
      * Add prestationAnnex
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
      *
      * @return Fournisseur
      */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
     {
-        $this->prestationAnnexes[] = $prestationAnnex;
+        $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
 
         return $this;
     }
@@ -558,9 +559,9 @@ class Fournisseur extends Moral
     /**
      * Remove prestationAnnex
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    public function removePrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
     {
         $this->prestationAnnexes->removeElement($prestationAnnex);
     }

@@ -2,22 +2,22 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
-    associationOverride:
-        moyenComs:
-            joinTable:
-                name: fournisseur_moyenscomm
-                joinColumns:
-                    fournisseur_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    moyenComm_id:
-                        referencedColumnName: id
-                orphanRemoval: true
-                onDelete: CASCADE
-                cascade: [ "persist", "remove" ]
-            cascade: [ "persist", "remove" ]
-            onDelete: CASCADE
-            orphanRemoval: true
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: fournisseur_moyenscomm
+#                joinColumns:
+#                    fournisseur_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyenComm_id:
+#                        referencedColumnName: id
+#                orphanRemoval: true
+#                onDelete: CASCADE
+#                cascade: [ "persist", "remove" ]
+#            cascade: [ "persist", "remove" ]
+#            onDelete: CASCADE
+#            orphanRemoval: true
     fields:
         contient:
             type: integer
@@ -46,6 +46,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
             mappedBy: fournisseur
             cascade: ['persist','remove']
+        prestationAnnexes:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            mappedBy: fournisseur
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
@@ -60,6 +63,4 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     manyToMany:
         types:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
-        prestationAnnexes:
-            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
     lifecycleCallbacks: {  }
