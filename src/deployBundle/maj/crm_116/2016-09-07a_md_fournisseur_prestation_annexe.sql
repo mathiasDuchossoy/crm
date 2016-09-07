@@ -16,3 +16,8 @@ ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB3670C757F FOR
 CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_traduction (id INT UNSIGNED AUTO_INCREMENT NOT NULL, prestation_annexe_id INT UNSIGNED DEFAULT NULL, langue_id INT UNSIGNED DEFAULT NULL, libelle VARCHAR(255) NOT NULL, INDEX IDX_3E804BC233AD7BEF (prestation_annexe_id), INDEX IDX_3E804BC22AADBACD (langue_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 ALTER TABLE fournisseur_prestation_annexe_traduction ADD CONSTRAINT FK_3E804BC233AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
 ALTER TABLE fournisseur_prestation_annexe_traduction ADD CONSTRAINT FK_3E804BC22AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+
+
+ALTER TABLE fournisseur_prestation_annexe ADD prestation_annexe_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB333AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES prestation_annexe (id);
+CREATE INDEX IDX_9AB97BB333AD7BEF ON fournisseur_prestation_annexe (prestation_annexe_id);

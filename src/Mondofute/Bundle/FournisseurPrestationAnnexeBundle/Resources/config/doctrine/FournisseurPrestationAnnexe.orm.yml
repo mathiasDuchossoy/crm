@@ -39,4 +39,7 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: prestationAnnexes
+        prestationAnnexe:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+            inversedBy: fournisseurs
     lifecycleCallbacks: {  }
