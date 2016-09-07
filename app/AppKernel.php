@@ -56,6 +56,8 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
             new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
              );
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+        );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
