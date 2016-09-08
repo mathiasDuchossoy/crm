@@ -112,7 +112,12 @@
                                                                 </button>
                                                             </div>
                                                             <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text"
+<<<<<<< 6114ad451a000f9655d0eb836973ede9bf746ada
                                                                    onkeypress="testEnterSearchClient(event,'{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}')"
+||||||| merged common ancestors
+=======
+                                                                   onkeypress="test(event,'{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}')"
+>>>>>>> possibilité de cliquer sur enter pour la recherhce de client dans codepromoclient
                                                                    class="form-control" placeholder="Rechercher...">
                                                         </div><!-- /input-group -->
                                                     </div><!-- /.col-lg-6 -->
@@ -456,8 +461,8 @@
                 $('#panel_client_' + site).hide();
             }
         }
-<<<<<<< c761daadd52f2eb981d8083382152e3482671074
 
+<<<<<<< 6114ad451a000f9655d0eb836973ede9bf746ada
         function testEnterSearchClient(event,codePromoId, siteId){
 //            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
             var eCode = event.keyCode
@@ -472,8 +477,18 @@
 
 ||||||| merged common ancestors
 =======
-
->>>>>>> suppression maj et création des codePromoClient en focntion de l'usage
+        function test(event,codePromoId, siteId){
+//            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+            var eCode = event.keyCode
+//            alert ("The Unicode character code is: " + chCode);
+//            alert ("The Unicode character code is: " + eCode);
+            if(eCode == 13 ){
+                searchClient(codePromoId, siteId)
+            }
+            event.preventDefault();
+            return false;
+        }
+>>>>>>> possibilité de cliquer sur enter pour la recherhce de client dans codepromoclient
     </script>
 
 {% endblock %}
