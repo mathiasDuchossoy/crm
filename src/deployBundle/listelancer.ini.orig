@@ -12,7 +12,7 @@
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
-<<<<<<< c6bec935a06168ffbe67a3a7c4be8629a12e7a49
+<<<<<<< f0ae180316e8cc2d82f4c3dc02903dc44687d1a2
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -36,21 +36,9 @@ maj\crm_54\2016-08-09b_md_visuels_station.sql
 maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
 ||||||| merged common ancestors
-maj\crm_54\2016-08-08a_md_grande_ville.sql
-maj\crm_88\2016-08-09a_md_medias_domaine.sql
-maj\crm_88\2016-08-09b_md_medias_domaines.sql
-maj\crm_54\2016-08-09a_md_visuels_station.sql
-maj\crm_54\2016-08-09b_md_visuels_station.sql
-
-maj\crm_65\2016-08-26a_md_station.sql
-=======
-;maj\crm_54\2016-08-08a_md_grande_ville.sql
-;maj\crm_88\2016-08-09a_md_medias_domaine.sql
-;maj\crm_88\2016-08-09b_md_medias_domaines.sql
-;maj\crm_54\2016-08-09a_md_visuels_station.sql
-;maj\crm_54\2016-08-09b_md_visuels_station.sql
-;
-;maj\crm_65\2016-08-26a_md_station.sql
-
 maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
->>>>>>> Création des différentes entités pour codePromoGénérale
+=======
+;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+
+maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie

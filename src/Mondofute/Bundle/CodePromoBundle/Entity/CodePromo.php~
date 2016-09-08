@@ -2,7 +2,9 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * CodePromo
@@ -14,13 +16,21 @@ class CodePromo extends BaseCodePromo
      */
     protected $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $codePromoPeriodeSejours;
     /**
-     * @var \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     * @var CodePromoUnifie
      */
     private $codePromoUnifie;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
+    /**
+     * @var Site
+     */
+    private $site;
 
     /**
      * Get id
@@ -35,11 +45,11 @@ class CodePromo extends BaseCodePromo
     /**
      * Add codePromoPeriodeSejour
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour $codePromoPeriodeSejour
+     * @param CodePromoPeriodeSejour $codePromoPeriodeSejour
      *
      * @return CodePromo
      */
-    public function addCodePromoPeriodeSejour(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour $codePromoPeriodeSejour)
+    public function addCodePromoPeriodeSejour(CodePromoPeriodeSejour $codePromoPeriodeSejour)
     {
         $this->codePromoPeriodeSejours[] = $codePromoPeriodeSejour;
 
@@ -49,9 +59,9 @@ class CodePromo extends BaseCodePromo
     /**
      * Remove codePromoPeriodeSejour
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour $codePromoPeriodeSejour
+     * @param CodePromoPeriodeSejour $codePromoPeriodeSejour
      */
-    public function removeCodePromoPeriodeSejour(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour $codePromoPeriodeSejour)
+    public function removeCodePromoPeriodeSejour(CodePromoPeriodeSejour $codePromoPeriodeSejour)
     {
         $this->codePromoPeriodeSejours->removeElement($codePromoPeriodeSejour);
     }
@@ -59,7 +69,7 @@ class CodePromo extends BaseCodePromo
     /**
      * Get codePromoPeriodeSejours
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCodePromoPeriodeSejours()
     {
@@ -69,7 +79,7 @@ class CodePromo extends BaseCodePromo
     /**
      * Get codePromoUnifie
      *
-     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     * @return CodePromoUnifie
      */
     public function getCodePromoUnifie()
     {
@@ -79,13 +89,37 @@ class CodePromo extends BaseCodePromo
     /**
      * Set codePromoUnifie
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie
+     * @param CodePromoUnifie $codePromoUnifie
      *
      * @return CodePromo
      */
-    public function setCodePromoUnifie(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie = null)
+    public function setCodePromoUnifie(CodePromoUnifie $codePromoUnifie = null)
     {
         $this->codePromoUnifie = $codePromoUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get site
+     *
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set site
+     *
+     * @param Site $site
+     *
+     * @return CodePromo
+     */
+    public function setSite(Site $site = null)
+    {
+        $this->site = $site;
 
         return $this;
     }

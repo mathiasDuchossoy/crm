@@ -6,8 +6,11 @@ use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
 use HiDev\Bundle\CodePromoBundle\Entity\TypeRemise;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,7 +27,7 @@ class CodePromoType extends AbstractType
             ->add('code')
             ->add('clientAffectation', ChoiceType::class, array(
                 'choices'       => array(
-                    ClientAffectation::tous => ClientAffectation::getLibelle(ClientAffectation::tous),
+                    ClientAffectation::tous      => ClientAffectation::getLibelle(ClientAffectation::tous),
                     ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
                 ),
                 'placeholder'   => " --- Choisir l'affection --- ",
@@ -32,7 +35,7 @@ class CodePromoType extends AbstractType
             ))
             ->add('typeRemise', ChoiceType::class, array(
                 'choices'       => array(
-                    TypeRemise::euro => TypeRemise::getLibelle(TypeRemise::euro),
+                    TypeRemise::euro       => TypeRemise::getLibelle(TypeRemise::euro),
                     TypeRemise::poucentage => TypeRemise::getLibelle(TypeRemise::poucentage),
                 ),
                 'placeholder'   => ' --- Choisir le type de remise --- ',
@@ -40,7 +43,7 @@ class CodePromoType extends AbstractType
             ))
             ->add('valeurRemise')
             ->add('prixMini')
-            ->add('usage', ChoiceType::class, array(
+            ->add('usageCodePromo', ChoiceType::class, array(
                 'choices'       => array(
                     Usage::unique           => Usage::getLibelle(Usage::unique),
                     Usage::uniqueParPeriode => Usage::getLibelle(Usage::uniqueParPeriode),
@@ -59,13 +62,14 @@ class CodePromoType extends AbstractType
                 )
             )
             ->add('codePromoPeriodeSejours', CollectionType::class, array(
-                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeSejourType',
+                    'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoPeriodeSejourType',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Périodes de séjour',
                     'by_reference' => false,
                 )
             )
+            ->add('site', HiddenType::class, array('mapped' => false))
         ;
     }
     
