@@ -1,14 +1,14 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
 
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 ||||||| merged common ancestors
 =======
-
->>>>>>> dev controller et fiche de codepromounifie
+use Doctrine\Common\Collections\Collection;
+>>>>>>> CRM-101|REBASE 8/38
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
@@ -21,7 +21,6 @@ class CodePromo extends BaseCodePromo
      * @var int
      */
     protected $id;
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
     /**
      * @var Collection
      */
@@ -30,6 +29,7 @@ class CodePromo extends BaseCodePromo
      * @var CodePromoUnifie
      */
     private $codePromoUnifie;
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
     /**
      * @var Site
      */
@@ -49,17 +49,16 @@ class CodePromo extends BaseCodePromo
         $this->codePromoPeriodeSejours = new ArrayCollection();
     }
 ||||||| merged common ancestors
-
 =======
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var boolean
      */
-    private $codePromoPeriodeSejours;
+    private $actif = true;
     /**
-     * @var \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     * @var Site
      */
-    private $codePromoUnifie;
->>>>>>> dev controller et fiche de codepromounifie
+    private $site;
+>>>>>>> CRM-101|REBASE 8/38
 
     /**
      * Get id
@@ -104,7 +103,6 @@ class CodePromo extends BaseCodePromo
     {
         return $this->codePromoPeriodeSejours;
     }
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
 
     /**
      * Get codePromoUnifie
@@ -129,6 +127,7 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
 
     /**
      * Get site
@@ -215,27 +214,27 @@ class CodePromo extends BaseCodePromo
 =======
 
     /**
-     * Get codePromoUnifie
+     * Get site
      *
-     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
+     * @return Site
      */
-    public function getCodePromoUnifie()
+    public function getSite()
     {
-        return $this->codePromoUnifie;
+        return $this->site;
     }
 
     /**
-     * Set codePromoUnifie
+     * Set site
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie
+     * @param Site $site
      *
      * @return CodePromo
      */
-    public function setCodePromoUnifie(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie $codePromoUnifie = null)
+    public function setSite(Site $site = null)
     {
-        $this->codePromoUnifie = $codePromoUnifie;
+        $this->site = $site;
 
         return $this;
     }
->>>>>>> dev controller et fiche de codepromounifie
+>>>>>>> CRM-101|REBASE 8/38
 }

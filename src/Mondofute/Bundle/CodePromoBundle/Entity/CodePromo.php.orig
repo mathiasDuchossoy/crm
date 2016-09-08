@@ -2,21 +2,11 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Entity;
 
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-||||||| merged common ancestors
-=======
-use Doctrine\Common\Collections\Collection;
->>>>>>> dev controller et fiche de codepromounifie
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-||||||| merged common ancestors
-=======
-use Mondofute\Bundle\SiteBundle\Entity\Site;
->>>>>>> dev controller et fiche de codepromounifie
 
 /**
  * CodePromo
@@ -39,8 +29,8 @@ class CodePromo extends BaseCodePromo
      * @var CodePromoUnifie
      */
     private $codePromoUnifie;
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
     /**
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
      * @var Site
      */
     private $site;
@@ -50,7 +40,17 @@ class CodePromo extends BaseCodePromo
     private $actifSite = true;
     /**
      * @var \Doctrine\Common\Collections\Collection
+||||||| merged common ancestors
+     * @var boolean
      */
+    private $actif = true;
+    /**
+     * @var Site
+=======
+     * @var Site
+>>>>>>> CRM-101|REBASE 8/38
+     */
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
     private $codePromoClients;
 
     public function __construct()
@@ -60,16 +60,20 @@ class CodePromo extends BaseCodePromo
         $this->codePromoClients = new ArrayCollection();
     }
 ||||||| merged common ancestors
+    private $site;
 =======
+    private $site;
     /**
      * @var boolean
      */
-    private $actif = true;
-    /**
-     * @var Site
-     */
-    private $site;
->>>>>>> dev controller et fiche de codepromounifie
+    private $actifSite = true;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->codePromoPeriodeSejours = new ArrayCollection();
+    }
+>>>>>>> CRM-101|REBASE 8/38
 
     /**
      * @return string
@@ -157,7 +161,6 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
 
     /**
      * Get site
@@ -182,6 +185,7 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
 
     /**
      * Get actifSite
@@ -244,27 +248,27 @@ class CodePromo extends BaseCodePromo
 =======
 
     /**
-     * Get site
+     * Get actifSite
      *
-     * @return Site
+     * @return boolean
      */
-    public function getSite()
+    public function getActifSite()
     {
-        return $this->site;
+        return $this->actifSite;
     }
 
     /**
-     * Set site
+     * Set actifSite
      *
-     * @param Site $site
+     * @param boolean $actifSite
      *
      * @return CodePromo
      */
-    public function setSite(Site $site = null)
+    public function setActifSite($actifSite)
     {
-        $this->site = $site;
+        $this->actifSite = $actifSite;
 
         return $this;
     }
->>>>>>> dev controller et fiche de codepromounifie
+>>>>>>> CRM-101|REBASE 8/38
 }

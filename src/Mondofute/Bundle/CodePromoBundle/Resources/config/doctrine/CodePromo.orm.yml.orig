@@ -2,9 +2,30 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoRepository
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
     attributeOverride:
         code:
             nullable: true
+||||||| merged common ancestors
+    manyToMany:
+        codePromoPeriodeSejours:
+            targetEntity: CodePromoPeriodeSejour
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_sejour_id:
+                        unique: true
+=======
+    manyToMany:
+        codePromoPeriodeSejours:
+            targetEntity: CodePromoPeriodeSejour
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_sejour_id:
+                        unique: true
+            cascade: ['persist','remove']
+>>>>>>> CRM-101|REBASE 8/38
     fields:
         actifSite:
             type: boolean
@@ -29,25 +50,6 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_sejour_id:
                         unique: true
-<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
                         onDelete: cascade
             cascade: ['persist','remove']
-||||||| merged common ancestors
-    manyToOne:
-        codePromoUnifie:
-            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
-            inversedBy: codePromos
-=======
-    fields:
-        actif:
-            type: boolean
-            options:
-                default: true
-    manyToOne:
-        codePromoUnifie:
-            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie
-            inversedBy: codePromos
-        site:
-            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
->>>>>>> dev controller et fiche de codepromounifie
     lifecycleCallbacks: {  }

@@ -1,4 +1,3 @@
-<<<<<<< acf591ff5ebd9e9420f69e8d033e1c6b8710816d
 HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
     type: mappedSuperclass
     table: null
@@ -44,53 +43,12 @@ HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_validite_id:
                         unique: true
+<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
                         onDelete: cascade
-    lifecycleCallbacks: {  }
 ||||||| merged common ancestors
 =======
-HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
-    type: entity
-    table: null
-    repositoryClass: HiDev\Bundle\CodePromoBundle\Repository\CodePromoRepository
-    id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
-    fields:
-        libelle:
-            type: string
-            length: 255
-        code:
-            type: string
-            length: 255
-            unique: true
-        clientAffectation:
-            type: smallint
-        typeRemise:
-            type: smallint
-        valeurRemise:
-            type: decimal
-            precision: 10
-            scale: 2
-        prixMini:
-            type: decimal
-            precision: 10
-            scale: 2
-        usage:
-            type: smallint
-        actif:
-            type: boolean
-    manyToMany:
-        codePromoPeriodeValidites:
-            targetEntity: CodePromoPeriodeValidite
-            joinTable:
-                name: ~
-                inverseJoinColumns:
-                    code_promo_periode_validite_id:
-                        unique: true
+                        cascade: ['persist','remove']
+            cascade: ['persist','remove']
+#            onDelete: 'cascade'
+>>>>>>> CRM-101|REBASE 8/38
     lifecycleCallbacks: {  }
->>>>>>> CRM-101|REBASE 2/38
