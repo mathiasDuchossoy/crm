@@ -155,6 +155,7 @@ class PeriodeController extends Controller
 
     public function creerPeriodes(\DateTime $debut, \DateTime $fin, TypePeriode $typePeriode, $nbJour = null)
     {
+        $today = new \DateTime();
         if (empty($nbJour)) {
             $nbJour = $typePeriode->getNbJourDefaut();
         }
@@ -172,12 +173,16 @@ class PeriodeController extends Controller
 //            calcul la date de fin (date de debut + nombre de jours)
             $finTmp->add(new \DateInterval('P' . $nbJour . 'D'));
 //            Création de la période
-            $periode = new Periode();
-            $periode->setDebut(clone $debutTmp)
-                ->setFin(clone $finTmp)
-                ->setNbJour($nbJour)
-                ->setType(clone $typePeriode);
-            $periodes->add($periode);
+            if($debutTmp->format('Y-m-d') >= $today->format('Y-m-d')) {
+
+
+                $periode = new Periode();
+                $periode->setDebut(clone $debutTmp)
+                    ->setFin(clone $finTmp)
+                    ->setNbJour($nbJour)
+                    ->setType(clone $typePeriode);
+                $periodes->add($periode);
+            }
 //            décale la date de debut à +7 jours afin de créer les périodes semaines par semaine
             $debutTmp->add(new \DateInterval('P7D'));
             unset($periode);

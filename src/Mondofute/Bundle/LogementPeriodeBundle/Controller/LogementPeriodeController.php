@@ -34,17 +34,17 @@ class LogementPeriodeController extends Controller
      */
     public function associerPeriodes($idLogement,$site,$idPeriodeMin = null){
         /** @var EntityManager $em */
+        $today = new \DateTime();
         $em = $this->getDoctrine()->getManager($site->getLibelle());
         $where = '';
 //        si $idPeriodeMin est renseigné on récupère les id > idPeriodeMin si on récupère toutes les périodes
         if(!empty($idPeriodeMin)){
-            $where =  'WHERE p.id > '.$idPeriodeMin;
+            $where =  ' AND p.id > '.$idPeriodeMin;
 //            récupère toutes les periodes
         }
-        $requete = 'SELECT p.id FROM '.Periode::class.' AS p '.$where;
+        $requete = 'SELECT p.id FROM '.Periode::class.' AS p WHERE p.debut >= '.$today->format('Y-m-d').$where;
         $periodes = $em->createQuery($requete)->getArrayResult();
         $this->enregistrerLogementPeriodes($idLogement,$periodes,$site);
-
     }
 
     /**
