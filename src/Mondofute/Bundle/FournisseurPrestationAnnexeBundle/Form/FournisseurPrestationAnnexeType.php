@@ -54,7 +54,20 @@ class FournisseurPrestationAnnexeType extends AbstractType
                 'attr' => [
                     'style' => 'display:none',
                 ],
-            ));
+            ))
+            ->add('tarifs', CollectionType::class, array(
+                'entry_type' => PrestationAnnexeTarifType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'label' => 'prestation.annexe',
+                'translation_domain' => 'messages',
+//                'prototype_name' => '__tarif_name__',
+//                'options'   => array(
+//                    'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
+//                )
+            ))
+        ;
     }
 
     /**
