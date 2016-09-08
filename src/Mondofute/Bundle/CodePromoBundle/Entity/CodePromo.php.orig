@@ -22,10 +22,6 @@ class CodePromo extends BaseCodePromo
      */
     protected $code;
     /**
-     * @var string
-     */
-    protected $code;
-    /**
      * @var Collection
      */
     private $codePromoPeriodeSejours;
@@ -54,13 +50,6 @@ class CodePromo extends BaseCodePromo
     }
 
     /**
-<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
-     * @return string
-||||||| merged common ancestors
-     * Get id
-     *
-     * @return int
-=======
      * @return string
      */
     public function getCode()
@@ -79,28 +68,7 @@ class CodePromo extends BaseCodePromo
         return $this;
     }
 
-    /**
-     * Get id
-     *
-     * @return int
->>>>>>> panel de recherche client dans la fiche codepromo
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    /**
-     * @param string $code
-     * @return $this
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
+<<<<<<< f20afe43d165c13869ec23f777975103a7b28a76
 //    /**
 //     * //     * Get id
 //     * //     *
@@ -110,6 +78,27 @@ class CodePromo extends BaseCodePromo
 //    {
 //        return $this->id;
 //    }
+||||||| merged common ancestors
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+=======
+    /**
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
+>>>>>>> gestion des clients pour codePromo
 
     /**
      * Add codePromoPeriodeSejour
@@ -216,7 +205,6 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
-<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
 
     /**
      * Add codePromoClient
@@ -251,41 +239,4 @@ class CodePromo extends BaseCodePromo
     {
         return $this->codePromoClients;
     }
-||||||| merged common ancestors
-=======
-
-    /**
-     * Add codePromoClient
-     *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
-     *
-     * @return CodePromo
-     */
-    public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
-    {
-        $this->codePromoClients[] = $codePromoClient;
-
-        return $this;
-    }
-
-    /**
-     * Remove codePromoClient
-     *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
-     */
-    public function removeCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
-    {
-        $this->codePromoClients->removeElement($codePromoClient);
-    }
-
-    /**
-     * Get codePromoClients
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCodePromoClients()
-    {
-        return $this->codePromoClients;
-    }
->>>>>>> panel de recherche client dans la fiche codepromo
 }
