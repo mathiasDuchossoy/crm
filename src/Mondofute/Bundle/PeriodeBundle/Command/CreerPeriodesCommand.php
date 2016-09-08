@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\PeriodeBundle\Command;
 
 use DateTime;
+use Mondofute\Bundle\LogementPeriodeBundle\Controller\LogementPeriodeController;
 use Mondofute\Bundle\PeriodeBundle\Controller\PeriodeController;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -33,6 +34,9 @@ class CreerPeriodesCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+//        $debut = new DateTime();
+//        $output->writeln($debut->format('H:i:s'));
+//        $output->writeln(memory_get_usage());
         if ($this->valideArguments($input->getArguments())) {
             $em = $this->getContainer()->get('doctrine.orm.crm_entity_manager');
             $sites = $em->getRepository(Site::class)->findAll();
@@ -42,16 +46,23 @@ class CreerPeriodesCommand extends ContainerAwareCommand
             if (!empty($typePeriode = $em->getRepository(TypePeriode::class)->find(intval($input->getArgument('type-periode'),
                 10)))
             ) {
+                $logementPeriodeControlleur = new LogementPeriodeController();
+                $logementPeriodeControlleur->setContainer($this->getContainer());
                 $periodeController = new PeriodeController();
                 $periodeController->setContainer($this->getContainer());
                 $periodes = $periodeController->creerPeriodes($debut, $fin, $typePeriode, $nbJour);
                 if ($periodes->count() > 0) {
-                    $periodeController->enregistrerPeriodesDansSites($periodes, $sites);
+                    $idPeriodesMin = $periodeController->enregistrerPeriodesDansSites($periodes, $sites);
+                    $logementPeriodeControlleur->associerLogements($idPeriodesMin,$sites);
                 }
             } else {
                 $output->writeln('Le type de période spécifié n\'existe pas dans la base de données');
             }
         }
+//        $fin = new DateTime();
+//        $output->writeln($fin->format('H:i:s'));
+//        $output->writeln(memory_get_usage());
+//        $output->writeln(memory_get_peak_usage());
     }
 
     /**

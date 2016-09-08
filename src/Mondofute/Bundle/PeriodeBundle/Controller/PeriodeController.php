@@ -177,25 +177,29 @@ class PeriodeController extends Controller
                 ->setFin(clone $finTmp)
                 ->setNbJour($nbJour)
                 ->setType(clone $typePeriode);
-//            dump($periode);
             $periodes->add($periode);
 //            décale la date de debut à +7 jours afin de créer les périodes semaines par semaine
             $debutTmp->add(new \DateInterval('P7D'));
             unset($periode);
         }
-//        dump($periodes);
         return $periodes;
     }
 
     public function enregistrerPeriodesDansSites(ArrayCollection $periodes, array $sites)
     {
-//        dump($periodes->first()->getDebut());
-//        dump($periodes->last()->getDebut());
-        $nbRequete = 0;
+        $idPeriodesMin = array();
+        $managerPeriode = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
         /** @var Site $site */
         foreach ($sites as $site) {
+//            initialisation du insertMassif pour les periodes
+            $managerPeriode->initInsertMassif('periode', array('type_id', 'debut', 'fin', 'nb_jour'), false,
+                array($site->getLibelle()))
+                ->setNbLignesParInsertMassif(5000);
             /** @var EntityManagerInterface $emSite */
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//            $emSite->beginTransaction();
+            $idPeriodesMin[$site->getLibelle()] = intval($emSite->createQuery('SELECT MAX(p.id) AS id FROM '.Periode::class.' AS p')->getArrayResult()[0]['id'],10);
+
 //            Récupération des périodes répondant aux critères dans la base de données 
             $periodesSite = $emSite->getRepository(Periode::class)->rechercherPeriodesIntervale($periodes->first()->getDebut(),
                 $periodes->last()->getFin(), $periodes->first()->getType());
@@ -207,18 +211,22 @@ class PeriodeController extends Controller
                         return ($element->getDebut() == $periode->getDebut() && $element->getFin() == $periode->getFin() && $element->getNbJour() == $periode->getNbJour() && $element->getType()->getId() == $periode->getType()->getId());
                     })->first();
                 if (empty($result)) {
+                    /** @var Periode $periode */
                     $periode->setType($emSite->getRepository(TypePeriode::class)->find($periode->getType()->getId()));
-                    $emSite->persist($periode);
-                    $nbRequete++;
-                    if ($nbRequete > 20) {
-                        $nbRequete = 0;
-                        $emSite->flush();
-                        $emSite->clear();
-                    }
-
+//                    ajout de la periode pour l'insert massif
+                    $managerPeriode->addInsertLigne(array(
+                        $periode->getType()->getId(),
+                        $periode->getDebut()->format('Y-m-d'),
+                        $periode->getFin()->format('Y-m-d'),
+                        $periode->getNbJour()
+                    ));
                 }
             }
-            $emSite->flush();
+//            if(isset($emSite))
+//                unset($emSite);
+//            envoie les enregistrement des Periodes
+            $managerPeriode->insertMassif();
         }
+        return $idPeriodesMin;
     }
 }
