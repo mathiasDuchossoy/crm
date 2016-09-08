@@ -315,20 +315,21 @@
                 {% endfor %}
             </div>
 
-<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
+<<<<<<< 9241588116b6cc967768476b6fea9196eb5a596c
             <div id="values_prestation_annexe" style="display: none">
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
 ||||||| merged common ancestors
-            <div id="values_prestation_annexe" >
+            <div id="values_prestation_annexe" style="display: none">
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
 =======
-            <div id="values_prestation_annexe" style="display: none">
+            {#<div id="values_prestation_annexe" style="display: none">#}
+            <div id="values_prestation_annexe">
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
->>>>>>> affichage ou non de capacite et dureesejour
+>>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -1471,24 +1472,13 @@
                 });
             }
             $prestationAnnexeModal.modal();
-<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
             $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
-||||||| merged common ancestors
-            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
-            $prestationAnnexeModal.on('hidden.bs.modal', function (e) {
-                enregisterPrestationAnnexe(prestationAnnexeId);
-=======
-//            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
-            $prestationAnnexeModal.on('hide.bs.modal', function (e) {
-                return enregisterPrestationAnnexe(prestationAnnexeId);
->>>>>>> affichage ou non de capacite et dureesejour
             })
         }
 
         function enregisterPrestationAnnexe(prestationAnnexeId){
-<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
             var $myForm = $('#form_prestation_annexe')
             if (!$myForm[0].checkValidity()) {
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
@@ -1521,6 +1511,7 @@
         }
 
     </script>
+<<<<<<< 9241588116b6cc967768476b6fea9196eb5a596c
     <script>
 
         function addTagForm($collectionHolder, $newLinkLi , name) {
@@ -1640,42 +1631,39 @@
             }).on('hide', function(e){
                 return false;
             });
-||||||| merged common ancestors
-            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $('#prestationAnnexeModal').modal('hide');
-=======
-            var $myForm = $('#form_prestation_annexe')
-            if (!$myForm[0].checkValidity()) {
-                $('<input type="submit">').hide().appendTo($myForm).click().remove();
-                return false;
-            }
-            else {
-                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-//                $('#prestationAnnexeModal').modal('hide');
-                return true;
-            }
-        }
-
-        function displayCapaciteSejour(elementId){
-            $element = $("#" +elementId);
-            $buttonEdit     = $("#" +elementId + '_edit');
-            $buttonRemove = $("#" +elementId + '_remove');
-            if($element.is(":visible")){
-                $element.hide();
-                $buttonRemove.hide();
-                $buttonEdit.show();
-                $element.find(':input').each(function(index,input){
-                    $(input).val('');
-                })
-            }
-            else{
-                $element.show();
-                $buttonEdit.hide();
-                $buttonRemove.show();
-            }
->>>>>>> affichage ou non de capacite et dureesejour
         }
         periodevaliditeDatetimePicker();
 
     </script>
+||||||| merged common ancestors
+=======
+    <script>
+
+
+        function addTagForm($collectionHolder, $newLinkLi , name) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+//            var newForm = prototype.replace(/__name__/g, index);
+            var regex = new RegExp(name, 'g');
+            var newForm = prototype.replace( regex , index);
+//            newForm = prototype.replace('/__name__/g', index);
+            console.log(newForm);
+
+            // increase the index with one for the next item
+            console.log($collectionHolder.data('index'));
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+        }
+
+    </script>
+>>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
 {% endblock %}
