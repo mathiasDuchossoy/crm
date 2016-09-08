@@ -1,0 +1,30 @@
+{{ form_row(tarif.prixPublic) }}
+<h3>Périodes de validité</h3>
+<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
+    {% for periodeValidite in tarif.periodeValidites %}
+        <li class="li_periode_validite">
+            {{ form_row(periodeValidite) }}
+        </li>
+    {% endfor %}
+</ul>
+<script>
+//    jQuery(document).ready(function() {
+var test2 = function() {
+    var $collectionHolderperiode_validite{{ index }};
+    var $addTagLinkperiode_validite{{ prestationAnnexe.vars.id }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+        e.preventDefault();
+        addTagForm($collectionHolderperiode_validite{{ index }}, $newLinkLiperiode_validite{{ index }} , '__periode_validite_name__');
+    });
+}
+if (window.jQuery){
+    test2();
+}else{
+    window.onload = test2;
+}
+//    });
+</script>

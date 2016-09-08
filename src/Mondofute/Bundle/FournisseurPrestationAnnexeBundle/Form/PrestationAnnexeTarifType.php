@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,7 +17,14 @@ class PrestationAnnexeTarifType extends AbstractType
     {
         $builder
             ->add('prixPublic')
-            ->add('prestationAnnexe')
+            ->add('periodeValidites', CollectionType::class, array(
+                'entry_type' => PeriodeValiditeType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'translation_domain' => 'messages',
+                'prototype_name' => '__periode_validite_name__',
+            ))
         ;
     }
     

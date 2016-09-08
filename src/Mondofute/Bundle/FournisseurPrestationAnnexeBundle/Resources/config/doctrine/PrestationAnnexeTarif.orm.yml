@@ -16,7 +16,7 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif:
             precision: 10
             scale: '2'
     oneToMany:
-        periodeValidite:
+        periodeValidites:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
             mappedBy: tarif
             cascade: ['persist','remove']

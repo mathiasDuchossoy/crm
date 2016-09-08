@@ -17,20 +17,20 @@ class PrestationAnnexeTarif
      */
     private $prixPublic;
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $periodeValidite;
-    /**
      * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
      */
     private $prestationAnnexe;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $periodeValidites;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->periodeValidite = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->periodeValidites = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -68,40 +68,6 @@ class PrestationAnnexeTarif
     }
 
     /**
-     * Add periodeValidite
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
-     *
-     * @return PrestationAnnexeTarif
-     */
-    public function addPeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
-    {
-        $this->periodeValidite[] = $periodeValidite->setTarif($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove periodeValidite
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
-     */
-    public function removePeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
-    {
-        $this->periodeValidite->removeElement($periodeValidite);
-    }
-
-    /**
-     * Get periodeValidite
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPeriodeValidite()
-    {
-        return $this->periodeValidite;
-    }
-
-    /**
      * Get prestationAnnexe
      *
      * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
@@ -123,5 +89,39 @@ class PrestationAnnexeTarif
         $this->prestationAnnexe = $prestationAnnexe;
 
         return $this;
+    }
+
+    /**
+     * Add periodeValidite
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function addPeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
+    {
+        $this->periodeValidites[] = $periodeValidite->setTarif($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove periodeValidite
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
+     */
+    public function removePeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
+    {
+        $this->periodeValidites->removeElement($periodeValidite);
+    }
+
+    /**
+     * Get periodeValidites
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPeriodeValidites()
+    {
+        return $this->periodeValidites;
     }
 }
