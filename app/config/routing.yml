@@ -1,5 +1,6 @@
 mondofute_prestationannexe:
     resource: "@MondofutePrestationAnnexeBundle/Resources/config/routing.yml"
+    prefix:   /
 
 mondofute_code_promo:
     resource: "@MondofuteCodePromoBundle/Resources/config/routing.yml"
