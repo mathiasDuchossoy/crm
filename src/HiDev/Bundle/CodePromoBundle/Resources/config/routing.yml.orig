@@ -1,0 +1,10 @@
+<<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
+hi_dev_code_promo_codepromo:
+    resource: "@HiDevCodePromoBundle/Resources/config/routing/codepromo.yml"
+    prefix:   /codepromo
+||||||| merged common ancestors
+=======
+hi_dev_code_promo_homepage:
+    path:     /
+    defaults: { _controller: HiDevCodePromoBundle:Default:index }
+>>>>>>> rebase CRM-101 onto preprod 1/38
