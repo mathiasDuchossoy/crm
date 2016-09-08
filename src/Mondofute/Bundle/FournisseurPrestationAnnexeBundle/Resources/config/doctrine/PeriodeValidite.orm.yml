@@ -18,5 +18,5 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite:
     manyToOne:
         tarif:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
-            inversedBy: periodeValidite
+            inversedBy: periodeValidites
     lifecycleCallbacks: {  }

@@ -16,6 +16,10 @@ class PrestationAnnexeTarif
      * @var string
      */
     private $prixPublic;
+    /**
+     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+     */
+    private $prestationAnnexe;
 
 
     /**
@@ -26,6 +30,16 @@ class PrestationAnnexeTarif
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get prixPublic
+     *
+     * @return string
+     */
+    public function getPrixPublic()
+    {
+        return $this->prixPublic;
     }
 
     /**
@@ -43,13 +57,26 @@ class PrestationAnnexeTarif
     }
 
     /**
-     * Get prixPublic
+     * Get prestationAnnexe
      *
-     * @return string
+     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
      */
-    public function getPrixPublic()
+    public function getPrestationAnnexe()
     {
-        return $this->prixPublic;
+        return $this->prestationAnnexe;
+    }
+
+    /**
+     * Set prestationAnnexe
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function setPrestationAnnexe(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe = null)
+    {
+        $this->prestationAnnexe = $prestationAnnexe;
+
+        return $this;
     }
 }
-

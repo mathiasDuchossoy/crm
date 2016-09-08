@@ -17,7 +17,6 @@ class PeriodeValiditeType extends AbstractType
         $builder
             ->add('dateDebut', 'datetime')
             ->add('dateFin', 'datetime')
-            ->add('tarif')
         ;
     }
     
