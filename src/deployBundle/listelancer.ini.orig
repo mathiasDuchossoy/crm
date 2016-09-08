@@ -36,11 +36,14 @@ maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
 
-<<<<<<< 671a89df9b9ec2924e31e608df9493f2de5b69c0
+<<<<<<< 2a72acd963f44d50d45720127a724d8a80154784
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 maj\crm_101\2016-08-30a_code_promo.sql
+maj\crm_101\2016-08-31a_md_code_promo.sql
 ||||||| merged common ancestors
-maj\crm_101\2016-08-31a_code_promo.sql
+maj\crm_101\2016-08-31a_md_code_promo.sql
 =======
 maj\crm_101\2016-08-31a_md_code_promo.sql
->>>>>>> modification listelancer
+
+maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
+>>>>>>> ajout exemple de grande ville dans sql et lislancer
