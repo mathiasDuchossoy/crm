@@ -1502,30 +1502,41 @@
     </script>
     <script>
 
-
         function addTagForm($collectionHolder, $newLinkLi , name) {
-            // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
             var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
 //            var newForm = prototype.replace(/__name__/g, index);
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace( regex , index);
-//            newForm = prototype.replace('/__name__/g', index);
-            console.log(newForm);
-
-            // increase the index with one for the next item
-            console.log($collectionHolder.data('index'));
             $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a tag" link li
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
         }
+        {% for key, prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.id %}
+            var $collectionHolderperiode_validite{{ index }};
+            var $addTagLinkperiode_validite{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+            var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
+            $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ key }}{{ index }}');
+            $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
+            $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
+            $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+                e.preventDefault();
+                addTagForm($collectionHolderperiode_validite{{ index }}, $newLinkLiperiode_validite{{ index }} , '__periode_validite_name__');
+            });
+
+            var $collectionHolder{{ index }};
+            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
+            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
+            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
+            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
+            $addTagLink{{ index }}.on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            });
+
+        {% endfor %}
 
     </script>
 {% endblock %}
