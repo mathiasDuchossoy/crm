@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImageTraduction;
@@ -85,9 +86,12 @@ class ZoneTouristiqueUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
-
+            /** @var ZoneTouristique $entity */
+            foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
             // ***** Gestion des Medias *****
             foreach ($request->get('zone_touristique_unifie')['zoneTouristiques'] as $key => $zoneTouristique) {
@@ -293,24 +297,6 @@ class ZoneTouristiqueUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les zoneTouristiques qui ne doivent pas être enregistrer
-     * @param ZoneTouristiqueUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerZoneTouristiques(ZoneTouristiqueUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getZoneTouristiques() as $zoneTouristique) {
-            if (!in_array($zoneTouristique->getSite()->getId(), $sitesAEnregistrer)) {
-                $zoneTouristique->setZoneTouristiqueUnifie(null);
-                $entity->removeZoneTouristique($zoneTouristique);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité station
      * @param ZoneTouristiqueUnifie $entity
      */
@@ -329,6 +315,9 @@ class ZoneTouristiqueUnifieController extends Controller
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $emSite->find(ZoneTouristiqueUnifie::class, $entity->getId())))) {
                     $entitySite = new ZoneTouristiqueUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
@@ -339,7 +328,9 @@ class ZoneTouristiqueUnifieController extends Controller
 //            copie des données station
                 $zoneTouristiqueSite
                     ->setSite($site)
-                    ->setZoneTouristiqueUnifie($entitySite);
+                    ->setZoneTouristiqueUnifie($entitySite)
+                    ->setActif($zoneTouristique->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($zoneTouristique->getTraductions() as $zoneTouristiqueTraduc) {
@@ -757,17 +748,17 @@ class ZoneTouristiqueUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
-                array_push($sitesAEnregistrer, $zoneTouristique->getSite()->getId());
+            /** @var ZoneTouristique $entity */
+            foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
-
 
         $originalZoneTouristiques = new ArrayCollection();
         $originalZoneTouristiqueImages = new ArrayCollection();
@@ -810,7 +801,13 @@ class ZoneTouristiqueUnifieController extends Controller
 //        dump($editForm);die();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
-
+                foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity){
+                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                        $entity->setActif(false);
+                    }else{
+                        $entity->setActif(true);
+                    }
+                }
 
                 // ************* suppression images *************
                 // ** CAS OU L'ON SUPPRIME UN "ZoneTouristique IMAGE" **
@@ -937,78 +934,6 @@ class ZoneTouristiqueUnifieController extends Controller
                 }
                 // ************* fin suppression photos *************
                 
-                
-                $this->supprimerZoneTouristiques($zoneTouristiqueUnifie, $sitesAEnregistrer);
-//                $this->mettreAJourZoneTouristiqueCrm($zoneTouristiqueUnifie, $zoneTouristiqueCrm);
-//                $em->persist($zoneTouristiqueCrm);
-
-                // Supprimer la relation entre la station et stationUnifie
-                foreach ($originalZoneTouristiques as $zoneTouristique) {
-                    if (!$zoneTouristiqueUnifie->getZoneTouristiques()->contains($zoneTouristique)) {
-
-                        //  suppression de la station sur le site
-                        $emSite = $this->getDoctrine()->getManager($zoneTouristique->getSite()->getLibelle());
-                        $entitySite = $emSite->find(ZoneTouristiqueUnifie::class, $zoneTouristiqueUnifie->getId());
-                        $zoneTouristiqueSite = $entitySite->getZoneTouristiques()->first();
-
-                        /** @var ZoneTouristiqueImage $zoneTouristiqueImageSite */
-                        if (!empty($zoneTouristiqueSite->getImages())) {
-                            foreach ($zoneTouristiqueSite->getImages() as $zoneTouristiqueImageSite) {
-                                $zoneTouristiqueSite->removeImage($zoneTouristiqueImageSite);
-//                                        $zoneTouristiqueImageSite->setZoneTouristique(null);
-//                                        $zoneTouristiqueImageSite->setImage(null);
-                                $emSite->remove($zoneTouristiqueImageSite);
-                                $emSite->remove($zoneTouristiqueImageSite->getImage());
-                            }
-                            $emSite->flush();
-                        }
-                        /** @var ZoneTouristiquePhoto $zoneTouristiquePhotoSite */
-                        if (!empty($zoneTouristiqueSite->getPhotos())) {
-                            foreach ($zoneTouristiqueSite->getPhotos() as $zoneTouristiquePhotoSite) {
-                                $zoneTouristiqueSite->removePhoto($zoneTouristiquePhotoSite);
-//                                        $zoneTouristiquePhotoSite->setZoneTouristique(null);
-//                                        $zoneTouristiquePhotoSite->setPhoto(null);
-                                $emSite->remove($zoneTouristiquePhotoSite);
-                                $emSite->remove($zoneTouristiquePhotoSite->getPhoto());
-                            }
-                            $emSite->flush();
-                        }
-                        
-                        $emSite->remove($zoneTouristiqueSite);
-                        $emSite->flush();
-                        $zoneTouristique->setZoneTouristiqueUnifie(null);
-
-
-                        // *** suppression des zoneTouristiqueImages de l'zoneTouristique à supprimer ***
-                        /** @var ZoneTouristiqueImage $zoneTouristiqueImage */
-                        $zoneTouristiqueImageSites = $em->getRepository(ZoneTouristiqueImage::class)->findBy(array('zoneTouristique' => $zoneTouristique));
-                        if (!empty($zoneTouristiqueImageSites)) {
-                            foreach ($zoneTouristiqueImageSites as $zoneTouristiqueImage) {
-                                $zoneTouristiqueImage->setImage(null);
-                                $zoneTouristiqueImage->setZoneTouristique(null);
-                                $em->remove($zoneTouristiqueImage);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des zoneTouristiqueImages de l'zoneTouristique à supprimer ***
-                        // *** suppression des zoneTouristiquePhotos de l'zoneTouristique à supprimer ***
-                        /** @var ZoneTouristiquePhoto $zoneTouristiquePhoto */
-                        $zoneTouristiquePhotoSites = $em->getRepository(ZoneTouristiquePhoto::class)->findBy(array('zoneTouristique' => $zoneTouristique));
-                        if (!empty($zoneTouristiquePhotoSites)) {
-                            foreach ($zoneTouristiquePhotoSites as $zoneTouristiquePhoto) {
-                                $zoneTouristiquePhoto->setPhoto(null);
-                                $zoneTouristiquePhoto->setZoneTouristique(null);
-                                $em->remove($zoneTouristiquePhoto);
-                            }
-                            $em->flush();
-                        }
-                        // *** fin suppression des zoneTouristiquePhotos de l'zoneTouristique à supprimer ***
-                        
-                        $em->remove($zoneTouristique);
-                    }
-                }
-
-
                 // ***** Gestion des Medias *****
                 // CAS D'UN NOUVEAU 'ZoneTouristique IMAGE' OU DE MODIFICATION D'UN "ZoneTouristique IMAGE"
                 /** @var ZoneTouristiqueImage $zoneTouristiqueImage */
@@ -1090,7 +1015,7 @@ class ZoneTouristiqueUnifieController extends Controller
                                 }
                             }
                         }
-                        // on est dans l'zoneTouristiqueImage CRM
+                        // on est dans zoneTouristiqueImage CRM
                         // s'il s'agit d'un nouveau média
                         elseif (empty($zoneTouristiqueImage->getImage()->getId()) && !empty($originalImages->get($key))) {
                             // on stocke  l'ancien media pour le supprimer après le persist final
@@ -1180,7 +1105,7 @@ class ZoneTouristiqueUnifieController extends Controller
                                 }
                             }
                         }
-                        // on est dans l'zoneTouristiquePhoto CRM
+                        // on est dans zoneTouristiquePhoto CRM
                         // s'il s'agit d'un nouveau média
                         elseif (empty($zoneTouristiquePhoto->getPhoto()->getId()) && !empty($originalPhotos->get($key))) {
                             // on stocke  l'ancien media pour le supprimer après le persist final

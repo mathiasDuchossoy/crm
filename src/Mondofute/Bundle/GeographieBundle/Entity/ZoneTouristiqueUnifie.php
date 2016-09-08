@@ -1,8 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 
 /**
  * ZoneTouristiqueUnifie
@@ -14,7 +15,7 @@ class ZoneTouristiqueUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $zoneTouristiques;
 
@@ -23,7 +24,7 @@ class ZoneTouristiqueUnifie
      */
     public function __construct()
     {
-        $this->zoneTouristiques = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->zoneTouristiques = new ArrayCollection();
     }
 
     /**
@@ -37,11 +38,22 @@ class ZoneTouristiqueUnifie
     }
 
     /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Remove zoneTouristique
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     * @param ZoneTouristique $zoneTouristique
      */
-    public function removeZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    public function removeZoneTouristique(ZoneTouristique $zoneTouristique)
     {
         $this->zoneTouristiques->removeElement($zoneTouristique);
     }
@@ -49,7 +61,7 @@ class ZoneTouristiqueUnifie
     /**
      * Get zoneTouristiques
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getZoneTouristiques()
     {
@@ -73,11 +85,11 @@ class ZoneTouristiqueUnifie
     /**
      * Add zoneTouristique
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     * @param ZoneTouristique $zoneTouristique
      *
      * @return ZoneTouristiqueUnifie
      */
-    public function addZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique)
+    public function addZoneTouristique(ZoneTouristique $zoneTouristique)
     {
         $this->zoneTouristiques[] = $zoneTouristique->setZoneTouristiqueUnifie($this);
 

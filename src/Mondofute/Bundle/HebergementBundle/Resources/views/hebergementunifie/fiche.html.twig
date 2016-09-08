@@ -146,19 +146,19 @@
                                     <ul class="visuels"
                                         data-prototype_photo="
                                         {% filter escape %}
-                                        {% include('@MondofuteMedia/Layout/template-sous-famille-prestation-annexe.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementPhotoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementPhotoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
                                         {% endfilter %}
                                         "
                                         data-prototype_video="
                                         {% filter escape %}
-                                        {% include('@MondofuteMedia/Layout/template-sous-famille-prestation-annexe.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementVideoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementVideoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
                                         {% endfilter %}
                                         "
                                     >
                                         {% set i = 0 %}
                                         {% for visuel in hebergement.visuels %}
                                             <li class="element">
-                                                {% include('@MondofuteMedia/Layout/template-sous-famille-prestation-annexe.html.twig') with {'form': visuel,'langues': langues, 'name': i, 'entity': 'visuel'} %}
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': visuel,'langues': langues, 'name': i, 'entity': 'visuel'} %}
                                             </li>
                                             {% set i = i + 1 %}
                                         {% endfor %}
@@ -454,12 +454,13 @@
         {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
         {#{% endfor %}#}
         var items = [];
-        //        items.push('_hebergement_unifie_hebergements_entry_station');
-        {#items.push("_domaine_unifie_domaines_entry_domaineParent");#}
-        {#{% for langue in langues %}#}
-        {#items.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#items.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
-        {#{% endfor %}#}
+        items.push('_hebergement_unifie_hebergements_entry_typeHebergement');
+        items.push('_hebergement_unifie_hebergements_entry_station');
+        items.push('_hebergement_unifie_hebergements_entry_classement_valeur');
+        items.push('_hebergement_unifie_hebergements_entry_classement_unite');
+        {% for langue in langues %}
+        items.push("_hebergement_unifie_hebergements_entry_traductions_entry_nom_{{ langue.code }}");
+        {% endfor %}
     </script>
 
     {{ parent() }}

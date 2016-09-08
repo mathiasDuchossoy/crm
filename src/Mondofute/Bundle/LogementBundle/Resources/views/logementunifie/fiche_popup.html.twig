@@ -23,25 +23,14 @@
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ logement.vars.value.site.crm | number_format }}">
 
-                        {#{{ form_row(departement.region, { 'attr' : { 'data-unique_block_prefix' : departement.region.vars['unique_block_prefix']  }}) }}#}
-
-                        {#{% for choix in departement.region %}#}
-                        {#{{ dump(choix) }}#}
-                        {#{{ form_widget(choix) }}#}
-                        {#{{ form_label(choix) }}#}
-                        {#{% endfor %}#}
-                        {{ form_row(logement.actif) }}
                         <div style="display: none">
                             {{ form_row(logement.fournisseurHebergement) }}
                         </div>
-                        {#{{ form_row(logement.hebergement) }}#}
-                        {#{{ form_row(logement.hebergements) }}#}
-                        {#{{ form_row(logement.fournisseur) }}#}
-                        {{ form_row(logement.nbChambre) }}
-                        {{ form_row(logement.capacite) }}
-                        {{ form_row(logement.superficieMin) }}
-                        {{ form_row(logement.superficieMax) }}
-                        {{ form_row(logement.accesPMR) }}
+                        {{ form_row(logement.nbChambre, { 'attr' : { 'data-unique_block_prefix' : logement.nbChambre.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.capacite, { 'attr' : { 'data-unique_block_prefix' : logement.capacite.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.superficieMin, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMin.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.superficieMax, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMax.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.accesPMR, { 'attr' : { 'data-unique_block_prefix' : logement.accesPMR.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.site) }}
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
@@ -57,7 +46,6 @@
                                         {% endfor %}
                                     </a>
                                 </li>
-                                {#{{ form_row(traduction) }}#}
                             {% endfor %}
                         </ul>
                         <div class="tab-content">
@@ -135,11 +123,14 @@
         {#itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
         {% endfor %}
         var items = [];
-        //        items.push("_departement_unifie_departements_entry_region");
+        items.push("_logement_unifie_logements_entry_nbChambre");
+        items.push("_logement_unifie_logements_entry_capacite");
+        items.push("_logement_unifie_logements_entry_superficieMin");
+        items.push("_logement_unifie_logements_entry_superficieMax");
+        items.push("_logement_unifie_logements_entry_accesPMR");
         {% for langue in langues %}
-        {#items.push("_departement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");#}
-        {#items.push("_departement_unifie_departements_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
-        {#items.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
+        items.push("_logement_unifie_logements_entry_traductions_entry_nom_{{ langue.code }}");
+        items.push("_logement_unifie_logements_entry_traductions_entry_descriptif_{{ langue.code }}");
         {% endfor %}
     </script>
     {{ parent() }}

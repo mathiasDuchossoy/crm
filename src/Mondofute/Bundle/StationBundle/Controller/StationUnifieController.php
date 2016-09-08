@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
@@ -121,6 +122,12 @@ class StationUnifieController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Station $entity */
+            foreach ($stationUnifie->getStations() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
             /** @var Station $station */
             foreach ($stationUnifie->getStations() as $station){
@@ -141,8 +148,6 @@ class StationUnifieController extends Controller
 
             $descriptionController = new StationDescriptionUnifieController();
             $descriptionController->setContainer($this->container);
-
-            $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
 
             // ***** Carte d'identité *****
             /** @var Station $station */
@@ -441,42 +446,6 @@ class StationUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les stations qui ne doivent pas être enregistrer
-     * @param StationUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerStations(StationUnifie $entity, array $sitesAEnregistrer)
-    {
-        /** @var Secteur $secteur */
-        /** @var Station $station */
-        /** @var ZoneTouristique $zoneTouristique */
-        foreach ($entity->getStations() as $station) {
-            if (!in_array($station->getSite()->getId(), $sitesAEnregistrer)) {
-                if (!empty($station->getZoneTouristiques())) {
-                    foreach ($station->getZoneTouristiques() as $zoneTouristique) {
-                        $zoneTouristique->removeStation($station);
-                    }
-                }
-                if (!empty($station->getSecteurs())) {
-                    foreach ($station->getSecteurs() as $secteur) {
-                        $secteur->removeStation($station);
-                    }
-                }
-                if (!empty($station->getProfils())) {
-                    foreach ($station->getProfils() as $profil) {
-                        $profil->removeStation($station);
-                    }
-                }
-                $station->setStationUnifie(null);
-                $entity->removeStation($station);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * @param Request $request
      * @param StationUnifie $stationUnifie
      */
@@ -676,6 +645,9 @@ class StationUnifieController extends Controller
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $emSite->getRepository(StationUnifie::class)->find($entity->getId())))) {
                     $entitySite = new StationUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 //                if (is_null(($entitySite = $em->getRepository('MondofuteStationBundle:StationUnifie')->find(array($entity->getId()))))) {
 //                    $entitySite = new StationUnifie();
@@ -702,6 +674,7 @@ class StationUnifieController extends Controller
                     ->setStationDescription($stationDescription)
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
+                    ->setActif($station->getActif())
                 ;
 
 //            Gestion des traductions
@@ -974,24 +947,23 @@ class StationUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($stationUnifie->getStations() as $station) {
-                array_push($sitesAEnregistrer, $station->getSite()->getId());
+            /** @var Station $entity */
+            foreach ($stationUnifie->getStations() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-        $originalStations = new ArrayCollection();
         $originalStationVisuels = new ArrayCollection();
         $originalVisuels = new ArrayCollection();
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         /** @var Station $station */
         foreach ($stationUnifie->getStations() as $station) {
-            $originalStations->add($station);
             // si l'station est celui du CRM
             if ($station->getSite()->getCrm() == 1) {
                 // on parcourt les stationVisuel pour les comparer ensuite
@@ -1017,6 +989,13 @@ class StationUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            foreach ($stationUnifie->getStations() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }else{
+                    $entity->setActif(true);
+                }
+            }
 
             foreach ($stationUnifie->getStations() as $station){
                 if (empty($station->getStationMere())){
@@ -1101,75 +1080,6 @@ class StationUnifieController extends Controller
                 }
             }
             // ************* fin suppression visuels *************
-
-            $this->supprimerStations($stationUnifie, $sitesAEnregistrer);
-
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalStations as $station) {
-                if (!$stationUnifie->getStations()->contains($station)) {
-
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getManager($station->getSite()->getLibelle());
-                    $entitySite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
-                    $stationSite = $entitySite->getStations()->first();
-
-                    /** @var StationVisuel $stationVisuelSite */
-                    if (!empty($stationSite->getVisuels())) {
-                        foreach ($stationSite->getVisuels() as $stationVisuelSite) {
-                            $stationSite->removeVisuel($stationVisuelSite);
-//                                        $stationVisuelSite->setStation(null);
-//                                        $stationVisuelSite->setVisuel(null);
-                            $emSite->remove($stationVisuelSite);
-                            $emSite->remove($stationVisuelSite->getVisuel());
-                            $this->deleteFile($stationVisuelSite->getVisuel());
-                        }
-                        $emSite->flush();
-                    }
-
-                    $emSite->remove($stationSite);
-                    $emSite->flush();
-
-                    $stationUnifie->removeStation($station);
-                    $station->setStationUnifie(null);
-                    $stationMere = $station->getStationMere();
-
-                    $stationCI = $station->getStationCarteIdentite();
-                    $station->getStationCarteIdentite()->removeStation($station);
-
-                    $stationCV = $station->getStationCommentVenir();
-                    $station->getStationCommentVenir()->removeStation($station);
-
-                    $stationDescription = $station->getStationDescription();
-                    $station->getStationDescription()->removeStation($station);
-
-                    $station->setStationMere(null);
-
-                    // *** suppression des stationVisuels de l'station à supprimer ***
-                    /** @var StationVisuel $stationVisuel */
-                    $stationVisuelSites = $em->getRepository(StationVisuel::class)->findBy(array('station' => $station));
-                    if (!empty($stationVisuelSites)) {
-                        foreach ($stationVisuelSites as $stationVisuel) {
-                            $stationVisuel->setVisuel(null);
-                            $stationVisuel->setStation(null);
-                            $em->remove($stationVisuel);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des stationVisuels de l'station à supprimer ***
-
-                    $em->remove($station);
-                    if (empty($stationMere) || $stationCI != $stationMere->getStationCarteIdentite()) {
-                        $stationCarteIdentiteUnifieController->deleteEntity($stationCI->getStationCarteIdentiteUnifie());
-                    }
-                    if (empty($stationMere) || $stationCV != $stationMere->getStationCommentVenir()) {
-                        $stationCommentVenirUnifieController->deleteEntity($stationCV->getStationCommentVenirUnifie());
-                    }
-                    if (empty($stationMere) || $stationDescription != $stationMere->getStationDescription()) {
-                        $stationDescriptionUnifieController->deleteEntity($stationDescription->getStationDescriptionUnifie());
-                    }
-                }
-            }
-//            $em->flush();die;
 
             // ***** carte d'identité *****
             $this->carteIdentiteEdit($request, $stationUnifie);

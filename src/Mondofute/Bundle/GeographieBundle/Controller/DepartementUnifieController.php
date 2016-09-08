@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementImage;
 use Mondofute\Bundle\GeographieBundle\Entity\DepartementImageTraduction;
@@ -85,11 +86,12 @@ class DepartementUnifieController extends Controller
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // dispacher les données communes
-//            $this->dispacherDonneesCommune($departementUnifie);
-
-            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
-
+            /** @var Departement $entity */
+            foreach ($departementUnifie->getDepartements() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }
+            }
 
             // ***** Gestion des Medias *****
             foreach ($request->get('departement_unifie')['departements'] as $key => $departement) {
@@ -342,6 +344,9 @@ class DepartementUnifieController extends Controller
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (is_null(($entitySite = $emSite->getRepository(DepartementUnifie::class)->find($entity->getId())))) {
                     $entitySite = new DepartementUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
@@ -353,7 +358,9 @@ class DepartementUnifieController extends Controller
                 $departementSite
                     ->setSite($site)
                     ->setDepartementUnifie($entitySite)
-                    ->setRegion($region);
+                    ->setRegion($region)
+                    ->setActif($departement->getActif())
+                ;
 
 //            Gestion des traductions
                 foreach ($departement->getTraductions() as $departementTraduc) {
@@ -772,26 +779,24 @@ class DepartementUnifieController extends Controller
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
-
 //            récupère les sites ayant la région d'enregistrée
-            foreach ($departementUnifie->getDepartements() as $departement) {
-                array_push($sitesAEnregistrer, $departement->getSite()->getId());
+            /** @var Departement $entity */
+            foreach ($departementUnifie->getDepartements() as $entity) {
+                if ($entity->getActif()){
+                    array_push($sitesAEnregistrer, $entity->getSite()->getId());
+                }
             }
         } else {
-
 //            récupère les sites cochés
             $sitesAEnregistrer = $request->get('sites');
         }
 
-
-        $originalDepartements = new ArrayCollection();
         $originalDepartementImages = new ArrayCollection();
         $originalImages = new ArrayCollection();
         $originalDepartementPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($departementUnifie->getDepartements() as $departement) {
-            $originalDepartements->add($departement);
             // si l'departement est celui du CRM
             if ($departement->getSite()->getCrm() == 1) {
                 // on parcourt les departementImage pour les comparer ensuite
@@ -823,7 +828,13 @@ class DepartementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-
+            foreach ($departementUnifie->getDepartements() as $entity){
+                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                    $entity->setActif(false);
+                }else{
+                    $entity->setActif(true);
+                }
+            }
 
             // ************* suppression images *************
             // ** CAS OU L'ON SUPPRIME UN "DEPARTEMENT IMAGE" **
@@ -887,7 +898,6 @@ class DepartementUnifieController extends Controller
             }
             // ************* fin suppression images *************
 
-
             // ************* suppression photos *************
             // ** CAS OU L'ON SUPPRIME UN "DEPARTEMENT PHOTO" **
             // on récupère les DepartementPhoto de l'hébergementCrm pour les mettre dans une collection
@@ -949,76 +959,6 @@ class DepartementUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-
-//            $this->dispacherDonneesCommune($departementUnifie);
-            $this->supprimerDepartements($departementUnifie, $sitesAEnregistrer);
-
-            // Supprimer la relation entre la station et stationUnifie
-            foreach ($originalDepartements as $departement) {
-                if (!$departementUnifie->getDepartements()->contains($departement)) {
-
-                    //  suppression de la station sur le site
-                    $emSite = $this->getDoctrine()->getManager($departement->getSite()->getLibelle());
-                    $entitySite = $emSite->find(DepartementUnifie::class, $departementUnifie->getId());
-                    $departementSite = $entitySite->getDepartements()->first();
-
-                    /** @var DepartementImage $departementImageSite */
-                    if (!empty($departementSite->getImages())) {
-                        foreach ($departementSite->getImages() as $departementImageSite) {
-                            $departementSite->removeImage($departementImageSite);
-//                                        $departementImageSite->setDepartement(null);
-//                                        $departementImageSite->setImage(null);
-                            $emSite->remove($departementImageSite);
-                            $emSite->remove($departementImageSite->getImage());
-                        }
-                        $emSite->flush();
-                    }
-                    /** @var DepartementPhoto $departementPhotoSite */
-                    if (!empty($departementSite->getPhotos())) {
-                        foreach ($departementSite->getPhotos() as $departementPhotoSite) {
-                            $departementSite->removePhoto($departementPhotoSite);
-//                                        $departementPhotoSite->setDepartement(null);
-//                                        $departementPhotoSite->setPhoto(null);
-                            $emSite->remove($departementPhotoSite);
-                            $emSite->remove($departementPhotoSite->getPhoto());
-                        }
-                        $emSite->flush();
-                    }
-                    
-                    $emSite->remove($departementSite);
-
-                    $emSite->flush();
-                    $departement->setDepartementUnifie(null);
-
-                    // *** suppression des departementImages de l'departement à supprimer ***
-                    /** @var DepartementImage $departementImage */
-                    $departementImageSites = $em->getRepository(DepartementImage::class)->findBy(array('departement' => $departement));
-                    if (!empty($departementImageSites)) {
-                        foreach ($departementImageSites as $departementImage) {
-                            $departementImage->setImage(null);
-                            $departementImage->setDepartement(null);
-                            $em->remove($departementImage);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des departementImages de l'departement à supprimer ***
-                    // *** suppression des departementPhotos de l'departement à supprimer ***
-                    /** @var DepartementPhoto $departementPhoto */
-                    $departementPhotoSites = $em->getRepository(DepartementPhoto::class)->findBy(array('departement' => $departement));
-                    if (!empty($departementPhotoSites)) {
-                        foreach ($departementPhotoSites as $departementPhoto) {
-                            $departementPhoto->setPhoto(null);
-                            $departementPhoto->setDepartement(null);
-                            $em->remove($departementPhoto);
-                        }
-                        $em->flush();
-                    }
-                    // *** fin suppression des departementPhotos de l'departement à supprimer ***
-                    
-                    $em->remove($departement);
-                }
-            }
-
 
             // ***** Gestion des Medias *****
 //            dump($departementUnifie);die;
@@ -1264,25 +1204,27 @@ class DepartementUnifieController extends Controller
                         $emSite->remove($departementUnifieSite);
                         $departementSite = $departementUnifieSite->getDepartements()->first();
 
-                        // si il y a des images pour l'entité, les supprimer
-                        if (!empty($departementSite->getImages())) {
-                            /** @var DepartementImage $departementImageSite */
-                            foreach ($departementSite->getImages() as $departementImageSite) {
-                                $imageSite = $departementImageSite->getImage();
-                                $departementImageSite->setImage(null);
-                                if (!empty($imageSite)) {
-                                    $emSite->remove($imageSite);
+                        if(!empty($departementSite)){
+                            // si il y a des images pour l'entité, les supprimer
+                            if (!empty($departementSite->getImages())) {
+                                /** @var DepartementImage $departementImageSite */
+                                foreach ($departementSite->getImages() as $departementImageSite) {
+                                    $imageSite = $departementImageSite->getImage();
+                                    $departementImageSite->setImage(null);
+                                    if (!empty($imageSite)) {
+                                        $emSite->remove($imageSite);
+                                    }
                                 }
                             }
-                        }
-                        // si il y a des photos pour l'entité, les supprimer
-                        if (!empty($departementSite->getPhotos())) {
-                            /** @var DepartementPhoto $departementPhotoSite */
-                            foreach ($departementSite->getPhotos() as $departementPhotoSite) {
-                                $photoSite = $departementPhotoSite->getPhoto();
-                                $departementPhotoSite->setPhoto(null);
-                                if (!empty($photoSite)) {
-                                    $emSite->remove($photoSite);
+                            // si il y a des photos pour l'entité, les supprimer
+                            if (!empty($departementSite->getPhotos())) {
+                                /** @var DepartementPhoto $departementPhotoSite */
+                                foreach ($departementSite->getPhotos() as $departementPhotoSite) {
+                                    $photoSite = $departementPhotoSite->getPhoto();
+                                    $departementPhotoSite->setPhoto(null);
+                                    if (!empty($photoSite)) {
+                                        $emSite->remove($photoSite);
+                                    }
                                 }
                             }
                         }

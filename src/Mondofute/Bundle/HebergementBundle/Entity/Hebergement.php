@@ -56,6 +56,10 @@ class Hebergement
      * @var \Doctrine\Common\Collections\Collection
      */
     private $visuels;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
@@ -386,5 +390,29 @@ class Hebergement
     public function getVisuels()
     {
         return $this->visuels;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Hebergement
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }
