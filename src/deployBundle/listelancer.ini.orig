@@ -12,7 +12,7 @@
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
-<<<<<<< e2ce4fb5266cb340ef5bc3714804ca28384b54d0
+<<<<<<< dad097e8adb0c2de4c7323e099420682efaf0d4b
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -38,8 +38,9 @@ maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
 
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
-||||||| merged common ancestors
-maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
-=======
 maj\crm_101\2016-08-30a_code_promo.sql
->>>>>>> changement du nom du fichier sql code promo
+||||||| merged common ancestors
+maj\crm_101\2016-08-30a_code_promo.sql
+=======
+maj\crm_101\2016-08-31a_code_promo.sql
+>>>>>>> maj sql codepromo
