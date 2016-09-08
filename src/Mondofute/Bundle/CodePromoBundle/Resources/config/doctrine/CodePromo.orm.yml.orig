@@ -2,7 +2,7 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoRepository
-<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
+<<<<<<< 27344b148f7f721bfe6ed20a6fc82c6556b607c2
     attributeOverride:
         code:
             nullable: true
@@ -15,6 +15,7 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_sejour_id:
                         unique: true
+            cascade: ['persist','remove']
 =======
     manyToMany:
         codePromoPeriodeSejours:
@@ -24,8 +25,9 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                 inverseJoinColumns:
                     code_promo_periode_sejour_id:
                         unique: true
+                        onDelete: cascade
             cascade: ['persist','remove']
->>>>>>> CRM-101|REBASE 8/38
+>>>>>>> ondelete cascade manytomany codepromoperiode
     fields:
         actifSite:
             type: boolean
