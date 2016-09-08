@@ -5,14 +5,13 @@
 ; maj/2016-04-02_c_dc_nom_de_ma_table2.php
 ;maj\crm_75\2016-07-21a_sls_periode.sql
 ;maj\crm_71\2016-08-02a_md_medias.sql
-;maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
-<<<<<<< 36c3761be67c67b2e8873bed12241a8f7487e1b5
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -37,11 +36,12 @@ maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
 
+<<<<<<< 3e36fb24eac79661d383bb154f104d4207c5789c
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 maj\crm_101\2016-08-30a_code_promo.sql
 maj\crm_101\2016-08-31a_md_code_promo.sql
 ||||||| merged common ancestors
-maj\crm_101\2016-08-30a_code_promo.sql
-=======
 maj\crm_101\2016-08-31a_code_promo.sql
->>>>>>> maj sql codepromo
+=======
+maj\crm_101\2016-08-31a_md_code_promo.sql
+>>>>>>> modification listelancer
