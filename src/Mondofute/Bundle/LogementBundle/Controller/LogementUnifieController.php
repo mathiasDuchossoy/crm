@@ -161,7 +161,9 @@ class LogementUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($logementUnifie);
             $em->flush();
+            foreach ($logementUnifie->getLogements() as $logement){
 
+            }
             return $this->redirectToRoute('logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
 
