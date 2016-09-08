@@ -22,6 +22,10 @@ class CodePromo extends BaseCodePromo
      */
     protected $code;
     /**
+     * @var string
+     */
+    protected $code;
+    /**
      * @var Collection
      */
     private $codePromoPeriodeSejours;
@@ -30,7 +34,6 @@ class CodePromo extends BaseCodePromo
      */
     private $codePromoUnifie;
     /**
-<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
      * @var Site
      */
     private $site;
@@ -40,17 +43,7 @@ class CodePromo extends BaseCodePromo
     private $actifSite = true;
     /**
      * @var \Doctrine\Common\Collections\Collection
-||||||| merged common ancestors
-     * @var boolean
      */
-    private $actif = true;
-    /**
-     * @var Site
-=======
-     * @var Site
->>>>>>> CRM-101|REBASE 8/38
-     */
-<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
     private $codePromoClients;
 
     public function __construct()
@@ -59,24 +52,38 @@ class CodePromo extends BaseCodePromo
         $this->codePromoPeriodeSejours = new ArrayCollection();
         $this->codePromoClients = new ArrayCollection();
     }
-||||||| merged common ancestors
-    private $site;
-=======
-    private $site;
-    /**
-     * @var boolean
-     */
-    private $actifSite = true;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->codePromoPeriodeSejours = new ArrayCollection();
-    }
->>>>>>> CRM-101|REBASE 8/38
 
     /**
+<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
      * @return string
+||||||| merged common ancestors
+     * Get id
+     *
+     * @return int
+=======
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+>>>>>>> panel de recherche client dans la fiche codepromo
      */
     public function getCode()
     {
@@ -185,7 +192,6 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
-<<<<<<< 92506c64db29b1ef4919b5824edd7883e6d9d7dc
 
     /**
      * Get actifSite
@@ -210,6 +216,7 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
+<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
 
     /**
      * Add codePromoClient
@@ -248,27 +255,37 @@ class CodePromo extends BaseCodePromo
 =======
 
     /**
-     * Get actifSite
+     * Add codePromoClient
      *
-     * @return boolean
-     */
-    public function getActifSite()
-    {
-        return $this->actifSite;
-    }
-
-    /**
-     * Set actifSite
-     *
-     * @param boolean $actifSite
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
      *
      * @return CodePromo
      */
-    public function setActifSite($actifSite)
+    public function addCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
     {
-        $this->actifSite = $actifSite;
+        $this->codePromoClients[] = $codePromoClient;
 
         return $this;
     }
->>>>>>> CRM-101|REBASE 8/38
+
+    /**
+     * Remove codePromoClient
+     *
+     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient
+     */
+    public function removeCodePromoClient(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients->removeElement($codePromoClient);
+    }
+
+    /**
+     * Get codePromoClients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoClients()
+    {
+        return $this->codePromoClients;
+    }
+>>>>>>> panel de recherche client dans la fiche codepromo
 }

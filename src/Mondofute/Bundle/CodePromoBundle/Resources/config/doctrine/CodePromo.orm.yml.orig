@@ -2,32 +2,9 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoRepository
-<<<<<<< 27344b148f7f721bfe6ed20a6fc82c6556b607c2
     attributeOverride:
         code:
             nullable: true
-||||||| merged common ancestors
-    manyToMany:
-        codePromoPeriodeSejours:
-            targetEntity: CodePromoPeriodeSejour
-            joinTable:
-                name: ~
-                inverseJoinColumns:
-                    code_promo_periode_sejour_id:
-                        unique: true
-            cascade: ['persist','remove']
-=======
-    manyToMany:
-        codePromoPeriodeSejours:
-            targetEntity: CodePromoPeriodeSejour
-            joinTable:
-                name: ~
-                inverseJoinColumns:
-                    code_promo_periode_sejour_id:
-                        unique: true
-                        onDelete: cascade
-            cascade: ['persist','remove']
->>>>>>> ondelete cascade manytomany codepromoperiode
     fields:
         actifSite:
             type: boolean
@@ -39,6 +16,7 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
             inversedBy: codePromos
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
     oneToMany:
         codePromoClients:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient
@@ -54,4 +32,21 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
                         unique: true
                         onDelete: cascade
             cascade: ['persist','remove']
+||||||| merged common ancestors
+=======
+    oneToMany:
+        codePromoClients:
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient
+            mappedBy: codePromo
+    manyToMany:
+        codePromoPeriodeSejours:
+            targetEntity: CodePromoPeriodeSejour
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_sejour_id:
+                        unique: true
+                        onDelete: cascade
+            cascade: ['persist','remove']
+>>>>>>> panel de recherche client dans la fiche codepromo
     lifecycleCallbacks: {  }

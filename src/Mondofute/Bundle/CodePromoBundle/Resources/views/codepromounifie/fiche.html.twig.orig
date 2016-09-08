@@ -62,6 +62,7 @@
                                 {% endfor %}
                             </ul>
                         </ul>
+<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
                         <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}"
                             {% if codePromo.vars.value.clientAffectation != 2 %}
                                 style="display: none"
@@ -145,6 +146,31 @@
                             </table>
 
                         </div>
+||||||| merged common ancestors
+=======
+                        <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}">
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">Client</div>
+                            <div class="panel-body">
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" aria-label="Left Align"
+                                            onclick="searchClient('{{ codePromo.vars.value.site.id }}');"
+                                            >
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                        <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text" class="form-control" placeholder="Rechercher...">
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 -->
+                            </div>
+                            <!-- Table -->
+                            <table class="table">
+                                ...
+                            </table>
+                        </div>
+>>>>>>> panel de recherche client dans la fiche codepromo
                     </div>
 
                     {% set index = (index + 1) %}
@@ -186,6 +212,7 @@
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_actif");
 
         var items = [];
+<<<<<<< d86d0fd5aa473bc31c5688ec2eea060d19969cc8
                 items.push("_code_promo_unifie_codePromos_entry_libelle");
                 items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
                 items.push("_code_promo_unifie_codePromos_entry_typeRemise");
@@ -193,6 +220,17 @@
                 items.push("_code_promo_unifie_codePromos_entry_prixMini");
                 items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
                 items.push("_code_promo_unifie_codePromos_entry_actif");
+||||||| merged common ancestors
+//        items.push("_prestation_annexe_unifie_codePromos_entry_type");
+//        items.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
+//        items.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
+//        items.push("_codePromo_unifie_codePromos_entry_departement");
+=======
+        //        items.push("_prestation_annexe_unifie_codePromos_entry_type");
+        //        items.push("_prestation_annexe_unifie_codePromos_entry_familleCodePromo");
+        //        items.push("_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo");
+        //        items.push("_codePromo_unifie_codePromos_entry_departement");
+>>>>>>> panel de recherche client dans la fiche codepromo
 
     </script>
     {{ parent() }}
@@ -308,13 +346,7 @@
         var link = {};
         {% set elements = {} %}
         {% for site in sites %}
-<<<<<<< ec7cc7c2707b54254bed554e5f45ffcf352f46c7
         {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
-||||||| merged common ancestors
-            {% set elements = elements|merge( ['code_promo_periode_validate_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
-=======
-            {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
->>>>>>> Validate en Validite
         {% endfor %}
         {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
 
