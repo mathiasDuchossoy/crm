@@ -12,7 +12,7 @@
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
-<<<<<<< f0ae180316e8cc2d82f4c3dc02903dc44687d1a2
+<<<<<<< 9adf8129434643e749ecb49f9ae189bbc70e1b30
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -35,10 +35,13 @@ maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
 maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
-||||||| merged common ancestors
-maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
-=======
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
 
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
->>>>>>> Mise en place copieVersSite pour codePromoUnifie
+||||||| merged common ancestors
+;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+
+maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
+=======
+maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+>>>>>>> ajout chemin sql dans listelancer
