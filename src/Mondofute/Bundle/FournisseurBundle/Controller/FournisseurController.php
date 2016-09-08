@@ -523,8 +523,8 @@ class FournisseurController extends Controller
         // *** gestion prestation annexe ***
         $originalPrestationAnnexes = new ArrayCollection();
 
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
         foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
-            /** @var FournisseurPrestationAnnexe $prestationAnnex */
             $originalPrestationAnnexes->add($prestationAnnex);
             foreach ($langues as $langue){
                 $traduction = $prestationAnnex->getTraductions()->filter(function(FournisseurPrestationAnnexeTraduction $element) use ($langue){
@@ -622,6 +622,18 @@ class FournisseurController extends Controller
 
             foreach ($originalPrestationAnnexes as $prestationAnnex) {
                 if (false === $fournisseur->getPrestationAnnexes()->contains($prestationAnnex)) {
+                    $em->remove($prestationAnnex);
+                }
+            }
+            foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex){
+                $capacite = $prestationAnnex->getCapacite();
+                if(!empty($capacite) && $capacite->getMin() == 0 && $capacite->getMax() == 0){
+                    $prestationAnnex->setCapacite(null);
+                    $em->remove($capacite);
+                }
+                $dureeSejour = $prestationAnnex->getDureeSejour();
+                if(!empty($dureeSejour) && $dureeSejour->getMin() == 0 && $dureeSejour->getMax() == 0){
+                    $prestationAnnex->setDureeSejour(null);
                     $em->remove($prestationAnnex);
                 }
             }
