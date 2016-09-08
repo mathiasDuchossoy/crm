@@ -131,11 +131,20 @@
                                                 </div>
                                             </div>
                                             <div class="panel-body">
+<<<<<<< 9ce756b7983d346bc701090f2a92c55daed1bd39
+||||||| merged common ancestors
                                                 <div class="progress">
                                                     <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
                                                         0%
                                                     </div>
                                                 </div>
+=======
+                                                {#<div class="progress">#}
+                                                    {#<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">#}
+                                                        {#0%#}
+                                                    {#</div>#}
+                                                {#</div>#}
+>>>>>>> cooretion fiche codepromoclient
                                                 <div id="result_search_{{ codePromo.vars.value.site.id }}">
 
                                                 </div>
@@ -424,85 +433,15 @@
                 path = path.replace(/_clientName_/g, clienVal);
                 path = path.replace(/_siteId_/g, siteId);
                 $.ajax(path,
-<<<<<<< adcb78c1c4231cf3f2910ebc61a0770bcde8a123
                     {
                     }
-||||||| merged common ancestors
-                        {
-                            method: 'GET'
-                        }
-=======
-                    {
-                        method: 'GET',
-//                        xhr: function () {
-//                            var xhr = new window.XMLHttpRequest();
-////                            xhr.upload.addEventListener("progress", function (evt) {
-////                                if (evt.lengthComputable) {
-////                                    var percentComplete = evt.loaded / evt.total;
-////                                    console.log(percentComplete);
-////                                    $('.progress').css({
-////                                        width: percentComplete * 100 + '%'
-////                                    });
-////                                    if (percentComplete === 1) {
-////                                        $('.progress').addClass('hide');
-////                                    }
-////                                }
-////                            }, false);
-//                            xhr.addEventListener("progress", function (evt) {
-//                                console.log('ici');
-//                                if (evt.lengthComputable) {
-//                                    var percentComplete = evt.loaded / evt.total;
-////                                    console.log(percentComplete);
-////                                    console.log('ici');
-////
-////                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-//                                    $('.progress-bar').css({
-//                                        width: percentComplete * 100 + '%'
-//                                    });
-//                                    $('.progress-bar').attr('aria-valuenow', percentComplete * 100 );
-//                                }
-//                            }, false);
-//                            return xhr;
-//                        },
-                    }
->>>>>>> coorection recherche client
                 ).done(function (data) {
                     $("#result_search_" + siteId).html(data);
-<<<<<<< adcb78c1c4231cf3f2910ebc61a0770bcde8a123
                     $progressBar.removeClass("active");
                     $progress.hide();
                 })
                 ;
 
-||||||| merged common ancestors
-//                    $("#list_client_" + siteId).append(data);
-//                    $famillePrestationAnnexe.show();
-                });
-=======
-                });
-
-//                $.ajax({
-//                    method: 'GET',
-//                    url: path,
-//                    success: function(data) {
-//                        $("#result_search_" + siteId).html(data);
-//                    },
-//                    error: function() {
-//                        // TODO add message error
-//                    },
-//                    progress: function(e) {
-//                        console.log('ici');
-//                        if(e.lengthComputable) {
-//                            var progress = e.loaded / e.total * 100;
-//                            console.log(progress);
-//                            var content = e.srcElement.responseText;
-//                        }
-//                        else {
-//                            // TODO add message error 'Content Length not reported!';
-//                        }
-//                    }
-//                });
->>>>>>> coorection recherche client
             }
         }
 
