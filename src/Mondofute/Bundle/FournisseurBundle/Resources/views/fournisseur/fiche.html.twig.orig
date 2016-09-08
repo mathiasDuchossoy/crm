@@ -1509,8 +1509,13 @@
             $collectionHolder.data('index', index + 1);
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
+<<<<<<< f980e6f0dcd58891d9cf886e975dcf910f8cd9db
             addTagFormDeleteLink($newFormLi);
             periodevaliditeDatetimePicker();
+||||||| merged common ancestors
+=======
+            addTagFormDeleteLink($newFormLi);
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
         }
 
         function addTagFormDeleteLink($tagFormLi) {
@@ -1520,10 +1525,18 @@
                 e.preventDefault();
                 $tagFormLi.remove();
             });
+<<<<<<< f980e6f0dcd58891d9cf886e975dcf910f8cd9db
         }
 
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
             {% set index = prestationAnnexe.prestationAnnexe.id %}
+||||||| merged common ancestors
+=======
+        }
+
+        {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.id %}
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
 
             var $collectionHolder{{ index }};
             var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
@@ -1618,36 +1631,7 @@
                 return false;
             });
         }
-<<<<<<< 8f9123aa6d8a5fb8f35dfb3d3ca557c729d24899
         periodevaliditeDatetimePicker();
-||||||| merged common ancestors
-=======
-        {% for key, prestationAnnexe in fournisseur.prestationAnnexes %}
-            {% set index = prestationAnnexe.id %}
-            var $collectionHolderperiode_validite{{ index }};
-            var $addTagLinkperiode_validite{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-            var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
-            $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ key }}{{ index }}');
-            $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
-            $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
-            $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
-                e.preventDefault();
-                addTagForm($collectionHolderperiode_validite{{ index }}, $newLinkLiperiode_validite{{ index }} , '__periode_validite_name__');
-            });
-
-            var $collectionHolder{{ index }};
-            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
-            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
-            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
-            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
-            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
-            $addTagLink{{ index }}.on('click', function(e) {
-                e.preventDefault();
-                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
-            });
-
-        {% endfor %}
->>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
 
     </script>
 {% endblock %}
