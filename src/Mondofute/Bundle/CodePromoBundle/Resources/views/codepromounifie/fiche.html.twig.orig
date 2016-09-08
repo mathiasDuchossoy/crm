@@ -88,14 +88,7 @@
                                                                                    checked="checked"
                                                                                    value="{{ codePromoClient.client.id }}"
                                                                                    name="client_{{ codePromo.vars.value.site.id }}[]"
-<<<<<<< 5e4aefd5cf880857beeb1eaa0620d6a2b4a1d8ac
                                                                                    id="checkbox_client_{{ codePromoClient.client.id }}_{{ codePromo.vars.value.site.id }}">
-||||||| merged common ancestors
-                                                                                   id="code_promo_unifie_codePromos_0_actif">
-                                                                            {#{{ dump(codePromoClient.client) }}#}
-=======
-                                                                                   id="code_promo_unifie_codePromos_0_actif">
->>>>>>> suppression CodePromoPeriodeValidate
                                                                             {{ codePromoClient.client.nom }} {{ codePromoClient.client.prenom }}
                                                                         </label></div>
                                                                 </div>
@@ -444,36 +437,12 @@
                 var $listeClient = $("#list_client_" + siteId);
                 $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
                 if($div.length > 0){
-<<<<<<< 5e4aefd5cf880857beeb1eaa0620d6a2b4a1d8ac
                     $listeClient.find("#checkbox_client_"+ clientId +"_"+siteId).prop( "checked" , true);
-||||||| merged common ancestors
-//                    $("#client_"+ clientId +"_"+siteId ).remove();
-=======
->>>>>>> suppression CodePromoPeriodeValidate
                     $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
                 }
                 else {
                     $listeClient.append($("#client_"+ clientId +"_"+siteId ));
                 }
-<<<<<<< 5e4aefd5cf880857beeb1eaa0620d6a2b4a1d8ac
-||||||| merged common ancestors
-//                console.log($div);
-=======
-            }
-        }
-
-        function displayPanelClient(element){
-            var $element = $(element);
-            var site = $element.data('site');
-            console.log($element.val());
-            console.log(site);
-            if($element.val() == 2){
-                $('#panel_client_' + site).show();
-            }
-            else {
-                $('#panel_client_' + site).hide();
-                console.log( $('#panel_client_' + site));
->>>>>>> suppression CodePromoPeriodeValidate
             }
         }
 
@@ -487,6 +456,7 @@
                 $('#panel_client_' + site).hide();
             }
         }
+<<<<<<< c761daadd52f2eb981d8083382152e3482671074
 
         function testEnterSearchClient(event,codePromoId, siteId){
 //            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
@@ -500,6 +470,10 @@
             return false;
         }
 
+||||||| merged common ancestors
+=======
+
+>>>>>>> suppression maj et création des codePromoClient en focntion de l'usage
     </script>
 
 {% endblock %}
