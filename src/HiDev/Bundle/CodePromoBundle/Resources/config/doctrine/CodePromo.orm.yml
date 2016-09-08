@@ -1,5 +1,5 @@
 HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
-    type: entity
+    type: mappedSuperclass
     table: null
     repositoryClass: HiDev\Bundle\CodePromoBundle\Repository\CodePromoRepository
     id:
