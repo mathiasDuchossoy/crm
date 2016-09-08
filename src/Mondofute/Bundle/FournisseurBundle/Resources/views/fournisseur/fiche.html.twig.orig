@@ -314,8 +314,8 @@
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
                 {% endfor %}
             </div>
-<<<<<<< 8f4729684b5bad06664a9de77c7f7fe913b72446
 
+<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
             <div id="values_prestation_annexe" style="display: none">
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
 ||||||| merged common ancestors
@@ -324,12 +324,11 @@
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
 =======
-
-            <div id="values_prestation_annexe" >
+            <div id="values_prestation_annexe" style="display: none">
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
->>>>>>> avancement sur fournisseur/fiche
+>>>>>>> affichage ou non de capacite et dureesejour
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -1375,16 +1374,8 @@
             }
         }
     </script>
-<<<<<<< 8f4729684b5bad06664a9de77c7f7fe913b72446
     <script type="text/javascript">
         function updatePrestationAnnexe( fournisseurId , element) {
-||||||| merged common ancestors
-<script type="text/javascript">
-        function updatePrestationAnnexe(element) {
-=======
-    <script type="text/javascript">
-        function updatePrestationAnnexe(element) {
->>>>>>> avancement sur fournisseur/fiche
             $element = $(element);
             $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
@@ -1427,7 +1418,6 @@
             var $prestationAnnexeModal = $('#prestationAnnexeModal');
             $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
             if ($element.is(':checked')) {
-<<<<<<< 8f4729684b5bad06664a9de77c7f7fe913b72446
                 if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
 //
@@ -1445,31 +1435,6 @@
                         })
                     });
                 }
-||||||| merged common ancestors
-                var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-
-                $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
-                ).done(function (data) {
-                    $("#values_prestation_annexe").html(data);
-                });
-=======
-                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
-                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-//
-                    $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
-                    ).done(function (data) {
-                        $("#values_prestation_annexe").append(data);
-                    });
-                }
->>>>>>> avancement sur fournisseur/fiche
                 $editPrestationAnnexe.show();
             }else{
                 $editPrestationAnnexe.hide();
@@ -1506,14 +1471,24 @@
                 });
             }
             $prestationAnnexeModal.modal();
+<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
             $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
+||||||| merged common ancestors
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.on('hidden.bs.modal', function (e) {
+                enregisterPrestationAnnexe(prestationAnnexeId);
+=======
+//            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                return enregisterPrestationAnnexe(prestationAnnexeId);
+>>>>>>> affichage ou non de capacite et dureesejour
             })
         }
 
         function enregisterPrestationAnnexe(prestationAnnexeId){
-<<<<<<< 8f4729684b5bad06664a9de77c7f7fe913b72446
+<<<<<<< e3c542e5c98f5490cc6047242266999ed7594b1a
             var $myForm = $('#form_prestation_annexe')
             if (!$myForm[0].checkValidity()) {
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
@@ -1667,11 +1642,38 @@
             });
 ||||||| merged common ancestors
             $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $prestationAnnexeModal.modal('hide');
-=======
-            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
             $('#prestationAnnexeModal').modal('hide');
->>>>>>> avancement sur fournisseur/fiche
+=======
+            var $myForm = $('#form_prestation_annexe')
+            if (!$myForm[0].checkValidity()) {
+                $('<input type="submit">').hide().appendTo($myForm).click().remove();
+                return false;
+            }
+            else {
+                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+//                $('#prestationAnnexeModal').modal('hide');
+                return true;
+            }
+        }
+
+        function displayCapaciteSejour(elementId){
+            $element = $("#" +elementId);
+            $buttonEdit     = $("#" +elementId + '_edit');
+            $buttonRemove = $("#" +elementId + '_remove');
+            if($element.is(":visible")){
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function(index,input){
+                    $(input).val('');
+                })
+            }
+            else{
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
+>>>>>>> affichage ou non de capacite et dureesejour
         }
         periodevaliditeDatetimePicker();
 
