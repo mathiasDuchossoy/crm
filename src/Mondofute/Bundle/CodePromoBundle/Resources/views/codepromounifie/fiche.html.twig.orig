@@ -30,14 +30,7 @@
                         {{ form_row(codePromo.site) }}
                         <ul class="nav nav-tabs">
                             {{ form_row(codePromo.libelle, { 'attr' : { 'data-unique_block_prefix' : codePromo.libelle.vars['unique_block_prefix']}}) }}
-<<<<<<< a1d88eceb49bc7ca13d83810ec0c7e5bd32e9641
                             {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-site' : codePromo.vars.value.site.id , 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
-||||||| merged common ancestors
-                            {{ form_row(codePromo.code, { 'attr' : { 'data-unique_block_prefix' : codePromo.code.vars['unique_block_prefix']}}) }}
-                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
-=======
-                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
->>>>>>> déplacement de code dans codePromoUnifie
                             {{ form_row(codePromo.typeRemise, { 'attr' : { 'data-unique_block_prefix' : codePromo.typeRemise.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : codePromo.valeurRemise.vars['unique_block_prefix'] }}) }}
                             {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
@@ -69,7 +62,6 @@
                                 {% endfor %}
                             </ul>
                         </ul>
-<<<<<<< a1d88eceb49bc7ca13d83810ec0c7e5bd32e9641
                         <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}"
                             {% if codePromo.vars.value.clientAffectation != 2 %}
                                 style="display: none"
@@ -153,20 +145,6 @@
                             </table>
 
                         </div>
-||||||| merged common ancestors
-                        {#<div class="tab-content">#}
-                            {#{% set iTraduc = 0 %}#}
-                            {#{% for traduction in codePromo.traductions %}#}
-                                {#<div id="{{ codePromo.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"#}
-                                     {#class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">#}
-                                    {#{% for element in traduction.children %}#}
-                                        {#{{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}#}
-                                    {#{% endfor %}#}
-                                {#</div>#}
-                            {#{% endfor %}#}
-                        {#</div>#}
-=======
->>>>>>> déplacement de code dans codePromoUnifie
                     </div>
 
                     {% set index = (index + 1) %}
@@ -330,7 +308,13 @@
         var link = {};
         {% set elements = {} %}
         {% for site in sites %}
+<<<<<<< ec7cc7c2707b54254bed554e5f45ffcf352f46c7
         {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+||||||| merged common ancestors
+            {% set elements = elements|merge( ['code_promo_periode_validate_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+=======
+            {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+>>>>>>> Validate en Validite
         {% endfor %}
         {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
 
