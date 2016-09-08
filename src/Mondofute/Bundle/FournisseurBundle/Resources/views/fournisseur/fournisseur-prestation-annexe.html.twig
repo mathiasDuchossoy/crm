@@ -57,9 +57,9 @@
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
         </div>
         <h3>Tarifs</h3>
-        <ul class="tarifs{{ prestationAnnexe.vars.id }}" data-prototype="
+        <ul class="tarifs{{ prestationAnnexe.vars.value.id }}" data-prototype="
             {% filter escape %}
-                {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'tarif' : prestationAnnexe.tarifs.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.id , 'name' : '__name__'} %}
+                {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'tarif' : prestationAnnexe.tarifs.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.id , 'name' : '__name__'} %}
             {% endfilter %}
         ">
             {% for key, tarif in prestationAnnexe.tarifs %}
@@ -71,11 +71,14 @@
     </div>
     <script type="text/javascript">
 
-var test = function(){
+var collectionTarif = function(){
     var $collectionHolder{{ prestationAnnexe.vars.id }};
     var $addTagLink{{ prestationAnnexe.vars.id }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
     var $newLinkLi{{ prestationAnnexe.vars.id }} = $('<li></li>').append($addTagLink{{ prestationAnnexe.vars.id }});
     $collectionHolder{{ prestationAnnexe.vars.id }} = $('ul.tarifs{{ prestationAnnexe.vars.id }}');
+    $collectionHolder{{ prestationAnnexe.vars.id }}.find('.li_tarif').each(function() {
+        addTagFormDeleteLink($(this));
+    });
     $collectionHolder{{ prestationAnnexe.vars.id }}.append($newLinkLi{{ prestationAnnexe.vars.id }});
     $collectionHolder{{ prestationAnnexe.vars.id }}.data('index', $collectionHolder{{ prestationAnnexe.vars.id }}.find('.li_tarif').length);
     $addTagLink{{ prestationAnnexe.vars.id }}.on('click', function(e) {
@@ -84,10 +87,7 @@ var test = function(){
     });
 }
 if (window.jQuery){
-    test();
+    collectionTarif();
 }
-//else{
-//    window.onload = test;
-//}
     </script>
 {% endfor %}
