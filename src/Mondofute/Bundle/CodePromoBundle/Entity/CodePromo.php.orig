@@ -1,0 +1,270 @@
+<?php
+
+namespace Mondofute\Bundle\CodePromoBundle\Entity;
+
+<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+||||||| merged common ancestors
+=======
+use Doctrine\Common\Collections\Collection;
+>>>>>>> dev controller et fiche de codepromounifie
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+||||||| merged common ancestors
+=======
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+>>>>>>> dev controller et fiche de codepromounifie
+
+/**
+ * CodePromo
+ */
+class CodePromo extends BaseCodePromo
+{
+//    /**
+//     * @var int
+//     */
+//    protected $id;
+    /**
+     * @var string
+     */
+    protected $code;
+    /**
+     * @var Collection
+     */
+    private $codePromoPeriodeSejours;
+    /**
+     * @var CodePromoUnifie
+     */
+    private $codePromoUnifie;
+<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
+    /**
+     * @var Site
+     */
+    private $site;
+    /**
+     * @var boolean
+     */
+    private $actifSite = true;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoClients;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->codePromoPeriodeSejours = new ArrayCollection();
+        $this->codePromoClients = new ArrayCollection();
+    }
+||||||| merged common ancestors
+=======
+    /**
+     * @var boolean
+     */
+    private $actif = true;
+    /**
+     * @var Site
+     */
+    private $site;
+>>>>>>> dev controller et fiche de codepromounifie
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return $this
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+//    /**
+//     * //     * Get id
+//     * //     *
+//     * //     * @return int
+//     * //     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
+
+    /**
+     * Add codePromoPeriodeSejour
+     *
+     * @param CodePromoPeriodeSejour $codePromoPeriodeSejour
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoPeriodeSejour(CodePromoPeriodeSejour $codePromoPeriodeSejour)
+    {
+        $this->codePromoPeriodeSejours[] = $codePromoPeriodeSejour;
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoPeriodeSejour
+     *
+     * @param CodePromoPeriodeSejour $codePromoPeriodeSejour
+     */
+    public function removeCodePromoPeriodeSejour(CodePromoPeriodeSejour $codePromoPeriodeSejour)
+    {
+        $this->codePromoPeriodeSejours->removeElement($codePromoPeriodeSejour);
+    }
+
+    /**
+     * Get codePromoPeriodeSejours
+     *
+     * @return Collection
+     */
+    public function getCodePromoPeriodeSejours()
+    {
+        return $this->codePromoPeriodeSejours;
+    }
+
+    /**
+     * Get codePromoUnifie
+     *
+     * @return CodePromoUnifie
+     */
+    public function getCodePromoUnifie()
+    {
+        return $this->codePromoUnifie;
+    }
+
+    /**
+     * Set codePromoUnifie
+     *
+     * @param CodePromoUnifie $codePromoUnifie
+     *
+     * @return CodePromo
+     */
+    public function setCodePromoUnifie(CodePromoUnifie $codePromoUnifie = null)
+    {
+        $this->codePromoUnifie = $codePromoUnifie;
+
+        return $this;
+    }
+<<<<<<< 850f20aa93b9b6e2411ffef717f7038a6d8051f1
+
+    /**
+     * Get site
+     *
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set site
+     *
+     * @param Site $site
+     *
+     * @return CodePromo
+     */
+    public function setSite(Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get actifSite
+     *
+     * @return boolean
+     */
+    public function getActifSite()
+    {
+        return $this->actifSite;
+    }
+
+    /**
+     * Set actifSite
+     *
+     * @param boolean $actifSite
+     *
+     * @return CodePromo
+     */
+    public function setActifSite($actifSite)
+    {
+        $this->actifSite = $actifSite;
+
+        return $this;
+    }
+
+    /**
+     * Add codePromoClient
+     *
+     * @param CodePromoClient $codePromoClient
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoClient(CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients[] = $codePromoClient->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoClient
+     *
+     * @param CodePromoClient $codePromoClient
+     */
+    public function removeCodePromoClient(CodePromoClient $codePromoClient)
+    {
+        $this->codePromoClients->removeElement($codePromoClient);
+    }
+
+    /**
+     * Get codePromoClients
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoClients()
+    {
+        return $this->codePromoClients;
+    }
+||||||| merged common ancestors
+=======
+
+    /**
+     * Get site
+     *
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set site
+     *
+     * @param Site $site
+     *
+     * @return CodePromo
+     */
+    public function setSite(Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+>>>>>>> dev controller et fiche de codepromounifie
+}
