@@ -51,18 +51,18 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
-<<<<<<< e6b021a8bbe5958971a92dfba119e9276b014f1a
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
+<<<<<<< 65eac6c4431a4131641dda1d0cf7beb8509760d2
             new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
             new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
              );
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 ||||||| merged common ancestors
-        );
 =======
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+>>>>>>> CRM-118|REBASE 1/16
         );
->>>>>>> creation bundle FournisseurPrestationAnnexe
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();

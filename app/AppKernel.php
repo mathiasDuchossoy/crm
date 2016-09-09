@@ -55,7 +55,6 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
             new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
             new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
-             );
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
         );
 
