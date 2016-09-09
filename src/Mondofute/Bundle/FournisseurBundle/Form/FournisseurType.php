@@ -39,8 +39,6 @@ class FournisseurType extends AbstractType
         $locale = $options["locale"];
         $famillePrestationAnnexeId = $options["famillePrestationAnnexeId"];
 
-
-
         $builder
             ->add('logo', 'sonata_media_type', array(
                 'provider' => 'sonata.media.provider.image',
@@ -62,7 +60,7 @@ class FournisseurType extends AbstractType
                 'multiple'  => true,
                 'expanded'  => true,
                 'attr'      => array(
-                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
+                    'onclick' => "javascript:updatePrestationAnnexe('$fournisseurId',this);"
                 )
             ))
             ->add('enseigne', null, array(

@@ -10,9 +10,6 @@
 <script>
 
 var collectionPeriodeValidite = function() {
-    var $collectionHolderperiode_validite{{ name }}{{ index }};
-    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
     $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
     $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
         addTagFormDeleteLink($(this));
@@ -25,6 +22,9 @@ var collectionPeriodeValidite = function() {
     });
 }
 if (window.jQuery){
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
     collectionPeriodeValidite();
 }
 </script>
