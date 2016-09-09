@@ -1687,7 +1687,7 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!empty($fournisseurId)) {
             $fournisseur = $em->find(Fournisseur::class, $fournisseurId);
-            $fournisseur->getPrestationAnnexes()->clear();
+//            $fournisseur->getPrestationAnnexes()->clear();
         } else {
             $fournisseur = new Fournisseur();
         }
@@ -1749,25 +1749,25 @@ class FournisseurController extends Controller
         ));
     }
 
-    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
-    {
-        /** @var Site $site */
-        $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
-        foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-
-            $typeFournisseurSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
-                'fournisseur' => $typeFournisseur->getFournisseur(),
-                'typeFournisseur' => $typeFournisseur->getTypeFournisseur()
-            ));
-
-            if (!empty($typeFournisseurSite)) {
-                $typeFournisseurSite->setFournisseur(null);
-                $emSite->remove($typeFournisseurSite);
-            }
-            $emSite->flush();
-        }
-    }
+//    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
+//    {
+//        /** @var Site $site */
+//        $em = $this->getDoctrine()->getManager();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+//        foreach ($sites as $site) {
+//            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+//
+//            $typeFournisseurSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
+//                'fournisseur' => $typeFournisseur->getFournisseur(),
+//                'typeFournisseur' => $typeFournisseur->getTypeFournisseur()
+//            ));
+//
+//            if (!empty($typeFournisseurSite)) {
+//                $typeFournisseurSite->setFournisseur(null);
+//                $emSite->remove($typeFournisseurSite);
+//            }
+//            $emSite->flush();
+//        }
+//    }
 
 }
