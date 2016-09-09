@@ -256,6 +256,13 @@ assetic:
              - lessphp
              - cssrewrite
           output: css/bootstrap-datepicker.css
+        bootstrap_datetimepicker_css:
+          inputs:
+             - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/less/datetimepicker.less"
+          filters:
+             - lessphp
+             - cssrewrite
+          output: css/bootstrap-datetimepicker.css
         bootstrap_glyphicons_ttf:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
@@ -294,6 +301,16 @@ assetic:
               - "%kernel.root_dir%/../app/Resources/public/js/datepicker-type.js"
             filters: [?yui_js]
             output: js/bootstrap-datepicker.js
+        bootstrap_datetimepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.de.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.nl.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datetimepicker.js
 
 
 fos_user:
