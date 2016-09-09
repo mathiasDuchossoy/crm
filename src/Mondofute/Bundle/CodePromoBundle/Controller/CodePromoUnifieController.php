@@ -167,11 +167,14 @@ class CodePromoUnifieController extends Controller
      */
     private function getClientsBySites($sitesAEnregistrer, $sites, $request ){
         $clientsBySites  = array();
+        foreach ($sites as $site){
+            $clientsBySites[intval($site->getId())]   = array();
+        }
         if(!empty($sitesAEnregistrer)){
             foreach ($sitesAEnregistrer as $item){
-                if(empty($clientsBySites[intval($item)])){
-                    $clientsBySites[intval($item)]   = array();
-                }
+//                if(empty($clientsBySites[intval($item)])){
+//                    $clientsBySites[intval($item)]   = array();
+//                }
                 $clients = $request->get('client_'.$item);
                 if(!empty($clients)){
                     foreach ($clients as $client){

@@ -18,6 +18,15 @@ class Client extends Physique
      * @var \DateTime
      */
     private $dateNaissance;
+    /**
+     * @var string
+     */
+    private $prenom;
+
+    /**
+     * @var string
+     */
+    private $nom;
 
     /**
      * Get vip
@@ -69,7 +78,59 @@ class Client extends Physique
 
     public function getLabel()
     {
-        return $this->getNom() .', '. $this->getPrenom();
+        return $this->getNom() . ', ' . $this->getPrenom();
     }
+
+    public function __toString()
+    {
+        return $this->getNom() . ', ' . $this->getPrenom();
+    }
+
+    /**
+     * Get nom
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    /**
+     * Set nom
+     *
+     * @param string $nom
+     * @return Physique
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get prenom
+     *
+     * @return string
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
+
+    /**
+     * Set prenom
+     *
+     * @param string $prenom
+     * @return Physique
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
 
 }
