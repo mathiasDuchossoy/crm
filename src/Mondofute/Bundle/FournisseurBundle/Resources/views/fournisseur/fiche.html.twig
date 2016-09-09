@@ -1522,7 +1522,7 @@
         }
 
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
-            {% set index = prestationAnnexe.id %}
+            {% set index = prestationAnnexe.prestationAnnexe.id %}
 
             var $collectionHolder{{ index }};
             var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
