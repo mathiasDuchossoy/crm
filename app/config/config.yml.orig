@@ -122,13 +122,14 @@ doctrine:
                         dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
-<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
-||||||| merged common ancestors
-=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
->>>>>>> Mise en place copieVersSite pour codePromoUnifie
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -170,13 +171,14 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
-<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
-||||||| merged common ancestors
-=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
->>>>>>> Mise en place copieVersSite pour codePromoUnifie
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -215,13 +217,14 @@ doctrine:
                     ApplicationSonataMediaBundle: ~
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
-<<<<<<< be39648751711a58b19f199bdd4c60bd8d828713
                     MondofutePrestationAnnexeBundle: ~
-||||||| merged common ancestors
-=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
->>>>>>> Mise en place copieVersSite pour codePromoUnifie
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
 
 # Swiftmailer Configuration
 swiftmailer:
