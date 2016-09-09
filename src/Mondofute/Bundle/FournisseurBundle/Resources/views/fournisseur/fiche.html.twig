@@ -1363,14 +1363,15 @@
         }
     </script>
     <script type="text/javascript">
-        function updatePrestationAnnexe(element) {
+        function updatePrestationAnnexe( fournisseurId , element) {
             $element = $(element);
             $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
                 if ($(this).is(':checked')) {
-                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
+                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_','fournisseurId': '_fournisseurId_'}) }}";
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
+                    path = path.replace(/_fournisseurId_/g, fournisseurId);
 //                    if($famillePrestationAnnexe.is(':hidden')) {
                     if ($famillePrestationAnnexe.css('display') == 'none') {
                         $.ajax(path,
@@ -1521,7 +1522,7 @@
         }
 
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
-            {% set index = prestationAnnexe.id %}
+            {% set index = prestationAnnexe.prestationAnnexe.id %}
 
             var $collectionHolder{{ index }};
             var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
