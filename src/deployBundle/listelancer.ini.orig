@@ -11,7 +11,7 @@
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
-;
+
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -64,10 +64,10 @@ maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
 ; *** fin crm-116 ***
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 maj\crm_101\2016-08-30a_code_promo.sql
-<<<<<<< 303d792b33d230c134d6bb17d66b8570b0b1c6e3
 maj\crm_101\2016-08-31a_md_code_promo.sql
 
 ; *** crm-116 ***
+<<<<<<< d87783ad51d7c2ec3a403ae9e22728524fea0d66
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 ;maj\crm_54\2016-08-09a_md_visuels_station.sql
@@ -89,19 +89,24 @@ maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
 ;maj\crm_93\2016-08-26b_md_prestation_annexe.sql
 ;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
 maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
-; *** fin crm-116 ***
 ||||||| merged common ancestors
-maj\crm_101\2016-08-31a_md_code_promo.sql
-=======
-maj\crm_101\2016-08-31a_md_code_promo.sql
-
-; *** crm-116 ***
 maj\crm_54\2016-08-05a_md_station_liaisons.sql
 maj\crm_54\2016-08-08a_md_grande_ville.sql
 maj\crm_54\2016-08-09a_md_visuels_station.sql
 maj\crm_54\2016-08-09b_md_visuels_station.sql
 maj\crm_88\2016-08-09a_md_medias_domaine.sql
 maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_93\2016-08-26b_md_prestation_annexe.sql
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+=======
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+>>>>>>> CRM-118|REBASE 3/16
 ; *** fin crm-116 ***
->>>>>>> CRM-116|REBASE 3/4
