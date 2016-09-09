@@ -38,9 +38,15 @@
     "sonata-project/media-bundle": "^2.3",
     "jms/job-queue-bundle": "dev-master",
     "nucleus/deploybundle": "dev-master",
+<<<<<<< 0676e0c9dccc8c71467c84c7989508a041826fed
     "eternicode/bootstrap-datepicker": "1.6.1",
-    "nucleus/managerBDDBundle": "dev-master",
+    "nucleus/managerBDDBundle": "dev-master"
+||||||| merged common ancestors
+    "eternicode/bootstrap-datepicker": "1.6.1"
+=======
+    "eternicode/bootstrap-datepicker": "1.6.1",
     "components/bootstrap-datetimepicker": "^2.3"
+>>>>>>> modif bug 'supprimer' liste periode_validite
   },
   "repositories": [
     {

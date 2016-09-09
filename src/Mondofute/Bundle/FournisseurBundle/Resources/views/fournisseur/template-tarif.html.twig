@@ -11,7 +11,7 @@
 
 var collectionPeriodeValidite = function() {
     $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
-    $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
+    $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
         addTagFormDeleteLink($(this));
     });
     $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
