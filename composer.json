@@ -38,7 +38,8 @@
     "sonata-project/media-bundle": "^2.3",
     "jms/job-queue-bundle": "dev-master",
     "nucleus/deploybundle": "dev-master",
-    "eternicode/bootstrap-datepicker": "1.6.1"
+    "eternicode/bootstrap-datepicker": "1.6.1",
+    "components/bootstrap-datetimepicker": "^2.3"
   },
   "repositories": [
     {
