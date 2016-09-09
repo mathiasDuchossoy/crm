@@ -44,6 +44,14 @@ class PrestationAnnexeTarif
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get prixPublic
      *
      * @return string
