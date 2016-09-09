@@ -53,6 +53,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

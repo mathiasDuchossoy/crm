@@ -51,13 +51,13 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
-<<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
+<<<<<<< 760ee1e685215dafc522f4944d86b0e7667416a8
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
 ||||||| merged common ancestors
 =======
-            new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
->>>>>>> rebase CRM-101 onto preprod 1/38
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+>>>>>>> creation bundle FournisseurPrestationAnnexe
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
