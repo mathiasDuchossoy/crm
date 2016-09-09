@@ -23,6 +23,12 @@
             {#</div>#}
             <ul class="list-group" id="list_prestation_annexe_{{ sousFamillePrestationAnnexe.id }}">
                 {% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}
+                    {% set display = false %}
+                    {% for formPrestationAnnexe in form.vars.value.prestationAnnexes %}
+                        {% if formPrestationAnnexe.prestationAnnexe.id == prestationAnnexe.id %}
+                            {% set display = true %}
+                        {% endif %}
+                    {% endfor %}
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-1">
@@ -54,7 +60,9 @@
                             <div class="col-md-1">
                                 <div class="btn-group" role="group" aria-label="..."
                                      id="edit_prestation_annexe_{{ prestationAnnexe.id }}"
-                                     style="display: none;"
+                                     {% if display == false %}
+                                        style="display: none;"
+                                     {% endif %}
                                 >
                                     <button type="button" class="btn btn-default"
                                             onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
@@ -73,6 +81,12 @@
 
             {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
                 {% if prestationAnnexe.sousFamillePrestationAnnexe is empty %}
+                    {% set display = false %}
+                    {% for formPrestationAnnexe in form.vars.value.prestationAnnexes %}
+                        {% if formPrestationAnnexe.prestationAnnexe.id == prestationAnnexe.id %}
+                            {% set display = true %}
+                        {% endif %}
+                    {% endfor %}
                     <li class="list-group-item">
                         <div class="row">
                             <div class="col-md-1">
@@ -102,7 +116,9 @@
                             <div class="col-md-1">
                                 <div class="btn-group" role="group" aria-label="..."
                                      id="edit_prestation_annexe_{{ prestationAnnexe.id }}"
-                                     style="display: none;"
+                                        {% if display == false %}
+                                            style="display: none;"
+                                        {% endif %}
                                 >
                                     <button type="button" class="btn btn-default"
                                             onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
