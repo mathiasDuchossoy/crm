@@ -9,6 +9,12 @@
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
+||||||| merged common ancestors
+<<<<<<< HEAD
+=======
+<<<<<<< 863344dc5cc541b2f41e734b2a1645ea9a849f46
+>>>>>>> CRM-116|REBASE 1/4
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
 
@@ -22,7 +28,27 @@
 ; *** prestation annexe ***
 ;maj\crm_93\2016-09-06a_md_prestation_annexe.sql
 ; *** fin prestation annexe ***
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
 
+||||||| merged common ancestors
+||||||| merged common ancestors
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+=======
+
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+;
+maj\crm_65\2016-08-26a_md_station.sql
+>>>>>>> c45a9a80dc8cbf5aa12d2b35bb15229d3b22a468
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> CRM-116|REBASE 1/4
 ; *** maj unifies ***
 maj\crm_105\2016-09-06a_md_maj_unifies.sql
 ; *** fin maj unifies ***
@@ -39,7 +65,18 @@ maj\crm_105\2016-09-06a_md_maj_unifies.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
+||||||| merged common ancestors
+||||||| merged common ancestors
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+=======
+maj\crm_101\2016-09-01a_md_code_promo.sql
+=======
 
+maj\crm_101\2016-09-01a_md_code_promo.sql
+>>>>>>> CRM-116|REBASE 1/4
+
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
 ;maj\crm_101\2016-09-01a_md_code_promo.sql
 ;
 ;maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
@@ -49,7 +86,14 @@ maj\crm_93\2016-09-06a_md_prestation_annexe.sql
 ;maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 ;maj\crm_101\2016-08-30a_code_promo.sql
 maj\crm_101\2016-09-01a_md_code_promo.sql
+||||||| merged common ancestors
+maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
+>>>>>>> c45a9a80dc8cbf5aa12d2b35bb15229d3b22a468
+=======
+maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
+>>>>>>> CRM-116|REBASE 1/4
 
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
 <<<<<<< b3e6efcc1a3e7e0ecbaf9e94a42294bf698c4f07
 ; *** crm_101 ***
 maj\crm_101\2016-09-09a_md_maj_client.sql
@@ -57,8 +101,33 @@ maj\crm_101\2016-09-09a_md_maj_client.sql
 ;maj\crm_65\2016-08-26a_md_station.sql
 maj\crm_84\2016-08-31a_sls_logement_periode.sql
 ||||||| merged common ancestors
+<<<<<<< HEAD
+maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
+maj\crm_101\2016-08-30a_code_promo.sql
+maj\crm_101\2016-08-31a_md_code_promo.sql
+=======
+maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+||||||| merged common ancestors
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+=======
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+>>>>>>> transformation de prestationAnnexeUnifie en prestationAnnexe en cours
+
+<<<<<<< 863344dc5cc541b2f41e734b2a1645ea9a849f46
+maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
+maj\crm_101\2016-08-30a_code_promo.sql
+maj\crm_101\2016-08-31a_md_code_promo.sql
+>>>>>>> CRM-116|REBASE 1/4
+||||||| merged common ancestors
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
 =======
+<<<<<<< 0ec04d0048806c82a464934f7f293290f9a91a16
 
 ; *** crm-116 ***
 maj\crm_54\2016-08-05a_md_station_liaisons.sql
@@ -70,3 +139,10 @@ maj\crm_88\2016-08-09b_md_medias_domaines.sql
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
 ; *** fin crm-116 ***
 >>>>>>> maj listelancer
+||||||| merged common ancestors
+maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+>>>>>>> c45a9a80dc8cbf5aa12d2b35bb15229d3b22a468
+=======
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+>>>>>>> transformation de prestationAnnexeUnifie en prestationAnnexe en cours
+>>>>>>> CRM-116|REBASE 1/4
