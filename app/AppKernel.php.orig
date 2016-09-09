@@ -51,7 +51,13 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
+<<<<<<< 4fa93c1618171f7a4b41743dfdd8fea658a01d16
 <<<<<<< fdb62078561f2b6ca5de80dc26e6e39f60c3352f
+||||||| merged common ancestors
+<<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
+=======
+<<<<<<< 760ee1e685215dafc522f4944d86b0e7667416a8
+>>>>>>> CRM-118|REBASE 1/16
 ||||||| merged common ancestors
 <<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
 =======
@@ -65,9 +71,17 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 ||||||| merged common ancestors
 =======
+<<<<<<< 4fa93c1618171f7a4b41743dfdd8fea658a01d16
 <<<<<<< fdb62078561f2b6ca5de80dc26e6e39f60c3352f
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 >>>>>>> CRM-118|REBASE 1/34
+||||||| merged common ancestors
+            new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
+>>>>>>> rebase CRM-101 onto preprod 1/38
+=======
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+>>>>>>> creation bundle FournisseurPrestationAnnexe
+>>>>>>> CRM-118|REBASE 1/16
 ||||||| merged common ancestors
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
 >>>>>>> rebase CRM-101 onto preprod 1/38
