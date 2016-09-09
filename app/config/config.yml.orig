@@ -123,13 +123,14 @@ doctrine:
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
                     MondofutePrestationAnnexeBundle: ~
-<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+<<<<<<< HEAD
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
 ||||||| merged common ancestors
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
->>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -172,13 +173,14 @@ doctrine:
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
                     MondofutePrestationAnnexeBundle: ~
-<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+<<<<<<< HEAD
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
 ||||||| merged common ancestors
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
->>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -218,13 +220,14 @@ doctrine:
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
                     MondofutePrestationAnnexeBundle: ~
-<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+<<<<<<< HEAD
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
 ||||||| merged common ancestors
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
->>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
 
 # Swiftmailer Configuration
 swiftmailer:

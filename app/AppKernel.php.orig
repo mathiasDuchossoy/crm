@@ -51,13 +51,14 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
-<<<<<<< 760ee1e685215dafc522f4944d86b0e7667416a8
+<<<<<<< HEAD
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 ||||||| merged common ancestors
 =======
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
->>>>>>> creation bundle FournisseurPrestationAnnexe
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
