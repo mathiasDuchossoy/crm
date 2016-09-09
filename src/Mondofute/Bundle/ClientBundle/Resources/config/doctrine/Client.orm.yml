@@ -44,6 +44,15 @@ Mondofute\Bundle\ClientBundle\Entity\Client:
 #                strategy: AUTO
 #            options:
 #                unsigned: true
+    attributeOverride:
+        prenom:
+            type: string
+            length: 255
+            nullable: false
+        nom:
+            type: string
+            length: 255
+            nullable: false
     fields:
         vip:
             type: boolean
