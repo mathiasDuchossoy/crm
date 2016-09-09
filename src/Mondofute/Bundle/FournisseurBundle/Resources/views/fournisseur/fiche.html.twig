@@ -1510,6 +1510,7 @@
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
             addTagFormDeleteLink($newFormLi);
+            periodevaliditeDatetimePicker();
         }
 
         function addTagFormDeleteLink($tagFormLi) {
@@ -1601,6 +1602,23 @@
             {% endfor %}
 
         {% endfor %}
+
+        function periodevaliditeDatetimePicker(){
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
+            });
+        }
+        periodevaliditeDatetimePicker();
 
     </script>
 {% endblock %}
