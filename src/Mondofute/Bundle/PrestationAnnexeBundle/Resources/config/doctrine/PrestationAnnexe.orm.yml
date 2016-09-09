@@ -10,27 +10,15 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        actif:
-            type: boolean
-            options:
-                default: true
-        type:
-            type: integer
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction
             mappedBy: prestationAnnexe
             cascade: ['persist','remove']
     manyToOne:
-        prestationAnnexeUnifie:
-            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie
-            inversedBy: prestationAnnexes
         sousFamillePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
             inversedBy: prestationAnnexes
-        site:
-            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         famillePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
             inversedBy: prestationAnnexes

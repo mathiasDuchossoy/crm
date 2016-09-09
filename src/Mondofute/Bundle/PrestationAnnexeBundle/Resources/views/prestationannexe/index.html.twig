@@ -14,19 +14,15 @@
         </tr>
         </thead>
         <tbody>
-        {% for prestationAnnexeUnifie in prestationAnnexeUnifies %}
+        {% for prestationAnnexe in prestationAnnexes %}
             <tr>
                 <td>
-                    <a href="{{ path('prestationannexe_show', { 'id': prestationAnnexeUnifie.id }) }}">{{ prestationAnnexeUnifie.id }}</a>
+                    <a href="{{ path('prestationannexe_show', { 'id': prestationAnnexe.id }) }}">{{ prestationAnnexe.id }}</a>
                 </td>
                 <td>
-                    {% for prestationAnnexe in prestationAnnexeUnifie.prestationAnnexes %}
-                        {% if prestationAnnexe.site.crm == 1 %}
-                            {% for traduction in prestationAnnexe.traductions %}
-                                {% if traduction.langue.code == app.request.locale %}
-                                    {{ traduction.libelle }}
-                                {% endif %}
-                            {% endfor %}
+                    {% for traduction in prestationAnnexe.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.libelle }}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -34,11 +30,11 @@
                     <ul class="list-unstyled">
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('prestationannexe_show', { 'id': prestationAnnexeUnifie.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                               href="{{ path('prestationannexe_show', { 'id': prestationAnnexe.id }) }}">{{ 'visualiser' | capitalize }}</a>
                         </li>
                         <li>
                             <a class="btn btn-default"
-                               href="{{ path('prestationannexe_edit', { 'id': prestationAnnexeUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
+                               href="{{ path('prestationannexe_edit', { 'id': prestationAnnexe.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
                 </td>
@@ -46,7 +42,7 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if  prestationAnnexeUnifies is not empty %}
+    {% if  prestationAnnexes is not empty %}
         {% include '@MondofuteCore/pagination.html.twig' %}
     {% endif %}
     <div style="text-align: right">
