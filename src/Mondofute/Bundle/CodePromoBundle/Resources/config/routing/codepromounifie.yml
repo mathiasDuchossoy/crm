@@ -1,0 +1,29 @@
+codepromo_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+codepromo_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:show" }
+    methods:  GET
+
+codepromo_new:
+    path:     /new
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:new" }
+    methods:  [GET, POST]
+
+codepromo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:edit" }
+    methods:  [GET, POST]
+
+codepromo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:delete" }
+    methods:  DELETE
+
+codepromo_get_clients:
+    path:     /getclient/{clientName}/{siteId}/{codePromoId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getClients" , codePromoId: null }
+    methods:  GET

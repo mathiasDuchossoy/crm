@@ -1,0 +1,60 @@
+<<<<<<< f20afe43d165c13869ec23f777975103a7b28a76
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{#{% for codePromo in form.codePromos %}#}
+    {#{% if codePromo.vars.value.site.id == siteId %}#}
+
+        {#{% for client in codePromo.clients %}#}
+        {#{% endfor %}#}
+        {#{% for codePromoClient in codePromo.codePromoClients %}#}
+            {#{{ form_row(codePromoClient) }}#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
+{#{% endfor %}#}
+{% if clients is not empty %}
+    {% for client in clients %}
+        <div id="client_{{ client.id }}_{{ siteId }}">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"
+                               name="client_{{ siteId }}[]" value="{{ client.id }}"
+                               id="checkbox_client_{{ client.id }}_{{ siteId }}"
+                               onclick="moveInputClient( this , '{{ client.id }}' , '{{ siteId }}')"
+                        >
+                        {{ client.nom }} {{ client.prenom }}</label></div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info" role="alert">Pas de clients correspondant à la recherche...</div>
+{% endif %}
+||||||| merged common ancestors
+=======
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{#{% for codePromo in form.codePromos %}#}
+    {#{% if codePromo.vars.value.site.id == siteId %}#}
+
+        {#{% for client in codePromo.clients %}#}
+        {#{% endfor %}#}
+        {#{% for codePromoClient in codePromo.codePromoClients %}#}
+            {#{{ form_row(codePromoClient) }}#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
+{#{% endfor %}#}
+{% for client in clients %}
+    <div id="client_{{ client.id }}_{{ siteId }}">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"
+                           name="client_{{ siteId }}[]" value="{{ client.id }}"
+                           id="code_promo_unifie_codePromos_0_actif"
+                           onclick="moveInputClient( this , '{{ client.id }}' , '{{ siteId }}')"
+                    >
+                    {{ client.nom }} {{ client.prenom }}</label></div>
+        </div>
+    </div>
+{% endfor %}
+>>>>>>> gestion des clients pour codePromo

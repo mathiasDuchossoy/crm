@@ -1,0 +1,5 @@
+Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoPeriodeSejourRepository
+    lifecycleCallbacks: {  }

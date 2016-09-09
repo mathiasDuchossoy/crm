@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\ClientBundle\Repository;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
 
 /**
  * ClientRepository
@@ -10,4 +11,76 @@ namespace Mondofute\Bundle\ClientBundle\Repository;
  */
 class ClientRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $clientName
+     * @return array
+     */
+    public function getClients($clientName){
+        $q = $this->createQueryBuilder('client')
+            ->select('client')
+            ->where('client.prenom LIKE :val')
+            ->setParameter('val', '%'.$clientName.'%')
+            ->orWhere('client.nom LIKE :val2')
+            ->setParameter('val2', '%'.$clientName.'%')
+        ;
+
+        return $q->getQuery()->getResult();
+    }
+
+    public function getClientsById($clients){
+        /** @var Client $client */
+        if (count($clients) > 0){
+            $qb = $this->getEntityManager()->createQueryBuilder();
+            $qb
+                ->select('client')
+                ->from('MondofuteClientBundle:Client', 'client')
+            ;
+
+            for ($i = 0; $i < count($clients); $i++ ){
+//                dump($clients[$i]);die;
+                $client = $clients[$i];
+                if (!$i){
+                    $qb
+                        ->where("client.id = :id".$i)
+                        ->setParameter('id'.$i , $client->getId())
+                    ;
+                }
+                else{
+
+                    $qb
+                        ->orWhere("client.id = :id".$i)
+                        ->setParameter('id'.$i , $client->getId())
+                    ;
+                }
+            }
+            $qb
+                ->orderBy('client.nom' , 'ASC')
+                ->orderBy('client.prenom' , 'ASC')
+            ;
+
+            return $qb;
+        }
+    }
+
+    /**
+     * @param $locale
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    // récupérer les traductioin des départements crm qui sont de la langue locale
+    public function getTraductionsByLocale($locale)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('d , dt ')
+            ->from('MondofuteDomaineBundle:Domaine', 'd')
+            ->join('d.traductions', 'dt')
+            ->join('d.domaineUnifie', 'du')
+            ->join('d.site', 's')
+            ->join('dt.langue', 'l')
+            ->where("l.code = '$locale'");
+
+        return $qb;
+    }
+
+
 }

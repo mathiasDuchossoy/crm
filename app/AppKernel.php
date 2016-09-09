@@ -51,6 +51,8 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
+            new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
+            new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

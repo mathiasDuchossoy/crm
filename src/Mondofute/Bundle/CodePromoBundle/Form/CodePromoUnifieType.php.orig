@@ -1,0 +1,43 @@
+<?php
+
+namespace Mondofute\Bundle\CodePromoBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class CodePromoUnifieType extends AbstractType
+{
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+//        dump($builder->getData());die;
+        $builder
+<<<<<<< a1d88eceb49bc7ca13d83810ec0c7e5bd32e9641
+            ->add('codePromos', CollectionType::class, array('entry_type' => CodePromoType::class , 'options' => array('clients' => $options['clients'])))
+            ->add('code')
+        ;
+||||||| merged common ancestors
+            ->add('codePromos', CollectionType::class, array('entry_type' => CodePromoType::class));
+=======
+            ->add('codePromos', CollectionType::class, array('entry_type' => CodePromoType::class))
+            ->add('code')
+        ;
+>>>>>>> déplacement de code dans codePromoUnifie
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class'    => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie',
+            'clients'       => array()
+        ));
+    }
+}
