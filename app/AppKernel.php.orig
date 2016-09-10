@@ -53,15 +53,14 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
-<<<<<<< 65eac6c4431a4131641dda1d0cf7beb8509760d2
+<<<<<<< 267449bd5db8ef34c7c874a421a29a27a0977f57
             new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
             new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
-             );
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 ||||||| merged common ancestors
 =======
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
->>>>>>> CRM-118|REBASE 1/16
+>>>>>>> CRM-118|REBASE 1/34
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

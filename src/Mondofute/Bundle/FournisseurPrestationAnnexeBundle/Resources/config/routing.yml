@@ -1,0 +1,3 @@
+mondofute_fournisseur_prestation_annexe_homepage:
+    path:     /
+    defaults: { _controller: MondofuteFournisseurPrestationAnnexeBundle:Default:index }
