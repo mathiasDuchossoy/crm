@@ -8,7 +8,7 @@
     {% endfor %}
 </ul>
 <script>
-<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
+<<<<<<< 366fcfc9e20728cf914678f71e31c67f114798aa
 
 var collectionPeriodeValidite = function() {
     $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
@@ -22,47 +22,40 @@ var collectionPeriodeValidite = function() {
 //    jQuery(document).ready(function() {
 var test2 = function() {
     var $collectionHolderperiode_validite{{ index }};
-    var $addTagLinkperiode_validite{{ prestationAnnexe.vars.id }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-    var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
-    $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
-    $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
-    $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
-    $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
-=======
-//    jQuery(document).ready(function() {
-var test2 = function() {
-    var $collectionHolderperiode_validite{{ index }};
     var $addTagLinkperiode_validite{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
     var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
     $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
     $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
     $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
     $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
->>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
+=======
+
+var collectionPeriodeValidite = function() {
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+    $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
         e.preventDefault();
         addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
     });
 }
 if (window.jQuery){
-<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
+<<<<<<< 366fcfc9e20728cf914678f71e31c67f114798aa
     var $collectionHolderperiode_validite{{ name }}{{ index }};
     var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
     var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
     collectionPeriodeValidite();
 ||||||| merged common ancestors
     test2();
-}else{
-    window.onload = test2;
 =======
-    test2();
->>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
+    collectionPeriodeValidite();
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
 }
-<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
-||||||| merged common ancestors
-//    });
-=======
-// else{
-//    window.onload = test2;
-//}
->>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
 </script>
