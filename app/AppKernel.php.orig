@@ -51,13 +51,28 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
+<<<<<<< HEAD
+<<<<<<< 760ee1e685215dafc522f4944d86b0e7667416a8
+||||||| merged common ancestors
 <<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
+=======
+<<<<<<< HEAD
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
 ||||||| merged common ancestors
 =======
+<<<<<<< HEAD
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+>>>>>>> creation bundle FournisseurPrestationAnnexe
+||||||| merged common ancestors
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
 >>>>>>> rebase CRM-101 onto preprod 1/38
+=======
+            new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

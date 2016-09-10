@@ -1,0 +1,37 @@
+<ul class="nav nav-tabs" role="tablist">
+    {% set firstOnglet = true %}
+    {% for langue in langues %}
+        <li role="presentation"
+                {% if firstOnglet %}
+                    class="active"
+                    {% set firstOnglet = false %}
+                {% endif %}
+        ><a href="#onglet-{{ entity }}-{{ name }}-{{ langue.id }}" aria-controls="home" role="tab"
+            data-toggle="tab">
+
+                {% for traductionLangue in  langue.traductions %}
+                    {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                        {{ traductionLangue.libelle }}
+                    {% endif %}
+                {% endfor %}
+            </a></li>
+    {% endfor %}
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content {{ entity }}s_{{ name }}"
+>
+    {% set firstOnglet = true %}
+    {% for traduction in traductions %}
+        <div role="tabpanel" class="tab-pane
+            {% if firstOnglet %}
+                active
+                {% set firstOnglet = false %}
+            {% endif %}"
+             id="onglet-{{ entity }}-{{ name }}-{{ traduction.langue.vars.data.id }}"
+        >
+            {{ form_row(traduction.libelle) }}
+            {{ form_row(traduction.langue ) }}
+        </div>
+    {% endfor %}
+</div>

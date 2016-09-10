@@ -15,6 +15,9 @@ Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction
             mappedBy: prestationAnnexe
             cascade: ['persist','remove']
+        fournisseurs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            mappedBy: fournisseur
     manyToOne:
         sousFamillePrestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe

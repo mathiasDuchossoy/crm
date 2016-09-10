@@ -25,14 +25,15 @@ class PrestationAnnexe
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
-    /**
-     * @var integer
-     */
-    private $type;
+
     /**
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
      */
     private $sousFamillePrestationAnnexe;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurs;
 
     /**
      * Constructor
@@ -153,5 +154,39 @@ class PrestationAnnexe
         $this->sousFamillePrestationAnnexe = $sousFamillePrestationAnnexe;
 
         return $this;
+    }
+
+    /**
+     * Add fournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     *
+     * @return PrestationAnnexe
+     */
+    public function addFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    {
+        $this->fournisseurs[] = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     */
+    public function removeFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    {
+        $this->fournisseurs->removeElement($fournisseur);
+    }
+
+    /**
+     * Get fournisseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFournisseurs()
+    {
+        return $this->fournisseurs;
     }
 }

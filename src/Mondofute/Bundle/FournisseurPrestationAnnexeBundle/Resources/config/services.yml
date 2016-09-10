@@ -1,0 +1,4 @@
+services:
+#    mondofute_fournisseur_prestation_annexe.example:
+#        class: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
