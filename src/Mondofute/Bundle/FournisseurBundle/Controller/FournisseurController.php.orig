@@ -523,9 +523,16 @@ class FournisseurController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         // *** gestion prestation annexe ***
+<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
         $originalPrestationAnnexes  = new ArrayCollection();
         $originalTarifs             = new ArrayCollection();
         $originalPeriodeValidites   = new ArrayCollection();
+||||||| merged common ancestors
+        $originalPrestationAnnexes = new ArrayCollection();
+=======
+        $originalPrestationAnnexes = new ArrayCollection();
+        $originalTarifs             = new ArrayCollection();
+>>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
 
         /** @var FournisseurPrestationAnnexe $prestationAnnex */
         foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
@@ -540,6 +547,7 @@ class FournisseurController extends Controller
                     $traduction->setLangue($langue);
                 }
             }
+<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
             /** @var PrestationAnnexeTarif $tarif */
             foreach ($prestationAnnex->getTarifs() as $tarif) {
                 $originalTarifs->add($tarif);
@@ -547,6 +555,12 @@ class FournisseurController extends Controller
                     $originalPeriodeValidites->add($periodeValidite);
                 }
             }
+||||||| merged common ancestors
+=======
+            foreach ($prestationAnnex->getTarifs() as $tarif){
+                $originalTarifs->add($tarif);
+            }
+>>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
         }
 
         $newPrestationAnnexes = new ArrayCollection();
@@ -629,6 +643,7 @@ class FournisseurController extends Controller
         }
 
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur) {
+<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
             // *** gestion suppression prestations annexe et ses collections ***
             /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
             foreach ($originalPrestationAnnexes as $originalPrestationAnnex) {
@@ -658,7 +673,33 @@ class FournisseurController extends Controller
                             }
                         }
                     }
+||||||| merged common ancestors
+
+            foreach ($originalPrestationAnnexes as $prestationAnnex) {
+                if (false === $fournisseur->getPrestationAnnexes()->contains($prestationAnnex)) {
+                    $em->remove($prestationAnnex);
+=======
+            // *** gestion suppression prestations annexe et ses collections ***
+            /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
+            foreach ($originalPrestationAnnexes as $originalPrestationAnnex) {
+                if (false === $fournisseur->getPrestationAnnexes()->contains($originalPrestationAnnex)) {
+                    $em->remove($originalPrestationAnnex);
                 }
+                else{
+//                    $prestationAnnex = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($originalPrestationAnnex){
+//                        return $element == $originalPrestationAnnex;
+//                    })->first();
+                    $originalTarifs = $originalPrestationAnnex->getTarifs();
+                    foreach ($originalTarifs as $originalTarif){
+                        dump('ici');
+                        if (false === $prestationAnnex->getTarifs()->contains($originalTarif)) {
+//                            $em->remove($originalPrestationAnnex);
+                            dump('supprimer');
+                        }
+                    }
+>>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
+                }
+//                foreach ()
             }
             foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
                 $capacite = $prestationAnnex->getCapacite();
@@ -672,23 +713,7 @@ class FournisseurController extends Controller
                     $em->remove($prestationAnnex);
                 }
             }
-<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
             // *** gestion suppression prestations annexe et ses collections ***
-||||||| merged common ancestors
-=======
-            foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex){
-                $capacite = $prestationAnnex->getCapacite();
-                if(!empty($capacite) && $capacite->getMin() == 0 && $capacite->getMax() == 0){
-                    $prestationAnnex->setCapacite(null);
-                    $em->remove($capacite);
-                }
-                $dureeSejour = $prestationAnnex->getDureeSejour();
-                if(!empty($dureeSejour) && $dureeSejour->getMin() == 0 && $dureeSejour->getMax() == 0){
-                    $prestationAnnex->setDureeSejour(null);
-                    $em->remove($prestationAnnex);
-                }
-            }
->>>>>>> affichage ou non de capacite et dureesejour
 
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
