@@ -1,3 +1,4 @@
+<<<<<<< 3a1d9817b1e322a0fcbbd671130786985418159f
 <<<<<<< 02dc3447212c62598ec840237edd9f4340c8b7c2
 {{ form_row(tarif.prixPublic) }}
 <h3>Périodes de validité</h3>
@@ -64,6 +65,10 @@ if (window.jQuery){
 ||||||| merged common ancestors
 =======
 <<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
+||||||| merged common ancestors
+<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
+=======
+>>>>>>> CRM-118|REBASE 28/34
 {{ form_row(tarif.prixPublic) }}
 <h3>Périodes de validité</h3>
 <ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
@@ -74,6 +79,7 @@ if (window.jQuery){
     {% endfor %}
 </ul>
 <script>
+<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
 
 var collectionPeriodeValidite = function() {
     $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
@@ -83,29 +89,7 @@ var collectionPeriodeValidite = function() {
     $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
     $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
     $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
-        e.preventDefault();
-        addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
-    });
-}
-if (window.jQuery){
-    var $collectionHolderperiode_validite{{ name }}{{ index }};
-    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
-    collectionPeriodeValidite();
-}
-</script>
 ||||||| merged common ancestors
-=======
-{{ form_row(tarif.prixPublic) }}
-<h3>Périodes de validité</h3>
-<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
-    {% for periodeValidite in tarif.periodeValidites %}
-        <li class="li_periode_validite">
-            {{ form_row(periodeValidite) }}
-        </li>
-    {% endfor %}
-</ul>
-<script>
 //    jQuery(document).ready(function() {
 var test2 = function() {
     var $collectionHolderperiode_validite{{ index }};
@@ -115,16 +99,50 @@ var test2 = function() {
     $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
     $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
     $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+=======
+//    jQuery(document).ready(function() {
+var test2 = function() {
+    var $collectionHolderperiode_validite{{ index }};
+    var $addTagLinkperiode_validite{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+>>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
         e.preventDefault();
-        addTagForm($collectionHolderperiode_validite{{ index }}, $newLinkLiperiode_validite{{ index }} , '__periode_validite_name__');
+        addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
     });
 }
 if (window.jQuery){
+<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    collectionPeriodeValidite();
+||||||| merged common ancestors
     test2();
 }else{
     window.onload = test2;
+=======
+    test2();
+>>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
 }
+<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
+||||||| merged common ancestors
 //    });
+<<<<<<< 3a1d9817b1e322a0fcbbd671130786985418159f
 </script>
 >>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
 >>>>>>> CRM-118|REBASE 27/34
+||||||| merged common ancestors
+</script>
+>>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
+=======
+=======
+// else{
+//    window.onload = test2;
+//}
+>>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
+</script>
+>>>>>>> CRM-118|REBASE 28/34
