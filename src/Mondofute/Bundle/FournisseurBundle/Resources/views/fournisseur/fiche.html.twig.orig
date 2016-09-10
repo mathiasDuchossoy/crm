@@ -314,19 +314,22 @@
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
                 {% endfor %}
             </div>
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
 
             <div id="values_prestation_annexe" style="display: none">
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
-            </div>
 ||||||| merged common ancestors
-=======
             <div id="values_prestation_annexe" >
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') with {'form': form} %}
                 {#{% endfor %}#}
+=======
+            <div id="values_prestation_annexe" >
+                {#{% for prestationAnnexe in form.prestationAnnexes %}#}
+                    {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
+                {#{% endfor %}#}
+>>>>>>> avancement sur le formulaire de fournisseur
             </div>
->>>>>>> avancement sur l'edition d'un fournisseur
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
             <div class="modal fade" id="modalListeService" tabindex="-1" role="dialog"
@@ -493,7 +496,6 @@
                     </div>
                 </div>
             </div>
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
 
             <div class="modal fade" id="prestationAnnexeModal" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel">
@@ -519,34 +521,6 @@
                     </div>
                 </div>
             </div>
-||||||| merged common ancestors
-=======
-
-            <div class="modal fade" id="prestationAnnexeModal" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span
-                                        aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel"></h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="form_prestation_annexe" data-prestation_annexe_index="{{ countInterlocuteur }}"
-                                  class="form-horizontal">
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
-                            <button id="enregistrer_prestation_annexe" type="button"
-                                    class="btn btn-primary">
-                                Enregistrer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
->>>>>>> avancement sur l'edition d'un fournisseur
         {% endblock %}
     </section>
     <section>
@@ -1399,32 +1373,15 @@
                 return false;
             }
         }
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
     </script>
     <script type="text/javascript">
         function updatePrestationAnnexe( fournisseurId , element) {
-||||||| merged common ancestors
-
-        function updatePrestationAnnexe(element){
-=======
-    </script>
-<script type="text/javascript">
-        function updatePrestationAnnexe(element) {
->>>>>>> avancement sur l'edition d'un fournisseur
             $element = $(element);
             $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
                 if ($(this).is(':checked')) {
                     var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_','fournisseurId': '_fournisseurId_'}) }}";
-||||||| merged common ancestors
-                if($(this).is(':checked')){
-                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
-=======
-                if ($(this).is(':checked')) {
-                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
->>>>>>> avancement sur l'edition d'un fournisseur
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
                     path = path.replace(/_fournisseurId_/g, fournisseurId);
 //                    if($famillePrestationAnnexe.is(':hidden')) {
@@ -1453,15 +1410,20 @@
             $test.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
         function displayEditPrestationAnnexe(element){
             var $element = $(element);
             var prestationAnnexeId = $element.val();
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
             var fournisseurId = $element.data('fournisseur_id');
             var $form_prestation_annexe =$("#form_prestation_annexe");
             var $prestationAnnexeModal = $('#prestationAnnexeModal');
+||||||| merged common ancestors
+=======
+            var fournisseurId = $element.data('fournisseur_id');
+>>>>>>> avancement sur le formulaire de fournisseur
             $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
             if ($element.is(':checked')) {
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
                 if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
 //
@@ -1479,6 +1441,19 @@
                         })
                     });
                 }
+||||||| merged common ancestors
+=======
+                var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+
+                $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+                    $("#values_prestation_annexe").html(data);
+                });
+>>>>>>> avancement sur le formulaire de fournisseur
                 $editPrestationAnnexe.show();
             }else{
                 $editPrestationAnnexe.hide();
@@ -1493,6 +1468,7 @@
         function getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
             var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_' , 'fournisseurId': '_fournisseurId_'}) }}";
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
             path = path.replace(/_fournisseurId_/g, fournisseurId);
             return path;
         }
@@ -1504,6 +1480,22 @@
             var $form_prestation_annexe =$("#form_prestation_annexe");
             if($fournisseurPrestationAnnexe.length > 0){
                 $form_prestation_annexe.html($fournisseurPrestationAnnexe);
+||||||| merged common ancestors
+            if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length > 0){
+                $("#form_prestation_annexe").html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+=======
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            return path;
+        }
+
+        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+            var $fournisseurPrestationAnnexe = $('#fournisseurPrestationAnnexe_' + prestationAnnexeId);
+            var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            var $form_prestation_annexe =$("#form_prestation_annexe");
+            if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length > 0){
+                $form_prestation_annexe.html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+>>>>>>> avancement sur le formulaire de fournisseur
             }else{
                 $.ajax(path,
                     {
@@ -1514,14 +1506,27 @@
                     $form_prestation_annexe.html(data);
                 });
             }
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
             $prestationAnnexeModal.modal();
 //            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
+||||||| merged common ancestors
+            $('#prestationAnnexeModal').modal();
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $('#prestationAnnexeModal').on('hidden.bs.modal', function (e) {
+                enregisterPrestationAnnexe(prestationAnnexeId);
+=======
+            $prestationAnnexeModal.modal();
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.on('hidden.bs.modal', function (e) {
+                enregisterPrestationAnnexe(prestationAnnexeId);
+>>>>>>> avancement sur le formulaire de fournisseur
             })
         }
 
         function enregisterPrestationAnnexe(prestationAnnexeId){
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
             var $myForm = $('#form_prestation_annexe')
             if (!$myForm[0].checkValidity()) {
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
@@ -1551,6 +1556,13 @@
                 $buttonEdit.hide();
                 $buttonRemove.show();
             }
+||||||| merged common ancestors
+            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+            $('#prestationAnnexeModal').modal('hide');
+=======
+            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+            $prestationAnnexeModal.modal('hide');
+>>>>>>> avancement sur le formulaire de fournisseur
         }
 
     </script>
@@ -1613,48 +1625,5 @@
 
         {% endfor %}
 
-||||||| merged common ancestors
-=======
-        function displayEditPrestationAnnexe(element){
-            var $element = $(element);
-            var prestationAnnexeId = $element.val();
-            $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
-            if ($element.is(':checked')) {
-                $editPrestationAnnexe.show();
-            }else{
-                $editPrestationAnnexe.hide();
-                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
-            }
-        }
-
-        function getFournisseurPrestationAnnexeForm(prestationAnnexeId){
-            var $fournisseurPrestationAnnexe = $('#fournisseurPrestationAnnexe_' + prestationAnnexeId);
-            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_'}) }}";
-            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
-            if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length > 0){
-                $("#form_prestation_annexe").html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            }else{
-                $.ajax(path,
-                    {
-                        async: false,
-                        method: 'GET'
-                    }
-                ).done(function (data) {
-                    $("#form_prestation_annexe").html(data);
-                });
-            }
-            $('#prestationAnnexeModal').modal();
-            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
-            $('#prestationAnnexeModal').on('hidden.bs.modal', function (e) {
-                enregisterPrestationAnnexe(prestationAnnexeId);
-            })
-        }
-
-        function enregisterPrestationAnnexe(prestationAnnexeId){
-            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $('#prestationAnnexeModal').modal('hide');
-        }
-
->>>>>>> avancement sur l'edition d'un fournisseur
     </script>
 {% endblock %}
