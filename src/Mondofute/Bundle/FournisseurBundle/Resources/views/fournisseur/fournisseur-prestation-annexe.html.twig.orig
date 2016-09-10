@@ -12,6 +12,7 @@
     {#{{ dump(form.prestationAnnexes) }}#}
 {% for prestationAnnexe in form.prestationAnnexes %}
     <div id="{{ prestationAnnexe.vars.id }}">
+<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
         {{ form_row(prestationAnnexe.type) }}
 
         <div>
@@ -29,7 +30,14 @@
                             style="display: none"
                         {% endif %}
                       aria-hidden="true"></span>
+||||||| merged common ancestors
+            {{ form_row(prestationAnnexe.type) }}
+            {{ form_row(prestationAnnexe.capacite) }}
+=======
+        {{ form_row(prestationAnnexe.type) }}
+>>>>>>> affichage ou non de capacite et dureesejour
 
+<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
             </button>
             {% if prestationAnnexe.capacite.vars.value is null %}
                 {{ form_widget(prestationAnnexe.capacite , {'attr' : { 'style' : 'display:none'}}) }}
@@ -59,8 +67,75 @@
             {% else %}
                 {{ form_widget(prestationAnnexe.dureeSejour ) }}
             {% endif %}
+<<<<<<< 4f7ea9a55b3c2e709edd2bd147530a98f1396f4b
+||||||| merged common ancestors
+||||||| merged common ancestors
+            {{ form_row(prestationAnnexe.dureeSejour) }}
+            {{ form_row(prestationAnnexe.traductions) }}
+=======
+            {{ form_row(prestationAnnexe.dureeSejour) }}
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
+=======
             {{ form_row(prestationAnnexe.prestationAnnexe) }}
         </div>
+||||||| merged common ancestors
+            {{ form_row(prestationAnnexe.dureeSejour) }}
+>>>>>>> CRM-118|REBASE 26/34
+            {{ form_row(prestationAnnexe.prestationAnnexe) }}
+<<<<<<< 4f7ea9a55b3c2e709edd2bd147530a98f1396f4b
+||||||| merged common ancestors
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
+=======
+=======
+        <div>
+        {{ form_label(prestationAnnexe.capacite) }}
+        <button type="button" class="btn btn-default"
+                onclick="displayCapaciteSejour('{{ prestationAnnexe.capacite.vars.id }}');"
+        >
+                <span id="{{ prestationAnnexe.capacite.vars.id }}_edit" class="glyphicon glyphicon-edit"
+                        {% if prestationAnnexe.capacite.vars.value is not null %}
+                            style="display: none"
+                        {% endif %}
+                      aria-hidden="true"></span>
+                <span id="{{ prestationAnnexe.capacite.vars.id }}_remove" class="glyphicon glyphicon-remove"
+                        {% if prestationAnnexe.capacite.vars.value is null %}
+                            style="display: none"
+                        {% endif %}
+                      aria-hidden="true"></span>
+
+        </button>
+        {% if prestationAnnexe.capacite.vars.value is null %}
+            {{ form_widget(prestationAnnexe.capacite , {'attr' : { 'style' : 'display:none'}}) }}
+        {% else %}
+            {{ form_widget(prestationAnnexe.capacite ) }}
+        {% endif %}
+        </div>
+        <div>
+        {{ form_label(prestationAnnexe.dureeSejour) }}
+        <button type="button" class="btn btn-default"
+                onclick="displayCapaciteSejour('{{ prestationAnnexe.dureeSejour.vars.id }}');"
+        >
+                <span id="{{ prestationAnnexe.dureeSejour.vars.id }}_edit" class="glyphicon glyphicon-edit"
+                        {% if prestationAnnexe.dureeSejour.vars.value is not null %}
+                            style="display: none"
+                        {% endif %}
+                      aria-hidden="true"></span>
+            <span id="{{ prestationAnnexe.dureeSejour.vars.id }}_remove" class="glyphicon glyphicon-remove"
+                    {% if prestationAnnexe.dureeSejour.vars.value is null %}
+                        style="display: none"
+                    {% endif %}
+                  aria-hidden="true"></span>
+
+        </button>
+        {% if prestationAnnexe.dureeSejour.vars.value is null %}
+            {{ form_widget(prestationAnnexe.dureeSejour , {'attr' : { 'style' : 'display:none'}}) }}
+        {% else %}
+            {{ form_widget(prestationAnnexe.dureeSejour ) }}
+        {% endif %}
+        {{ form_row(prestationAnnexe.prestationAnnexe) }}
+>>>>>>> CRM-118|REBASE 26/34
+        </div>
+>>>>>>> affichage ou non de capacite et dureesejour
         <div>
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
         </div>
@@ -88,6 +163,7 @@
                 </li>
             {% endfor %}
         </ul>
+<<<<<<< 4f7ea9a55b3c2e709edd2bd147530a98f1396f4b
     </div>
     {#{{ dump(prestationAnnexe) }}#}
     <script type="text/javascript">
@@ -222,6 +298,15 @@ if (window.jQuery){
                 </li>
             {% endfor %}
         </ul>
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+        <div>
+            {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+        </div>
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
+=======
+>>>>>>> CRM-118|REBASE 26/34
     </div>
     {#{{ dump(prestationAnnexe) }}#}
     <script type="text/javascript">
