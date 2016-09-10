@@ -672,7 +672,23 @@ class FournisseurController extends Controller
                     $em->remove($prestationAnnex);
                 }
             }
+<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
             // *** gestion suppression prestations annexe et ses collections ***
+||||||| merged common ancestors
+=======
+            foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex){
+                $capacite = $prestationAnnex->getCapacite();
+                if(!empty($capacite) && $capacite->getMin() == 0 && $capacite->getMax() == 0){
+                    $prestationAnnex->setCapacite(null);
+                    $em->remove($capacite);
+                }
+                $dureeSejour = $prestationAnnex->getDureeSejour();
+                if(!empty($dureeSejour) && $dureeSejour->getMin() == 0 && $dureeSejour->getMax() == 0){
+                    $prestationAnnex->setDureeSejour(null);
+                    $em->remove($prestationAnnex);
+                }
+            }
+>>>>>>> affichage ou non de capacite et dureesejour
 
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -1692,21 +1708,7 @@ class FournisseurController extends Controller
             $fournisseur = new Fournisseur();
         }
 
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
         $famillePrestationAnnexe = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-||||||| merged common ancestors
-//        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
-//        $fournisseurPrestationAnnexe->setPrestationAnnexe()
-//        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
-//        $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId ));
-        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        $sousFamillePrestationAnnexe    = $em->find(SousFamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        foreach ($prestationAnnexes as $prestationAnnex){
-//            $fournisseur->addPrestationAnnex($prestationAnnex);
-//        }
-=======
-        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
->>>>>>> avancement sur fournisseur/fiche
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
                 'locale' => 'fr_FR',
@@ -1730,37 +1732,14 @@ class FournisseurController extends Controller
             // *** gestion prestations annexe ***
             $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
 //        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
             $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class, $prestationAnnexeId));
-||||||| merged common ancestors
-            $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
-            $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
-=======
-            $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
->>>>>>> avancement sur fournisseur/fiche
         }
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
         $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId, $fournisseurPrestationAnnexe);
         foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction) {
             $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element) use ($traduction) {
-||||||| merged common ancestors
-        foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction){
-            $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element)use($traduction){
-=======
-        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
-        foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction){
-            $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element)use($traduction){
->>>>>>> avancement sur fournisseur/fiche
                 return $element->getLangue() == $traduction->getLangue();
             })->first();
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
             if (false === $traductionFPA) {
-||||||| merged common ancestors
-            if(false === $traductionFPA ){
-
-=======
-            if(false === $traductionFPA ){
->>>>>>> avancement sur fournisseur/fiche
                 $traductionFPA = new FournisseurPrestationAnnexeTraduction();
                 $fournisseurPrestationAnnexe->addTraduction($traductionFPA);
                 $traductionFPA->setLangue($traduction->getLangue());
@@ -1768,33 +1747,15 @@ class FournisseurController extends Controller
             }
         }
 
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
         // traductions
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-||||||| merged common ancestors
-//        // traductions
-        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
-=======
-        // traductions
-        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
->>>>>>> avancement sur fournisseur/fiche
 
         // *** fin gestion prestations annexe ***
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
                 'locale' => $this->container->getParameter('locale'),
             ));
-||||||| merged common ancestors
-                'locale'    => 'fr_FR',
-            ))
-        ;
-=======
-                'locale'    => $this->container->getParameter('locale'),
-            ))
-        ;
->>>>>>> avancement sur fournisseur/fiche
 
         return $this->render('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig', array(
             'form' => $form->createView(),
