@@ -1,0 +1,64 @@
+<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
+{{ form_row(tarif.prixPublic) }}
+<h3>Périodes de validité</h3>
+<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
+    {% for periodeValidite in tarif.periodeValidites %}
+        <li class="li_periode_validite">
+            {{ form_widget(periodeValidite) }}
+        </li>
+    {% endfor %}
+</ul>
+<script>
+
+var collectionPeriodeValidite = function() {
+    $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+    $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+        e.preventDefault();
+        addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+    });
+}
+if (window.jQuery){
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    collectionPeriodeValidite();
+}
+</script>
+||||||| merged common ancestors
+=======
+{{ form_row(tarif.prixPublic) }}
+<h3>Périodes de validité</h3>
+<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
+    {% for periodeValidite in tarif.periodeValidites %}
+        <li class="li_periode_validite">
+            {{ form_row(periodeValidite) }}
+        </li>
+    {% endfor %}
+</ul>
+<script>
+//    jQuery(document).ready(function() {
+var test2 = function() {
+    var $collectionHolderperiode_validite{{ index }};
+    var $addTagLinkperiode_validite{{ prestationAnnexe.vars.id }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+        e.preventDefault();
+        addTagForm($collectionHolderperiode_validite{{ index }}, $newLinkLiperiode_validite{{ index }} , '__periode_validite_name__');
+    });
+}
+if (window.jQuery){
+    test2();
+}else{
+    window.onload = test2;
+}
+//    });
+</script>
+>>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
