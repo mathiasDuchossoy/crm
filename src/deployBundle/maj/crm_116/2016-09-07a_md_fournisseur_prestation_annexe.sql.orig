@@ -1,3 +1,4 @@
+<<<<<<< 7f56dac2c1490c90b6f83c4e0b88caae928ddf1a
 <<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
 DROP TABLE IF EXISTS fournisseur_prestation_annexe;
 
@@ -35,6 +36,10 @@ ALTER TABLE fournisseur_prestation_annexe_traduction ADD CONSTRAINT FK_3E804BC22
 ||||||| merged common ancestors
 =======
 <<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+||||||| merged common ancestors
+<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+=======
+>>>>>>> CRM-118|REBASE 20/34
 DROP TABLE IF EXISTS fournisseur_prestation_annexe;
 
 CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_capacite (id INT UNSIGNED AUTO_INCREMENT NOT NULL, min INT NOT NULL, max INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
@@ -48,6 +53,7 @@ ALTER TABLE prestation_annexe_tarif ADD CONSTRAINT FK_D1663A6833AD7BEF FOREIGN K
 
 ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB37C79189D FOREIGN KEY (capacite_id) REFERENCES fournisseur_prestation_annexe_capacite (id);
 ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB39CDD2F46 FOREIGN KEY (duree_sejour_id) REFERENCES fournisseur_prestation_annexe_duree_sejour (id);
+<<<<<<< c2c36c93f2b64a3c47f693fa53c09ae0b5f4be5f
 ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB3670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
 
 CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_traduction (id INT UNSIGNED AUTO_INCREMENT NOT NULL, prestation_annexe_id INT UNSIGNED DEFAULT NULL, langue_id INT UNSIGNED DEFAULT NULL, libelle VARCHAR(255) NOT NULL, INDEX IDX_3E804BC233AD7BEF (prestation_annexe_id), INDEX IDX_3E804BC22AADBACD (langue_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
@@ -59,20 +65,18 @@ ALTER TABLE fournisseur_prestation_annexe ADD prestation_annexe_id INT UNSIGNED 
 ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB333AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES prestation_annexe (id);
 CREATE INDEX IDX_9AB97BB333AD7BEF ON fournisseur_prestation_annexe (prestation_annexe_id);
 ||||||| merged common ancestors
-=======
-DROP TABLE IF EXISTS fournisseur_prestation_annexe;
-
-CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_capacite (id INT UNSIGNED AUTO_INCREMENT NOT NULL, min INT NOT NULL, max INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_duree_sejour (id INT UNSIGNED AUTO_INCREMENT NOT NULL, min INT NOT NULL, max INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS periode_validite (id INT UNSIGNED AUTO_INCREMENT NOT NULL, tarif_id INT UNSIGNED DEFAULT NULL, date_debut DATETIME NOT NULL, date_fin DATETIME NOT NULL, INDEX IDX_C9CE4FAF357C0A59 (tarif_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS prestation_annexe_tarif (id INT UNSIGNED AUTO_INCREMENT NOT NULL, prestation_annexe_id INT UNSIGNED DEFAULT NULL, prix_public NUMERIC(10, 2) NOT NULL, INDEX IDX_D1663A6833AD7BEF (prestation_annexe_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe (id INT UNSIGNED AUTO_INCREMENT NOT NULL, capacite_id INT UNSIGNED DEFAULT NULL, duree_sejour_id INT UNSIGNED DEFAULT NULL, fournisseur_id INT UNSIGNED DEFAULT NULL, libelle VARCHAR(255) NOT NULL, type INT UNSIGNED NOT NULL, UNIQUE INDEX UNIQ_9AB97BB37C79189D (capacite_id), UNIQUE INDEX UNIQ_9AB97BB39CDD2F46 (duree_sejour_id), INDEX IDX_9AB97BB3670C757F (fournisseur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-
-ALTER TABLE periode_validite ADD CONSTRAINT FK_C9CE4FAF357C0A59 FOREIGN KEY (tarif_id) REFERENCES prestation_annexe_tarif (id);
-ALTER TABLE prestation_annexe_tarif ADD CONSTRAINT FK_D1663A6833AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
-
-ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB37C79189D FOREIGN KEY (capacite_id) REFERENCES fournisseur_prestation_annexe_capacite (id);
-ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB39CDD2F46 FOREIGN KEY (duree_sejour_id) REFERENCES fournisseur_prestation_annexe_duree_sejour (id);
 ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB3670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+=======
+ALTER TABLE fournisseur_prestation_annexe ADD CONSTRAINT FK_9AB97BB3670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+<<<<<<< 7f56dac2c1490c90b6f83c4e0b88caae928ddf1a
 >>>>>>> CRM-118|REBASE 3/16
 >>>>>>> CRM-118|REBASE 19/34
+||||||| merged common ancestors
+>>>>>>> CRM-118|REBASE 3/16
+=======
+
+CREATE TABLE IF NOT EXISTS fournisseur_prestation_annexe_traduction (id INT UNSIGNED AUTO_INCREMENT NOT NULL, prestation_annexe_id INT UNSIGNED DEFAULT NULL, langue_id INT UNSIGNED DEFAULT NULL, libelle VARCHAR(255) NOT NULL, INDEX IDX_3E804BC233AD7BEF (prestation_annexe_id), INDEX IDX_3E804BC22AADBACD (langue_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE fournisseur_prestation_annexe_traduction ADD CONSTRAINT FK_3E804BC233AD7BEF FOREIGN KEY (prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
+ALTER TABLE fournisseur_prestation_annexe_traduction ADD CONSTRAINT FK_3E804BC22AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+>>>>>>> creation des form et ajout traductions pour fournisseurPrestationAnnexe
+>>>>>>> CRM-118|REBASE 20/34
