@@ -11,6 +11,19 @@ class FournisseurPrestationAnnexe
      * @var int
      */
     private $id;
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
+||||||| merged common ancestors
+
+    /**
+     * @var string
+     */
+    private $libelle;
+=======
+    /**
+     * @var string
+     */
+    private $libelle;
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
     /**
      * @var integer
      */
@@ -31,7 +44,6 @@ class FournisseurPrestationAnnexe
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseur;
-<<<<<<< c2c36c93f2b64a3c47f693fa53c09ae0b5f4be5f
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -40,13 +52,6 @@ class FournisseurPrestationAnnexe
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
      */
     private $prestationAnnexe;
-||||||| merged common ancestors
-=======
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $traductions;
->>>>>>> creation des form et ajout traductions pour fournisseurPrestationAnnexe
 
     /**
      * Constructor
@@ -68,7 +73,49 @@ class FournisseurPrestationAnnexe
     }
 
     /**
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
      * @param int $id
+||||||| merged common ancestors
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return FournisseurPrestationAnnexe
+=======
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return FournisseurPrestationAnnexe
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
      */
     public function setId($id)
     {
@@ -204,7 +251,6 @@ class FournisseurPrestationAnnexe
 
         return $this;
     }
-<<<<<<< c2c36c93f2b64a3c47f693fa53c09ae0b5f4be5f
 
     /**
      * Add traduction
@@ -263,41 +309,4 @@ class FournisseurPrestationAnnexe
 
         return $this;
     }
-||||||| merged common ancestors
-=======
-
-    /**
-     * Add traduction
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove traduction
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
-     */
-    public function removeTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
-    {
-        $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
->>>>>>> creation des form et ajout traductions pour fournisseurPrestationAnnexe
 }

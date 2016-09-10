@@ -14,8 +14,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
@@ -23,8 +23,10 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 ||||||| merged common ancestors
 =======
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
->>>>>>> avancement sur l'edition d'un fournisseur
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -124,7 +126,6 @@ class FournisseurController extends Controller
         /** @var FournisseurInterlocuteur $interlocuteur */
         /** @var Site $site */
         /** @var EntityManager $em */
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
@@ -135,29 +136,6 @@ class FournisseurController extends Controller
 //            ->getResult()
 //        ;
         $fournisseur = new Fournisseur();
-||||||| merged common ancestors
-        $em                         = $this->getDoctrine()->getManager();
-        $langues                    = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-        $serviceInterlocuteurs      = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
-        $locale  = $request->getLocale();
-        $famillePrestationAnnexes    = $em
-            ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
-            ->getQuery()
-            ->getResult()
-        ;
-        $fournisseur                = new Fournisseur();
-=======
-        $em                         = $this->getDoctrine()->getManager();
-        $langues                    = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
-        $serviceInterlocuteurs      = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
-        $locale  = $request->getLocale();
-//        $famillePrestationAnnexes    = $em
-//            ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-        $fournisseur                = new Fournisseur();
->>>>>>> avancement sur l'edition d'un fournisseur
 
         // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
         $adresse = new Adresse();
@@ -253,25 +231,11 @@ class FournisseurController extends Controller
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/new.html.twig', array(
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
             'form' => $form->createView(),
             'langues' => $langues,
 //            'famillePrestationAnnexes'  => $famillePrestationAnnexes
-||||||| merged common ancestors
-            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
-            'fournisseur'               => $fournisseur,
-            'form'                      => $form->createView(),
-            'langues'                   => $langues,
-            'famillePrestationAnnexes'  => $famillePrestationAnnexes
-=======
-            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
-            'fournisseur'               => $fournisseur,
-            'form'                      => $form->createView(),
-            'langues'                   => $langues,
-//            'famillePrestationAnnexes'  => $famillePrestationAnnexes
->>>>>>> avancement sur l'edition d'un fournisseur
         ));
     }
 
@@ -562,7 +526,6 @@ class FournisseurController extends Controller
      */
     public function editAction(Request $request, Fournisseur $fournisseur)
     {
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
@@ -573,7 +536,9 @@ class FournisseurController extends Controller
 
         /** @var FournisseurPrestationAnnexe $prestationAnnex */
         foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
+            /** @var FournisseurPrestationAnnexe $prestationAnnex */
             $originalPrestationAnnexes->add($prestationAnnex);
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
             foreach ($langues as $langue) {
                 $traduction = $prestationAnnex->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element) use ($langue) {
                     return $element->getLangue() == $langue;
@@ -591,6 +556,19 @@ class FournisseurController extends Controller
                     $originalPeriodeValidites->add($periodeValidite);
                 }
             }
+||||||| merged common ancestors
+=======
+            foreach ($langues as $langue){
+                $traduction = $prestationAnnex->getTraductions()->filter(function(FournisseurPrestationAnnexeTraduction $element) use ($langue){
+                    return $element->getLangue() == $langue;
+                })->first();
+                if(false === $traduction){
+                    $traduction = new FournisseurPrestationAnnexeTraduction();
+                    $prestationAnnex->addTraduction($traduction);
+                    $traduction->setLangue($langue);
+                }
+            }
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
         }
 
         $newPrestationAnnexes = new ArrayCollection();
@@ -606,29 +584,6 @@ class FournisseurController extends Controller
         }
         // *** fin gestion prestation annexe ***
 
-||||||| merged common ancestors
-=======
-        // *** gestion prestation annexe ***
-        $originalPrestationAnnexes = new ArrayCollection();
-
-        foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
-            $originalPrestationAnnexes->add($prestationAnnex);
-        }
-
-        $newPrestationAnnexes = new ArrayCollection();
-        /** @var FournisseurPrestationAnnexe $prestationAnnex */
-        foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex){
-            $newPrestationAnnexes->set($prestationAnnex->getPrestationAnnexe()->getId() , $prestationAnnex);
-        }
-
-        $fournisseur->getPrestationAnnexes()->clear();
-
-        foreach ($newPrestationAnnexes as $key => $prestationAnnex) {
-            $fournisseur->getPrestationAnnexes()->set($key , $prestationAnnex);
-        }
-        // *** fin gestion prestation annexe ***
-
->>>>>>> avancement sur l'edition d'un fournisseur
         /** @var FournisseurInterlocuteur $interlocuteur */
         $originalInterlocuteurs = new ArrayCollection();
         $originalRemiseClefs = new ArrayCollection();
@@ -740,12 +695,6 @@ class FournisseurController extends Controller
                 }
             }
             // *** gestion suppression prestations annexe et ses collections ***
-
-            foreach ($originalPrestationAnnexes as $prestationAnnex) {
-                if (false === $fournisseur->getPrestationAnnexes()->contains($prestationAnnex)) {
-                    $em->remove($prestationAnnex);
-                }
-            }
 
             foreach ($fournisseur->getListeServices() as $listeService) {
                 $listeService->setFournisseur($fournisseur);
@@ -895,7 +844,6 @@ class FournisseurController extends Controller
         }
 
         return $this->render('@MondofuteFournisseur/fournisseur/edit.html.twig', array(
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
             'serviceInterlocuteurs' => $serviceInterlocuteurs,
             'fournisseur' => $fournisseur,
             'form' => $editForm->createView(),
@@ -903,22 +851,6 @@ class FournisseurController extends Controller
             'delete_form' => $deleteForm->createView(),
             'famillePrestationAnnexes' => $famillePrestationAnnexes,
             'edit' => true
-||||||| merged common ancestors
-            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
-            'fournisseur'               => $fournisseur,
-            'form'                      => $editForm->createView(),
-            'langues'                   => $langues,
-            'delete_form'               => $deleteForm->createView(),
-            'famillePrestationAnnexes'  => $famillePrestationAnnexes
-=======
-            'serviceInterlocuteurs'     => $serviceInterlocuteurs,
-            'fournisseur'               => $fournisseur,
-            'form'                      => $editForm->createView(),
-            'langues'                   => $langues,
-            'delete_form'               => $deleteForm->createView(),
-            'famillePrestationAnnexes'  => $famillePrestationAnnexes,
-            'edit'                      => true
->>>>>>> avancement sur l'edition d'un fournisseur
         ));
     }
 
@@ -1120,7 +1052,7 @@ class FournisseurController extends Controller
 
 
                 // *** GESTION PRESTATION ANNEXE ***
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
                 /** @var FournisseurPrestationAnnexe $prestationAnnexeSite */
                 /** @var PeriodeValidite $periodeValiditeSite */
                 /** @var FournisseurPrestationAnnexe $prestationAnnexe */
@@ -1253,26 +1185,6 @@ class FournisseurController extends Controller
                     // *** fin tarifs ***
                 }
 ||||||| merged common ancestors
-                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
-                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexeSite) {
-                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexeSite->getPrestationAnnexeUnifie()->getId();
-                    })->first();
-                    if (false === $prestationAnnexe) {
-                        // On doit le supprimer de l'entité parent
-                        $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
-                    }
-                }
-
-                foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnexe) {
-                    $prestationAnnexeSite = $fournisseurSite->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexe) {
-                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexe->getPrestationAnnexeUnifie()->getId();
-                    })->first();
-                    if (false === $prestationAnnexeSite) {
-                        $prestationAnnexSite = $emSite->getRepository(PrestationAnnexe::class )->findOneBy(array('prestationAnnexeUnifie' => $prestationAnnexe->getPrestationAnnexeUnifie()));
-                        $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
-                    }
-                }
-=======
 //                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
 //                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexeSite) {
 //                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexeSite->getPrestationAnnexeUnifie()->getId();
@@ -1292,7 +1204,80 @@ class FournisseurController extends Controller
 //                        $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
 //                    }
 //                }
->>>>>>> avancement sur l'edition d'un fournisseur
+=======
+                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
+                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($prestationAnnexeSite) {
+                        return $element->getId() == $prestationAnnexeSite->getId();
+                    })->first();
+                    if (false === $prestationAnnexe) {
+                        // On doit le supprimer de l'entité parent
+                        $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
+                        $emSite->remove($prestationAnnexeSite);
+                    }
+                }
+
+                /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
+                foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
+                    $fournisseurPrestationAnnexeSite = $fournisseurSite->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($fournisseurPrestationAnnexe) {
+                        return $element->getId() == $fournisseurPrestationAnnexe->getId();
+                    })->first();
+                    if (false === $fournisseurPrestationAnnexeSite) {
+                        $fournisseurPrestationAnnexeSite = new FournisseurPrestationAnnexe();
+                        $fournisseurPrestationAnnexeSite->setId($fournisseurPrestationAnnexe->getId());
+                        $metadata = $emSite->getClassMetadata(get_class($fournisseurPrestationAnnexeSite));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $fournisseurSite->addPrestationAnnex($fournisseurPrestationAnnexeSite);
+                    }
+                    $fournisseurPrestationAnnexeSite->setPrestationAnnexe($emSite->find(PrestationAnnexe::class,$fournisseurPrestationAnnexe->getPrestationAnnexe()));
+                    $fournisseurPrestationAnnexeSite->setType($fournisseurPrestationAnnexe->getType());
+                    // *** capacite ***
+                    $capaciteSite = null;
+                    if (!empty($capacite = $fournisseurPrestationAnnexe->getCapacite())){
+                        if (empty($capaciteSite = $fournisseurPrestationAnnexeSite->getCapacite())){
+                            $capaciteSite   = new FournisseurPrestationAnnexeCapacite();
+                        }
+                        $capaciteSite
+                            ->setMin($capacite->getMin())
+                            ->setMax($capacite->getMax())
+                        ;
+                    }elseif (!empty($fournisseurPrestationAnnexeSite->getCapacite())){
+                        $emSite->remove($fournisseurPrestationAnnexeSite->getCapacite());
+                    }
+                    $fournisseurPrestationAnnexeSite->setCapacite($capaciteSite);
+                    // *** fin capacite ***
+                    // *** duree sejour ***
+                    $dureeSejourSite = null;
+                    if (!empty($dureeSejour       = $fournisseurPrestationAnnexe->getDureeSejour())){
+                        if (empty($dureeSejourSite = $fournisseurPrestationAnnexeSite->getDureeSejour())){
+                            $dureeSejourSite   = new FournisseurPrestationAnnexeDureeSejour();
+                        }
+                        $dureeSejourSite
+                            ->setMin($dureeSejour->getMin())
+                            ->setMax($dureeSejour->getMax())
+                        ;
+                    }elseif (!empty($fournisseurPrestationAnnexeSite->getDureeSejour())){
+                        $emSite->remove($fournisseurPrestationAnnexeSite->getDureeSejour());
+                    }
+                    $fournisseurPrestationAnnexeSite->setDureeSejour($dureeSejourSite);
+                    // *** fin duree sejour ***
+                    // *** traductions ***
+                    /** @var FournisseurPrestationAnnexeTraduction $traduction */
+                    foreach ($fournisseurPrestationAnnexe->getTraductions() as $traduction){
+                        $traductionSite = $fournisseurPrestationAnnexeSite->getTraductions()->filter(function(FournisseurPrestationAnnexeTraduction $element) use ($traduction){
+                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                        })->first();
+                        if(false === $traductionSite){
+                            $traductionSite = new FournisseurPrestationAnnexeTraduction();
+                            $fournisseurPrestationAnnexeSite->addTraduction($traductionSite);
+                            $traductionSite
+                                ->setLangue($emSite->find(Langue::class,$traduction->getLangue()))
+                            ;
+                        }
+                        $traductionSite->setLibelle($traduction->getLibelle());
+                    }
+                    // *** fin traductions ***
+                }
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
                 // *** FIN GESTION PRESTATION ANNEXE ***
 
                 $fournisseurSite->setContient($fournisseur->getContient());
@@ -1817,7 +1802,6 @@ class FournisseurController extends Controller
     public function getPrestationAnnexesAction($famillePrestationAnnexeId, $fournisseurId = null)
     {
         $em = $this->getDoctrine()->getManager();
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
         if (!empty($fournisseurId)) {
             $fournisseur = $em->find(Fournisseur::class, $fournisseurId);
 //            $fournisseur->getPrestationAnnexes()->clear();
@@ -1826,26 +1810,6 @@ class FournisseurController extends Controller
         }
 
         $famillePrestationAnnexe = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-||||||| merged common ancestors
-//        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
-        $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId, 'site' => 1 ));
-        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        $sousFamillePrestationAnnexe    = $em->find(SousFamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        foreach ($prestationAnnexes as $prestationAnnex){
-//            $fournisseur->addPrestationAnnex($prestationAnnex);
-//        }
-=======
-
-//        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
-//        $fournisseurPrestationAnnexe->setPrestationAnnexe()
-//        $prestationAnnexe   = $em->find(PrestationAnnexeUnifie::class , $famillePrestationAnnexeId);
-//        $prestationAnnexes          = $em->getRepository(PrestationAnnexe::class)->findBy(array('famillePrestationAnnexe' => $famillePrestationAnnexeId ));
-        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        $sousFamillePrestationAnnexe    = $em->find(SousFamillePrestationAnnexe::class, $famillePrestationAnnexeId);
-//        foreach ($prestationAnnexes as $prestationAnnex){
-//            $fournisseur->addPrestationAnnex($prestationAnnex);
-//        }
->>>>>>> avancement sur l'edition d'un fournisseur
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
                 'locale' => 'fr_FR',
@@ -1869,6 +1833,7 @@ class FournisseurController extends Controller
             // *** gestion prestations annexe ***
             $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
 //        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
             $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class, $prestationAnnexeId));
         }
         $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId, $fournisseurPrestationAnnexe);
@@ -1887,6 +1852,22 @@ class FournisseurController extends Controller
         // traductions
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
+||||||| merged common ancestors
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+=======
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+
+        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
+        foreach ($langues as $langue){
+            $traduction = new FournisseurPrestationAnnexeTraduction();
+            $fournisseurPrestationAnnexe->addTraduction($traduction);
+            $traduction->setLangue($langue);
+        }
+
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
         // *** fin gestion prestations annexe ***
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
@@ -1897,12 +1878,18 @@ class FournisseurController extends Controller
         return $this->render('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig', array(
             'form' => $form->createView(),
 //            'prestationAnnexes'         => $prestationAnnexes,
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
             'formAjax' => true,
             'langues' => $langues
+||||||| merged common ancestors
+            'formAjax'                  => true
+=======
+            'formAjax'                  => true,
+            'langues'                   => $langues
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
         ));
     }
 
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
 //    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
 //    {
 //        /** @var Site $site */
@@ -1924,31 +1911,4 @@ class FournisseurController extends Controller
 //        }
 //    }
 
-||||||| merged common ancestors
-=======
-    public function getFournisseurPrestationAnnexeFormAction($prestationAnnexeId){
-        $em = $this->getDoctrine()->getManager();
-        $fournisseur = new Fournisseur();
-
-        // *** gestion prestations annexe ***
-        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
-//        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
-        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
-        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
-        // *** fin gestion prestations annexe ***
-
-        $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
-            array(
-                'locale'    => 'fr_FR',
-            ))
-        ;
-
-        return $this->render('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig', array(
-            'form'                      => $form->createView(),
-//            'prestationAnnexes'         => $prestationAnnexes,
-            'formAjax'                  => true
-        ));
-    }
-
->>>>>>> avancement sur l'edition d'un fournisseur
 }
