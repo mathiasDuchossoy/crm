@@ -123,8 +123,16 @@ doctrine:
                         prefix: FOS\UserBundle\Model
                         is_bundle: false # needed as we don't follow the standard convention for bundles
                     MondofutePrestationAnnexeBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+>>>>>>> CRM-118|REBASE 19/34
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 <<<<<<< ebfcaf092f7be295f891607f7d99a8d68baf9fbe
                     MondofuteLogementPeriodeBundle: ~
                     MondofuteFournisseurPrestationAnnexeBundle: ~
@@ -132,6 +140,14 @@ doctrine:
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
 >>>>>>> CRM-118|REBASE 3/16
+||||||| merged common ancestors
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
+=======
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> CRM-118|REBASE 19/34
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -174,8 +190,16 @@ doctrine:
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
                     MondofutePrestationAnnexeBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+>>>>>>> CRM-118|REBASE 19/34
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 <<<<<<< ebfcaf092f7be295f891607f7d99a8d68baf9fbe
                     MondofuteLogementPeriodeBundle: ~
                     MondofuteFournisseurPrestationAnnexeBundle: ~
@@ -183,6 +207,14 @@ doctrine:
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
 >>>>>>> CRM-118|REBASE 3/16
+||||||| merged common ancestors
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
+=======
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> CRM-118|REBASE 19/34
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -222,8 +254,16 @@ doctrine:
                     SonataMediaBundle: ~
                     MondofuteMediaBundle: ~
                     MondofutePrestationAnnexeBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+=======
+<<<<<<< adf9050031af46529baeca4f802602d99b93c8bd
+>>>>>>> CRM-118|REBASE 19/34
                     HiDevCodePromoBundle: ~
                     MondofuteCodePromoBundle: ~
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 <<<<<<< ebfcaf092f7be295f891607f7d99a8d68baf9fbe
                     MondofuteLogementPeriodeBundle: ~
                     MondofuteFournisseurPrestationAnnexeBundle: ~
@@ -231,6 +271,14 @@ doctrine:
 =======
                     MondofuteFournisseurPrestationAnnexeBundle: ~
 >>>>>>> CRM-118|REBASE 3/16
+||||||| merged common ancestors
+>>>>>>> Mise en place copieVersSite pour codePromoUnifie
+=======
+||||||| merged common ancestors
+=======
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+>>>>>>> modification fournisseur orm et mise en place sql
+>>>>>>> CRM-118|REBASE 19/34
 
 # Swiftmailer Configuration
 swiftmailer:

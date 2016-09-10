@@ -11,7 +11,7 @@
 ;maj\crm_65\2016-08-08a_md_type_piste.sql
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
 ;maj\crm_88\2016-08-09b_md_medias_domaines.sql
-;
+
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 
 ; *** prestation annexe ***
@@ -74,6 +74,7 @@ maj\crm_101\2016-09-09a_md_maj_client.sql
 ; *** fin crm_101 ***
 >>>>>>> CRM-116|REBASE 7/8
 
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 <<<<<<< ee217e9ad5e7ffe216e4d6a434d5cea8af652b7c
 ; *** crm-116 ***
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
@@ -103,7 +104,22 @@ maj\crm_54\2016-08-08a_md_grande_ville.sql
 <<<<<<< 863344dc5cc541b2f41e734b2a1645ea9a849f46
 =======
 <<<<<<< 6d64e778708ca63b73298acffc361f8423645e23
+||||||| merged common ancestors
+<<<<<<< HEAD
+=======
+>>>>>>> CRM-118|REBASE 19/34
 ; *** crm-116 ***
+<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+;maj\crm_54\2016-08-05a_md_station_liaisons.sql
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+;maj\crm_54\2016-08-09a_md_visuels_station.sql
+;maj\crm_54\2016-08-09b_md_visuels_station.sql
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+||||||| merged common ancestors
 maj\crm_54\2016-08-05a_md_station_liaisons.sql
 maj\crm_54\2016-08-08a_md_grande_ville.sql
 maj\crm_54\2016-08-09a_md_visuels_station.sql
@@ -112,6 +128,7 @@ maj\crm_88\2016-08-09a_md_medias_domaine.sql
 maj\crm_88\2016-08-09b_md_medias_domaines.sql
 maj\crm_93\2016-08-26b_md_prestation_annexe.sql
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 ; *** fin crm-116 ***
 ||||||| merged common ancestors
 >>>>>>> CRM-116|REBASE 7/8
@@ -149,12 +166,15 @@ maj\crm_54\2016-08-09b_md_visuels_station.sql
 maj\crm_88\2016-08-09a_md_medias_domaine.sql
 maj\crm_88\2016-08-09b_md_medias_domaines.sql
 ||||||| merged common ancestors
-=======
+||||||| merged common ancestors
+; *** fin crm-116 ***
+||||||| merged common ancestors
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 maj\crm_101\2016-08-30a_code_promo.sql
 maj\crm_101\2016-08-31a_md_code_promo.sql
-
-; *** crm-116 ***
+=======
+>>>>>>> CRM-118|REBASE 19/34
+=======
 maj\crm_54\2016-08-05a_md_station_liaisons.sql
 maj\crm_54\2016-08-08a_md_grande_ville.sql
 maj\crm_54\2016-08-09a_md_visuels_station.sql
@@ -163,6 +183,7 @@ maj\crm_88\2016-08-09a_md_medias_domaine.sql
 maj\crm_88\2016-08-09b_md_medias_domaines.sql
 >>>>>>> CRM-116|REBASE 7/8
 maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+<<<<<<< c220e9906fefffbfd1053a9aeb6e9aff3992e93f
 <<<<<<< ee217e9ad5e7ffe216e4d6a434d5cea8af652b7c
 ; *** fin crm-116 ***
 >>>>>>> CRM-116|REBASE 3/8
@@ -172,3 +193,11 @@ maj\crm_116\2016-09-06a_md_prestation_annexe.sql
 ; *** fin crm-116 ***
 >>>>>>> CRM-116|REBASE 3/4
 >>>>>>> CRM-116|REBASE 7/8
+||||||| merged common ancestors
+; *** fin crm-116 ***
+>>>>>>> 760ee1e685215dafc522f4944d86b0e7667416a8
+=======
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+>>>>>>> CRM-118|REBASE 3/16
+; *** fin crm-116 ***
+>>>>>>> CRM-118|REBASE 19/34
