@@ -2,7 +2,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
-<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
     attributeOverride:
         id:
             type: integer
@@ -28,23 +28,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             onDelete: CASCADE
             orphanRemoval: true
 ||||||| merged common ancestors
-#    associationOverride:
-#        moyenComs:
-#            joinTable:
-#                name: fournisseur_moyenscomm
-#                joinColumns:
-#                    fournisseur_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    moyenComm_id:
-#                        referencedColumnName: id
-#                orphanRemoval: true
-#                onDelete: CASCADE
-#                cascade: [ "persist", "remove" ]
-#            cascade: [ "persist", "remove" ]
-#            onDelete: CASCADE
-#            orphanRemoval: true
-=======
     associationOverride:
         moyenComs:
             joinTable:
@@ -61,7 +44,26 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             cascade: [ "persist", "remove" ]
             onDelete: CASCADE
             orphanRemoval: true
->>>>>>> CRM-118|REBASE 3/16
+=======
+    attributeOverride:
+        id: ~
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: fournisseur_moyenscomm
+#                joinColumns:
+#                    fournisseur_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyenComm_id:
+#                        referencedColumnName: id
+#                orphanRemoval: true
+#                onDelete: CASCADE
+#                cascade: [ "persist", "remove" ]
+#            cascade: [ "persist", "remove" ]
+#            onDelete: CASCADE
+#            orphanRemoval: true
+>>>>>>> avancement sur l'edition d'un fournisseur
     fields:
         contient:
             type: integer
