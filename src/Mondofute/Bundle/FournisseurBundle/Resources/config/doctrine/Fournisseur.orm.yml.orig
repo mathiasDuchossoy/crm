@@ -1,0 +1,118 @@
+Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
+<<<<<<< cdf75f69cc351801b699a7cfaa8af214860571ec
+    attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+||||||| merged common ancestors
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+=======
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: fournisseur_moyenscomm
+#                joinColumns:
+#                    fournisseur_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyenComm_id:
+#                        referencedColumnName: id
+#                orphanRemoval: true
+#                onDelete: CASCADE
+#                cascade: [ "persist", "remove" ]
+#            cascade: [ "persist", "remove" ]
+#            onDelete: CASCADE
+#            orphanRemoval: true
+>>>>>>> creation des entités de fournisseurPrestationAnnexe
+    fields:
+        contient:
+            type: integer
+            options:
+                unsigned: true
+    oneToMany:
+        interlocuteurs:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
+            mappedBy: fournisseur
+            cascade: ['persist' , 'remove']
+        fournisseurEnfants:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            mappedBy: fournisseurParent
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            mappedBy: fournisseur
+        remiseClefs:
+            targetEntity: Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef
+            mappedBy: fournisseur
+            cascade: ['persist' , 'remove']
+        listeServices:
+            targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ListeService
+            mappedBy: fournisseur
+            cascade: ['persist']
+        receptions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
+            mappedBy: fournisseur
+            cascade: ['persist','remove']
+<<<<<<< cdf75f69cc351801b699a7cfaa8af214860571ec
+        prestationAnnexes:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            mappedBy: fournisseur
+            cascade: ['persist','remove']
+||||||| merged common ancestors
+=======
+        prestationAnnexes:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            mappedBy: fournisseur
+>>>>>>> creation des entités de fournisseurPrestationAnnexe
+    manyToOne:
+        passerelle:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
+            inversedBy: fournisseurs
+        fournisseurParent:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: fournisseurEnfants
+    oneToOne:
+        logo:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist','remove']
+    manyToMany:
+        types:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+    lifecycleCallbacks: {  }
