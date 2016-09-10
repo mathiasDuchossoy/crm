@@ -21,6 +21,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+<<<<<<< 4a2e8229f00eac26ac4a7052de05871e97e52cd5
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -1836,6 +1837,15 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTa
 =======
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 >>>>>>> avancement sur l'edition d'un fournisseur
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
+=======
+>>>>>>> CRM-118|REBASE 24/34
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -2931,7 +2941,12 @@ class FournisseurController extends Controller
 
 
                 // *** GESTION PRESTATION ANNEXE ***
+<<<<<<< 4a2e8229f00eac26ac4a7052de05871e97e52cd5
 <<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+||||||| merged common ancestors
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
+=======
+>>>>>>> CRM-118|REBASE 24/34
                 /** @var FournisseurPrestationAnnexe $prestationAnnexeSite */
                 /** @var PeriodeValidite $periodeValiditeSite */
                 /** @var FournisseurPrestationAnnexe $prestationAnnexe */
@@ -3063,6 +3078,7 @@ class FournisseurController extends Controller
                     }
                     // *** fin tarifs ***
                 }
+<<<<<<< 4a2e8229f00eac26ac4a7052de05871e97e52cd5
 ||||||| merged common ancestors
                 foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
                     $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexeSite) {
@@ -3104,6 +3120,103 @@ class FournisseurController extends Controller
 //                    }
 //                }
 >>>>>>> avancement sur l'edition d'un fournisseur
+||||||| merged common ancestors
+||||||| merged common ancestors
+//                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
+//                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexeSite) {
+//                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexeSite->getPrestationAnnexeUnifie()->getId();
+//                    })->first();
+//                    if (false === $prestationAnnexe) {
+//                        // On doit le supprimer de l'entité parent
+//                        $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
+//                    }
+//                }
+//
+//                foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnexe) {
+//                    $prestationAnnexeSite = $fournisseurSite->getPrestationAnnexes()->filter(function (PrestationAnnexe $element) use ($prestationAnnexe) {
+//                        return $element->getPrestationAnnexeUnifie()->getId() == $prestationAnnexe->getPrestationAnnexeUnifie()->getId();
+//                    })->first();
+//                    if (false === $prestationAnnexeSite) {
+//                        $prestationAnnexSite = $emSite->getRepository(PrestationAnnexe::class )->findOneBy(array('prestationAnnexeUnifie' => $prestationAnnexe->getPrestationAnnexeUnifie()));
+//                        $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
+//                    }
+//                }
+=======
+                foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnexeSite) {
+                    $prestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($prestationAnnexeSite) {
+                        return $element->getId() == $prestationAnnexeSite->getId();
+                    })->first();
+                    if (false === $prestationAnnexe) {
+                        // On doit le supprimer de l'entité parent
+                        $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
+                        $emSite->remove($prestationAnnexeSite);
+                    }
+                }
+
+                /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
+                foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
+                    $fournisseurPrestationAnnexeSite = $fournisseurSite->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($fournisseurPrestationAnnexe) {
+                        return $element->getId() == $fournisseurPrestationAnnexe->getId();
+                    })->first();
+                    if (false === $fournisseurPrestationAnnexeSite) {
+                        $fournisseurPrestationAnnexeSite = new FournisseurPrestationAnnexe();
+                        $fournisseurPrestationAnnexeSite->setId($fournisseurPrestationAnnexe->getId());
+                        $metadata = $emSite->getClassMetadata(get_class($fournisseurPrestationAnnexeSite));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $fournisseurSite->addPrestationAnnex($fournisseurPrestationAnnexeSite);
+                    }
+                    $fournisseurPrestationAnnexeSite->setPrestationAnnexe($emSite->find(PrestationAnnexe::class,$fournisseurPrestationAnnexe->getPrestationAnnexe()));
+                    $fournisseurPrestationAnnexeSite->setType($fournisseurPrestationAnnexe->getType());
+                    // *** capacite ***
+                    $capaciteSite = null;
+                    if (!empty($capacite = $fournisseurPrestationAnnexe->getCapacite())){
+                        if (empty($capaciteSite = $fournisseurPrestationAnnexeSite->getCapacite())){
+                            $capaciteSite   = new FournisseurPrestationAnnexeCapacite();
+                        }
+                        $capaciteSite
+                            ->setMin($capacite->getMin())
+                            ->setMax($capacite->getMax())
+                        ;
+                    }elseif (!empty($fournisseurPrestationAnnexeSite->getCapacite())){
+                        $emSite->remove($fournisseurPrestationAnnexeSite->getCapacite());
+                    }
+                    $fournisseurPrestationAnnexeSite->setCapacite($capaciteSite);
+                    // *** fin capacite ***
+                    // *** duree sejour ***
+                    $dureeSejourSite = null;
+                    if (!empty($dureeSejour       = $fournisseurPrestationAnnexe->getDureeSejour())){
+                        if (empty($dureeSejourSite = $fournisseurPrestationAnnexeSite->getDureeSejour())){
+                            $dureeSejourSite   = new FournisseurPrestationAnnexeDureeSejour();
+                        }
+                        $dureeSejourSite
+                            ->setMin($dureeSejour->getMin())
+                            ->setMax($dureeSejour->getMax())
+                        ;
+                    }elseif (!empty($fournisseurPrestationAnnexeSite->getDureeSejour())){
+                        $emSite->remove($fournisseurPrestationAnnexeSite->getDureeSejour());
+                    }
+                    $fournisseurPrestationAnnexeSite->setDureeSejour($dureeSejourSite);
+                    // *** fin duree sejour ***
+                    // *** traductions ***
+                    /** @var FournisseurPrestationAnnexeTraduction $traduction */
+                    foreach ($fournisseurPrestationAnnexe->getTraductions() as $traduction){
+                        $traductionSite = $fournisseurPrestationAnnexeSite->getTraductions()->filter(function(FournisseurPrestationAnnexeTraduction $element) use ($traduction){
+                            return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                        })->first();
+                        if(false === $traductionSite){
+                            $traductionSite = new FournisseurPrestationAnnexeTraduction();
+                            $fournisseurPrestationAnnexeSite->addTraduction($traductionSite);
+                            $traductionSite
+                                ->setLangue($emSite->find(Langue::class,$traduction->getLangue()))
+                            ;
+                        }
+                        $traductionSite->setLibelle($traduction->getLibelle());
+                    }
+                    // *** fin traductions ***
+                }
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
+=======
+>>>>>>> CRM-118|REBASE 24/34
                 // *** FIN GESTION PRESTATION ANNEXE ***
 
                 $fournisseurSite->setContient($fournisseur->getContient());
@@ -3671,15 +3784,39 @@ class FournisseurController extends Controller
         ));
     }
 
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
     public function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId)
     {
+||||||| merged common ancestors
+    public function getFournisseurPrestationAnnexeFormAction($prestationAnnexeId){
+=======
+    public function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId){
+>>>>>>> avancement sur le formulaire de fournisseur
         $em = $this->getDoctrine()->getManager();
         $fournisseur = new Fournisseur();
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
         $fournisseurPrestationAnnexe = $em->getRepository(FournisseurPrestationAnnexe::class)->findOneBy(array('fournisseur' => $fournisseurId, 'prestationAnnexe' => $prestationAnnexeId));
         if (empty($fournisseurPrestationAnnexe)) {
             // *** gestion prestations annexe ***
             $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
+||||||| merged common ancestors
+
+        // *** gestion prestations annexe ***
+        $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
+=======
+
+        $fournisseurPrestationAnnexe = $em->getRepository(FournisseurPrestationAnnexe::class)->findOneBy(array('fournisseur' => $fournisseurId , 'prestationAnnexe' => $prestationAnnexeId));
+        if (empty($fournisseurPrestationAnnexe)){
+            // *** gestion prestations annexe ***
+            $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
+>>>>>>> avancement sur le formulaire de fournisseur
 //        $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
+<<<<<<< 4a2e8229f00eac26ac4a7052de05871e97e52cd5
+||||||| merged common ancestors
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
+=======
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
+>>>>>>> CRM-118|REBASE 24/34
             $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class, $prestationAnnexeId));
         }
         $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId, $fournisseurPrestationAnnexe);
@@ -3694,10 +3831,71 @@ class FournisseurController extends Controller
                 $traductionFPA->setLibelle($traduction->getLibelle());
             }
         }
+<<<<<<< 4a2e8229f00eac26ac4a7052de05871e97e52cd5
 
         // traductions
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
+||||||| merged common ancestors
+
+        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+
+||||||| merged common ancestors
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+=======
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+
+        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
+        foreach ($langues as $langue){
+            $traduction = new FournisseurPrestationAnnexeTraduction();
+            $fournisseurPrestationAnnexe->addTraduction($traduction);
+            $traduction->setLangue($langue);
+        }
+
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
+=======
+||||||| merged common ancestors
+        $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+        $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+=======
+            $fournisseur->getPrestationAnnexes()->set($prestationAnnexeId , $fournisseurPrestationAnnexe);
+            $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class,$prestationAnnexeId));
+        }
+        foreach ($fournisseurPrestationAnnexe->getPrestationAnnexe()->getTraductions() as $traduction){
+            $traductionFPA = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element)use($traduction){
+                return $element->getLangue() == $traduction->getLangue();
+            })->first();
+            if(false === $traductionFPA ){
+
+                $traductionFPA = new FournisseurPrestationAnnexeTraduction();
+                $fournisseurPrestationAnnexe->addTraduction($traductionFPA);
+                $traductionFPA->setLangue($traduction->getLangue());
+                $traductionFPA->setLibelle($traduction->getLibelle());
+            }
+        }
+>>>>>>> avancement sur le formulaire de fournisseur
+
+<<<<<<< ca94dfc71e326717db728d456c70b2ea2a640717
+        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+||||||| merged common ancestors
+        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
+        foreach ($langues as $langue){
+            $traduction = new FournisseurPrestationAnnexeTraduction();
+            $fournisseurPrestationAnnexe->addTraduction($traduction);
+            $traduction->setLangue($langue);
+        }
+=======
+//        // traductions
+        $langues = $em->getRepository(Langue::class)->findBy(array(),array('id' => 'ASC'));
+>>>>>>> avancement sur le formulaire de fournisseur
+
+>>>>>>> CRM-118|REBASE 24/34
         // *** fin gestion prestations annexe ***
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
