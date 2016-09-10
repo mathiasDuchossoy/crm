@@ -21,7 +21,6 @@ class FournisseurPrestationAnnexeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
                     Type::getLibelle(Type::Individuelle) => Type::Individuelle,
@@ -48,6 +47,7 @@ class FournisseurPrestationAnnexeType extends AbstractType
 //            ))
             ->add('prestationAnnexe', EntityType::class, array(
                 'class' => PrestationAnnexe::class,
+<<<<<<< 2c53324234fdf2b8f932e68514b5a2a7eb850a2c
                 'choice_label' => 'id',
                 'label_attr' => [
                     'style' => 'display:none',
@@ -68,38 +68,22 @@ class FournisseurPrestationAnnexeType extends AbstractType
 //                    'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
 //                )
             ))
+        ;
 ||||||| merged common ancestors
-            ->add('libelle')
-            ->add('type')
-            ->add('capacite')
-            ->add('dureeSejour')
-            ->add('fournisseur')
-=======
-            ->add('type', ChoiceType::class, array(
-                'choices' => array(
-                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
-                    Type::getLibelle(Type::Quantite) => Type::Quantite,
-                    Type::getLibelle(Type::Forfait) => Type::Forfait,
-                ),
-                "placeholder" => " --- choisir un type ---",
-                'choices_as_values' => true,
-                'label' => 'type',
-                'translation_domain' => 'messages',
-//                'expanded' => true,
-                'required' => true,
-            ))
-            ->add('capacite', FournisseurPrestationAnnexeCapaciteType::class, array('required' => false,))
-            ->add('dureeSejour', FournisseurPrestationAnnexeDureeSejourType::class, array('required' => false,))
-            ->add('traductions', CollectionType::class, array(
-                'entry_type' => FournisseurPrestationAnnexeTraductionType::class,
-            ))
-            ->add('prestationAnnexe', EntityType::class, array(
-                'class' => PrestationAnnexe::class,
                 'required' => true,
                 "choice_label" => "id",
             ))
->>>>>>> avancement sur l'edition d'un fournisseur
         ;
+=======
+                'choice_label' => 'id',
+                'label_attr' => [
+                    'style' => 'display:none',
+                ],
+                'attr' => [
+                    'style' => 'display:none',
+                ],
+            ));
+>>>>>>> mise en place traductions et persistance sur les site pour fournisseurPrestationAnnexe
     }
 
     /**
