@@ -187,7 +187,6 @@
         <div>
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
         </div>
-<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
         <h3>Tarifs</h3>
 <<<<<<< 366fcfc9e20728cf914678f71e31c67f114798aa
         <ul class="tarifs{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
@@ -212,6 +211,7 @@
                 </li>
             {% endfor %}
         </ul>
+<<<<<<< b1b317602c8cfc3928a72f9fa0cfed5fffca6577
 <<<<<<< 4f7ea9a55b3c2e709edd2bd147530a98f1396f4b
     </div>
     {#{{ dump(prestationAnnexe) }}#}
@@ -375,8 +375,25 @@ if (window.jQuery){
         </ul>
 >>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
 >>>>>>> CRM-118|REBASE 27/34
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+        <h3>Tarifs</h3>
+        <ul class="tarifs{{ prestationAnnexe.vars.id }}" data-prototype="
+            {% filter escape %}
+                {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'tarif' : prestationAnnexe.tarifs.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.id , 'name' : '__name__'} %}
+            {% endfilter %}
+        ">
+            {% for key, tarif in prestationAnnexe.tarifs %}
+                <li class="li_tarif">
+                    {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'index' : prestationAnnexe.vars.value.id , 'name' : key} %}
+                </li>
+            {% endfor %}
+        </ul>
+>>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
+=======
+>>>>>>> CRM-118|REBASE 28/34
     </div>
-<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
     {#{{ dump(prestationAnnexe) }}#}
     <script type="text/javascript">
 
@@ -393,36 +410,24 @@ var collectionTarif = function(){
     });
 }
 if (window.jQuery){
+<<<<<<< 9effa4109ade3ae11db82ca6e3af328cbb3f3e37
 
     var $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
     var $addTagLink{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
     var $newLinkLi{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<li></li>').append($addTagLink{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
     collectionTarif();
-}
-    </script>
 ||||||| merged common ancestors
-=======
-    <script type="text/javascript">
-
-var test = function(){
-    var $collectionHolder{{ prestationAnnexe.vars.id }};
-    var $addTagLink{{ prestationAnnexe.vars.id }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
-    var $newLinkLi{{ prestationAnnexe.vars.id }} = $('<li></li>').append($addTagLink{{ prestationAnnexe.vars.id }});
-    $collectionHolder{{ prestationAnnexe.vars.id }} = $('ul.tarifs{{ prestationAnnexe.vars.id }}');
-    $collectionHolder{{ prestationAnnexe.vars.id }}.append($newLinkLi{{ prestationAnnexe.vars.id }});
-    $collectionHolder{{ prestationAnnexe.vars.id }}.data('index', $collectionHolder{{ prestationAnnexe.vars.id }}.find('.li_tarif').length);
-    $addTagLink{{ prestationAnnexe.vars.id }}.on('click', function(e) {
-        e.preventDefault();
-        addTagForm($collectionHolder{{ prestationAnnexe.vars.id }}, $newLinkLi{{ prestationAnnexe.vars.id }} , '__name__');
-    });
-}
-if (window.jQuery){
     test();
 }else{
     window.onload = test;
+=======
+    test();
+>>>>>>> avancement sur les collection de la fiche des fournisseur/fournisseur-prestation-annexe
 }
+//else{
+//    window.onload = test;
+//}
     </script>
->>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
 {% endfor %}
 ||||||| merged common ancestors
 =======
