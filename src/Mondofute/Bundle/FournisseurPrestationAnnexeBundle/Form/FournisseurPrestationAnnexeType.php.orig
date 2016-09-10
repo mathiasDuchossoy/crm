@@ -1,3 +1,4 @@
+<<<<<<< 463e236374ba816f4176b42dce5b9a953ab968e5
 <<<<<<< 7f56dac2c1490c90b6f83c4e0b88caae928ddf1a
 <?php
 
@@ -101,6 +102,10 @@ class FournisseurPrestationAnnexeType extends AbstractType
 ||||||| merged common ancestors
 =======
 <<<<<<< c2c36c93f2b64a3c47f693fa53c09ae0b5f4be5f
+||||||| merged common ancestors
+<<<<<<< c2c36c93f2b64a3c47f693fa53c09ae0b5f4be5f
+=======
+>>>>>>> CRM-118|REBASE 22/34
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
@@ -124,6 +129,7 @@ class FournisseurPrestationAnnexeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
                     Type::getLibelle(Type::Individuelle) => Type::Individuelle,
@@ -170,6 +176,37 @@ class FournisseurPrestationAnnexeType extends AbstractType
 //                    'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
 //                )
             ))
+||||||| merged common ancestors
+            ->add('libelle')
+            ->add('type')
+            ->add('capacite')
+            ->add('dureeSejour')
+            ->add('fournisseur')
+=======
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
+                    Type::getLibelle(Type::Quantite) => Type::Quantite,
+                    Type::getLibelle(Type::Forfait) => Type::Forfait,
+                ),
+                "placeholder" => " --- choisir un type ---",
+                'choices_as_values' => true,
+                'label' => 'type',
+                'translation_domain' => 'messages',
+//                'expanded' => true,
+                'required' => true,
+            ))
+            ->add('capacite', FournisseurPrestationAnnexeCapaciteType::class, array('required' => false,))
+            ->add('dureeSejour', FournisseurPrestationAnnexeDureeSejourType::class, array('required' => false,))
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => FournisseurPrestationAnnexeTraductionType::class,
+            ))
+            ->add('prestationAnnexe', EntityType::class, array(
+                'class' => PrestationAnnexe::class,
+                'required' => true,
+                "choice_label" => "id",
+            ))
+>>>>>>> avancement sur l'edition d'un fournisseur
         ;
     }
 
@@ -184,42 +221,10 @@ class FournisseurPrestationAnnexeType extends AbstractType
         ));
     }
 }
-||||||| merged common ancestors
-=======
-<?php
-
-namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-class FournisseurPrestationAnnexeType extends AbstractType
-{
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('libelle')
-            ->add('type')
-            ->add('capacite')
-            ->add('dureeSejour')
-            ->add('fournisseur')
-        ;
-    }
-    
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe'
-        ));
-    }
-}
+<<<<<<< 463e236374ba816f4176b42dce5b9a953ab968e5
 >>>>>>> creation des form et ajout traductions pour fournisseurPrestationAnnexe
 >>>>>>> CRM-118|REBASE 20/34
+||||||| merged common ancestors
+>>>>>>> creation des form et ajout traductions pour fournisseurPrestationAnnexe
+=======
+>>>>>>> CRM-118|REBASE 22/34

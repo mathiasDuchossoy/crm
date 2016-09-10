@@ -2,6 +2,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
+<<<<<<< 463e236374ba816f4176b42dce5b9a953ab968e5
 <<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
 <<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
 ||||||| merged common ancestors
@@ -9,6 +10,11 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 =======
 <<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
 >>>>>>> CRM-118|REBASE 19/34
+||||||| merged common ancestors
+<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+=======
+<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+>>>>>>> CRM-118|REBASE 22/34
     attributeOverride:
         id:
             type: integer
@@ -34,6 +40,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             onDelete: CASCADE
             orphanRemoval: true
 ||||||| merged common ancestors
+<<<<<<< 463e236374ba816f4176b42dce5b9a953ab968e5
 <<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
     associationOverride:
         moyenComs:
@@ -96,6 +103,26 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 >>>>>>> creation des entités de fournisseurPrestationAnnexe
 =======
 =======
+||||||| merged common ancestors
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: fournisseur_moyenscomm
+#                joinColumns:
+#                    fournisseur_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyenComm_id:
+#                        referencedColumnName: id
+#                orphanRemoval: true
+#                onDelete: CASCADE
+#                cascade: [ "persist", "remove" ]
+#            cascade: [ "persist", "remove" ]
+#            onDelete: CASCADE
+#            orphanRemoval: true
+=======
+=======
+>>>>>>> CRM-118|REBASE 22/34
     associationOverride:
         moyenComs:
             joinTable:
@@ -112,8 +139,33 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             cascade: [ "persist", "remove" ]
             onDelete: CASCADE
             orphanRemoval: true
+<<<<<<< 463e236374ba816f4176b42dce5b9a953ab968e5
 >>>>>>> CRM-118|REBASE 3/16
 >>>>>>> CRM-118|REBASE 19/34
+||||||| merged common ancestors
+>>>>>>> CRM-118|REBASE 3/16
+=======
+=======
+    attributeOverride:
+        id: ~
+#    associationOverride:
+#        moyenComs:
+#            joinTable:
+#                name: fournisseur_moyenscomm
+#                joinColumns:
+#                    fournisseur_id:
+#                        referencedColumnName: id
+#                inverseJoinColumns:
+#                    moyenComm_id:
+#                        referencedColumnName: id
+#                orphanRemoval: true
+#                onDelete: CASCADE
+#                cascade: [ "persist", "remove" ]
+#            cascade: [ "persist", "remove" ]
+#            onDelete: CASCADE
+#            orphanRemoval: true
+>>>>>>> avancement sur l'edition d'un fournisseur
+>>>>>>> CRM-118|REBASE 22/34
     fields:
         contient:
             type: integer
