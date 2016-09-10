@@ -503,7 +503,7 @@
                             {#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
                             <button id="enregistrer_prestation_annexe" data-dismiss="modal" type="button"
                                     class="btn btn-primary">
-                                Enregistrer
+                                Valider
                             </button>
                         </div>
                     </div>
@@ -1459,7 +1459,7 @@
                 });
             }
             $prestationAnnexeModal.modal();
-//            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
             })
