@@ -1,0 +1,204 @@
+{% if formAjax is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+{% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}
+    {% if sousFamillePrestationAnnexe.prestationAnnexes is not empty %}
+        <div class="panel panel-default">
+            {% for traduction in sousFamillePrestationAnnexe.traductions %}
+                {% if traduction.langue.code == app.request.locale %}
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           onclick="checkPrestatioAnnexe(this , 'list_prestation_annexe_' + '{{ sousFamillePrestationAnnexe.id }}');"
+                                    > {{ traduction.libelle }}
+                                </label>
+                            </div>
+                        </h3>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {#<div class="panel-body">#}
+            {#</div>#}
+            <ul class="list-group" id="list_prestation_annexe_{{ sousFamillePrestationAnnexe.id }}">
+                {% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}
+<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+                    {% set display = false %}
+                    {% for formPrestationAnnexe in form.vars.value.prestationAnnexes %}
+                        {% if formPrestationAnnexe.prestationAnnexe.id == prestationAnnexe.id %}
+                            {% set display = true %}
+                        {% endif %}
+                    {% endfor %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    <label class="">
+                                        {#{{ dump(form.prestationAnnexes) }}#}
+                                        {#{{ dump(prestationAnnexe.id) }}#}
+                                        <input type="checkbox" value="{{ prestationAnnexe.id }}"
+                                               name="prestation_annexe[]"
+                                               class="chekbox_prestation_annexe"
+                                               data-fournisseur_id="{{ form.vars.value.id }}"
+                                                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                                                    {% if formPrestationAnnexe.vars.value.prestationAnnexe.id == prestationAnnexe.id %}
+                                                        checked=""
+                                                    {% endif %}
+                                                {% endfor %}
+                                               onclick="displayEditPrestationAnnexe(this);"
+                                               id="prestation_annexe_{{ prestationAnnexe.id }}">
+                                        {% for traduction in prestationAnnexe.traductions %}
+                                            {% if traduction.langue.code == app.request.locale %}
+                                                {{ traduction.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="btn-group" role="group" aria-label="..."
+                                     id="edit_prestation_annexe_{{ prestationAnnexe.id }}"
+                                     {% if display == false %}
+                                        style="display: none;"
+                                     {% endif %}
+                                >
+                                    <button type="button" class="btn btn-default"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
+                                    >
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+||||||| merged common ancestors
+                    {% for formPrestationAnnexe in form.prestationAnnexes %}
+                        {% if prestationAnnexe.id == formPrestationAnnexe.vars.value %}
+                            <li class="list-group-item">{{ form_widget(formPrestationAnnexe) }}</li>
+                        {% endif %}
+                    {% endfor %}
+=======
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    <label class="">
+                                        <input type="checkbox" value="{{ prestationAnnexe.id }}"
+                                               name="prestation_annexe[]"
+                                               onclick="displayEditPrestationAnnexe(this);"
+                                               id="prestation_annexe_{{ prestationAnnexe.id }}">
+                                        {% for traduction in prestationAnnexe.traductions %}
+                                            {% if traduction.langue.code == app.request.locale %}
+                                                {{ traduction.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="btn-group" role="group" aria-label="..." id="edit_prestation_annexe_{{ prestationAnnexe.id }}">
+                                    <button style="text-align: right" type="button" class="btn btn-default"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ prestationAnnexe.id }}');"
+                                    >
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+>>>>>>> avancement sur l'edition d'un fournisseur
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+            {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+                {% if prestationAnnexe.sousFamillePrestationAnnexe is empty %}
+                    {% set display = false %}
+                    {% for formPrestationAnnexe in form.vars.value.prestationAnnexes %}
+                        {% if formPrestationAnnexe.prestationAnnexe.id == prestationAnnexe.id %}
+                            {% set display = true %}
+                        {% endif %}
+                    {% endfor %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    <label class="">
+                                        <input type="checkbox" value="{{ prestationAnnexe.id }}"
+                                               name="prestation_annexe[]"
+                                               class="chekbox_prestation_annexe"
+                                               data-fournisseur_id="{{ form.vars.value.id }}"
+                                                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                                                    {% if formPrestationAnnexe.vars.value.prestationAnnexe.id == prestationAnnexe.id %}
+                                                        checked=""
+                                                    {% endif %}
+                                                {% endfor %}
+                                               onclick="displayEditPrestationAnnexe(this);"
+                                               id="prestation_annexe_{{ prestationAnnexe.id }}">
+                                        {% for traduction in prestationAnnexe.traductions %}
+                                            {% if traduction.langue.code == app.request.locale %}
+                                                {{ traduction.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="btn-group" role="group" aria-label="..."
+                                     id="edit_prestation_annexe_{{ prestationAnnexe.id }}"
+                                        {% if display == false %}
+                                            style="display: none;"
+                                        {% endif %}
+                                >
+                                    <button type="button" class="btn btn-default"
+                                            onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"
+                                    >
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+||||||| merged common ancestors
+        {% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+            <ul class="list-group">
+                {#{% for prestationAnnexe in sousFamillePrestationAnnexe.prestationAnnexes %}#}
+                {% for formPrestationAnnexe in form.prestationAnnexes %}
+                    {% if prestationAnnexe.id == formPrestationAnnexe.vars.value and prestationAnnexe.sousFamillePrestationAnnexe is null %}
+                        <li class="list-group-item">{{ form_widget(formPrestationAnnexe) }}</li>
+                    {% endif %}
+                {% endfor %}
+                {#{% endfor %}#}
+            </ul>
+        {% endfor %}
+=======
+{% for prestationAnnexe in famillePrestationAnnexe.prestationAnnexes %}
+    {% if prestationAnnexe.sousFamillePrestationAnnexe is empty %}
+        <li class="list-group-item">
+            <div class="checkbox">
+                <label class="">
+                    <input type="checkbox" value="{{ prestationAnnexe.id }}" name="prestation_annexe[]"
+                           id="prestation_annexe_{{ prestationAnnexe.id }}">
+                    {% for traduction in prestationAnnexe.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </label>
+            </div>
+        </li>
+    {% endif %}
+{% endfor %}
+>>>>>>> avancement sur l'edition d'un fournisseur
