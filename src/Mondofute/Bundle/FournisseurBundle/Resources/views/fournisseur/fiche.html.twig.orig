@@ -314,8 +314,8 @@
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
                 {% endfor %}
             </div>
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
 
+<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
             <div id="values_prestation_annexe" style="display: none">
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
 ||||||| merged common ancestors
@@ -324,12 +324,11 @@
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
 =======
-
-            <div id="values_prestation_annexe" >
+            <div id="values_prestation_annexe" style="display: none">
                 {#{% for prestationAnnexe in form.prestationAnnexes %}#}
                     {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
                 {#{% endfor %}#}
->>>>>>> avancement sur fournisseur/fiche
+>>>>>>> affichage ou non de capacite et dureesejour
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -1375,16 +1374,8 @@
             }
         }
     </script>
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
     <script type="text/javascript">
         function updatePrestationAnnexe( fournisseurId , element) {
-||||||| merged common ancestors
-<script type="text/javascript">
-        function updatePrestationAnnexe(element) {
-=======
-    <script type="text/javascript">
-        function updatePrestationAnnexe(element) {
->>>>>>> avancement sur fournisseur/fiche
             $element = $(element);
             $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
@@ -1427,7 +1418,6 @@
             var $prestationAnnexeModal = $('#prestationAnnexeModal');
             $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
             if ($element.is(':checked')) {
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
                 if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
 //
@@ -1445,31 +1435,6 @@
                         })
                     });
                 }
-||||||| merged common ancestors
-                var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-
-                $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
-                ).done(function (data) {
-                    $("#values_prestation_annexe").html(data);
-                });
-=======
-                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
-                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-//
-                    $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
-                    ).done(function (data) {
-                        $("#values_prestation_annexe").append(data);
-                    });
-                }
->>>>>>> avancement sur fournisseur/fiche
                 $editPrestationAnnexe.show();
             }else{
                 $editPrestationAnnexe.hide();
@@ -1513,7 +1478,7 @@
         }
 
         function enregisterPrestationAnnexe(prestationAnnexeId){
-<<<<<<< 040ab9a7e872d570535b572dba811d34214938eb
+<<<<<<< 4001815894219f680c08d3c8cad777b630ac476d
             var $myForm = $('#form_prestation_annexe')
             if (!$myForm[0].checkValidity()) {
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
@@ -1558,6 +1523,40 @@
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
             addTagFormDeleteLink($newFormLi);
+||||||| merged common ancestors
+            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+            $('#prestationAnnexeModal').modal('hide');
+=======
+            var $myForm = $('#form_prestation_annexe')
+            if (!$myForm[0].checkValidity()) {
+                $('<input type="submit">').hide().appendTo($myForm).click().remove();
+                return false;
+            }
+            else {
+                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+//                $('#prestationAnnexeModal').modal('hide');
+                return true;
+            }
+        }
+
+        function displayCapaciteSejour(elementId){
+            $element = $("#" +elementId);
+            $buttonEdit     = $("#" +elementId + '_edit');
+            $buttonRemove = $("#" +elementId + '_remove');
+            if($element.is(":visible")){
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function(index,input){
+                    $(input).val('');
+                })
+            }
+            else{
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
+>>>>>>> affichage ou non de capacite et dureesejour
         }
 
         function addTagFormDeleteLink($tagFormLi) {
@@ -1567,13 +1566,6 @@
                 e.preventDefault();
                 $tagFormLi.remove();
             });
-||||||| merged common ancestors
-            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $prestationAnnexeModal.modal('hide');
-=======
-            $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-            $('#prestationAnnexeModal').modal('hide');
->>>>>>> avancement sur fournisseur/fiche
         }
 
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
