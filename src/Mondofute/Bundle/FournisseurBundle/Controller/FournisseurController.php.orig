@@ -523,16 +523,9 @@ class FournisseurController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         // *** gestion prestation annexe ***
-<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
         $originalPrestationAnnexes  = new ArrayCollection();
         $originalTarifs             = new ArrayCollection();
         $originalPeriodeValidites   = new ArrayCollection();
-||||||| merged common ancestors
-        $originalPrestationAnnexes = new ArrayCollection();
-=======
-        $originalPrestationAnnexes = new ArrayCollection();
-        $originalTarifs             = new ArrayCollection();
->>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
 
         /** @var FournisseurPrestationAnnexe $prestationAnnex */
         foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
@@ -547,7 +540,6 @@ class FournisseurController extends Controller
                     $traduction->setLangue($langue);
                 }
             }
-<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
             /** @var PrestationAnnexeTarif $tarif */
             foreach ($prestationAnnex->getTarifs() as $tarif) {
                 $originalTarifs->add($tarif);
@@ -555,12 +547,6 @@ class FournisseurController extends Controller
                     $originalPeriodeValidites->add($periodeValidite);
                 }
             }
-||||||| merged common ancestors
-=======
-            foreach ($prestationAnnex->getTarifs() as $tarif){
-                $originalTarifs->add($tarif);
-            }
->>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
         }
 
         $newPrestationAnnexes = new ArrayCollection();
@@ -643,7 +629,6 @@ class FournisseurController extends Controller
         }
 
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur) {
-<<<<<<< c73761e28ce6e977a524806b688ded7347deeadb
             // *** gestion suppression prestations annexe et ses collections ***
             /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
             foreach ($originalPrestationAnnexes as $originalPrestationAnnex) {
@@ -673,33 +658,7 @@ class FournisseurController extends Controller
                             }
                         }
                     }
-||||||| merged common ancestors
-
-            foreach ($originalPrestationAnnexes as $prestationAnnex) {
-                if (false === $fournisseur->getPrestationAnnexes()->contains($prestationAnnex)) {
-                    $em->remove($prestationAnnex);
-=======
-            // *** gestion suppression prestations annexe et ses collections ***
-            /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
-            foreach ($originalPrestationAnnexes as $originalPrestationAnnex) {
-                if (false === $fournisseur->getPrestationAnnexes()->contains($originalPrestationAnnex)) {
-                    $em->remove($originalPrestationAnnex);
                 }
-                else{
-//                    $prestationAnnex = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($originalPrestationAnnex){
-//                        return $element == $originalPrestationAnnex;
-//                    })->first();
-                    $originalTarifs = $originalPrestationAnnex->getTarifs();
-                    foreach ($originalTarifs as $originalTarif){
-                        dump('ici');
-                        if (false === $prestationAnnex->getTarifs()->contains($originalTarif)) {
-//                            $em->remove($originalPrestationAnnex);
-                            dump('supprimer');
-                        }
-                    }
->>>>>>> gestion des collections dans le controlleur fournisseur pour prestation annexe
-                }
-//                foreach ()
             }
             foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
                 $capacite = $prestationAnnex->getCapacite();
@@ -1726,12 +1685,22 @@ class FournisseurController extends Controller
     public function getPrestationAnnexesAction($famillePrestationAnnexeId, $fournisseurId = null)
     {
         $em = $this->getDoctrine()->getManager();
+<<<<<<< 29ed83145ac0d996ae05cae2e7f3e9f0221e25d3
         if (!empty($fournisseurId)) {
             $fournisseur = $em->find(Fournisseur::class, $fournisseurId);
 //            $fournisseur->getPrestationAnnexes()->clear();
         } else {
             $fournisseur = new Fournisseur();
         }
+||||||| merged common ancestors
+=======
+        if (!empty($fournisseurId)) {
+            $fournisseur = $em->find(Fournisseur::class, $fournisseurId);
+            $fournisseur->getPrestationAnnexes()->clear();
+        } else {
+            $fournisseur = new Fournisseur();
+        }
+>>>>>>> persist et remove sur les site distant
 
         $famillePrestationAnnexe = $em->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
@@ -1790,6 +1759,7 @@ class FournisseurController extends Controller
         ));
     }
 
+<<<<<<< 29ed83145ac0d996ae05cae2e7f3e9f0221e25d3
 //    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
 //    {
 //        /** @var Site $site */
@@ -1811,4 +1781,28 @@ class FournisseurController extends Controller
 //        }
 //    }
 
+||||||| merged common ancestors
+=======
+    private function deleteTypeFournisseurSites(TypeFournisseur $typeFournisseur)
+    {
+        /** @var Site $site */
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+            $typeFournisseurSite = $emSite->getRepository(TypeFournisseur::class)->findOneBy(array(
+                'fournisseur' => $typeFournisseur->getFournisseur(),
+                'typeFournisseur' => $typeFournisseur->getTypeFournisseur()
+            ));
+
+            if (!empty($typeFournisseurSite)) {
+                $typeFournisseurSite->setFournisseur(null);
+                $emSite->remove($typeFournisseurSite);
+            }
+            $emSite->flush();
+        }
+    }
+
+>>>>>>> persist et remove sur les site distant
 }
