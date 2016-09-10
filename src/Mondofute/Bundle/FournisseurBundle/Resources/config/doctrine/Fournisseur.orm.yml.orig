@@ -2,7 +2,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
-<<<<<<< cdf75f69cc351801b699a7cfaa8af214860571ec
+<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
     attributeOverride:
         id:
             type: integer
@@ -28,23 +28,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             onDelete: CASCADE
             orphanRemoval: true
 ||||||| merged common ancestors
-    associationOverride:
-        moyenComs:
-            joinTable:
-                name: fournisseur_moyenscomm
-                joinColumns:
-                    fournisseur_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    moyenComm_id:
-                        referencedColumnName: id
-                orphanRemoval: true
-                onDelete: CASCADE
-                cascade: [ "persist", "remove" ]
-            cascade: [ "persist", "remove" ]
-            onDelete: CASCADE
-            orphanRemoval: true
-=======
 #    associationOverride:
 #        moyenComs:
 #            joinTable:
@@ -61,7 +44,24 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 #            cascade: [ "persist", "remove" ]
 #            onDelete: CASCADE
 #            orphanRemoval: true
->>>>>>> creation des entités de fournisseurPrestationAnnexe
+=======
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+>>>>>>> CRM-118|REBASE 3/16
     fields:
         contient:
             type: integer
@@ -90,17 +90,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
             mappedBy: fournisseur
             cascade: ['persist','remove']
-<<<<<<< cdf75f69cc351801b699a7cfaa8af214860571ec
         prestationAnnexes:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
             mappedBy: fournisseur
             cascade: ['persist','remove']
-||||||| merged common ancestors
-=======
-        prestationAnnexes:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
-            mappedBy: fournisseur
->>>>>>> creation des entités de fournisseurPrestationAnnexe
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
