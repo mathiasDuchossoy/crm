@@ -2,7 +2,13 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
+<<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
 <<<<<<< 31d05b532179786187b3fc4ff68a6461cca3c166
+||||||| merged common ancestors
+<<<<<<< cdf75f69cc351801b699a7cfaa8af214860571ec
+=======
+<<<<<<< 11edc9445b3c95c61e130df0b58c5f84abf07760
+>>>>>>> CRM-118|REBASE 19/34
     attributeOverride:
         id:
             type: integer
@@ -28,6 +34,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             onDelete: CASCADE
             orphanRemoval: true
 ||||||| merged common ancestors
+<<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
     associationOverride:
         moyenComs:
             joinTable:
@@ -47,6 +54,26 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 =======
     attributeOverride:
         id: ~
+||||||| merged common ancestors
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+=======
+=======
+>>>>>>> CRM-118|REBASE 19/34
 #    associationOverride:
 #        moyenComs:
 #            joinTable:
@@ -63,7 +90,30 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 #            cascade: [ "persist", "remove" ]
 #            onDelete: CASCADE
 #            orphanRemoval: true
+<<<<<<< ed9a9cb10abbffb2e70259ff0739a9a88992d9f7
 >>>>>>> avancement sur l'edition d'un fournisseur
+||||||| merged common ancestors
+>>>>>>> creation des entités de fournisseurPrestationAnnexe
+=======
+=======
+    associationOverride:
+        moyenComs:
+            joinTable:
+                name: fournisseur_moyenscomm
+                joinColumns:
+                    fournisseur_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    moyenComm_id:
+                        referencedColumnName: id
+                orphanRemoval: true
+                onDelete: CASCADE
+                cascade: [ "persist", "remove" ]
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+>>>>>>> CRM-118|REBASE 3/16
+>>>>>>> CRM-118|REBASE 19/34
     fields:
         contient:
             type: integer
