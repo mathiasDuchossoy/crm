@@ -18,11 +18,13 @@
 ;maj\crm_93\2016-09-06a_md_prestation_annexe.sql
 ; *** fin prestation annexe ***
 
+<<<<<<< HEAD
 ; *** maj unifies ***
 maj\crm_105\2016-09-06a_md_maj_unifies.sql
 ; *** fin maj unifies ***
 
 ; *** crm_105 ***
+<<<<<<< HEAD
 ;maj\others\2016-09-06a_md_grande_ville.sql
 ;maj\crm_54\2016-08-08a_md_grande_ville.sql
 ;maj\crm_88\2016-08-09a_md_medias_domaine.sql
@@ -34,7 +36,44 @@ maj\crm_105\2016-09-06a_md_maj_unifies.sql
 ;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
 ; *** fin crm_105 ***
 ;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+||||||| merged common ancestors
+maj\others\2016-09-06a_md_grande_ville.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_65\2016-08-26a_md_station.sql
+maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\fos-user\2016-08-10a_md_fos_user_maj.sql
+; *** fin crm_105 ***
+;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+||||||| merged common ancestors
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+=======
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+>>>>>>> f39ca86ad4be3f6d938418cfa2ac2b140bef262e
+=======
+maj\others\2016-09-06a_md_grande_ville.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_65\2016-08-26a_md_station.sql
+maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\fos-user\2016-08-10a_md_fos_user_maj.sql
+; *** fin crm_105 ***
+;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
 
+<<<<<<< HEAD
 <<<<<<< 03dcee4511e335037fe81a9befc094cca77f8e5d
 ;maj\crm_101\2016-09-01a_md_code_promo.sql
 ;
@@ -46,6 +85,10 @@ maj\crm_105\2016-09-06a_md_maj_unifies.sql
 ;maj\crm_101\2016-08-30a_code_promo.sql
 ;maj\crm_101\2016-08-31a_md_code_promo.sql
 ||||||| merged common ancestors
+||||||| merged common ancestors
+<<<<<<< HEAD
+=======
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
 maj\crm_101\2016-09-01a_md_code_promo.sql
 
 maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
@@ -66,8 +109,25 @@ maj\crm_101\2016-09-09a_md_maj_client.sql
 maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 maj\crm_101\2016-08-30a_code_promo.sql
 maj\crm_101\2016-08-31a_md_code_promo.sql
+<<<<<<< HEAD
 =======
 >>>>>>> modif bug 'supprimer' liste periode_validite
+
+||||||| merged common ancestors
+
+; *** crm-116 ***
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+; *** fin crm-116 ***
+||||||| merged common ancestors
+=======
+=======
 
 ; *** crm-116 ***
 ;maj\crm_54\2016-08-05a_md_station_liaisons.sql
@@ -79,4 +139,51 @@ maj\crm_101\2016-08-31a_md_code_promo.sql
 ;maj\crm_93\2016-08-26b_md_prestation_annexe.sql
 ;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
 maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+||||||| merged common ancestors
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
+; *** crm-116 ***
+<<<<<<< HEAD
+;maj\crm_54\2016-08-05a_md_station_liaisons.sql
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+;maj\crm_54\2016-08-09a_md_visuels_station.sql
+;maj\crm_54\2016-08-09b_md_visuels_station.sql
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
 ; *** fin crm-116 ***
+||||||| merged common ancestors
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+; *** fin crm-116 ***
+>>>>>>> f39ca86ad4be3f6d938418cfa2ac2b140bef262e
+=======
+maj\crm_54\2016-08-05a_md_station_liaisons.sql
+maj\crm_54\2016-08-08a_md_grande_ville.sql
+maj\crm_54\2016-08-09a_md_visuels_station.sql
+maj\crm_54\2016-08-09b_md_visuels_station.sql
+maj\crm_88\2016-08-09a_md_medias_domaine.sql
+maj\crm_88\2016-08-09b_md_medias_domaines.sql
+maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+=======
+; *** crm-116 ***
+;maj\crm_54\2016-08-05a_md_station_liaisons.sql
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+;maj\crm_54\2016-08-09a_md_visuels_station.sql
+;maj\crm_54\2016-08-09b_md_visuels_station.sql
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+;maj\crm_93\2016-08-26b_md_prestation_annexe.sql
+;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+>>>>>>> f96ee4a174a85b8ca8fe97028bb4c2a58d62b2e9
+; *** fin crm-116 ***
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372

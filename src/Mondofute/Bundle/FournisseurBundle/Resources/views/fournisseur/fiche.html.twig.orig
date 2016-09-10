@@ -315,21 +315,8 @@
                 {% endfor %}
             </div>
 
-<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
             <div id="values_prestation_annexe" style="display: none">
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
-||||||| merged common ancestors
-            <div id="values_prestation_annexe" style="display: none">
-                {#{% for prestationAnnexe in form.prestationAnnexes %}#}
-                    {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
-                {#{% endfor %}#}
-=======
-            {#<div id="values_prestation_annexe" style="display: none">#}
-            <div id="values_prestation_annexe">
-                {#{% for prestationAnnexe in form.prestationAnnexes %}#}
-                    {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
-                {#{% endfor %}#}
->>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -516,7 +503,7 @@
                             {#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
                             <button id="enregistrer_prestation_annexe" data-dismiss="modal" type="button"
                                     class="btn btn-primary">
-                                Enregistrer
+                                Valider
                             </button>
                         </div>
                     </div>
@@ -1411,6 +1398,7 @@
             $test.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
+<<<<<<< HEAD
         function displayEditPrestationAnnexe(element){
             var $element = $(element);
             var prestationAnnexeId = $element.val();
@@ -1472,7 +1460,7 @@
                 });
             }
             $prestationAnnexeModal.modal();
-//            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
             })
@@ -1511,7 +1499,6 @@
         }
 
     </script>
-<<<<<<< 5a478794df845360f166e7e2134ebedfacd47ba3
     <script>
 
         function addTagForm($collectionHolder, $newLinkLi , name) {
@@ -1524,6 +1511,7 @@
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
             addTagFormDeleteLink($newFormLi);
+            periodevaliditeDatetimePicker();
         }
 
         function addTagFormDeleteLink($tagFormLi) {
@@ -1571,36 +1559,247 @@
 
         {% endfor %}
 
-    </script>
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $tagFormLi.append($removeFormA);
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $tagFormLi.remove();
+            });
+        }
+
+        {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.prestationAnnexe.id %}
+
+            var $collectionHolder{{ index }};
+            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
+            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
+            $collectionHolder{{ index }}.find('.li_tarif').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
+            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
+            $addTagLink{{ index }}.on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            });
+
+            {% for key, tarif in prestationAnnexe.tarifs %}
+                {% set name = key %}
+                var $collectionHolderperiode_validite{{ name }}{{ index }};
+                var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+                var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+                $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
+                    addTagFormDeleteLink($(this));
+                });
+                $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+                $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+                    e.preventDefault();
+                    addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+                });
+            {% endfor %}
+
+        {% endfor %}
+
+        function periodevaliditeDatetimePicker(){
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
+            });
+        }
+        periodevaliditeDatetimePicker();
+
 ||||||| merged common ancestors
 =======
-    <script>
+        function displayEditPrestationAnnexe(element){
+            var $element = $(element);
+            var prestationAnnexeId = $element.val();
+            var fournisseurId = $element.data('fournisseur_id');
+            var $form_prestation_annexe =$("#form_prestation_annexe");
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
+            if ($element.is(':checked')) {
+                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
+                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+//
+                    $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                    ).done(function (data) {
+//                        $("#values_prestation_annexe").append(data);
+                        $form_prestation_annexe.html(data);
+                        $prestationAnnexeModal.modal();
+                        $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                            return enregisterPrestationAnnexe(prestationAnnexeId);
+                        })
+                    });
+                }
+                $editPrestationAnnexe.show();
+            }else{
+                $editPrestationAnnexe.hide();
+                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+            }
+        }
 
+        $(".chekbox_prestation_annexe").each(function(index, element){
+            displayEditPrestationAnnexe(element);
+        });
 
-        function addTagForm($collectionHolder, $newLinkLi , name) {
-            // Get the data-prototype explained earlier
-            var prototype = $collectionHolder.data('prototype');
+        function getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_' , 'fournisseurId': '_fournisseurId_'}) }}";
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            return path;
+        }
 
-            // get the new index
-            var index = $collectionHolder.data('index');
+        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+            var $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
+            var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            var $form_prestation_annexe =$("#form_prestation_annexe");
+            if($fournisseurPrestationAnnexe.length > 0){
+                $form_prestation_annexe.html($fournisseurPrestationAnnexe);
+            }else{
+                $.ajax(path,
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
+                ).done(function (data) {
+                    $form_prestation_annexe.html(data);
+                });
+            }
+            $prestationAnnexeModal.modal();
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                return enregisterPrestationAnnexe(prestationAnnexeId);
+            })
+        }
 
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
-//            var newForm = prototype.replace(/__name__/g, index);
-            var regex = new RegExp(name, 'g');
-            var newForm = prototype.replace( regex , index);
-//            newForm = prototype.replace('/__name__/g', index);
-            console.log(newForm);
+        function enregisterPrestationAnnexe(prestationAnnexeId){
+            var $myForm = $('#form_prestation_annexe')
+            if (!$myForm[0].checkValidity()) {
+                $('<input type="submit">').hide().appendTo($myForm).click().remove();
+                return false;
+            }
+            else {
+                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+//                $('#prestationAnnexeModal').modal('hide');
+                return true;
+            }
+        }
 
-            // increase the index with one for the next item
-            console.log($collectionHolder.data('index'));
-            $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a tag" link li
-            var $newFormLi = $('<li></li>').append(newForm);
-            $newLinkLi.before($newFormLi);
+        function displayCapaciteSejour(elementId){
+            $element = $("#" +elementId);
+            $buttonEdit     = $("#" +elementId + '_edit');
+            $buttonRemove = $("#" +elementId + '_remove');
+            if($element.is(":visible")){
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function(index,input){
+                    $(input).val('');
+                })
+            }
+            else{
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
         }
 
     </script>
->>>>>>> avancement sur fournisseur/fournisseur-prestation-annexe
+    <script>
+
+        function addTagForm($collectionHolder, $newLinkLi , name) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+//            var newForm = prototype.replace(/__name__/g, index);
+            var regex = new RegExp(name, 'g');
+            var newForm = prototype.replace( regex , index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+            addTagFormDeleteLink($newFormLi);
+            periodevaliditeDatetimePicker();
+        }
+
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $tagFormLi.append($removeFormA);
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $tagFormLi.remove();
+            });
+        }
+
+        {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.prestationAnnexe.id %}
+
+            var $collectionHolder{{ index }};
+            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
+            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
+            $collectionHolder{{ index }}.find('.li_tarif').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
+            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
+            $addTagLink{{ index }}.on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            });
+
+            {% for key, tarif in prestationAnnexe.tarifs %}
+                {% set name = key %}
+                var $collectionHolderperiode_validite{{ name }}{{ index }};
+                var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+                var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+                $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
+                    addTagFormDeleteLink($(this));
+                });
+                $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+                $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+                    e.preventDefault();
+                    addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+                });
+            {% endfor %}
+
+        {% endfor %}
+
+        function periodevaliditeDatetimePicker(){
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
+            });
+        }
+        periodevaliditeDatetimePicker();
+
+>>>>>>> dcc043a08126479e690e2536f1662436e6e14372
+    </script>
 {% endblock %}
