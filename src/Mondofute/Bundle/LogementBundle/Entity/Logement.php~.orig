@@ -58,10 +58,6 @@ class Logement
      * @var Collection
      */
     private $photos;
-    /**
-     * @var boolean
-     */
-    private $actif = true;
 
     /**
      * Constructor
@@ -356,68 +352,5 @@ class Logement
     public function getPhotos()
     {
         return $this->photos;
-    }
-
-    /**
-     * Get actif
-     *
-     * @return boolean
-     */
-    public function getActif()
-    {
-        return $this->actif;
-    }
-
-    /**
-     * Set actif
-     *
-     * @param boolean $actif
-     *
-     * @return Logement
-     */
-    public function setActif($actif)
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $periodes;
-
-
-    /**
-     * Add periode
-     *
-     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
-     *
-     * @return Logement
-     */
-    public function addPeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
-    {
-        $this->periodes[] = $periode;
-
-        return $this;
-    }
-
-    /**
-     * Remove periode
-     *
-     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
-     */
-    public function removePeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
-    {
-        $this->periodes->removeElement($periode);
-    }
-
-    /**
-     * Get periodes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPeriodes()
-    {
-        return $this->periodes;
     }
 }

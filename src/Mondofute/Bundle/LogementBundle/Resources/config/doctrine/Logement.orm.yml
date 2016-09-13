@@ -43,6 +43,9 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
             inversedBy: logements
     oneToMany:
+        periodes:
+            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+            mappedBy: logement
         traductions:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementTraduction
             mappedBy: logement
