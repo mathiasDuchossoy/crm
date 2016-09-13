@@ -39,6 +39,10 @@ class FournisseurPrestationAnnexe
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
      */
     private $prestationAnnexe;
+    /**
+     * @var integer
+     */
+    private $modeAffectation;
 
     /**
      * Constructor
@@ -251,6 +255,30 @@ class FournisseurPrestationAnnexe
     public function setPrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe = null)
     {
         $this->prestationAnnexe = $prestationAnnexe;
+
+        return $this;
+    }
+
+    /**
+     * Get modeAffectation
+     *
+     * @return integer
+     */
+    public function getModeAffectation()
+    {
+        return $this->modeAffectation;
+    }
+
+    /**
+     * Set modeAffectation
+     *
+     * @param integer $modeAffectation
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function setModeAffectation($modeAffectation)
+    {
+        $this->modeAffectation = $modeAffectation;
 
         return $this;
     }

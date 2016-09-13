@@ -11,11 +11,6 @@ class FournisseurPrestationAnnexe
      * @var int
      */
     private $id;
-
-    /**
-     * @var string
-     */
-    private $libelle;
     /**
      * @var integer
      */
@@ -40,6 +35,10 @@ class FournisseurPrestationAnnexe
      * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
+    /**
+     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     */
+    private $prestationAnnexe;
 
     /**
      * Constructor
@@ -61,27 +60,11 @@ class FournisseurPrestationAnnexe
     }
 
     /**
-     * Get libelle
-     *
-     * @return string
+     * @param int $id
      */
-    public function getLibelle()
+    public function setId($id)
     {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
+        $this->id = $id;
     }
 
     /**
@@ -246,5 +229,29 @@ class FournisseurPrestationAnnexe
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Get prestationAnnexe
+     *
+     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     */
+    public function getPrestationAnnexe()
+    {
+        return $this->prestationAnnexe;
+    }
+
+    /**
+     * Set prestationAnnexe
+     *
+     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function setPrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe = null)
+    {
+        $this->prestationAnnexe = $prestationAnnexe;
+
+        return $this;
     }
 }

@@ -36,27 +36,10 @@ class Fournisseur extends Moral
     use FournisseurTrait;
 
     private $id;
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $interlocuteurs;
-
     /**
      * @var FournisseurPasserelle
      */
@@ -85,17 +68,14 @@ class Fournisseur extends Moral
      * @var \Doctrine\Common\Collections\Collection
      */
     private $receptions;
-
     /**
      * @var \Application\Sonata\MediaBundle\Entity\Media
      */
     private $logo;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $listeServices;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -116,6 +96,22 @@ class Fournisseur extends Moral
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
         $this->prestationAnnexes = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
 //    public function setId($id){
