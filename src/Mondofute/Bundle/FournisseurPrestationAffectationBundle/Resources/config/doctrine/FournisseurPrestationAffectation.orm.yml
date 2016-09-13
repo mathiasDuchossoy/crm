@@ -1,0 +1,11 @@
+Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\FournisseurPrestationAffectation:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\FournisseurPrestationAffectationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    lifecycleCallbacks: {  }
