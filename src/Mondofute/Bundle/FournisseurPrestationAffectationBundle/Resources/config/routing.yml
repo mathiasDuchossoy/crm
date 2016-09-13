@@ -1,3 +1,0 @@
-mondofute_fournisseur_prestation_affectation_homepage:
-    path:     /
-    defaults: { _controller: MondofuteFournisseurPrestationAffectationBundle:Default:index }

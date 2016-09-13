@@ -8,4 +8,11 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeL
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        prestationAnnexeLogements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
+            mappedBy: prestationAnnexeLogementUnifie
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

@@ -2,10 +2,10 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeL
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\PrestationAnnexeLogementRepository
-    id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
+    manyToOne:
+        prestationAnnexeLogementUnifie:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie
+            inversedBy: prestationAnnexeLogements
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
     lifecycleCallbacks: {  }

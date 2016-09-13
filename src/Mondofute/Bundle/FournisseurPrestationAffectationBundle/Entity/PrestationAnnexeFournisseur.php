@@ -1,26 +1,69 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
 
 /**
  * PrestationAnnexeFournisseur
  */
-class PrestationAnnexeFournisseur
+class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
 {
     /**
-     * @var int
+     * @var PrestationAnnexeFournisseurUnifie
      */
-    private $id;
-
+    private $prestationAnnexeFournisseurUnifie;
 
     /**
-     * Get id
-     *
-     * @return int
+     * @var Fournisseur
      */
-    public function getId()
+    private $fournisseur;
+
+    /**
+     * Get prestationAnnexeFournisseurUnifie
+     *
+     * @return PrestationAnnexeFournisseurUnifie
+     */
+    public function getPrestationAnnexeFournisseurUnifie()
     {
-        return $this->id;
+        return $this->prestationAnnexeFournisseurUnifie;
+    }
+
+    /**
+     * Set prestationAnnexeFournisseurUnifie
+     *
+     * @param PrestationAnnexeFournisseurUnifie $prestationAnnexeFournisseurUnifie
+     *
+     * @return PrestationAnnexeFournisseur
+     */
+    public function setPrestationAnnexeFournisseurUnifie(PrestationAnnexeFournisseurUnifie $prestationAnnexeFournisseurUnifie = null)
+    {
+        $this->prestationAnnexeFournisseurUnifie = $prestationAnnexeFournisseurUnifie;
+
+        return $this;
+    }
+
+    /**
+     * Get fournisseur
+     *
+     * @return Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
+    }
+
+    /**
+     * Set fournisseur
+     *
+     * @param Fournisseur $fournisseur
+     *
+     * @return PrestationAnnexeFournisseur
+     */
+    public function setFournisseur(Fournisseur $fournisseur = null)
+    {
+        $this->fournisseur = $fournisseur;
+
+        return $this;
     }
 }
-

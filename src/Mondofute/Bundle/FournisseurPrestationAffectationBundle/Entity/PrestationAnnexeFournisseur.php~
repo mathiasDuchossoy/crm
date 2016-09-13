@@ -1,0 +1,11 @@
+<?php
+
+namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
+
+/**
+ * PrestationAnnexeFournisseur
+ */
+class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
+{
+}
+

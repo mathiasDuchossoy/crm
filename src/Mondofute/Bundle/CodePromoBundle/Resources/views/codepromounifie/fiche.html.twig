@@ -403,12 +403,14 @@
 
     <script type="text/javascript">
         function searchClient(codePromoId, siteId) {
+            $input_search_client = $('#input_search_client_' + siteId)
+            $input_search_client.popover('hide');
             var $progressBar = $('.progress-bar');
             var $progress = $('.progress');
-            $progressBar.addClass("active");
-            $progress.show();
-            var clienVal = $("#input_search_client_" + siteId).val();
+            var clienVal = $input_search_client.val();
             if (clienVal) {
+                $progressBar.addClass("active");
+                $progress.show();
                 var path;
                 if(codePromoId != ''){
                     path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_', 'codePromoId':'_codePromoId_' }) }}";
@@ -427,7 +429,11 @@
                     $progress.hide();
                 })
                 ;
-
+            }
+            else{
+                $input_search_client.popover({
+                    content: 'Veuillez renseigner le champs.'
+                }).popover('show');
             }
         }
 

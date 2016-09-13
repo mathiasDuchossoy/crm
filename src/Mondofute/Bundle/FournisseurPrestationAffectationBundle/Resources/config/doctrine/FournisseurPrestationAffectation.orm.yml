@@ -1,5 +1,5 @@
 Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\FournisseurPrestationAffectation:
-    type: entity
+    type: mappedSuperclass
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\FournisseurPrestationAffectationRepository
     id:
@@ -8,4 +8,16 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\FournisseurPresta
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
     lifecycleCallbacks: {  }

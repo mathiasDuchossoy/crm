@@ -1599,8 +1599,6 @@
 
     </script>
     <script  type="text/javascript">
-        oninvalid="setCustomValidity('Plz enter on Alphabets ')"
-        onchange="try{setCustomValidity('')}catch(e){}"
         $('form[name=fournisseur]').bind('submit', function(e){
             var $field = $('#fournisseur_types');
             var val = [];
@@ -1610,29 +1608,6 @@
             if (val.length === 0) {
                 $('#alert_type').show();
                 e.preventDefault();
-//                $field.popover({
-//                    placement: 'top',
-//                    html: true,
-////                    content: function() {
-////                        return $('#my-popover-container').html();
-////                    },
-//                    content: 'Veuillez choisir au moin un type',
-//
-//                    // We specify a template in order to set a class (an ID is overwritten) to the popover for styling purposes
-//                    template: '<div id="my-popover" class="alert alert-danger" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
-//                });
-//                $('#my-popover').on('shown.bs.popover', function() {
-//                    // parseInt removes "px"
-//                    var currentTop = parseInt($(this).css('top'));
-//                    var currentLeft = parseInt($(this).css('left'));
-//
-//                    $(this).css({
-//                        top: (currentTop + 500) + 'px',
-//                        left: (currentLeft + 500) + 'px'
-//                    });
-//                    console.log($(this));
-//                });
-//                $field.popover('show');
             }
         });
 
