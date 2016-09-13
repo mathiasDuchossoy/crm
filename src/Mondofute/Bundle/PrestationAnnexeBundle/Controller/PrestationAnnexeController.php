@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeTraduction;
@@ -267,11 +268,17 @@ class PrestationAnnexeController extends Controller
      */
     public function deleteAction(Request $request, PrestationAnnexe $prestationAnnexe)
     {
+        $em = $this->getDoctrine()->getManager();
         $form = $this->createDeleteForm($prestationAnnexe);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        $fournisseurPrestationAnnexe = $em->getRepository(FournisseurPrestationAnnexe::class)->findOneBy(array('prestationAnnexe' => $prestationAnnexe));
+        $errorFournisseurPrestationAnnexe = false;
+        if (!empty($fournisseurPrestationAnnexe)){
+            $errorFournisseurPrestationAnnexe = true;
+            $this->addFlash('error', 'La prestation annexe est utilisé par un fournisseur.');
+        }
+        if ($form->isSubmitted() && $form->isValid() && !$errorFournisseurPrestationAnnexe) {
 
             $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             // Parcourir les sites non CRM

@@ -60,7 +60,7 @@ class FournisseurType extends AbstractType
                 'multiple'  => true,
                 'expanded'  => true,
                 'attr'      => array(
-                    'onclick' => "javascript:updatePrestationAnnexe('$fournisseurId',this);"
+                    'onclick' => "javascript:updatePrestationAnnexe('$fournisseurId',this);",
                 )
             ))
             ->add('enseigne', null, array(

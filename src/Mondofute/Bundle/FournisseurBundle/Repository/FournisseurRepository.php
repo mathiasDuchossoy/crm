@@ -80,4 +80,19 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+    public function findFournisseurByContient($contient)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fournisseur.id , fournisseur.enseigne')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->where("fournisseur.contient = :contient")
+            ->setParameter('contient', $contient);
+        $qb->orderBy('fournisseur.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
 }

@@ -10,6 +10,10 @@
     <section>
         {% block formulaire %}
             {% include '::flashbags.html.twig' %}
+            <div id="alert_type" class="alert alert-danger" role="alert" style="display: none">
+                <p>  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>Vous devez choisir au moins un type.</p>
+            </div>
             {% set countInterlocuteur = 0 %}
 
             {{ form_start(form) }}
@@ -27,13 +31,16 @@
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
                     {{ form_row(form.types) }}
-                    {#{{ form_row(form.typeFournisseurs) }}#}
-                    {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
+                    {#<div id="my-popover-container" style="display: none;">#}
+                        {#<div class="alert alert-danger" role="alert">#}
+                            {#<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>#}
+                            {#<span class="sr-only">Error:</span>#}
+                            {#Enter a valid email address#}
+                        {#</div>#}
+                    {#</div>#}
+
                     {{ form_row(form.fournisseurParent) }}
                     {{ form_row(form.contient) }}
-                    {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
-                    {#{{ form_label(form.moyenComs[0]) }}#}
-                    {#{{ dump(form.moyenComs[0]) }}#}
                     {% if form.moyenComs[0] is defined %}
                         {{ form_row(form.moyenComs[0].code_postal) }}
                         {{ form_row(form.moyenComs[0].adresse1) }}
@@ -288,24 +295,17 @@
             {% set interlocuteurs %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur} %}
             {% endset %}
-            {#{{ dump(interlocuteurs) }}#}
-            {#{% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}#}
-            {#{% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}#}
             {% set moyenComsMail %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_mail.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email} %}
             {% endset %}
-            {#{% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}#}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
             {% set moyenComsFixe %}
                 {#{% filter escape %}#}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_fixe.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , 'label' : 'Téléphone __number__'} %}
                 {#{% endfilter %}#}
             {% endset %}
-            {#{% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , { 'label' : 'Télephone __number__' }) %}#}
             {% set moyenComsMobile %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_mobile.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile } %}
             {% endset %}
-
             {% set moyenComsAdresse %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_adresse.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse} %}
             {% endset %}
@@ -485,30 +485,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="prestationAnnexeModal" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span
-                                        aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="exampleModalLabel"></h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="form_prestation_annexe" data-prestation_annexe_index="{{ countInterlocuteur }}"
-                                  class="form-horizontal">
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
-                            <button id="enregistrer_prestation_annexe" data-dismiss="modal" type="button"
-                                    class="btn btn-primary">
-                                Valider
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include('MondofuteFournisseurBundle:fournisseur:modal-fournisseur-prestation-annexe.html.twig') %}
         {% endblock %}
     </section>
     <section>
@@ -1620,5 +1597,48 @@
         }
         periodevaliditeDatetimePicker();
 
+    </script>
+    <script  type="text/javascript">
+        oninvalid="setCustomValidity('Plz enter on Alphabets ')"
+        onchange="try{setCustomValidity('')}catch(e){}"
+        $('form[name=fournisseur]').bind('submit', function(e){
+            var $field = $('#fournisseur_types');
+            var val = [];
+            $("input[name='fournisseur[types][]']:checked").each(function(i){
+                val[i] = $(this).val();
+            });
+            if (val.length === 0) {
+                $('#alert_type').show();
+                e.preventDefault();
+//                $field.popover({
+//                    placement: 'top',
+//                    html: true,
+////                    content: function() {
+////                        return $('#my-popover-container').html();
+////                    },
+//                    content: 'Veuillez choisir au moin un type',
+//
+//                    // We specify a template in order to set a class (an ID is overwritten) to the popover for styling purposes
+//                    template: '<div id="my-popover" class="alert alert-danger" role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+//                });
+//                $('#my-popover').on('shown.bs.popover', function() {
+//                    // parseInt removes "px"
+//                    var currentTop = parseInt($(this).css('top'));
+//                    var currentLeft = parseInt($(this).css('left'));
+//
+//                    $(this).css({
+//                        top: (currentTop + 500) + 'px',
+//                        left: (currentLeft + 500) + 'px'
+//                    });
+//                    console.log($(this));
+//                });
+//                $field.popover('show');
+            }
+        });
+
+
+        function chargerAffectations(type){
+
+        }
     </script>
 {% endblock %}
