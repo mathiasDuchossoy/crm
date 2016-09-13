@@ -426,9 +426,11 @@ class LogementUnifieController extends Controller
                     'fournisseur' => $logement->getFournisseurHebergement()->getFournisseur(),
                     'hebergement' => $logement->getFournisseurHebergement()->getHebergement()
                 ));
+                $edit = true;
                 if (empty($entity->getId()) || is_null($logementSite = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $entity->getId())))) {
                     $logementSite = new Logement();
                     $entitySite->addLogement($logementSite);
+                    $edit=false;
                 }
                 $logementSite->setActif($logement->getActif())
                     ->setAccesPMR($logement->getAccesPMR())
@@ -568,15 +570,17 @@ class LogementUnifieController extends Controller
                 
                 $emSite->persist($entitySite);
                 $emSite->flush();
-                $em=$this->getDoctrine()->getManager();
-                foreach ($entitySite->getLogements() as $logement) {
-                    $job = new Job('mondofute_logement:associer_periodes_command',
-                        array(
-                            'id-logement' => $logement->getId(),
-                            'id-site' => $site->getId()
-                        ), true, 'periode');
-                    $em->persist($job);
-                    $em->flush();
+                if(!$edit) {
+                    $em = $this->getDoctrine()->getManager();
+                    foreach ($entitySite->getLogements() as $logement) {
+                        $job = new Job('mondofute_logement:associer_periodes_command',
+                            array(
+                                'id-logement' => $logement->getId(),
+                                'id-site' => $site->getId()
+                            ), true, 'periode');
+                        $em->persist($job);
+                        $em->flush();
+                    }
                 }
 //                $em->persist($job);
 //                $em->flush();
