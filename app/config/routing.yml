@@ -1,3 +1,7 @@
+mondofute_fournisseur_prestation_affectation:
+    resource: "@MondofuteFournisseurPrestationAffectationBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_fournisseur_prestation_annexe:
     resource: "@MondofuteFournisseurPrestationAnnexeBundle/Resources/config/routing.yml"
     prefix:   /
