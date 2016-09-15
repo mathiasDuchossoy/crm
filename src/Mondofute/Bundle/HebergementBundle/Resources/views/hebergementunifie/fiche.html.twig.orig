@@ -1,0 +1,1161 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.hebergements %}
+            {% set ongletFournisseurs = 1 %}
+            {% set ongletServices = 1 %}
+            {% include '::onglets_sites.html.twig' %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {{ form_widget(form._token) }}
+                {% for hebergement in form.hebergements %}
+
+                    <div id="data_site_{{ hebergement.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ hebergement.vars.value.site.crm | number_format }}">
+                        {{ form_row(hebergement.typeHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typeHebergement.vars['unique_block_prefix']  }}) }}
+                        {{ form_row(hebergement.station, { 'attr' : { 'data-unique_block_prefix' : hebergement.station.vars['unique_block_prefix']  }}) }}
+                        {#{{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}#}
+                        {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
+                        {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Emplacements</label>
+                            <div class="row">
+                                <div class="col-sm-10 col-lg-push-2">
+                                    {% for emplacement in hebergement.emplacements %}
+                                        {#{{ dump(app.request.locale) }}#}
+                                        {#{{ 'EmplacementCommerces' | trans }}#}
+                                        {% set labelCheckbox = ((emplacement.vars.value.typeEmplacement~'Libelle') | trans) | capitalize %}
+                                        {#{% set labelCheckbox = labelCheckbox | capitalize  %}#}
+                                        {% if(emplacement.distance1.vars.value) %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'checked': 'checked','onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~emplacement.vars.name~');'}} %}
+                                            {% set requiredAttr = {'attr':{'required':'required'}} %}
+                                        {% else %}
+                                            {% set attrCheckbox = {'label':labelCheckbox,'attr':{'onclick':'gestionEmplacementRequired('~loop.parent.loop.index0~','~emplacement.vars.name~');'}} %}
+                                            {% set requiredAttr = {} %}
+                                        {% endif %}
+                                        <div class="form-group">
+                                            {{ form_widget(emplacement.checkbox, attrCheckbox) }}
+                                        </div>
+                                        <div class="form-group form-inline">
+                                            <label  class="col-sm-2 control-label">Distance 1</label>
+                                            <div class="col-sm-10">
+                                                <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label"
+                                                               for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1_valeur">Valeur</label>
+                                                        <div class="col-sm-10">
+                                                            {{ form_widget(emplacement.distance1.valeur, requiredAttr) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label"
+                                                               for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1_unite">Unité</label>
+                                                        <div class="col-sm-10">
+                                                            {{ form_widget(emplacement.distance1.unite, requiredAttr) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group  form-inline">
+                                            <label  class="col-sm-2 control-label">Distance 2</label>
+                                            <div class="col-sm-10">
+                                                <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label"
+                                                               for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2_valeur">Valeur</label>
+                                                        <div class="col-sm-10">
+                                                            {{ form_widget(emplacement.distance2.valeur) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label"
+                                                               for="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2_unite">Unité</label>
+                                                        <div class="col-sm-10">
+                                                            {{ form_widget(emplacement.distance2.unite) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#<div class="form-group">#}
+                                        {#<label>Distance 2</label>#}
+                                        {#{{ form_widget(emplacement.distance2) }}#}
+                                        {#</div>#}
+                                        <div class="form-group">
+                                            {{ form_widget(emplacement.typeEmplacement, {'attr': {'disabled':'true','style':'display:none;'}}) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {#{{ form_row(hebergement.emplacements, {'label' : 'Emplacements', 'attr' : { 'data-unique_block_prefix' : hebergement.emplacements.vars['unique_block_prefix']  }}) }}#}
+                        </div>
+
+                        {#{{ form_row(domaine.enneige) }}#}
+                        {{ form_row(hebergement.site) }}
+                        <ul class="nav nav-tabs">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in hebergement.traductions %}
+                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                    <a data-toggle="tab"
+                                       href="#{{ hebergement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                        {# affiche la langue en fonction de la locale#}
+                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                {{ traductionLangue.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                                {#{{ form_row(traduction) }}#}
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in hebergement.traductions %}
+                                <div id="{{ hebergement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if hebergement.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Visuels
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {# liste des photos #}
+                                    <ul class="visuels"
+                                        data-prototype_photo="
+                                        {% filter escape %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementPhotoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% endfilter %}
+                                        "
+                                        data-prototype_video="
+                                        {% filter escape %}
+                                        {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': hebergement.visuels.vars.prototypes["Mondofute\\Bundle\\HebergementBundle\\Form\\HebergementVideoType"], 'langues': langues, 'name': '__name__', 'entity': 'visuel'} %}
+                                        {% endfilter %}
+                                        "
+                                    >
+                                        {% set i = 0 %}
+                                        {% for visuel in hebergement.visuels %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': visuel,'langues': langues, 'name': i, 'entity': 'visuel'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div id="data_services" class="tab-pane fade">
+                    {{ form_row(form.listeService) }}
+                    <div id="services">
+                        <table class="table table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>{{ 'selectionner' | trans | capitalize }}</th>
+                                <th>{{ 'type' | trans | capitalize }}</th>
+                                <th>{{ 'categorie' | trans | capitalize }}</th>
+                                <th>{{ 'souscategorie' | trans | capitalize }}</th>
+                                <th>{{ 'tarifs' | trans | capitalize }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% include '@MondofuteHebergement/hebergementunifie/tableau_services_hebergement.html.twig' with {'form':form} %}
+                            </tbody>
+                        </table>
+                        {#{{ form_row(form.services) }}#}
+                    </div>
+                </div>
+<<<<<<< HEAD
+                {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
+                    <div id="data_hebergement_stocks" class="tab-pane fade">
+                        <div class="progress">
+                            <div id="progress-bar_onglets_type_periode_hebergement_{{ entity.id }}" class="progress-bar"
+                                 role="progressbar" aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                0%
+                            </div>
+                        </div>
+                        {#{% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes} %}#}
+                    </div>
+                {% endif %}
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+                {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
+                    <div id="data_hebergement_stocks" class="tab-pane fade">
+                        {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes}  %}
+                        <button type="button" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+                    </div>
+                {% endif %}
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+                <div id="data_fournisseurs" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table id="tabFournisseursAssocies" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="col-lg-11">Enseigne</th>
+                                    <th class="col-lg-1">Dissocier</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-1 col-lg-push-11">
+                            <button title="{{ 'associer.fournisseur' | trans }}" type="button" class="btn btn-default"
+                                    onclick="afficherModalRechercheFournisseurs()">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                    {% set nbFournisseurs = 0 %}
+                    <div id="form_fournisseurs"
+                         data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
+                         data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
+                         class="row">
+                        {% for fournisseur in form.fournisseurs %}
+
+                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12">
+                                            <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
+                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
+                                                    class="btn btn-default"
+                                                    type="button"><span
+                                                        class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {{ form_row(fournisseur.fournisseur) }}
+                                    {{ form_row(fournisseur.telFixe) }}
+                                    {{ form_row(fournisseur.telMobile) }}
+                                    {{ form_row(fournisseur.adresse) }}
+                                    {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label required">Receptions</label>
+                                        <div class="col-sm-10">
+                                            <div id="hebergement_unifie_fournisseurs_0_receptions"
+                                                 data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
+                                                {% for reception in fournisseur.receptions.vars.choices %}
+                                                    {#Gestion du libelle à afficher#}
+                                                    {#traduction du jour#}
+                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
+                                                    {#traduction de la tranche1#}
+                                                    {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
+                                                    {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
+                                                    {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
+                                                    {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
+                                                        {#traduction de la tranche2#}
+                                                        {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
+                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
+                                                    {% endif %}
+                                                    {#affichage de la donnée#}
+                                                    {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <ul class="nav nav-tabs">
+                                        {#gestion du premier onglet#}
+                                        {% set first = true %}
+                                        {% set idLangue = 0 %}
+                                        {% for langue in langues %}
+                                            <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
+                                                <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
+                                                   data-toggle="tab" aria-expanded="true">
+                                                    {% for traduction in langue.traductions %}
+                                                        {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
+                                                            {{ traduction.libelle }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content">
+                                        {% for traduction in fournisseur.traductions %}
+                                            {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
+                                            <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
+                                                 class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
+
+                                                {{ form_widget(traduction) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% set nbFournisseurs = nbFournisseurs + 1 %}
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                    <div id="nb_fournisseurs" data-index="{{ nbFournisseurs }}">
+
+                    </div>
+                </div>
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalRechercherFournisseur" tabindex="-1" role="dialog"
+         aria-labelledby="modalRechercherFournisseurLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="modalRechercherFournisseurLabel">Rechercher un fournisseur</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="rechercherFournisseur" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="rechercheFournisseurEnseigne">Enseigne</label> <input
+                                        id="rechercheFournisseurEnseigne" name="rechercheFournisseurEnseigne"
+                                        type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 col-lg-push-9">
+
+                                <button title="{{ 'rechercher.fournisseur' | trans }}" type="button"
+                                        onclick="rechercherFournisseursHebergement($('#rechercheFournisseurEnseigne'))"
+                                        class="btn btn-default">
+                                    Rechercher
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="resultatRechercheFournisseur">
+
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="modalAjoutRemiseClef" tabindex="-1" role="dialog"
+         aria-labelledby="modalAjoutRemiseClefLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Ajouter une remise de clef</h4>
+                </div>
+                <div class="modal-body">
+                    {{ render(controller("MondofuteRemiseClefBundle:RemiseClef:newSimple")) }}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAjoutReception" tabindex="-1" role="dialog"
+         aria-labelledby="modalAjoutReception" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Ajouter une réception</h4>
+                </div>
+                <div class="modal-body">
+                    {{ render(controller("MondofuteHebergementBundle:Reception:newSimple")) }}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="modalListeLogements" tabindex="-1" role="dialog" aria-labelledby="modalListeLogements"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  ">
+            <div class="modal-content" style="  height: auto;
+  min-height: 100vh;">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{ 'liste.logements'|trans }}</h4>
+                </div>
+                <div class="modal-body" style="height: 95vh;">
+                    <iframe src="" frameborder="0" id="iframeListeLogements" style="width: 100%;height:100%"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalTarifsService" tabindex="-1" role="dialog"
+         aria-labelledby="modalTarifService">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="{{ 'fermer' | trans | capitalize }}"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">{{ 'gestion.tarifs.service' | trans | capitalize }}</h4>
+                </div>
+                <div class="modal-body">
+                    {#<div class="row" id="modal-prototype-liste-service"#}
+                    {#data-prototype-service="#}
+                    {#"#}
+                    {#data-prototype="#}
+                    {#{% filter escape %}#}
+                    {#{% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}#}
+                    {#{% endfilter %}#}
+                    {#">#}
+                    {#</div>#}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">{{ 'fermer' | trans | capitalize }}</button>
+                    <button type="button" class="btn btn-default valider-tarifs-service"
+                            id="valider-tarifs-service" data-index-liste-service="" data-index-service=""
+                    >{{ 'valider' | trans | capitalize }}</button>
+                    {#<div id="index-tarif-service" data-index=""></div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push('_hebergement_unifie_hebergements_entry_station');
+        {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_domaineParent");#}
+        {#{% for langue in langues %}#}
+        {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_domaine_unifie_domaines_entry_traductions_entry_affichageTexte_{{ langue.code }}");#}
+        {#{% endfor %}#}
+        var items = [];
+        items.push('_hebergement_unifie_hebergements_entry_typeHebergement');
+        items.push('_hebergement_unifie_hebergements_entry_station');
+        items.push('_hebergement_unifie_hebergements_entry_classement_valeur');
+        items.push('_hebergement_unifie_hebergements_entry_classement_unite');
+        {% for langue in langues %}
+        items.push("_hebergement_unifie_hebergements_entry_traductions_entry_nom_{{ langue.code }}");
+        {% endfor %}
+    </script>
+
+    {{ parent() }}
+    <script type="text/javascript">
+        var _fournisseurs = [];
+        var _codeLangues = [];
+        //        récupération de l'id de la langue locale
+        {% for langue in langues %}
+        {% if(langue.code == app.request.locale ) %}
+        var _locale = {{ langue.id }};
+        {% endif %}
+        {% endfor %}
+        {# recupere les objets langue dans un tableau #}
+        var _langues = {{ langues | serialize('json') | raw }};
+        $(document).on('change', '#hebergement_unifie_listeService', function () {
+            chargerServices($(this).val());
+        });
+        function chargerServices(idListeService) {
+            if (idListeService > 0) {
+                {% if not form.vars.value.id is null %}
+                {% set idHebergementUnifie = form.vars.value.id %}
+                {% else %}
+                {% set idHebergementUnifie = 0 %}
+                {% endif %}
+                var url = '{{ path('hebergement_hebergement_charger_services_ajax',{idListeService:"__idListeService__",idHebergementUnifie:idHebergementUnifie}) }}';
+                {#var url = '{{ path('hebergement_hebergement_charger_services_ajax',{idListeService:"__idListeService__"}) }}';#}
+                url = url.replace(/__idListeService__/g, idListeService);
+//            alert(url);
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+//                data: {'idListeService': idListeService},
+                    dataType: 'html',
+                    success: function (data) { // quand la réponse de la requete arrive
+                        $('#services tbody').html(data);
+                    }
+                });
+            } else {
+                $('#services tbody').html('');
+            }
+        }
+        $(document).on('click', '.afficher-modal-tarif-service', function (event) {
+            afficherModalTarifsService(parseInt($(this).attr('data-index-service')));
+        });
+        $(document).on('click', '.ajouter-ligne-tarif-service', function () {
+            ajouterLigneTarifService($(this).attr('data-prototype'), $(this).attr('data-index-service'));
+        });
+        $(document).on('click', '.valider-tarifs-service', function () {
+            validerTarifsService(parseInt($(this).attr('data-index-service')));
+        });
+        $('#modalTarifsService').on('hidden.bs.modal', function () {
+            $(this).find('.modal-body').html('');
+        });
+        $(document).on('click', '.suppr-tarif-service', function () {
+            supprimerTarifService(parseInt($(this).attr('data-index-service-hebergement')), parseInt($(this).attr('data-index-tarif-service')));
+        });
+        function ajouterLigneTarifService(prototype, indexService) {
+            var $modal = $('#modalTarifsService');
+            var $form = $modal.find('#form-tarifs-service-' + indexService);
+            var $tarifs = $form.find('#tarifs-' + indexService);
+            prototype = prototype.replace(/__name__/g, $form.attr('data-index'));
+            $tarifs.append($(prototype));
+            $form.attr('data-index', parseInt($form.attr('data-index')) + 1);
+        }
+        function supprimerTarifService(indexService, indexTarifService) {
+            $modal = $('#modalTarifsService');
+            $modal.find('#tarif-' + indexService + '-' + indexTarifService).remove();
+        }
+        function validerTarifsService(indexService) {
+            $modalTarifsService = $('#modalTarifsService');
+            $services = $('#services');
+            $form = $modalTarifsService.find('#form-tarifs-service-' + indexService);
+            $services.find('#ctn-tarifs-service-' + indexService).html('');
+            $services.find('#ctn-tarifs-service-' + indexService).append($form);
+            $modalTarifsService.modal('hide');
+        }
+        function afficherModalTarifsService(indexService) {
+            var $modal = $('#modalTarifsService');
+            var $form = $('#form-tarifs-service-' + indexService);
+//            $('#valider-tarifs-service').attr('data-index-liste-service', indexListeService);
+            $('#valider-tarifs-service').attr('data-index-service', indexService);
+            $modal.find('.modal-body').append(cloneFormulaire($form));
+            $modal.modal('show');
+        }
+
+        function cloneFormulaire($form) {
+            var prefixe = '_deepcloned';
+//            copy jquery de l'element
+            $dest = $form.clone();
+//            duplique les select
+            $selects = $form.find('select');
+            $selects.each(function () {
+                $dest.find('#' + $(this).attr('id')).val($(this).val());
+            });
+//            duplique les textareas
+            $textareas = $form.find('textarea');
+            $textareas.each(function () {
+                $dest.find('#' + $(this).attr('id')).val($(this).val());
+            });
+//            gestion des onglets pour ne pas avoir de rédondance d'id et assurer le bon fonctionnement des onglets
+            $tabs = $dest.find('.tab-pane');
+            $tabs.each(function () {
+                $dest.find('li [href="#' + $(this).attr('id') + '"]').attr('href', '#' + $(this).attr('id') + prefixe);
+                $(this).attr('id', $(this).attr('id') + prefixe);
+            });
+//            fin gestion des onglets
+            return $dest;
+        }
+        //        Affiche la modale recherche fournisseur
+        function afficherModalRechercheFournisseurs() {
+
+            var modal = $('#modalRechercherFournisseur');
+            modal.modal().show();
+        }
+        function afficherModalListeLogements(idFournisseurHebergement) {
+            var url = '{{ path('popup_logement_logement_index',{'idFournisseurHebergement': '__idFournisseurHebergement__'}) }}';
+            url = url.replace(/__idFournisseurHebergement__/g, idFournisseurHebergement);
+            $('#iframeListeLogements').attr('src', url);
+            $('#iframeListeLogements').css('display', 'none');
+            $('#iframeListeLogements').on('load', function () {
+                $('#iframeListeLogements').css('display', '');
+            });
+            $('#modalListeLogements').modal('show');
+        }
+        function gestionEmplacementRequired(indexHebergement, indexEmplacement) {
+            $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
+            $valeur = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_valeur');
+            $unite = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_unite');
+//            alert($checkbox.is(':checked'));
+            if ($checkbox.is(':checked')) {
+                $valeur.attr('required', 'required');
+                $unite.attr('required', 'required');
+            } else {
+                $valeur.removeAttr('required');
+                $unite.removeAttr('required');
+            }
+        }
+        function rechercherFournisseursHebergement($rechercheFournisseurEnseigne) {
+
+            var $resultatRechercheFournisseur = $('#resultatRechercheFournisseur');
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+            $.ajax({
+                url: "{{ path('fournisseur_rechercher_type_hebergement') }}",
+                type: 'GET',
+                data: {'enseigne': $rechercheFournisseurEnseigne.val()},
+                dataType: 'json',
+                success: function (json) { // quand la réponse de la requete arrive
+//                    vide la zone de résultat de recherche
+                    $resultatRechercheFournisseur.html('');
+//                    test si il y a au moins un résultat
+                    if (json.length > 0) {
+                        ajouterTableauRechercheFournisseur(json, $resultatRechercheFournisseur);
+                    } else {
+                        afficheAucunResultat($resultatRechercheFournisseur)
+                    }
+                }
+            });
+        }
+        function afficheAucunResultat(destination) {
+            destination.html($('<div class="row"><div class="col-lg-12">Aucun résultat trouvé</div></div>'));
+        }
+        //        Création d'un tableau de résultat pour les fournisseurs avec association
+        function ajouterTableauRechercheFournisseur(json, destination) {
+            //                        création du tableau de résultat
+            var table = $('<table class="table-striped table"><thead><tr><th  class="col-lg-11">Enseigne</th><th  class="col-lg-1">Associer</th></tr></thead><tbody></tbody></table>');
+            destination.append(table);
+//                        balaye les résultats
+            $.each(json, function (index, value) {
+                ajouterLigneTableauRechercheFournisseur(table, value);
+            });
+        }
+        function ajouterLigneTableauRechercheFournisseur(table, value) {
+//                            création de la ligne de résultat
+            var ligne = $('<tr id="resultatRechercheFournisseur' + value.id + '" data-enseigne="' + value.enseigne + '"></tr>');
+//                            création des colonnes de résultat
+            var colonneEnseigne = $('<td>' + value.enseigne + '</td>');
+            var colonneAssocier = $('<td><button title="{{ 'associer.fournisseur' | trans }}" type="button" onclick="associerFournisseur(' + value.id + ', \'' + value.enseigne + '\')" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button></td>');
+//                            ajout des colonnes dans la ligne
+            ligne.append(colonneEnseigne);
+            ligne.append(colonneAssocier);
+//                            ajout de la ligne dans le tableau
+            table.find('tbody').append(ligne);
+        }
+        function associerFournisseur(id, label) {
+            var present = false;
+//            test la presence du fournisseur "id"
+            for (var i = 0; i < _fournisseurs.length; i++) {
+                if (_fournisseurs[i] == id) {
+                    present = true;
+                }
+            }
+//            si fournisseur id non présent on genere le formulaire et ajoute la ligne au tableau de fournisseurs
+            if (present === false) {
+                genererFormulaireFournisseurHebergement(id, label);
+                ajouterLigneFournisseursAssocies(id);
+                _fournisseurs.push(id);
+                ajouterListeServicesFournisseur(id);
+            }
+        }
+        function ajouterListeServicesFournisseur(id) {
+            chargerListeServicesFournisseur(id, 'add');
+        }
+        function supprimerListeServicesFournisseur(id) {
+            chargerListeServicesFournisseur(id, 'suppr');
+        }
+        function chargerListeServicesFournisseur(id, action) {
+            var url = '{{ path('hebergement_hebergement_charger_liste_services_fournisseur_ajax',{idFournisseur:"__idFournisseur__"}) }}';
+            {#var url = '{{ path('hebergement_hebergement_charger_services_ajax',{idListeService:"__idListeService__"}) }}';#}
+            url = url.replace(/__idFournisseur__/g, id);
+//            alert(url);
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+            $.ajax({
+                url: url,
+                type: 'POST',
+//                data: {'idListeService': idListeService},
+                dataType: 'json',
+                success: function (data) { // quand la réponse de la requete arrive
+                    for (i = 0; i < data.length; i++) {
+                        switch (action) {
+                            case 'add':
+                                $('#hebergement_unifie_listeService').append($('<option value="' + data[i].id + '">' + data[i].libelle + '</option>'));
+                                break;
+                            case 'suppr':
+                                $('#hebergement_unifie_listeService option[value="' + data[i].id + '"]').remove();
+                                break;
+                        }
+                    }
+//                    alert($('#hebergement_unifie_listeService').val());
+                    chargerServices($('#hebergement_unifie_listeService').val());
+//                    $('#services tbody').html(data);
+                }
+            });
+        }
+        /**
+         * retire la ligne du fournisseur id et supprime le formulaire d'association fournisseur/hebergement
+         * @param id
+         */
+        function dissocierFournisseur(id) {
+//            recupere l'element nombre fournisseur
+            var $nbFournisseurs = $('#nb_fournisseurs');
+//            recupère la ligne du fournisseur a dissocier
+            var ligne = $('#fournisseurAssocie' + id);
+//            recupere le form du fournisseur a dissocier
+            var form = $('#fournisseur' + id);
+//            supprime le formulaire de la page
+            form.remove();
+//            supprime la ligne du tableau des fournisseurs associes
+            ligne.remove();
+//            lit le tableau des fournisseurs associés pour supprimer l'element du tableau
+            for (var i = 0; i < _fournisseurs.length; i++) {
+                if (_fournisseurs[i] == id) {
+                    _fournisseurs.splice(i, 1);
+                    supprimerListeServicesFournisseur(id);
+                    break;
+                }
+            }
+//            décrémente le nombre de fournisseurs associés
+            $nbFournisseurs.attr('data-index', ($nbFournisseurs.attr('data-index') - 1));
+        }
+        function traduireLangue(langues, langueATraduire, langueDeTraduction) {
+//            balaye les langues
+            for (var i = 0; i < langues.length; i++) {
+//                vérifie si la langue est la lague que nous souhaitons traduire
+                if (langues[i].id == langueATraduire) {
+//                    balaye les traductions
+                    for (var j = 0; j < langues[i].traductions.length; j++) {
+//                        particularité du serializer json si la langue a traduire = la langue de traduction alors langues[i].traductions[j].langue_traduction n'existe pas
+                        if (!(langues[i].traductions[j].langue_traduction)) {
+                            if (langueDeTraduction == langues[i].id) {
+//                                cas ou la langue a traduire est la langue de traduction
+                                return langues[i].traductions[j].libelle;
+                            }
+                        } else {
+
+                            if (langues[i].traductions[j].langue_traduction.id == langueDeTraduction) {
+                                return langues[i].traductions[j].libelle;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        function genererFormulaireFournisseurHebergementTraductions(idFournisseur, langues) {
+            var formTraductions = '';
+            var ongletActif = '';
+            var menuOnglets = '<div><ul class="nav nav-tabs">';
+            formTraductions += '<div class="tab-content">';
+//            balaye les langues
+            for (var i = 0; i < langues.length; i++) {
+//                défini si c'est la première langue l'onglet a actif pour le sélectionner et et afficher la zone en question
+                if (i == 0) {
+                    ongletActif = 'active';
+                } else {
+                    ongletActif = '';
+                }
+//                ajoute l'onglet de la langue
+                menuOnglets += '<li class="' + ongletActif + '">' +
+                        '<a href="#fournisseur_hebergement_' + idFournisseur + '_langue_' + langues[i].id + '" data-toggle="tab" aria-expanded="true">' + traduireLangue(langues, langues[i].id, _locale) + '</a>' +
+                        '</li>';
+//                récupère la zone de la langue
+                formTraductions += ajouterFormulaireFournisseurHebergementLangue(langues[i], idFournisseur, ongletActif);
+            }
+
+            menuOnglets += "</ul></div>";
+            formTraductions += '</div>';
+//            création des onglets et des formulaires
+            return menuOnglets + formTraductions;
+        }
+        function ajouterFormulaireFournisseurHebergementLangue(langue, idFournisseur, ongletActif) {
+//            récupère l'element contenant le prototype de formulaire fournisseur_hebergement
+            var $formFournisseurHebergement = $('#form_fournisseurs');
+//            gestion du prototype pour les fournisseur_hebergement_traduction
+            var formTraductionPrototype = $formFournisseurHebergement.attr('data-traduction-prototype');
+            var $formTraduction = $(formTraductionPrototype.replace(/__name__/g, idFournisseur).replace(/__tradname__/g, langue.id));
+            $formTraduction.find('#hebergement_unifie_fournisseurs_' + idFournisseur + '_traductions_' + langue.id + '_langue option[value="' + langue.id + '"]').attr('selected', 'selected');
+            var formTraduction = '<div id="fournisseur_hebergement_' + idFournisseur + '_langue_' + langue.id + '" class="tab-pane ' + ongletActif + ' fade in">'
+                    + $formTraduction.html()
+                    + '</div>';
+            return formTraduction;
+        }
+        /**
+         * genere le formulaire et incrémente le nombre de fournisseurs associés
+         * @param id
+         * @param label
+         */
+        function genererFormulaireFournisseurHebergement(id, label) {
+//            récupère l'element contenant le prototype de formulaire fournisseur_hebergement
+            var $formFournisseurHebergement = $('#form_fournisseurs');
+//            récupère l'élément contenant le nombre de fournisseurs associés
+            var $nbFournisseurs = $('#nb_fournisseurs');
+//            récupère le prototype du formulaire FournisseurHebergementType
+            var formPrototype = $formFournisseurHebergement.attr('data-prototype');
+
+            formTraductions = genererFormulaireFournisseurHebergementTraductions(id, _langues);
+
+//            mise en forme du formulaire
+            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + formTraductions + '</div></div></div>';
+            var $newForm = $(newForm);
+//            donnes la valeur du fournisseur dans le hidden fournisseur
+            $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
+            $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
+            $newForm.find('#hebergement_unifie_fournisseurs_' + id + '_receptions').attr('data-fournisseur', id);
+            $newForm.find('.addReception').attr('data-fournisseur', id);
+            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
+            supprimerReceptionParFournisseur($newForm.find('[id$="_receptions"]'));
+//            ajoute le formulaire dans la page
+            $formFournisseurHebergement.append($newForm.html());
+
+//            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'))
+//            incrémente le nombre de fournisseurs associés
+            $nbFournisseurs.attr('data-index', (parseInt($nbFournisseurs.attr('data-index')) + 1));
+        }
+        function ajouterLigneFournisseursAssocies(id, enseigne) {
+            var ligne = $('<tr id="fournisseurAssocie' + id + '"></tr>');
+            var colonneEnseigne = null;
+            if (!enseigne) {
+                colonneEnseigne = $('<td>' + $('#resultatRechercheFournisseur' + id).attr('data-enseigne') + '</td>');
+            } else {
+                colonneEnseigne = $('<td>' + enseigne + '</td>');
+            }
+            var colonneDissocier = $('<td><button title="{{ 'dissocier.fournisseur' | trans }}" type="button" class="btn-default btn" onclick="dissocierFournisseur(' + id + ')"><span class="glyphicon glyphicon-minus"></span></button></td>');
+            ligne.append(colonneEnseigne);
+            ligne.append(colonneDissocier);
+            $('#tabFournisseursAssocies').append(ligne);
+        }
+        function afficherModaleAjoutRemiseClef(idFournisseur) {
+            $('#remise_clef_fournisseur option').each(function () {
+                if (parseInt($(this).attr('value')) == parseInt(idFournisseur)) {
+                    $(this).attr('selected', 'selected');
+                } else {
+                    $(this).removeAttr('selected');
+                }
+            });
+            $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
+            $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
+            $modalAjoutRemiseClef.modal().show();
+        }
+        function afficherModaleAjoutReception(idFournisseur) {
+            $('#reception_fournisseur').val(idFournisseur);
+            $modalAjoutReception = $('#modalAjoutReception');
+            $modalAjoutReception.find('.nav-tabs li:first a').tab('show');
+            $modalAjoutReception.modal().show();
+        }
+        function ajouterNouvelleRemiseClef($form) {
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $('#modalAjoutRemiseClef').modal('hide');
+                    ajouterOptionRemiseClef(data.remiseClef.id, data.remiseClef.libelle, $('#remise_clef_fournisseur').val());
+                }
+            });
+        }
+        function ajouterNouvelleReception($form) {
+            $.ajax({
+                type: $form.attr('method'),
+                url: $form.attr('action'),
+                data: $form.serialize(),
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    $('#modalAjoutReception').modal('hide');
+                    for (var i = 0; i < data.receptions.length; i++) {
+                        console.log(data.receptions[i]);
+                        ajouterCheckboxReception(data.receptions[i]);
+                    }
+                }
+            });
+        }
+        function ajouterOptionRemiseClef(id, libelle, idFournisseur) {
+            var option = '<option selected="selected" value="' + id + '">' + libelle + '</option>';
+            var $option = $(option);
+            $option.insertBefore('#fournisseur' + idFournisseur + ' [id$="_remiseClef"] [value="add"]');
+            $('#fournisseur' + idFournisseur + ' [id$="_remiseClef"] option:selected').each(function (i, $elem) {
+                $elem.removeAttribute('selected');
+            });
+            $option.attr('selected', 'selected');
+        }
+        function ajouterCheckboxReception(reception) {
+            var indice = $('#fournisseur' + reception.idFournisseur + ' [id$="_receptions"]').attr('id');
+            indice = indice.substring(32);
+            indice = indice.substring(0, (indice.length - 11));
+            var data = '<div class="checkbox">' +
+                    '<label class="">' +
+                    '<input type="checkbox" name="hebergement_unifie[fournisseurs][' + indice + '][receptions][]" checked="checked" value="' + reception.id + '" data-fournisseur="' + reception.idFournisseur + '" id="hebergement_unifie_fournisseurs_' + indice + '_receptions_' + reception.id + '">' + reception.libelle +
+                    '</label>' +
+                    '</div>';
+//            console.log($("#hebergement_unifie_fournisseurs_"+reception.idFournisseur));
+            $('#fournisseur' + reception.idFournisseur + ' [id$="_receptions"]').append($(data));
+        }
+        function supprimerRemiseClefParFournisseur($select) {
+            var idFournisseur = $select.attr('data-fournisseur');
+            $select.find('option').each(function () {
+                if ($(this).attr('data-fournisseur')) {
+                    if ($(this).attr('data-fournisseur') != idFournisseur) {
+                        $(this).remove();
+                    }
+                }
+            });
+        }
+        function supprimerReceptionParFournisseur($receptions) {
+            var idFournisseur = $receptions.attr('data-fournisseur');
+            var $checkbox = null;
+            $receptions.find('.checkbox').each(function () {
+                $checkbox = $(this);
+                if ($checkbox.find('input').attr('data-fournisseur') != idFournisseur) {
+                    $checkbox.remove();
+                }
+            });
+        }
+        //        $(document).delegate('form[name="hebergement_unifie"]','submit',function(e){
+        //           var retour = $(this).submit();
+        //            alert(retour);
+        //        });
+        $(document).ready(function () {
+
+            $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
+                $('[id$="_remiseClef"] option:selected').each(function () {
+                    if ($(this).val() == 'add') {
+                        $(this).prop('selected', false);
+                    }
+                });
+                // do something…
+            });
+            $('[name="remise_clef"]').submit(function (e) {
+                e.preventDefault();
+                ajouterNouvelleRemiseClef($(this));
+            });
+            $('[name="reception"]').submit(function (e) {
+                e.preventDefault();
+                ajouterNouvelleReception($(this));
+            });
+            {% for fournisseur in form.fournisseurs %}
+            _fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
+            ajouterLigneFournisseursAssocies({{ fournisseur.vars.value.fournisseur.id }}, '{{ fournisseur.vars.value.fournisseur.enseigne }}');
+            {% endfor %}
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+            $(document).on('change', 'select[id$="_remiseClef"]', function () {
+                if ($(this).val() == 'add') {
+                    afficherModaleAjoutRemiseClef($(this).attr('data-fournisseur'));
+                }
+            });
+            $('select[id$="_remiseClef"]').each(function (i, select) {
+                supprimerRemiseClefParFournisseur($(select));
+
+            });
+            $('[id$="_receptions"]').each(function (i, receptions) {
+                supprimerReceptionParFournisseur($(receptions));
+            });
+            $(document).on('click', 'button.addReception', function () {
+                afficherModaleAjoutReception($(this).attr('data-fournisseur'));
+            });
+            $(document).on('click', 'button[name="liste_logements"]', function () {
+                afficherModalListeLogements(parseInt($(this).attr('data-fournisseur-hebergement')));
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        var $visuelsCollectionHolder;
+
+        var $visuelsAddLinkPhoto = $('<a href="#" class="add_visuel_link_photo">Ajouter photo</a>');
+        var $visuelsAddLinkVideo = $('<a href="#" class="add_visuel_link_video">Ajouter video</a>');
+
+        var $newLinkLiVisuel = $('<li></li>').append($visuelsAddLinkPhoto);
+        $newLinkLiVisuel = $newLinkLiVisuel.append($('<br/>'));
+        $newLinkLiVisuel = $newLinkLiVisuel.append($visuelsAddLinkVideo);
+
+
+        var link = {
+            visuels: $newLinkLiVisuel
+        };
+
+        var elements = [
+            'visuels'
+        ];
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of diaporamas
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing diaporama form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a diaporama" anchor and li to the diaporamas ul
+//                $.each(link[element] , function(index , $link){
+//                    window['$'+element+'CollectionHolder'].append($link);
+//                });
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input[id$=_binaryContent]').length);
+
+                window['$' + element + 'AddLinkPhoto'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new diaporama form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], 'photo');
+                });
+
+                if (window['$' + element + 'AddLinkVideo']) {
+                    window['$' + element + 'AddLinkVideo'].on('click', function (e) {
+                        // prevent the link from creating a "#" on the URL
+                        e.preventDefault();
+
+                        // add a new diaporama form (see next code block)
+                        addForm(window['$' + element + 'CollectionHolder'], link[element], 'video');
+                    });
+                }
+
+            });
+        });
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype_' + type);
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
+{% endblock %}

@@ -36,6 +36,8 @@ framework:
     trusted_proxies: ~
     session:
         # handler_id set to null will use default session handler from php.ini
+#        cookie_secure:  true
+#        cookie_httponly:  true
         handler_id:  ~
     fragments:       ~
     http_method_override: true
@@ -275,8 +277,12 @@ assetic:
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
+#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
+<<<<<<< HEAD
         datatables_js:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
@@ -313,6 +319,17 @@ assetic:
               - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
             filters: [?yui_js]
             output: js/bootstrap-datetimepicker.js
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+        datatables_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+            filters: [?yui_js]
+            output: js/datatables.min.js
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
         menu_css:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
@@ -320,9 +337,15 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+<<<<<<< HEAD
                - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
 #               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
 #               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
            filters:
                - lessphp
                - cssrewrite
