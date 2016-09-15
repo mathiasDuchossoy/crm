@@ -510,4 +510,417 @@
 =======
 >>>>>>> 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
 {% endblock %}
+<<<<<<< HEAD
 >>>>>>> 6d36bb6... gestion des stocks dans la fiche hébergement
+||||||| parent of 80adf90... gestion des stocks dans la fiche hébergement
+=======
+||||||| parent of 99139ca... gestion des stocks dans la fiche hébergement
+=======
+{% extends '@MondofuteHebergement/hebergementunifie/fiche.html.twig' %}
+
+
+{% block title %}
+    {{ 'modification de l\'hébergement ' | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification de l'hébergement
+{% endblock %}
+
+{% block body %}
+    {% set ongletHebergementStocks = 1 %}
+    {{ parent() }}
+{% endblock %}
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('hebergement_hebergement_index') }}">{{ 'retour.liste' | trans | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+
+{% endblock %}
+
+{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
+<<<<<<< 1be053fe7598931bc261d84a85844982caca6770
+{% block javascripts %}
+||||||| merged common ancestors
+{% block javascript_page %}
+=======
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+//            gestion des table de type hebergement-stocks
+            $('.table-hebergement-stocks').DataTable({
+                paging: false,
+                info: false,
+                scrollX: true,
+                scrollY: false,
+                scrollCollapse: true,
+                fixedColumns: true,
+                scroller: {
+                    rowHeight: 30
+                },
+                "columnDefs": [
+                    { "orderable": true, "targets": 0 },
+                    { "orderable": false, "targets": '_all' },
+                    { "searchable": true, "targets": 0 },
+                    { "searchable": false, "targets": '_all' },
+                ],
+                language: {
+                    processing:     "{{ 'processing'|trans }}",
+                    search:         "{{ 'rechercher'|trans }} :",
+                    loadingRecords:  "{{ 'chargementEnCours'|trans }}...",
+                    zeroRecords:    "{{ 'zeroResultats'|trans }}",
+                    emptyTable:     "{{ 'tableVide'|trans }}",
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block stylesheets %}
+>>>>>>> gestion des stocks dans la fiche hébergement
+    {{ parent() }}
+<<<<<<< 1be053fe7598931bc261d84a85844982caca6770
+    {% javascripts
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        function genererDataTables($tableau, colonnes, parametres, $progressBar, callback) {
+            var table = $tableau.DataTable({
+                data: null,
+                "aoColumns": colonnes,
+                "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                    $(nRow).find('td').attr('style', 'vertical-align: middle;');
+                },
+                "bAutoWidth": true,
+                aoColumnDefs: [
+                    {"bSortable": true, aTargets: [0]},
+                    {"bSortable": false, aTargets: ['_all']},
+                ],
+                paging: true,
+                info: false,
+                pageLength: 25,
+                scrollX: true,
+                scrollY: false,
+                scrollCollapse: true,
+                fixedColumns: true,
+                scroller: {
+                    rowHeight: 30
+                },
+                language: {
+                    processing: "{{ 'processing'|trans }}",
+                    search: "{{ 'rechercher'|trans }} :",
+                    loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                    "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                    zeroRecords: "{{ 'zeroResultats'|trans }}",
+                    emptyTable: "{{ 'tableVide'|trans }}",
+                    "paginate": {
+                        "first": "{{ 'page.premiere'|trans }}",
+                        "last": "{{ 'page.derniere'|trans }}",
+                        "next": "{{ 'page.suivante'|trans }}",
+                        "previous": "{{ 'page.precedente'|trans }}"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+            if (callback != null) {
+                callback(table, parametres, $progressBar);
+            }
+            return table;
+        }
+    </script>
+    <script type="text/javascript">
+        "use strict";
+        var stocksModifies = Array();
+        $(document).ready(function () {
+            chargerOngletStocksHebergement({{ entity.id }});
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.duplique-stocks', 'click', function (e) {
+                var datas = $(this).data();
+                dupliquerStocksLogement(datas.logement_id,datas.periode_type_id);
+            });
+            $(document).delegate('.table-hebergement-stocks input[name^="stocks"]', 'change', function (e) {
+                modificationStock($(this));
+            });
+            $(document).on('resize', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+        });
+        function modificationStock($obj) {
+            var datas = $obj.data();
+            if (stocksModifies[datas.logement] == null) {
+                stocksModifies[datas.logement] = Array();
+            }
+            if (stocksModifies[datas.logement][datas.periode] == null) {
+                stocksModifies[datas.logement][datas.periode] = 0;
+            }
+            stocksModifies[datas.logement][datas.periode] = $obj.val();
+        }
+        //        copie le premier stock du logement dans le tableau sur les autres stocks
+        function dupliquerStocksLogement(logementId,typePeriodeId) {
+            var $ref = $('input[data-logement=' + logementId + '][data-type_periode='+typePeriodeId+']:first');
+            var valeur = $ref.val();
+            $ref.attr('value', valeur);
+            $('input[data-logement=' + logementId + '][data-type_periode='+typePeriodeId+']').each(function () {
+                $(this).val(valeur);
+                $(this).attr('value', valeur);
+                modificationStock($(this));
+            });
+        }
+        function chargerTableauStocks(table, parametres, $progressBar) {
+            var logements = Array();
+            logements['logements'] = Array();
+            for (var i = 0; i < parametres.logements.length; i++) {
+                logements['logements'][i] = parametres.logements[i].id;
+            }
+            ajouterLogementLocatifTableau(table, logements, parametres, $progressBar);
+        }
+        function ajouterLogementLocatifTableau(table, logements, parametres, $progressBar) {
+            $.post(
+                    "{{ path('logement_charger_locatif') }}",
+                    {'logements[]': logements['logements']},
+                    function (datas) {
+                        var donnees = Array();
+                        var data = null;
+                        for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
+                            donnees[iDatas] = Array();
+                            data = datas['logements'][iDatas];
+                            donnees[iDatas]['logement'] = '<div><span data-logement_id="' + data.logementUnifie.id + '" data-periode_type_id="'+parametres.typePeriode.id+'" title="copie le stock de la première période de ce logement sur toutes les périodes du logement" class="duplique-stocks glyphicon glyphicon-play pull-right"> </span>'+data.nom + '</div>';
+                            var attribut = null;
+                            for (var i = 0; i < data.periodes.length; i++) {
+
+                                if (data.periodes[i].type.id == parametres.typePeriode.id) {
+                                    attribut = 'periode' + data.periodes[i].id;
+                                    donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i], data.periodes[i].stock);
+                                }
+                            }
+                            chargerProgressBar($progressBar, (parseFloat($progressBar.attr('aria-valuenow')) + parametres.pasProgressBar));
+                            if ($progressBar.attr('aria-valuenow') >= 100) {
+                                $progressBar.closest('.progress').remove();
+                            }
+                        }
+                        table.rows.add(donnees).draw();
+                        if (datas['suivant'] != null) {
+                            var i = 0;
+                            while (i < logements['logements'].length && logements['logements'][i] != datas['suivant']) {
+                                i++;
+                            }
+                            var indice = i;
+                            var newLogements = Array();
+                            newLogements['logements'] = Array();
+                            for (indice = i; indice < logements['logements'].length; indice++) {
+                                newLogements['logements'].push(logements['logements'][indice]);
+                            }
+                            ajouterLogementLocatifTableau(table, newLogements, parametres, $progressBar);
+                        }
+                    }, 'json'
+            );
+        }
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+                            var idTypePeriode = null;
+                            chargerFournisseurHebergements(idHebergement, typePeriodes, function (data, idHebergement, typePeriodes) {
+                                for (var i = 0; i < typePeriodes.length; i++) {
+                                    if (typePeriodes[i].periodes != null && typePeriodes[i].periodes.length > 0) {
+                                        idTypePeriode = typePeriodes[i].id;
+                                        $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
+                                        var colonnes = [{'mDataProp': "logement", title: 'logement'}];
+                                        var debut = null;
+                                        var fin = null;
+                                        var moisDebut = null;
+                                        var jourDebut = null;
+                                        var moisFin = null;
+                                        var jourFin = null;
+                                        var attribut = null;
+                                        var stock = null;
+                                        for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
+                                            debut = new Date(typePeriodes[i].periodes[k].debut.date);
+                                            fin = new Date(typePeriodes[i].periodes[k].fin.date);
+                                            moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
+                                            jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
+                                            moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
+                                            jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
+                                            attribut = 'periode' + typePeriodes[i].periodes[k].id;
+                                            colonnes.push({
+                                                mDataProp: attribut,
+                                                title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
+                                            });
+                                        }
+
+                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+
+                                        for (var j = 0; j < data.fournisseurHebergements.length; j++) {
+                                            var $panelFournisseur = $('<div class="panel panel-default"> <div class="panel-heading"> <div class="panel-title"> <h2> <a data-toggle="collapse" href="#stocks_type_periode_' + typePeriodes[i].id + '_fournisseur_' + data.fournisseurHebergements[j].fournisseur.id + '">' + data.fournisseurHebergements[j].fournisseur.enseigne + '</a> </h2> </div> </div> <div id="stocks_type_periode_' + typePeriodes[i].id + '_fournisseur_' + data.fournisseurHebergements[j].fournisseur.id + '" class="panel-collapse collapse in"></div> </div>');
+                                            $div.append($panelFournisseur);
+                                            var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap display" width="100%" id="type-periode-' + idTypePeriode + '-indice-' + data.fournisseurHebergements[j].fournisseur.id + '"></table>');
+                                            $panelFournisseur.find('#stocks_type_periode_' + idTypePeriode + '_fournisseur_' + data.fournisseurHebergements[j].fournisseur.id).append($tableau);
+                                            var donnees = {
+                                                hebergement: {id: idHebergement},
+                                                typePeriode: {id: idTypePeriode},
+                                                fournisseur: {
+                                                    id: data.fournisseurHebergements[j].fournisseur.id
+                                                },
+                                                logements: data.fournisseurHebergements[j].logements,
+                                                nbTotalLogements: data.nbLogements,
+                                                pasProgressBar: 100 / data.nbLogements
+                                            };
+                                            var table = genererDataTables($tableau, colonnes, donnees, $progressBar, function (table, parametres, $progressBar) {
+                                                chargerTableauStocks(table, parametres, $progressBar);
+                                            });
+                                        }
+                                    }
+                                }
+
+                            });
+                            $conteneur.append('<button data-loading-text="<span class=\'glyphicon glyphicon-refresh glyphicon-refresh-animate\'></span> Enregistrement en cours" type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
+                        });
+                    }, 'json');
+        }
+        function genererInputStock(idLogementUnifie, periode, stock) {
+            return '<input data-logement="' + idLogementUnifie + '" data-type_periode="' + periode.type.id + '" data-periode="' + periode.id + '" name="stocks[' + idLogementUnifie + '][' + periode.id + ']" class="form-control" type="text" size="2" maxlength="2" value="' + stock + '"/>';
+        }
+        function chargerFournisseurHebergements(idHebergement, typePeriodes, callback) {
+            var url = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}";
+            url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
+            $.get(
+                    url,
+                    function (data) {
+                        if (callback != null) {
+                            callback(data, idHebergement, typePeriodes);
+                        }
+                    },
+                    'json'
+            )
+        }
+        function chargerProgressBar($progressBar, valeur) {
+            $progressBar.attr('aria-valuenow', parseFloat(valeur));
+            $progressBar.css('width', parseFloat(valeur) + '%');
+            $progressBar.html(parseInt(valeur) + '%');
+        }
+        /**
+         * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
+         * @param $conteneur
+         * @param $progressBar
+         */
+        function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
+            $.post("{{ path('periode_type_periode_onglets') }}",
+                    {'idConteneur': $conteneur.attr('id')},
+                    function (html) {
+                        if ($progressBar != null) {
+                            chargerProgressBar($progressBar, 100);
+                        }
+                        $conteneur.html(html);
+                        if (callback != null) {
+                            callback(html);
+                        }
+                    }
+            ), 'html';
+        }
+        function enregistrerStocks() {
+            var $button = $(this);
+            var $element = $button.parent();
+            var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+            $button.button('loading');
+//            $reponse.html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
+
+            if (stocksModifies.length > 0) {
+                var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+                $.ajax({
+                    url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                    type: 'POST',
+                    data: {"stocks": stocksModifies},
+                    success: function (json) {
+                        if (json.valid) {
+                            stocksModifies = Array();
+                            $reponse.html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
+                            $button.button('reset');
+                        } else {
+                            $reponse.html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+                            $button.button('reset');
+                        }
+                    }
+                }, 'json');
+            } else {
+                $reponse.html('<div class="alert alert-info">{{ 'enregistrement_stock.aucun'|trans }}</div>');
+                $button.button('reset');
+            }
+        }
+    </script>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td {
+            height: 50px;
+        }
+
+        .duplique-stocks:hover {
+            cursor: pointer;
+        }
+        /*.duplique-stocks {*/
+            /*float: right;*/
+        /*}*/
+
+        th.logement, td.logement {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+||||||| merged common ancestors
+=======
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td{
+            height: 50px;
+        }
+        th.logement,td.logement{
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+>>>>>>> gestion des stocks dans la fiche hébergement
+{% endblock %}
+>>>>>>> 99139ca... gestion des stocks dans la fiche hébergement
+>>>>>>> 80adf90... gestion des stocks dans la fiche hébergement
