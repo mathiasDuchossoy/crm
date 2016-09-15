@@ -2,6 +2,9 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeS
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\PrestationAnnexeStationRepository
+    associationOverride:
+        fournisseurPrestationAnnexe:
+            inversedBy: prestationAnnexeStations
     manyToOne:
         prestationAnnexeStationUnifie:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie

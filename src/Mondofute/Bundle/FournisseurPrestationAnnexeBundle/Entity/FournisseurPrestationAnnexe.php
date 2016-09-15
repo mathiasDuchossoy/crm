@@ -1,6 +1,18 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 
 /**
  * FournisseurPrestationAnnexe
@@ -16,41 +28,61 @@ class FournisseurPrestationAnnexe
      */
     private $type;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
+     * @var FournisseurPrestationAnnexeCapacite
      */
     private $capacite;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour
+     * @var FournisseurPrestationAnnexeDureeSejour
      */
     private $dureeSejour;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $tarifs;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     * @var PrestationAnnexe
      */
     private $prestationAnnexe;
     /**
      * @var integer
      */
     private $modeAffectation;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeHebergements;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeLogements;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeStations;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tarifs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tarifs = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
+        $this->prestationAnnexeFournisseurs = new ArrayCollection();
+        $this->prestationAnnexeHebergements = new ArrayCollection();
+        $this->prestationAnnexeLogements = new ArrayCollection();
+        $this->prestationAnnexeStations = new ArrayCollection();
     }
 
     /**
@@ -98,7 +130,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get capacite
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
+     * @return FournisseurPrestationAnnexeCapacite
      */
     public function getCapacite()
     {
@@ -108,11 +140,11 @@ class FournisseurPrestationAnnexe
     /**
      * Set capacite
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite $capacite
+     * @param FournisseurPrestationAnnexeCapacite $capacite
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function setCapacite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite $capacite = null)
+    public function setCapacite(FournisseurPrestationAnnexeCapacite $capacite = null)
     {
         $this->capacite = $capacite;
 
@@ -122,7 +154,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get dureeSejour
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour
+     * @return FournisseurPrestationAnnexeDureeSejour
      */
     public function getDureeSejour()
     {
@@ -132,11 +164,11 @@ class FournisseurPrestationAnnexe
     /**
      * Set dureeSejour
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour $dureeSejour
+     * @param FournisseurPrestationAnnexeDureeSejour $dureeSejour
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function setDureeSejour(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour $dureeSejour = null)
+    public function setDureeSejour(FournisseurPrestationAnnexeDureeSejour $dureeSejour = null)
     {
         $this->dureeSejour = $dureeSejour;
 
@@ -146,11 +178,11 @@ class FournisseurPrestationAnnexe
     /**
      * Add tarif
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif
+     * @param PrestationAnnexeTarif $tarif
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function addTarif(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif)
+    public function addTarif(PrestationAnnexeTarif $tarif)
     {
         $this->tarifs[] = $tarif->setPrestationAnnexe($this);
 
@@ -160,9 +192,9 @@ class FournisseurPrestationAnnexe
     /**
      * Remove tarif
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif
+     * @param PrestationAnnexeTarif $tarif
      */
-    public function removeTarif(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif)
+    public function removeTarif(PrestationAnnexeTarif $tarif)
     {
         $this->tarifs->removeElement($tarif);
     }
@@ -170,7 +202,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get tarifs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTarifs()
     {
@@ -180,7 +212,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -190,11 +222,11 @@ class FournisseurPrestationAnnexe
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -204,11 +236,11 @@ class FournisseurPrestationAnnexe
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
+     * @param FournisseurPrestationAnnexeTraduction $traduction
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function addTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
+    public function addTraduction(FournisseurPrestationAnnexeTraduction $traduction)
     {
         $this->traductions[] = $traduction->setPrestationAnnexe($this);
 
@@ -218,9 +250,9 @@ class FournisseurPrestationAnnexe
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction
+     * @param FournisseurPrestationAnnexeTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction $traduction)
+    public function removeTraduction(FournisseurPrestationAnnexeTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -228,7 +260,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -238,7 +270,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get prestationAnnexe
      *
-     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
+     * @return PrestationAnnexe
      */
     public function getPrestationAnnexe()
     {
@@ -248,11 +280,11 @@ class FournisseurPrestationAnnexe
     /**
      * Set prestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe
+     * @param PrestationAnnexe $prestationAnnexe
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function setPrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnexe = null)
+    public function setPrestationAnnexe(PrestationAnnexe $prestationAnnexe = null)
     {
         $this->prestationAnnexe = $prestationAnnexe;
 
@@ -281,5 +313,141 @@ class FournisseurPrestationAnnexe
         $this->modeAffectation = $modeAffectation;
 
         return $this;
+    }
+
+    /**
+     * Add prestationAnnexeFournisseur
+     *
+     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeFournisseur
+     *
+     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     */
+    public function removePrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs->removeElement($prestationAnnexeFournisseur);
+    }
+
+    /**
+     * Get prestationAnnexeFournisseurs
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeFournisseurs()
+    {
+        return $this->prestationAnnexeFournisseurs;
+    }
+
+    /**
+     * Add prestationAnnexeHebergement
+     *
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeHebergement
+     *
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
+     */
+    public function removePrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
+    }
+
+    /**
+     * Get prestationAnnexeHebergements
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeHebergements()
+    {
+        return $this->prestationAnnexeHebergements;
+    }
+
+    /**
+     * Add prestationAnnexeLogement
+     *
+     * @param PrestationAnnexeLogement $prestationAnnexeLogement
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeLogement
+     *
+     * @param PrestationAnnexeLogement $prestationAnnexeLogement
+     */
+    public function removePrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements->removeElement($prestationAnnexeLogement);
+    }
+
+    /**
+     * Get prestationAnnexeLogements
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeLogements()
+    {
+        return $this->prestationAnnexeLogements;
+    }
+
+    /**
+     * Add prestationAnnexeStation
+     *
+     * @param PrestationAnnexeStation $prestationAnnexeStation
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
+    {
+        $this->prestationAnnexeStations[] = $prestationAnnexeStation->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeStation
+     *
+     * @param PrestationAnnexeStation $prestationAnnexeStation
+     */
+    public function removePrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
+    {
+        $this->prestationAnnexeStations->removeElement($prestationAnnexeStation);
+    }
+
+    /**
+     * Get prestationAnnexeStations
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeStations()
+    {
+        return $this->prestationAnnexeStations;
     }
 }

@@ -1,75 +1,126 @@
-{% stylesheets 'css/bootstrap.css' 'css/menu.css' 'css/bootstrap-datepicker.css' 'css/bootstrap-datetimepicker.css' %}
-<link rel="stylesheet" href="{{ asset_url }}"/>
-{% endstylesheets %}
+{#{% stylesheets 'css/bootstrap.css' 'css/menu.css' 'css/bootstrap-datepicker.css' 'css/bootstrap-datetimepicker.css' %}#}
+{#<link rel="stylesheet" href="{{ asset_url }}"/>#}
+{#{% endstylesheets %}#}
 {% if formAjax is defined %}
     {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% endif %}
 
-{#{{ dump(fournisseurs) }}#}
-<div class="panel panel-default">
-    <!-- Default panel contents -->
-    {% for fournisseur in fournisseurs %}
-        {#<div class="panel-heading">#}
-            {#<div class="checkbox">#}
-                {#<label><input type="checkbox" value="">{{ fournisseur.enseigne }}</label>#}
-            {#</div>#}
-        {#</div>#}
-        {#<div class="panel-body">#}
-            {#<p>...</p>#}
-        {#</div>#}
-        <!-- List group -->
-        {#<ul class="list-group">#}
-            {#{% for fournisseurHebergement in fournisseur.hebergements %}#}
-                {#{% set hebergementUnifie =  fournisseurHebergement.hebergement %}#}
-                {#{% for hebergement in hebergementUnifie.hebergements %}#}
-                    {#{% if hebergement.site.crm == 1 %}#}
-                        {#{% set iTraduc = 0 %}#}
-                        {#{% for traduction in hebergement.traductions %}#}
-                            {#{% if traduction.langue.code == app.request.locale %}#}
-                                {#<li class="list-group-item">#}
-                                    {#<div class="checkbox">#}
-                                        {#<label><input type="checkbox" value="">{{ traduction.nom }}</label>#}
-                                    {#</div>#}
-                                {#</li>#}
-                            {#{% endif %}#}
-                        {#{% endfor %}#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
-            {#{% endfor %}#}
-        {#</ul>#}
+{#<div class="panel panel-default">#}
+<!-- Default panel contents -->
 
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingTwo">
-                    <h4 class="panel-title">
-                        {#<div class="row">#}
-                            {#<div class=""                            #}
-                        {#</div>#}
-                        <div class="checkbox">
-                            <label><input type="checkbox" value="">{{ fournisseur.enseigne }}</label>
+<ul class="nav nav-tabs">
+    {#{% set personalisable =  true %}#}
+    {% set iSite = 0 %}
+    {% for site in sites %}
+        {#{% if (personalisable == false and site.vars.value.site.crm == true) or (personalisable == true) %}#}
+        <li id="onglet_data_site_{{ prestationAnnexeId }}_{{ site.id }}"
+            {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
+            <a data-toggle="tab"
+               href="#data_site_{{ prestationAnnexeId }}_{{ site.id }}">
+                {{ site.libelle }}
+            </a>
+        </li>
+        {#{% endif %}#}
+    {% endfor %}
+</ul>
+<div class="tab-content" style="padding:20px;">
+    {% set iSite = 0 %}
+    {% for site in sites %}
+        <div id="data_site_{{ prestationAnnexeId }}_{{ site.id }}"
+             class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                {#data-crm="{{ hebergement.vars.value.site.crm | number_format }}"#}
+        >
+            {% for fournisseurProduit in fournisseurProduits %}
+                {% set FournisseurExists = false %}
+                {% if prestationAnnexeFournisseurs is defined %}
+                    {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
+                        {#{% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}#}
+                            {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
+                            == fournisseurProduit.id
+                            and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
+                                {% set FournisseurExists = true %}
+                            {% endif %}
+                        {#{% endif %}#}
+                    {% endfor %}
+                {% endif %}
+
+                {% set hebergementExists = false %}
+                {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined %}
+                    {% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}
+                    {% set hebergementExists = true %}
+                {% endif %}
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab"
+                             id="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}">
+                            <h4 class="panel-title">
+                                <div class="checkbox">
+                                    <label><input type="checkbox"
+                                                {% if FournisseurExists == true %}
+                                                    checked="checked"
+                                                {% endif %}
+                                                  name="prestation_annexe_affectation[{{ prestationAnnexeId }}][{{ fournisseurProduit.id }}][{{ site.id }}]"
+                                        >
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           href="#collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}"
+                                           aria-controls="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}"
+                                           onclick="chargerHebergements('{{ prestationAnnexeId }}' , '{{ site.id }}' , {{ fournisseurProduit.id }});return true;"
+                                           aria-expanded="
+                                                {% if FournisseurExists == true or hebergementExists == true %}
+                                                true
+                                                {% else %}
+                                                false
+                                                {% endif %}
+                                           "
+                                        >
+                                            {{ fournisseurProduit.enseigne }}
+                                        </a>
+                                    </label>
+                                </div>
+                            </h4>
                         </div>
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Collapsible Group Item #2
+                        <div id="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}"
+                             class="panel-collapse collapse
+                                {% if FournisseurExists == true or hebergementExists == true %}
+                                in
+                                {% endif %}
+                            " role="tabpanel"
+                             aria-labelledby="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}">
+                            {#<div class="panel-body" id="list_hebergements_{{ fournisseur.id }}_{{prestationAnnexeId}}">#}
+                            <ul class="list-group"
+                                id="list_hebergements_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.id }}"
+                            >
+                                {% if FournisseurExists == true or hebergementExists == true %}
+                                    {#{% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}#}
+                                    {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-hebergement.html.twig') with {'siteId' : site.id , 'hebergements' : hebergement} %}
+                                {% endif %}
+                                {#{% if prestationAnnexeFournisseurs is defined %}#}
+                                {#{% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}#}
+                                {#{% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}#}
+                                {#{% if prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.id and prestationAnnexeFournisseur.vars.value.site.id == site.id %}#}
+                                {#{% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-hebergement.html.twig') with {'siteId' : site.id} %}#}
+                                {#{% endif %}#}
+                                {#{% endif %}#}
+                                {#{% endfor %}#}
+                                {#{% endif %}#}
 
-
-                        </a>
-
-                    </h4>
-                </div>
-                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    <div class="panel-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            </ul>
+                            {#</div>#}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
+
         </div>
+
     {% endfor %}
 </div>
+{#</div>#}
 
-{% javascripts
-'js/jquery.min.js'
-'js/bootstrap.js'
-'js/bootstrap-datepicker.js'
-'js/bootstrap-datetimepicker.js' %}
-<script src="{{ asset_url }}"></script>
-{% endjavascripts %}
+{#{% javascripts#}
+{#'js/jquery.min.js'#}
+{#'js/bootstrap.js'#}
+{#'js/bootstrap-datepicker.js'#}
+{#'js/bootstrap-datetimepicker.js' %}#}
+{#<script src="{{ asset_url }}"></script>#}
+{#{% endjavascripts %}#}

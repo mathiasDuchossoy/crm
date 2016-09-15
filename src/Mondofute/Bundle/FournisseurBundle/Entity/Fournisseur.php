@@ -96,6 +96,7 @@ class Fournisseur extends Moral
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
         $this->prestationAnnexes = new ArrayCollection();
+//        $this->id = $this->setId(parent::getId());
     }
 
     /**
@@ -113,10 +114,6 @@ class Fournisseur extends Moral
     {
         $this->id = $id;
     }
-
-//    public function setId($id){
-//        $this->id =
-//    }
 
     /**
      * Add interlocuteur

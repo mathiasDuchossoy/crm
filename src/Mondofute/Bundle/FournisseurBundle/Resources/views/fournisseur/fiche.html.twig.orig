@@ -1446,6 +1446,32 @@
             var $myForm = $('#form_prestation_annexe');
             if (!$myForm[0].checkValidity()) {
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
+
+//                $('<input type="submit">').hide().appendTo($myForm).on('click',function(types , selector, data, fn, one){
+//                    console.log($myForm.serializeArray());
+//                    var dataArray = $myForm.serializeArray();
+//                    var typeEmpty = false;
+//                    $.each(dataArray , function (index, element){
+//                        if(element.name == "fournisseur[prestationAnnexes]["+prestationAnnexeId+"][modeAffectation]"){
+//                            if(elemnt.value == 'undefined')
+//                            {
+//                                typeEmpty = true;
+//                            }
+//                            console.log(element.value);
+//                        }
+//
+//                    });
+////                    dataArray.each(function (index, element){
+////                       console.log(element.val());
+////                    });
+//                    console.log(types);
+//                    console.log(selector);
+//                    console.log(data);
+//                    console.log(fn);
+//                    console.log(one);
+////                    types.preventDefault();
+//                }).click().remove();
+
                 return false;
             }
             else {
@@ -1500,6 +1526,52 @@
         }
 
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.id %}
+
+            var $collectionHolder{{ index }};
+            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
+            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
+            $collectionHolder{{ index }}.find('.li_tarif').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
+            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
+            $addTagLink{{ index }}.on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            });
+
+            {% for key, tarif in prestationAnnexe.tarifs %}
+                {% set name = key %}
+                var $collectionHolderperiode_validite{{ name }}{{ index }};
+                var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+                var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+                $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
+                    addTagFormDeleteLink($(this));
+                });
+                $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+                $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+                    e.preventDefault();
+                    addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+                });
+            {% endfor %}
+
+        {% endfor %}
+
+<<<<<<< 30cc250c3d5dafb009c19445d271d3fda167c4ac
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $tagFormLi.append($removeFormA);
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $tagFormLi.remove();
+            });
+        }
+
+        {% for prestationAnnexe in fournisseur.prestationAnnexes %}
             {% set index = prestationAnnexe.prestationAnnexe.id %}
 
             var $collectionHolder{{ index }};
@@ -1535,6 +1607,54 @@
 
         {% endfor %}
 
+||||||| merged common ancestors
+        {#function addTagFormDeleteLink($tagFormLi) {#}
+            {#var $removeFormA = $('<a href="#">Supprimer</a>');#}
+            {#$tagFormLi.append($removeFormA);#}
+            {#$removeFormA.on('click', function(e) {#}
+                {#e.preventDefault();#}
+                {#$tagFormLi.remove();#}
+            {#});#}
+        {#}#}
+
+        {#{% for prestationAnnexe in fournisseur.prestationAnnexes %}#}
+            {#{% set index = prestationAnnexe.prestationAnnexe.id %}#}
+
+            {#var $collectionHolder{{ index }};#}
+            {#var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');#}
+            {#var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});#}
+            {#$collectionHolder{{ index }} = $('ul.tarifs{{ index }}');#}
+            {#$collectionHolder{{ index }}.find('.li_tarif').each(function() {#}
+                {#addTagFormDeleteLink($(this));#}
+            {#});#}
+            {#$collectionHolder{{ index }}.append($newLinkLi{{ index }});#}
+            {#$collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);#}
+            {#$addTagLink{{ index }}.on('click', function(e) {#}
+                {#e.preventDefault();#}
+                {#addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');#}
+            {#});#}
+
+            {#{% for key, tarif in prestationAnnexe.tarifs %}#}
+                {#{% set name = key %}#}
+                {#var $collectionHolderperiode_validite{{ name }}{{ index }};#}
+                {#var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');#}
+                {#var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});#}
+                {#$collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');#}
+                {#$collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {#}
+                    {#addTagFormDeleteLink($(this));#}
+                {#});#}
+                {#$collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});#}
+                {#$collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);#}
+                {#$addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {#}
+                    {#e.preventDefault();#}
+                    {#addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');#}
+                {#});#}
+            {#{% endfor %}#}
+
+        {#{% endfor %}#}
+
+=======
+>>>>>>> gestion des affectations fournisseurs et hebergement en cours
         function periodevaliditeDatetimePicker(){
 
             $('.datetimepicker').datetimepicker({

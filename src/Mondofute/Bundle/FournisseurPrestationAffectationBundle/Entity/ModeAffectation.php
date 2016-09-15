@@ -6,11 +6,11 @@
  * Time: 13:55
  */
 
-namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
+namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
 
 /**
  * Class Type
- * @package Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity
+ * @package Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity
  */
 class ModeAffectation
 {

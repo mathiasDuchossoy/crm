@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeFournisseurType;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeHebergementType;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -66,6 +69,38 @@ class FournisseurPrestationAnnexeType extends AbstractType
 //                'options'   => array(
 //                    'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
 //                )
+            ))
+            ->add('modeAffectation', ChoiceType::class, array(
+                'choices' => array(
+                    ModeAffectation::getLibelle(ModeAffectation::Station) => ModeAffectation::Station,
+                    ModeAffectation::getLibelle(ModeAffectation::Fournisseur) => ModeAffectation::Fournisseur
+                ),
+//                "placeholder" => " --- choisir un type ---",
+                'choices_as_values' => true,
+//                'label' => 'type',
+//                'translation_domain' => 'messages',
+                'expanded' => true,
+                'required' => true,
+                'attr'      => array(
+                    'onchange'   => 'chargerAffectations(this)',
+                    'class'     => 'form-inline'
+                ),
+//                'preferred_choices' => array(ModeAffectation::Station)
+                'data'      => ModeAffectation::Station
+            ))
+            ->add('prestationAnnexeFournisseurs', CollectionType::class, array(
+                'entry_type' => PrestationAnnexeFournisseurType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'translation_domain' => 'messages',
+            ))
+            ->add('prestationAnnexeHebergements', CollectionType::class, array(
+                'entry_type' => PrestationAnnexeHebergementType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'translation_domain' => 'messages',
             ))
         ;
     }

@@ -39,6 +39,22 @@ class FournisseurPrestationAnnexe
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
      */
     private $prestationAnnexe;
+    /**
+     * @var integer
+     */
+    private $modeAffectation;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexeFournisseurs;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexeHebergements;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexeLogements;
 
     /**
      * Constructor
@@ -253,5 +269,131 @@ class FournisseurPrestationAnnexe
         $this->prestationAnnexe = $prestationAnnexe;
 
         return $this;
+    }
+
+    /**
+     * Get modeAffectation
+     *
+     * @return integer
+     */
+    public function getModeAffectation()
+    {
+        return $this->modeAffectation;
+    }
+
+    /**
+     * Set modeAffectation
+     *
+     * @param integer $modeAffectation
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function setModeAffectation($modeAffectation)
+    {
+        $this->modeAffectation = $modeAffectation;
+
+        return $this;
+    }
+
+    /**
+     * Add prestationAnnexeFournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeFournisseur(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeFournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     */
+    public function removePrestationAnnexeFournisseur(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs->removeElement($prestationAnnexeFournisseur);
+    }
+
+    /**
+     * Get prestationAnnexeFournisseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexeFournisseurs()
+    {
+        return $this->prestationAnnexeFournisseurs;
+    }
+
+    /**
+     * Add prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     */
+    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
+    }
+
+    /**
+     * Get prestationAnnexeHebergements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexeHebergements()
+    {
+        return $this->prestationAnnexeHebergements;
+    }
+
+    /**
+     * Add prestationAnnexeLogement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeLogement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     */
+    public function removePrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements->removeElement($prestationAnnexeLogement);
+    }
+
+    /**
+     * Get prestationAnnexeLogements
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexeLogements()
+    {
+        return $this->prestationAnnexeLogements;
     }
 }

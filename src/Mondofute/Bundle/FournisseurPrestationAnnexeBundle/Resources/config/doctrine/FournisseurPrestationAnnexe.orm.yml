@@ -39,6 +39,22 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction
             mappedBy: prestationAnnexe
             cascade: ['persist','remove']
+        prestationAnnexeFournisseurs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
+        prestationAnnexeStations:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
+        prestationAnnexeHebergements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
+        prestationAnnexeLogements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur

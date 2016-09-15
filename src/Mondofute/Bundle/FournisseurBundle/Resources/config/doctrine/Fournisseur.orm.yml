@@ -4,12 +4,13 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
     attributeOverride:
         id:
-            type: integer
+#            column: id
             id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
+            type: integer
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
     associationOverride:
         moyenComs:
             joinTable:
