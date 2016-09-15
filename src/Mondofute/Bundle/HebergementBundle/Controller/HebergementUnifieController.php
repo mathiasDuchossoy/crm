@@ -40,6 +40,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -1346,9 +1347,6 @@ class HebergementUnifieController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
-//        $typePeriodes = new ArrayCollection();
-//        $periodes = $em->getRepository(Periode::class)->findAll();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
@@ -1705,9 +1703,7 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-//        $this->chargerCatalogue($entityUnifie);
-//        dump($entityUnifie);
-//        die;
+
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -1717,7 +1713,6 @@ class HebergementUnifieController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
-
 
     private function deleteTarifSites(ServiceHebergementTarif $tarif)
     {
