@@ -10,6 +10,7 @@ Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode:
     fields:
         actif:
             type: boolean
+
     manyToOne:
         periode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
@@ -21,9 +22,9 @@ Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode:
 #            targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
 #            joinColumn:
 #                name: periode_id
-#                referencedColumnName: periode_id
+#                referencedColumnName: periode
 #            joinColumn:
 #                name: logement_id
-#                referencedColumnName: logement_id
+#                referencedColumnName: logement
 
     lifecycleCallbacks: {  }

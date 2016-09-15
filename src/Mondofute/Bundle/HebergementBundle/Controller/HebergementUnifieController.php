@@ -39,6 +39,9 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -191,7 +194,9 @@ class HebergementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Hebergement $entitySite */
-                                    $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                                    $entitySite = $entityUnifie->getHebergements()->filter(function (
+                                        Hebergement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($entitySite)) {
@@ -1326,6 +1331,8 @@ class HebergementUnifieController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
+        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+        $periodes = $em->getRepository(Periode::class)->findAll();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
@@ -1582,7 +1589,9 @@ class HebergementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Hebergement $entitySite */
-                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
+                            $site
+                        ) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1592,7 +1601,10 @@ class HebergementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau hebergementVisuel
                             if (!empty($entityVisuel->getId())) {
                                 // on récupère l'hebergementVisuel pour le modifier
-                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array('hebergement' => $entitySite, 'visuel' => $originalVisuels->get($key)));
+                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array(
+                                    'hebergement' => $entitySite,
+                                    'visuel' => $originalVisuels->get($key)
+                                ));
                             }
                             // si l'hebergementVisuel est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($entityVisuel->getId()) || empty($entityVisuelSite)) {
@@ -1623,7 +1635,9 @@ class HebergementUnifieController extends Controller
                                     $traductionSites = $entityVisuelSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            HebergementVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1636,7 +1650,8 @@ class HebergementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementVisuel doit être actif sur le site ou non
                                 if (!empty($request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
                                 ) {
                                     $entityVisuelSite->setActif(true);
                                 } else {
@@ -1684,7 +1699,9 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-
+        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -1692,6 +1709,7 @@ class HebergementUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'typePeriodes' => $typePeriodes,
         ));
     }
 
@@ -1732,6 +1750,24 @@ class HebergementUnifieController extends Controller
                 }
             }
 
+        }
+    }
+
+    /**
+     * @param HebergementUnifie $hebergementUnifie
+     */
+    public function chargerCatalogue($hebergementUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($hebergementUnifie->getFournisseurs() as $fournisseurHebergement) {
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                /** @var LogementPeriode $logementPeriode */
+                foreach ($logement->getPeriodes() as $logementPeriode) {
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriode);
+                }
+            }
         }
     }
 
@@ -1894,7 +1930,6 @@ class HebergementUnifieController extends Controller
                 $em->flush();
             }
         } catch (ForeignKeyConstraintViolationException $except) {
-//            dump($except->getMessage());die;
             /** @var ForeignKeyConstraintViolationException $except */
             switch ($except->getCode()) {
                 case 0:
