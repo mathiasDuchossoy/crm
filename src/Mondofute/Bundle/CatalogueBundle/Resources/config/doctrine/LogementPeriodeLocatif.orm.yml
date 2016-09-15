@@ -22,11 +22,11 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
             inverseBy: periode
             joinColumn:
                 name: periode_id
-                referencedColumnName: periode_id
+                referencedColumnName: id
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
             inversedBy: logement
             joinColumn:
                 name: logement_id
-                referencedColumnName: logement_id
+                referencedColumnName: id
     lifecycleCallbacks: {  }
