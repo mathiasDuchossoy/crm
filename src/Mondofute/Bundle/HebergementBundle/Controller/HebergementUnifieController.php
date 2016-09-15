@@ -22,6 +22,9 @@ use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -109,12 +112,12 @@ class HebergementUnifieController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Hebergement $entity */
-            foreach ($entityUnifie->getHebergements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($entityUnifie->getHebergements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
-            
+
             /** @var Hebergement $entity */
             foreach ($entityUnifie->getHebergements() as $keyHebergement => $entity) {
                 foreach ($entity->getEmplacements() as $keyEmplacement => $emplacement) {
@@ -174,7 +177,9 @@ class HebergementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Hebergement $entitySite */
-                                    $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                                    $entitySite = $entityUnifie->getHebergements()->filter(function (
+                                        Hebergement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($entitySite)) {
@@ -382,7 +387,7 @@ class HebergementUnifieController extends Controller
                 }
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null($entityUnifieSite = $emSite->find(HebergementUnifie::class , $entityUnifie))) {
+                if (is_null($entityUnifieSite = $emSite->find(HebergementUnifie::class, $entityUnifie))) {
                     $entityUnifieSite = new HebergementUnifie();
                     $entityUnifieSite->setId($entityUnifie->getId());
                     $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
@@ -529,8 +534,7 @@ class HebergementUnifieController extends Controller
                     ->setTypeHebergement($typeHebergementSite)
                     ->setClassement($classementSite)
                     ->setHebergementUnifie($entityUnifieSite)
-                    ->setActif($entity->getActif())
-                ;
+                    ->setActif($entity->getActif());
 //                GESTION DES EMPLACEMENTS
                 $this->gestionEmplacementsSiteDistant($site, $entity, $entitySite);
 
@@ -582,7 +586,9 @@ class HebergementUnifieController extends Controller
                             // *** récupération de l'hébergementVisuel correspondant sur la bdd distante ***
                             // récupérer l'hebergementVisuel original correspondant sur le crm
                             /** @var ArrayCollection $originalHebergementVisuels */
-                            $originalHebergementVisuel = $originalHebergementVisuels->filter(function (HebergementVisuel $element) use ($entityVisuel) {
+                            $originalHebergementVisuel = $originalHebergementVisuels->filter(function (
+                                HebergementVisuel $element
+                            ) use ($entityVisuel) {
                                 return $element->getVisuel() == $entityVisuel->getVisuel();
                             })->first();
                             unset($entityVisuelSite);
@@ -629,7 +635,9 @@ class HebergementUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            HebergementVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -640,7 +648,8 @@ class HebergementUnifieController extends Controller
                                     else {
                                         $traductionSite = new HebergementVisuelTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $entityVisuelSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -817,8 +826,11 @@ class HebergementUnifieController extends Controller
      * @param Hebergement $entitySite
      * @param EntityManager $emSite
      */
-    private function createHebergementVisuel(HebergementVisuel $entityVisuel, Hebergement $entitySite, EntityManager $emSite)
-    {
+    private function createHebergementVisuel(
+        HebergementVisuel $entityVisuel,
+        Hebergement $entitySite,
+        EntityManager $emSite
+    ) {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
@@ -1011,6 +1023,8 @@ class HebergementUnifieController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
+        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+        $periodes = $em->getRepository(Periode::class)->findAll();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 //        dump($entityUnifie); die;
@@ -1032,7 +1046,7 @@ class HebergementUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Hebergement $entity */
             foreach ($entityUnifie->getHebergements() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -1073,10 +1087,10 @@ class HebergementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($entityUnifie->getHebergements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($entityUnifie->getHebergements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -1241,7 +1255,9 @@ class HebergementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Hebergement $entitySite */
-                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
+                            $site
+                        ) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1251,7 +1267,10 @@ class HebergementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau hebergementVisuel
                             if (!empty($entityVisuel->getId())) {
                                 // on récupère l'hebergementVisuel pour le modifier
-                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array('hebergement' => $entitySite, 'visuel' => $originalVisuels->get($key)));
+                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array(
+                                    'hebergement' => $entitySite,
+                                    'visuel' => $originalVisuels->get($key)
+                                ));
                             }
                             // si l'hebergementVisuel est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($entityVisuel->getId()) || empty($entityVisuelSite)) {
@@ -1282,7 +1301,9 @@ class HebergementUnifieController extends Controller
                                     $traductionSites = $entityVisuelSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            HebergementVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1295,7 +1316,8 @@ class HebergementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementVisuel doit être actif sur le site ou non
                                 if (!empty($request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
                                 ) {
                                     $entityVisuelSite->setActif(true);
                                 } else {
@@ -1341,7 +1363,9 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-
+        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -1349,6 +1373,7 @@ class HebergementUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'typePeriodes' => $typePeriodes,
         ));
     }
 
@@ -1389,6 +1414,24 @@ class HebergementUnifieController extends Controller
                 }
             }
 
+        }
+    }
+
+    /**
+     * @param HebergementUnifie $hebergementUnifie
+     */
+    public function chargerCatalogue($hebergementUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($hebergementUnifie->getFournisseurs() as $fournisseurHebergement) {
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                /** @var LogementPeriode $logementPeriode */
+                foreach ($logement->getPeriodes() as $logementPeriode) {
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriode);
+                }
+            }
         }
     }
 

@@ -11,8 +11,6 @@ use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
  */
 class LogementPeriodeLocatif
 {
-
-
     /**
      * @var string
      */
@@ -24,24 +22,15 @@ class LogementPeriodeLocatif
     private $stock;
 
     /**
-     * @var Periode
+     * @var \Mondofute\Bundle\PeriodeBundle\Entity\Periode
      */
     private $periode;
 
     /**
-     * @var Logement
+     * @var \Mondofute\Bundle\LogementBundle\Entity\Logement
      */
     private $logement;
 
-    /**
-     * Get prixPublic
-     *
-     * @return string
-     */
-    public function getPrixPublic()
-    {
-        return $this->prixPublic;
-    }
 
     /**
      * Set prixPublic
@@ -58,13 +47,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get stock
+     * Get prixPublic
      *
-     * @return integer
+     * @return string
      */
-    public function getStock()
+    public function getPrixPublic()
     {
-        return $this->stock;
+        return $this->prixPublic;
     }
 
     /**
@@ -82,23 +71,23 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get periode
+     * Get stock
      *
-     * @return LogementPeriode
+     * @return integer
      */
-    public function getPeriode()
+    public function getStock()
     {
-        return $this->periode;
+        return $this->stock;
     }
 
     /**
      * Set periode
      *
-     * @param Periode $periode
+     * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode
      *
      * @return LogementPeriodeLocatif
      */
-    public function setPeriode(Periode $periode)
+    public function setPeriode(\Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode)
     {
         $this->periode = $periode;
 
@@ -106,26 +95,36 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get logement
+     * Get periode
      *
-     * @return LogementPeriode
+     * @return \Mondofute\Bundle\PeriodeBundle\Entity\Periode
      */
-    public function getLogement()
+    public function getPeriode()
     {
-        return $this->logement;
+        return $this->periode;
     }
 
     /**
      * Set logement
      *
-     * @param Periode $logement
+     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
      *
      * @return LogementPeriodeLocatif
      */
-    public function setLogement(Logement $logement)
+    public function setLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
     {
         $this->logement = $logement;
 
         return $this;
+    }
+
+    /**
+     * Get logement
+     *
+     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
+     */
+    public function getLogement()
+    {
+        return $this->logement;
     }
 }

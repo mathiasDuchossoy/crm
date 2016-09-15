@@ -18,13 +18,13 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
             type: integer
     oneToOne:
         periode:
-            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
             inverseBy: periode
             joinColumn:
                 name: periode_id
                 referencedColumnName: periode_id
         logement:
-            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
             inversedBy: logement
             joinColumn:
                 name: logement_id

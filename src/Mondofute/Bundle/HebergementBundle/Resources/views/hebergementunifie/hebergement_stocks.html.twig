@@ -1,0 +1,78 @@
+{#Onglets des types de période#}
+{#n'affiche rien si aucun type de période existe#}
+{% if typePeriodes|length > 0 %}
+    <ul class="nav nav-tabs">
+        {#Balaye les types de période#}
+        {% for typePeriode in typePeriodes %}
+            {#ne créer pas l'onglet si aucune période est associée au type#}
+            {% if typePeriode.periodes|length > 0 %}
+                <li class="{% if loop.index==1 %}active{% endif %}"
+                    id="onglet_data_hebergement_stocks_periode_{{ typePeriode.id }}">
+                    <a data-toggle="tab"
+                       href="#data_hebergement_stocks_periode_{{ typePeriode.id }}">{{ typePeriode | trans }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {#Contient les données par type de période#}
+    <div class="tab-content">
+        {#Balaye les types de période#}
+        {% for typePeriode in typePeriodes %}
+            {#Création des éléments seulement si le type de période coontient au moins une période#}
+            {% if typePeriode.periodes|length > 0 %}
+                {#zone à afficher / masquer par les onglets de type tabs#}
+                <div id="data_hebergement_stocks_periode_{{ typePeriode.id }}"
+                     class="tab-pane fade {% if loop.index==1 %}in active{% endif %}">
+                    {% for fournisseur in hebergementUnifie.fournisseurs %}
+                        <h2>{{ fournisseur.fournisseur.enseigne }}</h2>
+                        {#Tableau des stocks#}
+                        <table class="table-hebergement-stocks display table table-striped nowrap" cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+                                <th class="logement">Logement</th>
+                                {% for periode in typePeriode.periodes %}
+                                    <th>
+                                        du
+                                        {{ periode.debut|date('d-m-Y') }}<br/>
+                                        au
+                                        {{ periode.fin|date('d-m-Y') }}
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for logement in fournisseur.logements %}
+                                {% if logement.site.crm == true %}
+                                    <tr>
+                                        <td class="logement">
+                                            {% for traduction in logement.traductions %}
+                                                {% if traduction.langue.code == app.request.locale %}
+                                                    {{ traduction.nom }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        {% for periode in typePeriode.periodes %}
+                                            <td>
+                                                {% set stock = 0 %}
+                                                {% for logementPeriode in logement.periodes %}
+                                                    {% if logementPeriode.periode == periode %}
+                                                        {% set stock = logementPeriode.locatif.stock %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                                <input name="stocks[{{ logement.id }}][{{ periode.id }}]"
+                                                       type="text"
+                                                       size="2" maxlength="2" value="{{ stock }}"/>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
