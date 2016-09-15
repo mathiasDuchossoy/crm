@@ -275,9 +275,6 @@ assetic:
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
-#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
-#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
-#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
         datatables_js:

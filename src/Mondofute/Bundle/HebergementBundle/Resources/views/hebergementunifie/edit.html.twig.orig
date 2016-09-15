@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends '@MondofuteHebergement/hebergementunifie/fiche.html.twig' %}
 
 
@@ -237,3 +238,165 @@
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
+||||||| parent of 6d36bb6... gestion des stocks dans la fiche hébergement
+=======
+{% extends '@MondofuteHebergement/hebergementunifie/fiche.html.twig' %}
+
+
+{% block title %}
+    {{ 'modification de l\'hébergement ' | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification de l'hébergement
+{% endblock %}
+
+{% block body %}
+    {% set ongletHebergementStocks = 1 %}
+    {{ parent() }}
+{% endblock %}
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('hebergement_hebergement_index') }}">{{ 'retour.liste' | trans | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+
+{% endblock %}
+
+{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
+<<<<<<< HEAD
+{% block javascripts %}
+    <script type="text/javascript">
+        "use strict";
+        var langue = {
+            'enregistrer': {
+                'stock': "{{ 'enregistrer.stock' | trans }}",
+                'stock_ok': "{{ 'enregistrement_stock.ok'|trans }}",
+                'stock_pas_ok': "{{ 'enregistrement_stock.pas_ok'|trans }}",
+                'stock_aucun': "{{ 'enregistrement_stock.aucun'|trans }}",
+            }
+        };
+        var stocksModifies = Array();
+        var urls = {
+            'logementChargerLocatif': "{{ path('logement_charger_locatif') }}",
+            'periodeHebergementStocks': "{{ path('periode_type_periode_liste') }}",
+            'hebergementChargerHebergementFournisseur': "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}",
+            'catalogueEnregistrerStockLocatif': "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+            'periodeTypePeriodeOnglets': "{{ path('periode_type_periode_onglets') }}",
+        };
+        var datatableLangue = {
+            language: {
+                processing: "{{ 'processing'|trans }}",
+                search: "{{ 'rechercher'|trans }} :",
+                loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                zeroRecords: "{{ 'zeroResultats'|trans }}",
+                emptyTable: "{{ 'tableVide'|trans }}",
+                "paginate": {
+                    "first": "{{ 'page.premiere'|trans }}",
+                    "last": "{{ 'page.derniere'|trans }}",
+                    "next": "{{ 'page.suivante'|trans }}",
+                    "previous": "{{ 'page.precedente'|trans }}"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        };
+    </script>
+    {{ parent() }}
+    {% javascripts
+    'js/datatables.min.js'
+    'js/form.min.js'
+    'js/hebergement-edit.min.js'
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+//            transforme le button submit en bouton de type button
+            chargerOngletStocksHebergement({{ entity.id }});
+
+        });
+    </script>
+{% endblock %}
+{% block stylesheets %}
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+{% block javascript_page %}
+=======
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+//            gestion des table de type hebergement-stocks
+            $('.table-hebergement-stocks').DataTable({
+                paging: false,
+                info: false,
+                scrollX: true,
+                scrollY: false,
+                scrollCollapse: true,
+                fixedColumns: true,
+                scroller: {
+                    rowHeight: 30
+                },
+                "columnDefs": [
+                    { "orderable": true, "targets": 0 },
+                    { "orderable": false, "targets": '_all' },
+                    { "searchable": true, "targets": 0 },
+                    { "searchable": false, "targets": '_all' },
+                ],
+                language: {
+                    processing:     "{{ 'processing'|trans }}",
+                    search:         "{{ 'rechercher'|trans }} :",
+                    loadingRecords:  "{{ 'chargementEnCours'|trans }}...",
+                    zeroRecords:    "{{ 'zeroResultats'|trans }}",
+                    emptyTable:     "{{ 'tableVide'|trans }}",
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block stylesheets %}
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+    {{ parent() }}
+<<<<<<< HEAD
+    {% stylesheets 'css/datatables.css'
+    'css/hebergement-edit.min.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td{
+            height: 50px;
+        }
+        th.logement,td.logement{
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+{% endblock %}
+>>>>>>> 6d36bb6... gestion des stocks dans la fiche hébergement

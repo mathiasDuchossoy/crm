@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
@@ -874,3 +875,825 @@ jms_job_queue:
     queue_options:
         periode:
             max_concurrent_jobs: 1  # lance les jobs de type periode 1 par 1
+||||||| parent of 9ad1ae2... gestion des stocks dans la fiche hébergement
+=======
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: "@NucleusMoyenComBundle/Resources/config/services.yml"}
+    - { resource: services.yml }
+    - { resource: "@MondofuteMediaBundle/Resources/config/services.yml" }
+    - { resource: '../../src/deployBundle/parameters.yml', ignore_errors: true }
+    - { resource: '@MondofuteCoreBundle/Resources/config/config.yml' }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr_FR
+    sonata.media.provider.file.class: Mondofute\Bundle\MediaBundle\Provider\FileProvider
+    sonata.media.provider.image.class: Mondofute\Bundle\MediaBundle\Provider\ImageProvider
+    sonata.media.provider.youtube.class: Mondofute\Bundle\MediaBundle\Provider\YouTubeProvider
+    max_per_page: 25
+
+framework:
+    #esi:             ~
+    translator:      { fallbacks: ["%locale%"] }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enabled: true, enable_annotations: true }
+#    validation:      { enabled: true }
+    #serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+#        cookie_secure:  true
+#        cookie_httponly:  true
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'InfiniteFormBundle::form_theme.html.twig'
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        default_connection: crm
+        connections:
+            crm:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            skifute:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name_skifute%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+            francefute:
+                driver:   pdo_mysql
+                host:     "%database_host%"
+                port:     "%database_port%"
+                dbname:   "%database_name_francefute%"
+                user:     "%database_user%"
+                password: "%database_password%"
+                charset:  UTF8
+        types:
+            json: Sonata\Doctrine\Types\JsonType
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        default_entity_manager: crm
+        entity_managers:
+            crm:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: true
+                connection: crm
+                mappings:
+                    MondofuteGeographieBundle:  ~
+                    MondofuteLangueBundle:  ~
+                    MondofuteSiteBundle:  ~
+                    MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
+                    MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
+                    MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
+                    MondofutePrestationAnnexeBundle: ~
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
+                    MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+                    MondofuteFournisseurPrestationAffectationBundle: ~
+                    MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
+            skifute:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: false
+                connection: skifute
+                mappings:
+                    MondofuteGeographieBundle:  ~
+                    MondofuteLangueBundle:  ~
+                    MondofuteSiteBundle:  ~
+                    MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
+                    MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
+                    MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
+                    MondofutePeriodeBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
+                    MondofuteServiceBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Model'
+#                        D:\projets\v2\crm\www\vendor\friendsofsymfony\user-bundle\Resources\config\doctrine-mapping
+#                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/FOS/UserBundle/Resources/config/doctrine/model'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
+                    MondofutePrestationAnnexeBundle: ~
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
+                    MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+                    MondofuteFournisseurPrestationAffectationBundle: ~
+                    MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
+            francefute:
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                auto_mapping: false
+                connection: francefute
+                mappings:
+                    MondofuteGeographieBundle:  ~
+                    MondofuteLangueBundle:  ~
+                    MondofuteSiteBundle:  ~
+                    MondofuteAccueilBundle: ~
+                    MondofuteDomaineBundle: ~
+                    MondofuteStationBundle: ~
+                    MondofuteFournisseurBundle: ~
+                    MondofuteUniteBundle: ~
+                    MondofuteDescriptionForfaitSkiBundle: ~
+                    MondofuteChoixBundle: ~
+                    MondofuteUtilisateurBundle: ~
+                    MondofuteClientBundle: ~
+                    MondofuteCoreBundle: ~
+                    MondofuteHebergementBundle: ~
+                    MondofuteRemiseClefBundle: ~
+                    MondofuteTrancheHoraireBundle: ~
+                    MondofuteLogementBundle: ~
+                    MondofuteServiceBundle: ~
+                    MondofutePeriodeBundle: ~
+                    NucleusContactBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    NucleusMoyenComBundle:
+                        type: yml
+                        dir: Resources/config/doctrine
+                    FOSUserBundle:
+                        type: xml
+                        dir: '%kernel.root_dir%/../vendor/friendsofsymfony/user-bundle/Resources/config/doctrine-mapping'
+                        prefix: FOS\UserBundle\Model
+                        is_bundle: false # needed as we don't follow the standard convention for bundles
+                    ApplicationSonataMediaBundle: ~
+                    SonataMediaBundle: ~
+                    MondofuteMediaBundle: ~
+                    MondofutePrestationAnnexeBundle: ~
+                    HiDevCodePromoBundle: ~
+                    MondofuteCodePromoBundle: ~
+                    MondofuteLogementPeriodeBundle: ~
+                    MondofuteFournisseurPrestationAnnexeBundle: ~
+                    MondofuteFournisseurPrestationAffectationBundle: ~
+                    MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+# Assetic Configuration
+assetic:
+    debug:  true
+    use_controller: false
+#    bundles: ['FOSUserBundle']
+    filters:
+        cssrewrite: ~
+        lessphp:
+           file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
+           apply_to: ".less$"
+    assets:
+        hebergement_edit_js:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-fonctions.js"
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-evenements.js"
+            filters: [?yui_js]
+            output: js/hebergement-edit.min.js
+        form_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/form.js"
+            filters: [?yui_js]
+            output: js/form.min.js
+        type_periodes_onglets_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/type-periodes-onglets.js"
+            filters: [?yui_js]
+            output: js/type-periodes-onglets.min.js
+        progressbar_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/progressbar.js"
+            filters: [?yui_js]
+            output: js/progressbar.min.js
+        tarifs_locatif_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/tarifs-locatif.js"
+            filters: [?yui_js]
+            output: js/tarifs-locatif.min.js
+        jquery_js:
+            inputs:
+                - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
+#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
+            filters: [?yui_js]
+            output: js/jquery.min.js
+<<<<<<< HEAD
+        datatables_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/js/datatables.js"
+            filters: [?yui_js]
+            output: js/datatables.min.js
+        bootstrap_js:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
+           filters: [?yui_js]
+           output: js/bootstrap.js
+        bootstrap_datepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.nl.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min.js"
+              - "%kernel.root_dir%/../app/Resources/public/js/datepicker-type.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datepicker.js
+        bootstrap_datetimepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.de.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.nl.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datetimepicker.js
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+        datatables_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+            filters: [?yui_js]
+            output: js/datatables.min.js
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+        menu_css:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
+            output: css/menu.css
+        bootstrap_css:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+<<<<<<< HEAD
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+=======
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+>>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+           filters:
+               - lessphp
+               - cssrewrite
+           output: css/bootstrap.css
+        datatables_css:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/css/fixedColumns.bootstrap.min.css"
+            output: css/datatables.css
+        bootstrap_datepicker_css:
+          inputs:
+             - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/build/build_standalone3.less"
+          filters:
+             - lessphp
+             - cssrewrite
+          output: css/bootstrap-datepicker.css
+        bootstrap_datetimepicker_css:
+          inputs:
+             - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/less/datetimepicker.less"
+          filters:
+             - lessphp
+             - cssrewrite
+          output: css/bootstrap-datetimepicker.css
+        hebergement_edit_css:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/css/hebergement-edit.css"
+#            filters:
+#                - lessphp
+            output: css/hebergement-edit.min.css
+        bootstrap_glyphicons_ttf:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
+           output: "fonts/glyphicons-halflings-regular.ttf"
+        bootstrap_glyphicons_eot:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.eot"
+           output: "fonts/glyphicons-halflings-regular.eot"
+        bootstrap_glyphicons_svg:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.svg"
+           output: "fonts/glyphicons-halflings-regular.svg"
+        bootstrap_glyphicons_woff:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff"
+           output: "fonts/glyphicons-halflings-regular.woff"
+        bootstrap_glyphicons_woff2:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2"
+           output: "fonts/glyphicons-halflings-regular.woff2"
+
+
+
+fos_user:
+#    model_manager_name: ~
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Mondofute\Bundle\CoreBundle\Entity\User
+#    user_class: Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser
+    service:
+        user_manager: pugx_user_manager
+    registration:
+        form:
+            type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media:        MyVendor\MediaBundle\Entity\Media
+    #    gallery:      MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_item: MyVendor\MediaBundle\Entity\GalleryItem
+    db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+    default_context: default # you need to set a context
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+                - sonata.media.provider.vimeo
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+        secteur_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        secteur_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_carte_identite_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        logement_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        fournisseur_logo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_image_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        hebergement_visuel_crm:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        station_visuel_skifute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        station_visuel_francefute:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        station_visuel_crm:
+            providers:
+                - sonata.media.provider.image
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+    providers:
+        file:
+            service:    sonata.media.provider.file
+            resizer:    false
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            allowed_extensions: ['pdf', 'txt', 'rtf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pttx', 'odt', 'odg', 'odp', 'ods', 'odc', 'odf', 'odb', 'csv', 'xml']
+            allowed_mime_types: ['application/pdf', 'application/x-pdf', 'application/rtf', 'text/html', 'text/rtf', 'text/plain']
+
+        image:
+            service:    sonata.media.provider.image
+            resizer:    sonata.media.resizer.simple # sonata.media.resizer.square
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            allowed_extensions: ['jpg', 'png', 'jpeg']
+            allowed_mime_types: ['image/pjpeg', 'image/jpeg', 'image/png', 'image/x-png']
+
+        youtube:
+            service:    sonata.media.provider.youtube
+            resizer:    sonata.media.resizer.simple
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+            html5: false
+
+        dailymotion:
+            service:    sonata.media.provider.dailymotion
+            resizer:    sonata.media.resizer.simple
+            filesystem: sonata.media.filesystem.local
+            cdn:        sonata.media.cdn.server
+            generator:  sonata.media.generator.default
+            thumbnail:  sonata.media.thumbnail.format
+
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+#            path: %kernel.root_dir%/../web/uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  "%kernel.root_dir%/../web/uploads/media"
+            create:     false
+
+    buzz:
+        connector:  sonata.media.buzz.connector.curl
+#        connector:  sonata.media.buzz.connector.file_get_content
+jms_job_queue:
+    queue_options_defaults:
+        max_concurrent_jobs: 3  # par defaut le jobs queue peut lancer 3 jobs en meme temps
+    queue_options:
+        periode:
+            max_concurrent_jobs: 1  # lance les jobs de type periode 1 par 1
+>>>>>>> 9ad1ae2... gestion des stocks dans la fiche hébergement
