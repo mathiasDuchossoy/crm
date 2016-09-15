@@ -10,7 +10,10 @@
     Modification de l'hébergement
 {% endblock %}
 
-
+{% block body %}
+    {% set ongletHebergementStocks = 1 %}
+    {{ parent() }}
+{% endblock %}
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
 {% block actions %}
     <div style="text-align: right">
@@ -24,6 +27,63 @@
 {% endblock %}
 
 {#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
-{% block javascript_page %}
+{% block javascripts %}
     {{ parent() }}
+    {% javascripts
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+//            gestion des table de type hebergement-stocks
+            $('.table-hebergement-stocks').DataTable({
+                paging: false,
+                info: false,
+                scrollX: true,
+                scrollY: false,
+                scrollCollapse: true,
+                fixedColumns: true,
+                scroller: {
+                    rowHeight: 30
+                },
+                "columnDefs": [
+                    { "orderable": true, "targets": 0 },
+                    { "orderable": false, "targets": '_all' },
+                    { "searchable": true, "targets": 0 },
+                    { "searchable": false, "targets": '_all' },
+                ],
+                language: {
+                    processing:     "{{ 'processing'|trans }}",
+                    search:         "{{ 'rechercher'|trans }} :",
+                    loadingRecords:  "{{ 'chargementEnCours'|trans }}...",
+                    zeroRecords:    "{{ 'zeroResultats'|trans }}",
+                    emptyTable:     "{{ 'tableVide'|trans }}",
+                    aria: {
+                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td{
+            height: 50px;
+        }
+        th.logement,td.logement{
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
 {% endblock %}

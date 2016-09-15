@@ -248,8 +248,19 @@ assetic:
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
+#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
+        datatables_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+            filters: [?yui_js]
+            output: js/datatables.min.js
         menu_css:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
@@ -257,10 +268,17 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
            filters:
                - lessphp
                - cssrewrite
            output: css/bootstrap.css
+        datatables_css:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/css/dataTables.bootstrap.min.css"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/css/fixedColumns.bootstrap.min.css"
+            output: css/datatables.css
         bootstrap_datepicker_css:
           inputs:
              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/build/build_standalone3.less"

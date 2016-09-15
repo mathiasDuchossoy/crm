@@ -189,6 +189,12 @@
                         {#{{ form_row(form.services) }}#}
                     </div>
                 </div>
+                {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
+                    <div id="data_hebergement_stocks" class="tab-pane fade">
+                        {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes}  %}
+                        <button type="button" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+                    </div>
+                {% endif %}
                 <div id="data_fournisseurs" class="tab-pane fade">
                     <div class="row">
                         <div class="col-lg-12">
