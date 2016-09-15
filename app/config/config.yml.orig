@@ -247,6 +247,7 @@ assetic:
            apply_to: ".less$"
     assets:
 <<<<<<< HEAD
+<<<<<<< HEAD
         hebergement_edit_js:
             inputs:
                 - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-fonctions.js"
@@ -291,11 +292,33 @@ assetic:
             filters: [?yui_js]
             output: js/tarifs-locatif.min.js
 >>>>>>> 8a4c7ff... externalisation des javascripts pour pouvoir gérer facilement la minification plus tard
+||||||| parent of 99139ca... gestion des stocks dans la fiche hébergement
+=======
+        type_periodes_onglets_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/type-periodes-onglets.js"
+            filters: [?yui_js]
+            output: js/type-periodes-onglets.min.js
+        progressbar_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/progressbar.js"
+            filters: [?yui_js]
+            output: js/progressbar.min.js
+        tarifs_locatif_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/tarifs-locatif.js"
+            filters: [?yui_js]
+            output: js/tarifs-locatif.min.js
+>>>>>>> 99139ca... gestion des stocks dans la fiche hébergement
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
+#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
+#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
+<<<<<<< 1be053fe7598931bc261d84a85844982caca6770
         datatables_js:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
@@ -305,6 +328,18 @@ assetic:
                 - "%kernel.root_dir%/../app/Resources/public/js/datatables.js"
             filters: [?yui_js]
             output: js/datatables.min.js
+||||||| merged common ancestors
+=======
+        datatables_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/jquery.dataTables.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/js/datatables.js"
+            filters: [?yui_js]
+            output: js/datatables.min.js
+<<<<<<< HEAD
         bootstrap_js:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
@@ -332,6 +367,10 @@ assetic:
               - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
             filters: [?yui_js]
             output: js/bootstrap-datetimepicker.js
+||||||| parent of 99139ca... gestion des stocks dans la fiche hébergement
+=======
+>>>>>>> gestion des stocks dans la fiche hébergement
+>>>>>>> 99139ca... gestion des stocks dans la fiche hébergement
         menu_css:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
@@ -339,9 +378,31 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+<<<<<<< HEAD
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
+||||||| parent of 99139ca... gestion des stocks dans la fiche hébergement
+<<<<<<< 8a0275f45912120381e0805e8d7607c0dba9c667
+||||||| merged common ancestors
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+=======
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
+=======
+<<<<<<< 1be053fe7598931bc261d84a85844982caca6770
                - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
 #               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
 #               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+||||||| merged common ancestors
+=======
+>>>>>>> 99139ca... gestion des stocks dans la fiche hébergement
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+<<<<<<< HEAD
+||||||| parent of 99139ca... gestion des stocks dans la fiche hébergement
+>>>>>>> gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+=======
+>>>>>>> gestion des stocks dans la fiche hébergement
+>>>>>>> 99139ca... gestion des stocks dans la fiche hébergement
            filters:
                - lessphp
                - cssrewrite
