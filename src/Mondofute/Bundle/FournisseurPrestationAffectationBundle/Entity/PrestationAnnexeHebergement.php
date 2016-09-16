@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
+
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 
@@ -18,6 +19,10 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
      * @var Hebergement
      */
     private $hebergement;
+    /**
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    private $fournisseur;
 
     /**
      * Get prestationAnnexeHebergementUnifie
@@ -63,6 +68,30 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
     public function setHebergement(Hebergement $hebergement = null)
     {
         $this->hebergement = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Get fournisseur
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
+    }
+
+    /**
+     * Set fournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     *
+     * @return PrestationAnnexeHebergement
+     */
+    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    {
+        $this->fournisseur = $fournisseur;
 
         return $this;
     }

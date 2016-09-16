@@ -57,7 +57,7 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 
     public function findByFournisseur($fournisseurId , $locale, $site = 1){
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId')
+        $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId')
 //        $qb->select('hebergementUnifie')
             ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
             ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')

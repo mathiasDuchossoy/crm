@@ -24,3 +24,8 @@ ALTER TABLE prestation_annexe_station ADD CONSTRAINT FK_7A4D4838F1775174 FOREIGN
 ALTER TABLE prestation_annexe_station ADD CONSTRAINT FK_7A4D483821BDB235 FOREIGN KEY (station_id) REFERENCES station (id);
 
 ALTER TABLE fournisseur_prestation_annexe ADD mode_affectation INT UNSIGNED NOT NULL;
+
+
+ALTER TABLE prestation_annexe_hebergement ADD fournisseur_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE prestation_annexe_hebergement ADD CONSTRAINT FK_866E7038670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+CREATE INDEX IDX_866E7038670C757F ON prestation_annexe_hebergement (fournisseur_id);

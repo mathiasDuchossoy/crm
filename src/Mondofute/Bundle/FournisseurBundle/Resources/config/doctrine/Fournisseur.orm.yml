@@ -7,10 +7,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
 #            column: id
             id: true
             type: integer
-#            generator:
-#                strategy: AUTO
-#            options:
-#                unsigned: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
     associationOverride:
         moyenComs:
             joinTable:

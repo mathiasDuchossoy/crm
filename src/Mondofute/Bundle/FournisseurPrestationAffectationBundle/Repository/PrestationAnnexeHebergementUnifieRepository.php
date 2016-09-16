@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 
 /**
  * PrestationAnnexeHebergementUnifieRepository
@@ -10,4 +11,26 @@ namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
  */
 class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByCriteria($fournisseurId, FournisseurPrestationAnnexe $prestationAnnex, $hebergementUnifieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeHebergementUnifie , prestationAnnexeHebergements')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements', 'prestationAnnexeHebergements')
+            ->join('prestationAnnexeHebergements.hebergement' , 'hebergement')
+            ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')
+            ->where('prestationAnnexeHebergements.fournisseurPrestationAnnexe = :prestationAnnex')
+            ->setParameter('prestationAnnex' , $prestationAnnex->getId())
+            ->andWhere('prestationAnnexeHebergements.fournisseur = :fournisseurId')
+            ->setParameter('fournisseurId' ,$fournisseurId )
+            ->andWhere('hebergementUnifie.id = :hebergementUnifieId')
+            ->setParameter('hebergementUnifieId' ,$hebergementUnifieId )
+        ;
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+//        $result = $qb->getQuery()->getFirstResult();
+//        dump($result);die;
+        return $result;
+    }
 }

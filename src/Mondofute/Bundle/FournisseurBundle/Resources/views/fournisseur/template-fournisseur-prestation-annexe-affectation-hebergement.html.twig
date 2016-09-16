@@ -22,7 +22,9 @@
                                 {% if HebergementExists == true %}
                                     checked="checked"
                                 {% endif %}
-                               name="prestation_annexe_affectation[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ siteId }}][{{ hebergement.hebergementId }}][{{ siteId }}]"
+                               {#name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ siteId }}][{{ hebergement.hebergementId }}][{{ siteId }}]"#}
+                               {#name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementId }}][{{ siteId }}]"#}
+                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
                         >
                         {{ hebergement.nom }}
                     </label>

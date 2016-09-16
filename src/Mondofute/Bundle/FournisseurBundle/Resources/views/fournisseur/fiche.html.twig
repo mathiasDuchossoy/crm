@@ -1618,4 +1618,45 @@
         }
 
     </script>
+    <script type="text/javascript">
+        function manageSelectionPrestationAnnexeSite(prestationAnnexeId , siteId)
+        {
+            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '[]"]');
+            var sitesCked  = [];
+            $(sitesCkbox).each(function (index , e){
+                if($(this).is(':checked')){
+                    sitesCked.push($(this).val());
+                }
+            });
+            if(sitesCked.length == 1){
+                return false;
+            }
+
+            $contenuOngletSite = $('#data_site_'+prestationAnnexeId+'_'+ siteId );
+
+            $(sitesCkbox).each(function (index , e){
+                $e = $(e);
+                if (!$(this).is(':checked')) {
+                    if ($('#onglet_data_site_'+prestationAnnexeId+'_'+ $e.val() ).hasClass('active')) {
+                        $("[id^='data_site_" + prestationAnnexeId +"_]").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+                        });
+                    }
+                    $("#onglet_data_site_" + prestationAnnexeId +"_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+                    $("#onglet_data_site_" + prestationAnnexeId +"_" + $(this).attr('data-site-id')).show();
+                }
+            });
+
+            var siteIdFirst = $('[id^="siteAEnregistrer_'+prestationAnnexeId+'_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + prestationAnnexeId +"_" + siteIdFirst + " a").tab('show');
+
+            return true;
+        }
+    </script>
 {% endblock %}
