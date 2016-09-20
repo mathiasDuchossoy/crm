@@ -191,8 +191,12 @@
                 </div>
                 {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
                     <div id="data_hebergement_stocks" class="tab-pane fade">
-                        {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes}  %}
-                        <button type="button" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+                        {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes} %}
+
+                        <button type="button" name="btnEnregistrerStocks"
+                                class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+                        <div name="btnEnregistrerStocksReponse">
+                        </div>
                     </div>
                 {% endif %}
                 <div id="data_fournisseurs" class="tab-pane fade">
@@ -1038,7 +1042,31 @@
             });
         });
     </script>
-
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
+        });
+        function enregistrerStocks() {
+            var $element = $(this).parent();
+            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
+//            console.log($(this));
+            var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+//            var $resultatRechercheFournisseur = $('#resultatRechercheFournisseur');
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+            $.ajax({
+                url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                type: 'POST',
+                data: $stocks,
+                success: function (json){
+                    if(json.valid){
+                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">Enregistrement du stock OK</div>');
+                    }else{
+                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">Enregistrement du stock PAS OK</div>');
+                    }
+                }
+            });
+        }
+    </script>
 
     <script type="text/javascript">
         var $visuelsCollectionHolder;
@@ -1099,7 +1127,6 @@
 
             });
         });
-
         function addForm($collectionHolder, $newLinkLi, type) {
             // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype_' + type);
