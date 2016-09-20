@@ -194,9 +194,9 @@
                         {#{{ form_row(form.services) }}#}
                     </div>
                 </div>
-<<<<<<< HEAD
                 {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
                     <div id="data_hebergement_stocks" class="tab-pane fade">
+<<<<<<< HEAD
                         <div class="progress">
                             <div id="progress-bar_onglets_type_periode_hebergement_{{ entity.id }}" class="progress-bar"
                                  role="progressbar" aria-valuenow="0"
@@ -205,17 +205,19 @@
                             </div>
                         </div>
                         {#{% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes} %}#}
-                    </div>
-                {% endif %}
-||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
-=======
-                {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
-                    <div id="data_hebergement_stocks" class="tab-pane fade">
+||||||| parent of 484c9df... gestion de l'enregistrement des stock en BDD
                         {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes}  %}
                         <button type="button" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+=======
+                        {% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes} %}
+
+                        <button type="button" name="btnEnregistrerStocks"
+                                class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button>
+                        <div name="btnEnregistrerStocksReponse">
+                        </div>
+>>>>>>> 484c9df... gestion de l'enregistrement des stock en BDD
                     </div>
                 {% endif %}
->>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
                 <div id="data_fournisseurs" class="tab-pane fade">
                     <div class="row">
                         <div class="col-lg-12">
@@ -1063,7 +1065,39 @@
             });
         });
     </script>
+<<<<<<< HEAD
 
+||||||| parent of 484c9df... gestion de l'enregistrement des stock en BDD
+
+
+=======
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
+        });
+        function enregistrerStocks() {
+            var $element = $(this).parent();
+            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
+//            console.log($(this));
+            var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+//            var $resultatRechercheFournisseur = $('#resultatRechercheFournisseur');
+//            lance la requête ajax de recherche des fournisseurs de type hébergement
+            $.ajax({
+                url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                type: 'POST',
+                data: $stocks,
+                success: function (json){
+                    if(json.valid){
+                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">Enregistrement du stock OK</div>');
+                    }else{
+                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">Enregistrement du stock PAS OK</div>');
+                    }
+                }
+            });
+        }
+    </script>
+
+>>>>>>> 484c9df... gestion de l'enregistrement des stock en BDD
     <script type="text/javascript">
         var $visuelsCollectionHolder;
 
