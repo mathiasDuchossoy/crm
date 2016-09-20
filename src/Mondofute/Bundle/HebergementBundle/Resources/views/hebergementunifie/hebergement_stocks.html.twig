@@ -60,7 +60,7 @@
                                                         {% set stock = logementPeriode.locatif.stock %}
                                                     {% endif %}
                                                 {% endfor %}
-                                                <input name="stocks[{{ logement.id }}][{{ periode.id }}]"
+                                                <input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"
                                                        type="text"
                                                        size="2" maxlength="2" value="{{ stock }}"/>
                                             </td>

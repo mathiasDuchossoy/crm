@@ -1,3 +1,8 @@
-mondofute_catalogue_homepage:
-    path:     /
-    defaults: { _controller: MondofuteCatalogueBundle:Default:index }
+#mondofute_catalogue_homepage:
+#    path:     /
+#    defaults: { _controller: MondofuteCatalogueBundle:Default:index }
+
+mondofute_catalogue_enregistrer_stock_locatif:
+    path:     /catalogue/enregistrer_stocks_locatif
+    defaults: { _controller: MondofuteCatalogueBundle:Default:enregistrerStocksLocatif }
+    methods: POST
