@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\HebergementBundle\Repository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * HebergementRepository

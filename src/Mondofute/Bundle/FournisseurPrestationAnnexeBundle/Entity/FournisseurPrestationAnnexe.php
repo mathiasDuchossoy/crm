@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
@@ -54,7 +55,7 @@ class FournisseurPrestationAnnexe
     /**
      * @var integer
      */
-    private $modeAffectation;
+    private $modeAffectation = ModeAffectation::Station;
     /**
      * @var Collection
      */

@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PrestationAnnexeLogementUnifieRepository
@@ -10,4 +11,23 @@ namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
  */
 class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findByCriteria($prestationAnnexeId, $logementUnifieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeLogementUnifie , prestationAnnexeLogements')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie', 'prestationAnnexeLogementUnifie')
+            ->join('prestationAnnexeLogementUnifie.prestationAnnexeLogements', 'prestationAnnexeLogements')
+            ->join('prestationAnnexeLogements.logement', 'logement')
+            ->join('logement.logementUnifie', 'logementUnifie')
+            ->where('prestationAnnexeLogements.fournisseurPrestationAnnexe = :prestationAnnexeId')
+            ->setParameter('prestationAnnexeId' , $prestationAnnexeId)
+            ->andWhere('logementUnifie.id = :logementUnifieId')
+            ->setParameter('logementUnifieId' ,$logementUnifieId )
+        ;
+
+        $result = $qb->getQuery()->getOneOrNullResult();
+//        dump($result);
+        return $result;
+    }
 }

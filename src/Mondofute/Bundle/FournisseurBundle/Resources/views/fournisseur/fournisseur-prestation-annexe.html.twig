@@ -84,13 +84,16 @@
                 <h3>Affectations</h3>
                 {{ form_widget(prestationAnnexe.modeAffectation , {'attr' : { 'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id}}) }}
                 <div id="div_affectation_{{ prestationAnnexe.modeAffectation.vars.id }}">
-                    {#{{ form_row(prestationAnnexe.prestationAnnexeFournisseurs ) }}#}
-                    {#{{ dump(prestationAnnexe.prestationAnnexeFournisseurs) }}#}
-                    {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig'  with {
-                    'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,
-                    'prestationAnnexeFournisseurs' : prestationAnnexe.prestationAnnexeFournisseurs,
-                    'prestationAnnexeHebergements' : prestationAnnexe.prestationAnnexeHebergements
-                    }  %}
+                    {% if prestationAnnexe.vars.value.modeAffectation == 1 %}
+                    {% elseif prestationAnnexe.vars.value.modeAffectation == 2 %}
+                        {#{{ form_row(prestationAnnexe.prestationAnnexeFournisseurs ) }}#}
+                        {#{{ dump(prestationAnnexe.prestationAnnexeFournisseurs) }}#}
+                        {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig'  with {
+                        'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,
+                        'prestationAnnexeFournisseurs' : prestationAnnexe.prestationAnnexeFournisseurs,
+                        'prestationAnnexeHebergements' : prestationAnnexe.prestationAnnexeHebergements
+                        }  %}
+                    {% endif %}
                 </div>
                 {#{% for element in prestationAnnexe.modeAffectation %}#}
                 {#{{ form_row(element) }}#}

@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
@@ -35,6 +36,14 @@ class PrestationAnnexeFournisseurUnifie
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**

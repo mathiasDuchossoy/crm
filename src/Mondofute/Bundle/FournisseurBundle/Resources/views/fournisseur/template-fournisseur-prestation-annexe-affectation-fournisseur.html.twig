@@ -7,13 +7,30 @@
 
 {#<div class="panel panel-default">#}
 <!-- Default panel contents -->
+{% set sitesActifs = [] %}
+{% if prestationAnnexeFournisseurs is defined %}
+    {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
+        {% if prestationAnnexeFournisseur.vars.value.actif == true and (prestationAnnexeFournisseur.vars.value.site.id not in sitesActifs) %}
+            {% set sitesActifs = sitesActifs|merge([prestationAnnexeFournisseur.vars.value.site.id]) %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if prestationAnnexeHebergements is defined %}
+    {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
+        {% if prestationAnnexeHebergement.vars.value.actif == true and (prestationAnnexeHebergement.vars.value.site.id not in sitesActifs) %}
+            {% set sitesActifs = sitesActifs|merge([prestationAnnexeHebergement.vars.value.site.id]) %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <div id="siteAEnregistrer_{{ prestationAnnexeId }}">
     {% for site in sites %}
         <span style="{% if site.crm == 1 %}display:none; {% endif %}">
             <label>
-                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ site.id }}" data-site-id="{{ site.id }}" type="checkbox" name="sites_{{ prestationAnnexeId }}[]"
+                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ site.id }}" data-site-id="{{ site.id }}"
+                       type="checkbox" name="sites_{{ prestationAnnexeId }}[]"
                        value="{{ site.id }}"
-                       {% if site.crm == 1 %} checked="checked" {% endif %}
+                        {% if site.crm == 1  or site.id in sitesActifs or sitesActifs is empty %} checked="checked" {% endif %}
                        onclick="return manageSelectionPrestationAnnexeSite('{{ prestationAnnexeId }}' , '{{ site.id }}');"
                 /> {{ site.libelle }}</label>
         </span>
@@ -25,7 +42,8 @@
     {% for site in sites %}
         {#{% if (personalisable == false and site.vars.value.site.crm == true) or (personalisable == true) %}#}
         <li id="onglet_data_site_{{ prestationAnnexeId }}_{{ site.id }}"
-            {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
+            {% if site.id not in sitesActifs  and sitesActifs is not empty and  site.crm != 1 %}style="display: none" {% endif %}
+                {% if(iSite==0) %}class="active"{% set iSite = 1 %}{% endif %}>
             <a data-toggle="tab"
                href="#data_site_{{ prestationAnnexeId }}_{{ site.id }}">
                 {{ site.libelle }}

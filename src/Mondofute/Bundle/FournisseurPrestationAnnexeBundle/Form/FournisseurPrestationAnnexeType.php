@@ -86,7 +86,7 @@ class FournisseurPrestationAnnexeType extends AbstractType
                     'class'     => 'form-inline'
                 ),
 //                'preferred_choices' => array(ModeAffectation::Station)
-                'data'      => ModeAffectation::Station
+//                'data'      => ModeAffectation::Station
             ))
             ->add('prestationAnnexeFournisseurs', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeFournisseurType::class,
