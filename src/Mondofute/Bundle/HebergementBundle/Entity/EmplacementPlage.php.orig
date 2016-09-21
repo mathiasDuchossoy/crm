@@ -1,11 +1,11 @@
 <?php
 
-namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 /**
- * PrestationAnnexeUnifie
+ * EmplacementPlage
  */
-class PrestationAnnexeUnifie
+class EmplacementPlage extends Emplacement
 {
     /**
      * @var int
@@ -23,4 +23,3 @@ class PrestationAnnexeUnifie
         return $this->id;
     }
 }
-

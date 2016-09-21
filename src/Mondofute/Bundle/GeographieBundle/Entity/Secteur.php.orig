@@ -3,28 +3,30 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
- * Profil
+ * Secteur
  */
-class Profil
+class Secteur
 {
     /**
      * @var int
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @var SecteurUnifie
      */
-    private $profilUnifie;
+    private $secteurUnifie;
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -37,13 +39,17 @@ class Profil
      * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
+    /**
+     * @var boolean
+     */
+    private $actif = true;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -59,9 +65,9 @@ class Profil
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param SecteurTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function removeTraduction(SecteurTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -69,7 +75,7 @@ class Profil
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -79,11 +85,11 @@ class Profil
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
-     * @return Profil
+     * @return Secteur
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -91,25 +97,25 @@ class Profil
     }
 
     /**
-     * Get profilUnifie
+     * Get secteurUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @return SecteurUnifie
      */
-    public function getProfilUnifie()
+    public function getSecteurUnifie()
     {
-        return $this->profilUnifie;
+        return $this->secteurUnifie;
     }
 
     /**
-     * Set profilUnifie
+     * Set secteurUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie
+     * @param SecteurUnifie $secteurUnifie
      *
-     * @return Profil
+     * @return Secteur
      */
-    public function setProfilUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie = null)
+    public function setSecteurUnifie(SecteurUnifie $secteurUnifie = null)
     {
-        $this->profilUnifie = $profilUnifie;
+        $this->secteurUnifie = $secteurUnifie;
 
         return $this;
     }
@@ -123,7 +129,7 @@ class Profil
             foreach ($traductions as $traduction) {
                 $cloneTraduction = clone $traduction;
                 $this->traductions->add($cloneTraduction);
-                $cloneTraduction->setProfil($this);
+                $cloneTraduction->setSecteur($this);
             }
         }
     }
@@ -131,17 +137,13 @@ class Profil
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
         return $this->traductions;
     }
 
-    /**
-     * @param $traductions
-     * @return Profil $this
-     */
     public function setTraductions($traductions)
     {
         $this->getTraductions()->clear();
@@ -155,13 +157,13 @@ class Profil
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param SecteurTraduction $traduction
      *
-     * @return Profil
+     * @return Secteur
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function addTraduction(SecteurTraduction $traduction)
     {
-        $this->traductions[] = $traduction->setProfil($this);
+        $this->traductions[] = $traduction->setSecteur($this);
 
         return $this;
     }
@@ -171,34 +173,11 @@ class Profil
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
      *
-     * @return Profil
+     * @return Secteur
      */
     public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations[] = $station;
-<<<<<<< HEAD
-
-        return $this;
-    }
-
-
-||||||| parent of 13f3f42... DEBUG merge
-=======
-
-        return $this;
-    }
-
->>>>>>> 13f3f42... DEBUG merge
-    /**
-     * Add image
-     *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image
-     *
-     * @return Profil
-     */
-    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image)
-    {
-        $this->images[] = $image->setProfil($this);
 
         return $this;
     }
@@ -224,11 +203,25 @@ class Profil
     }
 
     /**
+     * Add image
+     *
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image
+     *
+     * @return Secteur
+     */
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image)
+    {
+        $this->images[] = $image->setSecteur($this);
+
+        return $this;
+    }
+
+    /**
      * Remove image
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image
      */
-    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image)
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\SecteurImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -246,13 +239,13 @@ class Profil
     /**
      * Add photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
      *
-     * @return Profil
+     * @return Secteur
      */
-    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo)
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
     {
-        $this->photos[] = $photo->setProfil($this);
+        $this->photos[] = $photo->setSecteur($this);
 
         return $this;
     }
@@ -260,9 +253,9 @@ class Profil
     /**
      * Remove photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo
      */
-    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo)
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\SecteurPhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -275,5 +268,29 @@ class Profil
     public function getPhotos()
     {
         return $this->photos;
+    }
+
+    /**
+     * Get actif
+     *
+     * @return boolean
+     */
+    public function getActif()
+    {
+        return $this->actif;
+    }
+
+    /**
+     * Set actif
+     *
+     * @param boolean $actif
+     *
+     * @return Secteur
+     */
+    public function setActif($actif)
+    {
+        $this->actif = $actif;
+
+        return $this;
     }
 }
