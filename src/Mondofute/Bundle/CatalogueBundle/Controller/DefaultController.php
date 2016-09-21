@@ -24,7 +24,7 @@ class DefaultController extends Controller
         if ($request->isXmlHttpRequest()) {
             $retour = array('valid'=>true);
             try{
-                $this->exception();
+//                $this->exception();
                 $mbdd = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
                 $em = $this->get('doctrine.orm.entity_manager');
                 $stocks = $request->get('stocks');
