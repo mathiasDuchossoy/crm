@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ; Le listelancer.ini permet de choisir les fichiers que vous souhaitez lancer
 ; ajouter simplement le chemin du fichier, voici un exemple :
 ; maj/2016-04-02_a_dc_nom_de_ma_table.sql
@@ -93,6 +94,10 @@ maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
 =======
 <<<<<<< HEAD
 >>>>>>> c539ef4... maj-listelancer
+||||||| parent of b962c88... ajout dans liste a lancer de la mise a jour BDD
+<<<<<<< HEAD
+=======
+>>>>>>> b962c88... ajout dans liste a lancer de la mise a jour BDD
 ; Le listelancer.ini permet de choisir les fichiers que vous souhaitez lancer
 ; ajouter simplement le chemin du fichier, voici un exemple :
 ; maj/2016-04-02_a_dc_nom_de_ma_table.sql
@@ -136,11 +141,17 @@ maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
 ; *** fin crm_101 ***
 
 ;maj\crm_65\2016-08-26a_md_station.sql
+<<<<<<< HEAD
+maj\crm_84\2016-08-31a_sls_logement_periode.sql
+||||||| parent of c2411b9... ajout dans liste a lancer de la mise a jour BDD
+;maj\crm_84\2016-08-31a_sls_logement_periode.sql
+=======
 maj\crm_84\2016-08-31a_sls_logement_periode.sql
 ; *** crm_122 ***
 maj\crm_122\2016-09-15a_sls_add_contraintes_logement_periode_locatif.sql
 ; fin maj crm_122
 ;maj\crm_84\2016-08-31a_sls_logement_periode.sql
+<<<<<<< HEAD
 
 ;maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 ;maj\crm_101\2016-08-30a_code_promo.sql
@@ -255,13 +266,7 @@ maj\crm_101\2016-09-01a_md_code_promo.sql
 ;maj\crm_65\2016-08-26a_md_station.sql
 <<<<<<< HEAD
 ;maj\crm_84\2016-08-31a_sls_logement_periode.sql
-; *** crm_122 ***
-maj\crm_122\2016-09-15a_sls_add_contraintes_logement_periode_locatif.sql
-; fin maj crm_122
-||||||| parent of 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
-=======
-;maj\crm_84\2016-08-31a_sls_logement_periode.sql
->>>>>>> 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
+||||||| parent of b962c88... ajout dans liste a lancer de la mise a jour BDD
 
 ;maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
 ;maj\crm_101\2016-08-30a_code_promo.sql
@@ -278,11 +283,8 @@ maj\crm_126\2016-10-03a_md_fournisseur_prestation_annexe_stock.sql
 ; *** fin crm-126 ***
 
 ; *** other ***
-||||||| parent of d65474c... maj-listelancer
 <<<<<<< HEAD
-=======
->>>>>>> d65474c... maj-listelancer
-maj\others\2016-10-03a_md_maj_fos_user.sql
+;maj\others\2016-10-03a_md_maj_fos_user.sql
 ; *** fin other ***
 
 ; *** crm_103 ***
@@ -290,15 +292,113 @@ maj\others\2016-10-03a_md_maj_fos_user.sql
 ; *** fin crm_103 ***
 
 ; *** crm_125 ***
+;maj\crm_125\2016-09-29a_md_code_promo_application.sql
+maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
 <<<<<<< HEAD
-maj\crm_125\2016-09-29a_md_code_promo_application.sql
-maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
-||||||| parent of 10f79cb... maj-listelancer
-;maj\crm_125\2016-09-29a_md_code_promo_application.sql
-;maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+; *** fin crm_125 ***
+
+; *** crm-128 ***
+;maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
+; *** fin crm-128 ***
+||||||| parent of 9436724... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+; *** fin crm_125 ***
 =======
+; *** fin crm_125 ***
+; *** crm_123 ***
+maj\crm_123\2016-10-12a_sls_add_tarifs.sql
+; fin maj crm_123
+>>>>>>> 9436724... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+||||||| parent of 924c131... maj-listelancer
+=======
+; Le listelancer.ini permet de choisir les fichiers que vous souhaitez lancer
+; ajouter simplement le chemin du fichier, voici un exemple :
+; maj/2016-04-02_a_dc_nom_de_ma_table.sql
+; maj/2016-04-02_b_dc_nom_de_ma_table2.sql
+; maj/2016-04-02_c_dc_nom_de_ma_table2.php
+;maj\crm_75\2016-07-21a_sls_periode.sql
+;maj\crm_71\2016-08-02a_md_medias.sql
+;maj\crm_54\2016-08-05a_md_station_liaisons.sql
+;maj\fos-user\2016-08-10a_md_fos_user_maj.sql
+;maj\crm_65\2016-08-08a_md_niveau_skieur.sql
+;maj\crm_65\2016-08-08a_md_type_piste.sql
+;maj\crm_88\2016-08-09a_md_medias_domaine.sql
+;maj\crm_88\2016-08-09b_md_medias_domaines.sql
+
+;maj\crm_54\2016-08-08a_md_grande_ville.sql
+
+; *** prestation annexe ***
+;maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+; *** fin prestation annexe ***
+
+; *** maj unifies ***
+;maj\crm_105\2016-09-06a_md_maj_unifies.sql
+; *** fin maj unifies ***
+
+; *** crm_105 ***
+;maj\crm_105\2016-09-06a_md_maj_unifies.sql
+; *** fin crm_105 ***
+
+;maj\crm_101\2016-08-29a_md_hi_dev_code_promo.sql
+
+
+;maj\grande_ville\2016-08-31a_md_exemple_grande_ville.sql
+
+;maj\crm_93\2016-09-06a_md_prestation_annexe.sql
+
+;maj\crm_84\2016-08-31a_sls_logement_periode.sql
+
+; *** crm_101 ***
+<<<<<<< HEAD
+;maj\crm_101\2016-09-09a_md_maj_client.sql
+;maj\crm_101\2016-09-01a_md_code_promo.sql
+;maj\crm_101\2016-09-01a_md_unite.sql
+||||||| parent of 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
+maj\crm_101\2016-09-09a_md_maj_client.sql
+maj\crm_101\2016-09-01a_md_code_promo.sql
+;maj\crm_101\2016-09-01a_md_unite.sql
+=======
+;maj\crm_101\2016-09-09a_md_maj_client.sql
+;maj\crm_101\2016-09-01a_md_code_promo.sql
+>>>>>>> 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
+; *** fin crm_101 ***
+
+;maj\crm_65\2016-08-26a_md_station.sql
+<<<<<<< HEAD
+;maj\crm_84\2016-08-31a_sls_logement_periode.sql
+=======
+>>>>>>> c2411b9... ajout dans liste a lancer de la mise a jour BDD
+>>>>>>> b962c88... ajout dans liste a lancer de la mise a jour BDD
+; *** crm_122 ***
+maj\crm_122\2016-09-15a_sls_add_contraintes_logement_periode_locatif.sql
+; fin maj crm_122
+;maj\crm_84\2016-08-31a_sls_logement_periode.sql
+
+;maj\crm_101\2016-08-30a_md_hi_dev_code_promo_specifique.sql
+;maj\crm_101\2016-08-30a_code_promo.sql
+;maj\crm_101\2016-08-31a_md_code_promo.sql
+
+; *** crm-116 ***
+;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+;maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+;maj\crm_116\2016-09-13a_md_fournisseur_prestation_annexe_affectations.sql
+; *** fin crm-116 ***
+
+; *** crm-126 ***
+;maj\crm_126\2016-10-03a_md_fournisseur_prestation_annexe_stock.sql
+; *** fin crm-126 ***
+
+; *** other ***
+;maj\others\2016-10-03a_md_maj_fos_user.sql
+; *** fin other ***
+
+; *** crm_103 ***
+;maj\crm_103\2016-09-28a_md_code_promo_application.sql
+; *** fin crm_103 ***
+
+; *** crm_125 ***
 ;maj\crm_125\2016-09-29a_md_code_promo_application.sql
 maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+<<<<<<< HEAD
 >>>>>>> 10f79cb... maj-listelancer
 ; *** fin crm_125 ***
 <<<<<<< HEAD
@@ -323,7 +423,31 @@ maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
 =======
 ;maj\crm_125\2016-09-29a_md_code_promo_application.sql
 ;maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+||||||| parent of b962c88... ajout dans liste a lancer de la mise a jour BDD
+>>>>>>> 10f79cb... maj-listelancer
 ; *** fin crm_125 ***
+<<<<<<< HEAD
+; *** crm_123 ***
+maj\crm_123\2016-10-12a_sls_add_tarifs.sql
+; fin maj crm_123
+<<<<<<< HEAD
+||||||| parent of 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
+maj\crm_125\2016-09-29a_md_code_promo_application.sql
+maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+; *** fin crm_125 ***
+<<<<<<< HEAD
+>>>>>>> da87937... maj-listelancer
+>>>>>>> 924c131... maj-listelancer
+||||||| parent of b6008c7... mise à jours ids entity en unsigned et batch pour sql
+>>>>>>> da87937... maj-listelancer
+=======
+=======
+;maj\crm_125\2016-09-29a_md_code_promo_application.sql
+;maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+=======
+>>>>>>> b962c88... ajout dans liste a lancer de la mise a jour BDD
+; *** fin crm_125 ***
+<<<<<<< HEAD
 ||||||| parent of d65474c... maj-listelancer
 ||||||| merged common ancestors
 maj\others\2016-10-03a_md_maj_fos_user.sql
@@ -349,10 +473,42 @@ maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
 >>>>>>> 4bef68b3d1d5e18e940dc607c9eccb5ac17570f0
 =======
 =======
+||||||| parent of b962c88... ajout dans liste a lancer de la mise a jour BDD
+||||||| parent of d65474c... maj-listelancer
+||||||| merged common ancestors
+maj\others\2016-10-03a_md_maj_fos_user.sql
+; *** fin other ***
+=======
+;maj\others\2016-10-03a_md_maj_fos_user.sql
+; *** fin other ***
+=======
+||||||| parent of 10f79cb... maj-listelancer
+>>>>>>> d65474c... maj-listelancer
+
+; *** crm-128 ***
+maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
+; *** fin crm-128 ***
+<<<<<<< HEAD
+>>>>>>> 23ed5ae... mise à jours ids entity en unsigned et batch pour sql
+>>>>>>> b6008c7... mise à jours ids entity en unsigned et batch pour sql
+||||||| parent of d65474c... maj-listelancer
+>>>>>>> 4bef68b3d1d5e18e940dc607c9eccb5ac17570f0
+=======
+=======
+=======
+>>>>>>> b962c88... ajout dans liste a lancer de la mise a jour BDD
 
 ; *** crm-128 ***
 ;maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
+<<<<<<< HEAD
 ; *** fin crm-128 ***
 >>>>>>> 10f79cb... maj-listelancer
 >>>>>>> d65474c... maj-listelancer
 >>>>>>> 851981f... maj-listelancer
+||||||| parent of b962c88... ajout dans liste a lancer de la mise a jour BDD
+; *** fin crm-128 ***
+>>>>>>> 10f79cb... maj-listelancer
+>>>>>>> d65474c... maj-listelancer
+=======
+; *** fin crm-128 ***
+>>>>>>> b962c88... ajout dans liste a lancer de la mise a jour BDD
