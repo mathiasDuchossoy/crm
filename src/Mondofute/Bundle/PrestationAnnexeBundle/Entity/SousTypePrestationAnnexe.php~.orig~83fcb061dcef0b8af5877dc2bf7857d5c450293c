@@ -1,0 +1,26 @@
+<?php
+
+namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+
+/**
+ * SousTypePrestationAnnexe
+ */
+class SousTypePrestationAnnexe
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

@@ -1,0 +1,29 @@
+Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementPeriodeBundle\Repository\LogementPeriodeRepository
+    id:
+        periode:
+            associationKey: true
+        logement:
+            associationKey: true
+    fields:
+        actif:
+            type: boolean
+    manyToOne:
+        periode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: periodes
+#    oneToOne:
+#        locatif:
+#            targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
+#            joinColumn:
+#                name: periode_id
+#                referencedColumnName: periode_id
+#            joinColumn:
+#                name: logement_id
+#                referencedColumnName: logement_id
+
+    lifecycleCallbacks: {  }

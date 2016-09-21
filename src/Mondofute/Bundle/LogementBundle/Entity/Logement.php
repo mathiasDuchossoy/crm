@@ -381,4 +381,43 @@ class Logement
 
         return $this;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $periodes;
+
+
+    /**
+     * Add periode
+     *
+     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
+     *
+     * @return Logement
+     */
+    public function addPeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
+    {
+        $this->periodes[] = $periode;
+
+        return $this;
+    }
+
+    /**
+     * Remove periode
+     *
+     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
+     */
+    public function removePeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
+    {
+        $this->periodes->removeElement($periode);
+    }
+
+    /**
+     * Get periodes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPeriodes()
+    {
+        return $this->periodes;
+    }
 }

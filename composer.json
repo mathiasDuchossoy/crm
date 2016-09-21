@@ -38,7 +38,8 @@
     "sonata-project/media-bundle": "^2.3",
     "jms/job-queue-bundle": "dev-master",
     "nucleus/deploybundle": "dev-master",
-    "eternicode/bootstrap-datepicker": "1.6.1"
+    "eternicode/bootstrap-datepicker": "1.6.1",
+    "nucleus/managerBDDBundle": "dev-master"
   },
   "repositories": [
     {
@@ -52,6 +53,10 @@
     {
       "type": "git",
       "url": "http://labgit.com/symfony-vendors/deploybundle.git"
+    },
+    {
+      "type": "git",
+      "url": "http://labgit.com/symfony-vendors/managerBDDBundle.git"
     }
   ],
   "require-dev": {
