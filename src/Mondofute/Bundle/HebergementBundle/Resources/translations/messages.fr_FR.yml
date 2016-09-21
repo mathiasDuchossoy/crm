@@ -30,4 +30,12 @@ tarifs: 'tarifs'
 selectionner: 'sélectionner'
 tarif: 'tarif'
 periode: 'période'
-
+enregistrer.stock: 'enregistrement du stock'
+rechercher: 'rechercher'
+processing: 'en cours'
+chargementEnCours: 'chargement en cours'
+zeroResultats: 'aucun résultat trouvé'
+tableVide: 'tableau vide'
+enregistrement_stock:
+    ok: 'enregistrement du stock OK'
+    pas_ok: 'erreur lors de l''enregistrement du stock'
