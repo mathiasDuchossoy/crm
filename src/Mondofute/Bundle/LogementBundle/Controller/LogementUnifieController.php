@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\LogementBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -164,9 +165,18 @@ class LogementUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($logementUnifie);
             $em->flush();
-            foreach ($logementUnifie->getLogements() as $logement){
-
-            }
+            /** @var Logement $logement */
+//            foreach ($logementUnifie->getLogements() as $logement){
+//                $job = new Job('mondofute_logement:associer_periodes_command',
+//                    array(
+//                        'id-logement' => $logement->getId(),
+//                        'id-site' => ,
+//                        'type-periode' => $periode->getType()->getId(),
+//                        'nb-jour' => $periode->getNbJour(),
+//                    ), true, 'periode');
+//                $em->persist($job);
+//                $em->flush();
+//            }
             return $this->redirectToRoute('logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
 
@@ -362,6 +372,20 @@ class LogementUnifieController extends Controller
             
             $em->persist($logementUnifie);
             $em->flush();
+            foreach ($sites as $site){
+                if($site->getCrm()==1){
+                    foreach ($logementUnifie->getLogements() as $logement) {
+                        $job = new Job('mondofute_logement:associer_periodes_command',
+                            array(
+                                'id-logement' => $logement->getId(),
+                                'id-site' => $site->getId()
+                            ), true, 'periode');
+                        $em->persist($job);
+                        $em->flush();
+                    }
+                }
+            }
+
             $this->copieVersSites($logementUnifie);
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
@@ -544,6 +568,18 @@ class LogementUnifieController extends Controller
                 
                 $emSite->persist($entitySite);
                 $emSite->flush();
+                $em=$this->getDoctrine()->getManager();
+                foreach ($entitySite->getLogements() as $logement) {
+                    $job = new Job('mondofute_logement:associer_periodes_command',
+                        array(
+                            'id-logement' => $logement->getId(),
+                            'id-site' => $site->getId()
+                        ), true, 'periode');
+                    $em->persist($job);
+                    $em->flush();
+                }
+//                $em->persist($job);
+//                $em->flush();
             }
         }
     }
@@ -989,7 +1025,7 @@ class LogementUnifieController extends Controller
                 }
             }
             // ************* fin suppression photos *************
-            
+
             // CAS D'UN NOUVEAU 'LOGEMENT PHOTO' OU DE MODIFICATION D'UN "LOGEMENT PHOTO"
             /** @var LogementPhoto $logementPhoto */
             // tableau pour la suppression des anciens photos

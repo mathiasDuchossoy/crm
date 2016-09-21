@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementBundle\Command;
 
+use Mondofute\Bundle\LogementPeriodeBundle\Controller\LogementPeriodeController;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,7 +34,9 @@ class AssocierPeriodesCommand extends ContainerAwareCommand
             $idSite = intval($input->getArgument('id-site'),10);
             $em = $this->getContainer()->get('doctrine.orm.entity_manager');
             $site = $em->getRepository(Site::class)->find($idSite);
-            dump($site);
+            $logementPeriodeController = new LogementPeriodeController();
+            $logementPeriodeController->setContainer($this-$this->getContainer());
+            $logementPeriodeController->associerPeriodes($idLogement,$site);
         }
     }
 
