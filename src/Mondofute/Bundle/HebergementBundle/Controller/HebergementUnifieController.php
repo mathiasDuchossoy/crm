@@ -1699,7 +1699,7 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-        $this->chargerCatalogue($entityUnifie);
+//        $this->chargerCatalogue($entityUnifie);
 //        dump($entityUnifie);
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
