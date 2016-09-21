@@ -51,14 +51,19 @@ class AppKernel extends Kernel
             new Sonata\IntlBundle\SonataIntlBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Mondofute\Bundle\PrestationAnnexeBundle\MondofutePrestationAnnexeBundle(),
-<<<<<<< 54031490e44a3ccef3cf22e652717154d6652b13
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
+<<<<<<< 9bc284111a83442ec9a30e0cd601c77f7d5d2dcd
+            new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
+            new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
+             );
 ||||||| merged common ancestors
-=======
-            new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
->>>>>>> rebase CRM-101 onto preprod 1/38
         );
+=======
+            new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
+            new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
+        );
+>>>>>>> (CRM-84|REBASE 1/6)
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
