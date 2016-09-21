@@ -82,10 +82,6 @@ class Fournisseur extends Moral
      * @var \Doctrine\Common\Collections\Collection
      */
     private $types;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $prestationAnnexes;
 
     /**
      * Fournisseur constructor.
@@ -539,39 +535,5 @@ class Fournisseur extends Moral
     public function getTypes()
     {
         return $this->types;
-    }
-
-    /**
-     * Add prestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
-     *
-     * @return Fournisseur
-     */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes[] = $prestationAnnex;
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
-     */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes->removeElement($prestationAnnex);
-    }
-
-    /**
-     * Get prestationAnnexes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPrestationAnnexes()
-    {
-        return $this->prestationAnnexes;
     }
 }
