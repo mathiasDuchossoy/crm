@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form;
 
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -18,8 +19,8 @@ class PrestationAnnexeHebergementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hebergement', EntityType::class, array(
-                'class'     => PrestationAnnexeHebergement::class,
+            ->add('hebergement' , EntityType::class, array(
+                'class'     => Hebergement::class,
                 'property' => 'id'
             ))
             ->add('site', HiddenType::class, array('mapped' => false))

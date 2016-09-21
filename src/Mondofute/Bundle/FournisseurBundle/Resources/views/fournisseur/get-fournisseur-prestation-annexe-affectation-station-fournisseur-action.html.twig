@@ -1,0 +1,45 @@
+{% if formAjax is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+
+{% set sitesActifs = [] %}
+{% if prestationAnnexeFournisseurs is defined %}
+    {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
+        {% if prestationAnnexeFournisseur.vars.value.actif == true and (prestationAnnexeFournisseur.vars.value.site.id not in sitesActifs) %}
+            {% set sitesActifs = sitesActifs|merge([prestationAnnexeFournisseur.vars.value.site.id]) %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if prestationAnnexeHebergements is defined %}
+    {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
+        {% if prestationAnnexeHebergement.vars.value.actif == true and (prestationAnnexeHebergement.vars.value.site.id not in sitesActifs) %}
+            {% set sitesActifs = sitesActifs|merge([prestationAnnexeHebergement.vars.value.site.id]) %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% for keyProduit, fournisseurProduit in fournisseurProduits %}
+    {% if fournisseurProduit.siteId == site.id %}
+        {% set FournisseurExists = false %}
+        {% if prestationAnnexeFournisseurs is defined %}
+            {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
+                {% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}
+                    {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
+                    == fournisseurProduit.id
+                    and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
+                        {% set FournisseurExists = true %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% set hebergementExists = false %}
+        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined %}
+            {% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}
+            {% set hebergementExists = true %}
+        {% endif %}
+
+        {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur.html.twig') %}
+
+    {% endif %}
+{% endfor %}

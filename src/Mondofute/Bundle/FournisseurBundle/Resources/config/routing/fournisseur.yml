@@ -44,7 +44,12 @@ fournisseur_get_fournisseur_prestation_annexe_affectation:
     methods:  GET
 
 fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement:
-    path:     /getFournisseurPrestationAnnexeAffectationHebergement/{prestationAnnexeId}/{siteId}/{fournisseurId}
-    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationHebergement" }
+    path:     /getFournisseurPrestationAnnexeAffectationHebergement/{prestationAnnexeId}/{siteId}/{fournisseurId}/{stationId}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationHebergement" , stationId: null }
+    methods:  GET
+
+fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur:
+    path:     /getFournisseurPrestationAnnexeAffectationStationFournisseur/{prestationAnnexeId}/{siteId}/{stationId}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationStationFournisseur" , stationId: null }
     methods:  GET
 

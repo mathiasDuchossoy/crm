@@ -47,7 +47,7 @@ class PrestationAnnexeStationUnifie
      */
     public function addPrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
     {
-        $this->prestationAnnexeStations[] = $prestationAnnexeStation;
+        $this->prestationAnnexeStations[] = $prestationAnnexeStation->setPrestationAnnexeStationUnifie($this);
 
         return $this;
     }

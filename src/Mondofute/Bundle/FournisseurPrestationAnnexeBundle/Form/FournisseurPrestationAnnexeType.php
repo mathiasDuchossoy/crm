@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeFournisseurType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeHebergementType;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeStationType;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -97,6 +98,13 @@ class FournisseurPrestationAnnexeType extends AbstractType
             ))
             ->add('prestationAnnexeHebergements', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeHebergementType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'translation_domain' => 'messages',
+            ))
+            ->add('prestationAnnexeStations', CollectionType::class, array(
+                'entry_type' => PrestationAnnexeStationType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,

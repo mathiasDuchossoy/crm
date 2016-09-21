@@ -1594,25 +1594,70 @@
             });
         }
 
-        function chargerHebergements(prestationAnnexeId, siteId , fournisseurId){
-//            $('#collapse_fournisseur_' + fournisseurId).collapse();
+        function chargerAffectationStationFournisseurs(prestationAnnexeId, siteId , stationId){
+            var path ;
 
-            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
+            var templateStationId = '';
+
+            path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur' ,{
                 'prestationAnnexeId' : '_prestationAnnexeId_',
                 'siteId': '_siteId_' ,
-                'fournisseurId': '_fournisseurId_' ,
+                'stationId': '_stationId_' ,
             }) }}";
+
+            console.log(stationId);
+            path = path.replace(/_stationId_/g, stationId);
+            templateStationId = stationId + "_";
+
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_siteId_/g, siteId);
-            path = path.replace(/_fournisseurId_/g, fournisseurId);
-            if($('#collapse_fournisseur_'+prestationAnnexeId+"_"+siteId+"_"+fournisseurId ).is(':hidden')){
+            if($('#collapse_station_'+prestationAnnexeId+"_"+siteId+"_"+ stationId  ).is(':hidden')){
                 $.ajax(path,
                         {
                             async: false,
                             method: 'GET'
                         }
                 ).done(function (data) {
-                    $('#list_hebergements_'+prestationAnnexeId+"_"+siteId+"_"+fournisseurId).html(data);
+                    $('#collapse_station_'+prestationAnnexeId+"_"+siteId+"_"+ stationId  ).html(data);
+                });
+            }
+        }
+
+        function chargerHebergements(prestationAnnexeId, siteId , fournisseurId , stationId  ){
+//            $('#collapse_fournisseur_' + fournisseurId).collapse();
+            var path ;
+
+            var templateStationId = '';
+            if(stationId !== undefined && stationId !== null){
+
+                path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
+                    'prestationAnnexeId' : '_prestationAnnexeId_',
+                    'siteId': '_siteId_' ,
+                    'fournisseurId': '_fournisseurId_' ,
+                    'stationId': '_stationId_' ,
+                }) }}";
+                console.log(stationId);
+                path = path.replace(/_stationId_/g, stationId);
+                templateStationId = stationId + "_";
+            }
+            else {
+                path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
+                    'prestationAnnexeId' : '_prestationAnnexeId_',
+                    'siteId': '_siteId_' ,
+                    'fournisseurId': '_fournisseurId_'
+                }) }}";
+            }
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            if($('#collapse_fournisseur_'+prestationAnnexeId+"_"+siteId+"_"+ templateStationId + ''+ fournisseurId ).is(':hidden')){
+                $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+                    $('#list_hebergements_'+prestationAnnexeId+"_"+siteId+"_"+ templateStationId +''+fournisseurId).html(data);
                 });
             }
         }

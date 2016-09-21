@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form;
 
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,7 +20,10 @@ class PrestationAnnexeStationType extends AbstractType
     {
         $builder
 //            ->add('prestationAnnexeStationUnifie')
-            ->add('station')
+            ->add('station' , EntityType::class, array(
+                'class' => Station::class,
+                'property' => 'id'
+            ))
             ->add('site', HiddenType::class, array('mapped' => false))
         ;
     }

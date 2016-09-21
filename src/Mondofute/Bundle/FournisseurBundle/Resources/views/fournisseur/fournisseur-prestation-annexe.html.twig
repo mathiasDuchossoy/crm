@@ -85,6 +85,13 @@
                 {{ form_widget(prestationAnnexe.modeAffectation , {'attr' : { 'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id}}) }}
                 <div id="div_affectation_{{ prestationAnnexe.modeAffectation.vars.id }}">
                     {% if prestationAnnexe.vars.value.modeAffectation == 1 %}
+                        {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station.html.twig'  with {
+                        'fournisseurProduits' : stationsWithHebergement,
+                        'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,
+                        'prestationAnnexeFournisseurs' : prestationAnnexe.prestationAnnexeFournisseurs,
+                        'prestationAnnexeHebergements' : prestationAnnexe.prestationAnnexeHebergements,
+                        'prestationAnnexeStations' : prestationAnnexe.prestationAnnexeStations
+                        }  %}
                     {% elseif prestationAnnexe.vars.value.modeAffectation == 2 %}
                         {#{{ form_row(prestationAnnexe.prestationAnnexeFournisseurs ) }}#}
                         {#{{ dump(prestationAnnexe.prestationAnnexeFournisseurs) }}#}

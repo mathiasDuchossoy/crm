@@ -1,0 +1,48 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab"
+             id="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}">
+            <h4 class="panel-title">
+                <div class="checkbox">
+                    <label><input type="checkbox"
+                                {% if FournisseurExists == true %}
+                                    checked="checked"
+                                {% endif %}
+                                  name="prestation_annexe_affectation_station_fournisseur[{{ prestationAnnexeId }}][{{ fournisseurProduit.stationId }}][{{ fournisseurProduit.id }}][{{ site.id }}]"
+                        >
+                        <a class="collapsed" role="button" data-toggle="collapse"
+                           href="#collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}"
+                           aria-controls="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}"
+                           onclick="chargerHebergements('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.id }}' , '{{ fournisseurProduit.stationId }}');return true;"
+                           aria-expanded="
+                                                {% if hebergementExists == true %}
+                                                true
+                                                {% else %}
+                                                false
+                                                {% endif %}
+                                           "
+                        >
+                            {{ fournisseurProduit.enseigne }} {{ fournisseurProduit.siteId }} {{ fournisseurProduit.stationId }}
+                        </a>
+                    </label>
+                </div>
+            </h4>
+        </div>
+        <div id="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}"
+             class="panel-collapse collapse
+                                {% if hebergementExists == true %}
+                                in
+                                {% endif %}
+                            " role="tabpanel"
+             aria-labelledby="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}">
+            <ul class="list-group"
+                id="list_hebergements_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}"
+            >
+                {% if hebergementExists == true %}
+                    {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-hebergement.html.twig') with {'siteId' : site.id , 'hebergements' : hebergement} %}
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</div>

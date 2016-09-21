@@ -1,28 +1,7 @@
 Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
     type: entity
     table: null
-#    inheritanceType: SINGLE_TABLE
-#    discriminatorColumn:
-#        name: hebergement_type
-#        type: smallint
-#    discriminatorMap:
-#        0: Hebergement
-#        1: Chalet
-#        2: Residence
-#        3: VillageClub
-#    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementRepository
-#    associationOverride:
-#        moyenComs:
-#            cascade: ['persist','remove']
-#            mappedBy: moyenComs
-#            joinTable:
-#                name: hebergement_moyenscom
-#                joinColumns:
-#                    hebergement_id:
-#                        referencedColumnName: id
-#                inverseJoinColumns:
-#                    moyencom_id:
-#                        referencedColumnName: id
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementRepository
     id:
         id:
             type: integer

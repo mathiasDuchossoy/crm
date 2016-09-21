@@ -13,4 +13,6 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeF
             inversedBy: prestationAnnexeFournisseurs
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
     lifecycleCallbacks: {  }

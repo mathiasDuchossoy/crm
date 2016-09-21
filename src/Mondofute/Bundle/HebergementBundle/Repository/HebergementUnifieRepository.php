@@ -55,7 +55,7 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
-    public function findByFournisseur($fournisseurId , $locale, $site = 1){
+    public function findByFournisseur($fournisseurId , $locale, $site = 1 , $stationId = null){
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId')
 //        $qb->select('hebergementUnifie')
@@ -73,6 +73,17 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('site.id = :site')
             ->setParameter('site', $site)
         ;
+
+        if (!empty($stationId))
+        {
+            $qb
+                ->join('hebergements.station' , 'station')
+                ->join('station.stationUnifie' , 'stationUnifie')
+                ->andWhere('stationUnifie.id = :stationId')
+                ->setParameter('stationId' , $stationId)
+            ;
+        }
+
         $qb->orderBy('hebergementUnifie.id', 'ASC');
 
         $result = $qb->getQuery()->getResult();
