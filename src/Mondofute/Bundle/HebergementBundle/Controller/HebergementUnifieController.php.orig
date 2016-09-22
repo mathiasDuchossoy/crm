@@ -1945,7 +1945,7 @@ class HebergementUnifieController extends Controller
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-<<<<<<< f0d4fff085d1bc0a01c5aad723c1185591d0272e
+<<<<<<< 0252a6978fef54047c0f69f8f46bb6733dca48af
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $reponse = new \stdClass();
         $nbLogements = 0;
@@ -2022,14 +2022,6 @@ class HebergementUnifieController extends Controller
         return new JsonResponse($data);
 ||||||| merged common ancestors
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
@@ -2037,7 +2029,15 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> debug step par step
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> debug step pour memory limit
     }
 
     /**
