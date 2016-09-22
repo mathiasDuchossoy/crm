@@ -663,6 +663,7 @@ class HebergementUnifieController extends Controller
                             }
                             // *** fin suppression des code promo logement ***
 <<<<<<< HEAD
+<<<<<<< HEAD
                             /** @var Logement $logement */
                             /** @var LogementPeriode $logementPeriode */
 //                            foreach ($fournisseurSite->getLogements() as $logement)
@@ -694,6 +695,23 @@ class HebergementUnifieController extends Controller
                                 }
                             }
 >>>>>>> f2b6182... resolution crsf
+||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
+=======
+                            /** @var Logement $logement */
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($fournisseurSite->getLogements() as $logement)
+                            {
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    $logementPeriodeLocatifs = $emSite->getRepository(LogementPeriodeLocatif::class)->findBy(array('logement' => $logement , 'periode' => $logementPeriode->getPeriode()));
+                                    foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif)
+                                    {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                        dump('delete');
+                                    }
+                                }
+                            }
+>>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
                             $entityUnifieSite->removeFournisseur($fournisseurSite);
                             $emSite->remove($fournisseurSite);
                         }
@@ -1404,7 +1422,26 @@ class HebergementUnifieController extends Controller
 //        }
 //        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
+<<<<<<< HEAD
+||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+=======
+<<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
+||||||| merged common ancestors
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+=======
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+>>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
+        $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
+>>>>>>> suppression chargement logementPeriode dans l'edit
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         $originalServices = new ArrayCollection();
@@ -1766,7 +1803,25 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
+<<<<<<< HEAD
 
+||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
+//        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+=======
+<<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
+
+||||||| merged common ancestors
+        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+=======
+//        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+>>>>>>> suppression chargement logementPeriode dans l'edit
+>>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -2068,11 +2123,24 @@ class HebergementUnifieController extends Controller
                         }
 
                     }
+<<<<<<< HEAD
                     $em->flush();
                 }
                 /** @var FournisseurHebergement $fournisseurHebergement */
                 foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                     foreach ($fournisseurHebergement->getLogements() as $logement) {
+||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
+<<<<<<< e2b360afd19135a0ff69692d410f3f0442acfa54
+                    /** @var FournisseurHebergement $fournisseurHebergement */
+                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                        foreach ($fournisseurHebergement->getLogements() as $logement)
+                        {
+=======
+                    /** @var FournisseurHebergement $fournisseurHebergement */
+                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                        foreach ($fournisseurHebergement->getLogements() as $logement)
+                        {
+>>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
 //                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
 //                                foreach ($codePromoLogements as $codePromoLogement)
 //                                {
@@ -2107,6 +2175,7 @@ class HebergementUnifieController extends Controller
                         foreach ($codePromoLogements as $codePromoLogement) {
                             $em->remove($codePromoLogement);
                         }
+<<<<<<< HEAD
                         /** @var LogementPeriode $logementPeriode */
                         foreach ($logement->getPeriodes() as $logementPeriode) {
                             // *** suprression logement periode locatif  ***
@@ -2120,6 +2189,39 @@ class HebergementUnifieController extends Controller
                             // *** fin suprression logement periode locatif  ***
                         }
                     }
+||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
+                    }
+||||||| merged common ancestors
+                    /** @var FournisseurHebergement $fournisseurHebergement */
+                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                        foreach ($fournisseurHebergement->getLogements() as $logement)
+                        {
+//                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+//                                foreach ($codePromoLogements as $codePromoLogement)
+//                                {
+//                                    $em->remove($codePromoLogement);
+//                                }
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($logement->getPeriodes() as $logementPeriode)
+                            {
+                                // *** suprression logement periode locatif  ***
+                                $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                    'logement' => $logement,
+                                    'periode' => $logementPeriode->getPeriode()->getId(),
+                                ));
+                                if(!empty($logementPeriodeLocatif))
+                                {
+                                    $em->remove($logementPeriodeLocatif);
+                                }
+                                // *** fin suprression logement periode locatif  ***
+                            }
+                        }
+                    }
+=======
+>>>>>>> suppression du code pour le delete hebergement/logementPeriodeLocatif
+=======
+                    }
+>>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
                 }
             }
 
