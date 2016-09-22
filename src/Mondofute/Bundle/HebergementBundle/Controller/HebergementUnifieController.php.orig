@@ -1867,16 +1867,7 @@ class HebergementUnifieController extends Controller
         $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
         $reponse->nbLogements = $nbLogements;
         return new JsonResponse($reponse);
-||||||| parent of 0c84ec2... debug step pour memory limit
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
+||||||| parent of 66dfb3a... debug memory limit
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
@@ -1884,7 +1875,15 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> 0c84ec2... debug step pour memory limit
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> 66dfb3a... debug memory limit
     }
 //    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
 ////        dump($request);
