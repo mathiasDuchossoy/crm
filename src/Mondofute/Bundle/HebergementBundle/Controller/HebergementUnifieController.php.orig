@@ -1941,16 +1941,18 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-<<<<<<< 3e0d24545dc3c24d04da66568184b8287f73c698
+<<<<<<< 76300bf281838719daa75811ecfd4e441d3eb839
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
 ||||||| merged common ancestors
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
 =======
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
->>>>>>> verif memory
+        ini_set('max_execution_time',3600);
+>>>>>>> ajout de max execution time
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $reponse = new \stdClass();
