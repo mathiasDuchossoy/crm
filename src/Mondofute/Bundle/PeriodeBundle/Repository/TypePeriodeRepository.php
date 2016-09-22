@@ -45,4 +45,13 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
         $pag = new Paginator($q, true);
         return $pag;
     }
+
+    public function findAllArray()
+    {
+        $qb = $this->createQueryBuilder('type_periode_repository')
+            ->select('type_periode_repository')
+            ->addSelect('periodes')
+            ->leftJoin('type_periode_repository.periodes', 'periodes');
+        return $qb->getQuery()->getArrayResult();
+    }
 }
