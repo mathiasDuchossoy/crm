@@ -39,7 +39,7 @@
                 id="list_hebergements_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}_{{ fournisseurProduit.id }}"
             >
                 {% if hebergementExists == true %}
-                    {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-hebergement.html.twig') with {'siteId' : site.id , 'hebergements' : hebergement} %}
+                    {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur-hebergement.html.twig') with {'siteId' : site.id , 'hebergements' : hebergement} %}
                 {% endif %}
 
             </ul>

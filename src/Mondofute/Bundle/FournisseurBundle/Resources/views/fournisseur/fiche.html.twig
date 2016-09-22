@@ -1571,8 +1571,15 @@
             prestationAnnexeId = $element.data('prestation-annexe-id');
             $radioVal = $element.find('input:checked').val();
             var elementId = $element.attr('id');
-            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation' ,{'affectation': '_affectation_' , 'prestationAnnexeId' : '_prestationAnnexeId_'}) }}";
+            var fournisseurId = '{{ fournisseur.id }}';
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation' ,{
+                'affectation': '_affectation_' ,
+                'prestationAnnexeId' : '_prestationAnnexeId_',
+                'prestationAnnexeId' : '_prestationAnnexeId_',
+                'fournisseurId': '_fournisseurId_' ,
+            }) }}";
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
             switch ($radioVal){
                 case '1':
                     path = path.replace(/_affectation_/g, 'station');
@@ -1598,19 +1605,20 @@
             var path ;
 
             var templateStationId = '';
+            var fournisseurId = '{{ fournisseur.id }}';
 
             path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur' ,{
                 'prestationAnnexeId' : '_prestationAnnexeId_',
                 'siteId': '_siteId_' ,
                 'stationId': '_stationId_' ,
+                'fournisseurId': '_fournisseurId_' ,
             }) }}";
 
-            console.log(stationId);
             path = path.replace(/_stationId_/g, stationId);
-            templateStationId = stationId + "_";
 
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
             if($('#collapse_station_'+prestationAnnexeId+"_"+siteId+"_"+ stationId  ).is(':hidden')){
                 $.ajax(path,
                         {
@@ -1628,6 +1636,8 @@
             var path ;
 
             var templateStationId = '';
+
+            var fournisseurCurrentId = '{{ fournisseur.id }}';
             if(stationId !== undefined && stationId !== null){
 
                 path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
@@ -1635,21 +1645,25 @@
                     'siteId': '_siteId_' ,
                     'fournisseurId': '_fournisseurId_' ,
                     'stationId': '_stationId_' ,
+                    'fournisseurCurrentId': '_fournisseurCurrentId_' ,
                 }) }}";
-                console.log(stationId);
+
                 path = path.replace(/_stationId_/g, stationId);
+                path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
                 templateStationId = stationId + "_";
             }
             else {
                 path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
                     'prestationAnnexeId' : '_prestationAnnexeId_',
                     'siteId': '_siteId_' ,
-                    'fournisseurId': '_fournisseurId_'
+                    'fournisseurId': '_fournisseurId_',
+                    'fournisseurCurrentId': '_fournisseurCurrentId_' ,
                 }) }}";
             }
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_siteId_/g, siteId);
             path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
             if($('#collapse_fournisseur_'+prestationAnnexeId+"_"+siteId+"_"+ templateStationId + ''+ fournisseurId ).is(':hidden')){
                 $.ajax(path,
                         {

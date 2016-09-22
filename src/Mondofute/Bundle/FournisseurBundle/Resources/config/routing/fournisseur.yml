@@ -39,17 +39,17 @@ fournisseur_get_fournisseur_prestation_annexe_form:
     methods:  GET
 
 fournisseur_get_fournisseur_prestation_annexe_affectation:
-    path:     /getFournisseurPrestationAnnexeAffectation/{affectation}/{prestationAnnexeId}
+    path:     /getFournisseurPrestationAnnexeAffectation/{affectation}/{prestationAnnexeId}/{fournisseurId}
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectation" }
     methods:  GET
 
 fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement:
-    path:     /getFournisseurPrestationAnnexeAffectationHebergement/{prestationAnnexeId}/{siteId}/{fournisseurId}/{stationId}
+    path:     /getFournisseurPrestationAnnexeAffectationHebergement/{prestationAnnexeId}/{siteId}/{fournisseurId}/{fournisseurCurrentId}/{stationId}
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationHebergement" , stationId: null }
     methods:  GET
 
 fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur:
-    path:     /getFournisseurPrestationAnnexeAffectationStationFournisseur/{prestationAnnexeId}/{siteId}/{stationId}
+    path:     /getFournisseurPrestationAnnexeAffectationStationFournisseur/{prestationAnnexeId}/{siteId}/{stationId}/{fournisseurId}
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationStationFournisseur" , stationId: null }
     methods:  GET
 

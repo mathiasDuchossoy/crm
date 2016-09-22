@@ -63,6 +63,50 @@
             {% set stationIdTemp = '' %}
             {% for keyProduit, fournisseurProduit in fournisseurProduits %}
                 {% if fournisseurProduit.siteId == site.id %}
+
+                    {% set FournisseurExists = false %}
+                    {% if prestationAnnexeFournisseurs is defined %}
+                        {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
+                            {% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}
+
+                                {% if
+                                prestationAnnexeFournisseur.vars.value.actif == true
+                                and prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.id
+                                and prestationAnnexeFournisseur.vars.value.site.id == site.id
+                                and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+                                %}
+                                    {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationId#}
+                                    {% set FournisseurExists = true %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% set openStation = false %}
+                    {% for item in fournisseurProduits  %}
+                        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ item.id ] is defined
+                        and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+                        %}
+                            {% set openStation = true %}
+                        {% endif %}
+                    {% endfor %}
+
+
+                    {% set hebergementExists = false %}
+                    {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined
+                    and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+                    %}
+                        {% set hebergement = [] %}
+                        {#{% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}#}
+                        {% for item in hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}
+                            {% if item.stationUnifieId == fournisseurProduit.stationId %}
+                                {% set hebergement = hebergement|merge([item]) %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set hebergementExists = true %}
+                    {% endif %}
+
+
                     {% if stationIdTemp !=  fournisseurProduit.stationId %}
 
                         {% set stationExists = false %}
@@ -92,7 +136,8 @@
                                            aria-controls="collapse_station_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}"
                                                 onclick="chargerAffectationStationFournisseurs('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.stationId }}');return true;"
                                            aria-expanded="
-                                                {% if stationExists == true %}
+                                                {#{% if hebergementExists == true or FournisseurExists == true %}#}
+                                                {% if FournisseurExists == true or openStation == true %}
                                                 true
                                                 {% else %}
                                                 false
@@ -106,31 +151,15 @@
                             </legend>
                             <div  id="collapse_station_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}"
                             class="panel-collapse collapse
-                                    {% if stationExists == true %}
+                                    {#{% if hebergementExists == true or FournisseurExists == true %}#}
+                                    {% if FournisseurExists == true or openStation == true %}
                                     in
                                     {% endif %}
                                 " role="tabpanel"
                             aria-labelledby="heading_station_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationId }}">
                     {% endif %}
-                    {% set FournisseurExists = false %}
-                    {% if prestationAnnexeFournisseurs is defined %}
-                        {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
-                            {% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}
-                                {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
-                                == fournisseurProduit.id
-                                and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
-                                    {% set FournisseurExists = true %}
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
 
 
-                    {% set hebergementExists = false %}
-                    {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined %}
-                        {% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}
-                        {% set hebergementExists = true %}
-                    {% endif %}
 
                     {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur.html.twig') %}
 

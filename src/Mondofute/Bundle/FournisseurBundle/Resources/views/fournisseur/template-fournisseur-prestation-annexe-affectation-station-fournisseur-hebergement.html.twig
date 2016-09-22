@@ -1,0 +1,29 @@
+{% for hebergement in hebergements %}
+    {% if hebergement.stationUnifieId == fournisseurProduit.stationId %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-11">
+                <div class="checkbox">
+                    <label class="">
+                        <input type="checkbox"
+                                {% if hebergementExists == true %}
+                                    checked="checked"
+                                {% endif %}
+                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
+                        >
+                        {{ hebergement.nom }}
+                        {#{{ dump(hebergements) }}#}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </li>
+{% endif %}
+{% endfor %}
+{% if hebergements is empty %}
+    <li class="list-group-item">
+        <div role="alert" class="alert alert-info">Pas d'hébergements correspondant à ce fournisseur...</div>
+    </li>
+{% endif %}

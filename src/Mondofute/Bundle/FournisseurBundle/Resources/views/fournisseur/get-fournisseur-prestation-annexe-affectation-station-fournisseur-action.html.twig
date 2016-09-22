@@ -26,7 +26,9 @@
                 {% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}
                     {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
                     == fournisseurProduit.id
-                    and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
+                    and prestationAnnexeFournisseur.vars.value.site.id == site.id
+                    and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+                    %}
                         {% set FournisseurExists = true %}
                     {% endif %}
                 {% endif %}
@@ -34,7 +36,9 @@
         {% endif %}
 
         {% set hebergementExists = false %}
-        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined %}
+        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] is defined
+            and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+        %}
             {% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.id ] %}
             {% set hebergementExists = true %}
         {% endif %}

@@ -57,7 +57,7 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 
     public function findByFournisseur($fournisseurId , $locale, $site = 1 , $stationId = null){
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId')
+        $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId , stationUnifie.id stationUnifieId')
 //        $qb->select('hebergementUnifie')
             ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
             ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
@@ -66,6 +66,8 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->join('hebergements.traductions' , 'traductions')
             ->join('traductions.langue' , 'langue')
             ->join('hebergements.site' , 'site')
+            ->join('hebergements.station' , 'station')
+            ->join('station.stationUnifie' , 'stationUnifie')
             ->where('fournisseur.id = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseurId)
             ->andWhere('langue.code = :langue')
@@ -77,8 +79,6 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
         if (!empty($stationId))
         {
             $qb
-                ->join('hebergements.station' , 'station')
-                ->join('station.stationUnifie' , 'stationUnifie')
                 ->andWhere('stationUnifie.id = :stationId')
                 ->setParameter('stationId' , $stationId)
             ;
