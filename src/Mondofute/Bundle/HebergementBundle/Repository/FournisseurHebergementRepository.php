@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * FournisseurHebergementRepository
  *
@@ -10,4 +12,30 @@ namespace Mondofute\Bundle\HebergementBundle\Repository;
  */
 class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function chargerPourStocks($idHebergementUnifie){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fh')
+            ->addSelect('f')
+            ->addSelect('l')
+        ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
+        ->leftJoin('fh.fournisseur','f')
+        ->leftJoin('fh.logements','l');
+        $result = $qb->getQuery()->getResult();
+//        dump(new ArrayCollection($result));
+//        die;
+//        $qb->select('fh')
+//            ->addSelect('fh.fournisseur')
+//            ->addSelect('fh.logements')
+//            ->addSelect('lt.langue')
+//            ->addSelect('lt.nom')
+//            ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
+//            ->leftJoin('fh.fournisseur','f')
+//            ->leftJoin('fh.logements','l')
+//        ->leftJoin('l.site','site')
+//        ->leftJoin('l.traductions','lt')
+//        ->leftJoin('lt.langue','ltl')
+//        ->where('fh.hebergement.id = :idHebergement')
+//        ->setParameter('idHebergement',$idHebergementUnifie);
+        return new ArrayCollection($result);
+    }
 }
