@@ -11,7 +11,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
  */
 class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByCriteria($fournisseurId, FournisseurPrestationAnnexe $prestationAnnex)
+    public function findByCriteria($fournisseurId, FournisseurPrestationAnnexe $prestationAnnex, $stationExists = false)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -23,6 +23,13 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
             ->andWhere('prestationAnnexeFournisseurs.fournisseur = :fournisseurId')
             ->setParameter('fournisseurId' ,$fournisseurId )
         ;
+
+        if($stationExists){
+            $qb
+//                ->join('prestationAnnexeFournisseurs.station' , 'station')
+                ->andWhere('prestationAnnexeFournisseurs.station IS NOT NULL')
+            ;
+        }
 
         $result = $qb->getQuery()->getOneOrNullResult();
 //        dump($result);die;

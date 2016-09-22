@@ -739,6 +739,7 @@ class FournisseurController extends Controller
                         });
                         /** @var PrestationAnnexeFournisseur $originalprestationsAnnexeStationFournisseur */
                         foreach ($prestationsAnnexeStationFournisseursOriginalSites as $originalprestationsAnnexeStationFournisseur) {
+
                             if (
                                 empty($originalprestationsAnnexeStationFournisseur->getStation())
                                 or
@@ -748,6 +749,7 @@ class FournisseurController extends Controller
                                 $em->remove($originalprestationsAnnexeStationFournisseur->getPrestationAnnexeFournisseurUnifie());
                             }
                         }
+//                        die;
                     } else {
                         $prestationsAnnexeFournisseursOriginalSites = $originalPrestationsAnnexeFournisseurs->filter(function (PrestationAnnexeFournisseur $element) use ($prestationAnnex) {
                             return $element->getFournisseurPrestationAnnexe() == $prestationAnnex;
@@ -755,6 +757,8 @@ class FournisseurController extends Controller
                         /** @var PrestationAnnexeFournisseur $originalprestationsAnnexeFournisseur */
                         foreach ($prestationsAnnexeFournisseursOriginalSites as $originalprestationsAnnexeFournisseur) {
                             if (
+                            !empty($originalprestationsAnnexeFournisseur->getStation())
+                            or
                             empty($prestation_annexe_affectation_fournisseurs[$originalprestationsAnnexeFournisseur->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$originalprestationsAnnexeFournisseur->getFournisseur()->getId()])
                             ) {
                                 $em->remove($originalprestationsAnnexeFournisseur);
@@ -923,7 +927,7 @@ class FournisseurController extends Controller
 
                             $fournisseurPrestationAnnexeFournisseur = $em->find(Fournisseur::class, $fournisseurId);
                             /** @var PrestationAnnexeStation $prestationAnnexeStation */
-                            $prestationAnnexeStationFournisseurUnifie = $em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByCriteria($fournisseurId, $prestationAnnex);
+                            $prestationAnnexeStationFournisseurUnifie = $em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByCriteria($fournisseurId, $prestationAnnex, $stationExists = true);
                             if (empty($prestationAnnexeStationFournisseurUnifie)) {
                                 $prestationAnnexeStationFournisseurUnifie = new PrestationAnnexeFournisseurUnifie();
                                 $em->persist($prestationAnnexeStationFournisseurUnifie);
@@ -1527,6 +1531,37 @@ class FournisseurController extends Controller
                             }
                         }
 
+                        // *** suppression prestation annexe station ***
+                        $prestationAnnexeStationUnifies = new ArrayCollection();
+                        $prestationAnnexeStationUnifiesSite = new ArrayCollection();
+                        foreach ($prestationAnnexe->getPrestationAnnexeStations() as $prestationAnnexeStation) {
+                            if (false === $prestationAnnexeStationUnifies->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
+                                $prestationAnnexeStationUnifies->add($prestationAnnexeStation->getPrestationAnnexeStationUnifie());
+                            }
+                        }
+                        foreach ($prestationAnnexeSite->getPrestationAnnexeStations() as $prestationAnnexeStation) {
+                            if (false === $prestationAnnexeStationUnifiesSite->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
+                                $prestationAnnexeStationUnifiesSite->add($prestationAnnexeStation->getPrestationAnnexeStationUnifie());
+                            }
+                        }
+
+                        /** @var PrestationAnnexeStationUnifie $prestationAnnexeAffectationUnifieSite */
+                        foreach ($prestationAnnexeStationUnifiesSite as $prestationAnnexeAffectationUnifieSite) {
+                            $prestationAnnexeAffectationUnifie = $prestationAnnexeStationUnifies->filter(function (PrestationAnnexeStationUnifie $element) use ($prestationAnnexeAffectationUnifieSite) {
+                                return $element->getId() == $prestationAnnexeAffectationUnifieSite->getId();
+                            })->first();
+                            if (false === $prestationAnnexeAffectationUnifie) {
+                                /** @var PrestationAnnexeStation $prestationAnnexeStation */
+                                foreach ($prestationAnnexeAffectationUnifieSite->getPrestationAnnexeStations() as $prestationAnnexeStation) {
+                                    $prestationAnnexeAffectationUnifieSite->getPrestationAnnexeStations()->removeElement($prestationAnnexeStation);
+                                    $prestationAnnexeSite->getPrestationAnnexeStations()->removeElement($prestationAnnexeStation);
+                                    $emSite->remove($prestationAnnexeStation);
+                                }
+                                $emSite->remove($prestationAnnexeAffectationUnifieSite);
+                            }
+                        }
+                        // *** fin suppression prestation annexe station ***
+
                         // *** suppression prestation annexe fournisseur ***
                         $prestationAnnexeFournisseurUnifies = new ArrayCollection();
                         $prestationAnnexeFournisseurUnifiesSite = new ArrayCollection();
@@ -1758,11 +1793,66 @@ class FournisseurController extends Controller
                                 ->setSite($emSite->find(Site::class, $prestationAnnexeFournisseur->getSite()));
                         }
 
+
+                        $stationUnifieSite = $emSite->find(StationUnifie::class, $prestationAnnexeFournisseur->getStation()->getStationUnifie());
+                        $stationSite = $stationUnifieSite->getStations()->first();
+
                         $prestationAnnexeFournisseurSite = $prestationAnnexeFournisseurUnifieSite->getPrestationAnnexeFournisseurs()->first();
                         $prestationAnnexeFournisseurSite
-                            ->setActif($prestationAnnexeFournisseur->getActif());
+                            ->setActif($prestationAnnexeFournisseur->getActif())
+                            ->setStation($stationSite)
+                        ;
                     }
                     // *** fin prestationAnnexeFournisseurs ***
+                    // *** prestationAnnexeStations ***
+                    /** @var PrestationAnnexeStation $prestationAnnexeStation */
+                    $prestationAnnexeStationUnifies = new ArrayCollection();
+                    $prestationAnnexeStationUnifiesSite = new ArrayCollection();
+                    foreach ($fournisseurPrestationAnnexe->getPrestationAnnexeStations() as $prestationAnnexeStation) {
+                        if (false === $prestationAnnexeStationUnifies->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
+                            $prestationAnnexeStationUnifies->add($prestationAnnexeStation->getPrestationAnnexeStationUnifie());
+                        }
+                    }
+                    foreach ($fournisseurPrestationAnnexeSite->getPrestationAnnexeStations() as $prestationAnnexeStation) {
+                        if (false === $prestationAnnexeStationUnifiesSite->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
+                            $prestationAnnexeStationUnifiesSite->add($prestationAnnexeStation->getPrestationAnnexeStationUnifie());
+                        }
+                    }
+                    /** @var PrestationAnnexeStationUnifie $prestationAnnexeStationUnifie */
+                    foreach ($prestationAnnexeStationUnifies as $prestationAnnexeStationUnifie) {
+                        $prestationAnnexeStationUnifieSite = $prestationAnnexeStationUnifiesSite->filter(function (PrestationAnnexeStationUnifie $element) use ($prestationAnnexeStationUnifie) {
+                            return $element->getId() == $prestationAnnexeStationUnifie->getId();
+                        })->first();
+
+                        $prestationAnnexeStation = $prestationAnnexeStationUnifie->getPrestationAnnexeStations()->filter(function (PrestationAnnexeStation $element) use ($site) {
+                            return $element->getSite() == $site;
+                        })->first();
+
+                        if (false === $prestationAnnexeStationUnifieSite) {
+                            $prestationAnnexeStationUnifieSite = new PrestationAnnexeStationUnifie();
+                            $emSite->persist($prestationAnnexeStationUnifieSite);
+                            $prestationAnnexeStationUnifieSite->setId($prestationAnnexeStationUnifie->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($prestationAnnexeStationUnifieSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+
+                            $prestationAnnexeStationSite = new PrestationAnnexeStation();
+                            $prestationAnnexeStationUnifieSite->addPrestationAnnexeStation($prestationAnnexeStationSite);
+
+
+                            $stationUnifieSite = $emSite->find(StationUnifie::class, $prestationAnnexeStation->getStation()->getStationUnifie());
+                            $stationSite = $stationUnifieSite->getStations()->first();
+                            $fournisseurPrestationAnnexeSite->addPrestationAnnexeStation($prestationAnnexeStationSite);
+                            $prestationAnnexeStationSite
+                                ->setStation($stationSite)
+                                ->setSite($emSite->find(Site::class, $prestationAnnexeStation->getSite()));
+                        }
+
+                        $prestationAnnexeStationSite = $prestationAnnexeStationUnifieSite->getPrestationAnnexeStations()->first();
+                        $prestationAnnexeStationSite
+                            ->setActif($prestationAnnexeStation->getActif());
+                    }
+                    // *** fin prestationAnnexeStations ***
 
                     // *** prestationAnnexeHebergements ***
                     /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
