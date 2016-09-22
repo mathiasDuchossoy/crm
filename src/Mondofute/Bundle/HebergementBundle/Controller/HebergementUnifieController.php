@@ -1451,8 +1451,8 @@ class HebergementUnifieController extends Controller
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         $em = $this->getDoctrine()->getManager();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
