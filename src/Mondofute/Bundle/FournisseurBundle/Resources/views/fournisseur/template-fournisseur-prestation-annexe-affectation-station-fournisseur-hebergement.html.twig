@@ -1,5 +1,13 @@
 {% for hebergement in hebergements %}
-    {% if hebergement.stationUnifieId == fournisseurProduit.stationId %}
+    {#{% if hebergement.stationUnifieId == fournisseurProduit.stationId %}#}
+    {% set hebergementExists = false %}
+    {% if prestationAnnexeHebergements is defined %}
+        {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
+            {% if prestationAnnexeHebergement.vars.value.hebergement.id == hebergement.hebergementId %}
+                {% set hebergementExists = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <li class="list-group-item">
         <div class="row">
             <div class="col-md-1">
@@ -20,7 +28,7 @@
             </div>
         </div>
     </li>
-{% endif %}
+{#{% endif %}#}
 {% endfor %}
 {% if hebergements is empty %}
     <li class="list-group-item">

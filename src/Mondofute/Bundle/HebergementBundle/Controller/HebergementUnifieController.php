@@ -9,6 +9,12 @@ use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
@@ -109,12 +115,12 @@ class HebergementUnifieController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Hebergement $entity */
-            foreach ($entityUnifie->getHebergements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($entityUnifie->getHebergements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
-            
+
             /** @var Hebergement $entity */
             foreach ($entityUnifie->getHebergements() as $keyHebergement => $entity) {
                 foreach ($entity->getEmplacements() as $keyEmplacement => $emplacement) {
@@ -204,6 +210,77 @@ class HebergementUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
+
+            // ***** GESTION DES PRESTATIONS ANNEXE *****
+            // *** prestation annexe station ***
+            /** @var Hebergement $hebergement */
+            $hebergement = $entityUnifie->getHebergements()->first();
+            $prestationAnnexeStations = $em->getRepository(PrestationAnnexeStation::class)->findBy(array('station' => $hebergement->getStation()));
+            $prestationAnnexeStationUnifies = new ArrayCollection();
+            foreach ($prestationAnnexeStations as $prestationAnnexeStation) {
+                if (!$prestationAnnexeStationUnifies->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
+                    $prestationAnnexeStationUnifies->add($prestationAnnexeStation->getPrestationAnnexeStationUnifie());
+                }
+            }
+            /** @var PrestationAnnexeStationUnifie $prestationAnnexeStationUnifie */
+            foreach ($prestationAnnexeStationUnifies as $prestationAnnexeStationUnifie) {
+                /** @var FournisseurHebergement $fournisseurHebergement */
+                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                    /** @var PrestationAnnexeStation $prestationAnnexeStation */
+                    $newPrestationAnnexeHebergementUnifie = new PrestationAnnexeHebergementUnifie();
+                    $em->persist($newPrestationAnnexeHebergementUnifie);
+                    foreach ($fournisseurHebergement->getHebergement()->getHebergements() as $hebergement) {
+                        /** @var PrestationAnnexeHebergement $newPrestationAnnexeHebergement */
+                        $prestationAnnexeStation = $prestationAnnexeStationUnifie->getPrestationAnnexeStations()->filter(function (PrestationAnnexeStation $element) use ($hebergement) {
+                            return $element->getStation()->getSite() == $hebergement->getSite();
+                        })->first();
+                        $newPrestationAnnexeHebergement = new PrestationAnnexeHebergement();
+                        $em->persist($newPrestationAnnexeHebergement);
+                        $newPrestationAnnexeHebergementUnifie->addPrestationAnnexeHebergement($newPrestationAnnexeHebergement);
+                        $newPrestationAnnexeHebergement
+                            ->setHebergement($hebergement)
+                            ->setFournisseur($fournisseurHebergement->getFournisseur())
+                            ->setFournisseurPrestationAnnexe($prestationAnnexeStation->getFournisseurPrestationAnnexe())
+                            ->setSite($hebergement->getSite());
+                    }
+                }
+            }
+            // *** fin prestation annexe station ***
+//            // *** prestation annexe fournisseur ***
+//            /** @var Hebergement $hebergement */
+//            $hebergement = $entityUnifie->getHebergements()->first();
+//            $prestationAnnexeFournisseurs = $em->getRepository(PrestationAnnexeFournisseur::class)->findBy(array('fournisseur' => $hebergement->getFournisseur()));
+//            $prestationAnnexeFournisseurUnifies = new ArrayCollection();
+//            foreach ($prestationAnnexeFournisseurs as $prestationAnnexeFournisseur) {
+//                if (!$prestationAnnexeFournisseurUnifies->contains($prestationAnnexeFournisseur->getPrestationAnnexeFournisseurUnifie())) {
+//                    $prestationAnnexeFournisseurUnifies->add($prestationAnnexeFournisseur->getPrestationAnnexeFournisseurUnifie());
+//                }
+//            }
+//            /** @var PrestationAnnexeFournisseurUnifie $prestationAnnexeFournisseurUnifie */
+//            foreach ($prestationAnnexeFournisseurUnifies as $prestationAnnexeFournisseurUnifie) {
+//                /** @var FournisseurHebergement $fournisseurHebergement */
+//                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+//                    /** @var PrestationAnnexeFournisseur $prestationAnnexeFournisseur */
+//                    $newPrestationAnnexeHebergementUnifie = new PrestationAnnexeHebergementUnifie();
+//                    $em->persist($newPrestationAnnexeHebergementUnifie);
+//                    foreach ($fournisseurHebergement->getHebergement()->getHebergements() as $hebergement) {
+//                        /** @var PrestationAnnexeHebergement $newPrestationAnnexeHebergement */
+//                        $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) use ($hebergement) {
+//                            return $element->getFournisseur()->getSite() == $hebergement->getSite();
+//                        })->first();
+//                        $newPrestationAnnexeHebergement = new PrestationAnnexeHebergement();
+//                        $em->persist($newPrestationAnnexeHebergement);
+//                        $newPrestationAnnexeHebergementUnifie->addPrestationAnnexeHebergement($newPrestationAnnexeHebergement);
+//                        $newPrestationAnnexeHebergement
+//                            ->setHebergement($hebergement)
+//                            ->setFournisseur($fournisseurHebergement->getFournisseur())
+//                            ->setFournisseurPrestationAnnexe($prestationAnnexeFournisseur->getFournisseurPrestationAnnexe())
+//                            ->setSite($hebergement->getSite());
+//                    }
+//                }
+//            }
+//            // *** fin prestation annexe fournisseur ***
+            // ***** FIN GESTION DES PRESTATIONS ANNEXE *****
 
             $em->persist($entityUnifie);
             try {
@@ -382,7 +459,7 @@ class HebergementUnifieController extends Controller
                 }
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (is_null($entityUnifieSite = $emSite->find(HebergementUnifie::class , $entityUnifie))) {
+                if (is_null($entityUnifieSite = $emSite->find(HebergementUnifie::class, $entityUnifie))) {
                     $entityUnifieSite = new HebergementUnifie();
                     $entityUnifieSite->setId($entityUnifie->getId());
                     $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
@@ -529,8 +606,7 @@ class HebergementUnifieController extends Controller
                     ->setTypeHebergement($typeHebergementSite)
                     ->setClassement($classementSite)
                     ->setHebergementUnifie($entityUnifieSite)
-                    ->setActif($entity->getActif())
-                ;
+                    ->setActif($entity->getActif());
 //                GESTION DES EMPLACEMENTS
                 $this->gestionEmplacementsSiteDistant($site, $entity, $entitySite);
 
@@ -688,7 +764,8 @@ class HebergementUnifieController extends Controller
         FournisseurHebergement $fournisseur,
         FournisseurHebergement $fournisseurSite,
         $emSite
-    ) {
+    )
+    {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1032,7 +1109,7 @@ class HebergementUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Hebergement $entity */
             foreach ($entityUnifie->getHebergements() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -1073,10 +1150,10 @@ class HebergementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($entityUnifie->getHebergements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($entityUnifie->getHebergements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }

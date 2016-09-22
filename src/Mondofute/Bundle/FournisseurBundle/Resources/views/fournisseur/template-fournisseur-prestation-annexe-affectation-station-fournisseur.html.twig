@@ -1,3 +1,14 @@
+{% for item in hebergement %}
+    {#{% if hebergement.stationUnifieId == fournisseurProduit.stationId %}#}
+    {% set hebergementExists = false %}
+    {% if prestationAnnexeHebergements is defined %}
+        {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
+            {% if prestationAnnexeHebergement.vars.value.hebergement.id == item.hebergementId %}
+                {% set hebergementExists = true %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
         <div class="panel-heading" role="tab"
@@ -22,7 +33,7 @@
                                                 {% endif %}
                                            "
                         >
-                            {{ fournisseurProduit.enseigne }} {{ fournisseurProduit.siteId }} {{ fournisseurProduit.stationId }}
+                            {{ fournisseurProduit.enseigne }}
                         </a>
                     </label>
                 </div>
