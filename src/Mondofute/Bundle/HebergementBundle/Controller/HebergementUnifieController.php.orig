@@ -1423,13 +1423,19 @@ class HebergementUnifieController extends Controller
 //        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
 //        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
 //        $typePeriodes = new ArrayCollection();
 //        $periodes = $em->getRepository(Periode::class)->findAll();
 =======
 <<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
+||||||| parent of 0252a69... debug step par step
+<<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
+=======
+>>>>>>> 0252a69... debug step par step
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
+<<<<<<< HEAD
 ||||||| merged common ancestors
 //        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
 //        $typePeriodes = new ArrayCollection();
@@ -1442,6 +1448,20 @@ class HebergementUnifieController extends Controller
 >>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
 >>>>>>> suppression chargement logementPeriode dans l'edit
+||||||| parent of 0252a69... debug step par step
+||||||| merged common ancestors
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+=======
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+        $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
+>>>>>>> suppression chargement logementPeriode dans l'edit
+=======
+>>>>>>> 0252a69... debug step par step
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         $originalServices = new ArrayCollection();
@@ -1804,6 +1824,7 @@ class HebergementUnifieController extends Controller
             }
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 ||||||| parent of f0d4fff... suppression chargement logementPeriode dans l'edit
 //        $this->chargerCatalogue($entityUnifie);
@@ -1811,7 +1832,12 @@ class HebergementUnifieController extends Controller
 //        die;
 =======
 <<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
+||||||| parent of 0252a69... debug step par step
+<<<<<<< 306497bf6ef7f90c673d1f763d6a2f3817d00113
+=======
+>>>>>>> 0252a69... debug step par step
 
+<<<<<<< HEAD
 ||||||| merged common ancestors
         $this->chargerCatalogue($entityUnifie);
 //        dump($entityUnifie);
@@ -1822,6 +1848,18 @@ class HebergementUnifieController extends Controller
 //        die;
 >>>>>>> suppression chargement logementPeriode dans l'edit
 >>>>>>> f0d4fff... suppression chargement logementPeriode dans l'edit
+||||||| parent of 0252a69... debug step par step
+||||||| merged common ancestors
+        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+=======
+//        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+>>>>>>> suppression chargement logementPeriode dans l'edit
+=======
+>>>>>>> 0252a69... debug step par step
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -1907,6 +1945,7 @@ class HebergementUnifieController extends Controller
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
+<<<<<<< f0d4fff085d1bc0a01c5aad723c1185591d0272e
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $reponse = new \stdClass();
         $nbLogements = 0;
@@ -1981,6 +2020,24 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
+||||||| merged common ancestors
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> debug step par step
     }
 
     /**
