@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
@@ -40,14 +41,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
-<<<<<<< HEAD
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
-||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
-=======
-use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
->>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -1395,13 +1389,16 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 <<<<<<< HEAD
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
-||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
-=======
+||||||| parent of 0c0c7f5... modification de la gestion du stock en ajax
         $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
         $periodes = $em->getRepository(Periode::class)->findAll();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
->>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+=======
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+>>>>>>> 0c0c7f5... modification de la gestion du stock en ajax
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         $originalServices = new ArrayCollection();
@@ -1763,9 +1760,17 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
+<<<<<<< HEAD
+
+||||||| parent of 0c0c7f5... modification de la gestion du stock en ajax
+//        $this->chargerCatalogue($entityUnifie);
+//        dump($entityUnifie);
+//        die;
+=======
         $this->chargerCatalogue($entityUnifie);
 //        dump($entityUnifie);
 //        die;
+>>>>>>> 0c0c7f5... modification de la gestion du stock en ajax
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
@@ -1773,9 +1778,9 @@ class HebergementUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'typePeriodes' => $typePeriodes,
         ));
     }
+
 
     private function deleteTarifSites(ServiceHebergementTarif $tarif)
     {
@@ -1818,7 +1823,6 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * @param HebergementUnifie $hebergementUnifie
      */
     public function chargerCatalogue($hebergementUnifie)
@@ -1835,6 +1839,7 @@ class HebergementUnifieController extends Controller
             }
         }
     }
+<<<<<<< HEAD
 
     public function chargerFournisseursStockslogementLocatif($fournisseurHebergements)
     {
@@ -1929,16 +1934,12 @@ class HebergementUnifieController extends Controller
         return new JsonResponse($data);
     }
 
-    /**
-||||||| parent of e7607fe... gestion des stocks dans la fiche hébergement
+||||||| parent of 0c0c7f5... modification de la gestion du stock en ajax
+
 =======
-     * @param HebergementUnifie $hebergementUnifie
-     */
-    public function chargerCatalogue($hebergementUnifie)
-    {
+    public function chargerFournisseursStockslogementLocatif($fournisseurHebergements){
         $em = $this->getDoctrine()->getManager();
-        /** @var FournisseurHebergement $fournisseurHebergement */
-        foreach ($hebergementUnifie->getFournisseurs() as $fournisseurHebergement) {
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
             /** @var Logement $logement */
             foreach ($fournisseurHebergement->getLogements() as $logement) {
                 /** @var LogementPeriode $logementPeriode */
@@ -1948,9 +1949,18 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        $em = $this->getDoctrine()->getManager();
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+    }
+>>>>>>> 0c0c7f5... modification de la gestion du stock en ajax
     /**
->>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
      * Deletes a HebergementUnifie entity.
      *
      */
