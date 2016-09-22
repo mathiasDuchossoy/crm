@@ -12,14 +12,19 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function chargerPourStocks($idHebergementUnifie){
+    public function chargerPourStocks($idHebergementUnifie)
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('fh')
-            ->addSelect('f')
-            ->addSelect('l')
-        ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
-        ->leftJoin('fh.fournisseur','f')
-        ->leftJoin('fh.logements','l');
+            ->addSelect('h.id')
+            ->addSelect('f.id')
+            ->addSelect('logements')
+            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
+            ->join('fh.fournisseur', 'f')
+            ->join('fh.hebergement', 'h')
+            ->leftJoin('fh.logements','logements')
+        ->where('h.id = :idHebergementUnifie')
+        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
         $result = $qb->getQuery()->getResult();
 //        dump(new ArrayCollection($result));
 //        die;
