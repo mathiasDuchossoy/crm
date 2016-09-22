@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
@@ -1023,8 +1024,9 @@ class HebergementUnifieController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
-        $periodes = $em->getRepository(Periode::class)->findAll();
+//        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+//        $typePeriodes = new ArrayCollection();
+//        $periodes = $em->getRepository(Periode::class)->findAll();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 //        dump($entityUnifie); die;
@@ -1363,7 +1365,7 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-//        $this->chargerCatalogue($entityUnifie);
+        $this->chargerCatalogue($entityUnifie);
 //        dump($entityUnifie);
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
@@ -1373,9 +1375,9 @@ class HebergementUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'typePeriodes' => $typePeriodes,
         ));
     }
+
 
     private function deleteTarifSites(ServiceHebergementTarif $tarif)
     {
@@ -1434,7 +1436,28 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-
+    public function chargerFournisseursStockslogementLocatif($fournisseurHebergements){
+        $em = $this->getDoctrine()->getManager();
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                /** @var LogementPeriode $logementPeriode */
+                foreach ($logement->getPeriodes() as $logementPeriode) {
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriode);
+                }
+            }
+        }
+    }
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        $em = $this->getDoctrine()->getManager();
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+    }
     /**
      * Deletes a HebergementUnifie entity.
      *

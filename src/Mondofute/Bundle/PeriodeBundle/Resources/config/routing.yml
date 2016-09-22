@@ -10,3 +10,11 @@ periode_periode_liste:
     path:     /list/{typePeriodeId}/{page}/{maxPerPage}
     defaults: { _controller: "MondofutePeriodeBundle:Periode:liste" , typePeriodeId: null, page: 1 , maxPerPage: %max_per_page%  }
     methods:  GET
+
+periode_type_periode_liste:
+    path:     /type_periode/
+    defaults: {_controller: "MondofutePeriodeBundle:TypePeriode:listeTypePeriodes" }
+
+periode_type_periode_onglets:
+    path:   /type_periode/onglets
+    defaults: {_controller: "MondofutePeriodeBundle:TypePeriode:chargerOngletsTypePeriodes" }
