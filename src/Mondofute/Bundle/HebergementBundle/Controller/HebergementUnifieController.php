@@ -1027,7 +1027,7 @@ class HebergementUnifieController extends Controller
 //        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
 //        $typePeriodes = new ArrayCollection();
 //        $periodes = $em->getRepository(Periode::class)->findAll();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 //        dump($entityUnifie); die;
         $originalServices = new ArrayCollection();
@@ -1365,7 +1365,7 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-        $this->chargerCatalogue($entityUnifie);
+//        $this->chargerCatalogue($entityUnifie);
 //        dump($entityUnifie);
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
