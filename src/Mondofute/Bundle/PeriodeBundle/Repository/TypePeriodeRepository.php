@@ -68,7 +68,6 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
                 $this->connexion->rollBack();
                 $retour = false;
             } else {
-//                    $result = $stmt->fetch();
                 while ($tpResult = $tpStmt->fetch()) {
                     $typePeriode=new \stdClass();
                     $typePeriode->id = $tpResult['id'];
@@ -101,12 +100,5 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
             }
         }
         return $typePeriodes;
-//        $qb = $this->createQueryBuilder('type_periode_repository')
-//            ->select('type_periode_repository')
-//            ->addSelect('periodes')
-//            ->leftJoin('type_periode_repository.periodes', 'periodes')
-//            ->orderBy('periodes.debut', 'ASC')
-//            ->addOrderBy('periodes.fin', 'ASC');
-//        return $qb->getQuery()->getArrayResult();
     }
 }
