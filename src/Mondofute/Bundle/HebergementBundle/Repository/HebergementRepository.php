@@ -16,26 +16,23 @@ class HebergementRepository extends EntityRepository
 //        , station.id stationId, traductions.libelle, hebergementUnifie.id hebergementUnifieId, fournisseurHebergements.id fournisseurHebergementsId, fournisseur
         $qb = $this->getEntityManager()->createQueryBuilder();
 //        $qb->select('station.id stationId, fournisseur.id, fournisseur.enseigne, traductions.libelle libelle, site.id siteId ')
-        $qb->select('stationUnifie.id stationId, fournisseur.id, fournisseur.enseigne, traductions.libelle libelle , site.id siteId, station.id idStation')
+        $qb->select('stationUnifie.id stationUnifieId, fournisseur.id fournisseurId, fournisseur.enseigne fournisseurEnseigne, traductions.libelle stationLibelle , site.id siteId, station.id idStation')
             ->from('MondofuteHebergementBundle:Hebergement', 'hebergement')
             ->join('hebergement.station' , 'station')
             ->join('station.stationUnifie' , 'stationUnifie')
+            ->join('station.site' , 'site')
             ->join('station.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
             ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')
             ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
             ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
-            ->join('station.site' , 'site')
-
-//            ->groupBy('station.id')
-//            ->addGroupBy('fournisseur')
-            ->join('traductions.langue' , 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale' , $locale )
             ->orderBy('site.id', 'ASC')
             ->addOrderBy('stationUnifie.id', 'ASC')
             ->addOrderBy('traductions.libelle', 'ASC')
             ->addOrderBy('fournisseur.enseigne', 'ASC')
-//            ->andWhere('site.id = 1')
+            ->groupBy('stationUnifieId, fournisseurId, siteId, idStation')
         ;
 
         if (!empty($siteId))

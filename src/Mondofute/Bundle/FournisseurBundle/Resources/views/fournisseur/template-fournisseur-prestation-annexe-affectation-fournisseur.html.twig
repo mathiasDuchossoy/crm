@@ -10,7 +10,8 @@
 {% set sitesActifs = [] %}
 {% if prestationAnnexeFournisseurs is defined %}
     {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
-        {% if prestationAnnexeFournisseur.vars.value.actif == true and (prestationAnnexeFournisseur.vars.value.site.id not in sitesActifs) %}
+        {% if prestationAnnexeFournisseur.vars.value.actif == true and (prestationAnnexeFournisseur.vars.value.site.id not in sitesActifs)
+        and prestationAnnexeFournisseur.vars.value.station is null %}
             {% set sitesActifs = sitesActifs|merge([prestationAnnexeFournisseur.vars.value.site.id]) %}
         {% endif %}
     {% endfor %}
@@ -66,7 +67,9 @@
                         {% if prestationAnnexeFournisseur.vars.value.fournisseur is not null %}
                             {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
                             == fournisseurProduit.id
-                            and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
+                            and prestationAnnexeFournisseur.vars.value.site.id == site.id
+                            and prestationAnnexeFournisseur.vars.value.station is null
+                            %}
                                 {% set FournisseurExists = true %}
                             {% endif %}
                         {% endif %}

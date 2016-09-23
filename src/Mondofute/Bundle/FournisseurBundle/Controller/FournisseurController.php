@@ -270,14 +270,6 @@ class FournisseurController extends Controller
                     $fournisseurSite->addType($typeFournisseurSite);
                 }
 
-                // *** GESTION PRESTATION ANNEXE ***
-                /** @var PrestationAnnexe $prestationAnnex */
-                foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
-                    $prestationAnnexSite = $emSite->getRepository(PrestationAnnexe::class)->findOneBy(array('prestationAnnexeUnifie' => $prestationAnnex->getPrestationAnnexeUnifie()));
-                    $fournisseurSite->addPrestationAnnex($prestationAnnexSite);
-                }
-                // *** FIN GESTION PRESTATION ANNEXE ***
-
                 if (!empty($fournisseurSite->getFournisseurParent())) {
                     $fournisseurSite->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
                         $fournisseurSite->getFournisseurParent()->getId()));
@@ -539,7 +531,9 @@ class FournisseurController extends Controller
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
         $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
 
+
         $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+//        dump($stationsWithHebergement);die;
 
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         $hebergements = new ArrayCollection();
@@ -776,7 +770,10 @@ class FournisseurController extends Controller
                     /** @var PrestationAnnexeStation $originalprestationsAnnexeStation */
                     foreach ($prestationsAnnexeStationsOriginalSites as $originalprestationsAnnexeStation) {
                         $forceDelete = false;
-                        if (!empty($prestation_annexe_affectation_station = $prestation_annexe_affectation_stations[$originalprestationsAnnexeStation->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$originalprestationsAnnexeStation->getStation()->getStationUnifie()->getId()])) {
+//                        dump($prestation_annexe_affectation_stations[$originalprestationsAnnexeStation->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()]);die;
+                        if (!empty($prestation_annexe_affectation_stations[$originalprestationsAnnexeStation->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()])
+                            and
+                            !empty($prestation_annexe_affectation_station = $prestation_annexe_affectation_stations[$originalprestationsAnnexeStation->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$originalprestationsAnnexeStation->getStation()->getStationUnifie()->getId()])) {
                             if (count($prestation_annexe_affectation_station) == 1
                                 and
                                 !in_array(key($prestation_annexe_affectation_station), $postSitesAEnregistrer)
