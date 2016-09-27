@@ -1330,7 +1330,8 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-
+        ini_set('memory_limit','1G');
+        set_time_limit(3600);
         $em = $this->getDoctrine()->getManager();
 //        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
 //        $typePeriodes = new ArrayCollection();
@@ -1785,8 +1786,6 @@ class HebergementUnifieController extends Controller
         }
     }
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        set_time_limit(3600);
 //        echo ini_get('max_execution_time');
 //        die;
         $em = $this->getDoctrine()->getManager();
