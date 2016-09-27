@@ -36,6 +36,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
             ->where('fh.hebergement = :idHebergement')
             ->setParameter('idHebergement', $idHebergementUnifie);
         $fournisseurHebergementsResult = $qb->getQuery()->getResult();
+        unset($qb);
 //        print_r($fournisseurHebergementsResult);
 //        die;
         foreach ($fournisseurHebergementsResult as $fournisseurHebergementResult) {
@@ -54,6 +55,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                 ->setParameter('idSite', $site->getId())
                 ->setParameter('idFournisseurHebergement', $fournisseurHebergement->getId());
             $logementsResult = $qbLogements->getQuery()->getResult();
+            unset($qbLogements);
             foreach ($logementsResult as $logementResult) {
                 $idLogement = $logementResult['id'];
                 $logement = new Logement();
@@ -71,6 +73,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     ->where('l.id = :idlogement')
                     ->setParameter('idlogement', $idLogement);
                 $logementTraductionsResult = $qbLogementTraduction->getQuery()->getResult();
+                unset($qbLogementTraduction);
                 foreach ($logementTraductionsResult as $logementTraductionResult) {
                     $logementTraduction = new LogementTraduction();
                     $logementTraduction->setNom($logementTraductionResult['nom']);
@@ -89,6 +92,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     ->where('l.id = :idLogement')
                     ->setParameter('idLogement', $idLogement);
                 $logementPeriodesResult = $qbLogementPeriodes->getQuery()->getResult();
+                unset($qbLogementPeriodes);
                 foreach ($logementPeriodesResult as $logementPeriodeResult) {
                     $logementPeriode = new LogementPeriode();
                     $periode = new Periode();
@@ -137,6 +141,8 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //        ->leftJoin('lt.langue','ltl')
 //        ->where('fh.hebergement.id = :idHebergement')
 //        ->setParameter('idHebergement',$idHebergementUnifie);
+        echo memory_get_usage();
+        die;
         return $fournisseurHebergements;
     }
 }
