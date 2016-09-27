@@ -24,7 +24,6 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
  */
 class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 {
-<<<<<<< 969ecf805fcc9f3b81f4b93a5c5b0005869ae407
     private $connexion;
 
     public function __construct($em, $class)
@@ -34,6 +33,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
     }
     public function chargerPourStocks($idHebergementUnifie)
     {
+<<<<<<< e2b56531408d759b3d34e0d4baf7b33110628076
         $em = $this->getEntityManager();
         $site = $em->getRepository(Site::class)->findOneBy(array('crm' => true));
         if (isset($em)) {
@@ -214,19 +214,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //        dump($fournisseurHebergements);
 //        echo memory_get_peak_usage();
 ||||||| merged common ancestors
-    public function chargerPourStocks($idHebergementUnifie){
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('fh')
-            ->addSelect('f')
-            ->addSelect('l')
-        ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
-        ->leftJoin('fh.fournisseur','f')
-        ->leftJoin('fh.logements','l');
-        $result = $qb->getQuery()->getResult();
-//        dump(new ArrayCollection($result));
-=======
-    public function chargerPourStocks($idHebergementUnifie)
-    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('fh')
             ->addSelect('h.id')
@@ -240,7 +227,23 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         ->setParameter('idHebergementUnifie',$idHebergementUnifie);
         $result = $qb->getQuery()->getResult();
 //        dump(new ArrayCollection($result));
->>>>>>> verif mémoire
+=======
+//        SELECT fh.id FROM fournisseurHebergement WHERE idHebergement=x;
+
+//        $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb->select('fh')
+//            ->addSelect('h.id')
+//            ->addSelect('f.id')
+//            ->addSelect('logements')
+//            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
+//            ->join('fh.fournisseur', 'f')
+//            ->join('fh.hebergement', 'h')
+//            ->leftJoin('fh.logements','logements')
+//        ->where('h.id = :idHebergementUnifie')
+//        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
+//        $result = $qb->getQuery()->getResult();
+//        dump(new ArrayCollection($result));
+>>>>>>> test mémoire
 //        die;
         return $fournisseurHebergements;
     }
