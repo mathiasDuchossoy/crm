@@ -3,8 +3,13 @@
 namespace Mondofute\Bundle\HebergementBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+<<<<<<< ed49b1ca6294c49dca74ad628a426e1fb1ed2725
 use Doctrine\DBAL\Types\Type;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
+||||||| merged common ancestors
+=======
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
+>>>>>>> test mémoire et time
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -69,6 +74,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                         $lStmt = $this->connexion->prepare($sql);
                         if (!$lStmt) {
 
+<<<<<<< ed49b1ca6294c49dca74ad628a426e1fb1ed2725
                         } else {
                             $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
                             if ($retour) {
@@ -92,6 +98,64 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
                                             $ltStmt = $this->connexion->prepare($sql);
                                             if (!$ltStmt) {
+||||||| merged common ancestors
+//                gestion des périodes
+                $qbLogementPeriodes = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementPeriodes->select('p.id periodeId')
+                    ->from('MondofuteLogementPeriodeBundle:LogementPeriode', 'lp')
+                    ->join('lp.logement', 'l')
+                    ->join('lp.periode', 'p')
+                    ->where('l.id = :idLogement')
+                    ->setParameter('idLogement', $idLogement);
+                $logementPeriodesResult = $qbLogementPeriodes->getQuery()->getResult();
+                unset($qbLogementPeriodes);
+                foreach ($logementPeriodesResult as $logementPeriodeResult) {
+                    $logementPeriode = new LogementPeriode();
+                    $periode = new Periode();
+                    $periode->setId($logementPeriodeResult['periodeId']);
+                    $logementPeriode->setLogement($logement)
+                        ->setPeriode($periode);
+                    $logement->addPeriode($logementPeriode);
+                }
+=======
+//                gestion des périodes
+                $qbLogementPeriodes = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementPeriodes->select('p.id periodeId')
+                    ->from('MondofuteLogementPeriodeBundle:LogementPeriode', 'lp')
+                    ->join('lp.logement', 'l')
+                    ->join('lp.periode', 'p')
+                    ->where('l.id = :idLogement')
+                    ->setParameter('idLogement', $idLogement);
+                $logementPeriodesResult = $qbLogementPeriodes->getQuery()->getResult();
+                unset($qbLogementPeriodes);
+                foreach ($logementPeriodesResult as $logementPeriodeResult) {
+                    $logementPeriode = new LogementPeriode();
+                    $periode = new Periode();
+                    $periode->setId($logementPeriodeResult['periodeId']);
+                    $logementPeriode->setLogement($logement)
+                        ->setPeriode($periode);
+
+                    $qbLogementPeriodesLocatif = $this->getEntityManager()->createQueryBuilder();
+                    $qbLogementPeriodesLocatif->select('lpl.stock')
+                        ->from('MondofuteCatalogueBundle:LogementPeriodeLocatif','lpl')
+                        ->join('lpl.logement','l')
+                        ->join('lpl.periode','p')
+                        ->where('l.id = :idLogement')
+                        ->andWhere('p.id = :idPeriode')
+                        ->setParameter('idLogement',$idLogement)
+                        ->setParameter('idPeriode',$periode->getId());
+                    $lplResults = $qbLogementPeriodesLocatif->getQuery()->getResult();
+                    foreach ($lplResults as $lplResult){
+                        $lpl = new LogementPeriodeLocatif();
+                        $lpl->setStock($lplResult['stock'])
+                            ->setLogement($logement)
+                            ->setPeriode($periode);
+                        $logementPeriode->setLocatif($lpl);
+                    }
+
+                    $logement->addPeriode($logementPeriode);
+                }
+>>>>>>> test mémoire et time
 
                                             } else {
                                                 $retour = $ltStmt->bindValue(1, $idLogement, Type::BIGINT);
@@ -213,40 +277,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //        dump($fournisseurHebergements);
 //        echo memory_get_peak_usage();
 //        die;
-<<<<<<< d37ffe2b6672fb8bebe5f9e306a2b21609394eaa
-||||||| merged common ancestors
-//        $qb->select('fh')
-//            ->addSelect('fh.fournisseur')
-//            ->addSelect('fh.logements')
-//            ->addSelect('lt.langue')
-//            ->addSelect('lt.nom')
-//            ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
-//            ->leftJoin('fh.fournisseur','f')
-//            ->leftJoin('fh.logements','l')
-//        ->leftJoin('l.site','site')
-//        ->leftJoin('l.traductions','lt')
-//        ->leftJoin('lt.langue','ltl')
-//        ->where('fh.hebergement.id = :idHebergement')
-//        ->setParameter('idHebergement',$idHebergementUnifie);
-        echo memory_get_usage();
-        die;
-=======
-//        $qb->select('fh')
-//            ->addSelect('fh.fournisseur')
-//            ->addSelect('fh.logements')
-//            ->addSelect('lt.langue')
-//            ->addSelect('lt.nom')
-//            ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
-//            ->leftJoin('fh.fournisseur','f')
-//            ->leftJoin('fh.logements','l')
-//        ->leftJoin('l.site','site')
-//        ->leftJoin('l.traductions','lt')
-//        ->leftJoin('lt.langue','ltl')
-//        ->where('fh.hebergement.id = :idHebergement')
-//        ->setParameter('idHebergement',$idHebergementUnifie);
-//        echo memory_get_usage();
-//        die;
->>>>>>> test
         return $fournisseurHebergements;
     }
 }

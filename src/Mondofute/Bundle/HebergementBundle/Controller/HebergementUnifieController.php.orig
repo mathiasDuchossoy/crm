@@ -2004,7 +2004,7 @@ class HebergementUnifieController extends Controller
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< 1ca71306f8cca01ba6f91aa44a8885c3931d10c5
+<<<<<<< ed49b1ca6294c49dca74ad628a426e1fb1ed2725
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2035,18 +2035,6 @@ class HebergementUnifieController extends Controller
         }
         return new JsonResponse($data);
 ||||||| merged common ancestors
-        echo memory_get_usage();
-        die;
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        dump(memory_get_usage());
-//        die;
-//        error_log('mémoire : '.memory_get_usage());
-
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
         $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         echo memory_get_usage();
         die;
@@ -2058,7 +2046,19 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> test mémoire / time
+=======
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        echo memory_get_usage();
+        die;
+//        dump(memory_get_usage());
+//        die;
+//        error_log('mémoire : '.memory_get_usage());
+
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> test mémoire et time
     }
 
     /**
