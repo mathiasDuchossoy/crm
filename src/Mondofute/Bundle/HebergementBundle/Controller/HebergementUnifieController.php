@@ -1474,10 +1474,10 @@ class HebergementUnifieController extends Controller
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
-        echo memory_get_usage();
+        echo memory_get_peak_usage();
 //        die;
 //        dump($fournisseurHebergements);
-//        die;
+        die;
 //        error_log('mémoire : '.memory_get_usage());
 
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
