@@ -19,7 +19,7 @@
                     <th class="logement">Logement</th>
 
                     {% set break = false %}
-                    {% for periode in typePeriode.periodes %}
+                    {% for periode in typePeriode.periodes if not break %}
                         <th>
                             du
                             {{ periode.debut|date('d-m-Y') }}<br/>
