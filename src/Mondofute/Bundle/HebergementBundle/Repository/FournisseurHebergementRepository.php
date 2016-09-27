@@ -83,6 +83,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     $logementTraduction->setLangue($langue);
                     $logement->addTraduction($logementTraduction);
                 }
+                unset($logementTraductionsResult);
 
 //                gestion des périodes
                 $qbLogementPeriodes = $this->getEntityManager()->createQueryBuilder();
@@ -121,10 +122,12 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 
                     $logement->addPeriode($logementPeriode);
                 }
+                unset($logementPeriodesResult);
 
 //                ajout du logement au fournisseurHebergement
                 $fournisseurHebergement->addLogement($logement);
             }
+            unset($logementsResult);
             $fournisseurHebergement->setFournisseur($fournisseur);
 
             $fournisseurHebergements->add($fournisseurHebergement);

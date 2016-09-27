@@ -1808,7 +1808,7 @@ class HebergementUnifieController extends Controller
         $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         $time = new \DateTime();
         echo $time->format('H:i:s');
-        echo memory_get_usage();
+//        echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
 //        die;
