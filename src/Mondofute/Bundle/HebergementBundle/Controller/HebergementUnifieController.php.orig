@@ -1941,6 +1941,7 @@ class HebergementUnifieController extends Controller
             }
         }
     }
+<<<<<<< b8c0a6f85ef88e246f178fd22c3b5c98be538828
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
@@ -1988,9 +1989,19 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
+||||||| merged common ancestors
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        ini_set('max_execution_time',3600);
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        set_time_limit(3600);
+//        echo ini_get('max_execution_time');
+//        die;
+>>>>>>> modif du set_time_limit
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< 184e95c20302c10ea4557ee523c06232e63001dc
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2020,23 +2031,6 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
-||||||| merged common ancestors
-        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        dump(memory_get_usage());
-//        die;
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        dump(memory_get_usage());
-//        die;
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
->>>>>>> mémoire et temps
     }
 
     /**
