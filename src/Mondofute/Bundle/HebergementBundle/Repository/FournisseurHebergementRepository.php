@@ -101,23 +101,23 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     $logementPeriode->setLogement($logement)
                         ->setPeriode($periode);
 
-                    $qbLogementPeriodesLocatif = $this->getEntityManager()->createQueryBuilder();
-                    $qbLogementPeriodesLocatif->select('lpl.stock')
-                        ->from('MondofuteCatalogueBundle:LogementPeriodeLocatif','lpl')
-                        ->join('lpl.logement','l')
-                        ->join('lpl.periode','p')
-                        ->where('l.id = :idLogement')
-                        ->andWhere('p.id = :idPeriode')
-                        ->setParameter('idLogement',$idLogement)
-                        ->setParameter('idPeriode',$periode->getId());
-                    $lplResults = $qbLogementPeriodesLocatif->getQuery()->getResult();
-                    foreach ($lplResults as $lplResult){
-                        $lpl = new LogementPeriodeLocatif();
-                        $lpl->setStock($lplResult['stock'])
-                            ->setLogement($logement)
-                            ->setPeriode($periode);
-                        $logementPeriode->setLocatif($lpl);
-                    }
+//                    $qbLogementPeriodesLocatif = $this->getEntityManager()->createQueryBuilder();
+//                    $qbLogementPeriodesLocatif->select('lpl.stock')
+//                        ->from('MondofuteCatalogueBundle:LogementPeriodeLocatif','lpl')
+//                        ->join('lpl.logement','l')
+//                        ->join('lpl.periode','p')
+//                        ->where('l.id = :idLogement')
+//                        ->andWhere('p.id = :idPeriode')
+//                        ->setParameter('idLogement',$idLogement)
+//                        ->setParameter('idPeriode',$periode->getId());
+//                    $lplResults = $qbLogementPeriodesLocatif->getQuery()->getResult();
+//                    foreach ($lplResults as $lplResult){
+//                        $lpl = new LogementPeriodeLocatif();
+//                        $lpl->setStock($lplResult['stock'])
+//                            ->setLogement($logement)
+//                            ->setPeriode($periode);
+//                        $logementPeriode->setLocatif($lpl);
+//                    }
 
                     $logement->addPeriode($logementPeriode);
                 }
