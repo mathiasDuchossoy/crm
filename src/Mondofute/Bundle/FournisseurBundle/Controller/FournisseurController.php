@@ -548,6 +548,8 @@ class FournisseurController extends Controller
             }
         }
 
+//        dump($hebergements);die;
+
         // *** gestion prestation annexe ***
         $originalPrestationAnnexes = new ArrayCollection();
         $originalTarifs = new ArrayCollection();

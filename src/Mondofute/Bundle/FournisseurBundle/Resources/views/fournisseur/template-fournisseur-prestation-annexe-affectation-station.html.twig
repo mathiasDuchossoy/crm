@@ -117,6 +117,40 @@
                         {% endif %}
                     {% endfor %}
 
+                    {#{% set hebergement = [] %}#}
+                    {#{% set hebergementExists = false %}#}
+                    {#{% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] is defined#}
+                    {#%}#}
+                        {#{% for item in hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}#}
+                            {#{% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}#}
+                            {#{% if item.stationUnifieId == fournisseurProduit.stationUnifieId %}#}
+
+                                {#{% set hebergement = hebergement|merge([item]) %}#}
+                                {#{% if prestationAnnexeHebergements is defined %}#}
+                                    {#{% for prestationAnnexeHebergement in prestationAnnexeHebergements %}#}
+                                        {#{% if prestationAnnexeHebergement.vars.value.hebergement.id == item.hebergementId %}#}
+
+                                            {#{% set hebergement = hebergement|merge([item]) %}#}
+                                            {#{% set hebergementExists = true %}#}
+
+                                        {#{% endif %}#}
+                                    {#{% endfor %}#}
+                                {#{% endif %}#}
+
+
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+                    {#{% set hebergements = hebergement %}#}
+
+                    {#{{ dump(hebergementExists) }}#}
+
+
+
+
+
+
+
                     {% if stationIdTemp !=  fournisseurProduit.stationUnifieId %}
 
                         {% set stationExists = false %}

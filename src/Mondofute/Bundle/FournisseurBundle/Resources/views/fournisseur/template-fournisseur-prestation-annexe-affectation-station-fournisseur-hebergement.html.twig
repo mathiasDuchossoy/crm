@@ -1,5 +1,6 @@
 {% for hebergement in hebergements %}
     {#{% if hebergement.stationUnifieId == fournisseurProduit.stationId %}#}
+    {#{{ dump(hebergement) }}#}
     {% set hebergementExists = false %}
     {% if prestationAnnexeHebergements is defined %}
         {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}

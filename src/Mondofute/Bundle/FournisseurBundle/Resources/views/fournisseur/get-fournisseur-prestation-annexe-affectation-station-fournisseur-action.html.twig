@@ -35,13 +35,43 @@
             {% endfor %}
         {% endif %}
 
-        {% set hebergementExists = false %}
-        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] is defined
-            and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
-        %}
-            {% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}
-            {% set hebergementExists = true %}
-        {% endif %}
+        {#{% set hebergementExists = false %}#}
+        {#{% for prestationAnnexeHebergement in prestationAnnexeHebergements %}#}
+            {#{% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ prestationAnnexeHebergement.vars.value.fournisseur.id ] is defined#}
+            {#and prestationAnnexeHebergement.vars.value.hebergement.station.stationUnifie.id == fournisseurProduit.stationUnifieId#}
+            {#%}#}
+                {#{% set hebergementExists = true %}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
+
+
+        {#{% set hebergement = [] %}#}
+        {#{% set hebergementExists = false %}#}
+        {#{% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] is defined#}
+        {#%}#}
+            {#{% for item in hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}#}
+                {#{% set  hebergement = hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}#}
+                {#{% if item.stationUnifieId == fournisseurProduit.stationUnifieId %}#}
+
+                    {#{% set hebergement = hebergement|merge([item]) %}#}
+                    {#{% if prestationAnnexeHebergements is defined %}#}
+                        {#{% for prestationAnnexeHebergement in prestationAnnexeHebergements %}#}
+                            {#{% if prestationAnnexeHebergement.vars.value.hebergement.id == item.hebergementId %}#}
+
+                            {#{% set hebergement = hebergement|merge([item]) %}#}
+                            {#{% set hebergementExists = true %}#}
+
+                            {#{% endif %}#}
+                        {#{% endfor %}#}
+                    {#{% endif %}#}
+
+
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
+        {#{% set hebergements = hebergement %}#}
+
+        {#{{ dump(hebergementExists) }}#}
 
         {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur.html.twig') %}
 

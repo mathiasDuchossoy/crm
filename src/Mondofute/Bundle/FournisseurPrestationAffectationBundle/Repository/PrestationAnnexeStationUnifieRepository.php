@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 
 /**
  * PrestationAnnexeStationUnifieRepository
@@ -27,6 +28,25 @@ class PrestationAnnexeStationUnifieRepository extends \Doctrine\ORM\EntityReposi
         ;
 
         $result = $qb->getQuery()->getOneOrNullResult();
+//        $result = $qb->getQuery()->getFirstResult();
+//        dump($result);die;
+        return $result;
+    }
+
+    public function findByStationUnifie(StationUnifie $stationUnifie)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeStationUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie', 'prestationAnnexeStationUnifie')
+            ->join('prestationAnnexeStationUnifie.prestationAnnexeStations', 'prestationAnnexeStations')
+            ->join('prestationAnnexeStations.station' , 'station')
+            ->join('station.stationUnifie' , 'stationUnifie')
+            ->andWhere('stationUnifie.id = :stationUnifieId')
+            ->setParameter('stationUnifieId' ,$stationUnifie->getId() )
+        ;
+
+        $result = $qb->getQuery()->getResult();
 //        $result = $qb->getQuery()->getFirstResult();
 //        dump($result);die;
         return $result;

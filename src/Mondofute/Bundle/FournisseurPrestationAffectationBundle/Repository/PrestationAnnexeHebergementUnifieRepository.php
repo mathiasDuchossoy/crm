@@ -49,4 +49,21 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
 //        dump($result);die;
         return $result;
     }
+
+    public function findByHebergementUnifie($hebergementUnifieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeHebergementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements' , 'prestationAnnexeHebergements')
+            ->join('prestationAnnexeHebergements.hebergement' , 'hebergement')
+            ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')
+            ->where('hebergementUnifie.id = :hebergementUnifieId')
+            ->setParameter('hebergementUnifieId' , $hebergementUnifieId)
+        ;
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
 }

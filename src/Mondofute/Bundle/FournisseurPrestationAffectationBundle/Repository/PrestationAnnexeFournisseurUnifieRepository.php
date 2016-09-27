@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 
 /**
@@ -32,6 +33,38 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
         }
 
         $result = $qb->getQuery()->getOneOrNullResult();
+//        dump($result);die;
+        return $result;
+    }
+
+    public function findByFournisseur(Fournisseur $fournisseur , $whereStation = null , $stationUnifieId = null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeFournisseurUnifie, prestationAnnexeFournisseurs')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeFournisseurUnifie', 'prestationAnnexeFournisseurUnifie')
+            ->join('prestationAnnexeFournisseurUnifie.prestationAnnexeFournisseurs', 'prestationAnnexeFournisseurs')
+            ->where('prestationAnnexeFournisseurs.fournisseur = :fournisseurId')
+            ->setParameter('fournisseurId' ,$fournisseur->getId() )
+        ;
+
+        if(!empty($whereStation))
+        {
+            $qb
+                ->join('prestationAnnexeFournisseurs.station' , 'station')
+                ->andWhere('station.id ' . $whereStation )
+            ;
+        }
+        if(!empty($stationUnifieId))
+        {
+            $qb
+                ->join('prestationAnnexeFournisseurs.station' , 'station')
+                ->join('station.stationUnifie' , 'stationUnifie')
+                ->andWhere('stationUnifie.id = ' . $stationUnifieId )
+            ;
+        }
+
+        $result = $qb->getQuery()->getResult();
 //        dump($result);die;
         return $result;
     }
