@@ -1945,7 +1945,6 @@ class HebergementUnifieController extends Controller
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-<<<<<<< bf85bbe614372a8cfc99266c129a88cb60fed621
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $reponse = new \stdClass();
         $nbLogements = 0;
@@ -1991,6 +1990,7 @@ class HebergementUnifieController extends Controller
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+<<<<<<< 184e95c20302c10ea4557ee523c06232e63001dc
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2021,10 +2021,7 @@ class HebergementUnifieController extends Controller
         }
         return new JsonResponse($data);
 ||||||| merged common ancestors
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        error_log('mémoire : '.memory_get_usage());
-        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
@@ -2032,10 +2029,6 @@ class HebergementUnifieController extends Controller
             'typePeriode' => $typePeriode
         ));
 =======
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        error_log('mémoire : '.memory_get_usage());
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
@@ -2043,7 +2036,7 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> mémoire
+>>>>>>> mémoire et temps
     }
 
     /**
