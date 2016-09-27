@@ -13,6 +13,7 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -272,7 +273,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             }
 //                                            fin de la récupération des traductions
 //                                            récupération des périodes logement
-                                            $sql = 'SELECT lp.periode_id, lplocatif.stock FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id WHERE lp.logement_id=?';
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
                                             $lpStmt = $this->connexion->prepare($sql);
                                             if (!$lpStmt) {
 
@@ -288,7 +289,11 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                                             $logementPeriode = new LogementPeriode();
                                                             $logementPeriodeLocatif = new LogementPeriodeLocatif();
                                                             $periode = new Periode();
-                                                            $periode->setId($lpResult['periode_id']);
+                                                            $typePeriode = new TypePeriode();
+                                                            $typePeriode->setId((int) $lpResult['type_id']);
+//                                                            $periode->setId();
+                                                            $periode->setType($typePeriode)->setId($lpResult['periode_id']);
+
                                                             $logementPeriodeLocatif->setLogement($logement)
                                                                 ->setPeriode($periode)
                                                                 ->setStock($lpResult['stock']);
