@@ -274,6 +274,7 @@
             $.post("{{ path('periode_type_periode_onglets') }}",
                     {'idConteneur': $conteneur.attr('id')},
                     function (html) {
+                        console.log(html);
                         if ($progressBar != null) {
                             chargerProgressBar($progressBar, 100);
                         }
