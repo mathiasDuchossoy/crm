@@ -1467,9 +1467,9 @@ class HebergementUnifieController extends Controller
         $time = new \DateTime();
         echo $time->format('H:i:s');
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+//        $time = new \DateTime();
+//        echo $time->format('H:i:s');
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         $time = new \DateTime();
         echo $time->format('H:i:s');
         echo memory_get_usage();
