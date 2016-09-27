@@ -1790,8 +1790,14 @@ class HebergementUnifieController extends Controller
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
 //        die;
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $em = $this->getDoctrine()->getManager();
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
         $time = new \DateTime();
