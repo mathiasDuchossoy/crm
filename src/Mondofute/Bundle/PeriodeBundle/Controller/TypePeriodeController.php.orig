@@ -27,16 +27,16 @@ class TypePeriodeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $listeTypePeriodes = $em->getRepository(TypePeriode::class)->findAll();
-<<<<<<< f36c92d46b272e7dde6760078c5de007f0944de2
+<<<<<<< ede34472758bd2990057ff9b4f3660c2ba994e97
 ||||||| merged common ancestors
-        dump(memory_get_usage());
-//        $typePeriodes = $request->get('typePeriodes');
-//        dump($typePeriodes);
-=======
         error_log(memory_get_usage());
 //        $typePeriodes = $request->get('typePeriodes');
 //        dump($typePeriodes);
->>>>>>> mémoire
+=======
+        error_log('mémoire : '.memory_get_usage());
+//        $typePeriodes = $request->get('typePeriodes');
+//        dump($typePeriodes);
+>>>>>>> test mémoire
         return $this->render('@MondofuteHebergement/hebergementunifie/onglets_type_periode.html.twig',
             array('typePeriodes' => $listeTypePeriodes, 'conteneur' => $request->get('idConteneur')));
     }
