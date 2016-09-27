@@ -1792,7 +1792,8 @@ class HebergementUnifieController extends Controller
         error_log('mémoire : '.memory_get_usage());
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
