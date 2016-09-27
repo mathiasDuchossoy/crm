@@ -141,8 +141,8 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //        ->leftJoin('lt.langue','ltl')
 //        ->where('fh.hebergement.id = :idHebergement')
 //        ->setParameter('idHebergement',$idHebergementUnifie);
-        echo memory_get_usage();
-        die;
+//        echo memory_get_usage();
+//        die;
         return $fournisseurHebergements;
     }
 }
