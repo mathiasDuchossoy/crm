@@ -272,7 +272,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             }
 //                                            fin de la récupération des traductions
 //                                            récupération des périodes logement
-                                            $sql = 'SELECT lp.periode_id, lplocatif.stock FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id WHERE lp.logement_id=? LIMIT 100';
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id WHERE lp.logement_id=?';
                                             $lpStmt = $this->connexion->prepare($sql);
                                             if (!$lpStmt) {
 
