@@ -1380,18 +1380,11 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-<<<<<<< HEAD
 //        if($request->request->count() > 0 ){
 //            dump($request->request);
 //            die;
 //        }
 //        $request->request->remove('stocks');
-||||||| parent of ae6db69... mémoire et time_limit
-        ini_set('memory_limit','1G');
-        set_time_limit(3600);
-=======
-
->>>>>>> ae6db69... mémoire et time_limit
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
@@ -1885,31 +1878,22 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of ae6db69... mémoire et time_limit
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-//        echo ini_get('max_execution_time');
-//        die;
-=======
+||||||| parent of 5a6ba06... test augmentation du set_time_limit
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         set_time_limit(9000);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> ae6db69... mémoire et time_limit
-        $em = $this->getDoctrine()->getManager();
-<<<<<<< HEAD
-||||||| parent of ae6db69... mémoire et time_limit
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        error_log('mémoire : '.memory_get_usage());
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 =======
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
->>>>>>> ae6db69... mémoire et time_limit
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        ini_set('max_execution_time',300);
+        set_time_limit(300);
+//        echo ini_get('max_execution_time');
+//        die;
+>>>>>>> 5a6ba06... test augmentation du set_time_limit
+        $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< HEAD
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -1939,24 +1923,6 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
-||||||| parent of ae6db69... mémoire et time_limit
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        dump(memory_get_usage());
-//        die;
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        dump(memory_get_usage());
-//        die;
-        error_log('mémoire : '.memory_get_usage());
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
->>>>>>> ae6db69... mémoire et time_limit
     }
 
     /**
