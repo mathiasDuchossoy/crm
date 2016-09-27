@@ -182,7 +182,10 @@
             $.post("{{ path('periode_type_periode_liste') }}",
                     function (typePeriodes) {
                         chargerProgressBar($progressBar, 50);
+                        console.log('avant construireObgletsTypePeriodes');
                         construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            console.log('après construireObgletsTypePeriodes');
                             var idTypePeriode = null;
                             chargerFournisseurHebergements(idHebergement, typePeriodes, function (data, idHebergement, typePeriodes) {
                                 for (var i = 0; i < typePeriodes.length; i++) {
