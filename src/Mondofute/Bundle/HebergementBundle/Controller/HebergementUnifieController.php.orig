@@ -1416,11 +1416,18 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
+<<<<<<< HEAD
 //        if($request->request->count() > 0 ){
 //            dump($request->request);
 //            die;
 //        }
 //        $request->request->remove('stocks');
+||||||| parent of dba2296... time_limite
+
+=======
+        ini_set('memory_limit','1G');
+        set_time_limit(3600);
+>>>>>>> dba2296... time_limite
         $em = $this->getDoctrine()->getManager();
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1941,7 +1948,7 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-<<<<<<< b8c0a6f85ef88e246f178fd22c3b5c98be538828
+<<<<<<< d70cdff15068a1d7da4f08aa00605d716c8b4f69
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
@@ -1992,14 +1999,14 @@ class HebergementUnifieController extends Controller
 ||||||| merged common ancestors
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
-        ini_set('max_execution_time',3600);
-=======
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
         set_time_limit(3600);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> modif du set_time_limit
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+//        echo ini_get('max_execution_time');
+//        die;
+>>>>>>> time_limite
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
