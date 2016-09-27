@@ -1878,9 +1878,9 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of a4cb118... test mémoire
+||||||| parent of b7c073a... affichage du temps
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
+//        ini_set('memory_limit','1G');
         ini_set('max_execution_time',300);
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
@@ -1892,8 +1892,28 @@ class HebergementUnifieController extends Controller
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> a4cb118... test mémoire
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+>>>>>>> b7c073a... affichage du temps
         $em = $this->getDoctrine()->getManager();
+<<<<<<< HEAD
+||||||| parent of b7c073a... affichage du temps
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+=======
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+>>>>>>> b7c073a... affichage du temps
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
