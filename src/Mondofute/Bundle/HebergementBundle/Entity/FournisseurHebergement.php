@@ -83,6 +83,14 @@ class FournisseurHebergement
     }
 
     /**
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get hebergement
      *
      * @return HebergementUnifie
