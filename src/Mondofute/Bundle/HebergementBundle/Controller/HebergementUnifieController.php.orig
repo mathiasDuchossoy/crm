@@ -1945,7 +1945,7 @@ class HebergementUnifieController extends Controller
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-<<<<<<< e2b56531408d759b3d34e0d4baf7b33110628076
+<<<<<<< bf85bbe614372a8cfc99266c129a88cb60fed621
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $reponse = new \stdClass();
         $nbLogements = 0;
@@ -2022,16 +2022,7 @@ class HebergementUnifieController extends Controller
         return new JsonResponse($data);
 ||||||| merged common ancestors
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        dump(memory_get_usage());
-        die;
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        error_log('mémoire : '.memory_get_usage());
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
@@ -2040,7 +2031,19 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> test mémoire
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        error_log('mémoire : '.memory_get_usage());
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+//        dump(memory_get_usage());
+//        die;
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> mémoire
     }
 
     /**
