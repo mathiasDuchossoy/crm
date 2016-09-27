@@ -1459,7 +1459,7 @@ class HebergementUnifieController extends Controller
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
