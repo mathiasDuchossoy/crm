@@ -1458,8 +1458,14 @@ class HebergementUnifieController extends Controller
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
