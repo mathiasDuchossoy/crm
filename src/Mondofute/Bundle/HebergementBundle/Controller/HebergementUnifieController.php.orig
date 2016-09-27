@@ -2003,8 +2003,20 @@ class HebergementUnifieController extends Controller
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
+<<<<<<< 52f49da3a64cb9628aa2c643563da119319640d0
+||||||| merged common ancestors
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+>>>>>>> test temps
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< ed49b1ca6294c49dca74ad628a426e1fb1ed2725
+<<<<<<< 52f49da3a64cb9628aa2c643563da119319640d0
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2047,7 +2059,11 @@ class HebergementUnifieController extends Controller
             'typePeriode' => $typePeriode
         ));
 =======
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
@@ -2058,7 +2074,7 @@ class HebergementUnifieController extends Controller
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> test mémoire et time
+>>>>>>> test temps
     }
 
     /**
