@@ -17,6 +17,8 @@
                 <thead>
                 <tr>
                     <th class="logement">Logement</th>
+
+                    {% set break = false %}
                     {% for periode in typePeriode.periodes %}
                         <th>
                             du
@@ -24,6 +26,9 @@
                             au
                             {{ periode.fin|date('d-m-Y') }}
                         </th>
+                        {% if loop.index0 > 15 %}
+                            {% set break = true %}
+                        {% endif %}
                     {% endfor %}
                 </tr>
                 </thead>
