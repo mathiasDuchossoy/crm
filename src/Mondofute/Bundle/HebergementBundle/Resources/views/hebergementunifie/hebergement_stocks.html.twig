@@ -19,51 +19,48 @@
                     <th class="logement">Logement</th>
 
                     {% set break = false %}
-                    {% for periode in typePeriode.periodes if not break %}
+                    {% for periode in typePeriode.periodes %}
                         <th>
                             du
                             {{ periode.debut|date('d-m-Y') }}<br/>
                             au
                             {{ periode.fin|date('d-m-Y') }}
                         </th>
-                        {% if loop.index0 > 15 %}
-                            {% set break = true %}
-                        {% endif %}
                     {% endfor %}
                 </tr>
                 </thead>
                 <tbody>
-                {% for logement in fournisseurHebergement.logements %}
-                    {% if logement.site.crm == true %}
-                        <tr>
-                            <td class="logement">
-                                {% for traduction in logement.traductions %}
-                                    {% if traduction.langue.code == app.request.locale %}
-                                        {{ traduction.nom }}
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            {% set break = false %}
-                            {% for periode in typePeriode.periodes if not break %}
-                                <td>
-                                    {% set stock = 0 %}
-                                    {% for logementPeriode in logement.periodes %}
-                                        {% if logementPeriode.periode == periode %}
-                                            {% set stock = logementPeriode.locatif.stock %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"
-                                           type="text"
-                                           size="2" maxlength="2" value="{{ stock }}"/>
-                                </td>
+                {#{% for logement in fournisseurHebergement.logements %}#}
+                    {#{% if logement.site.crm == true %}#}
+                        {#<tr>#}
+                            {#<td class="logement">#}
+                                {#{% for traduction in logement.traductions %}#}
+                                    {#{% if traduction.langue.code == app.request.locale %}#}
+                                        {#{{ traduction.nom }}#}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                            {#</td>#}
+                            {#{% set break = false %}#}
+                            {#{% for periode in typePeriode.periodes if not break %}#}
+                                {#<td>#}
+                                    {#{% set stock = 0 %}#}
+                                    {#{% for logementPeriode in logement.periodes %}#}
+                                        {#{% if logementPeriode.periode == periode %}#}
+                                            {#{% set stock = logementPeriode.locatif.stock %}#}
+                                        {#{% endif %}#}
+                                    {#{% endfor %}#}
+                                    {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"#}
+                                           {#type="text"#}
+                                           {#size="2" maxlength="2" value="{{ stock }}"/>#}
+                                {#</td>#}
 
-                                {% if loop.index0 > 15 %}
-                                    {% set break = true %}
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                    {% endif %}
-                {% endfor %}
+                                {#{% if loop.index0 > 15 %}#}
+                                    {#{% set break = true %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#</tr>#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
                 </tbody>
             </table>
         </div>
