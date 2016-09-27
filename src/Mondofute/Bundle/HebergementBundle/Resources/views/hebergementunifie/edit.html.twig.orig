@@ -77,97 +77,19 @@
     {% endjavascripts %}
     <script type="text/javascript">
         $(document).ready(function () {
-<<<<<<< HEAD
 //            transforme le button submit en bouton de type button
             chargerOngletStocksHebergement({{ entity.id }});
 
         });
-||||||| parent of 0c0c7f5... modification de la gestion du stock en ajax
-//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-//            gestion des table de type hebergement-stocks
-            $('.table-hebergement-stocks').DataTable({
-                paging: false,
-                info: false,
-                scrollX: true,
-                scrollY: false,
-                scrollCollapse: true,
-                fixedColumns: true,
-                scroller: {
-                    rowHeight: 30
-                },
-                "columnDefs": [
-                    { "orderable": true, "targets": 0 },
-                    { "orderable": false, "targets": '_all' },
-                    { "searchable": true, "targets": 0 },
-                    { "searchable": false, "targets": '_all' },
-                ],
-                language: {
-                    processing:     "{{ 'processing'|trans }}",
-                    search:         "{{ 'rechercher'|trans }} :",
-                    loadingRecords:  "{{ 'chargementEnCours'|trans }}...",
-                    zeroRecords:    "{{ 'zeroResultats'|trans }}",
-                    emptyTable:     "{{ 'tableVide'|trans }}",
-                    aria: {
-                        sortAscending:  ": activer pour trier la colonne par ordre croissant",
-                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
-                    }
-                }
-            });
-        });
-=======
-//            gestion des table de type hebergement-stocks
-//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
-            genererDataTables($('.table-hebergement-stocks'));
-        });
-
-        function genererDataTables($obj) {
-
-            $obj.find('.table-hebergement-stocks').each(function () {
-                var table = $(this).DataTable({
-                    paging: false,
-                    info: false,
-                    scrollX: true,
-                    scrollY: false,
-                    scrollCollapse: true,
-                    fixedColumns: true,
-                    scroller: {
-                        rowHeight: 30
-                    },
-                    "columnDefs": [
-                        {"orderable": true, "targets": 0},
-                        {"orderable": false, "targets": '_all'},
-                        {"searchable": true, "targets": 0},
-                        {"searchable": false, "targets": '_all'},
-                    ],
-                    language: {
-                        processing: "{{ 'processing'|trans }}",
-                        search: "{{ 'rechercher'|trans }} :",
-                        loadingRecords: "{{ 'chargementEnCours'|trans }}...",
-                        zeroRecords: "{{ 'zeroResultats'|trans }}",
-                        emptyTable: "{{ 'tableVide'|trans }}",
-                        aria: {
-                            sortAscending: ": activer pour trier la colonne par ordre croissant",
-                            sortDescending: ": activer pour trier la colonne par ordre décroissant"
-                        }
-                    }
-                });
-                table.table({visible: true, api: true}).columns.adjust();
-            });
-        }
->>>>>>> 0c0c7f5... modification de la gestion du stock en ajax
     </script>
     <script type="text/javascript">
-        "use strict";
         $(document).ready(function () {
-            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
-            chargerOngletStocksHebergement({{ entity.id }});
+            $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
+            chargerOngletStocks({{ entity.id }});
         });
+<<<<<<< HEAD
+        function chargerOngletStocks(idhebergement){
+||||||| parent of a806486... log mémoire
         function chargerOngletStocksHebergement(idHebergement) {
 //            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
             var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
@@ -204,31 +126,48 @@
                         }
                     }
             )
+=======
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        console.log('avant construireObgletsTypePeriodes');
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
 
+                            console.log('après construireObgletsTypePeriodes');
+                            var idTypePeriode = null;
+                            for (var i = 0; i < typePeriodes.length; i++) {
+                                idTypePeriode = typePeriodes[i].id;
+                                genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, function (html, idTypePeriode) {
+                                    var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+                                    if ($div == null) {
+                                        console.log($div);
+                                    }
+                                    $div.html(html);
+                                    genererDataTables($div);
+                                });
+                            }
+                            $conteneur.append('<button type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
+                        });
+                    }, 'json');
         }
-        function chargerProgressBar($progressBar, valeur) {
-            $progressBar.attr('aria-valuenow', valeur);
-            $progressBar.css('width', valeur + '%');
-            $progressBar.html(valeur + '%');
-        }
-        /**
-         * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
-         * @param $conteneur
-         * @param $progressBar
-         */
-        function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
-            $.post("{{ path('periode_type_periode_onglets') }}",
-                    {'idConteneur': $conteneur.attr('id')},
-                    function (html) {
-                        if ($progressBar != null) {
-                            chargerProgressBar($progressBar, 100);
-                        }
-                        $conteneur.html(html);
+        function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, callback) {
+            var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idPeriode': '_idPeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
+            url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
+            url = url.replace(/_idPeriode_/g, parseInt(idTypePeriode));
+            $.get(
+                    url,
+                    function (data) {
                         if (callback != null) {
-                            callback(html);
+                            callback(data, idTypePeriode, idHebergement);
                         }
                     }
-            ), 'html';
+            )
+>>>>>>> a806486... log mémoire
+
         }
         function enregistrerStocks() {
             var $element = $(this).parent();
@@ -239,10 +178,10 @@
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
                 data: $stocks,
-                success: function (json) {
-                    if (json.valid) {
+                success: function (json){
+                    if(json.valid){
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
-                    } else {
+                    }else{
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
                     }
                 }
@@ -256,29 +195,4 @@
     'css/hebergement-edit.min.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
-<<<<<<< HEAD
-||||||| parent of 0c0c7f5... modification de la gestion du stock en ajax
-    <style>
-        .table-hebergement-stocks th, .table-hebergement-stocks td{
-            height: 50px;
-        }
-        th.logement,td.logement{
-            min-width: 200px;
-            max-width: 200px;
-            width: 200px;
-        }
-    </style>
-=======
-    <style>
-        .table-hebergement-stocks th, .table-hebergement-stocks td {
-            height: 50px;
-        }
-
-        th.logement, td.logement {
-            min-width: 200px;
-            max-width: 200px;
-            width: 200px;
-        }
-    </style>
->>>>>>> 0c0c7f5... modification de la gestion du stock en ajax
 {% endblock %}
