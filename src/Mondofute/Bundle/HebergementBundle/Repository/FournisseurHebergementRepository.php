@@ -210,7 +210,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                         $f->setId($fhResult['fournisseurId']);
 //                        association du fournisseur au fournisseur hébergement
                         $fh->setFournisseur($f);
-                        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=? LIMIT 25';
+                        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
 //                        $this->connexion->beginTransaction();
                         $lStmt = $this->connexion->prepare($sql);
                         if (!$lStmt) {
@@ -272,7 +272,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             }
 //                                            fin de la récupération des traductions
 //                                            récupération des périodes logement
-                                            $sql = 'SELECT lp.periode_id, lplocatif.stock FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id WHERE lp.logement_id=?';
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id WHERE lp.logement_id=? LIMIT 100';
                                             $lpStmt = $this->connexion->prepare($sql);
                                             if (!$lpStmt) {
 
