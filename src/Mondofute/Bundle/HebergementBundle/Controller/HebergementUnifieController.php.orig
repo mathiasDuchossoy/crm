@@ -1867,10 +1867,11 @@ class HebergementUnifieController extends Controller
         $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
         $reponse->nbLogements = $nbLogements;
         return new JsonResponse($reponse);
-||||||| parent of ea8ead1... mémoire
+||||||| parent of bb2f62b... gestion des stocks mémoire
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
         error_log('mémoire : '.memory_get_usage());
-        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
@@ -1883,14 +1884,15 @@ class HebergementUnifieController extends Controller
         error_log('mémoire : '.memory_get_usage());
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> ea8ead1... mémoire
+>>>>>>> bb2f62b... gestion des stocks mémoire
     }
 //    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
 ////        dump($request);
