@@ -66,4 +66,42 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
 //        dump($result);die;
         return $result;
     }
+
+    public function findByLogementUnifieId($logementUnifieId , $fournisseurId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb
+//            ->select('logementUnifie.id')
+//            ->select('fournisseur.id')
+//            ->select('fournisseurPrestationAnnexe.id ')
+            ->select('prestationAnnexeHebergementUnifie')
+//            ->select('fournisseurs.id')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements' , 'prestationAnnexeHebergements')
+
+
+            ->join('prestationAnnexeHebergements.fournisseur' , 'fournisseur')
+
+            ->join('prestationAnnexeHebergements.fournisseurPrestationAnnexe' , 'fournisseurPrestationAnnexe')
+
+            ->join('prestationAnnexeHebergements.hebergement' , 'hebergement')
+            ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.logements' , 'logements')
+            ->join('logements.logementUnifie', 'logementUnifie')
+
+
+            ->where('logementUnifie.id = :logementUnifieId')
+            ->setParameter('logementUnifieId' , $logementUnifieId)
+
+            ->andWhere('fournisseur.id = :fourisseurId')
+            ->setParameter('fourisseurId' , $fournisseurId)
+
+            ->groupBy('prestationAnnexeHebergementUnifie.id')
+        ;
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
 }

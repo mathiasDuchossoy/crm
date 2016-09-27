@@ -28,6 +28,7 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
 
         $result = $qb->getQuery()->getOneOrNullResult();
 //        dump($result);
+//die;
         return $result;
     }
 }

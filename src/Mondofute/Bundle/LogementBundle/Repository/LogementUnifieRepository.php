@@ -114,4 +114,25 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+    public function getFournisseur($logementUnfieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('fournisseur.id')
+            ->from('MondofuteLogementBundle:LogementUnifie', 'logementUnifie')
+            ->join('logementUnifie.logements', 'logements')
+            ->join('logements.fournisseurHebergement' , 'fournisseurHebergement')
+            ->join('fournisseurHebergement.fournisseur' , 'fournisseur')
+            ->where('logementUnifie.id = :logementUnfieId')
+            ->setParameter('logementUnfieId' , $logementUnfieId)
+            ->groupBy('fournisseur')
+        ;
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+//        dump($result);die;
+
+        return $result;
+    }
+
 }

@@ -577,8 +577,8 @@ class HebergementUnifieController extends Controller
 
 //        /** @var Logement $logement */
 //        $logementUnifieCollection = new ArrayCollection();
-////        foreach ($fournisseurPrestationAnnexeCollection as $item)
-////        {
+//        foreach ($fournisseurPrestationAnnexeCollection as $item)
+//        {
 //        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
 //            foreach ($fournisseurHebergement->getLogements() as $logement) {
 //                if (!$logementUnifieCollection->contains($logement->getLogementUnifie())) {
@@ -586,6 +586,8 @@ class HebergementUnifieController extends Controller
 //                }
 //            }
 //        }
+
+
 //        }
 
 //        /** @var LogementUnifie $value */
