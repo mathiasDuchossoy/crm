@@ -27,6 +27,7 @@ class TypePeriodeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $listeTypePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+        dump(memory_get_usage());
 //        $typePeriodes = $request->get('typePeriodes');
 //        dump($typePeriodes);
         return $this->render('@MondofuteHebergement/hebergementunifie/onglets_type_periode.html.twig',
