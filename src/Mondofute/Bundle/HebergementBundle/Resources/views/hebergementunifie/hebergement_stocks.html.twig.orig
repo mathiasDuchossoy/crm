@@ -7,7 +7,6 @@
                    href="#stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}">{{ fournisseurHebergement.fournisseur.enseigne }}</a>
             </h2>
         </div>
-<<<<<<< HEAD
     </div>
     <div id="stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}"
          class="panel-collapse collapse in">
@@ -19,6 +18,7 @@
             <tr>
                 <th class="logement">Logement</th>
 
+<<<<<<< HEAD
                 {% set break = false %}
                 {% for periode in typePeriode.periodes %}
                     <th>
@@ -38,35 +38,7 @@
                     {% for traduction in logement.traductions %}
                         {% if traduction.langue.code == app.request.locale %}
                             {{ traduction.nom }}
-                        {% endif %}
-||||||| parent of b3682cf... filtre a 15 periodes
-        <div id="stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}"
-             class="panel-collapse collapse in">
-            Tableau des stocks
-            <table class="table-hebergement-stocks display table table-striped nowrap"
-                   cellspacing="0"
-                   width="100%">
-                <thead>
-                <tr>
-                    <th class="logement">Logement</th>
-                    {% for periode in typePeriode.periodes %}
-                        <th>
-                            du
-                            {{ periode.debut|date('d-m-Y') }}<br/>
-                            au
-                            {{ periode.fin|date('d-m-Y') }}
-                        </th>
-=======
-        <div id="stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}"
-             class="panel-collapse collapse in">
-            Tableau des stocks
-            <table class="table-hebergement-stocks display table table-striped nowrap"
-                   cellspacing="0"
-                   width="100%">
-                <thead>
-                <tr>
-                    <th class="logement">Logement</th>
-
+||||||| parent of 58f19c1... limit a 15 periodes
                     {% set break = false %}
                     {% for periode in typePeriode.periodes %}
                         <th>
@@ -77,8 +49,19 @@
                         </th>
                         {% if loop.index0 > 15 %}
                             {% set break = true %}
+=======
+                    {% set break = false %}
+                    {% for periode in typePeriode.periodes if not break %}
+                        <th>
+                            du
+                            {{ periode.debut|date('d-m-Y') }}<br/>
+                            au
+                            {{ periode.fin|date('d-m-Y') }}
+                        </th>
+                        {% if loop.index0 > 15 %}
+                            {% set break = true %}
+>>>>>>> 58f19c1... limit a 15 periodes
                         {% endif %}
->>>>>>> b3682cf... filtre a 15 periodes
                     {% endfor %}
                 </td>
                 {% set break = false %}
