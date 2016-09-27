@@ -1380,11 +1380,18 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
+<<<<<<< HEAD
 //        if($request->request->count() > 0 ){
 //            dump($request->request);
 //            die;
 //        }
 //        $request->request->remove('stocks');
+||||||| parent of 428bdc7... time_limite
+
+=======
+        ini_set('memory_limit','1G');
+        set_time_limit(3600);
+>>>>>>> 428bdc7... time_limite
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
@@ -1878,17 +1885,17 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of 6c373d0... modif du set_time_limit
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        ini_set('max_execution_time',3600);
-=======
+||||||| parent of 428bdc7... time_limite
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         set_time_limit(3600);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> 6c373d0... modif du set_time_limit
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+//        echo ini_get('max_execution_time');
+//        die;
+>>>>>>> 428bdc7... time_limite
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
