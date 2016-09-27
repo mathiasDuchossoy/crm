@@ -87,62 +87,89 @@
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
         });
+<<<<<<< HEAD
         function chargerOngletStocks(idhebergement){
+||||||| parent of 3cbe21a... mémoire
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        console.log('avant construireObgletsTypePeriodes');
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            console.log('après construireObgletsTypePeriodes');
+                            var idTypePeriode = null;
+                            for (var i = 0; i < typePeriodes.length; i++) {
+                                idTypePeriode = typePeriodes[i].id;
+                                genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, function (html, idTypePeriode) {
+                                    var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+                                    if ($div == null) {
+                                        console.log($div);
+                                    }
+                                    $div.html(html);
+                                    genererDataTables($div);
+                                });
+                            }
+                            $conteneur.append('<button type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
+                        });
+                    }, 'json');
+        }
+        function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, callback) {
+            var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idPeriode': '_idPeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
+            url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
+            url = url.replace(/_idPeriode_/g, parseInt(idTypePeriode));
+            $.get(
+                    url,
+                    function (data) {
+                        if (callback != null) {
+                            callback(data, idTypePeriode, idHebergement);
+                        }
+                    }
+            )
+=======
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            var idTypePeriode = null;
+                            for (var i = 0; i < typePeriodes.length; i++) {
+                                idTypePeriode = typePeriodes[i].id;
+                                genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, function (html, idTypePeriode) {
+                                    var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+                                    if ($div == null) {
+                                        console.log($div);
+                                    }
+                                    $div.html(html);
+                                    genererDataTables($div);
+                                });
+                            }
+                            $conteneur.append('<button type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
+                        });
+                    }, 'json');
+        }
+        function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, callback) {
+            var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idPeriode': '_idPeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
+            url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
+            url = url.replace(/_idPeriode_/g, parseInt(idTypePeriode));
+            $.get(
+                    url,
+                    function (data) {
+                        if (callback != null) {
+                            callback(data, idTypePeriode, idHebergement);
+                        }
+                    }
+            )
+>>>>>>> 3cbe21a... mémoire
 
         }
-<<<<<<< HEAD
-||||||| parent of 503a62c... mémoire
-        function chargerProgressBar($progressBar, valeur) {
-            $progressBar.attr('aria-valuenow', valeur);
-            $progressBar.css('width', valeur + '%');
-            $progressBar.html(valeur + '%');
-        }
-        /**
-         * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
-         * @param $conteneur
-         * @param $progressBar
-         */
-        function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
-            $.post("{{ path('periode_type_periode_onglets') }}",
-                    {'idConteneur': $conteneur.attr('id')},
-                    function (html) {
-                        if ($progressBar != null) {
-                            chargerProgressBar($progressBar, 100);
-                        }
-                        $conteneur.html(html);
-                        if (callback != null) {
-                            callback(html);
-                        }
-                    }
-            ), 'html';
-        }
-=======
-        function chargerProgressBar($progressBar, valeur) {
-            $progressBar.attr('aria-valuenow', valeur);
-            $progressBar.css('width', valeur + '%');
-            $progressBar.html(valeur + '%');
-        }
-        /**
-         * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
-         * @param $conteneur
-         * @param $progressBar
-         */
-        function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
-            $.post("{{ path('periode_type_periode_onglets') }}",
-                    {'idConteneur': $conteneur.attr('id')},
-                    function (html) {
-                        console.log(html);
-                        if ($progressBar != null) {
-                            chargerProgressBar($progressBar, 100);
-                        }
-                        $conteneur.html(html);
-                        if (callback != null) {
-                            callback(html);
-                        }
-                    }
-            ), 'html';
-        }
->>>>>>> 503a62c... mémoire
         function enregistrerStocks() {
             var $element = $(this).parent();
             $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
