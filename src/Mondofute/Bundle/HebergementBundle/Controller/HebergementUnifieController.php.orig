@@ -2004,7 +2004,7 @@ class HebergementUnifieController extends Controller
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< 22a5b9dfa106874bf17c448926fb58bad3200645
+<<<<<<< 7a3274be5f73daee5d6e6aee3bea725a1b0157c6
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2040,7 +2040,7 @@ class HebergementUnifieController extends Controller
         $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         $time = new \DateTime();
         echo $time->format('H:i:s');
-        echo memory_get_usage();
+//        echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
 //        die;
@@ -2056,7 +2056,7 @@ class HebergementUnifieController extends Controller
         $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
         $time = new \DateTime();
         echo $time->format('H:i:s');
-//        echo memory_get_usage();
+        echo memory_get_usage();
         die;
 //        dump(memory_get_usage());
 //        die;
