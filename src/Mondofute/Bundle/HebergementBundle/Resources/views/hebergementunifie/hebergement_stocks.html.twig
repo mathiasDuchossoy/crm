@@ -122,6 +122,8 @@
                             </td>
                             {% set break = false %}
                             {% for logementPeriode in logement.periodes  %}
+                                {#{{ dump(logementPeriode) }}#}
+                                {% if logementPeriode.periode.type.id == typePeriode.id  %}
                                 <td>
                                     {#{% set stock = 0 %}#}
                                     {#{% for logementPeriode in logement.periodes %}#}
@@ -129,6 +131,7 @@
                                             {% set stock = logementPeriode.locatif.stock %}
                                         {#{% endif %}#}
                                     {#{% endfor %}#}
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"#}
                                            {#type="text"#}
@@ -142,6 +145,11 @@
                                 {#</td>#}
 =======
                                     <input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"
+||||||| parent of b53c6bc... modification algorithme du twig
+                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"
+=======
+                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+>>>>>>> b53c6bc... modification algorithme du twig
                                            type="text"
                                            size="2" maxlength="2" value="{{ stock }}"/>
                                 </td>
@@ -171,7 +179,7 @@
 =======
                                 {#{% if loop.index0 > 15 %}#}
                                     {#{% set break = true %}#}
-                                {#{% endif %}#}
+                                {% endif %}
                             {% endfor %}
                         </tr>
                     {% endif %}
