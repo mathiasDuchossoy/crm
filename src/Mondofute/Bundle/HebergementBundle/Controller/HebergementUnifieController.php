@@ -1790,9 +1790,9 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        dump(memory_get_usage());
-        die;
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+//        dump(memory_get_usage());
+//        die;
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
