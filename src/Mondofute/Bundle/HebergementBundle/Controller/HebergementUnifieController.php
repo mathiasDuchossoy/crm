@@ -1813,7 +1813,7 @@ class HebergementUnifieController extends Controller
         echo memory_get_peak_usage();
 //        die;
 //        dump($fournisseurHebergements);
-        die;
+//        die;
 //        error_log('mémoire : '.memory_get_usage());
 
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
