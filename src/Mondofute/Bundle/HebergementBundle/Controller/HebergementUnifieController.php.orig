@@ -1878,16 +1878,7 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of 10f2027... mémoire
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        ini_set('max_execution_time',300);
-        set_time_limit(300);
-//        echo ini_get('max_execution_time');
-//        die;
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-=======
+||||||| parent of 19d941c... temps
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         ini_set('max_execution_time',300);
@@ -1896,32 +1887,17 @@ class HebergementUnifieController extends Controller
 //        die;
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
->>>>>>> 10f2027... mémoire
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        ini_set('max_execution_time',300);
+        set_time_limit(300);
+//        echo ini_get('max_execution_time');
+//        die;
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+>>>>>>> 19d941c... temps
         $em = $this->getDoctrine()->getManager();
-<<<<<<< HEAD
-||||||| parent of 10f2027... mémoire
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-=======
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-        echo memory_get_usage();
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        echo memory_get_usage();
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
->>>>>>> 10f2027... mémoire
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
 <<<<<<< HEAD
         $data = array();
@@ -1953,16 +1929,16 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
-||||||| parent of 10f2027... mémoire
+||||||| parent of 19d941c... temps
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        echo memory_get_usage();
+//        $time = new \DateTime();
+//        echo $time->format('H:i:s');
+        echo memory_get_peak_usage();
 //        die;
-        dump($fournisseurHebergements);
-        die;
+//        dump($fournisseurHebergements);
+//        die;
 //        error_log('mémoire : '.memory_get_usage());
 
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
@@ -1973,19 +1949,19 @@ class HebergementUnifieController extends Controller
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-        echo memory_get_usage();
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
+        echo memory_get_peak_usage();
 //        die;
 //        dump($fournisseurHebergements);
-//        die;
+        die;
 //        error_log('mémoire : '.memory_get_usage());
 
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
         ));
->>>>>>> 10f2027... mémoire
+>>>>>>> 19d941c... temps
     }
 
     /**
