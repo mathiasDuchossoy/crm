@@ -1810,7 +1810,7 @@ class HebergementUnifieController extends Controller
         echo $time->format('H:i:s');
         echo memory_get_usage();
 //        die;
-//        dump(memory_get_usage());
+        dump($fournisseurHebergements);
         die;
 //        error_log('mémoire : '.memory_get_usage());
 
