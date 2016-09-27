@@ -33,7 +33,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
     }
     public function chargerPourStocks($idHebergementUnifie)
     {
-<<<<<<< e2b56531408d759b3d34e0d4baf7b33110628076
         $em = $this->getEntityManager();
         $site = $em->getRepository(Site::class)->findOneBy(array('crm' => true));
         if (isset($em)) {
@@ -41,11 +40,86 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         }
 
         $fournisseurHebergements = new ArrayCollection();
+<<<<<<< ad403dcdebe8094953b86267bbc399a19b5b0a6b
         $sql = 'SELECT fh.id, f.id AS fournisseurId, f.enseigne FROM fournisseur_hebergement AS fh LEFT JOIN fournisseur AS f ON f.id=fh.fournisseur_id WHERE fh.hebergement_id=?';
         $this->connexion->beginTransaction();
         $fhStmt = $this->connexion->prepare($sql);
         if (!$fhStmt) {
+||||||| merged common ancestors
+//        $em = $this->getEntityManager();
+//        $conn = $em->getConnection();
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fh.id, f.id fournisseurId')
+            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
+            ->leftJoin('fh.fournisseur', 'f')
+            ->where('fh.hebergement = :idHebergement')
+            ->setParameter('idHebergement', $idHebergementUnifie);
+        $fournisseurHebergementsResult = $qb->getQuery()->getResult();
+//        print_r($fournisseurHebergementsResult);
+//        die;
+        foreach ($fournisseurHebergementsResult as $fournisseurHebergementResult) {
+            $fournisseurHebergement = new FournisseurHebergement();
+            $fournisseurHebergement->setId($fournisseurHebergementResult['id']);
+            $fournisseur = new Fournisseur();
+            $fournisseur->setId($fournisseurHebergementResult['fournisseurId']);
+            $qbLogements = $this->getEntityManager()->createQueryBuilder();
+            $qbLogements->select('l.id, lu.id logementUnifieId')
+                ->from('MondofuteLogementBundle:Logement', 'l')
+                ->innerJoin('l.fournisseurHebergement', 'fh')
+                ->innerJoin('l.site', 's')
+                ->innerJoin('l.logementUnifie', 'lu')
+                ->where('fh.id = :idFournisseurHebergement')
+                ->andWhere('s.id = :idSite')
+                ->setParameter('idSite', $site->getId())
+                ->setParameter('idFournisseurHebergement', $fournisseurHebergement->getId());
+            $logementsResult = $qbLogements->getQuery()->getResult();
+            foreach ($logementsResult as $logementResult) {
+                $idLogement = $logementResult['id'];
+                $logement = new Logement();
+                $logementUnifie = new LogementUnifie();
+                $logementUnifie->setId($logementResult['logementUnifieId']);
+                $logement->setLogementUnifie($logementUnifie)
+                    ->setSite($site);
+=======
+//        $em = $this->getEntityManager();
+//        $conn = $em->getConnection();
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fh.id, f.id fournisseurId')
+            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
+            ->leftJoin('fh.fournisseur', 'f')
+            ->where('fh.hebergement = :idHebergement')
+            ->setParameter('idHebergement', $idHebergementUnifie);
+        $fournisseurHebergementsResult = $qb->getQuery()->getResult();
+        unset($qb);
+//        print_r($fournisseurHebergementsResult);
+//        die;
+        foreach ($fournisseurHebergementsResult as $fournisseurHebergementResult) {
+            $fournisseurHebergement = new FournisseurHebergement();
+            $fournisseurHebergement->setId($fournisseurHebergementResult['id']);
+            $fournisseur = new Fournisseur();
+            $fournisseur->setId($fournisseurHebergementResult['fournisseurId']);
+            $qbLogements = $this->getEntityManager()->createQueryBuilder();
+            $qbLogements->select('l.id, lu.id logementUnifieId')
+                ->from('MondofuteLogementBundle:Logement', 'l')
+                ->innerJoin('l.fournisseurHebergement', 'fh')
+                ->innerJoin('l.site', 's')
+                ->innerJoin('l.logementUnifie', 'lu')
+                ->where('fh.id = :idFournisseurHebergement')
+                ->andWhere('s.id = :idSite')
+                ->setParameter('idSite', $site->getId())
+                ->setParameter('idFournisseurHebergement', $fournisseurHebergement->getId());
+            $logementsResult = $qbLogements->getQuery()->getResult();
+            unset($qbLogements);
+            foreach ($logementsResult as $logementResult) {
+                $idLogement = $logementResult['id'];
+                $logement = new Logement();
+                $logementUnifie = new LogementUnifie();
+                $logementUnifie->setId($logementResult['logementUnifieId']);
+                $logement->setLogementUnifie($logementUnifie)
+                    ->setSite($site);
+>>>>>>> mémoire
 
+<<<<<<< ad403dcdebe8094953b86267bbc399a19b5b0a6b
         } else {
             $retour = $fhStmt->bindValue(1, $idHebergementUnifie, Type::BIGINT);
             if ($retour) {
@@ -69,7 +143,46 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //                        $this->connexion->beginTransaction();
                         $lStmt = $this->connexion->prepare($sql);
                         if (!$lStmt) {
+||||||| merged common ancestors
+//                gestion des traductions
+                $qbLogementTraduction = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementTraduction->select('lt.nom, lang.code')
+                    ->from('MondofuteLogementBundle:LogementTraduction', 'lt')
+                    ->innerJoin('lt.logement', 'l')
+                    ->innerJoin('lt.langue', 'lang')
+                    ->where('l.id = :idlogement')
+                    ->setParameter('idlogement', $idLogement);
+                $logementTraductionsResult = $qbLogementTraduction->getQuery()->getResult();
+                foreach ($logementTraductionsResult as $logementTraductionResult) {
+                    $logementTraduction = new LogementTraduction();
+                    $logementTraduction->setNom($logementTraductionResult['nom']);
+                    $langue = new Langue();
+                    $langue->setCode($logementTraductionResult['code']);
+                    $logementTraduction->setLangue($langue);
+                    $logement->addTraduction($logementTraduction);
+                }
+=======
+//                gestion des traductions
+                $qbLogementTraduction = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementTraduction->select('lt.nom, lang.code')
+                    ->from('MondofuteLogementBundle:LogementTraduction', 'lt')
+                    ->innerJoin('lt.logement', 'l')
+                    ->innerJoin('lt.langue', 'lang')
+                    ->where('l.id = :idlogement')
+                    ->setParameter('idlogement', $idLogement);
+                $logementTraductionsResult = $qbLogementTraduction->getQuery()->getResult();
+                unset($qbLogementTraduction);
+                foreach ($logementTraductionsResult as $logementTraductionResult) {
+                    $logementTraduction = new LogementTraduction();
+                    $logementTraduction->setNom($logementTraductionResult['nom']);
+                    $langue = new Langue();
+                    $langue->setCode($logementTraductionResult['code']);
+                    $logementTraduction->setLangue($langue);
+                    $logement->addTraduction($logementTraduction);
+                }
+>>>>>>> mémoire
 
+<<<<<<< ad403dcdebe8094953b86267bbc399a19b5b0a6b
                         } else {
                             $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
                             if ($retour) {
@@ -93,6 +206,44 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
                                             $ltStmt = $this->connexion->prepare($sql);
                                             if (!$ltStmt) {
+||||||| merged common ancestors
+//                gestion des périodes
+                $qbLogementPeriodes = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementPeriodes->select('p.id periodeId')
+                    ->from('MondofuteLogementPeriodeBundle:LogementPeriode', 'lp')
+                    ->join('lp.logement', 'l')
+                    ->join('lp.periode', 'p')
+                    ->where('l.id = :idLogement')
+                    ->setParameter('idLogement', $idLogement);
+                $logementPeriodesResult = $qbLogementPeriodes->getQuery()->getResult();
+                foreach ($logementPeriodesResult as $logementPeriodeResult) {
+                    $logementPeriode = new LogementPeriode();
+                    $periode = new Periode();
+                    $periode->setId($logementPeriodeResult['periodeId']);
+                    $logementPeriode->setLogement($logement)
+                        ->setPeriode($periode);
+                    $logement->addPeriode($logementPeriode);
+                }
+=======
+//                gestion des périodes
+                $qbLogementPeriodes = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementPeriodes->select('p.id periodeId')
+                    ->from('MondofuteLogementPeriodeBundle:LogementPeriode', 'lp')
+                    ->join('lp.logement', 'l')
+                    ->join('lp.periode', 'p')
+                    ->where('l.id = :idLogement')
+                    ->setParameter('idLogement', $idLogement);
+                $logementPeriodesResult = $qbLogementPeriodes->getQuery()->getResult();
+                unset($qbLogementPeriodes);
+                foreach ($logementPeriodesResult as $logementPeriodeResult) {
+                    $logementPeriode = new LogementPeriode();
+                    $periode = new Periode();
+                    $periode->setId($logementPeriodeResult['periodeId']);
+                    $logementPeriode->setLogement($logement)
+                        ->setPeriode($periode);
+                    $logement->addPeriode($logementPeriode);
+                }
+>>>>>>> mémoire
 
                                             } else {
                                                 $retour = $ltStmt->bindValue(1, $idLogement, Type::BIGINT);
@@ -213,38 +364,39 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         }
 //        dump($fournisseurHebergements);
 //        echo memory_get_peak_usage();
-||||||| merged common ancestors
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('fh')
-            ->addSelect('h.id')
-            ->addSelect('f.id')
-            ->addSelect('logements')
-            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
-            ->join('fh.fournisseur', 'f')
-            ->join('fh.hebergement', 'h')
-            ->leftJoin('fh.logements','logements')
-        ->where('h.id = :idHebergementUnifie')
-        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
-        $result = $qb->getQuery()->getResult();
-//        dump(new ArrayCollection($result));
-=======
-//        SELECT fh.id FROM fournisseurHebergement WHERE idHebergement=x;
-
-//        $qb = $this->getEntityManager()->createQueryBuilder();
-//        $qb->select('fh')
-//            ->addSelect('h.id')
-//            ->addSelect('f.id')
-//            ->addSelect('logements')
-//            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
-//            ->join('fh.fournisseur', 'f')
-//            ->join('fh.hebergement', 'h')
-//            ->leftJoin('fh.logements','logements')
-//        ->where('h.id = :idHebergementUnifie')
-//        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
-//        $result = $qb->getQuery()->getResult();
-//        dump(new ArrayCollection($result));
->>>>>>> test mémoire
 //        die;
+<<<<<<< ad403dcdebe8094953b86267bbc399a19b5b0a6b
+||||||| merged common ancestors
+//        $qb->select('fh')
+//            ->addSelect('fh.fournisseur')
+//            ->addSelect('fh.logements')
+//            ->addSelect('lt.langue')
+//            ->addSelect('lt.nom')
+//            ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
+//            ->leftJoin('fh.fournisseur','f')
+//            ->leftJoin('fh.logements','l')
+//        ->leftJoin('l.site','site')
+//        ->leftJoin('l.traductions','lt')
+//        ->leftJoin('lt.langue','ltl')
+//        ->where('fh.hebergement.id = :idHebergement')
+//        ->setParameter('idHebergement',$idHebergementUnifie);
+=======
+//        $qb->select('fh')
+//            ->addSelect('fh.fournisseur')
+//            ->addSelect('fh.logements')
+//            ->addSelect('lt.langue')
+//            ->addSelect('lt.nom')
+//            ->from('MondofuteHebergementBundle:FournisseurHebergement','fh')
+//            ->leftJoin('fh.fournisseur','f')
+//            ->leftJoin('fh.logements','l')
+//        ->leftJoin('l.site','site')
+//        ->leftJoin('l.traductions','lt')
+//        ->leftJoin('lt.langue','ltl')
+//        ->where('fh.hebergement.id = :idHebergement')
+//        ->setParameter('idHebergement',$idHebergementUnifie);
+        echo memory_get_usage();
+        die;
+>>>>>>> mémoire
         return $fournisseurHebergements;
     }
 }
