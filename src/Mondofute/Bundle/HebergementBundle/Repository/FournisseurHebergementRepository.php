@@ -14,18 +14,20 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 {
     public function chargerPourStocks($idHebergementUnifie)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('fh')
-            ->addSelect('h.id')
-            ->addSelect('f.id')
-            ->addSelect('logements')
-            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
-            ->join('fh.fournisseur', 'f')
-            ->join('fh.hebergement', 'h')
-            ->leftJoin('fh.logements','logements')
-        ->where('h.id = :idHebergementUnifie')
-        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
-        $result = $qb->getQuery()->getResult();
+//        SELECT fh.id FROM fournisseurHebergement WHERE idHebergement=x;
+
+//        $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb->select('fh')
+//            ->addSelect('h.id')
+//            ->addSelect('f.id')
+//            ->addSelect('logements')
+//            ->from('MondofuteHebergementBundle:FournisseurHebergement', 'fh')
+//            ->join('fh.fournisseur', 'f')
+//            ->join('fh.hebergement', 'h')
+//            ->leftJoin('fh.logements','logements')
+//        ->where('h.id = :idHebergementUnifie')
+//        ->setParameter('idHebergementUnifie',$idHebergementUnifie);
+//        $result = $qb->getQuery()->getResult();
 //        dump(new ArrayCollection($result));
 //        die;
 //        $qb->select('fh')
