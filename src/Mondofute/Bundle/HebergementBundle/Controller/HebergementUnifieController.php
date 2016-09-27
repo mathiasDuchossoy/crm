@@ -1022,8 +1022,7 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-        ini_set('memory_limit','1G');
-        set_time_limit(3600);
+
         $em = $this->getDoctrine()->getManager();
 //        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
 //        $typePeriodes = new ArrayCollection();
@@ -1450,17 +1449,19 @@ class HebergementUnifieController extends Controller
         }
     }
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        set_time_limit(9000);
 //        echo ini_get('max_execution_time');
 //        die;
         $em = $this->getDoctrine()->getManager();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        error_log('mémoire : '.memory_get_usage());
         $fournisseurHebergements = new ArrayCollection();
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
 //        die;
+        error_log('mémoire : '.memory_get_usage());
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
