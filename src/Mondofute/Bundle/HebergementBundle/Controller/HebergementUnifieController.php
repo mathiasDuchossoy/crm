@@ -1790,8 +1790,8 @@ class HebergementUnifieController extends Controller
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
 //        die;
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         $em = $this->getDoctrine()->getManager();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
@@ -1808,12 +1808,12 @@ class HebergementUnifieController extends Controller
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
+        $time = new \DateTime();
+        echo $time->format('H:i:s');
         echo memory_get_peak_usage();
 //        die;
 //        dump($fournisseurHebergements);
-//        die;
+        die;
 //        error_log('mémoire : '.memory_get_usage());
 
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
