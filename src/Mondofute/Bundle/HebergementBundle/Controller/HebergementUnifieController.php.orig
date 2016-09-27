@@ -1417,6 +1417,7 @@ class HebergementUnifieController extends Controller
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //        if($request->request->count() > 0 ){
 //            dump($request->request);
 //            die;
@@ -1428,6 +1429,12 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit','1G');
         set_time_limit(3600);
 >>>>>>> dba2296... time_limite
+||||||| parent of 9f09546... mémoire et time_limit
+        ini_set('memory_limit','1G');
+        set_time_limit(3600);
+=======
+
+>>>>>>> 9f09546... mémoire et time_limit
         $em = $this->getDoctrine()->getManager();
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1948,7 +1955,7 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-<<<<<<< d70cdff15068a1d7da4f08aa00605d716c8b4f69
+<<<<<<< dba22965294d26d58e699df2add7ea9328ae7e8c
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
@@ -1998,17 +2005,29 @@ class HebergementUnifieController extends Controller
 //        set_time_limit(300);
 ||||||| merged common ancestors
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        set_time_limit(3600);
 //        echo ini_get('max_execution_time');
 //        die;
 =======
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        set_time_limit(9000);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> time_limite
+>>>>>>> mémoire et time_limit
         $em = $this->getDoctrine()->getManager();
+<<<<<<< dba22965294d26d58e699df2add7ea9328ae7e8c
+||||||| merged common ancestors
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        error_log('mémoire : '.memory_get_usage());
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+=======
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $fournisseurHebergements = new ArrayCollection();
+//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
+>>>>>>> mémoire et time_limit
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+<<<<<<< dba22965294d26d58e699df2add7ea9328ae7e8c
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
@@ -2038,6 +2057,24 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
+||||||| merged common ancestors
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+//        dump(memory_get_usage());
+//        die;
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+=======
+//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
+//        dump(memory_get_usage());
+//        die;
+        error_log('mémoire : '.memory_get_usage());
+        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
+            'fournisseurHebergements' => $fournisseurHebergements,
+            'typePeriode' => $typePeriode
+        ));
+>>>>>>> mémoire et time_limit
     }
 
     /**
