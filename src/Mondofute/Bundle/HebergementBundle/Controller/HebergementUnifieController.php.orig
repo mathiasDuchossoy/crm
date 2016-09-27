@@ -1878,20 +1878,21 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of 5a6ba06... test augmentation du set_time_limit
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        set_time_limit(9000);
-//        echo ini_get('max_execution_time');
-//        die;
-=======
+||||||| parent of a4cb118... test mémoire
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         ini_set('max_execution_time',300);
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
 //        die;
->>>>>>> 5a6ba06... test augmentation du set_time_limit
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+//        ini_set('memory_limit','1G');
+        ini_set('max_execution_time',300);
+        set_time_limit(300);
+//        echo ini_get('max_execution_time');
+//        die;
+>>>>>>> a4cb118... test mémoire
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
