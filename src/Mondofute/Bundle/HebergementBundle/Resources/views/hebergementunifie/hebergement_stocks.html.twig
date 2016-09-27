@@ -30,37 +30,37 @@
                 </tr>
                 </thead>
                 <tbody>
-                {#{% for logement in fournisseurHebergement.logements %}#}
-                    {#{% if logement.site.crm == true %}#}
-                        {#<tr>#}
-                            {#<td class="logement">#}
-                                {#{% for traduction in logement.traductions %}#}
-                                    {#{% if traduction.langue.code == app.request.locale %}#}
-                                        {#{{ traduction.nom }}#}
-                                    {#{% endif %}#}
-                                {#{% endfor %}#}
-                            {#</td>#}
-                            {#{% set break = false %}#}
-                            {#{% for periode in typePeriode.periodes if not break %}#}
-                                {#<td>#}
+                {% for logement in fournisseurHebergement.logements %}
+                    {% if logement.site.crm == true %}
+                        <tr>
+                            <td class="logement">
+                                {% for traduction in logement.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.nom }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            {% set break = false %}
+                            {% for logementPeriode in logement.periodes  %}
+                                <td>
                                     {#{% set stock = 0 %}#}
                                     {#{% for logementPeriode in logement.periodes %}#}
                                         {#{% if logementPeriode.periode == periode %}#}
-                                            {#{% set stock = logementPeriode.locatif.stock %}#}
+                                            {% set stock = logementPeriode.locatif.stock %}
                                         {#{% endif %}#}
                                     {#{% endfor %}#}
-                                    {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"#}
-                                           {#type="text"#}
-                                           {#size="2" maxlength="2" value="{{ stock }}"/>#}
-                                {#</td>#}
+                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"
+                                           type="text"
+                                           size="2" maxlength="2" value="{{ stock }}"/>
+                                </td>
 
                                 {#{% if loop.index0 > 15 %}#}
                                     {#{% set break = true %}#}
                                 {#{% endif %}#}
-                            {#{% endfor %}#}
-                        {#</tr>#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
