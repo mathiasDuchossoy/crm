@@ -1789,6 +1789,7 @@ class HebergementUnifieController extends Controller
         ini_set('max_execution_time',3600);
         $em = $this->getDoctrine()->getManager();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        error_log('mémoire : '.memory_get_usage());
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
 //        dump(memory_get_usage());
