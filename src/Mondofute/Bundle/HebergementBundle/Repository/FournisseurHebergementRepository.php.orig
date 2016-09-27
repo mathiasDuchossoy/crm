@@ -45,6 +45,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         $fhStmt = $this->connexion->prepare($sql);
         if (!$fhStmt) {
 
+<<<<<<< 22a5b9dfa106874bf17c448926fb58bad3200645
         } else {
             $retour = $fhStmt->bindValue(1, $idHebergementUnifie, Type::BIGINT);
             if ($retour) {
@@ -68,6 +69,46 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //                        $this->connexion->beginTransaction();
                         $lStmt = $this->connexion->prepare($sql);
                         if (!$lStmt) {
+||||||| merged common ancestors
+//                gestion des traductions
+                $qbLogementTraduction = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementTraduction->select('lt.nom, lang.code')
+                    ->from('MondofuteLogementBundle:LogementTraduction', 'lt')
+                    ->innerJoin('lt.logement', 'l')
+                    ->innerJoin('lt.langue', 'lang')
+                    ->where('l.id = :idlogement')
+                    ->setParameter('idlogement', $idLogement);
+                $logementTraductionsResult = $qbLogementTraduction->getQuery()->getResult();
+                unset($qbLogementTraduction);
+                foreach ($logementTraductionsResult as $logementTraductionResult) {
+                    $logementTraduction = new LogementTraduction();
+                    $logementTraduction->setNom($logementTraductionResult['nom']);
+                    $langue = new Langue();
+                    $langue->setCode($logementTraductionResult['code']);
+                    $logementTraduction->setLangue($langue);
+                    $logement->addTraduction($logementTraduction);
+                }
+=======
+//                gestion des traductions
+                $qbLogementTraduction = $this->getEntityManager()->createQueryBuilder();
+                $qbLogementTraduction->select('lt.nom, lang.code')
+                    ->from('MondofuteLogementBundle:LogementTraduction', 'lt')
+                    ->innerJoin('lt.logement', 'l')
+                    ->innerJoin('lt.langue', 'lang')
+                    ->where('l.id = :idlogement')
+                    ->setParameter('idlogement', $idLogement);
+                $logementTraductionsResult = $qbLogementTraduction->getQuery()->getResult();
+                unset($qbLogementTraduction);
+                foreach ($logementTraductionsResult as $logementTraductionResult) {
+                    $logementTraduction = new LogementTraduction();
+                    $logementTraduction->setNom($logementTraductionResult['nom']);
+                    $langue = new Langue();
+                    $langue->setCode($logementTraductionResult['code']);
+                    $logementTraduction->setLangue($langue);
+                    $logement->addTraduction($logementTraduction);
+                }
+                unset($logementTraductionsResult);
+>>>>>>> memoire
 
                         } else {
                             $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
@@ -109,6 +150,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                                                 ->setNom($ltResult['nom']);
                                                             $logement->addTraduction($logementTraduction);
 
+<<<<<<< 22a5b9dfa106874bf17c448926fb58bad3200645
                                                         }
                                                         if (isset($ltResult)) {
                                                             unset($ltResult);
@@ -130,7 +172,16 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
                                             $lpStmt = $this->connexion->prepare($sql);
                                             if (!$lpStmt) {
+||||||| merged common ancestors
+                    $logement->addPeriode($logementPeriode);
+                }
+=======
+                    $logement->addPeriode($logementPeriode);
+                }
+                unset($logementPeriodesResult);
+>>>>>>> memoire
 
+<<<<<<< 22a5b9dfa106874bf17c448926fb58bad3200645
                                             } else {
                                                 $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
                                                 if ($retour) {
@@ -151,7 +202,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                                                 ->setFin(new \DateTime($lpResult['fin']))
                                                                 ->setType($typePeriode)->setId($lpResult['periode_id']);
 
-<<<<<<< 1e31490f6f83a38e2731f7869be875a1c7b9e909
                                                             $logementPeriodeLocatif->setLogement($logement)
                                                                 ->setPeriode($periode)
                                                                 ->setStock($lpResult['stock']);
@@ -191,6 +241,18 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                         if (isset($logementUnifie)) {
                                             unset($logementUnifie);
                                         }
+||||||| merged common ancestors
+//                ajout du logement au fournisseurHebergement
+                $fournisseurHebergement->addLogement($logement);
+            }
+            $fournisseurHebergement->setFournisseur($fournisseur);
+=======
+//                ajout du logement au fournisseurHebergement
+                $fournisseurHebergement->addLogement($logement);
+            }
+            unset($logementsResult);
+            $fournisseurHebergement->setFournisseur($fournisseur);
+>>>>>>> memoire
 
                                     }
                                 }
@@ -207,43 +269,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     if (isset($fh)) {
                         unset($fh);
                     }
-||||||| merged common ancestors
-                    $qbLogementPeriodesLocatif = $this->getEntityManager()->createQueryBuilder();
-                    $qbLogementPeriodesLocatif->select('lpl.stock')
-                        ->from('MondofuteCatalogueBundle:LogementPeriodeLocatif','lpl')
-                        ->join('lpl.logement','l')
-                        ->join('lpl.periode','p')
-                        ->where('l.id = :idLogement')
-                        ->andWhere('p.id = :idPeriode')
-                        ->setParameter('idLogement',$idLogement)
-                        ->setParameter('idPeriode',$periode->getId());
-                    $lplResults = $qbLogementPeriodesLocatif->getQuery()->getResult();
-                    foreach ($lplResults as $lplResult){
-                        $lpl = new LogementPeriodeLocatif();
-                        $lpl->setStock($lplResult['stock'])
-                            ->setLogement($logement)
-                            ->setPeriode($periode);
-                        $logementPeriode->setLocatif($lpl);
-                    }
-=======
-//                    $qbLogementPeriodesLocatif = $this->getEntityManager()->createQueryBuilder();
-//                    $qbLogementPeriodesLocatif->select('lpl.stock')
-//                        ->from('MondofuteCatalogueBundle:LogementPeriodeLocatif','lpl')
-//                        ->join('lpl.logement','l')
-//                        ->join('lpl.periode','p')
-//                        ->where('l.id = :idLogement')
-//                        ->andWhere('p.id = :idPeriode')
-//                        ->setParameter('idLogement',$idLogement)
-//                        ->setParameter('idPeriode',$periode->getId());
-//                    $lplResults = $qbLogementPeriodesLocatif->getQuery()->getResult();
-//                    foreach ($lplResults as $lplResult){
-//                        $lpl = new LogementPeriodeLocatif();
-//                        $lpl->setStock($lplResult['stock'])
-//                            ->setLogement($logement)
-//                            ->setPeriode($periode);
-//                        $logementPeriode->setLocatif($lpl);
-//                    }
->>>>>>> test temps
 
                 }
             }
