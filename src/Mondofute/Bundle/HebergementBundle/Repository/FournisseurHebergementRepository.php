@@ -187,7 +187,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         }
 
         $fournisseurHebergements = new ArrayCollection();
-        $sql = 'SELECT fh.id, f.id AS fournisseurId FROM fournisseur_hebergement AS fh LEFT JOIN fournisseur AS f ON f.id=fh.fournisseur_id WHERE fh.hebergement_id=?';
+        $sql = 'SELECT fh.id, f.id AS fournisseurId, f.enseigne FROM fournisseur_hebergement AS fh LEFT JOIN fournisseur AS f ON f.id=fh.fournisseur_id WHERE fh.hebergement_id=?';
         $this->connexion->beginTransaction();
         $fhStmt = $this->connexion->prepare($sql);
         if (!$fhStmt) {
@@ -208,7 +208,8 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                         $fh->setId($fhResult['id']);
 //                        création du fournisseur
                         $f = new Fournisseur();
-                        $f->setId($fhResult['fournisseurId']);
+                        $f->setEnseigne($fhResult['enseigne'])
+                            ->setId($fhResult['fournisseurId']);
 //                        association du fournisseur au fournisseur hébergement
                         $fh->setFournisseur($f);
                         $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
@@ -273,7 +274,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             }
 //                                            fin de la récupération des traductions
 //                                            récupération des périodes logement
-                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
                                             $lpStmt = $this->connexion->prepare($sql);
                                             if (!$lpStmt) {
 
@@ -292,7 +293,11 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                                             $typePeriode = new TypePeriode();
                                                             $typePeriode->setId((int) $lpResult['type_id']);
 //                                                            $periode->setId();
-                                                            $periode->setType($typePeriode)->setId($lpResult['periode_id']);
+                                                            $periode
+                                                            ->setDebut(new \DateTime($lpResult['debut']))
+                                                                ->setFin(new \DateTime($lpResult['fin']))
+                                                                ->setType($typePeriode)->setId($lpResult['periode_id'])
+                                                            ;
 
                                                             $logementPeriodeLocatif->setLogement($logement)
                                                                 ->setPeriode($periode)

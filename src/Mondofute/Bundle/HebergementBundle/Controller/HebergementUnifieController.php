@@ -24,6 +24,7 @@ use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -45,6 +46,7 @@ use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -1454,14 +1456,14 @@ class HebergementUnifieController extends Controller
         set_time_limit(300);
 //        echo ini_get('max_execution_time');
 //        die;
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
+//        $time = new \DateTime();
+//        echo $time->format('H:i:s');
         $em = $this->getDoctrine()->getManager();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
-        echo memory_get_usage();
+//        echo memory_get_usage();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        echo memory_get_usage();
+//        echo memory_get_usage();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
         $fournisseurHebergements = new ArrayCollection();
@@ -1469,17 +1471,44 @@ class HebergementUnifieController extends Controller
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+//        echo $request->getLocale();
+        $data = array();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach($fournisseurHebergements as $fournisseurHebergement){
+            $fournisseur = array();
+//            $table = array();
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                $ligne = array();
+                /** @var LogementTraduction $traduction */
+                foreach ($logement->getTraductions() as $traduction){
+                    if($traduction->getLangue()->getCode() == $request->getLocale()){
+                        $ligne['logement'] = $traduction->getNom();
+                    }
+                }
+                /** @var LogementPeriode $periode */
+                foreach ($logement->getPeriodes() as $periode){
+                    $ligne['du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y')] = $periode->getLocatif()->getStock();
+                }
+//                $fournisseur[1] = json_encode($ligne);
+                $fournisseur[1] = $ligne;
+            }
+            $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            array_push($data,$fournisseur);
+        }
+//        dump(json_encode($data));
+//        die;
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        echo memory_get_peak_usage();
+//        $time = new \DateTime();
+//        echo $time->format('H:i:s');
+//        echo memory_get_peak_usage();
 //        die;
 //        dump($fournisseurHebergements);
 //        die;
 //        error_log('mémoire : '.memory_get_usage());
-
+        return new JsonResponse($data);
         return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
             'fournisseurHebergements' => $fournisseurHebergements,
             'typePeriode' => $typePeriode
