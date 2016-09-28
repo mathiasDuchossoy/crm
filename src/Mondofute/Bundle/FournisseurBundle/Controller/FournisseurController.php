@@ -1083,7 +1083,7 @@ class FournisseurController extends Controller
                                 ) {
                                     $actif = true;
                                 }
-                                
+
                                 $prestationAnnexeHebergement->setActif($actif);
                                 $em->persist($prestationAnnexeHebergement);
                             }
@@ -2314,6 +2314,7 @@ class FournisseurController extends Controller
                 // ***** gestion logo *****
                 if (!empty($fournisseur->getLogo())) {
                     $logo = $fournisseur->getLogo();
+//                    dump($fournisseurSite->getLogo());die;
                     if (!empty($fournisseurSite->getLogo())) {
                         $logoSite = $fournisseurSite->getLogo();
                         if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
@@ -2329,25 +2330,43 @@ class FournisseurController extends Controller
                             $fournisseurSite->setLogo($cloneVisuel);
                         }
                     } else {
-                        // on lui clone l'image
-                        $cloneVisuel = clone $logo;
-                        // **** récupération du visuel physique ****
-                        $pool = $this->container->get('sonata.media.pool');
-                        $provider = $pool->getProvider($cloneVisuel->getProviderName());
-                        $provider->getReferenceImage($cloneVisuel);
+//                        // on lui clone l'image
+//                        $cloneVisuel = clone $logo;
+//                        // **** récupération du visuel physique ****
+//                        $pool = $this->container->get('sonata.media.pool');
+//                        $provider = $pool->getProvider($cloneVisuel->getProviderName());
+//                        $provider->getReferenceImage($cloneVisuel);
+//
+//                        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
+//
+//                        $cloneVisuel->setProviderReference($logo->getProviderReference());
+//                        $cloneVisuel->setName($logo->getName());
+//                        // **** fin récupération du visuel physique ****
+//
+//                        // on donne au nouveau visuel, le context correspondant en fonction du site
+//                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+//                        // on lui attache l'id de référence du visuel correspondant sur la bdd crm
+//                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+//
+//                        $fournisseur->setLogo($cloneVisuel);
 
-                        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
 
-                        $cloneVisuel->setProviderReference($logo->getProviderReference());
-                        $cloneVisuel->setName($logo->getName());
-                        // **** fin récupération du visuel physique ****
+                        if (!empty($fournisseur->getLogo())) {
+                            $logo = $fournisseur->getLogo();
+//                if (!empty($fournisseurSite->getLogo())){
+//                    $logoSite = $fournisseurSite->getLogo();
+//                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
 
-                        // on donne au nouveau visuel, le context correspondant en fonction du site
-                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-                        // on lui attache l'id de référence du visuel correspondant sur la bdd crm
-                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                            $cloneVisuel = clone $logo;
+                            $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
+                            $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
 
-                        $fournisseur->setLogo($cloneVisuel);
+                            // on supprime l'ancien visuel
+                            $fournisseurSite->setLogo(null);
+//                        $emSite->remove($logoSite);
+
+                            $fournisseurSite->setLogo($cloneVisuel);
+                        }
                     }
                 } else {
                     if (!empty($fournisseurSite->getLogo())) {
