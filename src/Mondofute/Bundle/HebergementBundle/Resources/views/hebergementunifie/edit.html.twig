@@ -78,9 +78,10 @@
     <script type="text/javascript">
         "use strict";
         $(document).ready(function () {
-            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
+//            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
+//                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+//            });
+            
             $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
         });
