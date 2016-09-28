@@ -1,0 +1,61 @@
+{{ form_row(tarif.prixPublic) }}
+<h3>Périodes de validité</h3>
+<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
+    {% for periodeValidite in tarif.periodeValidites %}
+        <li class="li_periode_validite">
+            {{ form_widget(periodeValidite) }}
+        </li>
+    {% endfor %}
+</ul>
+<script>
+<<<<<<< 366fcfc9e20728cf914678f71e31c67f114798aa
+
+var collectionPeriodeValidite = function() {
+    $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+    $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+||||||| merged common ancestors
+//    jQuery(document).ready(function() {
+var test2 = function() {
+    var $collectionHolderperiode_validite{{ index }};
+    var $addTagLinkperiode_validite{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolderperiode_validite{{ index }}.append($newLinkLiperiode_validite{{ index }});
+    $collectionHolderperiode_validite{{ index }}.data('index', $collectionHolderperiode_validite{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ index }}.on('click', function (e) {
+=======
+
+var collectionPeriodeValidite = function() {
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+    $collectionHolder{{ index }}.find('.li_periode_validite').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+    $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+    $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
+        e.preventDefault();
+        addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+    });
+}
+if (window.jQuery){
+<<<<<<< 366fcfc9e20728cf914678f71e31c67f114798aa
+    var $collectionHolderperiode_validite{{ name }}{{ index }};
+    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    collectionPeriodeValidite();
+||||||| merged common ancestors
+    test2();
+=======
+    collectionPeriodeValidite();
+>>>>>>> fiche fournisseur avec les collections tarif et periode-validite effectives
+}
+</script>
