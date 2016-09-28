@@ -677,7 +677,7 @@ class FournisseurController extends Controller
             if (false === $fournisseur->getRemiseClefs()->contains($originalRemiseClef) && !$errorRemiseClef) {
                 if(!empty($originalRemiseClef->getFournisseurHebergements()) and !$originalRemiseClef->getFournisseurHebergements()->isEmpty() )
                 {
-                    $this->addFlash( 'error', 'Une des remise clef ne peut pas être supprimer car elle lié à un hébergement.' );
+                    $this->addFlash( 'error', 'Une remise clef ne peut pas être supprimer car elle est lié à un hébergement.' );
                     $errorRemiseClef = true;
                 }
             }
