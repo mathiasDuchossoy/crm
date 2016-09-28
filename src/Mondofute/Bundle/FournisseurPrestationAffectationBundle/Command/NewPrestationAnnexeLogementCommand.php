@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
-class PrestationAnnexeLogementCommand extends ContainerAwareCommand
+class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -38,6 +38,7 @@ class PrestationAnnexeLogementCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var Logement $logement */
         /** @var PrestationAnnexeHebergementUnifie $prestationAnnexeHebergementUnifie */
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         $em = $this->getContainer()->get('doctrine.orm.crm_entity_manager');
@@ -59,17 +60,23 @@ class PrestationAnnexeLogementCommand extends ContainerAwareCommand
                 $logement = $logementUnifie->getLogements()->filter(function (Logement $element) use ($prestationAnnexeHebergement){
                     return $element->getSite() == $prestationAnnexeHebergement->getSite();
                 })->first();
+
+                $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+                $actif = false;
+                if(empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $logement->getCapacite() and $logement->getCapacite() <= $capacite->getMax())  )
+                {
+                    $actif = $prestationAnnexeHebergement->getActif();
+                }
+
                 $prestationAnnexeLogement = new PrestationAnnexeLogement();
                 $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
                 $prestationAnnexeLogement
                     ->setLogement($logement)
                     ->setFournisseurPrestationAnnexe($prestationAnnexeHebergement->getFournisseurPrestationAnnexe())
-                    ->setActif($prestationAnnexeHebergement->getActif())
+                    ->setActif($actif)
                     ->setSite($prestationAnnexeHebergement->getSite())
                 ;
             }
-
-
 //            dump($prestationAnnexeLogementUnifie->getId());
         }
 
@@ -94,6 +101,7 @@ class PrestationAnnexeLogementCommand extends ContainerAwareCommand
                 })->first();
 
                 $logement = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logementUnifieId));
+
                 $prestationAnnexeLogementSite = new PrestationAnnexeLogement();
                 $prestationAnnexeLogementUnifieSite->addPrestationAnnexeLogement($prestationAnnexeLogementSite);
                 $prestationAnnexeLogementSite
