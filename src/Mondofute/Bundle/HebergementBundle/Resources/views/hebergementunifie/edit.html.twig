@@ -44,10 +44,10 @@
 
             $obj.find('.table-hebergement-stocks').each(function () {
                 var table = $(this).DataTable({
-                    paging: false,
+                    paging: true,
                     info: false,
                     scrollX: true,
-                    scrollY: false,
+                    scrollY: true,
                     scrollCollapse: true,
                     fixedColumns: true,
                     scroller: {
@@ -78,9 +78,9 @@
     <script type="text/javascript">
         "use strict";
         $(document).ready(function () {
-//            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
-//                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-//            });
+            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
 
             $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
@@ -174,6 +174,9 @@
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
     <style>
+        .table-hebergement-stocks{
+            max-height: 200px;
+        }
         .table-hebergement-stocks th, .table-hebergement-stocks td {
             height: 50px;
         }
