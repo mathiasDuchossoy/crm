@@ -1103,15 +1103,23 @@ class FournisseurController extends Controller
                                 /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
                                 foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
                                     $actif = false;
-                                    if (!empty($prestation_annexe_affectation_hebergements[$prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
-                                        and
-                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
-                                    ) {
-                                        $actif = true;
-                                    }
+
                                     $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
                                         return $element->getSite() == $prestationAnnexeHebergement->getSite();
                                     })->first();
+
+                                    $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+                                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+
+                                    if (!empty($prestation_annexe_affectation_hebergements[$prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
+                                        and
+                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
+                                        and
+                                        (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
+                                    ) {
+                                        $actif = true;
+                                    }
+
                                     $prestationAnnexeLogement->setActif($actif);
                                     $em->persist($prestationAnnexeHebergement);
                                 }

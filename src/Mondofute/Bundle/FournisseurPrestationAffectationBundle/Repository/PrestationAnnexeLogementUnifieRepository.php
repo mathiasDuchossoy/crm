@@ -31,4 +31,22 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
 //die;
         return $result;
     }
+    public function findByLogementUnifieId($logementUnifieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('prestationAnnexeLogementUnifie ')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie', 'prestationAnnexeLogementUnifie')
+            ->join('prestationAnnexeLogementUnifie.prestationAnnexeLogements', 'prestationAnnexeLogements')
+            ->join('prestationAnnexeLogements.logement', 'logement')
+            ->join('logement.logementUnifie', 'logementUnifie')
+            ->andWhere('logementUnifie.id = :logementUnifieId')
+            ->setParameter('logementUnifieId' ,$logementUnifieId )
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        dump($result);
+        die;
+        return $result;
+    }
 }

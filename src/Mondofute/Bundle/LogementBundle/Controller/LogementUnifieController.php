@@ -377,8 +377,6 @@ class LogementUnifieController extends Controller
 
             $this->copieVersSites($logementUnifie);
 
-
-
             $job = new Job('creer:prestationAnnexeLogement',
                 array(
                     'logementUnifieId' => $logementUnifie->getId()
@@ -1123,6 +1121,12 @@ class LogementUnifieController extends Controller
             
             $this->copieVersSites($logementUnifie , $originalLogementPhotos);
 
+            $job = new Job('edit:prestationAnnexeLogement',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId()
+                ), true, 'prestationAnnexeLogement');
+            $em->persist($job);
+            $em->flush();
 
             if (!empty($photoToRemoveCollection)) {
                 foreach ($photoToRemoveCollection as $item) {
