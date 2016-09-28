@@ -71,7 +71,7 @@
                         }
                     }
                 });
-                table.table({visible: true, api: true}).columns.adjust();
+//                table.table({visible: true, api: true}).columns.adjust();
             });
         }
     </script>
@@ -81,7 +81,7 @@
 //            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
 //                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
 //            });
-            
+
             $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
         });
