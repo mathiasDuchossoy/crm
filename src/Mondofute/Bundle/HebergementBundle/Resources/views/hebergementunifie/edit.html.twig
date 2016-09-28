@@ -80,7 +80,6 @@
         "use strict";
         $(document).ready(function () {
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
-                console.log($.fn.dataTable.tables({visible: true}));
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
 
@@ -105,6 +104,8 @@
                                         $div.html('');
                                         for(var j = 0; j < data.length; j++){
 //                                            console.log(data[j][1]);
+
+
                                             var dataSet = [
                                                 [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
                                                 [ "Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750" ],
@@ -143,8 +144,11 @@
                                                 [ "Martena Mccray", "Post-Sales support", "Edinburgh", "8240", "2011/03/09", "$324,050" ],
                                                 [ "Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675" ]
                                             ];
+//                                            console.log(dataSet);
 //                                            gestion des colonnes des tableaux
-                                            var colonnes = [{ title : "logement"}];
+                                            var colonnes = [{ 'mDataProp' : "logement",title:'logement',"sWidth": '200px'}];
+                                            var objet = null;
+                                            var attribut = '';
                                             var debut=null;
                                             var fin=null;
                                             var moisDebut=null;
@@ -159,15 +163,22 @@
                                                 jourDebut = debut.getDate().toString().length>1?debut.getDate():'0'+debut.getDate();
                                                 moisFin = (fin.getMonth()+1).toString().length>1?(fin.getMonth()+1):'0'+(fin.getMonth()+1);
                                                 jourFin = fin.getDate().toString().length>1?fin.getDate():'0'+fin.getDate();
+                                                attribut = 'periode'+typePeriode.periodes[k].id;
+//                                                objet = new Object();
+//                                                objet[attribut] = 'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear();
 
-                                                colonnes.push({title : 'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear()});
+                                                colonnes.push({mDataProp:attribut,title:'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear()});
                                             }
+                                            console.log(colonnes);
+                                            console.log(data[j][1]);
+
 //                                            colonnes.push({ title : "test"});
                                             var $tableau = $('<table class="table-hebergement-stocks display" width="100%" id="type-periode-'+typePeriode.id+'-indice-'+j+'"></table>');
 //                                        console.log(data[j][1]);
                                             $div.append($tableau);
                                             var table = $tableau.DataTable({
-                                                columns: colonnes,
+                                                data: data[j][1],
+                                                "aoColumns":colonnes,
                                                 paging: true,
                                                 info: false,
                                                 scrollX: true,
@@ -177,12 +188,6 @@
                                                 scroller: {
                                                     rowHeight: 30
                                                 },
-                                                "columnDefs": [
-                                                    {"orderable": true, "targets": 0},
-                                                    {"orderable": false, "targets": '_all'},
-                                                    {"searchable": true, "targets": 0},
-                                                    {"searchable": false, "targets": '_all'},
-                                                ],
                                                 language: {
                                                     processing: "{{ 'processing'|trans }}",
                                                     search: "{{ 'rechercher'|trans }} :",
@@ -198,6 +203,8 @@
                                             table.table({visible: true, api: true}).columns.adjust();
 {#//                                            console.log(data[j]);#}
                                         }
+
+
 //                                    if ($div == null) {
 //                                        console.log($div);
 //                                    }
@@ -221,9 +228,9 @@
                     }, 'json');
         }
         function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {
-            var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idPeriode': '_idPeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
+            var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
             url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
-            url = url.replace(/_idPeriode_/g, parseInt(idTypePeriode));
+            url = url.replace(/_idTypePeriode_/g, parseInt(idTypePeriode));
             $.get(
                     url,
                     function (data) {
