@@ -34,6 +34,6 @@ hebergement_hebergement_charger_liste_services_fournisseur_ajax:
     methods:  POST
 
 hebergement_generer_tableaux_stocks_periode:
-    path:   /{idHebergementUnifie}/{idPeriode}/generer_tableaux_stocks
-    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:creerTableauxStocksHebergementPeriode", idHebergementUnifie: 0, idPeriode: 0}
+    path:   /{idHebergementUnifie}/{idTypePeriode}/generer_tableaux_stocks
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:creerTableauxStocksHebergementPeriode", idHebergementUnifie: 0, idTypePeriode: 0}
     methods: GET
