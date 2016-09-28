@@ -1612,22 +1612,8 @@ class HebergementUnifieController extends Controller
                     $em->remove($originalFournisseurHebergement);
                 }
             }
-<<<<<<< HEAD
 
 
-||||||| parent of 23dcbdd... test datatables en json
-//            /** @var FournisseurHebergement $fournisseurHebergement */
-//            foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
-//                if (empty($fournisseurHebergement->getFournisseur())) {
-//                    //  supprime le fournisseurHebergement car plus présent
-//                    $entityUnifie->removeFournisseur($fournisseurHebergement);
-//                    $em->remove($fournisseurHebergement);
-//                } else {
-//                    $fournisseurHebergement->setHebergement($entityUnifie);
-//                }
-//            }
-=======
->>>>>>> 23dcbdd... test datatables en json
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -1892,16 +1878,7 @@ class HebergementUnifieController extends Controller
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of 23dcbdd... test datatables en json
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        ini_set('max_execution_time',300);
-        set_time_limit(300);
-//        echo ini_get('max_execution_time');
-//        die;
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-=======
+||||||| parent of 3e78d0c... modification du datatable
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         ini_set('max_execution_time',300);
@@ -1910,15 +1887,24 @@ class HebergementUnifieController extends Controller
 //        die;
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
->>>>>>> 23dcbdd... test datatables en json
+=======
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie){
+        ini_set('memory_limit','1G');
+        ini_set('max_execution_time',300);
+        set_time_limit(300);
+//        echo ini_get('max_execution_time');
+//        die;
+//        $time = new \DateTime();
+//        echo $time->format('H:i:s');
+>>>>>>> 3e78d0c... modification du datatable
         $em = $this->getDoctrine()->getManager();
 <<<<<<< HEAD
-||||||| parent of 23dcbdd... test datatables en json
+||||||| parent of 3e78d0c... modification du datatable
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
-        echo memory_get_usage();
+//        echo memory_get_usage();
         $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
-        echo memory_get_usage();
+//        echo memory_get_usage();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
         $fournisseurHebergements = new ArrayCollection();
@@ -1929,7 +1915,7 @@ class HebergementUnifieController extends Controller
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        echo memory_get_usage();
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idTypePeriode));
 //        echo memory_get_usage();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
@@ -1937,98 +1923,86 @@ class HebergementUnifieController extends Controller
 //        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
->>>>>>> 23dcbdd... test datatables en json
+>>>>>>> 3e78d0c... modification du datatable
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-<<<<<<< HEAD
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
             $fournisseur = array();
+<<<<<<< HEAD
             $fournisseur[1] = array();
+||||||| parent of 3e78d0c... modification du datatable
+//            $table = array();
+=======
+            $fournisseur[1] = array();
+//            $table = array();
+>>>>>>> 3e78d0c... modification du datatable
             /** @var Logement $logement */
+<<<<<<< HEAD
             foreach ($fournisseurHebergement->getLogements() as $logement) {
                 $ligne = new \stdClass();
                 $ligne->logementUnifieId = $logement->getLogementUnifie()->getId();
+||||||| parent of 3e78d0c... modification du datatable
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                $ligne = array();
+=======
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                $ligne = new \stdClass();
+>>>>>>> 3e78d0c... modification du datatable
                 /** @var LogementTraduction $traduction */
+<<<<<<< HEAD
                 foreach ($logement->getTraductions() as $traduction) {
                     if ($traduction->getLangue()->getCode() == $request->getLocale()) {
                         $ligne->logement = $traduction->getNom();
+||||||| parent of 3e78d0c... modification du datatable
+                foreach ($logement->getTraductions() as $traduction){
+                    if($traduction->getLangue()->getCode() == $request->getLocale()){
+                        $ligne['logement'] = $traduction->getNom();
+=======
+                foreach ($logement->getTraductions() as $traduction){
+                    if($traduction->getLangue()->getCode() == $request->getLocale()){
+                        $ligne->logement = $traduction->getNom();
+>>>>>>> 3e78d0c... modification du datatable
                     }
                 }
                 /** @var LogementPeriode $periode */
+<<<<<<< HEAD
                 foreach ($logement->getPeriodes() as $periode) {
                     if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
 //                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input data-logement="' . $logement->getLogementUnifie()->getId() . '" data-periode="' . $periode->getPeriode()->getId() . '" name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
                         $ligne->{'periode' . $periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
                     }
+||||||| parent of 3e78d0c... modification du datatable
+                foreach ($logement->getPeriodes() as $periode){
+                    $ligne['du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y')] = $periode->getLocatif()->getStock();
+=======
+                foreach ($logement->getPeriodes() as $periode){
+
+//                    $ligne[] = array(
+//                        "titre" => 'du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y'),
+//                        "data" => $periode->getLocatif()->getStock()
+//                    );
+//                    $ligne['"du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y').'"'] = $periode->getLocatif()->getStock();
+                    if($periode->getPeriode()->getType()->getId() == $idTypePeriode){
+                        $ligne->{'periode'.$periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
+                    }
+>>>>>>> 3e78d0c... modification du datatable
                 }
+<<<<<<< HEAD
                 array_push($fournisseur[1], $ligne);
+||||||| parent of 3e78d0c... modification du datatable
+//                $fournisseur[1] = json_encode($ligne);
+                $fournisseur[1] = $ligne;
+=======
+//                $fournisseur[1] = json_encode($ligne);
+                array_push($fournisseur[1] ,$ligne);
+>>>>>>> 3e78d0c... modification du datatable
             }
             $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
-||||||| parent of 23dcbdd... test datatables en json
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-        $time = new \DateTime();
-        echo $time->format('H:i:s');
-        echo memory_get_peak_usage();
-//        die;
-//        dump($fournisseurHebergements);
-//        die;
-//        error_log('mémoire : '.memory_get_usage());
-
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
-=======
-//        echo $request->getLocale();
-        $data = array();
-        /** @var FournisseurHebergement $fournisseurHebergement */
-        foreach($fournisseurHebergements as $fournisseurHebergement){
-            $fournisseur = array();
-//            $table = array();
-            /** @var Logement $logement */
-            foreach ($fournisseurHebergement->getLogements() as $logement){
-                $ligne = array();
-                /** @var LogementTraduction $traduction */
-                foreach ($logement->getTraductions() as $traduction){
-                    if($traduction->getLangue()->getCode() == $request->getLocale()){
-                        $ligne['logement'] = $traduction->getNom();
-                    }
-                }
-                /** @var LogementPeriode $periode */
-                foreach ($logement->getPeriodes() as $periode){
-                    $ligne['du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y')] = $periode->getLocatif()->getStock();
-                }
-//                $fournisseur[1] = json_encode($ligne);
-                $fournisseur[1] = $ligne;
-            }
-            $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
-            array_push($data,$fournisseur);
-        }
-//        dump(json_encode($data));
-//        die;
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        echo memory_get_peak_usage();
-//        die;
-//        dump($fournisseurHebergements);
-//        die;
-//        error_log('mémoire : '.memory_get_usage());
-        return new JsonResponse($data);
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
->>>>>>> 23dcbdd... test datatables en json
     }
 
     /**
