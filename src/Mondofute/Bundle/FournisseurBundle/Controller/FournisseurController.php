@@ -1812,9 +1812,12 @@ class FournisseurController extends Controller
                                 ->setSite($emSite->find(Site::class, $prestationAnnexeFournisseur->getSite()));
                         }
 
-
-                        $stationUnifieSite = $emSite->find(StationUnifie::class, $prestationAnnexeFournisseur->getStation()->getStationUnifie());
-                        $stationSite = $stationUnifieSite->getStations()->first();
+                        $stationSite = null;
+                        if(!empty($prestationAnnexeFournisseur->getStation()))
+                        {
+                            $stationUnifieSite = $emSite->find(StationUnifie::class, $prestationAnnexeFournisseur->getStation()->getStationUnifie());
+                            $stationSite = $stationUnifieSite->getStations()->first();
+                        }
 
                         $prestationAnnexeFournisseurSite = $prestationAnnexeFournisseurUnifieSite->getPrestationAnnexeFournisseurs()->first();
                         $prestationAnnexeFournisseurSite
