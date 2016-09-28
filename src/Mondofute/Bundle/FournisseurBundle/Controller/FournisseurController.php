@@ -1083,6 +1083,7 @@ class FournisseurController extends Controller
                                 ) {
                                     $actif = true;
                                 }
+                                
                                 $prestationAnnexeHebergement->setActif($actif);
                                 $em->persist($prestationAnnexeHebergement);
                             }
@@ -1114,6 +1115,7 @@ class FournisseurController extends Controller
 
                                 /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
                                 foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+
                                     $actif = false;
 
                                     $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
@@ -1123,7 +1125,7 @@ class FournisseurController extends Controller
                                     $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
                                     /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
 
-                                    if (!empty($prestation_annexe_affectation_hebergements[$prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId()][$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
+                                    if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
                                         and
                                         in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
                                         and
@@ -1141,7 +1143,6 @@ class FournisseurController extends Controller
                 }
                 // *** fin gestion des prestations annexe affectation hebergement***
             }
-//            die;
 
             // *** gestion suppression prestations annexe et ses collections ***
 
