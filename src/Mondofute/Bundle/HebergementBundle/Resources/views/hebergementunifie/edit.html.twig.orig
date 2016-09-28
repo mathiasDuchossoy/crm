@@ -80,27 +80,96 @@
 //            transforme le button submit en bouton de type button
             chargerOngletStocksHebergement({{ entity.id }});
 
+<<<<<<< HEAD
         });
+||||||| parent of 530ec07... suppression du resize de la datatable
+            $obj.find('.table-hebergement-stocks').each(function () {
+                var table = $(this).DataTable({
+                    paging: false,
+                    info: false,
+                    scrollX: true,
+                    scrollY: false,
+                    scrollCollapse: true,
+                    fixedColumns: true,
+                    scroller: {
+                        rowHeight: 30
+                    },
+                    "columnDefs": [
+                        {"orderable": true, "targets": 0},
+                        {"orderable": false, "targets": '_all'},
+                        {"searchable": true, "targets": 0},
+                        {"searchable": false, "targets": '_all'},
+                    ],
+                    language: {
+                        processing: "{{ 'processing'|trans }}",
+                        search: "{{ 'rechercher'|trans }} :",
+                        loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                        zeroRecords: "{{ 'zeroResultats'|trans }}",
+                        emptyTable: "{{ 'tableVide'|trans }}",
+                        aria: {
+                            sortAscending: ": activer pour trier la colonne par ordre croissant",
+                            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                        }
+                    }
+                });
+                table.table({visible: true, api: true}).columns.adjust();
+            });
+        }
+=======
+            $obj.find('.table-hebergement-stocks').each(function () {
+                var table = $(this).DataTable({
+                    paging: false,
+                    info: false,
+                    scrollX: true,
+                    scrollY: false,
+                    scrollCollapse: true,
+                    fixedColumns: true,
+                    scroller: {
+                        rowHeight: 30
+                    },
+                    "columnDefs": [
+                        {"orderable": true, "targets": 0},
+                        {"orderable": false, "targets": '_all'},
+                        {"searchable": true, "targets": 0},
+                        {"searchable": false, "targets": '_all'},
+                    ],
+                    language: {
+                        processing: "{{ 'processing'|trans }}",
+                        search: "{{ 'rechercher'|trans }} :",
+                        loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                        zeroRecords: "{{ 'zeroResultats'|trans }}",
+                        emptyTable: "{{ 'tableVide'|trans }}",
+                        aria: {
+                            sortAscending: ": activer pour trier la colonne par ordre croissant",
+                            sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                        }
+                    }
+                });
+//                table.table({visible: true, api: true}).columns.adjust();
+            });
+        }
+>>>>>>> 530ec07... suppression du resize de la datatable
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
 <<<<<<< HEAD
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
-||||||| parent of 884368a... test sans resize du datatable
-            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
-            chargerOngletStocksHebergement({{ entity.id }});
-=======
+||||||| parent of 530ec07... suppression du resize de la datatable
 //            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
 //                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
 //            });
             
             $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
->>>>>>> 884368a... test sans resize du datatable
+=======
+//            $(document).delegate('a[data-toggle="tab"]','shown.bs.tab',function (e) {
+//                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+//            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]','click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+>>>>>>> 530ec07... suppression du resize de la datatable
         });
         function chargerOngletStocks(idhebergement){
 
