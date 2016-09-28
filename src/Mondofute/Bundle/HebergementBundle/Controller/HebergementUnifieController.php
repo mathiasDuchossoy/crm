@@ -1773,7 +1773,7 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idPeriode, $idHebergementUnifie){
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie){
         ini_set('memory_limit','1G');
         ini_set('max_execution_time',300);
         set_time_limit(300);
@@ -1785,7 +1785,7 @@ class HebergementUnifieController extends Controller
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
 //        echo memory_get_usage();
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idPeriode));
+        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idTypePeriode));
 //        echo memory_get_usage();
 //        $time = new \DateTime();
 //        echo $time->format('H:i:s');
@@ -1799,22 +1799,31 @@ class HebergementUnifieController extends Controller
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach($fournisseurHebergements as $fournisseurHebergement){
             $fournisseur = array();
+            $fournisseur[1] = array();
 //            $table = array();
             /** @var Logement $logement */
             foreach ($fournisseurHebergement->getLogements() as $logement){
-                $ligne = array();
+                $ligne = new \stdClass();
                 /** @var LogementTraduction $traduction */
                 foreach ($logement->getTraductions() as $traduction){
                     if($traduction->getLangue()->getCode() == $request->getLocale()){
-                        $ligne['logement'] = $traduction->getNom();
+                        $ligne->logement = $traduction->getNom();
                     }
                 }
                 /** @var LogementPeriode $periode */
                 foreach ($logement->getPeriodes() as $periode){
-                    $ligne['du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y')] = $periode->getLocatif()->getStock();
+
+//                    $ligne[] = array(
+//                        "titre" => 'du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y'),
+//                        "data" => $periode->getLocatif()->getStock()
+//                    );
+//                    $ligne['"du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y').'"'] = $periode->getLocatif()->getStock();
+                    if($periode->getPeriode()->getType()->getId() == $idTypePeriode){
+                        $ligne->{'periode'.$periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
+                    }
                 }
 //                $fournisseur[1] = json_encode($ligne);
-                $fournisseur[1] = $ligne;
+                array_push($fournisseur[1] ,$ligne);
             }
             $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
             array_push($data,$fournisseur);
