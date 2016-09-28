@@ -44,6 +44,7 @@
 
             $obj.find('.table-hebergement-stocks').each(function () {
                 var table = $(this).DataTable({
+                    "deferRender": true,
                     paging: true,
                     info: false,
                     scrollX: true,
