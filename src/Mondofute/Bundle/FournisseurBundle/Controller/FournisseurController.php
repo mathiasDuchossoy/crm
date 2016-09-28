@@ -671,7 +671,19 @@ class FournisseurController extends Controller
             }
         }
 
-        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur) {
+        $errorRemiseClef = false;
+        /** @var RemiseClef $originalRemiseClef */
+        foreach ($originalRemiseClefs as $originalRemiseClef) {
+            if (false === $fournisseur->getRemiseClefs()->contains($originalRemiseClef) && !$errorRemiseClef) {
+                if(!empty($originalRemiseClef->getFournisseurHebergements()) and !$originalRemiseClef->getFournisseurHebergements()->isEmpty() )
+                {
+                    $this->addFlash( 'error', 'Une des remise clef ne peut pas être supprimer car elle lié à un hébergement.' );
+                    $errorRemiseClef = true;
+                }
+            }
+        }
+
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur && !$errorRemiseClef) {
             // *** gestion suppression prestations annexe et ses collections ***
             $prestation_annexe_affectation_fournisseurs = null;
             if (!empty($request->get('prestation_annexe_affectation_fournisseur'))) {
