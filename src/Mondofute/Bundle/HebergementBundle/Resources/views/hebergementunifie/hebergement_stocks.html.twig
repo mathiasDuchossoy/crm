@@ -109,28 +109,29 @@
 =======
                 </tr>
                 </thead>
-                <tbody>
-                {% for logement in fournisseurHebergement.logements %}
-                    {% if logement.site.crm == true %}
-                        <tr>
-                            <td class="logement">
-                                {% for traduction in logement.traductions %}
-                                    {% if traduction.langue.code == app.request.locale %}
-                                        {{ traduction.nom }}
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            {% set break = false %}
-                            {% for logementPeriode in logement.periodes  %}
+                {#<tbody>#}
+                {#{% for logement in fournisseurHebergement.logements %}#}
+                    {#{% if logement.site.crm == true %}#}
+                        {#<tr>#}
+                            {#<td class="logement">#}
+                                {#{% for traduction in logement.traductions %}#}
+                                    {#{% if traduction.langue.code == app.request.locale %}#}
+                                        {#{{ traduction.nom }}#}
+                                    {#{% endif %}#}
+                                {#{% endfor %}#}
+                            {#</td>#}
+                            {#{% set break = false %}#}
+                            {#{% for logementPeriode in logement.periodes  %}#}
                                 {#{{ dump(logementPeriode) }}#}
-                                {% if logementPeriode.periode.type.id == typePeriode.id  %}
-                                <td>
+                                {#{% if logementPeriode.periode.type.id == typePeriode.id  %}#}
+                                {#<td>#}
                                     {#{% set stock = 0 %}#}
                                     {#{% for logementPeriode in logement.periodes %}#}
                                         {#{% if logementPeriode.periode == periode %}#}
-                                            {% set stock = logementPeriode.locatif.stock %}
+                                            {#{% set stock = logementPeriode.locatif.stock %}#}
                                         {#{% endif %}#}
                                     {#{% endfor %}#}
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                                     {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ periode.id }}]"#}
@@ -154,6 +155,17 @@
                                            size="2" maxlength="2" value="{{ stock }}"/>
                                 </td>
 >>>>>>> 04ee6c3... test
+||||||| parent of 23dcbdd... test datatables en json
+                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+                                           type="text"
+                                           size="2" maxlength="2" value="{{ stock }}"/>
+                                </td>
+=======
+                                    {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"#}
+                                           {#type="text"#}
+                                           {#size="2" maxlength="2" value="{{ stock }}"/>#}
+                                {#</td>#}
+>>>>>>> 23dcbdd... test datatables en json
 
 <<<<<<< HEAD
                 {% if loop.index0 > 15 %}
@@ -179,12 +191,12 @@
 =======
                                 {#{% if loop.index0 > 15 %}#}
                                     {#{% set break = true %}#}
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#</tr>#}
+                    {#{% endif %}#}
+                {#{% endfor %}#}
+                {#</tbody>#}
             </table>
         </div>
 >>>>>>> 3724666... test
