@@ -51,7 +51,9 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('type_periode_repository')
             ->select('type_periode_repository')
             ->addSelect('periodes')
-            ->leftJoin('type_periode_repository.periodes', 'periodes');
+            ->leftJoin('type_periode_repository.periodes', 'periodes')
+        ->orderBy('periodes.debut','ASC')
+        ->addOrderBy('periodes.fin','ASC');
         return $qb->getQuery()->getArrayResult();
     }
 }
