@@ -82,6 +82,9 @@
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
+            $(document).on('resize',function(e){
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
 
             $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
@@ -140,6 +143,11 @@
                                             var table = $tableau.DataTable({
                                                 data: data[j][1],
                                                 "aoColumns":colonnes,
+                                                "bAutoWidth": true,
+                                                aoColumnDefs: [
+                                                    { "bSortable": true, aTargets: [ 0 ] },
+                                                    { "bSortable": false, aTargets: [ '_all' ] },
+                                                ],
                                                 paging: true,
                                                 info: false,
                                                 scrollX: true,
