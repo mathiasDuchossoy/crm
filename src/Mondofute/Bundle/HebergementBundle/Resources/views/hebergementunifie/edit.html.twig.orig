@@ -89,60 +89,7 @@
         });
 <<<<<<< HEAD
         function chargerOngletStocks(idhebergement){
-||||||| parent of ce7dbf7... test avec création des inputs en javascript
-        function chargerOngletStocksHebergement(idHebergement) {
-//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
-            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
-            var $conteneur = $('#data_hebergement_stocks');
-            $.post("{{ path('periode_type_periode_liste') }}",
-                    function (typePeriodes) {
-                        chargerProgressBar($progressBar, 50);
-                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
-
-                            var idTypePeriode = null;
-
-                            for (var i = 0; i < typePeriodes.length; i++) {
-                                if (typePeriodes[i].periodes.length > 0) {
-                                    idTypePeriode = typePeriodes[i].id;
-                                    $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
-                                    chargerProgressBar($progressBar, 25);
-                                    genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriodes[i], function (data, idTypePeriode, typePeriode) {
-                                        chargerProgressBar($progressBar, 50);
-                                        var pasProgressBar = 50 / (data.length);
-                                        var curseurProgressBar = 50;
-                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
-                                        for (var j = 0; j < data.length; j++) {
-
-                                            curseurProgressBar += pasProgressBar;
-                                            chargerProgressBar($progressBar, curseurProgressBar);
-//                                            gestion des colonnes des tableaux
-                                            var colonnes = [{'mDataProp': "logement", title: 'logement'}];
-                                            var attribut = '';
-                                            var debut = null;
-                                            var fin = null;
-                                            var moisDebut = null;
-                                            var moisFin = null;
-                                            var jourDebut = null;
-                                            var jourFin = null;
-                                            for (var k = 0; k < typePeriode.periodes.length; k++) {
-                                                debut = new Date(typePeriode.periodes[k].debut.date);
-                                                fin = new Date(typePeriode.periodes[k].fin.date);
-//                                                console.log(debut.getDate().toString().length);
-                                                moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
-                                                jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
-                                                moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
-                                                jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
-                                                attribut = 'periode' + typePeriode.periodes[k].id;
-
-                                                colonnes.push({
-                                                    mDataProp: attribut,
-                                                    title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
-                                                });
-                                            }
-
-//                                            colonnes.push({ title : "test"});
-                                            var $panelFournisseur = $('<div class="panel panel-default"> <div class="panel-heading"> <div class="panel-title"> <h2> <a data-toggle="collapse" href="#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '">' + data[j][0] + '</a> </h2> </div> </div> <div id="stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '" class="panel-collapse collapse in"></div> </div>');
-=======
+||||||| parent of 6296641... creation des input stock en javascript pour alleger le dialogue en ajax
         function chargerOngletStocksHebergement(idHebergement) {
 //            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
             var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
@@ -199,13 +146,71 @@
 
 //                                            colonnes.push({ title : "test"});
                                             var $panelFournisseur = $('<div class="panel panel-default"> <div class="panel-heading"> <div class="panel-title"> <h2> <a data-toggle="collapse" href="#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '">' + data[j][0] + '</a> </h2> </div> </div> <div id="stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '" class="panel-collapse collapse in"></div> </div>');
->>>>>>> ce7dbf7... test avec création des inputs en javascript
+=======
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            var idTypePeriode = null;
+
+                            for (var i = 0; i < typePeriodes.length; i++) {
+                                if (typePeriodes[i].periodes.length > 0) {
+                                    idTypePeriode = typePeriodes[i].id;
+                                    $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
+                                    chargerProgressBar($progressBar, 25);
+                                    genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriodes[i], function (data, idTypePeriode, typePeriode) {
+                                        var stock = null;
+                                        chargerProgressBar($progressBar, 50);
+                                        var pasProgressBar = 50 / (data.length);
+                                        var curseurProgressBar = 50;
+                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+                                        for (var j = 0; j < data.length; j++) {
+
+                                            curseurProgressBar += pasProgressBar;
+                                            chargerProgressBar($progressBar, curseurProgressBar);
+//                                            gestion des colonnes des tableaux
+                                            var colonnes = [{'mDataProp': "logement", title: 'logement'}];
+                                            var attribut = '';
+                                            var debut = null;
+                                            var fin = null;
+                                            var moisDebut = null;
+                                            var moisFin = null;
+                                            var jourDebut = null;
+                                            var jourFin = null;
+                                            for (var k = 0; k < typePeriode.periodes.length; k++) {
+                                                debut = new Date(typePeriode.periodes[k].debut.date);
+                                                fin = new Date(typePeriode.periodes[k].fin.date);
+//                                                console.log(debut.getDate().toString().length);
+                                                moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
+                                                jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
+                                                moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
+                                                jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
+                                                attribut = 'periode' + typePeriode.periodes[k].id;
+                                                for(var l=0;l<data[j][1].length;l++){
+                                                    stock = data[j][1][l][attribut];
+                                                    data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'],typePeriode.periodes[k].id,stock);
+                                                }
+                                                colonnes.push({
+                                                    mDataProp: attribut,
+                                                    title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
+                                                });
+                                            }
+
+//                                            colonnes.push({ title : "test"});
+                                            var $panelFournisseur = $('<div class="panel panel-default"> <div class="panel-heading"> <div class="panel-title"> <h2> <a data-toggle="collapse" href="#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '">' + data[j][0] + '</a> </h2> </div> </div> <div id="stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '" class="panel-collapse collapse in"></div> </div>');
+>>>>>>> 6296641... creation des input stock en javascript pour alleger le dialogue en ajax
 
 <<<<<<< HEAD
-||||||| parent of ce7dbf7... test avec création des inputs en javascript
+||||||| parent of 6296641... creation des input stock en javascript pour alleger le dialogue en ajax
                                             var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap display" width="100%" id="type-periode-' + typePeriode.id + '-indice-' + j + '"></table>');
 //                                        console.log(data[j][1]);
 //                                            $div.append($tableau);
+//                                            console.log(data[j][1]);
                                             $div.append($panelFournisseur);
                                             $panelFournisseur.find('#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3]).append($tableau);
                                             var table = $tableau.DataTable({
@@ -335,6 +340,10 @@
                         });
                     }, 'json');
         }
+        function genererInputStock(idLogementUnifie,idPeriode,stock){
+//            var input = '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+            return '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+        }
         function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {
             var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
             url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
@@ -373,7 +382,7 @@
                         }
                     }
             ), 'html';
->>>>>>> ce7dbf7... test avec création des inputs en javascript
+>>>>>>> 6296641... creation des input stock en javascript pour alleger le dialogue en ajax
         }
         function enregistrerStocks() {
             var $element = $(this).parent();
