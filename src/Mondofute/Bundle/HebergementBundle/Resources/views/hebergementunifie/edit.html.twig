@@ -78,12 +78,28 @@
     </script>
     <script type="text/javascript">
         "use strict";
+        var stocksModifies = Array();
         $(document).ready(function () {
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
             $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.table-hebergement-stocks [name^="stocks"]','change',function(e){
+                if(stocksModifies[$(this).data('logement')] == null) {
+                    stocksModifies[$(this).data('logement')] = Array();
+                }
+                if(stocksModifies[$(this).data('logement')][$(this).data('periode')] == null){
+                    stocksModifies[$(this).data('logement')][$(this).data('periode')] = 0;
+                }
+                stocksModifies[$(this).data('logement')][$(this).data('periode')] = $(this).val();
+//                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
+//                }else{
+//                    alert('null');
+//                }
+//                alert(stocksModifies[$(this).data('logement')][$(this).data('periode')]);
+//                console.log(stocksModifies);
             });
             $(document).on('resize', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
@@ -238,9 +254,10 @@
             $.ajax({
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
-                data: $stocks,
+                data: { "stocks" : stocksModifies },
                 success: function (json) {
                     if (json.valid) {
+                        stocksModifies = Array();
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
                     } else {
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');

@@ -1798,7 +1798,7 @@ class HebergementUnifieController extends Controller
                 /** @var LogementPeriode $periode */
                 foreach ($logement->getPeriodes() as $periode) {
                     if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
-                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
+                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input data-logement="' . $logement->getLogementUnifie()->getId() . '" data-periode="' . $periode->getPeriode()->getId() . '" name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
                     }
                 }
                 array_push($fournisseur[1], $ligne);
