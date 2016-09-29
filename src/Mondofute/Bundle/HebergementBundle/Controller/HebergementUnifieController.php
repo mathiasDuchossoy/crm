@@ -1776,7 +1776,7 @@ class HebergementUnifieController extends Controller
 
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
     {
-        ini_set('memory_limit','1G');
+        ini_set('memory_limit', '1G');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
@@ -1798,7 +1798,7 @@ class HebergementUnifieController extends Controller
                 /** @var LogementPeriode $periode */
                 foreach ($logement->getPeriodes() as $periode) {
                     if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
-                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input name="stocks['.$logement->getLogementUnifie()->getId().']['.$periode->getPeriode()->getId().']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
+                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
                     }
                 }
                 array_push($fournisseur[1], $ligne);
@@ -1807,6 +1807,8 @@ class HebergementUnifieController extends Controller
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
+        echo memory_get_peak_usage();
+        die;
         return new JsonResponse($data);
     }
 
