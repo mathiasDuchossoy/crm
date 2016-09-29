@@ -1453,7 +1453,7 @@ class HebergementUnifieController extends Controller
 
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
     {
-        ini_set('memory_limit', '1G');
+        ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
@@ -1484,8 +1484,6 @@ class HebergementUnifieController extends Controller
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
-        echo memory_get_peak_usage();
-        die;
         return new JsonResponse($data);
     }
 
