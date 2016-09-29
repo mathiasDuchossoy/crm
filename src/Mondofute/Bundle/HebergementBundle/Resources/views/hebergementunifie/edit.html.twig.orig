@@ -84,12 +84,31 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
+<<<<<<< HEAD
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
+||||||| parent of ca5753b... gestion taille tableau
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+=======
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).on('resize',function(e){
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+>>>>>>> ca5753b... gestion taille tableau
         });
 <<<<<<< HEAD
         function chargerOngletStocks(idhebergement){
-||||||| parent of 947ceb0... width colonne
+||||||| parent of ca5753b... gestion taille tableau
         function chargerOngletStocksHebergement(idHebergement) {
 //            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
             var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
@@ -116,7 +135,7 @@
                                             curseurProgressBar += pasProgressBar;
                                             chargerProgressBar($progressBar,curseurProgressBar);
 //                                            gestion des colonnes des tableaux
-                                            var colonnes = [{ 'mDataProp' : "logement",title:'logement',"sWidth": '200px'}];
+                                            var colonnes = [{ 'mDataProp' : "logement",title:'logement'}];
                                             var attribut = '';
                                             var debut=null;
                                             var fin=null;
@@ -134,7 +153,7 @@
                                                 jourFin = fin.getDate().toString().length>1?fin.getDate():'0'+fin.getDate();
                                                 attribut = 'periode'+typePeriode.periodes[k].id;
 
-                                                colonnes.push({mDataProp:attribut,title:'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear(),"sWidth": '200px'});
+                                                colonnes.push({mDataProp:attribut,title:'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear()});
                                             }
 
 //                                            colonnes.push({ title : "test"});
@@ -245,6 +264,11 @@
                                             var table = $tableau.DataTable({
                                                 data: data[j][1],
                                                 "aoColumns":colonnes,
+                                                "bAutoWidth": true,
+                                                aoColumnDefs: [
+                                                    { "bSortable": true, aTargets: [ 0 ] },
+                                                    { "bSortable": false, aTargets: [ '_all' ] },
+                                                ],
                                                 paging: true,
                                                 info: false,
                                                 scrollX: true,
@@ -291,7 +315,7 @@
                     },
                     'json'
             )
->>>>>>> 947ceb0... width colonne
+>>>>>>> ca5753b... gestion taille tableau
 
         }
         function enregistrerStocks() {
