@@ -6,7 +6,6 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
-use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
@@ -26,7 +25,6 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -1438,7 +1436,9 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-    public function chargerFournisseursStockslogementLocatif($fournisseurHebergements){
+
+    public function chargerFournisseursStockslogementLocatif($fournisseurHebergements)
+    {
         $em = $this->getDoctrine()->getManager();
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
             /** @var Logement $logement */
@@ -1450,79 +1450,43 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        ini_set('max_execution_time',300);
-        set_time_limit(300);
-//        echo ini_get('max_execution_time');
-//        die;
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
+
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
+    {
+//        ini_set('memory_limit','1G');
+//        ini_set('max_execution_time',300);
+//        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        echo memory_get_usage();
-        $typePeriode = $em->getRepository(TypePeriode::class)->findOneBy(array('id'=>$idTypePeriode));
-//        echo memory_get_usage();
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-        $fournisseurHebergements = new ArrayCollection();
-//        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement'=>$idHebergementUnifie));
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
-//        echo $request->getLocale();
         $data = array();
         /** @var FournisseurHebergement $fournisseurHebergement */
-        foreach($fournisseurHebergements as $fournisseurHebergement){
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
             $fournisseur = array();
             $fournisseur[1] = array();
-//            $table = array();
             /** @var Logement $logement */
-            foreach ($fournisseurHebergement->getLogements() as $logement){
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
                 $ligne = new \stdClass();
                 /** @var LogementTraduction $traduction */
-                foreach ($logement->getTraductions() as $traduction){
-                    if($traduction->getLangue()->getCode() == $request->getLocale()){
+                foreach ($logement->getTraductions() as $traduction) {
+                    if ($traduction->getLangue()->getCode() == $request->getLocale()) {
                         $ligne->logement = $traduction->getNom();
                     }
                 }
                 /** @var LogementPeriode $periode */
-                foreach ($logement->getPeriodes() as $periode){
-
-//                    $ligne[] = array(
-//                        "titre" => 'du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y'),
-//                        "data" => $periode->getLocatif()->getStock()
-//                    );
-//                    $ligne['"du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y').'"'] = $periode->getLocatif()->getStock();
-                    if($periode->getPeriode()->getType()->getId() == $idTypePeriode){
-                        $ligne->{'periode'.$periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
+                foreach ($logement->getPeriodes() as $periode) {
+                    if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
+                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input name="stocks['.$logement->getLogementUnifie()->getId().']['.$periode->getPeriode()->getId().']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
                     }
                 }
-//                $fournisseur[1] = json_encode($ligne);
-                array_push($fournisseur[1] ,$ligne);
+                array_push($fournisseur[1], $ligne);
             }
             $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
-            array_push($data,$fournisseur);
+            $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
+            array_push($data, $fournisseur);
         }
-//        dump(json_encode($data));
-//        die;
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        $this->chargerFournisseursStockslogementLocatif($fournisseurHebergements);
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-//        echo memory_get_peak_usage();
-//        die;
-//        dump($fournisseurHebergements);
-//        die;
-//        error_log('mémoire : '.memory_get_usage());
         return new JsonResponse($data);
-        return $this->render('@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig', array(
-            'fournisseurHebergements' => $fournisseurHebergements,
-            'typePeriode' => $typePeriode
-        ));
     }
+
     /**
      * Deletes a HebergementUnifie entity.
      *

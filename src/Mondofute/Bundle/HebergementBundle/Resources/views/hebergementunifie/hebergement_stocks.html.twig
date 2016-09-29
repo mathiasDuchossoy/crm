@@ -29,41 +29,41 @@
                     {% endfor %}
                 </tr>
                 </thead>
-                {#<tbody>#}
-                {#{% for logement in fournisseurHebergement.logements %}#}
-                    {#{% if logement.site.crm == true %}#}
-                        {#<tr>#}
-                            {#<td class="logement">#}
-                                {#{% for traduction in logement.traductions %}#}
-                                    {#{% if traduction.langue.code == app.request.locale %}#}
-                                        {#{{ traduction.nom }}#}
-                                    {#{% endif %}#}
-                                {#{% endfor %}#}
-                            {#</td>#}
-                            {#{% set break = false %}#}
-                            {#{% for logementPeriode in logement.periodes  %}#}
-                                {#{{ dump(logementPeriode) }}#}
-                                {#{% if logementPeriode.periode.type.id == typePeriode.id  %}#}
-                                {#<td>#}
-                                    {#{% set stock = 0 %}#}
-                                    {#{% for logementPeriode in logement.periodes %}#}
-                                        {#{% if logementPeriode.periode == periode %}#}
-                                            {#{% set stock = logementPeriode.locatif.stock %}#}
-                                        {#{% endif %}#}
-                                    {#{% endfor %}#}
-                                    {#<input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"#}
-                                           {#type="text"#}
-                                           {#size="2" maxlength="2" value="{{ stock }}"/>#}
-                                {#</td>#}
+                <tbody>
+                {% for logement in fournisseurHebergement.logements %}
+                    {% if logement.site.crm == true %}
+                        <tr>
+                            <td class="logement">
+                                {% for traduction in logement.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.nom }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            {% set break = false %}
+                            {% for logementPeriode in logement.periodes  %}
+                                {{ dump(logementPeriode) }}
+                                {% if logementPeriode.periode.type.id == typePeriode.id  %}
+                                <td>
+                                    {% set stock = 0 %}
+                                    {% for logementPeriode in logement.periodes %}
+                                        {% if logementPeriode.periode == periode %}
+                                            {% set stock = logementPeriode.locatif.stock %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+                                           type="text"
+                                           size="2" maxlength="2" value="{{ stock }}"/>
+                                </td>
 
-                                {#{% if loop.index0 > 15 %}#}
-                                    {#{% set break = true %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
-                        {#</tr>#}
-                    {#{% endif %}#}
-                {#{% endfor %}#}
-                {#</tbody>#}
+                                {% if loop.index0 > 15 %}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
             </table>
         </div>
     </div>
