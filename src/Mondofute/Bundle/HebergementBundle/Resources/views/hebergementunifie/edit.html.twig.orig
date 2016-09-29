@@ -83,31 +83,11 @@
         });
     </script>
     <script type="text/javascript">
-<<<<<<< HEAD
-||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
-        "use strict";
-=======
-        "use strict";
-        var stocksModifies = Array();
->>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
         $(document).ready(function () {
 <<<<<<< HEAD
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
-||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
-            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).on('resize', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-
-            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
-            chargerOngletStocksHebergement({{ entity.id }});
-=======
+||||||| parent of 94cb5c1... enregistrement des stocks non visible dans le tableau (gestion compatibilité data() )
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
@@ -135,7 +115,36 @@
 
             $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
->>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
+=======
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.table-hebergement-stocks [name^="stocks"]','change',function(e){
+                var datas = $(this).data();
+                if(stocksModifies[datas.logement] == null) {
+                        stocksModifies[datas.logement] = Array();
+                }
+                if(stocksModifies[datas.logement][datas.periode] == null){
+                    stocksModifies[datas.logement][datas.periode] = 0;
+                }
+                stocksModifies[datas.logement][datas.periode] = $(this).val();
+//                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
+//                }else{
+//                    alert('null');
+//                }
+//                alert(stocksModifies[$(this).data('logement')][$(this).data('periode')]);
+//                console.log(stocksModifies);
+            });
+            $(document).on('resize', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+>>>>>>> 94cb5c1... enregistrement des stocks non visible dans le tableau (gestion compatibilité data() )
         });
         function chargerOngletStocks(idhebergement){
 
@@ -148,20 +157,9 @@
             $.ajax({
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
-<<<<<<< HEAD
                 data: $stocks,
                 success: function (json){
                     if(json.valid){
-||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
-                data: $stocks,
-                success: function (json) {
-                    if (json.valid) {
-=======
-                data: { "stocks" : stocksModifies },
-                success: function (json) {
-                    if (json.valid) {
-                        stocksModifies = Array();
->>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
                     }else{
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
