@@ -1789,6 +1789,7 @@ class HebergementUnifieController extends Controller
             /** @var Logement $logement */
             foreach ($fournisseurHebergement->getLogements() as $logement) {
                 $ligne = new \stdClass();
+                $ligne->logementUnifieId = $logement->getLogementUnifie()->getId();
                 /** @var LogementTraduction $traduction */
                 foreach ($logement->getTraductions() as $traduction) {
                     if ($traduction->getLangue()->getCode() == $request->getLocale()) {
