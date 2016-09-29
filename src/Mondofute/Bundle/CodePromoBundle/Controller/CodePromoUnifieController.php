@@ -790,10 +790,11 @@ class CodePromoUnifieController extends Controller
                     if(!empty($codePromoApplication) and $codePromo->getActifSite())
                     {
                         $codePromoFournisseur = new CodePromoFournisseur();
+                        $codePromo->addCodePromoFournisseur($codePromoFournisseur);
+                        $em->persist($codePromoFournisseur);
                         $codePromoFournisseur
                             ->setFournisseur($em->find(Fournisseur::class ,$codePromoFournisseurPost ))
                         ;
-                        $codePromo->addCodePromoFournisseur($codePromoFournisseur);
                     }
                 }
             }
