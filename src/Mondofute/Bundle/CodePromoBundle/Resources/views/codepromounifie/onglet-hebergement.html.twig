@@ -1,12 +1,14 @@
 <div role="tabpanel" class="tab-pane fade" id="data_code_promo_hebergement">
-    {% for fournisseur in fournisseurProduits %}
+    {{ dump(form.codePromos[0].codePromoFournisseurs) }}
+    {% for fournisseur in fournisseurHebergements %}
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading" role="tab" id="heading_code_promo_fournisseur_{{ fournisseur.id }}_hebergements">
                 <h4 class="panel-title">
                     <div class="checkbox">
-                        <label><input type="checkbox" value=""
+                        <label><input type="checkbox" value="{{ fournisseur.id }}"
                             onclick="checkChildren(this , 'code_promo_fournisseur_{{ fournisseur.id }}_hebergements')"
+                            name="codePromoFournisseurs[]"
                             >
                             <a
                                     data-toggle="collapse"

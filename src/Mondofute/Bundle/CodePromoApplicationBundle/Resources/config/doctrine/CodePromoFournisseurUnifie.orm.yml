@@ -10,9 +10,9 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurUnifie:
                 strategy: AUTO
             options:
                 unsigned: true
-    oneToMany:
-        codePromoFournisseurs:
-            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur
-            cascade: ['persist','remove']
-            mappedBy: codePromoFournisseurUnifie
+#    oneToMany:
+#        codePromoFournisseurs:
+#            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur
+#            cascade: ['persist','remove']
+#            mappedBy: codePromoFournisseurUnifie
     lifecycleCallbacks: {  }

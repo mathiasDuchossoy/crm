@@ -10,14 +10,14 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoApplication:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        actif:
-            type: boolean
-            options:
-                default: true
-    manyToOne:
-        site:
-            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+#    fields:
+#        actif:
+#            type: boolean
+#            options:
+#                default: true
+#    manyToOne:
+#        site:
+#            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
         codePromo:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
     lifecycleCallbacks: {  }

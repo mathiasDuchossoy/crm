@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\CodePromoBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -46,6 +47,10 @@ class CodePromo extends BaseCodePromo
      * @var \Doctrine\Common\Collections\Collection
      */
     private $codePromoApplications;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoFournisseurs;
 
     public function __construct()
     {
@@ -53,6 +58,7 @@ class CodePromo extends BaseCodePromo
         $this->codePromoPeriodeSejours = new ArrayCollection();
         $this->codePromoClients = new ArrayCollection();
         $this->codePromoApplications = new ArrayCollection();
+        $this->codePromoFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -247,22 +253,17 @@ class CodePromo extends BaseCodePromo
     {
         return $this->codePromoApplications;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $codePromoFournisseurs;
-
 
     /**
      * Add codePromoFournisseur
      *
-     * @param \Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur
+     * @param CodePromoFournisseur $codePromoFournisseur
      *
      * @return CodePromo
      */
-    public function addCodePromoFournisseur(\Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur)
+    public function addCodePromoFournisseur(CodePromoFournisseur $codePromoFournisseur)
     {
-        $this->codePromoFournisseurs[] = $codePromoFournisseur;
+        $this->codePromoFournisseurs[] = $codePromoFournisseur->setCodePromo($this);
 
         return $this;
     }
@@ -270,9 +271,9 @@ class CodePromo extends BaseCodePromo
     /**
      * Remove codePromoFournisseur
      *
-     * @param \Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur
+     * @param CodePromoFournisseur $codePromoFournisseur
      */
-    public function removeCodePromoFournisseur(\Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur)
+    public function removeCodePromoFournisseur(CodePromoFournisseur $codePromoFournisseur)
     {
         $this->codePromoFournisseurs->removeElement($codePromoFournisseur);
     }
