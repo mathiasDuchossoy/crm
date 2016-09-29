@@ -16,14 +16,17 @@ class DefaultController extends Controller
     {
         return $this->render('MondofuteCatalogueBundle:Default:index.html.twig');
     }
-    public function exception(){
+
+    public function exception()
+    {
         throw new \Exception('oups');
     }
+
     public function enregistrerStocksLocatifAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $retour = array('valid'=>true);
-            try{
+            $retour = array('valid' => true);
+            try {
 //                $this->exception();
                 $mbdd = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
                 $em = $this->get('doctrine.orm.entity_manager');
@@ -31,23 +34,28 @@ class DefaultController extends Controller
                 $sites = $em->getRepository(Site::class)->findAll();
                 foreach ($sites as $site) {
                     $table = 'logement_periode_locatif';
-                    $champs = array('logement_id','periode_id','stock');
+                    $champs = array('logement_id', 'periode_id', 'stock');
                     $duplicate = true;
                     $managers = array($site->getLibelle());
-                    $mbdd->initInsertMassif($table,$champs,$duplicate,$managers);
+                    $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
                     foreach ($stocks as $idLogementUnifie => $periodes) {
-                        /** @var EntityManager $emSite */
-                        $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
-                        $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
-                        foreach ($logements as $logement) {
-                            foreach ($periodes as $idPeriode => $stock){
-                                $mbdd->addInsertLigne(array($logement->getId(),$idPeriode,$stock));
+                        if (!empty($periodes)) {
+
+                            /** @var EntityManager $emSite */
+                            $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+                            $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
+                            foreach ($logements as $logement) {
+                                foreach ($periodes as $idPeriode => $stock) {
+                                    if (!empty($stock)) {
+                                        $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
+                                    }
+                                }
                             }
                         }
                     }
                     $mbdd->insertMassif();
                 }
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 $retour['valid'] = false;
                 return new JsonResponse($retour);
             }
