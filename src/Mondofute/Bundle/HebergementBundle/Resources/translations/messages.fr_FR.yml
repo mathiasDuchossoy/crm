@@ -39,3 +39,10 @@ tableVide: 'tableau vide'
 enregistrement_stock:
     ok: 'enregistrement du stock OK'
     pas_ok: 'erreur lors de l''enregistrement du stock'
+page:
+    premiere: 'première'
+    derniere: 'dernière'
+    suivante: 'suivante'
+    precedente: 'précédente'
+afficher: 'afficher'
+resultats: 'résultats'
