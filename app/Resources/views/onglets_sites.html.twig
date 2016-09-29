@@ -24,4 +24,16 @@
             <a data-toggle="tab" href="#data_services">Services</a>
         </li>
     {% endif %}
+
+    {% if ongletCodePromoHebergement is defined and ongletCodePromoHebergement == true %}
+        <li role="presentation" id="onglet_data_code_promo_hebergement" >
+            <a aria-controls="data_code_promo_hebergement" role="tab" data-toggle="tab" href="#data_code_promo_hebergement">Hebergements</a>
+        </li>
+    {% endif %}
+
+    {% if ongletCodePromoPrestationAnnexe is defined and ongletCodePromoPrestationAnnexe == true %}
+        <li role="presentation" id="onglet_data_code_promo_prestation_annexe" >
+            <a aria-controls="data_code_promo_prestation_annexe" role="tab" data-toggle="tab" href="#data_code_promo_prestation_annexe">Prestations annexe</a>
+        </li>
+    {% endif %}
 </ul>

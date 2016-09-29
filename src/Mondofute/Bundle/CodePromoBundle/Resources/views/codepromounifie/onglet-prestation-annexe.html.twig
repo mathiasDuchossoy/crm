@@ -1,0 +1,30 @@
+<div role="tabpanel" class="tab-pane fade" id="data_code_promo_prestation_annexe">
+    {% for fournisseur in fournisseurProduits %}
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading" role="tab" id="heading_code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                <h4 class="panel-title">
+                    <div class="checkbox">
+                        <label><input type="checkbox" value=""
+                            onclick="checkChildren(this , 'code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes')"
+                            >
+                            <a
+                                    data-toggle="collapse"
+                                    href="#collapse_code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes"
+                                    onclick="getFournisseurPrestationAnnexes('{{ fournisseur.id }}');return false;"
+                                    aria-expanded="false"
+                                    aria-controls="collapse_code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                                {{ fournisseur.enseigne }}
+                            </a></label>
+                    </div>
+                </h4>
+            </div>
+            <div id="collapse_code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes" class="panel-collapse collapse"
+                 role="tabpanel" aria-labelledby="heading_code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                <!-- List group prestation_annexes -->
+                <ul class="list-group" id="code_promo_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+</div>

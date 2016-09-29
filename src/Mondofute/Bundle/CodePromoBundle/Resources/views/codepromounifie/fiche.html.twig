@@ -18,7 +18,12 @@
 
             {% set mesSites = form.codePromos %}
             {{ form_row(form.code) }}
-            {% include '::onglets_sites.html.twig' %}
+            {% include ('::onglets_sites.html.twig') %}
+
+
+
+
+
 
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
@@ -36,9 +41,7 @@
                             {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
-                            {#{{ form_row(codePromo.codePromoApplications, { 'attr' : { 'data-unique_block_prefix' : codePromo.codePromoApplications.vars['unique_block_prefix']}}) }}#}
                             {% include ('@MondofuteCodePromo/codepromounifie/code-promo-application.html.twig') %}
-                            {{ dump(codePromo.codePromoPeriodeValidites) }}
                             <h4>Periodes de validité</h4>
                             <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
                                 data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
@@ -152,6 +155,15 @@
 
                     {% set index = (index + 1) %}
                 {% endfor %}
+
+                {% if ongletCodePromoHebergement is defined %}
+                    {% include ('@MondofuteCodePromo/codepromounifie/onglet-hebergement.html.twig') %}
+                {% endif %}
+
+                {% if ongletCodePromoPrestationAnnexe is defined %}
+                    {% include ('@MondofuteCodePromo/codepromounifie/onglet-prestation-annexe.html.twig') %}
+                {% endif %}
+
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
@@ -199,6 +211,7 @@
 
     </script>
     {{ parent() }}
+
     <script type="text/javascript">
         $(document).ready(function () {
             {% if sitesAEnregistrer is not empty %}
@@ -476,6 +489,53 @@
                 event.preventDefault();
             }
             return false;
+        }
+
+    </script>
+
+    <script type="application/javascript">
+        function getFournisseurHebergements(fournisseurId)
+        {
+            if($("#collapse_code_promo_fournisseur_"+fournisseurId+"_hebergements").is(':hidden'))
+            {
+                var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
+                    'fournisseurId' : '_fournisseurId_'
+                }) }}";
+
+                path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+                $.ajax( path , {
+
+                }).done(function (data){
+                    $('#code_promo_fournisseur_'+fournisseurId+'_hebergements').html(data);
+                });
+            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(fournisseurId)
+        {
+            if($("#collapse_code_promo_fournisseur_"+fournisseurId+"_prestation_annexes").is(':hidden'))
+            {
+                var path = "{{ path('codepromo_get_fournisseur_prestation_annexes' ,{
+                    'fournisseurId' : '_fournisseurId_'
+                }) }}";
+
+                path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+                $.ajax( path , {
+
+                }).done(function (data){
+                    $('#code_promo_fournisseur_'+fournisseurId+'_prestation_annexes').html(data);
+                });
+            }
+
+        }
+
+        function checkChildren(element , listGroup){
+            var $element = $(element);
+            listGroup = $('#' + listGroup);
+            listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
     </script>
