@@ -28,15 +28,15 @@ class DefaultController extends Controller
 <<<<<<< HEAD
             $retour = array('valid' => true);
             try {
-||||||| parent of 3de7106... Mise en page et traductions
-            $retour = array('valid'=>true);
-            try{
-                $this->exception();
-=======
+||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
             $retour = array('valid'=>true);
             try{
 //                $this->exception();
->>>>>>> 3de7106... Mise en page et traductions
+=======
+            $retour = array('valid' => true);
+            try {
+//                $this->exception();
+>>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
                 $mbdd = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
                 $em = $this->get('doctrine.orm.entity_manager');
                 $stocks = $request->get('stocks');
@@ -46,6 +46,7 @@ class DefaultController extends Controller
                     $champs = array('logement_id', 'periode_id', 'stock');
                     $duplicate = true;
                     $managers = array($site->getLibelle());
+<<<<<<< HEAD
                     $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
                     foreach ($stocks as $stock) {
                         /** @var EntityManager $emSite */
@@ -54,6 +55,30 @@ class DefaultController extends Controller
                         foreach ($logements as $logement) {
                             foreach ($stock['periodes'] as $periode) {
                                 $mbdd->addInsertLigne(array($logement->getId(), $periode['id'], $periode['stock']));
+||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
+                    $mbdd->initInsertMassif($table,$champs,$duplicate,$managers);
+                    foreach ($stocks as $idLogementUnifie => $periodes) {
+                        /** @var EntityManager $emSite */
+                        $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+                        $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
+                        foreach ($logements as $logement) {
+                            foreach ($periodes as $idPeriode => $stock){
+                                $mbdd->addInsertLigne(array($logement->getId(),$idPeriode,$stock));
+=======
+                    $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
+                    foreach ($stocks as $idLogementUnifie => $periodes) {
+                        if (!empty($periodes)) {
+
+                            /** @var EntityManager $emSite */
+                            $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+                            $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
+                            foreach ($logements as $logement) {
+                                foreach ($periodes as $idPeriode => $stock) {
+                                    if (!empty($stock)) {
+                                        $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
+                                    }
+                                }
+>>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
                             }
                         }
                     }
