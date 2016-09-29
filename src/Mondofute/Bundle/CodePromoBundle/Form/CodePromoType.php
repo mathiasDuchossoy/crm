@@ -89,6 +89,14 @@ class CodePromoType extends AbstractType
                     'by_reference' => true,
                 )
             )
+            ->add('codePromoFournisseurs', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFournisseurType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo fournisseurs',
+                    'mapped' => false
+                )
+            )
         ;
     }
     

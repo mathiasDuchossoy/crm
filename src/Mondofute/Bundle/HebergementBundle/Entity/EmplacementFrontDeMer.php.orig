@@ -1,11 +1,11 @@
 <?php
 
-namespace Mondofute\Bundle\CodePromoApplicationBundle\Entity;
+namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 /**
- * CodePromoFournisseurUnifie
+ * EmplacementFrontDeMer
  */
-class CodePromoFournisseurUnifie
+class EmplacementFrontDeMer extends Emplacement
 {
     /**
      * @var int

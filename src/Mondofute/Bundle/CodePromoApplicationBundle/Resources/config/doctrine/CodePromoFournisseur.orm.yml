@@ -17,6 +17,7 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur:
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
-        codePromoFournisseurUnifie:
-            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurUnifie
+#        codePromoFournisseurUnifie:
+#            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurUnifie
+#            inversedBy: codePromoFournisseurs
     lifecycleCallbacks: {  }

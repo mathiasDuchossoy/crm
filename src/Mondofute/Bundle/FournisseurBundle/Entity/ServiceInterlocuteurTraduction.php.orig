@@ -1,14 +1,14 @@
 <?php
 
-namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 /**
- * PrestationAnnexeTraduction
+ * ServiceInterlocuteurTraduction
  */
-class PrestationAnnexeTraduction
+class ServiceInterlocuteurTraduction
 {
     /**
-     * @var int
+     * @var integer
      */
     private $id;
 
@@ -16,10 +16,11 @@ class PrestationAnnexeTraduction
      * @var string
      */
     private $libelle;
+
     /**
-     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\prestationAnnexe
+     * @var \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
      */
-    private $prestationAnnexe;
+    private $service;
     /**
      * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
@@ -28,7 +29,7 @@ class PrestationAnnexeTraduction
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -50,7 +51,7 @@ class PrestationAnnexeTraduction
      *
      * @param string $libelle
      *
-     * @return PrestationAnnexeTraduction
+     * @return ServiceInterlocuteurTraduction
      */
     public function setLibelle($libelle)
     {
@@ -60,25 +61,25 @@ class PrestationAnnexeTraduction
     }
 
     /**
-     * Get prestationAnnexe
+     * Get service
      *
-     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\prestationAnnexe
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur
      */
-    public function getPrestationAnnexe()
+    public function getService()
     {
-        return $this->prestationAnnexe;
+        return $this->service;
     }
 
     /**
-     * Set prestationAnnexe
+     * Set service
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\prestationAnnexe $prestationAnnexe
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service
      *
-     * @return PrestationAnnexeTraduction
+     * @return ServiceInterlocuteurTraduction
      */
-    public function setPrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\prestationAnnexe $prestationAnnexe = null)
+    public function setService(\Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur $service = null)
     {
-        $this->prestationAnnexe = $prestationAnnexe;
+        $this->service = $service;
 
         return $this;
     }
@@ -98,7 +99,7 @@ class PrestationAnnexeTraduction
      *
      * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
      *
-     * @return PrestationAnnexeTraduction
+     * @return ServiceInterlocuteurTraduction
      */
     public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
     {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Mondofute\Bundle\CodePromoApplicationBundle\Entity;
+namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 /**
- * CodePromoApplication
+ * EmplacementCommerces
  */
-abstract class CodePromoApplication
+class EmplacementCommerces extends Emplacement
 {
     /**
      * @var int
@@ -23,4 +23,3 @@ abstract class CodePromoApplication
         return $this->id;
     }
 }
-
