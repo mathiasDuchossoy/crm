@@ -54,8 +54,9 @@ class AppKernel extends Kernel
             new HiDev\Bundle\CodePromoBundle\HiDevCodePromoBundle(),
             new Mondofute\Bundle\CodePromoBundle\MondofuteCodePromoBundle(),
             new Mondofute\Bundle\LogementPeriodeBundle\MondofuteLogementPeriodeBundle(),
-            new nucleus\managerBDDBundle\nucleusmanagerBDDBundle()
-             );
+            new nucleus\managerBDDBundle\nucleusmanagerBDDBundle(),
+            new Mondofute\Bundle\CodePromoApplicationBundle\MondofuteCodePromoApplicationBundle(),
+        );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
