@@ -25,6 +25,10 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication
             mappedBy: codePromo
             cascade: ['persist','remove']
+        codePromoFournisseurs:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur
+            mappedBy: codePromo
+            cascade: ['persist','remove']
     manyToMany:
         codePromoPeriodeSejours:
             targetEntity: CodePromoPeriodeSejour

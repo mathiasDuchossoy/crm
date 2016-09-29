@@ -1,0 +1,18 @@
+Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurUnifie:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoApplicationBundle\Repository\CodePromoFournisseurUnifieRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        codePromoFournisseurs:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur
+            cascade: ['persist','remove']
+            mappedBy: codePromoFournisseurUnifie
+    lifecycleCallbacks: {  }

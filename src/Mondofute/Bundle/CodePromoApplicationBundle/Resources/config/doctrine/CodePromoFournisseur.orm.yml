@@ -1,0 +1,22 @@
+Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoApplicationBundle\Repository\CodePromoFournisseurRepository
+    associationOverride:
+        codePromo:
+            targetEntity: ~
+            inversedBy: codePromoFournisseurs
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        codePromoFournisseurUnifie:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurUnifie
+    lifecycleCallbacks: {  }

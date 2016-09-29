@@ -247,43 +247,4 @@ class CodePromo extends BaseCodePromo
     {
         return $this->codePromoApplications;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $codePromoFournisseurs;
-
-
-    /**
-     * Add codePromoFournisseur
-     *
-     * @param \Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur
-     *
-     * @return CodePromo
-     */
-    public function addCodePromoFournisseur(\Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur)
-    {
-        $this->codePromoFournisseurs[] = $codePromoFournisseur;
-
-        return $this;
-    }
-
-    /**
-     * Remove codePromoFournisseur
-     *
-     * @param \Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur
-     */
-    public function removeCodePromoFournisseur(\Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur $codePromoFournisseur)
-    {
-        $this->codePromoFournisseurs->removeElement($codePromoFournisseur);
-    }
-
-    /**
-     * Get codePromoFournisseurs
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCodePromoFournisseurs()
-    {
-        return $this->codePromoFournisseurs;
-    }
 }
