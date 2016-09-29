@@ -1,0 +1,47 @@
+HiDev\Bundle\CodePromoBundle\Entity\CodePromo:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: HiDev\Bundle\CodePromoBundle\Repository\CodePromoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        code:
+            type: string
+            length: 255
+            unique: true
+        clientAffectation:
+            type: smallint
+        typeRemise:
+            type: smallint
+        valeurRemise:
+            type: decimal
+            precision: 10
+            scale: 2
+        prixMini:
+            type: decimal
+            precision: 10
+            scale: 2
+        usageCodePromo:
+            type: smallint
+        actif:
+            type: boolean
+    manyToMany:
+        codePromoPeriodeValidites:
+            targetEntity: CodePromoPeriodeValidite
+            cascade: ['persist','remove']
+            joinTable:
+                name: ~
+                inverseJoinColumns:
+                    code_promo_periode_validite_id:
+                        unique: true
+                        onDelete: cascade
+    lifecycleCallbacks: {  }

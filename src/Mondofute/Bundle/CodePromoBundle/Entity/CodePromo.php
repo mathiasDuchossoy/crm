@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\CodePromoBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
@@ -41,12 +42,17 @@ class CodePromo extends BaseCodePromo
      * @var \Doctrine\Common\Collections\Collection
      */
     private $codePromoClients;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $codePromoApplications;
 
     public function __construct()
     {
         parent::__construct();
         $this->codePromoPeriodeSejours = new ArrayCollection();
         $this->codePromoClients = new ArrayCollection();
+        $this->codePromoApplications = new ArrayCollection();
     }
 
     /**
@@ -67,16 +73,6 @@ class CodePromo extends BaseCodePromo
 
         return $this;
     }
-
-//    /**
-//     * //     * Get id
-//     * //     *
-//     * //     * @return int
-//     * //     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
 
     /**
      * Add codePromoPeriodeSejour
@@ -216,5 +212,39 @@ class CodePromo extends BaseCodePromo
     public function getCodePromoClients()
     {
         return $this->codePromoClients;
+    }
+
+    /**
+     * Add codePromoApplication
+     *
+     * @param CodePromoApplication $codePromoApplication
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoApplication(CodePromoApplication $codePromoApplication)
+    {
+        $this->codePromoApplications[] = $codePromoApplication->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoApplication
+     *
+     * @param CodePromoApplication $codePromoApplication
+     */
+    public function removeCodePromoApplication(CodePromoApplication $codePromoApplication)
+    {
+        $this->codePromoApplications->removeElement($codePromoApplication);
+    }
+
+    /**
+     * Get codePromoApplications
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoApplications()
+    {
+        return $this->codePromoApplications;
     }
 }

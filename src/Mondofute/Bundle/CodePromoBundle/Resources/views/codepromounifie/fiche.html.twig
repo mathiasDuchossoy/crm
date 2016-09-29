@@ -23,7 +23,7 @@
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
                 {% set index = 0 %}
-                {% for codePromo in form.codePromos %}
+                {% for keyCodePromo, codePromo in form.codePromos %}
                     <div id="data_site_{{ codePromo.vars.value.site.id }}"
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ codePromo.vars.value.site.crm | number_format }}">
@@ -36,6 +36,9 @@
                             {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
+                            {#{{ form_row(codePromo.codePromoApplications, { 'attr' : { 'data-unique_block_prefix' : codePromo.codePromoApplications.vars['unique_block_prefix']}}) }}#}
+                            {% include ('@MondofuteCodePromo/codepromounifie/code-promo-application.html.twig') %}
+                            {{ dump(codePromo.codePromoPeriodeValidites) }}
                             <h4>Periodes de validité</h4>
                             <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
                                 data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">

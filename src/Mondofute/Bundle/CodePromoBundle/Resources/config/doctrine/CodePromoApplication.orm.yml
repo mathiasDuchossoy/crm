@@ -1,0 +1,18 @@
+Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoBundle\Repository\CodePromoApplicationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        application:
+            type: smallint
+    manyToOne:
+        codePromo:
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+            inversedBy: codePromoApplications
+    lifecycleCallbacks: {  }
