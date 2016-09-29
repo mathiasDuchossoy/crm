@@ -87,13 +87,14 @@
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
             $(document).delegate('.table-hebergement-stocks [name^="stocks"]','change',function(e){
-                if(stocksModifies[$(this).data('logement')] == null) {
-                    stocksModifies[$(this).data('logement')] = Array();
+                var datas = $(this).data();
+                if(stocksModifies[datas.logement] == null) {
+                        stocksModifies[datas.logement] = Array();
                 }
-                if(stocksModifies[$(this).data('logement')][$(this).data('periode')] == null){
-                    stocksModifies[$(this).data('logement')][$(this).data('periode')] = 0;
+                if(stocksModifies[datas.logement][datas.periode] == null){
+                    stocksModifies[datas.logement][datas.periode] = 0;
                 }
-                stocksModifies[$(this).data('logement')][$(this).data('periode')] = $(this).val();
+                stocksModifies[datas.logement][datas.periode] = $(this).val();
 //                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
 //                }else{
 //                    alert('null');
