@@ -11,7 +11,9 @@ use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\CodePromoBundle\Entity\Application;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
@@ -75,6 +77,7 @@ class CodePromoUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $applications = Application::$libelles;
 
         $sitesAEnregistrer = $request->get('sites');
 
@@ -101,12 +104,17 @@ class CodePromoUnifieController extends Controller
         }
 
         if ($form->isSubmitted() && $form->isValid() && !$codeExists) {
+
             /** @var CodePromo $entity */
             $this->addCodePromoPeriode($codePromoUnifie , 'Validite' , CodePromoPeriodeValidite::class );
             $this->addCodePromoPeriode($codePromoUnifie , 'Sejour' , CodePromoPeriodeSejour::class );
             // *** gestion code promo client ***
             $this->gestionCodePromoClient($codePromoUnifie, $clientsBySites);
             // *** fin gestion code promo client ***
+
+            // *** gestion code promo application ***
+            $this->gestionCodePromoApplication($codePromoUnifie);
+            // *** fin gestion code promo application ***
 
             /** @var CodePromo $codePromo */
             foreach ($codePromoUnifie->getCodePromos() as $codePromo){
@@ -147,6 +155,7 @@ class CodePromoUnifieController extends Controller
             'sites' => $sites,
             'entity' => $codePromoUnifie,
             'form' => $form->createView(),
+            'applications' => $applications,
         ));
     }
 
@@ -349,8 +358,6 @@ class CodePromoUnifieController extends Controller
                     $entityUnifieSite->addCodePromo($entitySite);
                 }
 
-
-
                 // *** gestion code promo client ***
                 if (!empty($entity->getCodePromoClients()) && !$entity->getCodePromoClients()->isEmpty()){
                     /** @var CodePromoClient $codePromoClient */
@@ -429,10 +436,7 @@ class CodePromoUnifieController extends Controller
                             $codePromoClientSite = $entitySite->getCodePromoClients()->filter(function (CodePromoClient $element) use($codePromoPeriodeValiditeSite){
                                 return $element->getCodePromoPeriodeValidite() == $codePromoPeriodeValiditeSite;
                             })->first();
-                            dump($entitySite->getCodePromoClients());
                             if (!empty($codePromoClientSite)){
-
-                                dump('suppression');
                                 $codePromoClientSite->setCodePromoPeriodeValidite(null);
                                 $emSite->remove($codePromoClientSite);
                             }
@@ -481,7 +485,42 @@ class CodePromoUnifieController extends Controller
                 }
                 // *** fin gestion code promo periode séjour ***
 
+                // *** gestion code promo application ***
+                if (!empty($entity->getCodePromoApplications()) && !$entity->getCodePromoApplications()->isEmpty()){
+                    /** @var CodePromoApplication $codePromoApplication */
+                    foreach ($entity->getCodePromoApplications() as $codePromoApplication){
+                        $codePromoApplicationSite = $entitySite->getCodePromoApplications()->filter(function (CodePromoApplication $element) use ($codePromoApplication){
+                            return $element->getId() == $codePromoApplication->getId();
+                        })->first();
+                        if(false === $codePromoApplicationSite){
+                            $codePromoApplicationSite = new CodePromoApplication();
+                            $entitySite->addCodePromoApplication($codePromoApplicationSite);
+                            $codePromoApplicationSite
+                                ->setId($codePromoApplication->getId())
+                            ;
 
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoApplicationSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $codePromoApplicationSite
+                            ->setApplication($codePromoApplication->getApplication())
+                        ;
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoApplications()) && !$entitySite->getCodePromoApplications()->isEmpty()){
+                    /** @var CodePromoApplication $codePromoApplication */
+                    foreach ($entitySite->getCodePromoApplications() as $codePromoApplicationSite){
+                        $codePromoApplication = $entity->getCodePromoApplications()->filter(function (CodePromoApplication $element) use ($codePromoApplicationSite){
+                            return $element->getId() == $codePromoApplicationSite->getId();
+                        })->first();
+                        if(false === $codePromoApplication){
+//                            $entitySite->removeCodePromoApplication($codePromoApplicationSite);
+                            $emSite->remove($codePromoApplicationSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo application ***
 
                 $entityUnifieSite
                     ->setCode($entityUnifie->getCode())
@@ -548,6 +587,19 @@ class CodePromoUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
 
+        $applications = Application::$libelles;
+
+        $originalCodePromoApplications = new ArrayCollection();
+        /** @var CodePromo $codePromo */
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo)
+        {
+            $originalCodePromoApplications->set($codePromo->getSite()->getId() ,new ArrayCollection() );
+            foreach ($codePromo->getCodePromoApplications() as $codePromoApplication)
+            {
+                $originalCodePromoApplications->get($codePromo->getSite()->getId() )->add($codePromoApplication );
+            }
+        }
+
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
@@ -602,7 +654,7 @@ class CodePromoUnifieController extends Controller
         if ($codeExists){
             $this->addFlash('error', "Ce code existe déjà. ");
         }
-        
+
         if ($editForm->isSubmitted() && $editForm->isValid() && !$codeExists) {
             foreach ($codePromoUnifie->getCodePromos() as $codePromo){
                 if(false === in_array($codePromo->getSite()->getId(),$sitesAEnregistrer)){
@@ -649,10 +701,26 @@ class CodePromoUnifieController extends Controller
             $this->gestionCodePromoClient($codePromoUnifie, $clientsBySites);
             // *** fin gestion code promo client ***
 
+            // *** gestion code promo application ***
+            $this->gestionCodePromoApplication($codePromoUnifie);
+
+            foreach ($codePromoUnifie->getCodePromos() as $codePromo)
+            {
+                $originalCodePromoApplicationSites = $originalCodePromoApplications->get($codePromo->getSite()->getId());
+                foreach ($originalCodePromoApplicationSites as $originalCodePromoApplication)
+                {
+                    if(false === $codePromo->getCodePromoApplications()->contains($originalCodePromoApplication))
+                    {
+                        $em->remove($originalCodePromoApplication);
+                    }
+                }
+            }
+            // *** fin gestion code promo application ***
+
             $em->persist($codePromoUnifie);
             $em->flush();
 
-//            $this->copieVersSites($codePromoUnifie);
+            $this->copieVersSites($codePromoUnifie);
 
             // add flash messages
             /** @var Session $session */
@@ -667,8 +735,54 @@ class CodePromoUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'codePromoClients' => $originalCodePromoClients
+            'codePromoClients' => $originalCodePromoClients,
+            'applications' => $applications,
         ));
+    }
+
+    /**
+     * @param CodePromoUnifie $codePromoUnifie
+     */
+    private function gestionCodePromoApplication($codePromoUnifie)
+    {
+        /** @var CodePromoApplication $codePromoApplicationCrm */
+        /** @var CodePromo $codePromo */
+        /** @var CodePromoApplication $application */
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo)
+        {
+            foreach ($codePromo->getCodePromoApplications() as $application)
+            {
+                $application->setCodePromo($codePromo);
+            }
+        }
+        $codePromoApplicationCrms = $codePromoUnifie->getCodePromos()->filter(function (CodePromo $element){
+            return $element->getSite()->getCrm() == 1;
+        })->first()->getCodePromoApplications();
+        $applications = new ArrayCollection();
+        foreach ($codePromoApplicationCrms as $codePromoApplicationCrm)
+        {
+            $applications->add($codePromoApplicationCrm->getApplication());
+        }
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo)
+        {
+            if($codePromo->getSite()->getCrm() == 0)
+            {
+                $applicationSites = new ArrayCollection();
+                foreach ($codePromo->getCodePromoApplications() as $codePromoApplicationSite)
+                {
+                    $applicationSites->add($codePromoApplicationSite->getApplication());
+                }
+                foreach ($applications as $application)
+                {
+                    if (false === $applicationSites->contains($application))
+                    {
+                        $newApplication = new CodePromoApplication();
+                        $codePromo->addCodePromoApplication($newApplication);
+                        $newApplication->setApplication($application);
+                    }
+                }
+            }
+        }
     }
 
     /**
