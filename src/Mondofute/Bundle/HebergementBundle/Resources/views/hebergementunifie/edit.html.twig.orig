@@ -87,35 +87,7 @@
 <<<<<<< HEAD
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
-||||||| parent of 94cb5c1... enregistrement des stocks non visible dans le tableau (gestion compatibilité data() )
-            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-            $(document).delegate('.table-hebergement-stocks [name^="stocks"]','change',function(e){
-                if(stocksModifies[$(this).data('logement')] == null) {
-                    stocksModifies[$(this).data('logement')] = Array();
-                }
-                if(stocksModifies[$(this).data('logement')][$(this).data('periode')] == null){
-                    stocksModifies[$(this).data('logement')][$(this).data('periode')] = 0;
-                }
-                stocksModifies[$(this).data('logement')][$(this).data('periode')] = $(this).val();
-//                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
-//                }else{
-//                    alert('null');
-//                }
-//                alert(stocksModifies[$(this).data('logement')][$(this).data('periode')]);
-//                console.log(stocksModifies);
-            });
-            $(document).on('resize', function (e) {
-                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
-            });
-
-            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
-            chargerOngletStocksHebergement({{ entity.id }});
-=======
+||||||| parent of 1a8333f... ajout d'une sécurité pour les input dont le name commence par stocks
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
@@ -144,7 +116,36 @@
 
             $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
->>>>>>> 94cb5c1... enregistrement des stocks non visible dans le tableau (gestion compatibilité data() )
+=======
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.table-hebergement-stocks input[name^="stocks"]','change',function(e){
+                var datas = $(this).data();
+                if(stocksModifies[datas.logement] == null) {
+                        stocksModifies[datas.logement] = Array();
+                }
+                if(stocksModifies[datas.logement][datas.periode] == null){
+                    stocksModifies[datas.logement][datas.periode] = 0;
+                }
+                stocksModifies[datas.logement][datas.periode] = $(this).val();
+//                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
+//                }else{
+//                    alert('null');
+//                }
+//                alert(stocksModifies[$(this).data('logement')][$(this).data('periode')]);
+//                console.log(stocksModifies);
+            });
+            $(document).on('resize', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+>>>>>>> 1a8333f... ajout d'une sécurité pour les input dont le name commence par stocks
         });
         function chargerOngletStocks(idhebergement){
 
