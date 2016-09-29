@@ -86,7 +86,7 @@
             $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
-            $(document).delegate('.table-hebergement-stocks [name^="stocks"]','change',function(e){
+            $(document).delegate('.table-hebergement-stocks input[name^="stocks"]','change',function(e){
                 var datas = $(this).data();
                 if(stocksModifies[datas.logement] == null) {
                         stocksModifies[datas.logement] = Array();
