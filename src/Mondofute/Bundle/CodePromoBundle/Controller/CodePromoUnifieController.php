@@ -747,7 +747,6 @@ class CodePromoUnifieController extends Controller
     {
         /** @var CodePromoApplication $codePromoApplicationCrm */
         /** @var CodePromo $codePromo */
-        /** @var CodePromoApplication $application */
         foreach ($codePromoUnifie->getCodePromos() as $codePromo)
         {
             foreach ($codePromo->getCodePromoApplications() as $application)
