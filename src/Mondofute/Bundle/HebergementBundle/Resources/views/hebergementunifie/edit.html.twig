@@ -112,7 +112,7 @@
                                             curseurProgressBar += pasProgressBar;
                                             chargerProgressBar($progressBar,curseurProgressBar);
 //                                            gestion des colonnes des tableaux
-                                            var colonnes = [{ 'mDataProp' : "logement",title:'logement',"sWidth": '200px'}];
+                                            var colonnes = [{ 'mDataProp' : "logement",title:'logement'}];
                                             var attribut = '';
                                             var debut=null;
                                             var fin=null;
@@ -130,7 +130,7 @@
                                                 jourFin = fin.getDate().toString().length>1?fin.getDate():'0'+fin.getDate();
                                                 attribut = 'periode'+typePeriode.periodes[k].id;
 
-                                                colonnes.push({mDataProp:attribut,title:'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear(),"sWidth": '200px'});
+                                                colonnes.push({mDataProp:attribut,title:'du '+jourDebut+'-'+moisDebut+'-'+debut.getFullYear()+' au '+jourFin+'-'+moisFin+'-'+fin.getFullYear()});
                                             }
 
 //                                            colonnes.push({ title : "test"});
