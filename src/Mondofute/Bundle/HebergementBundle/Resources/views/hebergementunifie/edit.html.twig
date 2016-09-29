@@ -155,7 +155,7 @@
                                                 attribut = 'periode' + typePeriode.periodes[k].id;
                                                 for(var l=0;l<data[j][1].length;l++){
                                                     stock = data[j][1][l][attribut];
-                                                    data[j][1][l][attribut] = '<input data-logement="'+data[j][1][l]['logement']+'" data-periode="'+typePeriode.periodes[k].id+'" name="stocks['+data[j][1][l]['logement']+']['+typePeriode.periodes[k].id+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+                                                    data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'],typePeriode.periodes[k].id,stock);
                                                 }
                                                 colonnes.push({
                                                     mDataProp: attribut,
@@ -212,6 +212,10 @@
                             $conteneur.append('<button type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
                         });
                     }, 'json');
+        }
+        function genererInputStock(idLogementUnifie,idPeriode,stock){
+//            var input = '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+            return '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
         }
         function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {
             var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
