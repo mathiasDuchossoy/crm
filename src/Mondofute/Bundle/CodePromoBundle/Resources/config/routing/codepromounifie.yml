@@ -27,3 +27,13 @@ codepromo_get_clients:
     path:     /getclient/{clientName}/{siteId}/{codePromoId}
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getClients" , codePromoId: null }
     methods:  GET
+
+codepromo_get_fournisseur_hebergements:
+    path:     /getfournisseurhebergements/{fournisseurId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurHebergements"}
+    methods:  GET
+
+codepromo_get_fournisseur_prestation_annexes:
+    path:     /getfournisseurprestationannexes/{fournisseurId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurPrestationAnnexes"}
+    methods:  GET

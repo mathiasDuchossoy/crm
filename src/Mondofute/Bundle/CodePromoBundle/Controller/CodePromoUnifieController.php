@@ -17,6 +17,10 @@ use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoPeriodeSejour;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexeUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -587,6 +591,7 @@ class CodePromoUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
 
+        // *** gesttion code promo applicaton ***
         $applications = Application::$libelles;
 
         $originalCodePromoApplications = new ArrayCollection();
@@ -599,6 +604,8 @@ class CodePromoUnifieController extends Controller
                 $originalCodePromoApplications->get($codePromo->getSite()->getId() )->add($codePromoApplication );
             }
         }
+        $fournisseurProduits = $em->getRepository(Fournisseur::class)->findBy(array('contient' => FournisseurContient::PRODUIT));
+        // *** fin gesttion code promo applicaton ***
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -737,6 +744,32 @@ class CodePromoUnifieController extends Controller
             'delete_form' => $deleteForm->createView(),
             'codePromoClients' => $originalCodePromoClients,
             'applications' => $applications,
+            'ongletCodePromoHebergement' => true,
+            'ongletCodePromoPrestationAnnexe' => true,
+            'fournisseurProduits' => $fournisseurProduits
+        ));
+    }
+
+    public function getFournisseurHebergementsAction($fournisseurId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $hebergements = $em->getRepository(HebergementUnifie::class)->getFournisseurHebergements($fournisseurId , $this->container->getParameter('locale'));
+
+        return $this->render('@MondofuteCodePromo/codepromounifie/gte-code-promo-fournisseur-hebergements.html.twig', array(
+            'hebergements' => $hebergements,
+            'fournisseurId' => $fournisseurId
+        ));
+    }
+
+    public function getFournisseurPrestationAnnexesAction($fournisseurId)
+    {
+        $em = $this->getDoctrine()->getManager();
+//        $prestationAnnexes = $em->getRepository(FournisseurPrestationAnnexe::class)->getFournisseurHebergements($fournisseurId , $this->container->getParameter('locale'));
+        $prestationAnnexes = new ArrayCollection();
+
+        return $this->render('@MondofuteCodePromo/codepromounifie/gte-code-promo-fournisseur-prestation-annexes.html.twig', array(
+            'prestationAnnexes' => $prestationAnnexes,
+            'fournisseurId' => $fournisseurId
         ));
     }
 

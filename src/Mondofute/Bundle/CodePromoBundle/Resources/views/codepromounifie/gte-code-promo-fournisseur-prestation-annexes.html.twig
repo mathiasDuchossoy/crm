@@ -1,0 +1,15 @@
+{% for prestationAnnexe in prestationAnnexes %}
+    <li class="list-group-item">
+        <div class="checkbox">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label><input type="checkbox" value="">{{ hebergement.nom }}</label>
+            </div>
+        </div>
+    </li>
+{% endfor %}
+{% if prestationAnnexes is empty %}
+    <li class="list-group-item">
+        <div class="alert alert-info" role="alert">Il n'y a pas de prestations annexe pour ce fournisseur.</div>
+    </li>
+{% endif %}

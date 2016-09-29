@@ -53,4 +53,26 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+    public function getFournisseurHebergements($fournisseurId, $locale)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->from('MondofuteHebergementBundle:HebergementUnifie' , 'hebergementUnifie')
+            ->select('hebergementUnifie.id  hebergementUnifieId, traductions.nom')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergementUnifie.hebergements' , 'hebergements')
+            ->join('hebergements.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->where('fournisseur = :fournisseurId')
+            ->setParameter('fournisseurId' , $fournisseurId)
+            ->andWhere('langue.code = :locale')
+            ->setParameter('locale' , $locale)
+        ;
+
+        $result = $q->getQuery()->getResult();
+
+        return $result;
+    }
 }
