@@ -103,7 +103,6 @@
                                     $progressBar = $('#'+$conteneur.attr('id')+'_progress-bar_type_periode_'+typePeriodes[i].id);
                                     chargerProgressBar($progressBar,25);
                                     genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriodes[i], function (data, idTypePeriode, typePeriode) {
-//                                        $div.html('');
                                         chargerProgressBar($progressBar,50);
                                         var pasProgressBar = 50/(data.length);
                                         var curseurProgressBar = 50;
