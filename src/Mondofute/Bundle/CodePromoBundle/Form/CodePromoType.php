@@ -71,7 +71,6 @@ class CodePromoType extends AbstractType
                     'by_reference' => false,
                 )
             )
-
             ->add('codePromoClients', CollectionType::class, array(
                     'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoClientType',
                     'allow_add' => true,
@@ -82,6 +81,14 @@ class CodePromoType extends AbstractType
                 )
             )
             ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('codePromoApplications', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoApplicationType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Applications',
+                    'by_reference' => true,
+                )
+            )
         ;
     }
     
