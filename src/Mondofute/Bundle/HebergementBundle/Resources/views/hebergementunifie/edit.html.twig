@@ -126,6 +126,7 @@
                                     $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
                                     chargerProgressBar($progressBar, 25);
                                     genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriodes[i], function (data, idTypePeriode, typePeriode) {
+                                        var stock = null;
                                         chargerProgressBar($progressBar, 50);
                                         var pasProgressBar = 50 / (data.length);
                                         var curseurProgressBar = 50;
@@ -152,7 +153,10 @@
                                                 moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
                                                 jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
                                                 attribut = 'periode' + typePeriode.periodes[k].id;
-
+                                                for(var l=0;l<data[j][1].length;l++){
+                                                    stock = data[j][1][l][attribut];
+                                                    data[j][1][l][attribut] = '<input data-logement="'+data[j][1][l]['logement']+'" data-periode="'+typePeriode.periodes[k].id+'" name="stocks['+data[j][1][l]['logement']+']['+typePeriode.periodes[k].id+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+                                                }
                                                 colonnes.push({
                                                     mDataProp: attribut,
                                                     title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
@@ -165,6 +169,7 @@
                                             var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap display" width="100%" id="type-periode-' + typePeriode.id + '-indice-' + j + '"></table>');
 //                                        console.log(data[j][1]);
 //                                            $div.append($tableau);
+//                                            console.log(data[j][1]);
                                             $div.append($panelFournisseur);
                                             $panelFournisseur.find('#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3]).append($tableau);
                                             var table = $tableau.DataTable({
