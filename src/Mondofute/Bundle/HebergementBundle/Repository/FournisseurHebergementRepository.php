@@ -200,8 +200,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                     $this->connexion->rollBack();
                     $retour = false;
                 } else {
-//                    $this->connexion->commit();
-//                    $result = $stmt->fetch();
                     while ($fhResult = $fhStmt->fetch()) {
 //                        création du fournisseur hébergement
                         $fh = new FournisseurHebergement();
@@ -212,6 +210,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                             ->setId($fhResult['fournisseurId']);
 //                        association du fournisseur au fournisseur hébergement
                         $fh->setFournisseur($f);
+                        unset($fhResult);
                         $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
 //                        $this->connexion->beginTransaction();
                         $lStmt = $this->connexion->prepare($sql);
@@ -235,6 +234,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             $logementUnifie = new LogementUnifie();
                                             $logementUnifie->setId($lResult['logementUnifieId']);
                                             $logement->setLogementUnifie($logementUnifie)->setSite($site);
+                                            unset($lResult);
 //                                            recupération des traductions
                                             $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
                                             $ltStmt = $this->connexion->prepare($sql);
@@ -358,9 +358,9 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                 }
             }
         }
-//        dump($fournisseurHebergements);
-//        echo memory_get_peak_usage();
-//        die;
+        dump($fournisseurHebergements);
+        echo memory_get_peak_usage();
+        die;
         return $fournisseurHebergements;
     }
 }
