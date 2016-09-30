@@ -4,7 +4,7 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,26 +17,41 @@ class PeriodeValiditeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateDebut', DateTimeType::class , array(
+            ->add('dateDebut', DateTimeType::class ,
+                array(
                 'required' => true,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+                'model_timezone' => 'EUROPE/Paris',
                 'attr' => array(
                     'class' => 'form-control input-inline datetimepicker datetime',
                     'data-date-format' => 'dd/MM/yyyy HH:mm',
                     'placeholder' => 'format_date',
                 )
             ))
-            ->add('dateFin', DateTimeType::class , array(
+            ->add('dateFin', DateTimeType::class
+                , array(
                 'required' => true,
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+//                'format' => 'yyyy-MM-dd\'T\'HH:mm:ssZZZZZ',
+                'format' => 'dd/MM/yyyy - HH:mm',
+//                'format' => 'dd/MM/yyyy - HH:mm',
+//                'format' => 'dd/MM/yyyy - kk:mm',
+//                'model_timezone' => 'UTC',
+                'model_timezone' => 'EUROPE/Paris',
+//                'view_timezone' => 'GMT',
+//                'view_timezone' => 'Europe/Paris',
+//                'attr' => array(
+//                    'class' => 'form-control input-inline datetimepicker datetime',
+//                    'data-date-format' => 'dd/MM/yyyy HH:mm',
+//                    'placeholder' => 'format_date',
+//                )
                 'attr' => array(
-                    'class' => 'form-control input-inline datetimepicker datetime',
-                    'data-date-format' => 'dd/MM/yyyy - HH:mm',
+                    'class' => 'datetimepicker',
                     'placeholder' => 'format_date',
                 )
-            ))
+            )
+            )
 //            ->add('dateDebut', DateType::class, array(
 //                'required' => true,
 //                'widget' => 'single_text',
