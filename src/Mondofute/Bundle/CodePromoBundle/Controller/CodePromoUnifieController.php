@@ -395,6 +395,42 @@ class CodePromoUnifieController extends Controller
     }
 
     /**
+     * @param CodePromoUnifie $codePromoUnifie
+     */
+    private function gestionCodePromoFournisseur($codePromoUnifie)
+    {
+        /** @var CodePromoFournisseur $codePromoFournisseurCrm */
+        /** @var CodePromo $codePromo */
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+            foreach ($codePromo->getCodePromoFournisseurs() as $fournisseur) {
+                $fournisseur->setCodePromo($codePromo);
+            }
+        }
+        $codePromoFournisseurCrms = $codePromoUnifie->getCodePromos()->filter(function (CodePromo $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first()->getCodePromoFournisseurs();
+        $fournisseurs = new ArrayCollection();
+        foreach ($codePromoFournisseurCrms as $codePromoFournisseurCrm) {
+            $fournisseurs->add($codePromoFournisseurCrm->getFournisseur());
+        }
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+            if ($codePromo->getSite()->getCrm() == 0) {
+                $fournisseurSites = new ArrayCollection();
+                foreach ($codePromo->getCodePromoFournisseurs() as $codePromoFournisseurSite) {
+                    $fournisseurSites->add($codePromoFournisseurSite->getFournisseur());
+                }
+                foreach ($fournisseurs as $fournisseur) {
+                    if (false === $fournisseurSites->contains($fournisseur)) {
+                        $newFournisseur = new CodePromoFournisseur();
+                        $codePromo->addCodePromoFournisseur($newFournisseur);
+                        $newFournisseur->setFournisseur($fournisseur);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Copie dans la base de données site l'entité codePromo
      * @param CodePromoUnifie $entityUnifie
      */
@@ -584,6 +620,41 @@ class CodePromoUnifieController extends Controller
                 }
                 // *** fin gestion code promo application ***
 
+                // *** gestion code promo fournisseur ***
+                if (!empty($entity->getCodePromoFournisseurs()) && !$entity->getCodePromoFournisseurs()->isEmpty()) {
+                    /** @var CodePromoFournisseur $codePromoFournisseur */
+                    foreach ($entity->getCodePromoFournisseurs() as $codePromoFournisseur) {
+                        $codePromoFournisseurSite = $entitySite->getCodePromoFournisseurs()->filter(function (CodePromoFournisseur $element) use ($codePromoFournisseur) {
+                            return $element->getId() == $codePromoFournisseur->getId();
+                        })->first();
+                        if (false === $codePromoFournisseurSite) {
+                            $codePromoFournisseurSite = new CodePromoFournisseur();
+                            $entitySite->addCodePromoFournisseur($codePromoFournisseurSite);
+                            $codePromoFournisseurSite
+                                ->setId($codePromoFournisseur->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoFournisseurSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $codePromoFournisseurSite
+                            ->setFournisseur($emSite->find(Fournisseur::class , $codePromoFournisseur->getFournisseur()));
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoFournisseurs()) && !$entitySite->getCodePromoFournisseurs()->isEmpty()) {
+                    /** @var CodePromoFournisseur $codePromoFournisseur */
+                    foreach ($entitySite->getCodePromoFournisseurs() as $codePromoFournisseurSite) {
+                        $codePromoFournisseur = $entity->getCodePromoFournisseurs()->filter(function (CodePromoFournisseur $element) use ($codePromoFournisseurSite) {
+                            return $element->getId() == $codePromoFournisseurSite->getId();
+                        })->first();
+                        if (false === $codePromoFournisseur) {
+//                            $entitySite->removeCodePromoFournisseur($codePromoFournisseurSite);
+                            $emSite->remove($codePromoFournisseurSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo fournisseur ***
+
                 $entityUnifieSite
                     ->setCode($entityUnifie->getCode());
                 //  copie des données codePromo
@@ -643,11 +714,12 @@ class CodePromoUnifieController extends Controller
      */
     public function editAction(Request $request, CodePromoUnifie $codePromoUnifie)
     {
+//        dump($codePromoUnifie->getCodePromos()->first()->getCodePromoApplications());
         /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
 
-        // *** gesttion code promo applicaton ***
+        // *** gesttion code promo application ***
         $applications = Application::$libelles;
 
         $originalCodePromoApplications = new ArrayCollection();
@@ -659,8 +731,18 @@ class CodePromoUnifieController extends Controller
             }
         }
         $fournisseurHebergements = $em->getRepository(Fournisseur::class)->rechercherTypeHebergement()->getQuery()->getResult();
+        // *** fin gesttion code promo application ***
 
-        // *** fin gesttion code promo applicaton ***
+        // *** gestion code promo fournisseur ***
+        $originalCodePromoFournisseurs = new ArrayCollection();
+
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+            $originalCodePromoFournisseurs->set($codePromo->getSite()->getId(), new ArrayCollection());
+            foreach ($codePromo->getCodePromoFournisseurs() as $codePromoFournisseur) {
+                $originalCodePromoFournisseurs->get($codePromo->getSite()->getId())->add($codePromoFournisseur);
+            }
+        }
+        // *** fin gestion code promo fournisseur ***
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -711,6 +793,13 @@ class CodePromoUnifieController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
+
+
+//        foreach ($codePromoUnifie->getCodePromos()->first()->getCodePromoApplications() as $item)
+//        {
+//            dump($item);
+//        }
+//        die;
 
         $codeExists = $this->testCodeExists($codePromoUnifie);
         if ($codeExists) {
@@ -777,28 +866,40 @@ class CodePromoUnifieController extends Controller
             // *** fin gestion code promo application ***
 
             // *** gestion code promo fournisseur ***
-            $codePromoFournisseurPosts = $request->get('codePromoFournisseurs');
+            $this->gestionCodePromoFournisseur($codePromoUnifie);
 
-            foreach ($codePromoFournisseurPosts as $codePromoFournisseurPost )
-            {
-                foreach ($codePromoUnifie->getCodePromos() as $codePromo)
-                {
-                    // vérifier si l'option Logement a été choisi pour cette entité
-                    $codePromoApplication = $codePromo->getCodePromoApplications()->filter(function(CodePromoApplication $element) {
-                        return $element->getApplication() == Application::logement;
-                    })->first();
-                    if(!empty($codePromoApplication) and $codePromo->getActifSite())
-                    {
-                        $codePromoFournisseur = new CodePromoFournisseur();
-                        $codePromo->addCodePromoFournisseur($codePromoFournisseur);
-                        $em->persist($codePromoFournisseur);
-                        $codePromoFournisseur
-                            ->setFournisseur($em->find(Fournisseur::class ,$codePromoFournisseurPost ))
-                        ;
+            foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+                $originalCodePromoFournisseurSites = $originalCodePromoFournisseurs->get($codePromo->getSite()->getId());
+                foreach ($originalCodePromoFournisseurSites as $originalCodePromoFournisseur) {
+                    if (false === $codePromo->getCodePromoFournisseurs()->contains($originalCodePromoFournisseur)) {
+                        $em->remove($originalCodePromoFournisseur);
                     }
                 }
             }
 
+//            if (!empty($codePromoFournisseurPosts)) {
+//                foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+//                    if (!empty($codePromoFournisseurPosts[$codePromo->getId()]))
+//                    {
+//                        $codePromoFournisseurPostSites = $codePromoFournisseurPosts[$codePromo->getId()];
+//                        foreach ($codePromoFournisseurPostSites as $codePromoFournisseurPostSite)
+//                        {
+//                            // vérifier si l'option Logement a été choisi pour cette entité
+//                            $codePromoApplication = $codePromo->getCodePromoApplications()->filter(function (CodePromoApplication $element) {
+//                                return $element->getApplication() == Application::logement;
+//                            })->first();
+//                            if (!empty($codePromoApplication) and $codePromo->getActifSite()) {
+//                                $codePromoFournisseur = new CodePromoFournisseur();
+//                                $codePromo->addCodePromoFournisseur($codePromoFournisseur);
+//                                $em->persist($codePromoFournisseur);
+//                                $codePromoFournisseur
+//                                    ->setFournisseur($em->find(Fournisseur::class, $codePromoFournisseurPostSite));
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
             // *** fin gestion code promo fournisseur ***
 
             $em->persist($codePromoUnifie);
@@ -821,24 +922,25 @@ class CodePromoUnifieController extends Controller
             'delete_form' => $deleteForm->createView(),
             'codePromoClients' => $originalCodePromoClients,
             'applications' => $applications,
-            'ongletCodePromoHebergement' => true,
-            'ongletCodePromoPrestationAnnexe' => true,
+            'panelCodePromoHebergement' => true,
+            'panelCodePromoPrestationAnnexe' => true,
             'fournisseurHebergements' => $fournisseurHebergements
         ));
     }
 
-    public function getFournisseurHebergementsAction($fournisseurId)
+    public function getFournisseurHebergementsAction($codePromoId, $fournisseurId)
     {
         $em = $this->getDoctrine()->getManager();
         $hebergements = $em->getRepository(HebergementUnifie::class)->getFournisseurHebergements($fournisseurId, $this->container->getParameter('locale'));
 
         return $this->render('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-hebergements.html.twig', array(
             'hebergements' => $hebergements,
+            'codePromoId' => $codePromoId,
             'fournisseurId' => $fournisseurId
         ));
     }
 
-    public function getFournisseurPrestationAnnexesAction($fournisseurId)
+    public function getFournisseurPrestationAnnexesAction($codePromoId, $fournisseurId)
     {
         $em = $this->getDoctrine()->getManager();
 //        $prestationAnnexes = $em->getRepository(FournisseurPrestationAnnexe::class)->getFournisseurHebergements($fournisseurId , $this->container->getParameter('locale'));
@@ -846,6 +948,7 @@ class CodePromoUnifieController extends Controller
 
         return $this->render('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-prestation-annexes.html.twig', array(
             'prestationAnnexes' => $prestationAnnexes,
+            'codePromoId' => $codePromoId,
             'fournisseurId' => $fournisseurId
         ));
     }
