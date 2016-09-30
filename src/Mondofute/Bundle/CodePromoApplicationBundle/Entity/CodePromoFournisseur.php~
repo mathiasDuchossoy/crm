@@ -16,17 +16,14 @@ class CodePromoFournisseur
      * @var integer
      */
     private $id;
-
     /**
      * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
      */
     private $fournisseur;
-
     /**
      * @var \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
      */
     private $codePromo;
-
 
     /**
      * Get id
@@ -36,6 +33,24 @@ class CodePromoFournisseur
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Get fournisseur
+     *
+     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
     }
 
     /**
@@ -53,13 +68,13 @@ class CodePromoFournisseur
     }
 
     /**
-     * Get fournisseur
+     * Get codePromo
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
      */
-    public function getFournisseur()
+    public function getCodePromo()
     {
-        return $this->fournisseur;
+        return $this->codePromo;
     }
 
     /**
@@ -74,15 +89,5 @@ class CodePromoFournisseur
         $this->codePromo = $codePromo;
 
         return $this;
-    }
-
-    /**
-     * Get codePromo
-     *
-     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
-     */
-    public function getCodePromo()
-    {
-        return $this->codePromo;
     }
 }

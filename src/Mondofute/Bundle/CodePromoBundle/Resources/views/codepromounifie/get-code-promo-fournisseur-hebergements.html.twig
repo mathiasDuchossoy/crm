@@ -1,9 +1,25 @@
-{% for hebergement in hebergements %}
+
+{% for key, hebergement in hebergements %}
     <li class="list-group-item">
         <div class="checkbox">
             <div class="col-sm-1"></div>
             <div class="col-sm-11">
-                <label><input type="checkbox" value="{{ hebergement.hebergementUnifieId }}" name="codePromoHebergements[{{ codePromoId }}][{{ fournisseurId }}][]">{{ hebergement.nom }}</label>
+                <label><input type="checkbox" value="{{ hebergement.hebergementUnifieId }}"
+                              {#name="codePromoHebergements[{{ codePromoId }}][{{ fournisseurId }}][]"#}
+                            {% if codePromo.codePromoHebergements is defined %}
+                                {% for codePromoHebergement in codePromo.codePromoHebergements %}
+                                    {% if
+                                    codePromoHebergement.vars.value.fournisseur.id == fournisseurId
+                                    and codePromoHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId
+                                    and codePromoHebergement.vars.value.codePromo.id == codePromoId
+                                    %}
+                                    checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                              name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoHebergements][{{ key }}][hebergement]"
+                    >{{ hebergement.nom }}</label>
+                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoHebergements][{{ key }}][fournisseur]" value="{{ fournisseurId }}"/>
             </div>
         </div>
     </li>

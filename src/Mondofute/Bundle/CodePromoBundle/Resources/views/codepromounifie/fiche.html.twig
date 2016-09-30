@@ -478,27 +478,42 @@
 
     </script>
 
-    <script type="application/javascript">
-        function getFournisseurHebergements(codePromoId , fournisseurId)
+    <script type="text/javascript">
+        function getFournisseurHebergements(codePromoId , fournisseurId, keyCodePromo, siteId)
         {
             if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
             {
                 var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
                     'codePromoId' : '_codePromoId_',
-                    'fournisseurId' : '_fournisseurId_'
+                    'fournisseurId' : '_fournisseurId_',
+                    'siteId' : '_siteId_'
                 }) }}";
 
                 path = path.replace(/_codePromoId_/g, codePromoId);
                 path = path.replace(/_fournisseurId_/g, fournisseurId);
+                path = path.replace(/_siteId_/g, siteId);
 
                 $.ajax( path , {
 
                 }).done(function (data){
+                    data = data.replace(/__keyCodePromo__/g , keyCodePromo);
                     $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').html(data);
                 });
             }
 
         }
+
+        $( document ).ready(function() {
+        {% for keyCodePromo , codePromo in entity.codePromos  %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                {% if fournisseurHebergements[codePromo.id][fournisseurTypeHebergement.id] is not defined %}
+                    getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        });
+
+
 
         function getFournisseurPrestationAnnexes(codePromoId, fournisseurId)
         {
@@ -526,6 +541,12 @@
             listGroup = $('#' + listGroup);
             listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
+
+        {#{% for codePromo in codePromoUnifie.codePromos %}#}
+            {#{% if codePromo.codePromoHebergements is not empty %}#}
+                {#getFournisseurHebergements(codePromo.id , fournisseurId)#}
+            {#{% endif %}#}
+        {#{% endif %}#}
 
     </script>
 
