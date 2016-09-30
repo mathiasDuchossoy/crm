@@ -13,6 +13,7 @@ use HiDev\Bundle\CodePromoBundle\Entity\Usage;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\CodePromoBundle\Entity\Application;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
@@ -22,6 +23,7 @@ use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -719,9 +721,10 @@ class CodePromoUnifieController extends Controller
                             $metadata = $emSite->getClassMetadata(get_class($codePromoHebergementSite));
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
+
                         $codePromoHebergementSite
                             ->setFournisseur($emSite->find(Fournisseur::class , $codePromoHebergement->getFournisseur()))
-                            ->setHebergement($emSite->find(Hebergement::class , $codePromoHebergement->getHebergement()))
+                            ->setHebergement($emSite->getRepository(Hebergement::class )->findOneBy(array('hebergementUnifie' => $codePromoHebergement->getHebergement()->getHebergementUnifie())))
                         ;
                     }
                 }
@@ -739,6 +742,43 @@ class CodePromoUnifieController extends Controller
                     }
                 }
                 // *** fin gestion code promo hebergement ***
+
+                // *** gestion code promo logement ***
+                if (!empty($entity->getCodePromoLogements()) && !$entity->getCodePromoLogements()->isEmpty()) {
+                    /** @var CodePromoLogement $codePromoLogement */
+                    foreach ($entity->getCodePromoLogements() as $codePromoLogement) {
+                        $codePromoLogementSite = $entitySite->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogement) {
+                            return $element->getId() == $codePromoLogement->getId();
+                        })->first();
+                        if (false === $codePromoLogementSite) {
+                            $codePromoLogementSite = new CodePromoLogement();
+                            $entitySite->addCodePromoLogement($codePromoLogementSite);
+                            $codePromoLogementSite
+                                ->setId($codePromoLogement->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($codePromoLogementSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        $codePromoLogementSite
+                            ->setLogement($emSite->getRepository(Logement::class )->findOneBy(array('logementUnifie' => $codePromoLogement->getLogement()->getLogementUnifie())))
+                        ;
+                    }
+                }
+
+                if (!empty($entitySite->getCodePromoLogements()) && !$entitySite->getCodePromoLogements()->isEmpty()) {
+                    /** @var CodePromoLogement $codePromoLogement */
+                    foreach ($entitySite->getCodePromoLogements() as $codePromoLogementSite) {
+                        $codePromoLogement = $entity->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogementSite) {
+                            return $element->getId() == $codePromoLogementSite->getId();
+                        })->first();
+                        if (false === $codePromoLogement) {
+//                            $entitySite->removeCodePromoLogement($codePromoLogementSite);
+                            $emSite->remove($codePromoLogementSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo logement ***
 
                 $entityUnifieSite
                     ->setCode($entityUnifie->getCode());
@@ -799,7 +839,6 @@ class CodePromoUnifieController extends Controller
      */
     public function editAction(Request $request, CodePromoUnifie $codePromoUnifie)
     {
-//        dump($codePromoUnifie->getCodePromos()->first()->getCodePromoApplications());
         /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -991,10 +1030,25 @@ class CodePromoUnifieController extends Controller
             // *** gestion code promo hebergement ***
             $this->gestionCodePromoHebergement($codePromoUnifie);
 
+            /** @var CodePromoHebergement $originalCodePromoHebergement */
             foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
                 $originalCodePromoHebergementSites = $originalCodePromoHebergements->get($codePromo->getSite()->getId());
                 foreach ($originalCodePromoHebergementSites as $originalCodePromoHebergement) {
                     if (false === $codePromo->getCodePromoHebergements()->contains($originalCodePromoHebergement)) {
+                        $em->detach($originalCodePromoHebergement);
+                        $originalCodePromoHebergement = $em->find(CodePromoHebergement::class , $originalCodePromoHebergement);
+                        $hebergementUnifieId = $originalCodePromoHebergement->getHebergement()->getHebergementUnifie()->getId();
+                        $em->merge($originalCodePromoHebergement);
+                        $logements  = new ArrayCollection($em->getRepository(Logement::class)->findByFournisseurHebergement($originalCodePromoHebergement->getFournisseur()->getId(), $hebergementUnifieId , $codePromo->getSite()->getId()));
+                        /** @var CodePromoLogement $codePromoLogement */
+                        foreach ($codePromo->getCodePromoLogements() as $codePromoLogement)
+                        {
+                            if($logements->contains($codePromoLogement->getLogement())){
+                                $codePromo->getCodePromoLogements()->removeElement($codePromoLogement);
+                                $em->remove($codePromoLogement);
+                            }
+                        }
+                        $codePromo->getCodePromoHebergements()->removeElement($originalCodePromoHebergement);
                         $em->remove($originalCodePromoHebergement);
                     }
                 }
@@ -1037,10 +1091,30 @@ class CodePromoUnifieController extends Controller
      */
     public function gestionCodePromoLogement($codePromoUnifie)
     {
+        $em = $this->getDoctrine()->getManager();
         /** @var CodePromo $codePromo */
         foreach ($codePromoUnifie->getCodePromos() as $codePromo)
         {
-//            foreach ($codePromo-)
+            /** @var CodePromoHebergement $codePromoHebergement */
+            foreach ($codePromo->getCodePromoHebergements() as $codePromoHebergement)
+            {
+                $hebergementUnifieId = $codePromoHebergement->getHebergement()->getHebergementUnifie()->getId();
+                $logements  = $em->getRepository(Logement::class)->findByFournisseurHebergement($codePromoHebergement->getFournisseur()->getId(), $hebergementUnifieId , $codePromo->getSite()->getId());
+                foreach ($logements as $logement)
+                {
+                    if (false === $codePromo->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($logement)
+                        {
+                            return $element->getLogement() == $logement;
+                        })->first())
+                    {
+                        $codePromoLogement = new CodePromoLogement();
+                        $codePromo
+                            ->addCodePromoLogement($codePromoLogement)
+                        ;
+                        $codePromoLogement->setLogement($logement);
+                    }
+                }
+            }
         }
     }
 
