@@ -145,7 +145,7 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
             ->from('MondofuteHebergementBundle:HebergementUnifie' , 'hebergementUnifie')
-            ->select('hebergementUnifie.id  hebergementUnifieId, traductions.nom')
+            ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
             ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
             ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
             ->join('hebergementUnifie.hebergements' , 'hebergements')

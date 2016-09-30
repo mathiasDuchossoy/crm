@@ -6,8 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
-use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
-use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoClient;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -40,17 +39,21 @@ class CodePromo extends BaseCodePromo
      */
     private $actifSite = true;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $codePromoClients;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $codePromoApplications;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $codePromoFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $codePromoHebergements;
 
     public function __construct()
     {
@@ -59,6 +62,7 @@ class CodePromo extends BaseCodePromo
         $this->codePromoClients = new ArrayCollection();
         $this->codePromoApplications = new ArrayCollection();
         $this->codePromoFournisseurs = new ArrayCollection();
+        $this->codePromoHebergements = new ArrayCollection();
     }
 
     /**
@@ -213,7 +217,7 @@ class CodePromo extends BaseCodePromo
     /**
      * Get codePromoClients
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCodePromoClients()
     {
@@ -247,7 +251,7 @@ class CodePromo extends BaseCodePromo
     /**
      * Get codePromoApplications
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCodePromoApplications()
     {
@@ -281,10 +285,44 @@ class CodePromo extends BaseCodePromo
     /**
      * Get codePromoFournisseurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCodePromoFournisseurs()
     {
         return $this->codePromoFournisseurs;
+    }
+
+    /**
+     * Add codePromoHebergement
+     *
+     * @param CodePromoHebergement $codePromoHebergement
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoHebergement(CodePromoHebergement $codePromoHebergement)
+    {
+        $this->codePromoHebergements[] = $codePromoHebergement->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoHebergement
+     *
+     * @param CodePromoHebergement $codePromoHebergement
+     */
+    public function removeCodePromoHebergement(CodePromoHebergement $codePromoHebergement)
+    {
+        $this->codePromoHebergements->removeElement($codePromoHebergement);
+    }
+
+    /**
+     * Get codePromoHebergements
+     *
+     * @return Collection
+     */
+    public function getCodePromoHebergements()
+    {
+        return $this->codePromoHebergements;
     }
 }

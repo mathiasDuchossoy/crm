@@ -1,0 +1,19 @@
+Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CodePromoApplicationBundle\Repository\CodePromoLogementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+        codePromo:
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+            inversedBy: codePromoFournisseurs
+    lifecycleCallbacks: {  }

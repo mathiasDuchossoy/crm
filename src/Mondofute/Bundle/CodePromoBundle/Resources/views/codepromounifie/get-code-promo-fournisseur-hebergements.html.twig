@@ -4,7 +4,7 @@
         <div class="checkbox">
             <div class="col-sm-1"></div>
             <div class="col-sm-11">
-                <label><input type="checkbox" value="{{ hebergement.hebergementUnifieId }}"
+                <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
                               {#name="codePromoHebergements[{{ codePromoId }}][{{ fournisseurId }}][]"#}
                             {% if codePromo.codePromoHebergements is defined %}
                                 {% for codePromoHebergement in codePromo.codePromoHebergements %}

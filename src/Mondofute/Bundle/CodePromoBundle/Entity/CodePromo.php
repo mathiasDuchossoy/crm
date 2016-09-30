@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -54,6 +55,10 @@ class CodePromo extends BaseCodePromo
      * @var Collection
      */
     private $codePromoHebergements;
+    /**
+     * @var Collection
+     */
+    private $codePromoLogements;
 
     public function __construct()
     {
@@ -63,6 +68,7 @@ class CodePromo extends BaseCodePromo
         $this->codePromoApplications = new ArrayCollection();
         $this->codePromoFournisseurs = new ArrayCollection();
         $this->codePromoHebergements = new ArrayCollection();
+        $this->codePromoLogements = new ArrayCollection();
     }
 
     /**
@@ -324,5 +330,39 @@ class CodePromo extends BaseCodePromo
     public function getCodePromoHebergements()
     {
         return $this->codePromoHebergements;
+    }
+
+    /**
+     * Add codePromoLogement
+     *
+     * @param CodePromoLogement $codePromoLogement
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoLogement(CodePromoLogement $codePromoLogement)
+    {
+        $this->codePromoLogements[] = $codePromoLogement->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoLogement
+     *
+     * @param CodePromoLogement $codePromoLogement
+     */
+    public function removeCodePromoLogement(CodePromoLogement $codePromoLogement)
+    {
+        $this->codePromoLogements->removeElement($codePromoLogement);
+    }
+
+    /**
+     * Get codePromoLogements
+     *
+     * @return Collection
+     */
+    public function getCodePromoLogements()
+    {
+        return $this->codePromoLogements;
     }
 }
