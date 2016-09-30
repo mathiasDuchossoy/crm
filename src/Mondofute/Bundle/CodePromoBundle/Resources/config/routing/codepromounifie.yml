@@ -29,11 +29,11 @@ codepromo_get_clients:
     methods:  GET
 
 codepromo_get_fournisseur_hebergements:
-    path:     /getfournisseurhebergements/{fournisseurId}
+    path:     /getfournisseurhebergements/{codePromoId}/{fournisseurId}
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurHebergements"}
     methods:  GET
 
 codepromo_get_fournisseur_prestation_annexes:
-    path:     /getfournisseurprestationannexes/{fournisseurId}
+    path:     /getfournisseurprestationannexes/{codePromoId}/{fournisseurId}
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurPrestationAnnexes"}
     methods:  GET
