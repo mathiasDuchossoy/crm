@@ -96,6 +96,13 @@ class CodePromoType extends AbstractType
                     'label' => 'Code promo fournisseurs',
                 )
             )
+            ->add('codePromoHebergements', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoHebergementType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo hebergements',
+                )
+            )
         ;
     }
     

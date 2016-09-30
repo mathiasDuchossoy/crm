@@ -155,6 +155,9 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('fournisseurId' , $fournisseurId)
             ->andWhere('langue.code = :locale')
             ->setParameter('locale' , $locale)
+            ->join('hebergements.site' , 'site')
+            ->andWhere('site.id = :site')
+            ->setParameter('site' , $site)
         ;
 
         $result = $q->getQuery()->getResult();
