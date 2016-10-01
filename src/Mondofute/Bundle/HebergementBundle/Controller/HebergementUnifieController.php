@@ -1780,6 +1780,7 @@ class HebergementUnifieController extends Controller
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
+        echo memory_get_peak_usage() . PHP_EOL;
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
         echo memory_get_peak_usage() . PHP_EOL;
