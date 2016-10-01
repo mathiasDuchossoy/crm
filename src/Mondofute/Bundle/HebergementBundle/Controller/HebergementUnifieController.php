@@ -1782,6 +1782,7 @@ class HebergementUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
+        echo memory_get_peak_usage() . PHP_EOL;
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
             $fournisseur = array();
@@ -1809,7 +1810,7 @@ class HebergementUnifieController extends Controller
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
-        echo memory_get_peak_usage();
+        echo memory_get_peak_usage() . PHP_EOL;
         die;
         return new JsonResponse($data);
     }
