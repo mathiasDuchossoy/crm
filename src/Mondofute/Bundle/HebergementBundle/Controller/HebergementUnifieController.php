@@ -1457,10 +1457,8 @@ class HebergementUnifieController extends Controller
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
         $em = $this->getDoctrine()->getManager();
-        echo memory_get_peak_usage() . PHP_EOL;
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
-        echo memory_get_peak_usage() . PHP_EOL;
         /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
             $fournisseur = array();
@@ -1488,8 +1486,6 @@ class HebergementUnifieController extends Controller
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
-        echo memory_get_peak_usage() . PHP_EOL;
-        die;
         return new JsonResponse($data);
     }
 
