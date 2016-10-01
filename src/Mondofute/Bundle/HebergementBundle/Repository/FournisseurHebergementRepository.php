@@ -29,19 +29,19 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
     public function __construct($em, $class)
     {
         parent::__construct($em, $class);
-//        $this->connexion = ;
-        switch ($this->getEntityManager()->getConnection()->getDriver()->getName()) {
-            case 'pdo_mysql':
-                $dsn = 'mysql:dbname=' . $this->getEntityManager()->getConnection()->getParams()['dbname'] . ';host=' . $this->getEntityManager()->getConnection()->getParams()['host'];
-                $user = $this->getEntityManager()->getConnection()->getParams()['user'];
-                $password = $this->getEntityManager()->getConnection()->getParams()['password'];
-                try {
-                    $this->connexion = new \PDO($dsn, $user, $password);
-                } catch (\PDOException $except) {
-                    throw new \Exception('[ERREUR ' . __METHOD__ . '] new PDO : ' . $except->getMessage());
-                }
-                break;
-        }
+        $this->connexion = $this->getEntityManager()->getConnection();
+//        switch ($this->getEntityManager()->getConnection()->getDriver()->getName()) {
+//            case 'pdo_mysql':
+//                $dsn = 'mysql:dbname=' . $this->getEntityManager()->getConnection()->getParams()['dbname'] . ';host=' . $this->getEntityManager()->getConnection()->getParams()['host'];
+//                $user = $this->getEntityManager()->getConnection()->getParams()['user'];
+//                $password = $this->getEntityManager()->getConnection()->getParams()['password'];
+//                try {
+//                    $this->connexion = new \PDO($dsn, $user, $password);
+//                } catch (\PDOException $except) {
+//                    throw new \Exception('[ERREUR ' . __METHOD__ . '] new PDO : ' . $except->getMessage());
+//                }
+//                break;
+//        }
     }
     public function chargerPourStocks($idHebergementUnifie)
     {
