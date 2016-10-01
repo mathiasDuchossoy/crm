@@ -29,7 +29,19 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
     public function __construct($em, $class)
     {
         parent::__construct($em, $class);
-        $this->connexion = $this->getEntityManager()->getConnection();
+//        $this->connexion = ;
+        switch ($this->getEntityManager()->getConnection()->getDriver()->getName()) {
+            case 'pdo_mysql':
+                $dsn = 'mysql:dbname=' . $this->getEntityManager()->getConnection()->getParams()['dbname'] . ';host=' . $this->getEntityManager()->getConnection()->getParams()['host'];
+                $user = $this->getEntityManager()->getConnection()->getParams()['user'];
+                $password = $this->getEntityManager()->getConnection()->getParams()['password'];
+                try {
+                    $this->connexion = new \PDO($dsn, $user, $password);
+                } catch (\PDOException $except) {
+                    throw new \Exception('[ERREUR ' . __METHOD__ . '] new PDO : ' . $except->getMessage());
+                }
+                break;
+        }
     }
 //    public function chargerPourStocks($idHebergementUnifie)
 //    {
@@ -182,10 +194,9 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
     {
         $em = $this->getEntityManager();
         $site = $em->getRepository(Site::class)->findOneBy(array('crm' => true));
-        if(isset($em)){
+        if (isset($em)) {
             unset($em);
         }
-
         $fournisseurHebergements = new ArrayCollection();
         $sql = 'SELECT fh.id, f.id AS fournisseurId, f.enseigne FROM fournisseur_hebergement AS fh LEFT JOIN fournisseur AS f ON f.id=fh.fournisseur_id WHERE fh.hebergement_id=?';
         $this->connexion->beginTransaction();
@@ -193,7 +204,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         if (!$fhStmt) {
 
         } else {
-            $retour = $fhStmt->bindValue(1, $idHebergementUnifie, Type::BIGINT);
+            $retour = $fhStmt->bindValue(1, intval($idHebergementUnifie, 10), \PDO::PARAM_INT);
             if ($retour) {
                 $result = $fhStmt->execute();
                 if (!$result) {
@@ -217,9 +228,9 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                         if (!$lStmt) {
 
                         } else {
-                            $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
+                            $retour = $lStmt->bindValue(1, intval($fh->getId(),10), \PDO::PARAM_INT);
                             if ($retour) {
-                                $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
+                                $retour = $lStmt->bindValue(2, 1, \PDO::PARAM_INT);
                                 if ($retour) {
                                     $result = $lStmt->execute();
                                     if (!$result) {
@@ -241,7 +252,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             if (!$ltStmt) {
 
                                             } else {
-                                                $retour = $ltStmt->bindValue(1, $idLogement, Type::BIGINT);
+                                                $retour = $ltStmt->bindValue(1, intval($idLogement,10), \PDO::PARAM_INT);
                                                 if ($retour) {
                                                     $result = $ltStmt->execute();
                                                     if (!$result) {
@@ -279,7 +290,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             if (!$lpStmt) {
 
                                             } else {
-                                                $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
+                                                $retour = $lpStmt->bindValue(1, intval($idLogement,10), \PDO::PARAM_INT);
                                                 if ($retour) {
                                                     $result = $lpStmt->execute();
                                                     if (!$result) {
@@ -291,13 +302,12 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                                             $logementPeriodeLocatif = new LogementPeriodeLocatif();
                                                             $periode = new Periode();
                                                             $typePeriode = new TypePeriode();
-                                                            $typePeriode->setId((int) $lpResult['type_id']);
+                                                            $typePeriode->setId((int)$lpResult['type_id']);
 //                                                            $periode->setId();
                                                             $periode
-                                                            ->setDebut(new \DateTime($lpResult['debut']))
+                                                                ->setDebut(new \DateTime($lpResult['debut']))
                                                                 ->setFin(new \DateTime($lpResult['fin']))
-                                                                ->setType($typePeriode)->setId($lpResult['periode_id'])
-                                                            ;
+                                                                ->setType($typePeriode)->setId($lpResult['periode_id']);
 
                                                             $logementPeriodeLocatif->setLogement($logement)
                                                                 ->setPeriode($periode)
