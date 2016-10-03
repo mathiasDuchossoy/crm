@@ -39,7 +39,8 @@
     "jms/job-queue-bundle": "dev-master",
     "nucleus/deploybundle": "dev-master",
     "eternicode/bootstrap-datepicker": "1.6.1",
-    "nucleus/managerBDDBundle": "dev-master"
+    "nucleus/managerBDDBundle": "dev-master",
+    "components/bootstrap-datetimepicker": "^2.3"
   },
   "repositories": [
     {

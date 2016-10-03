@@ -165,18 +165,7 @@ class LogementUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($logementUnifie);
             $em->flush();
-            /** @var Logement $logement */
-//            foreach ($logementUnifie->getLogements() as $logement){
-//                $job = new Job('mondofute_logement:associer_periodes_command',
-//                    array(
-//                        'id-logement' => $logement->getId(),
-//                        'id-site' => ,
-//                        'type-periode' => $periode->getType()->getId(),
-//                        'nb-jour' => $periode->getNbJour(),
-//                    ), true, 'periode');
-//                $em->persist($job);
-//                $em->flush();
-//            }
+
             return $this->redirectToRoute('logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
 
@@ -387,6 +376,13 @@ class LogementUnifieController extends Controller
             }
 
             $this->copieVersSites($logementUnifie);
+
+            $job = new Job('creer:prestationAnnexeLogement',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId()
+                ), true, 'prestationAnnexeLogement');
+            $em->persist($job);
+            $em->flush();
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
@@ -1125,6 +1121,12 @@ class LogementUnifieController extends Controller
             
             $this->copieVersSites($logementUnifie , $originalLogementPhotos);
 
+            $job = new Job('edit:prestationAnnexeLogement',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId()
+                ), true, 'prestationAnnexeLogement');
+            $em->persist($job);
+            $em->flush();
 
             if (!empty($photoToRemoveCollection)) {
                 foreach ($photoToRemoveCollection as $item) {

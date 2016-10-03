@@ -35,7 +35,11 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $qb->select('fournisseur')
             ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
             ->where("fournisseur.contient = :contient")
-            ->setParameter('contient', FournisseurContient::PRODUIT);
+            ->setParameter('contient', FournisseurContient::PRODUIT)
+            ->join('fournisseur.types' , 'types')
+            ->andWhere('types.id = :typeId')
+            ->setParameter('typeId' , 9)
+        ;
         if (!empty($enseigne)) {
             $qb->andWhere("fournisseur.enseigne LIKE :enseigne")
 //            ->setParameters(array('contient'=> FournisseurContient::FOURNISSEUR , 'id' => $fournisseurId))
@@ -79,5 +83,20 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return new Paginator($q);
+    }
+
+    public function findFournisseurByContient($contient)
+    {
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fournisseur.id , fournisseur.enseigne')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->where("fournisseur.contient = :contient")
+            ->setParameter('contient', $contient);
+        $qb->orderBy('fournisseur.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
     }
 }

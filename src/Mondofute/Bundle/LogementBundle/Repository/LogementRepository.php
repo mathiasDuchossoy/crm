@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\LogementBundle\Repository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * LogementRepository

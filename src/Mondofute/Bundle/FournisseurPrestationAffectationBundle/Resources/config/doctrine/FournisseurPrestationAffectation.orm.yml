@@ -1,0 +1,23 @@
+Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\FournisseurPrestationAffectation:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\FournisseurPrestationAffectationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+    lifecycleCallbacks: {  }

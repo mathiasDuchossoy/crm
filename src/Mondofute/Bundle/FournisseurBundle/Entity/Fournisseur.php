@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -34,11 +35,11 @@ class Fournisseur extends Moral
 {
     use FournisseurTrait;
 
+    private $id;
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $interlocuteurs;
-
     /**
      * @var FournisseurPasserelle
      */
@@ -67,17 +68,14 @@ class Fournisseur extends Moral
      * @var \Doctrine\Common\Collections\Collection
      */
     private $receptions;
-
     /**
      * @var \Application\Sonata\MediaBundle\Entity\Media
      */
     private $logo;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $listeServices;
-
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -97,6 +95,24 @@ class Fournisseur extends Moral
         $this->remiseClefs = new ArrayCollection();
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
+        $this->prestationAnnexes = new ArrayCollection();
+//        $this->id = $this->setId(parent::getId());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -542,25 +558,11 @@ class Fournisseur extends Moral
     }
 
     /**
-     * Add prestationAnnex
-     *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
-     *
-     * @return Fournisseur
-     */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
-        $this->prestationAnnexes[] = $prestationAnnex;
-
-        return $this;
-    }
-
-    /**
      * Remove prestationAnnex
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
+    public function removePrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
     {
         $this->prestationAnnexes->removeElement($prestationAnnex);
     }
@@ -573,5 +575,40 @@ class Fournisseur extends Moral
     public function getPrestationAnnexes()
     {
         return $this->prestationAnnexes;
+    }
+
+    /**
+     * @param $prestationAnnexes
+     * @return $this
+     */
+    public function setPrestationAnnexes()
+    {
+
+        $newPrestationAnnexes = new ArrayCollection();
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
+        foreach ($this->getPrestationAnnexes() as $prestationAnnex) {
+            $newPrestationAnnexes->set($prestationAnnex->getPrestationAnnexe()->getId(), $prestationAnnex);
+        }
+
+        $this->getPrestationAnnexes()->clear();
+
+        foreach ($newPrestationAnnexes as $prestationAnnex) {
+            $this->addPrestationAnnex($prestationAnnex);
+        }
+        return $this;
+    }
+
+    /**
+     * Add prestationAnnex
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
+     *
+     * @return Fournisseur
+     */
+    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
+    {
+        $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
+
+        return $this;
     }
 }

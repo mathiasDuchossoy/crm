@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 
@@ -86,6 +87,52 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
 
 
         return new Paginator($q);
+    }
+
+
+
+    /**
+     * @param $fournisseurId
+     * @param $hebergementUnifieId
+     * @return ArrayCollection
+     */
+    public function findByFournisseurHebergement($fournisseurId , $hebergementUnifieId){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('logementUnifie , logements, fournisseurHebergement')
+            ->from('MondofuteLogementBundle:LogementUnifie', 'logementUnifie')
+            ->join('logementUnifie.logements', 'logements')
+            ->join('logements.fournisseurHebergement', 'fournisseurHebergement')
+            ->where('fournisseurHebergement.hebergement = :hebergementUnifieId')
+            ->setParameter('hebergementUnifieId' ,$hebergementUnifieId )
+            ->andWhere('fournisseurHebergement.fournisseur = :fournisseurId')
+            ->setParameter('fournisseurId' , $fournisseurId)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    public function getFournisseur($logementUnfieId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $qb->select('fournisseur.id')
+            ->from('MondofuteLogementBundle:LogementUnifie', 'logementUnifie')
+            ->join('logementUnifie.logements', 'logements')
+            ->join('logements.fournisseurHebergement' , 'fournisseurHebergement')
+            ->join('fournisseurHebergement.fournisseur' , 'fournisseur')
+            ->where('logementUnifie.id = :logementUnfieId')
+            ->setParameter('logementUnfieId' , $logementUnfieId)
+            ->groupBy('fournisseur')
+        ;
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+//        dump($result);die;
+
+        return $result;
     }
 
 }

@@ -21,31 +21,19 @@ class PrestationAnnexe
      * @var Collection
      */
     private $traductions;
-
-    /**
-     * @var boolean
-     */
-    private $actif = true;
-    /**
-     * @var PrestationAnnexeUnifie
-     */
-    private $prestationAnnexeUnifie;
-    /**
-     * @var Site
-     */
-    private $site;
     /**
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
-    /**
-     * @var integer
-     */
-    private $type;
+
     /**
      * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
      */
     private $sousFamillePrestationAnnexe;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $fournisseurs;
 
     /**
      * Constructor
@@ -63,6 +51,17 @@ class PrestationAnnexe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -110,78 +109,6 @@ class PrestationAnnexe
     }
 
     /**
-     * Get actif
-     *
-     * @return boolean
-     */
-    public function getActif()
-    {
-        return $this->actif;
-    }
-
-    /**
-     * Set actif
-     *
-     * @param boolean $actif
-     *
-     * @return PrestationAnnexe
-     */
-    public function setActif($actif)
-    {
-        $this->actif = $actif;
-
-        return $this;
-    }
-
-    /**
-     * Get prestationAnnexeUnifie
-     *
-     * @return PrestationAnnexeUnifie
-     */
-    public function getPrestationAnnexeUnifie()
-    {
-        return $this->prestationAnnexeUnifie;
-    }
-
-    /**
-     * Set prestationAnnexeUnifie
-     *
-     * @param PrestationAnnexeUnifie $prestationAnnexeUnifie
-     *
-     * @return PrestationAnnexe
-     */
-    public function setPrestationAnnexeUnifie(PrestationAnnexeUnifie $prestationAnnexeUnifie = null)
-    {
-        $this->prestationAnnexeUnifie = $prestationAnnexeUnifie;
-
-        return $this;
-    }
-
-    /**
-     * Get site
-     *
-     * @return Site
-     */
-    public function getSite()
-    {
-        return $this->site;
-    }
-
-    /**
-     * Set site
-     *
-     * @param Site $site
-     *
-     * @return PrestationAnnexe
-     */
-    public function setSite(Site $site = null)
-    {
-        $this->site = $site;
-
-        return $this;
-    }
-
-    /**
      * Get famillePrestationAnnexe
      *
      * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
@@ -201,30 +128,6 @@ class PrestationAnnexe
     public function setFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe = null)
     {
         $this->famillePrestationAnnexe = $famillePrestationAnnexe;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     *
-     * @return PrestationAnnexe
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -251,5 +154,39 @@ class PrestationAnnexe
         $this->sousFamillePrestationAnnexe = $sousFamillePrestationAnnexe;
 
         return $this;
+    }
+
+    /**
+     * Add fournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     *
+     * @return PrestationAnnexe
+     */
+    public function addFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    {
+        $this->fournisseurs[] = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseur
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     */
+    public function removeFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    {
+        $this->fournisseurs->removeElement($fournisseur);
+    }
+
+    /**
+     * Get fournisseurs
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFournisseurs()
+    {
+        return $this->fournisseurs;
     }
 }

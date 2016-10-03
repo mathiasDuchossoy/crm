@@ -10,13 +10,20 @@
     <section>
         {% block formulaire %}
             {% include '::flashbags.html.twig' %}
+            <div id="alert_type" class="alert alert-danger" role="alert" style="display: none">
+                <p>  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>Vous devez choisir au moins un type.</p>
+            </div>
             {% set countInterlocuteur = 0 %}
 
             {{ form_start(form) }}
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
-                <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a></li>
+                {% if edit is defined %}
+                    <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a>
+                {% endif %}
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="fiche" class="tab-pane fade in active">
@@ -24,20 +31,23 @@
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
                     {{ form_row(form.types) }}
-                    {#{{ form_row(form.typeFournisseurs) }}#}
-                    {#{{ include ('@MondofuteFournisseur/fournisseur/type-fournisseur-widget.html.twig' , { 'form': form.typeFournisseurs }) }}#}
+                    {#<div id="my-popover-container" style="display: none;">#}
+                        {#<div class="alert alert-danger" role="alert">#}
+                            {#<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>#}
+                            {#<span class="sr-only">Error:</span>#}
+                            {#Enter a valid email address#}
+                        {#</div>#}
+                    {#</div>#}
+
                     {{ form_row(form.fournisseurParent) }}
                     {{ form_row(form.contient) }}
-                    {#{{ form_row(form.moyenComs[0] , {'label' : 'Adresse'}) }}#}
-                    {#{{ form_label(form.moyenComs[0]) }}#}
-                    {#{{ dump(form.moyenComs[0]) }}#}
                     {% if form.moyenComs[0] is defined %}
-                    {{ form_row(form.moyenComs[0].code_postal) }}
-                    {{ form_row(form.moyenComs[0].adresse1) }}
-                    {{ form_row(form.moyenComs[0].adresse2) }}
-                    {{ form_row(form.moyenComs[0].adresse3) }}
-                    {{ form_row(form.moyenComs[0].ville) }}
-                    {{ form_row(form.moyenComs[0].pays) }}
+                        {{ form_row(form.moyenComs[0].code_postal) }}
+                        {{ form_row(form.moyenComs[0].adresse1) }}
+                        {{ form_row(form.moyenComs[0].adresse2) }}
+                        {{ form_row(form.moyenComs[0].adresse3) }}
+                        {{ form_row(form.moyenComs[0].ville) }}
+                        {{ form_row(form.moyenComs[0].pays) }}
                     {% endif %}
 
                     {#{{ form_row(form.remiseClefs) }}#}
@@ -240,95 +250,73 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
-                <div id="prestationannexe" class="tab-pane fade in">
-                    {% for famillePrestationAnnexe in famillePrestationAnnexes %}
-                        {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
-                        <div class="panel panel-primary" id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
-                            {% set displayType = false %}
-                            {% for type in fournisseur.types %}
-                                {% if famillePrestationAnnexe.id == type.id %}
-                                    {% set displayType = true %}
-                                {% endif %}
-                            {% endfor %}
-                            {% if displayType == false %}
-                                style="display: none"
-                            {% endif %}
-                        >
-                            <div class="panel-heading">
-                                {% for traduction in famillePrestationAnnexe.traductions %}
-                                    {% if traduction.langue.code == app.request.locale %}
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"
-                                                       onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
-                                                ><h3 class="panel-title"> {{ traduction.libelle }}</h3>
-                                            </label>
-                                        </div>
+                {% if edit is defined %}
+                    <div id="prestationannexe" class="tab-pane fade in">
+                        {% for famillePrestationAnnexe in famillePrestationAnnexes %}
+                            {#{{ dump(famillePrestationAnnexe.prestationAnnexes) }}#}
+                            <div class="panel panel-primary"
+                                 id="famillePrestationAnnexe_{{ famillePrestationAnnexe.id }}"
+                                    {% set displayType = false %}
+                                    {% for type in fournisseur.types %}
+                                        {% if famillePrestationAnnexe.id == type.id %}
+                                            {% set displayType = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if displayType == false %}
+                                        style="display: none"
                                     {% endif %}
-                                {% endfor %}
+                            >
+                                <div class="panel-heading">
+                                    {% for traduction in famillePrestationAnnexe.traductions %}
+                                        {% if traduction.langue.code == app.request.locale %}
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox"
+                                                           onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
+                                                    >
+                                                    <h3 class="panel-title"> {{ traduction.libelle }}</h3>
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="panel-body"
+                                     id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
+                                    {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                                </div>
                             </div>
-                            <div class="panel-body" id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
-                                {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
+
             {{ form_row(form.submit) }}
 
             {% set interlocuteurs %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur} %}
             {% endset %}
-            {#{{ dump(interlocuteurs) }}#}
-            {#{% set interlocuteurs   = form_widget( form.interlocuteurs.vars.prototype.children['interlocuteur'] ) %}#}
-            {#{% set moyenComsAdresse = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse, { 'label' : 'Adresse' }) %}#}
             {% set moyenComsMail %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_mail.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email} %}
             {% endset %}
-            {#{% set moyenComsMail    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email , { 'label' : 'Email' }) %}#}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_email) }}#}
             {% set moyenComsFixe %}
                 {#{% filter escape %}#}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_fixe.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , 'label' : 'Téléphone __number__'} %}
                 {#{% endfilter %}#}
             {% endset %}
-            {#{% set moyenComsFixe    = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telfixe , { 'label' : 'Télephone __number__' }) %}#}
             {% set moyenComsMobile %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_tel_mobile.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile } %}
             {% endset %}
-
             {% set moyenComsAdresse %}
                 {% include('@MondofuteFournisseur/Interlocuteur/fiche_adresse.html.twig') with {'form': form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_adresse} %}
             {% endset %}
-            {#{% set moyenComsMobile  = form_row(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes.nucleus_moyencombundle_telmobile , { 'label' : 'Mobile' }) %}#}
-            {#{{ dump(form.interlocuteurs.vars.prototype.interlocuteur.moyenComs.vars.prototypes) }}#}
-            {#<div id="values-interlocuteurs" style="">#}
-            {#{{ dump(form.interlocuteurs) }}#}
             <div id="values-interlocuteurs" style="display: none">
                 {% for interlocuteur in form.interlocuteurs %}
                     {% include ('@MondofuteFournisseur/Interlocuteur/fiche.html.twig') with {'form': interlocuteur.interlocuteur} %}
-                    {#{% for element in interlocuteur.children %}#}
-                    {#{{ form_widget(element) }}#}
-
-
-                        {#{% for child in element.children %}#}
-                        {#{{ dump(child.vars.name) }}#}
-                        {#{%  if child.vars.name == 'moyenComs' %}#}
-                        {#{{ dump(element.moyenComs) }}#}
-                        {#{% for key , moyenCom in element.moyenComs %}#}
-                        {#{{ dump(   moyenCom.vars.value) }}#}
-                        {#{{ form_row(moyenCom , {'label' : 'test'}) }}#}
-                        {#{{ dump(moyenCom.vars.value | format_args) }}#}
-                        {#{{ form_row(moyenCom , {'label' :'test'}) }}#}
-                        {#{% endfor %}#}
-                        {#{% else %}#}
-                        {#{{ form_row(child) }}#}
-                        {#{% endif %}#}
-                        {#{% endfor %}#}
-
-
-                    {#{% endfor %}#}
                 {% endfor %}
+            </div>
+
+            <div id="values_prestation_annexe" style="display: none">
+                {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -496,6 +484,8 @@
                     </div>
                 </div>
             </div>
+
+            {% include('MondofuteFournisseurBundle:fournisseur:modal-fournisseur-prestation-annexe.html.twig') %}
         {% endblock %}
     </section>
     <section>
@@ -1348,28 +1338,30 @@
                 return false;
             }
         }
-
-        function updatePrestationAnnexe(element){
+    </script>
+    <script type="text/javascript">
+        function updatePrestationAnnexe( fournisseurId , element) {
             $element = $(element);
-            $(element).find('input:checkbox').each(function(){
+            $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
-                if($(this).is(':checked')){
-                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_'}) }}";
+                if ($(this).is(':checked')) {
+                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_','fournisseurId': '_fournisseurId_'}) }}";
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
+                    path = path.replace(/_fournisseurId_/g, fournisseurId);
 //                    if($famillePrestationAnnexe.is(':hidden')) {
-                    if($famillePrestationAnnexe.css('display') == 'none') {
+                    if ($famillePrestationAnnexe.css('display') == 'none') {
                         $.ajax(path,
-                            {
-                                method: 'GET'
-                            }
+                                {
+                                    method: 'GET'
+                                }
                         ).done(function (data) {
                             $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
                             $famillePrestationAnnexe.show();
                         });
                     }
                 }
-                else{
+                else {
                     $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
                     $famillePrestationAnnexe.hide();
                     $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
@@ -1377,11 +1369,353 @@
             });
         }
 
-        function checkPrestatioAnnexe(element , test){
+        function checkPrestatioAnnexe(element, test) {
             var $element = $(element);
             $test = $('#' + test);
             $test.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
+        function displayEditPrestationAnnexe(element){
+            var $element = $(element);
+            var prestationAnnexeId = $element.val();
+            var fournisseurId = $element.data('fournisseur_id');
+            var $form_prestation_annexe =$("#form_prestation_annexe");
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            $editPrestationAnnexe   = $('#edit_prestation_annexe_' + prestationAnnexeId);
+            if ($element.is(':checked')) {
+                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
+                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+//
+                    $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                    ).done(function (data) {
+//                        $("#values_prestation_annexe").append(data);
+                        $form_prestation_annexe.html(data);
+                        $prestationAnnexeModal.modal();
+                        $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                            return enregisterPrestationAnnexe(prestationAnnexeId);
+                        })
+                    });
+                }
+                $editPrestationAnnexe.show();
+            }else{
+                $editPrestationAnnexe.hide();
+                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+            }
+        }
+
+        $(".chekbox_prestation_annexe").each(function(index, element){
+            displayEditPrestationAnnexe(element);
+        });
+
+        function getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_' , 'fournisseurId': '_fournisseurId_'}) }}";
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            return path;
+        }
+
+        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+            var $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
+            var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            var $form_prestation_annexe =$("#form_prestation_annexe");
+            if($fournisseurPrestationAnnexe.length > 0){
+                $form_prestation_annexe.html($fournisseurPrestationAnnexe);
+            }else{
+                $.ajax(path,
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
+                ).done(function (data) {
+                    $form_prestation_annexe.html(data);
+                });
+            }
+            $prestationAnnexeModal.modal();
+            $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                return enregisterPrestationAnnexe(prestationAnnexeId);
+            })
+        }
+
+        function enregisterPrestationAnnexe(prestationAnnexeId){
+            var $myForm = $('#form_prestation_annexe');
+            if (!$myForm[0].checkValidity()) {
+                $('<input type="submit">').hide().appendTo($myForm).click().remove();
+                return false;
+            }
+            else {
+                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+//                $('#prestationAnnexeModal').modal('hide');
+                return true;
+            }
+        }
+
+        function displayCapaciteSejour(elementId){
+            $element = $("#" +elementId);
+            $buttonEdit     = $("#" +elementId + '_edit');
+            $buttonRemove = $("#" +elementId + '_remove');
+            if($element.is(":visible")){
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function(index,input){
+                    $(input).val('');
+                })
+            }
+            else{
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
+        }
+
+    </script>
+    <script>
+
+        function addTagForm($collectionHolder, $newLinkLi , name) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+//            var newForm = prototype.replace(/__name__/g, index);
+            var regex = new RegExp(name, 'g');
+            var newForm = prototype.replace( regex , index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+            addTagFormDeleteLink($newFormLi);
+            periodevaliditeDatetimePicker();
+        }
+
+        function addTagFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $tagFormLi.append($removeFormA);
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $tagFormLi.remove();
+            });
+        }
+
+        {% for prestationAnnexe in fournisseur.prestationAnnexes %}
+            {% set index = prestationAnnexe.prestationAnnexe.id %}
+
+            var $collectionHolder{{ index }};
+            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
+            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
+            $collectionHolder{{ index }}.find('.li_tarif').each(function() {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
+            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
+            $addTagLink{{ index }}.on('click', function(e) {
+                e.preventDefault();
+                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            });
+
+            {% for key, tarif in prestationAnnexe.tarifs %}
+                {% set name = key %}
+                var $collectionHolderperiode_validite{{ name }}{{ index }};
+                var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+                var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
+                $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
+                    addTagFormDeleteLink($(this));
+                });
+                $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
+                $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
+                $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+                    e.preventDefault();
+                    addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+                });
+            {% endfor %}
+
+        {% endfor %}
+
+        function periodevaliditeDatetimePicker(){
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+//                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
+            });
+        }
+        periodevaliditeDatetimePicker();
+
+    </script>
+    <script  type="text/javascript">
+        $('form[name=fournisseur]').bind('submit', function(e){
+            var $field = $('#fournisseur_types');
+            var val = [];
+            $("input[name='fournisseur[types][]']:checked").each(function(i){
+                val[i] = $(this).val();
+            });
+            if (val.length === 0) {
+                $('#alert_type').show();
+                e.preventDefault();
+            }
+        });
+
+        function chargerAffectations(element){
+            $element = $(element);
+            prestationAnnexeId = $element.data('prestation-annexe-id');
+            $radioVal = $element.find('input:checked').val();
+            var elementId = $element.attr('id');
+            var fournisseurId = '{{ fournisseur.id }}';
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation' ,{
+                'affectation': '_affectation_' ,
+                'prestationAnnexeId' : '_prestationAnnexeId_',
+                'prestationAnnexeId' : '_prestationAnnexeId_',
+                'fournisseurId': '_fournisseurId_' ,
+            }) }}";
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            switch ($radioVal){
+                case '1':
+                    path = path.replace(/_affectation_/g, 'station');
+                    break;
+                case '2':
+                    path = path.replace(/_affectation_/g, 'fournisseur');
+                    break;
+                default:
+                    break;
+            }
+
+            $.ajax(path,
+                {
+                    async: false,
+                    method: 'GET'
+                }
+            ).done(function (data) {
+                $('#div_affectation_'+elementId).html(data);
+            });
+        }
+
+        function chargerAffectationStationFournisseurs(prestationAnnexeId, siteId , stationId){
+            var path ;
+
+            var templateStationId = '';
+            var fournisseurId = '{{ fournisseur.id }}';
+
+            path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur' ,{
+                'prestationAnnexeId' : '_prestationAnnexeId_',
+                'siteId': '_siteId_' ,
+                'stationId': '_stationId_' ,
+                'fournisseurId': '_fournisseurId_' ,
+            }) }}";
+
+            path = path.replace(/_stationId_/g, stationId);
+
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            if($('#collapse_station_'+prestationAnnexeId+"_"+siteId+"_"+ stationId  ).is(':hidden')){
+                $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+                    $('#collapse_station_'+prestationAnnexeId+"_"+siteId+"_"+ stationId  ).html(data);
+                });
+            }
+        }
+
+        function chargerHebergements(prestationAnnexeId, siteId , fournisseurId , stationId  ){
+//            $('#collapse_fournisseur_' + fournisseurId).collapse();
+            var path ;
+
+            var templateStationId = '';
+
+            var fournisseurCurrentId = '{{ fournisseur.id }}';
+            if(stationId !== undefined && stationId !== null){
+
+                path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
+                    'prestationAnnexeId' : '_prestationAnnexeId_',
+                    'siteId': '_siteId_' ,
+                    'fournisseurId': '_fournisseurId_' ,
+                    'stationId': '_stationId_' ,
+                    'fournisseurCurrentId': '_fournisseurCurrentId_' ,
+                }) }}";
+
+                path = path.replace(/_stationId_/g, stationId);
+                path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
+                templateStationId = stationId + "_";
+            }
+            else {
+                path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
+                    'prestationAnnexeId' : '_prestationAnnexeId_',
+                    'siteId': '_siteId_' ,
+                    'fournisseurId': '_fournisseurId_',
+                    'fournisseurCurrentId': '_fournisseurCurrentId_' ,
+                }) }}";
+            }
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
+            if($('#collapse_fournisseur_'+prestationAnnexeId+"_"+siteId+"_"+ templateStationId + ''+ fournisseurId ).is(':hidden')){
+                $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+                    $('#list_hebergements_'+prestationAnnexeId+"_"+siteId+"_"+ templateStationId +''+fournisseurId).html(data);
+                });
+            }
+        }
+
+    </script>
+    <script type="text/javascript">
+        function manageSelectionPrestationAnnexeSite(prestationAnnexeId , siteId)
+        {
+            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '[]"]');
+            var sitesCked  = [];
+            $(sitesCkbox).each(function (index , e){
+                if($(this).is(':checked')){
+                    sitesCked.push($(this).val());
+                }
+            });
+            if(sitesCked.length == 1){
+                return false;
+            }
+
+            $contenuOngletSite = $('#data_site_'+prestationAnnexeId+'_'+ siteId );
+
+            $(sitesCkbox).each(function (index , e){
+                $e = $(e);
+                if (!$(this).is(':checked')) {
+                    if ($('#onglet_data_site_'+prestationAnnexeId+'_'+ $e.val() ).hasClass('active')) {
+                        $("[id^='data_site_" + prestationAnnexeId +"_]").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+                        });
+                    }
+                    $("#onglet_data_site_" + prestationAnnexeId +"_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+                    $("#onglet_data_site_" + prestationAnnexeId +"_" + $(this).attr('data-site-id')).show();
+                }
+            });
+
+            var siteIdFirst = $('[id^="siteAEnregistrer_'+prestationAnnexeId+'_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + prestationAnnexeId +"_" + siteIdFirst + " a").tab('show');
+
+            return true;
+        }
     </script>
 {% endblock %}

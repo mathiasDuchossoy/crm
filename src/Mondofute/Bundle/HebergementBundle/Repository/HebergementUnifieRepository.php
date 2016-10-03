@@ -53,4 +53,90 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+
+    public function findByFournisseur($fournisseurId , $locale, $site = 1 , $stationId = null){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId , stationUnifie.id stationUnifieId')
+//        $qb->select('hebergementUnifie')
+            ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergementUnifie.hebergements' , 'hebergements')
+            ->join('hebergements.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->join('hebergements.site' , 'site')
+            ->join('hebergements.station' , 'station')
+            ->join('station.stationUnifie' , 'stationUnifie')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournisseurId)
+            ->andWhere('langue.code = :langue')
+            ->setParameter('langue', $locale)
+            ->andWhere('site.id = :site')
+            ->setParameter('site', $site)
+        ;
+
+        if (!empty($stationId))
+        {
+            $qb
+                ->andWhere('stationUnifie.id = :stationId')
+                ->setParameter('stationId' , $stationId)
+            ;
+        }
+
+        $qb->orderBy('hebergementUnifie.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
+
+//    public function findByFournisseur($fournisseurId , $locale){
+//        $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb->select('hebergementUnifie , hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId')
+////        $qb->select('hebergementUnifie')
+//            ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
+//            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+//            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+//            ->join('hebergementUnifie.hebergements' , 'hebergements')
+//            ->join('hebergements.traductions' , 'traductions')
+//            ->join('traductions.langue' , 'langue')
+//            ->join('hebergements.site' , 'site')
+//            ->where('fournisseur.id = :fournisseurId')
+//            ->setParameter('fournisseurId', $fournisseurId)
+//            ->andWhere('langue.code = :langue')
+//            ->setParameter('langue', $locale)
+//        ;
+//        $qb->orderBy('hebergementUnifie.id', 'ASC');
+//
+//        $result = $qb->getQuery()->getResult();
+////        dump($result);die;
+//        return $result;
+//    }
+
+
+    public function findHebergementUnifiesDuFournisseur($fournisseurId ){
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('hebergementUnifie , hebergements')
+//        $qb->select('hebergementUnifie')
+            ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergementUnifie.hebergements' , 'hebergements')
+            ->join('hebergements.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->join('hebergements.site' , 'site')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournisseurId)
+//            ->andWhere('langue.code = :langue')
+//            ->setParameter('langue', $locale)
+//            ->andWhere('site.id = :site')
+//            ->setParameter('site', $site)
+        ;
+        $qb->orderBy('hebergementUnifie.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
 }

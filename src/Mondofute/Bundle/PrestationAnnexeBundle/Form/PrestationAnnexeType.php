@@ -5,7 +5,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\Type;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\SousFamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -14,6 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PrestationAnnexeType extends AbstractType
@@ -57,23 +59,22 @@ class PrestationAnnexeType extends AbstractType
 //                },
 //                'multiple' => true
 //            ))
-            ->add('type', ChoiceType::class, array(
-                'choices' => array(
-                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
-                    Type::getLibelle(Type::Quantite) => Type::Quantite,
-                    Type::getLibelle(Type::Forfait) => Type::Forfait,
-                ),
-                "placeholder" => " --- choisir un type ---",
-                'choices_as_values' => true,
-                'label' => 'type',
-                'translation_domain' => 'messages',
-//                'expanded' => true,
-                'required' => true,
-            ))
+//            ->add('type', ChoiceType::class, array(
+//                'choices' => array(
+//                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
+//                    Type::getLibelle(Type::Quantite) => Type::Quantite,
+//                    Type::getLibelle(Type::Forfait) => Type::Forfait,
+//                ),
+//                "placeholder" => " --- choisir un type ---",
+//                'choices_as_values' => true,
+//                'label' => 'type',
+//                'translation_domain' => 'messages',
+////                'expanded' => true,
+//                'required' => true,
+//            ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
             ))
-            ->add('site', HiddenType::class, array('mapped' => false))
         ;
     }
     
@@ -87,4 +88,27 @@ class PrestationAnnexeType extends AbstractType
             'locale' => 'fr_FR',
         ));
     }
+
+    /**
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $entitySelect = 'sousFamillePrestationAnnexe';
+        /** @var FormView $viewChild */
+        $choices = $view->children[$entitySelect]->vars['choices'];
+
+        $newChoices = array();
+        foreach ($choices as $key => $choice) {
+            $famillePrestationAnnexeId = !empty($choice->data->getFamillePrestationAnnexe()) ? $choice->data->getFamillePrestationAnnexe()->getId() : '';
+            $choice->attr = array(
+                'data-famille_prestation_annexe_id' => $famillePrestationAnnexeId
+            );
+            $newChoices[$key] = $choice;
+        }
+        $view->children[$entitySelect]->vars['choices'] = $newChoices;
+    }
+
 }

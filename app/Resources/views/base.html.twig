@@ -5,7 +5,7 @@
     <title>{% block title %}{{ 'CRM Mondofute !' }}{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"/>
     {% block stylesheets %}
-        {% stylesheets 'css/bootstrap.css' 'css/menu.css' 'css/bootstrap-datepicker.css' %}
+        {% stylesheets 'css/bootstrap.css' 'css/menu.css' 'css/bootstrap-datepicker.css' 'css/bootstrap-datetimepicker.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
         {% endstylesheets %}
     {% endblock %}
@@ -33,7 +33,9 @@
     {% javascripts
     'js/jquery.min.js'
     'js/bootstrap.js'
-    'js/bootstrap-datepicker.js' %}
+    'js/bootstrap-datepicker.js'
+    'js/bootstrap-datetimepicker.js'
+    %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">

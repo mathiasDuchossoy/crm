@@ -70,6 +70,7 @@ class FournisseurHebergement
         $this->telMobile = new TelMobile();
         $this->telMobile->setDateCreation();
         $this->receptions = new ArrayCollection();
+        $this->logements = new ArrayCollection();
     }
 
     /**

@@ -1,0 +1,14 @@
+Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\PrestationAnnexeLogementRepository
+    associationOverride:
+        fournisseurPrestationAnnexe:
+            inversedBy: prestationAnnexeLogements
+    manyToOne:
+        prestationAnnexeLogementUnifie:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie
+            inversedBy: prestationAnnexeLogements
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+    lifecycleCallbacks: {  }

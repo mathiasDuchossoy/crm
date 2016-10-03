@@ -165,7 +165,6 @@ class LogementUnifieController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($logementUnifie);
             $em->flush();
-<<<<<<< a44fe06b24259faea788bad5fdf368392610aaf0
             /** @var Logement $logement */
 //            foreach ($logementUnifie->getLogements() as $logement){
 //                $job = new Job('mondofute_logement:associer_periodes_command',
@@ -178,13 +177,6 @@ class LogementUnifieController extends Controller
 //                $em->persist($job);
 //                $em->flush();
 //            }
-||||||| merged common ancestors
-
-=======
-            foreach ($logementUnifie->getLogements() as $logement){
-
-            }
->>>>>>> debut association dans logement de logement/periode
             return $this->redirectToRoute('logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
 
@@ -380,6 +372,7 @@ class LogementUnifieController extends Controller
             
             $em->persist($logementUnifie);
             $em->flush();
+<<<<<<< 0040ebf452d43e13f47e01bdfab87b6dc9b65b5c
             foreach ($sites as $site){
                 if($site->getCrm()==1){
                     foreach ($logementUnifie->getLogements() as $logement) {
@@ -394,7 +387,20 @@ class LogementUnifieController extends Controller
                 }
             }
 
+||||||| merged common ancestors
+=======
+
+>>>>>>> job queue mis en place pour les prestationAnnexeLogement
             $this->copieVersSites($logementUnifie);
+
+
+
+            $job = new Job('creer:prestationAnnexeLogement',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId()
+                ), true, 'prestationAnnexeLogement');
+            $em->persist($job);
+            $em->flush();
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
@@ -434,9 +440,11 @@ class LogementUnifieController extends Controller
                     'fournisseur' => $logement->getFournisseurHebergement()->getFournisseur(),
                     'hebergement' => $logement->getFournisseurHebergement()->getHebergement()
                 ));
+                $edit = true;
                 if (empty($entity->getId()) || is_null($logementSite = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $entity->getId())))) {
                     $logementSite = new Logement();
                     $entitySite->addLogement($logementSite);
+                    $edit=false;
                 }
                 $logementSite->setActif($logement->getActif())
                     ->setAccesPMR($logement->getAccesPMR())
@@ -576,15 +584,17 @@ class LogementUnifieController extends Controller
                 
                 $emSite->persist($entitySite);
                 $emSite->flush();
-                $em=$this->getDoctrine()->getManager();
-                foreach ($entitySite->getLogements() as $logement) {
-                    $job = new Job('mondofute_logement:associer_periodes_command',
-                        array(
-                            'id-logement' => $logement->getId(),
-                            'id-site' => $site->getId()
-                        ), true, 'periode');
-                    $em->persist($job);
-                    $em->flush();
+                if(!$edit) {
+                    $em = $this->getDoctrine()->getManager();
+                    foreach ($entitySite->getLogements() as $logement) {
+                        $job = new Job('mondofute_logement:associer_periodes_command',
+                            array(
+                                'id-logement' => $logement->getId(),
+                                'id-site' => $site->getId()
+                            ), true, 'periode');
+                        $em->persist($job);
+                        $em->flush();
+                    }
                 }
 //                $em->persist($job);
 //                $em->flush();
