@@ -27,8 +27,13 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
 
         if($stationExists){
             $qb
-//                ->join('prestationAnnexeFournisseurs.station' , 'station')
                 ->andWhere('prestationAnnexeFournisseurs.station IS NOT NULL')
+            ;
+        }
+        else
+        {
+            $qb
+                ->andWhere('prestationAnnexeFournisseurs.station IS NULL')
             ;
         }
 

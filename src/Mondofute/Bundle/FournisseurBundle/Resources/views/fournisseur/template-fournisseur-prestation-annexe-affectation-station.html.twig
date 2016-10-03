@@ -100,6 +100,7 @@
                         {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
                             {% if
                             prestationAnnexeFournisseur.vars.value.actif == true
+                            and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
                             and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId
                             and prestationAnnexeFournisseur.vars.value.site.id == site.id
                             %}

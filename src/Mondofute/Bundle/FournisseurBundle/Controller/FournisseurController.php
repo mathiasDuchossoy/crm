@@ -740,7 +740,7 @@ class FournisseurController extends Controller
                         }
                     }
 
-                    if ($prestationAnnex->getModeAffectation() == 1) {
+                    if ($prestationAnnex->getModeAffectation() == 1) { // station
 
                         $prestationsAnnexeStationFournisseursOriginalSites = $originalPrestationsAnnexeFournisseurs->filter(function (PrestationAnnexeFournisseur $element) use ($prestationAnnex) {
                             return $element->getFournisseurPrestationAnnexe() == $prestationAnnex;
@@ -758,7 +758,7 @@ class FournisseurController extends Controller
                             }
                         }
 //                        die;
-                    } else {
+                    } else { // fournisseur
                         $prestationsAnnexeFournisseursOriginalSites = $originalPrestationsAnnexeFournisseurs->filter(function (PrestationAnnexeFournisseur $element) use ($prestationAnnex) {
                             return $element->getFournisseurPrestationAnnexe() == $prestationAnnex;
                         });
@@ -1029,6 +1029,7 @@ class FournisseurController extends Controller
                     }
                 }
                 // *** fin gestion des prestations annexe affectation fournisseur***
+
                 // *** gestion des prestations annexe affectation hebergement***
                 if (!empty($prestation_annexe_affectation_hebergements[$prestationAnnex->getPrestationAnnexe()->getId()])) {
                     // on récupère les affectations de de la fournisseurPrestationAnnexe
