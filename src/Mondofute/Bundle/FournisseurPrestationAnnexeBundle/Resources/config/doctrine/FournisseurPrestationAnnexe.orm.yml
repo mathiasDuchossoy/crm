@@ -56,6 +56,10 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['persist','remove']
+        fournisseurPrestationAnnexeStocks:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur

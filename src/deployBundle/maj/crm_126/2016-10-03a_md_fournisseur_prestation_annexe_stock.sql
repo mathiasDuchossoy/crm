@@ -1,0 +1,5 @@
+
+CREATE TABLE fournisseur_prestation_annexe_stock (id INT UNSIGNED AUTO_INCREMENT NOT NULL, fournisseur_prestation_annexe_id INT UNSIGNED DEFAULT NULL, periode_id INT DEFAULT NULL, logement_id INT UNSIGNED DEFAULT NULL, stock INT UNSIGNED NOT NULL, INDEX IDX_43AC36CFDF2F2EF6 (fournisseur_prestation_annexe_id), INDEX IDX_43AC36CFF384C1CF (periode_id), INDEX IDX_43AC36CF58ABF955 (logement_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE fournisseur_prestation_annexe_stock ADD CONSTRAINT FK_43AC36CFDF2F2EF6 FOREIGN KEY (fournisseur_prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
+ALTER TABLE fournisseur_prestation_annexe_stock ADD CONSTRAINT FK_43AC36CFF384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+ALTER TABLE fournisseur_prestation_annexe_stock ADD CONSTRAINT FK_43AC36CF58ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id);

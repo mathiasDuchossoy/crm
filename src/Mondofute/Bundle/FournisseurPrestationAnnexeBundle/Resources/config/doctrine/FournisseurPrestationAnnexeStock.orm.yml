@@ -1,0 +1,28 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeStockRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        stock:
+            type: integer
+            options:
+                unsigned: true
+    manyToOne:
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            inversedBy: fournisseurPrestationAnnexeStocks
+#        logementPeriode:
+#            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
+        periode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+    lifecycleCallbacks: {  }
