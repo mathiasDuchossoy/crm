@@ -1,15 +1,30 @@
-{% for prestationAnnexe in prestationAnnexes %}
+{% for key, fournisseurPrestationAnnexe in fournisseurPrestationAnnexes %}
     <li class="list-group-item">
         <div class="checkbox">
             <div class="col-sm-1"></div>
             <div class="col-sm-11">
-                <label><input type="checkbox" value="">{{ hebergement.nom }}</label>
+                <label><input type="checkbox" value="{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"
+                            {#name="codePromoFournisseurPrestationAnnexes[{{ codePromoId }}][{{ fournisseurId }}][]"#}
+                            {% if codePromo.codePromoFournisseurPrestationAnnexes is defined %}
+                                {% for codePromofournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
+                                    {% if
+                                    codePromofournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseurId
+                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.fournisseurPrestationAnnexeUnifie.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeUnifieId
+                                    and codePromofournisseurPrestationAnnexe.vars.value.codePromo.id == codePromoId
+                                    %}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                              name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurPrestationAnnexes][{{ key }}][fournisseurPrestationAnnexe]"
+                    >{{ fournisseurPrestationAnnexe.libelle }}</label>
+                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurPrestationAnnexes][{{ key }}][fournisseur]" value="{{ fournisseurId }}"/>
             </div>
         </div>
     </li>
 {% endfor %}
-{% if prestationAnnexes is empty %}
+{% if fournisseurPrestationAnnexes is empty %}
     <li class="list-group-item">
-        <div class="alert alert-info" role="alert">Il n'y a pas de prestations annexe pour ce fournisseur.</div>
+        <div class="alert alert-info" role="alert">Il n'y a pas de prestation annexes pour ce fournisseur.</div>
     </li>
 {% endif %}

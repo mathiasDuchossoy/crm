@@ -1,24 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mathias
- * Date: 29/09/2016
- * Time: 16:11
- */
 
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Entity;
 
-
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 
-class CodePromoFournisseur
+/**
+ * CodePromoFournisseurPrestationAnnexe
+ */
+class CodePromoFournisseurPrestationAnnexe
 {
-
     /**
-     * @var integer
+     * @var int
      */
     private $id;
+    /**
+     * @var FournisseurPrestationAnnexe
+     */
+    private $fournisseurPrestationAnnexe;
     /**
      * @var Fournisseur
      */
@@ -31,7 +31,7 @@ class CodePromoFournisseur
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -44,6 +44,30 @@ class CodePromoFournisseur
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function getFournisseurPrestationAnnexe()
+    {
+        return $this->fournisseurPrestationAnnexe;
+    }
+
+    /**
+     * Set fournisseurPrestationAnnexe
+     *
+     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
+     *
+     * @return CodePromoFournisseurPrestationAnnexe
+     */
+    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
+    {
+        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
+
+        return $this;
     }
 
     /**
@@ -61,7 +85,7 @@ class CodePromoFournisseur
      *
      * @param Fournisseur $fournisseur
      *
-     * @return CodePromoFournisseur
+     * @return CodePromoFournisseurPrestationAnnexe
      */
     public function setFournisseur(Fournisseur $fournisseur = null)
     {
@@ -85,41 +109,12 @@ class CodePromoFournisseur
      *
      * @param CodePromo $codePromo
      *
-     * @return CodePromoFournisseur
+     * @return CodePromoFournisseurPrestationAnnexe
      */
     public function setCodePromo(CodePromo $codePromo = null)
     {
         $this->codePromo = $codePromo;
 
         return $this;
-    }
-    /**
-     * @var integer
-     */
-    private $type;
-
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     *
-     * @return CodePromoFournisseur
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

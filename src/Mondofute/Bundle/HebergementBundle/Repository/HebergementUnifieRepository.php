@@ -140,7 +140,7 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
-    public function getFournisseurHebergements($fournisseurId, $locale)
+    public function getFournisseurHebergements($fournisseurId, $locale, $site = 1)
     {
         $q = $this->getEntityManager()->createQueryBuilder();
         $q

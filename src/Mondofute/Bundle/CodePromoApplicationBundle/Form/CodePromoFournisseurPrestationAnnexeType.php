@@ -2,11 +2,13 @@
 
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Form;
 
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CodePromoFournisseurType extends AbstractType
+class CodePromoFournisseurPrestationAnnexeType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,9 +17,12 @@ class CodePromoFournisseurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('fournisseurPrestationAnnexe' , EntityType::class , array(
+                'class' => FournisseurPrestationAnnexe::class,
+                'property' => 'id'
+            ))
             ->add('fournisseur')
-            ->add('type')
-//            ->add('codePromoFournisseurUnifie')
+//            ->add('codePromo')
         ;
     }
     
@@ -27,7 +32,7 @@ class CodePromoFournisseurType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur'
+            'data_class' => 'Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe'
         ));
     }
 }

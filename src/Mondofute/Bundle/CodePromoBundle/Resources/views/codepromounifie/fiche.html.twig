@@ -142,12 +142,15 @@
                             </div>
                         </div>
 
+
+                        {% set keyFournisseur = 0 %}
+
                         {% if panelCodePromoHebergement is defined %}
-                            {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig') %}
+                            {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig' ) %}
                         {% endif %}
 
                         {#{% if panelCodePromoPrestationAnnexe is defined %}#}
-                            {#{% include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') %}#}
+                            {#{{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}#}
                         {#{% endif %}#}
 
                     </div>
@@ -516,12 +519,17 @@
                     getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
                 {% endif %}
             {% endfor %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                {% if fournisseurPrestationAnnexes[codePromo.id][fournisseurPrestationAnnexe.id] is not defined %}
+                    getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
+                {% endif %}
+            {% endfor %}
         {% endfor %}
         });
 
 
 
-        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId)
+        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId, keyCodePromo)
         {
             if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
             {
@@ -536,6 +544,7 @@
                 $.ajax( path , {
 
                 }).done(function (data){
+                    data = data.replace(/__keyCodePromo__/g , keyCodePromo);
                     $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').html(data);
                 });
             }

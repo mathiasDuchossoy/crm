@@ -99,4 +99,18 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 //        dump($result);die;
         return $result;
     }
+
+    public function findWithPrestationAnnexes()
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->select('fournisseur')
+            ->from('MondofuteFournisseurBundle:Fournisseur' , 'fournisseur')
+            ->join('fournisseur.prestationAnnexes' , 'prestationAnnexes')
+        ;
+
+        $result = $q->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
 }

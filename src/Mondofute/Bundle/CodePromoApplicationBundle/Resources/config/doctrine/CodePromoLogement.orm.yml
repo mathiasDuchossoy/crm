@@ -15,5 +15,5 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
         codePromo:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
-            inversedBy: codePromoFournisseurs
+            inversedBy: codePromoLogements
     lifecycleCallbacks: {  }

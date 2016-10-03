@@ -3,7 +3,7 @@
         <h3 class="panel-title">Hébergement</h3>
     </div>
     <div class="panel-body">
-        {% for keyFournisseur , fournisseur in fournisseursTypeHebergement %}
+        {% for fournisseur in fournisseursTypeHebergement %}
 
         {% set hebergementExists = false %}
         {% if codePromo.codePromoHebergements is not empty and fournisseurHebergements[codePromo.vars.value.id][fournisseur.id] is defined %}
@@ -20,11 +20,12 @@
                                           {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
                                           name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ keyFournisseur }}][fournisseur]"
                                         {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
-                                            {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id %}
+                                            {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id  and codePromoFournisseur.type.vars.value == 1%}
                                                 checked="checked"
                                             {% endif %}
                                         {% endfor %}
                                 >
+                                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ keyFournisseur }}][type]" value="1"/>
                                 <a
                                         data-toggle="collapse"
                                         href="#collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements"
@@ -36,7 +37,8 @@
                                         {% endif %}
                                         aria-controls="collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
                                     {{ fournisseur.enseigne }}
-                                </a></label>
+                                </a>
+                            </label>
                         </div>
                     </h4>
                 </div>
@@ -57,6 +59,10 @@
                     </ul>
                 </div>
             </div>
+            {% set keyFournisseur = keyFournisseur + 1 %}
         {% endfor %}
     </div>
 </div>
+
+{{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}
+

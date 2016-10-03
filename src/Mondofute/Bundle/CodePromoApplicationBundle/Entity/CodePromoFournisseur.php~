@@ -9,6 +9,9 @@
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Entity;
 
 
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+
 class CodePromoFournisseur
 {
 
@@ -17,11 +20,11 @@ class CodePromoFournisseur
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+     * @var CodePromo
      */
     private $codePromo;
 
@@ -46,7 +49,7 @@ class CodePromoFournisseur
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -56,11 +59,11 @@ class CodePromoFournisseur
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return CodePromoFournisseur
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -70,7 +73,7 @@ class CodePromoFournisseur
     /**
      * Get codePromo
      *
-     * @return \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+     * @return CodePromo
      */
     public function getCodePromo()
     {
@@ -80,11 +83,11 @@ class CodePromoFournisseur
     /**
      * Set codePromo
      *
-     * @param \Mondofute\Bundle\CodePromoBundle\Entity\CodePromo $codePromo
+     * @param CodePromo $codePromo
      *
      * @return CodePromoFournisseur
      */
-    public function setCodePromo(\Mondofute\Bundle\CodePromoBundle\Entity\CodePromo $codePromo = null)
+    public function setCodePromo(CodePromo $codePromo = null)
     {
         $this->codePromo = $codePromo;
 

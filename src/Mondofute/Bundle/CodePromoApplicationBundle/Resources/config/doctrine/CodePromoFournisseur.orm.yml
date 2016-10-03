@@ -10,6 +10,11 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        type:
+            type: smallint
+            options:
+                unsigned: true
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur

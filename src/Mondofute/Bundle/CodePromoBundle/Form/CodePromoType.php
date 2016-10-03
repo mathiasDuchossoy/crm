@@ -103,6 +103,13 @@ class CodePromoType extends AbstractType
                     'label' => 'Code promo hebergements',
                 )
             )
+            ->add('codePromoFournisseurPrestationAnnexes', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFournisseurPrestationAnnexeType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo prestation annexes',
+                )
+            )
         ;
     }
     
