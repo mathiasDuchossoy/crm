@@ -337,7 +337,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                 }
             }
         }
-        echo memory_get_usage() . PHP_EOL;
+//        echo memory_get_usage() . PHP_EOL;
 //        die;
 //                        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
 ////                        $this->connexion->beginTransaction();
@@ -485,7 +485,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //            }
 //        }
 //        dump($fournisseurHebergements);
-        echo memory_get_peak_usage();
+//        echo memory_get_peak_usage();
 //        die;
         return $fournisseurHebergements;
     }
