@@ -5,8 +5,6 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
-use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
-use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -62,6 +60,10 @@ class Logement
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $periodes;
 
     /**
      * Constructor
@@ -79,6 +81,15 @@ class Logement
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -317,8 +328,7 @@ class Logement
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    )
-    {
+    ) {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
@@ -381,11 +391,6 @@ class Logement
 
         return $this;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $periodes;
-
 
     /**
      * Add periode

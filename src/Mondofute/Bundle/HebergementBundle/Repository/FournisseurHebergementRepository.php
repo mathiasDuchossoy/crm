@@ -237,7 +237,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                 $logement = new Logement();
                                 $logementUnifie = new LogementUnifie();
                                 $logementUnifie->setId($lResult['logementUnifieId']);
-                                $logement->setLogementUnifie($logementUnifie)->setSite($site);
+                                $logement->setId($lResult['id'])->setLogementUnifie($logementUnifie)->setSite($site);
                                 $fournisseurHebergement->addLogement($logement);
                                 unset($lResult);
                             }
