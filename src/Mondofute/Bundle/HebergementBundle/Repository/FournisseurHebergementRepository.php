@@ -211,285 +211,152 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //                        association du fournisseur au fournisseur hébergement
                         $fh->setFournisseur($f);
                         unset($fhResult);
+                        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
+//                        $this->connexion->beginTransaction();
+                        $lStmt = $this->connexion->prepare($sql);
+                        if (!$lStmt) {
+
+                        } else {
+                            $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
+                            if ($retour) {
+                                $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
+                                if ($retour) {
+                                    $result = $lStmt->execute();
+                                    if (!$result) {
+                                        $this->connexion->rollBack();
+                                        $retour = false;
+                                    } else {
+//                                        $this->connexion->commit();
+//                    $result = $stmt->fetch();
+                                        while ($lResult = $lStmt->fetch()) {
+                                            $idLogement = $lResult['id'];
+                                            $logement = new Logement();
+                                            $logementUnifie = new LogementUnifie();
+                                            $logementUnifie->setId($lResult['logementUnifieId']);
+                                            $logement->setLogementUnifie($logementUnifie)->setSite($site);
+                                            unset($lResult);
+//                                            recupération des traductions
+                                            $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
+                                            $ltStmt = $this->connexion->prepare($sql);
+                                            if (!$ltStmt) {
+
+                                            } else {
+                                                $retour = $ltStmt->bindValue(1, $idLogement, Type::BIGINT);
+                                                if ($retour) {
+                                                    $result = $ltStmt->execute();
+                                                    if (!$result) {
+                                                        $this->connexion->rollBack();
+                                                        return false;
+                                                    } else {
+                                                        while ($ltResult = $ltStmt->fetch()) {
+                                                            $logementTraduction = new LogementTraduction();
+                                                            $langue = new Langue();
+                                                            $langue->setCode($ltResult['code']);
+                                                            $logementTraduction->setLangue($langue)
+                                                                ->setNom($ltResult['nom']);
+                                                            $logement->addTraduction($logementTraduction);
+
+                                                        }
+                                                        if (isset($ltResult)) {
+                                                            unset($ltResult);
+                                                        }
+                                                        if (isset($ltStmt)) {
+                                                            unset($ltStmt);
+                                                        }
+                                                        if (isset($logementTraduction)) {
+                                                            unset($logementTraduction);
+                                                        }
+                                                        if (isset($langue)) {
+                                                            unset($langue);
+                                                        }
+                                                    }
+                                                }
+                                            }
+//                                            fin de la récupération des traductions
+//                                            récupération des périodes logement
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
+                                            $lpStmt = $this->connexion->prepare($sql);
+                                            if (!$lpStmt) {
+
+                                            } else {
+                                                $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
+                                                if ($retour) {
+                                                    $result = $lpStmt->execute();
+                                                    if (!$result) {
+                                                        $this->connexion->rollBack();
+                                                        return false;
+                                                    } else {
+                                                        while ($lpResult = $lpStmt->fetch()) {
+                                                            $logementPeriode = new LogementPeriode();
+                                                            $logementPeriodeLocatif = new LogementPeriodeLocatif();
+                                                            $periode = new Periode();
+                                                            $typePeriode = new TypePeriode();
+                                                            $typePeriode->setId((int)$lpResult['type_id']);
+//                                                            $periode->setId();
+                                                            $periode
+                                                                ->setDebut(new \DateTime($lpResult['debut']))
+                                                                ->setFin(new \DateTime($lpResult['fin']))
+                                                                ->setType($typePeriode)->setId($lpResult['periode_id']);
+
+                                                            $logementPeriodeLocatif->setLogement($logement)
+                                                                ->setPeriode($periode)
+                                                                ->setStock($lpResult['stock']);
+                                                            $logementPeriode->setLogement($logement)->setPeriode($periode)->setLocatif($logementPeriodeLocatif);
+                                                            $logement->addPeriode($logementPeriode);
+                                                        }
+                                                        if (isset($lpStmt)) {
+                                                            unset($lpStmt);
+                                                        }
+                                                        if (isset($lpResult)) {
+                                                            unset($lpResult);
+                                                        }
+                                                        if (isset($logementPeriode)) {
+                                                            unset($logementPeriode);
+                                                        }
+                                                        if (isset($periode)) {
+                                                            unset($periode);
+                                                        }
+                                                        if (isset($logementPeriodeLocatif)) {
+                                                            unset($logementPeriodeLocatif);
+                                                        }
+                                                    }
+                                                }
+                                            }
+//                                            fin de récupération des périodes logements
+                                            $fh->addLogement($logement);
+                                        }
+                                        if (isset($lResult)) {
+                                            unset($lResult);
+                                        }
+                                        if (isset($lStmt)) {
+                                            unset($lStmt);
+                                        }
+                                        if (isset($logement)) {
+                                            unset($logement);
+                                        }
+                                        if (isset($logementUnifie)) {
+                                            unset($logementUnifie);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
                         $fournisseurHebergements->add($fh);
+                    }
+                    if (isset($fhResult)) {
+                        unset($fhResult);
                     }
                     if (isset($fhStmt)) {
                         unset($fhStmt);
                     }
-                }
-            }
-        }
-        /** @var FournisseurHebergement $fournisseurHebergement */
-        foreach ($fournisseurHebergements as $fournisseurHebergement) {
-            $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
-//                        $this->connexion->beginTransaction();
-            $lStmt = $this->connexion->prepare($sql);
-            if (!$lStmt) {
-
-            } else {
-                $retour = $lStmt->bindValue(1, $fournisseurHebergement->getId(), Type::BIGINT);
-                if ($retour) {
-                    $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
-                    if ($retour) {
-                        $result = $lStmt->execute();
-                        if (!$result) {
-                            $this->connexion->rollBack();
-                            $retour = false;
-                        } else {
-//                                        $this->connexion->commit();
-//                    $result = $stmt->fetch();
-                            while ($lResult = $lStmt->fetch()) {
-                                $idLogement = $lResult['id'];
-                                $logement = new Logement();
-                                $logementUnifie = new LogementUnifie();
-                                $logementUnifie->setId($lResult['logementUnifieId']);
-                                $logement->setId($lResult['id'])->setLogementUnifie($logementUnifie)->setSite($site);
-                                $fournisseurHebergement->addLogement($logement);
-                                unset($lResult);
-                            }
-                            if (isset($lStmt)) {
-                                unset($lStmt);
-                            }
-                            /** @var Logement $logement */
-                            foreach ($fournisseurHebergement->getLogements() as $logement) {
-                                $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
-                                $ltStmt = $this->connexion->prepare($sql);
-                                if (!$ltStmt) {
-
-                                } else {
-                                    $retour = $ltStmt->bindValue(1, $logement->getId(), Type::BIGINT);
-                                    if ($retour) {
-                                        $result = $ltStmt->execute();
-                                        if (!$result) {
-                                            $this->connexion->rollBack();
-                                            return false;
-                                        } else {
-                                            while ($ltResult = $ltStmt->fetch()) {
-                                                $logementTraduction = new LogementTraduction();
-                                                $langue = new Langue();
-                                                $langue->setCode($ltResult['code']);
-                                                $logementTraduction->setLangue($langue)
-                                                    ->setNom($ltResult['nom']);
-                                                $logement->addTraduction($logementTraduction);
-
-                                            }
-                                            if (isset($ltResult)) {
-                                                unset($ltResult);
-                                            }
-                                            if (isset($ltStmt)) {
-                                                unset($ltStmt);
-                                            }
-                                            if (isset($logementTraduction)) {
-                                                unset($logementTraduction);
-                                            }
-                                            if (isset($langue)) {
-                                                unset($langue);
-                                            }
-                                        }
-                                    }
-                                }
-                                $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
-                                $lpStmt = $this->connexion->prepare($sql);
-                                if (!$lpStmt) {
-
-                                } else {
-                                    $retour = $lpStmt->bindValue(1, $logement->getId(), Type::BIGINT);
-                                    if ($retour) {
-                                        $result = $lpStmt->execute();
-                                        if (!$result) {
-                                            $this->connexion->rollBack();
-                                            return false;
-                                        } else {
-                                            while ($lpResult = $lpStmt->fetch()) {
-                                                $logementPeriode = new LogementPeriode();
-                                                $logementPeriodeLocatif = new LogementPeriodeLocatif();
-                                                $periode = new Periode();
-                                                $typePeriode = new TypePeriode();
-                                                $typePeriode->setId((int)$lpResult['type_id']);
-//                                                            $periode->setId();
-                                                $periode
-                                                    ->setDebut(new \DateTime($lpResult['debut']))
-                                                    ->setFin(new \DateTime($lpResult['fin']))
-                                                    ->setType($typePeriode)->setId($lpResult['periode_id']);
-
-                                                $logementPeriodeLocatif->setLogement($logement)
-                                                    ->setPeriode($periode)
-                                                    ->setStock($lpResult['stock']);
-                                                $logementPeriode->setLogement($logement)->setPeriode($periode)->setLocatif($logementPeriodeLocatif);
-                                                $logement->addPeriode($logementPeriode);
-                                            }
-                                            if (isset($lpStmt)) {
-                                                unset($lpStmt);
-                                            }
-                                            if (isset($lpResult)) {
-                                                unset($lpResult);
-                                            }
-                                            if (isset($logementPeriode)) {
-                                                unset($logementPeriode);
-                                            }
-                                            if (isset($periode)) {
-                                                unset($periode);
-                                            }
-                                            if (isset($logementPeriodeLocatif)) {
-                                                unset($logementPeriodeLocatif);
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
+                    if (isset($fh)) {
+                        unset($fh);
                     }
+
                 }
             }
         }
-//        echo memory_get_usage() . PHP_EOL;
-//        die;
-//                        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
-////                        $this->connexion->beginTransaction();
-//                        $lStmt = $this->connexion->prepare($sql);
-//                        if (!$lStmt) {
-//
-//                        } else {
-//                            $retour = $lStmt->bindValue(1, $fh->getId(), Type::BIGINT);
-//                            if ($retour) {
-//                                $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
-//                                if ($retour) {
-//                                    $result = $lStmt->execute();
-//                                    if (!$result) {
-//                                        $this->connexion->rollBack();
-//                                        $retour = false;
-//                                    } else {
-////                                        $this->connexion->commit();
-////                    $result = $stmt->fetch();
-//                                        while ($lResult = $lStmt->fetch()) {
-//                                            $idLogement = $lResult['id'];
-//                                            $logement = new Logement();
-//                                            $logementUnifie = new LogementUnifie();
-//                                            $logementUnifie->setId($lResult['logementUnifieId']);
-//                                            $logement->setLogementUnifie($logementUnifie)->setSite($site);
-//                                            unset($lResult);
-////                                            recupération des traductions
-//                                            $sql = 'SELECT lt.nom, l.code FROM logement_traduction AS lt LEFT JOIN langue AS l ON lt.langue_id=l.id WHERE lt.logement_id=?';
-//                                            $ltStmt = $this->connexion->prepare($sql);
-//                                            if (!$ltStmt) {
-//
-//                                            } else {
-//                                                $retour = $ltStmt->bindValue(1, $idLogement, Type::BIGINT);
-//                                                if ($retour) {
-//                                                    $result = $ltStmt->execute();
-//                                                    if (!$result) {
-//                                                        $this->connexion->rollBack();
-//                                                        return false;
-//                                                    } else {
-//                                                        while ($ltResult = $ltStmt->fetch()) {
-//                                                            $logementTraduction = new LogementTraduction();
-//                                                            $langue = new Langue();
-//                                                            $langue->setCode($ltResult['code']);
-//                                                            $logementTraduction->setLangue($langue)
-//                                                                ->setNom($ltResult['nom']);
-//                                                            $logement->addTraduction($logementTraduction);
-//
-//                                                        }
-//                                                        if (isset($ltResult)) {
-//                                                            unset($ltResult);
-//                                                        }
-//                                                        if (isset($ltStmt)) {
-//                                                            unset($ltStmt);
-//                                                        }
-//                                                        if (isset($logementTraduction)) {
-//                                                            unset($logementTraduction);
-//                                                        }
-//                                                        if (isset($langue)) {
-//                                                            unset($langue);
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-////                                            fin de la récupération des traductions
-////                                            récupération des périodes logement
-//                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
-//                                            $lpStmt = $this->connexion->prepare($sql);
-//                                            if (!$lpStmt) {
-//
-//                                            } else {
-//                                                $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
-//                                                if ($retour) {
-//                                                    $result = $lpStmt->execute();
-//                                                    if (!$result) {
-//                                                        $this->connexion->rollBack();
-//                                                        return false;
-//                                                    } else {
-//                                                        while ($lpResult = $lpStmt->fetch()) {
-//                                                            $logementPeriode = new LogementPeriode();
-//                                                            $logementPeriodeLocatif = new LogementPeriodeLocatif();
-//                                                            $periode = new Periode();
-//                                                            $typePeriode = new TypePeriode();
-//                                                            $typePeriode->setId((int)$lpResult['type_id']);
-////                                                            $periode->setId();
-//                                                            $periode
-//                                                                ->setDebut(new \DateTime($lpResult['debut']))
-//                                                                ->setFin(new \DateTime($lpResult['fin']))
-//                                                                ->setType($typePeriode)->setId($lpResult['periode_id']);
-//
-//                                                            $logementPeriodeLocatif->setLogement($logement)
-//                                                                ->setPeriode($periode)
-//                                                                ->setStock($lpResult['stock']);
-//                                                            $logementPeriode->setLogement($logement)->setPeriode($periode)->setLocatif($logementPeriodeLocatif);
-//                                                            $logement->addPeriode($logementPeriode);
-//                                                        }
-//                                                        if (isset($lpStmt)) {
-//                                                            unset($lpStmt);
-//                                                        }
-//                                                        if (isset($lpResult)) {
-//                                                            unset($lpResult);
-//                                                        }
-//                                                        if (isset($logementPeriode)) {
-//                                                            unset($logementPeriode);
-//                                                        }
-//                                                        if (isset($periode)) {
-//                                                            unset($periode);
-//                                                        }
-//                                                        if (isset($logementPeriodeLocatif)) {
-//                                                            unset($logementPeriodeLocatif);
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-////                                            fin de récupération des périodes logements
-//                                            $fh->addLogement($logement);
-//                                        }
-//                                        if (isset($lResult)) {
-//                                            unset($lResult);
-//                                        }
-//                                        if (isset($lStmt)) {
-//                                            unset($lStmt);
-//                                        }
-//                                        if (isset($logement)) {
-//                                            unset($logement);
-//                                        }
-//                                        if (isset($logementUnifie)) {
-//                                            unset($logementUnifie);
-//                                        }
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    if (isset($fhResult)) {
-//                        unset($fhResult);
-//                    }
-//                    if (isset($fhStmt)) {
-//                        unset($fhStmt);
-//                    }
-//                    if (isset($fh)) {
-//                        unset($fh);
-//                    }
-//
-//                }
-//            }
-//        }
 //        dump($fournisseurHebergements);
 //        echo memory_get_peak_usage();
 //        die;
