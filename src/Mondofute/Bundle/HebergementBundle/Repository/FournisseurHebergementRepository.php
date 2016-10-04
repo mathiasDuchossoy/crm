@@ -180,16 +180,22 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //    }
     public function chargerPourStocks($idHebergementUnifie)
     {
+        echo memory_get_usage().PHP_EOL;
         $em = $this->getEntityManager();
+        echo memory_get_usage().PHP_EOL;
         $site = $em->getRepository(Site::class)->findOneBy(array('crm' => true));
+        echo memory_get_usage().PHP_EOL;
         if (isset($em)) {
             unset($em);
         }
+        echo memory_get_usage().PHP_EOL;
 
         $fournisseurHebergements = new ArrayCollection();
         $sql = 'SELECT fh.id, f.id AS fournisseurId, f.enseigne FROM fournisseur_hebergement AS fh LEFT JOIN fournisseur AS f ON f.id=fh.fournisseur_id WHERE fh.hebergement_id=?';
         $this->connexion->beginTransaction();
+        echo memory_get_usage().PHP_EOL;
         $fhStmt = $this->connexion->prepare($sql);
+        echo memory_get_usage().PHP_EOL;
         if (!$fhStmt) {
 
         } else {
@@ -211,6 +217,15 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //                        association du fournisseur au fournisseur hébergement
                         $fh->setFournisseur($f);
                         unset($fhResult);
+                        $fournisseurHebergements->add($fh);
+                    }
+                    if(isset($fhResult)) {
+                        unset($fhResult);
+                    }
+                }
+            }
+        }
+        die;
                         $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.fournisseur_hebergement_id=? AND l.site_id=?';
 //                        $this->connexion->beginTransaction();
                         $lStmt = $this->connexion->prepare($sql);
@@ -342,7 +357,6 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                 }
                             }
                         }
-                        $fournisseurHebergements->add($fh);
                     }
                     if (isset($fhResult)) {
                         unset($fhResult);
