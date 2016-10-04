@@ -338,7 +338,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
 //            }
 //        }
 //        dump($fournisseurHebergements);
-//        echo memory_get_peak_usage();
+        echo memory_get_peak_usage();
 //        die;
         return $fournisseurHebergements;
     }
