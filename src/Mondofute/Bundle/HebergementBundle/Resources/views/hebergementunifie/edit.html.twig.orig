@@ -84,13 +84,101 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
+<<<<<<< HEAD
             $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
+||||||| parent of cfdf426... ajout bouton duplique stocks logement
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.table-hebergement-stocks input[name^="stocks"]','change',function(e){
+                var datas = $(this).data();
+                if(stocksModifies[datas.logement] == null) {
+                        stocksModifies[datas.logement] = Array();
+                }
+                if(stocksModifies[datas.logement][datas.periode] == null){
+                    stocksModifies[datas.logement][datas.periode] = 0;
+                }
+                stocksModifies[datas.logement][datas.periode] = $(this).val();
+//                    alert($(this).val()+' '+$(this).data('logement')+' '+stocksModifies[$(this).data('logement')]);
+//                }else{
+//                    alert('null');
+//                }
+//                alert(stocksModifies[$(this).data('logement')][$(this).data('periode')]);
+//                console.log(stocksModifies);
+            });
+            $(document).on('resize', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+=======
+            $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.panel-collapse', 'shown.bs.collapse', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+            $(document).delegate('.duplique-stocks','click',function(e){
+                var datas = $(this).data();
+                dupliquerStocksLogement(datas.logement_id);
+            });
+            $(document).delegate('.table-hebergement-stocks input[name^="stocks"]', 'change', function (e) {
+                var datas = $(this).data();
+                if (stocksModifies[datas.logement] == null) {
+                    stocksModifies[datas.logement] = Array();
+                }
+                if (stocksModifies[datas.logement][datas.periode] == null) {
+                    stocksModifies[datas.logement][datas.periode] = 0;
+                }
+                stocksModifies[datas.logement][datas.periode] = $(this).val();
+            });
+            $(document).on('resize', function (e) {
+                $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+            });
+
+            $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
+            chargerOngletStocksHebergement({{ entity.id }});
+>>>>>>> cfdf426... ajout bouton duplique stocks logement
         });
+<<<<<<< HEAD
         function chargerOngletStocks(idhebergement){
+||||||| parent of cfdf426... ajout bouton duplique stocks logement
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            var idTypePeriode = null;
+=======
+        function dupliquerStocksLogement(logementId){
+            var valeur = $('input[data-logement='+logementId+']:first').val();
+            $('input[data-logement='+logementId+']').each(function(){
+                $(this).val(valeur);
+            });
+        }
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            var idTypePeriode = null;
+>>>>>>> cfdf426... ajout bouton duplique stocks logement
 
 <<<<<<< HEAD
-||||||| parent of 65110b9... defaut page
+||||||| parent of cfdf426... ajout bouton duplique stocks logement
                             for (var i = 0; i < typePeriodes.length; i++) {
                                 if (typePeriodes[i].periodes.length > 0) {
                                     idTypePeriode = typePeriodes[i].id;
@@ -259,18 +347,20 @@
                                             var moisFin = null;
                                             var jourDebut = null;
                                             var jourFin = null;
+                                            for (var k = 0; k < data[j][1].length; k++) {
+                                                data[j][1][k]['logement'] = data[j][1][k]['logement'] + ' <span data-logement_id="'+data[j][1][k]['logementUnifieId']+'" class="duplique-stocks glyphicon glyphicon-play"></span>';
+                                            }
                                             for (var k = 0; k < typePeriode.periodes.length; k++) {
                                                 debut = new Date(typePeriode.periodes[k].debut.date);
                                                 fin = new Date(typePeriode.periodes[k].fin.date);
-//                                                console.log(debut.getDate().toString().length);
                                                 moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
                                                 jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
                                                 moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
                                                 jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
                                                 attribut = 'periode' + typePeriode.periodes[k].id;
-                                                for(var l=0;l<data[j][1].length;l++){
+                                                for (var l = 0; l < data[j][1].length; l++) {
                                                     stock = data[j][1][l][attribut];
-                                                    data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'],typePeriode.periodes[k].id,stock);
+                                                    data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'], typePeriode.periodes[k].id, stock);
                                                 }
                                                 colonnes.push({
                                                     mDataProp: attribut,
@@ -297,6 +387,7 @@
                                                 ],
                                                 paging: true,
                                                 info: false,
+                                                pageLength: 25,
                                                 scrollX: true,
                                                 scrollY: false,
                                                 scrollCollapse: true,
@@ -308,14 +399,14 @@
                                                     processing: "{{ 'processing'|trans }}",
                                                     search: "{{ 'rechercher'|trans }} :",
                                                     loadingRecords: "{{ 'chargementEnCours'|trans }}...",
-                                                    "lengthMenu":     "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                                                    "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
                                                     zeroRecords: "{{ 'zeroResultats'|trans }}",
                                                     emptyTable: "{{ 'tableVide'|trans }}",
                                                     "paginate": {
-                                                        "first":      "{{ 'page.premiere'|trans }}",
-                                                        "last":       "{{ 'page.derniere'|trans }}",
-                                                        "next":       "{{ 'page.suivante'|trans }}",
-                                                        "previous":   "{{ 'page.precedente'|trans }}"
+                                                        "first": "{{ 'page.premiere'|trans }}",
+                                                        "last": "{{ 'page.derniere'|trans }}",
+                                                        "next": "{{ 'page.suivante'|trans }}",
+                                                        "previous": "{{ 'page.precedente'|trans }}"
                                                     },
                                                     aria: {
                                                         sortAscending: ": activer pour trier la colonne par ordre croissant",
@@ -335,9 +426,9 @@
                         });
                     }, 'json');
         }
-        function genererInputStock(idLogementUnifie,idPeriode,stock){
+        function genererInputStock(idLogementUnifie, idPeriode, stock) {
 //            var input = '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
-            return '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
+            return '<input data-logement="' + idLogementUnifie + '" data-periode="' + idPeriode + '" name="stocks[' + idLogementUnifie + '][' + idPeriode + ']" class="form-control" type="text" size="2" maxlength="2" value="' + stock + '"/>';
         }
         function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {
             var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";
@@ -377,7 +468,7 @@
                         }
                     }
             ), 'html';
->>>>>>> 65110b9... defaut page
+>>>>>>> cfdf426... ajout bouton duplique stocks logement
         }
         function enregistrerStocks() {
             var $element = $(this).parent();
@@ -387,9 +478,21 @@
             $.ajax({
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
+<<<<<<< HEAD
                 data: $stocks,
                 success: function (json){
                     if(json.valid){
+||||||| parent of cfdf426... ajout bouton duplique stocks logement
+                data: { "stocks" : stocksModifies },
+                success: function (json) {
+                    if (json.valid) {
+                        stocksModifies = Array();
+=======
+                data: {"stocks": stocksModifies},
+                success: function (json) {
+                    if (json.valid) {
+                        stocksModifies = Array();
+>>>>>>> cfdf426... ajout bouton duplique stocks logement
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
                     }else{
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
@@ -405,4 +508,32 @@
     'css/hebergement-edit.min.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
+<<<<<<< HEAD
+||||||| parent of cfdf426... ajout bouton duplique stocks logement
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td {
+            height: 50px;
+        }
+
+        th.logement, td.logement {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+=======
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td {
+            height: 50px;
+        }
+        .duplique-stocks:hover{
+            cursor: pointer;
+        }
+        th.logement, td.logement {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+>>>>>>> cfdf426... ajout bouton duplique stocks logement
 {% endblock %}
