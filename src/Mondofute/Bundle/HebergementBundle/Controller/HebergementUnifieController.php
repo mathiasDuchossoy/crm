@@ -1907,6 +1907,7 @@ class HebergementUnifieController extends Controller
             $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
             array_push($data, $fournisseur);
         }
+        echo memory_get_peak_usage();
         return new JsonResponse($data);
     }
 
