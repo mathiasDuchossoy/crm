@@ -110,6 +110,7 @@ class Fournisseur extends Moral
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
