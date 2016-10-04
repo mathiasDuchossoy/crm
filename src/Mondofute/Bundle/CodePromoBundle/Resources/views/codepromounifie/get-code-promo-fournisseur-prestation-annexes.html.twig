@@ -7,9 +7,10 @@
                             {#name="codePromoFournisseurPrestationAnnexes[{{ codePromoId }}][{{ fournisseurId }}][]"#}
                             {% if codePromo.codePromoFournisseurPrestationAnnexes is defined %}
                                 {% for codePromofournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
+                                    {#{{ dump(codePromofournisseurPrestationAnnexe.vars.value) }}#}
                                     {% if
                                     codePromofournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseurId
-                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.fournisseurPrestationAnnexeUnifie.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeUnifieId
+                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId
                                     and codePromofournisseurPrestationAnnexe.vars.value.codePromo.id == codePromoId
                                     %}
                                         checked="checked"

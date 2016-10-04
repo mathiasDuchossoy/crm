@@ -149,9 +149,9 @@
                             {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig' ) %}
                         {% endif %}
 
-                        {#{% if panelCodePromoPrestationAnnexe is defined %}#}
-                            {#{{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}#}
-                        {#{% endif %}#}
+                        {% if panelCodePromoPrestationAnnexe is defined %}
+                            {{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}
+                        {% endif %}
 
                     </div>
 
@@ -520,7 +520,7 @@
                 {% endif %}
             {% endfor %}
             {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                {% if fournisseurPrestationAnnexes[codePromo.id][fournisseurPrestationAnnexe.id] is not defined %}
+                {% if fournisseurFournisseurPrestationAnnexes[codePromo.id][fournisseurPrestationAnnexe.id] is not defined %}
                     getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
                 {% endif %}
             {% endfor %}
