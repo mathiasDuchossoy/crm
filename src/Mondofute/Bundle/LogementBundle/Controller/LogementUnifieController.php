@@ -687,7 +687,7 @@ class LogementUnifieController extends Controller
                 $reponse['logements'] = $logements;
                 return new JsonResponse($reponse);
             }
-            $logementRef = $em->getRepository(Logement::class)->find($idLogement);
+            $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
 
             $logement['id'] = $logementRef->getId();
             $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
