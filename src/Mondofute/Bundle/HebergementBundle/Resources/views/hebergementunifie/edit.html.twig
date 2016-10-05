@@ -40,7 +40,7 @@
             genererDataTables($('.table-hebergement-stocks'));
         });
 
-        function genererDataTables($tableau, colonnes, parametres, callback) {
+        function genererDataTables($tableau, colonnes, parametres,$progressBar, callback) {
             var table = $tableau.DataTable({
                 data: null,
                 "aoColumns": colonnes,
@@ -79,41 +79,9 @@
                 }
             });
             if (callback != null) {
-                callback(table, parametres);
+                callback(table, parametres,$progressBar);
             }
             return table;
-            {#$obj.find('.table-hebergement-stocks').each(function () {#}
-            {#var table = $(this).DataTable({#}
-            {#"deferRender": true,#}
-            {#paging: true,#}
-            {#info: false,#}
-            {#scrollX: true,#}
-            {#scrollY: false,#}
-            {#scrollCollapse: true,#}
-            {#fixedColumns: true,#}
-            {#scroller: {#}
-            {#rowHeight: 30#}
-            {#},#}
-            {#"columnDefs": [#}
-            {#{"orderable": true, "targets": 0},#}
-            {#{"orderable": false, "targets": '_all'},#}
-            {#{"searchable": true, "targets": 0},#}
-            {#{"searchable": false, "targets": '_all'},#}
-            {#],#}
-            {#language: {#}
-            {#processing: "{{ 'processing'|trans }}",#}
-            {#search: "{{ 'rechercher'|trans }} :",#}
-            {#loadingRecords: "{{ 'chargementEnCours'|trans }}...",#}
-            {#zeroRecords: "{{ 'zeroResultats'|trans }}",#}
-            {#emptyTable: "{{ 'tableVide'|trans }}",#}
-            {#aria: {#}
-            {#sortAscending: ": activer pour trier la colonne par ordre croissant",#}
-            {#sortDescending: ": activer pour trier la colonne par ordre décroissant"#}
-            {#}#}
-            {#}#}
-            {#});#}
-            {#//                table.table({visible: true, api: true}).columns.adjust();#}
-            {#});#}
         }
     </script>
     <script type="text/javascript">
@@ -154,57 +122,26 @@
                 $(this).val(valeur);
             });
         }
-        function chargerTableauStocks(table, parametres) {
-//            console.log('logements');
-//            console.log(parametres);
-//            for (var i = 0; i < parametres.logements.length; i++) {
-//
-//                ajouterLogementLocatifTableau(table, parametres.logements[i], parametres);
-//            }
-            var logements=Array();
+        function chargerTableauStocks(table, parametres,$progressBar) {
+            var logements = Array();
             logements['logements'] = Array();
-            for(var i =0;i<parametres.logements.length;i++){
-                logements['logements'][i]= parametres.logements[i].id;
+            for (var i = 0; i < parametres.logements.length; i++) {
+                logements['logements'][i] = parametres.logements[i].id;
             }
-            ajouterLogementLocatifTableau(table, logements, parametres);
+            ajouterLogementLocatifTableau(table, logements, parametres,$progressBar);
         }
-        function ajouterLogementLocatifTableau(table, logements, parametres) {
-            {#var url = "{{ path('logement_charger_locatif', {'id': '_idLogement_'}) }}";#}
-            {#url = url.replace(/_idLogement_/g, parseInt(logement.id));#}
-            {#$.get(#}
-                    {#url,#}
-                    {#function (data) {#}
-                        {#var donnees = Array();#}
-                        {#donnees['logement'] = data.nom+' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';#}
-                        {#var attribut = null;#}
-                        {#for (var i = 0; i < data.periodes.length; i++) {#}
-
-                            {#if (data.periodes[i].type.id == parametres.typePeriode.id) {#}
-                                {#attribut = 'periode' + data.periodes[i].id;#}
-                                {#donnees[attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);#}
-                            {#}#}
-                        {#}#}
-{#//                    console.log(data);#}
-                       {#table.row.add(donnees).draw();#}
-
-                    {#}#}
-            {#);#}
-//            console.log(logements);
-
-//            console.log(data);
+        function ajouterLogementLocatifTableau(table, logements, parametres,$progressBar) {
             var url = "{{ path('logement_charger_locatif') }}";
-//            url = url.replace(/_idLogement_/g, parseInt(logement.id));
             $.post(
                     url,
                     {'logements[]': logements['logements']},
                     function (datas) {
-//                        console.log(logements);
                         var donnees = Array();
-                        var data=null;
-                        for(var iDatas=0;iDatas<datas['logements'].length;iDatas++){
+                        var data = null;
+                        for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
                             donnees[iDatas] = Array();
                             data = datas['logements'][iDatas];
-                            donnees[iDatas]['logement'] = data.nom+' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
+                            donnees[iDatas]['logement'] = data.nom + ' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
                             var attribut = null;
                             for (var i = 0; i < data.periodes.length; i++) {
 
@@ -213,26 +150,23 @@
                                     donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
                                 }
                             }
-//                            console.log(donnees[iDatas]);
                         }
-
-//                    console.log(data);
-                       table.rows.add(donnees).draw();
-                        if(datas['suivant'] != null){
+                        table.rows.add(donnees).draw();
+                        if (datas['suivant'] != null) {
                             var i = 0;
-                            while(i<logements['logements'].length && logements['logements'][i] != datas['suivant']){
+                            while (i < logements['logements'].length && logements['logements'][i] != datas['suivant']) {
                                 i++;
                             }
-                            var indice=i;
+                            var indice = i;
                             var newLogements = Array();
-                            newLogements['logements']=Array();
-                            for(indice=i;indice<logements['logements'].length;indice++){
+                            newLogements['logements'] = Array();
+                            for (indice = i; indice < logements['logements'].length; indice++) {
                                 newLogements['logements'].push(logements['logements'][indice]);
                             }
                             ajouterLogementLocatifTableau(table, newLogements, parametres);
                         }
 
-                    },'json'
+                    }, 'json'
             );
         }
         function chargerOngletStocksHebergement(idHebergement) {
@@ -270,10 +204,6 @@
                                             moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
                                             jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
                                             attribut = 'periode' + typePeriodes[i].periodes[k].id;
-//                                            for (var l = 0; l < data[j][1].length; l++) {
-//                                                stock = data[j][1][l][attribut];
-//                                                data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'], typePeriode.periodes[k].id, stock);
-//                                            }
                                             colonnes.push({
                                                 mDataProp: attribut,
                                                 title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
@@ -295,103 +225,10 @@
                                                 },
                                                 logements: data[j].logements
                                             };
-                                            var table = genererDataTables($tableau, colonnes, donnees, function (table, parametres) {
-                                                chargerTableauStocks(table, parametres);
+                                            var table = genererDataTables($tableau, colonnes, donnees,$progressBar, function (table, parametres,$progressBar) {
+                                                chargerTableauStocks(table, parametres,$progressBar);
                                             });
                                         }
-//                                    chargerProgressBar($progressBar, 25);
-                                        {#genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriodes[i], function (data, idTypePeriode, typePeriode) {#}
-                                        {#var stock = null;#}
-                                        {#chargerProgressBar($progressBar, 50);#}
-                                        {#var pasProgressBar = 50 / (data.length);#}
-                                        {#var curseurProgressBar = 50;#}
-                                        {#var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');#}
-                                        {#for (var j = 0; j < data.length; j++) {#}
-
-                                        {#curseurProgressBar += pasProgressBar;#}
-                                        {#chargerProgressBar($progressBar, curseurProgressBar);#}
-                                        {#//                                            gestion des colonnes des tableaux#}
-                                        {#var colonnes = [{'mDataProp': "logement", title: 'logement'}];#}
-                                        {#var attribut = '';#}
-                                        {#var debut = null;#}
-                                        {#var fin = null;#}
-                                        {#var moisDebut = null;#}
-                                        {#var moisFin = null;#}
-                                        {#var jourDebut = null;#}
-                                        {#var jourFin = null;#}
-                                        {#for (var k = 0; k < data[j][1].length; k++) {#}
-                                        {#data[j][1][k]['logement'] = data[j][1][k]['logement'] + ' <span data-logement_id="' + data[j][1][k]['logementUnifieId'] + '" class="duplique-stocks glyphicon glyphicon-play"></span>';#}
-                                        {#}#}
-                                        {#for (var k = 0; k < typePeriode.periodes.length; k++) {#}
-                                        {#debut = new Date(typePeriode.periodes[k].debut.date);#}
-                                        {#fin = new Date(typePeriode.periodes[k].fin.date);#}
-                                        {#moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);#}
-                                        {#jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();#}
-                                        {#moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);#}
-                                        {#jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();#}
-                                        {#attribut = 'periode' + typePeriode.periodes[k].id;#}
-                                        {#for (var l = 0; l < data[j][1].length; l++) {#}
-                                        {#stock = data[j][1][l][attribut];#}
-                                        {#data[j][1][l][attribut] = genererInputStock(data[j][1][l]['logementUnifieId'], typePeriode.periodes[k].id, stock);#}
-                                        {#}#}
-                                        {#colonnes.push({#}
-                                        {#mDataProp: attribut,#}
-                                        {#title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()#}
-                                        {#});#}
-                                        {#}#}
-
-                                        {#//                                            colonnes.push({ title : "test"});#}
-                                        {#var $panelFournisseur = $('<div class="panel panel-default"> <div class="panel-heading"> <div class="panel-title"> <h2> <a data-toggle="collapse" href="#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '">' + data[j][0] + '</a> </h2> </div> </div> <div id="stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3] + '" class="panel-collapse collapse in"></div> </div>');#}
-
-                                        {#var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap display" width="100%" id="type-periode-' + typePeriode.id + '-indice-' + j + '"></table>');#}
-                                        {#//                                        console.log(data[j][1]);#}
-                                        {#//                                            $div.append($tableau);#}
-                                        {#//                                            console.log(data[j][1]);#}
-                                        {#$div.append($panelFournisseur);#}
-                                        {#$panelFournisseur.find('#stocks_type_periode_' + typePeriode.id + '_fournisseur_' + data[j][3]).append($tableau);#}
-                                        {#var table = $tableau.DataTable({#}
-                                        {#data: data[j][1],#}
-                                        {#"aoColumns": colonnes,#}
-                                        {#"bAutoWidth": true,#}
-                                        {#aoColumnDefs: [#}
-                                        {#{"bSortable": true, aTargets: [0]},#}
-                                        {#{"bSortable": false, aTargets: ['_all']},#}
-                                        {#],#}
-                                        {#paging: true,#}
-                                        {#info: false,#}
-                                        {#pageLength: 25,#}
-                                        {#scrollX: true,#}
-                                        {#scrollY: false,#}
-                                        {#scrollCollapse: true,#}
-                                        {#fixedColumns: true,#}
-                                        {#scroller: {#}
-                                        {#rowHeight: 30#}
-                                        {#},#}
-                                        {#language: {#}
-                                        {#processing: "{{ 'processing'|trans }}",#}
-                                        {#search: "{{ 'rechercher'|trans }} :",#}
-                                        {#loadingRecords: "{{ 'chargementEnCours'|trans }}...",#}
-                                        {#"lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",#}
-                                        {#zeroRecords: "{{ 'zeroResultats'|trans }}",#}
-                                        {#emptyTable: "{{ 'tableVide'|trans }}",#}
-                                        {#"paginate": {#}
-                                        {#"first": "{{ 'page.premiere'|trans }}",#}
-                                        {#"last": "{{ 'page.derniere'|trans }}",#}
-                                        {#"next": "{{ 'page.suivante'|trans }}",#}
-                                        {#"previous": "{{ 'page.precedente'|trans }}"#}
-                                        {#},#}
-                                        {#aria: {#}
-                                        {#sortAscending: ": activer pour trier la colonne par ordre croissant",#}
-                                        {#sortDescending: ": activer pour trier la colonne par ordre décroissant"#}
-                                        {#}#}
-                                        {#}#}
-                                        {#});#}
-                                        {#table.table({visible: true, api: true}).columns.adjust();#}
-                                        {#$('#' + $conteneur.attr('id') + '_data_type_periode_' + typePeriode.id + ' .progress').each(function () {#}
-                                        {#$(this).remove();#}
-                                        {#});#}
-                                        {#}#}
-                                        {#});#}
                                     }
                                 }
 
