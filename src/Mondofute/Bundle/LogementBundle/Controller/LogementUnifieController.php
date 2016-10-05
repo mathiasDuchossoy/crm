@@ -650,7 +650,7 @@ class LogementUnifieController extends Controller
      */
     public function chargerLocatifAction(Request $request)
     {
-        ini_set('memory_limit','256M');
+//        ini_set('memory_limit','256M');
         //        récupère la valeur numérique de memory_limit
         $memory = intval(ini_get('memory_limit'), 10);
 //        récupère l'unite de memory_limit, le trim permet de supprimer un éventuel espace
@@ -672,8 +672,6 @@ class LogementUnifieController extends Controller
         }
         $memoryLimitPourcentage=80;
         $logementsRef = $request->get('logements');
-//        dump($request->get('logements'));
-//        die;
         $em = $this->getDoctrine()->getManager();
         $reponse = new \stdClass();
 
@@ -681,11 +679,9 @@ class LogementUnifieController extends Controller
         foreach ($logementsRef as $indiceLogement => $idLogement){
             if (memory_get_usage() >= (($memoryLimit * $memoryLimitPourcentage) / 100)){
                 $reponse->suivant = $idLogement;
-                $reponse->logements = $logements;
                 return new JsonResponse($reponse);
             }
             $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
-//            echo memory_get_usage().PHP_EOL;
             $logement=new \stdClass();
             $logement->id = $logementRef->getId();
 
@@ -698,22 +694,16 @@ class LogementUnifieController extends Controller
             }
             /** @var LogementPeriode $logementPeriodeRef */
             foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
-//                $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
-
                 $logementPeriode=new \stdClass();
                 $logementPeriode->id=$logementPeriodeRef->getPeriode()->getId();
                 $logementPeriode->type=new \stdClass();
                 $logementPeriode->type->id=$logementPeriodeRef->getPeriode()->getType()->getId();
-//            $logementPeriode['debut']=$logementPeriodeRef->getPeriode()->getDebut();
-//            $logementPeriode['fin']=$logementPeriodeRef->getPeriode()->getFin();
                 $logementPeriode->stock=$logementPeriodeRef->getLocatif()->getStock();
                 $logement->periodes[]= $logementPeriode;
             }
             array_push($reponse->logements,$logement);
         }
-//        $reponse->logements=$logements;
         $reponse->suivant = null;
-//        echo memory_get_peak_usage();
         return new JsonResponse($reponse);
     }
 
