@@ -17,10 +17,12 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementBundle\Form\LogementUnifieType;
+use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -309,8 +311,8 @@ class LogementUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Logement $entity */
-            foreach ($logementUnifie->getLogements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($logementUnifie->getLogements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -330,7 +332,8 @@ class LogementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Logement $logementSite */
-                                    $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element) use ($site) {
+                                    $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($logementSite)) {
@@ -360,11 +363,11 @@ class LogementUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($logementUnifie);
             $em->flush();
-            foreach ($sites as $site){
-                if($site->getCrm()==1){
+            foreach ($sites as $site) {
+                if ($site->getCrm() == 1) {
                     foreach ($logementUnifie->getLogements() as $logement) {
                         $job = new Job('mondofute_logement:associer_periodes_command',
                             array(
@@ -435,7 +438,7 @@ class LogementUnifieController extends Controller
                 if (empty($entity->getId()) || is_null($logementSite = $emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $entity->getId())))) {
                     $logementSite = new Logement();
                     $entitySite->addLogement($logementSite);
-                    $edit=false;
+                    $edit = false;
                 }
                 $logementSite->setActif($logement->getActif())
                     ->setAccesPMR($logement->getAccesPMR())
@@ -484,7 +487,8 @@ class LogementUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'logementPhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalLogementPhotos */
-                            $originalLogementPhoto = $originalLogementPhotos->filter(function (LogementPhoto $element) use ($logementPhoto) {
+                            $originalLogementPhoto = $originalLogementPhotos->filter(function (LogementPhoto $element
+                            ) use ($logementPhoto) {
                                 return $element->getPhoto() == $logementPhoto->getPhoto();
                             })->first();
                             unset($logementPhotoSite);
@@ -530,7 +534,9 @@ class LogementUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (LogementPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            LogementPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -541,7 +547,8 @@ class LogementUnifieController extends Controller
                                     else {
                                         $traductionSite = new LogementPhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $logementPhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -572,10 +579,10 @@ class LogementUnifieController extends Controller
                 }
 
                 // ********** FIN GESTION DES MEDIAS **********
-                
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
-                if(!$edit) {
+                if (!$edit) {
                     $em = $this->getDoctrine()->getManager();
                     foreach ($entitySite->getLogements() as $logement) {
                         $job = new Job('mondofute_logement:associer_periodes_command',
@@ -592,7 +599,6 @@ class LogementUnifieController extends Controller
             }
         }
     }
-
 
     /**
      * Création d'un nouveau logementPhoto
@@ -642,6 +648,33 @@ class LogementUnifieController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function chargerLocatifAction(Request $request, Logement $logementRef)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $logement['id'] = $logementRef->getId();
+        $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
+        foreach ($logementRef->getTraductions() as $traduction) {
+            if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                $logement['nom'] = $traduction->getNom();
+            }
+        }
+        /** @var LogementPeriode $logementPeriodeRef */
+        foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
+            $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
+            $logementPeriode['id']=$logementPeriodeRef->getPeriode()->getId();
+            $logementPeriode['type']['id']=$logementPeriodeRef->getPeriode()->getType()->getId();
+//            $logementPeriode['debut']=$logementPeriodeRef->getPeriode()->getDebut();
+//            $logementPeriode['fin']=$logementPeriodeRef->getPeriode()->getFin();
+            $logementPeriode['stock']=$logementPeriodeRef->getLocatif()->getStock();
+            $logement['periodes'][]= $logementPeriode;
+        }
+        return new JsonResponse($logement);
+    }
 
     /**
      * Duplique a new LogementUnifie entity.
@@ -840,7 +873,7 @@ class LogementUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Logement $entity */
             foreach ($logementUnifie->getLogements() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -919,7 +952,7 @@ class LogementUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Logement $entity */
             foreach ($logementUnifie->getLogements() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -932,7 +965,7 @@ class LogementUnifieController extends Controller
 
         $originalLogementPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
-        
+
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         /** @var Logement $logement */
         foreach ($logementUnifie->getLogements() as $logement) {
@@ -965,10 +998,10 @@ class LogementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($logementUnifie->getLogements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($logementUnifie->getLogements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -1052,7 +1085,8 @@ class LogementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Logement $logementSite */
-                        $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element) use ($site) {
+                        $logementSite = $logementUnifie->getLogements()->filter(function (Logement $element) use ($site
+                        ) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1062,7 +1096,10 @@ class LogementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau logementPhoto
                             if (!empty($logementPhoto->getId())) {
                                 // on récupère l'logementPhoto pour le modifier
-                                $logementPhotoSite = $em->getRepository(LogementPhoto::class)->findOneBy(array('logement' => $logementSite, 'photo' => $originalPhotos->get($key)));
+                                $logementPhotoSite = $em->getRepository(LogementPhoto::class)->findOneBy(array(
+                                    'logement' => $logementSite,
+                                    'photo' => $originalPhotos->get($key)
+                                ));
                             }
                             // si l'logementPhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($logementPhoto->getId()) || empty($logementPhotoSite)) {
@@ -1093,7 +1130,9 @@ class LogementUnifieController extends Controller
                                     $traductionSites = $logementPhotoSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (LogementPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            LogementPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1106,7 +1145,8 @@ class LogementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                 if (!empty($request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('logement_unifie')['logements'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $logementPhotoSite->setActif(true);
                                 } else {
@@ -1124,11 +1164,11 @@ class LogementUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($logementUnifie);
             $em->flush();
-            
-            $this->copieVersSites($logementUnifie , $originalLogementPhotos);
+
+            $this->copieVersSites($logementUnifie, $originalLogementPhotos);
 
             $job = new Job('edit:prestationAnnexeLogement',
                 array(
@@ -1228,7 +1268,7 @@ class LogementUnifieController extends Controller
                             $emSite->remove($codePromoLogement);
                         }
                     }
-                    
+
                     
                     $emSite->flush();
                 }
@@ -1263,7 +1303,7 @@ class LogementUnifieController extends Controller
                         }
                     }
             }
-            
+
             $em->remove($logementUnifie);
             $em->flush();
         }
