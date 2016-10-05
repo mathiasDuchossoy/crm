@@ -684,7 +684,7 @@ class LogementUnifieController extends Controller
                 return new JsonResponse($reponse);
             }
             $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
-            echo memory_get_usage();
+            echo memory_get_usage().PHP_EOL;
             $logement['id'] = $logementRef->getId();
             $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
             foreach ($logementRef->getTraductions() as $traduction) {
