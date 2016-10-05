@@ -680,37 +680,43 @@ class LogementUnifieController extends Controller
 //        dump($request->get('logements'));
 //        die;
         $em = $this->getDoctrine()->getManager();
-        $reponse = array();
+        $reponse = new \stdClass();
         $logements = array();
         foreach ($logementsRef as $indiceLogement => $idLogement){
             if (memory_get_usage() >= (($memoryLimit * $memoryLimitPourcentage) / 100)){
-                $reponse['suivant'] = $idLogement;
-                $reponse['logements'] = $logements;
+                $reponse->suivant = $idLogement;
+                $reponse->logements = $logements;
                 return new JsonResponse($reponse);
             }
             $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
 //            echo memory_get_usage().PHP_EOL;
-            $logement['id'] = $logementRef->getId();
-            $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
+            $logement=new \stdClass();
+            $logement->id = $logementRef->getId();
+
+            $logement->logementUnifie=new \stdClass();
+            $logement->logementUnifie->id = $logementRef->getLogementUnifie()->getId();
             foreach ($logementRef->getTraductions() as $traduction) {
                 if ($traduction->getLangue()->getCode() == $request->getLocale()) {
-                    $logement['nom'] = $traduction->getNom();
+                    $logement->nom = $traduction->getNom();
                 }
             }
             /** @var LogementPeriode $logementPeriodeRef */
             foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
 //                $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
-                $logementPeriode['id']=$logementPeriodeRef->getPeriode()->getId();
-                $logementPeriode['type']['id']=$logementPeriodeRef->getPeriode()->getType()->getId();
+
+                $logementPeriode=new \stdClass();
+                $logementPeriode->id=$logementPeriodeRef->getPeriode()->getId();
+                $logementPeriode->type=new \stdClass();
+                $logementPeriode->type->id=$logementPeriodeRef->getPeriode()->getType()->getId();
 //            $logementPeriode['debut']=$logementPeriodeRef->getPeriode()->getDebut();
 //            $logementPeriode['fin']=$logementPeriodeRef->getPeriode()->getFin();
-                $logementPeriode['stock']=$logementPeriodeRef->getLocatif()->getStock();
-                $logement['periodes'][]= $logementPeriode;
+                $logementPeriode->stock=$logementPeriodeRef->getLocatif()->getStock();
+                $logement->periodes[]= $logementPeriode;
             }
             array_push($logements,$logement);
         }
-        $reponse['logements']=$logements;
-        $reponse['suivant'] = null;
+        $reponse->logements=$logements;
+        $reponse->suivant = null;
 //        echo memory_get_peak_usage();
         return new JsonResponse($reponse);
     }
