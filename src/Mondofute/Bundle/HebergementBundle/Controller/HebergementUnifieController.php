@@ -38,6 +38,7 @@ use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
+use Nelmio\ApiDocBundle\Parser\JsonSerializableParser;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
@@ -1451,6 +1452,42 @@ class HebergementUnifieController extends Controller
         }
     }
 
+    public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $em = $this->getDoctrine()->getManager();
+//        $data = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
+        $fournisseurHebergementsJson = array();
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            $fournisseurHebergementJson['fournisseur']['id'] = $fournisseurHebergement->getFournisseur()->getId();
+            $fournisseurHebergementJson['fournisseur']['enseigne'] = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            $fournisseurHebergementJson['logements'] = array();
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                if($logement->getSite()->getCrm()) {
+
+
+                    $logementJson['id'] = $logement->getId();
+                    $logementJson['logementUnifie']['id'] = $logement->getLogementUnifie()->getId();
+                    /** @var LogementTraduction $traduction */
+                    foreach ($logement->getTraductions() as $traduction) {
+                        if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                            $logementJson['nom'] = $traduction->getNom();
+                        }
+                    }
+                    $fournisseurHebergementJson['logements'][] = $logementJson;
+                }
+            }
+            $fournisseurHebergementsJson[] = $fournisseurHebergementJson;
+        }
+        return new JsonResponse($fournisseurHebergementsJson);
+    }
+//    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
+////        dump($request);
+////        die;
+//        return new JsonResponse('');
+//    }
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
     {
         ini_set('memory_limit', '256M');
