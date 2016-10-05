@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\CodePromoAppolBundle\Bundle\Repository;
+namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
 
 /**
  * CodePromoApplicationRepository
