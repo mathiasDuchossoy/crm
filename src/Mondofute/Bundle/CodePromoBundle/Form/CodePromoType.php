@@ -107,7 +107,14 @@ class CodePromoType extends AbstractType
                     'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFournisseurPrestationAnnexeType',
                     'allow_add' => true,
                     'allow_delete' => true,
-                    'label' => 'Code promo prestation annexes',
+                    'label' => 'Code promo fournisseur prestation annexes',
+                )
+            )
+            ->add('codePromoFamillePrestationAnnexes', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFamillePrestationAnnexeType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo famille prestation annexes',
                 )
             )
         ;

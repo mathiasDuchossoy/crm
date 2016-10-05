@@ -1,7 +1,7 @@
-Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe:
+Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFamillePrestationAnnexe:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\CodePromoApplicationBundle\Repository\CodePromoFournisseurPrestationAnnexeRepository
+    repositoryClass: Mondofute\Bundle\CodePromoApplicationBundle\Repository\CodePromoFamillePrestationAnnexeRepository
     id:
         id:
             type: integer
@@ -11,11 +11,11 @@ Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestatio
             options:
                 unsigned: true
     manyToOne:
-        fournisseurPrestationAnnexe:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+        famillePrestationAnnexe:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         codePromo:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
-            inversedBy: codePromoFournisseurPrestationAnnexes
+            inversedBy: codePromoFamillePrestationAnnexes
     lifecycleCallbacks: {  }

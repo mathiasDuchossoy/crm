@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -59,6 +60,10 @@ class CodePromo extends BaseCodePromo
      * @var Collection
      */
     private $codePromoLogements;
+    /**
+     * @var Collection
+     */
+    private $codePromoFournisseurPrestationAnnexes;
 
     public function __construct()
     {
@@ -69,6 +74,7 @@ class CodePromo extends BaseCodePromo
         $this->codePromoFournisseurs = new ArrayCollection();
         $this->codePromoHebergements = new ArrayCollection();
         $this->codePromoLogements = new ArrayCollection();
+        $this->codePromoFournisseurPrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -364,5 +370,39 @@ class CodePromo extends BaseCodePromo
     public function getCodePromoLogements()
     {
         return $this->codePromoLogements;
+    }
+
+    /**
+     * Add codePromoFournisseurPrestationAnnex
+     *
+     * @param CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoFournisseurPrestationAnnex(CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex)
+    {
+        $this->codePromoFournisseurPrestationAnnexes[] = $codePromoFournisseurPrestationAnnex->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoFournisseurPrestationAnnex
+     *
+     * @param CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex
+     */
+    public function removeCodePromoFournisseurPrestationAnnex(CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex)
+    {
+        $this->codePromoFournisseurPrestationAnnexes->removeElement($codePromoFournisseurPrestationAnnex);
+    }
+
+    /**
+     * Get codePromoFournisseurPrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getCodePromoFournisseurPrestationAnnexes()
+    {
+        return $this->codePromoFournisseurPrestationAnnexes;
     }
 }

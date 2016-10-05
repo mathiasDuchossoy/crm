@@ -42,7 +42,7 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
 //        ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
-            ->select('fournisseurPrestationAnnexe.id fournisseurPrestationAnnexeId, traductions.libelle')
+            ->select('fournisseurPrestationAnnexe.id fournisseurPrestationAnnexeId, traductions.libelle, famillePrestationAnnexe.id famillePrestationAnnexeId, traductionFamilles.libelle familleLibelle')
             ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe' , 'fournisseurPrestationAnnexe')
             ->join('fournisseurPrestationAnnexe.fournisseur' ,'fournisseur')
             ->where('fournisseur.id = :fournisseurId')
@@ -51,6 +51,12 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
             ->join('traductions.langue' , 'langue')
             ->andWhere('langue.code = :locale')
             ->setParameter('locale' , $locale)
+            ->join('fournisseurPrestationAnnexe.prestationAnnexe' , 'prestationAnnexe')
+            ->join('prestationAnnexe.famillePrestationAnnexe' , 'famillePrestationAnnexe')
+            ->join('famillePrestationAnnexe.traductions' , 'traductionFamilles')
+            ->join('traductionFamilles.langue' , 'langueFamille')
+            ->andWhere('langueFamille.code = :locale')
+            ->orderBy('traductionFamilles.libelle' , 'ASC')
         ;
 
         $result = $q->getQuery()->getResult();

@@ -6,9 +6,19 @@
         {% for fournisseur in fournisseursPrestationAnnexe %}
 
             {% set prestationAnnexeExists = false %}
-            {% if codePromo.codePromoFournisseurPrestationAnnexes is not empty and fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id] is defined %}
-                {% set prestationAnnexeExists = true %}
-            {% endif %}
+            {#{% if codePromo.codePromoFournisseurPrestationAnnexes is not empty and fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id] is defined %}#}
+                {#{% set prestationAnnexeExists = true %}#}
+            {#{% endif %}#}
+            {% for codePromoFournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
+                {% if codePromoFournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
+                    {% set prestationAnnexeExists = true %}
+                {% endif %}
+            {% endfor %}
+            {% for codePromoFamillePrestationAnnexe in codePromo.codePromoFamillePrestationAnnexes %}
+                {% if codePromoFamillePrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
+                    {% set prestationAnnexeExists = true %}
+                {% endif %}
+            {% endfor %}
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading" role="tab"
@@ -18,14 +28,16 @@
                             <label><input type="checkbox" value="{{ fournisseur.id }}"
                                           onclick="checkChildren(this , 'code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes')"
                                         {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
-                                          name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ keyFournisseur }}][fournisseur]"
+                                          name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}2][fournisseur]"
                                         {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
                                             {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id and codePromoFournisseur.type.vars.value == 2 %}
                                                 checked="checked"
                                             {% endif %}
                                         {% endfor %}
                                 >
-                                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ keyFournisseur }}][type]" value="2"/>
+                                <input type="hidden"
+                                       name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}2][type]"
+                                       value="2"/>
                                 <a
                                         data-toggle="collapse"
                                         href="#collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes"
@@ -41,24 +53,26 @@
                         </div>
                     </h4>
                 </div>
+
                 <div id="collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes"
                      class="panel-collapse collapse{% if prestationAnnexeExists == true %} in{% endif %}"
                      role="tabpanel"
                      aria-labelledby="heading_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
-                    <!-- List group prestation_annexes -->
-                    <ul class="list-group"
-                        id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
-                        {% if prestationAnnexeExists == true %}
-                            {% include ('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-prestation-annexes.html.twig') with {
-                            'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],
-                            'fournisseurId': fournisseur.id,
-                            'codePromoId' : codePromo.vars.value.id
-                            } %}
-                        {% endif %}
-                    </ul>
+
+                        <!-- List group prestation_annexes -->
+                        <ul class="list-group"
+                            id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                            {#{% if prestationAnnexeExists == true %}#}
+                                {#{% include ('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-prestation-annexes.html.twig') with {#}
+                                {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],#}
+                                {#'fournisseurId': fournisseur.id,#}
+                                {#'codePromoId' : codePromo.vars.value.id#}
+                                {#} %}#}
+                            {#{% endif %}#}
+                        </ul>
+
                 </div>
             </div>
-            {% set keyFournisseur = keyFournisseur + 1  %}
         {% endfor %}
     </div>
 </div>

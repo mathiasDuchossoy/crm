@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\CodePromoBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromo as BaseCodePromo;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFamillePrestationAnnexe;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
@@ -64,6 +65,10 @@ class CodePromo extends BaseCodePromo
      * @var Collection
      */
     private $codePromoFournisseurPrestationAnnexes;
+    /**
+     * @var Collection
+     */
+    private $codePromoFamillePrestationAnnexes;
 
     public function __construct()
     {
@@ -75,6 +80,7 @@ class CodePromo extends BaseCodePromo
         $this->codePromoHebergements = new ArrayCollection();
         $this->codePromoLogements = new ArrayCollection();
         $this->codePromoFournisseurPrestationAnnexes = new ArrayCollection();
+        $this->codePromoFamillePrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -404,5 +410,39 @@ class CodePromo extends BaseCodePromo
     public function getCodePromoFournisseurPrestationAnnexes()
     {
         return $this->codePromoFournisseurPrestationAnnexes;
+    }
+
+    /**
+     * Add codePromoFamillePrestationAnnex
+     *
+     * @param CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex
+     *
+     * @return CodePromo
+     */
+    public function addCodePromoFamillePrestationAnnex(CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex)
+    {
+        $this->codePromoFamillePrestationAnnexes[] = $codePromoFamillePrestationAnnex->setCodePromo($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove codePromoFamillePrestationAnnex
+     *
+     * @param CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex
+     */
+    public function removeCodePromoFamillePrestationAnnex(CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex)
+    {
+        $this->codePromoFamillePrestationAnnexes->removeElement($codePromoFamillePrestationAnnex);
+    }
+
+    /**
+     * Get codePromoFamillePrestationAnnexes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCodePromoFamillePrestationAnnexes()
+    {
+        return $this->codePromoFamillePrestationAnnexes;
     }
 }
