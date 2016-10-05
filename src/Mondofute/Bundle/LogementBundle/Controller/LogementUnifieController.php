@@ -655,6 +655,7 @@ class LogementUnifieController extends Controller
      */
     public function chargerLocatifAction(Request $request)
     {
+        ini_set('memory_limit','256G');
         //        récupère la valeur numérique de memory_limit
         $memory = intval(ini_get('memory_limit'), 10);
 //        récupère l'unite de memory_limit, le trim permet de supprimer un éventuel espace
@@ -674,7 +675,7 @@ class LogementUnifieController extends Controller
                 $memoryLimit = $memory;
                 break;
         }
-        $memoryLimitPourcentage=90;
+        $memoryLimitPourcentage=50;
         $logementsRef = $request->get('logements');
 //        dump($request->get('logements'));
 //        die;
@@ -688,7 +689,7 @@ class LogementUnifieController extends Controller
                 return new JsonResponse($reponse);
             }
             $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
-
+            echo memory_get_usage();
             $logement['id'] = $logementRef->getId();
             $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
             foreach ($logementRef->getTraductions() as $traduction) {
