@@ -669,7 +669,7 @@ class LogementUnifieController extends Controller
                 $memoryLimit = $memory;
                 break;
         }
-        $memoryLimitPourcentage=70;
+        $memoryLimitPourcentage=90;
         $logementsRef = $request->get('logements');
 //        dump($request->get('logements'));
 //        die;
