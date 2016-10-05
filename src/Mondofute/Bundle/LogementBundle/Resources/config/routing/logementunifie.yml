@@ -38,6 +38,11 @@ popup_logement_logement_show:
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:showPopup" }
     methods:  GET
 
+logement_charger_locatif:
+    path:     /{id}/charger_locatif
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:chargerLocatif" }
+    methods:  GET
+
 popup_logement_logement_new:
     path:     /new_popup/{idFournisseurHebergement}
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:newPopup" }
@@ -57,3 +62,4 @@ popup_logement_logement_delete:
     path:     /{id}/delete_popup
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:deletePopup" }
     methods:  DELETE
+
