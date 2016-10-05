@@ -668,6 +668,7 @@ class LogementUnifieController extends Controller
             $logementPeriode['stock']=$logementPeriodeRef->getLocatif()->getStock();
             $logement['periodes'][]= $logementPeriode;
         }
+        echo memory_get_peak_usage();
         return new JsonResponse($logement);
     }
 
