@@ -10,4 +10,23 @@ namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
  */
 class CodePromoHebergementRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findBySite($fournisseurId , $siteId = 1)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->from('MondofuteCodePromoApplicationBundle:CodePromoHebergement' , 'codePromoHebergement')
+            ->select('codePromoHebergement')
+            ->join('codePromoHebergement.codePromo' , 'codePromo')
+            ->join('codePromo.site' , 'site')
+            ->join('codePromoHebergement.fournisseur' , 'fournisseur')
+            ->where('site.id = :siteId')
+            ->setParameter('siteId' ,$siteId )
+            ->andWhere('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId' , $fournisseurId )
+        ;
+
+        $result = $q->getQuery()->getResult();
+
+        return $result;
+    }
 }
