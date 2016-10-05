@@ -274,54 +274,54 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
                                             }
 //                                            fin de la récupération des traductions
 //                                            récupération des périodes logement
-//                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
-//                                            $lpStmt = $this->connexion->prepare($sql);
-//                                            if (!$lpStmt) {
-//
-//                                            } else {
-//                                                $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
-//                                                if ($retour) {
-//                                                    $result = $lpStmt->execute();
-//                                                    if (!$result) {
-//                                                        $this->connexion->rollBack();
-//                                                        return false;
-//                                                    } else {
-//                                                        while ($lpResult = $lpStmt->fetch()) {
-//                                                            $logementPeriode = new LogementPeriode();
-//                                                            $logementPeriodeLocatif = new LogementPeriodeLocatif();
-//                                                            $periode = new Periode();
-//                                                            $typePeriode = new TypePeriode();
-//                                                            $typePeriode->setId((int)$lpResult['type_id']);
-////                                                            $periode->setId();
-//                                                            $periode
-//                                                                ->setDebut(new \DateTime($lpResult['debut']))
-//                                                                ->setFin(new \DateTime($lpResult['fin']))
-//                                                                ->setType($typePeriode)->setId($lpResult['periode_id']);
-//
-//                                                            $logementPeriodeLocatif->setLogement($logement)
-//                                                                ->setPeriode($periode)
-//                                                                ->setStock($lpResult['stock']);
-//                                                            $logementPeriode->setLogement($logement)->setPeriode($periode)->setLocatif($logementPeriodeLocatif);
-//                                                            $logement->addPeriode($logementPeriode);
-//                                                        }
-//                                                        if (isset($lpStmt)) {
-//                                                            unset($lpStmt);
-//                                                        }
-//                                                        if (isset($lpResult)) {
-//                                                            unset($lpResult);
-//                                                        }
-//                                                        if (isset($logementPeriode)) {
-//                                                            unset($logementPeriode);
-//                                                        }
-//                                                        if (isset($periode)) {
-//                                                            unset($periode);
-//                                                        }
-//                                                        if (isset($logementPeriodeLocatif)) {
-//                                                            unset($logementPeriodeLocatif);
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
+                                            $sql = 'SELECT lp.periode_id, lplocatif.stock, p.type_id, p.debut,p.fin FROM logement_periode AS lp LEFT JOIN logement_periode_locatif AS lplocatif ON lp.periode_id=lplocatif.periode_id AND lp.logement_id=lplocatif.logement_id LEFT JOIN periode AS p ON p.id=lp.periode_id WHERE lp.logement_id=?';
+                                            $lpStmt = $this->connexion->prepare($sql);
+                                            if (!$lpStmt) {
+
+                                            } else {
+                                                $retour = $lpStmt->bindValue(1, $idLogement, Type::BIGINT);
+                                                if ($retour) {
+                                                    $result = $lpStmt->execute();
+                                                    if (!$result) {
+                                                        $this->connexion->rollBack();
+                                                        return false;
+                                                    } else {
+                                                        while ($lpResult = $lpStmt->fetch()) {
+                                                            $logementPeriode = new LogementPeriode();
+                                                            $logementPeriodeLocatif = new LogementPeriodeLocatif();
+                                                            $periode = new Periode();
+                                                            $typePeriode = new TypePeriode();
+                                                            $typePeriode->setId((int)$lpResult['type_id']);
+//                                                            $periode->setId();
+                                                            $periode
+                                                                ->setDebut(new \DateTime($lpResult['debut']))
+                                                                ->setFin(new \DateTime($lpResult['fin']))
+                                                                ->setType($typePeriode)->setId($lpResult['periode_id']);
+
+                                                            $logementPeriodeLocatif->setLogement($logement)
+                                                                ->setPeriode($periode)
+                                                                ->setStock($lpResult['stock']);
+                                                            $logementPeriode->setLogement($logement)->setPeriode($periode)->setLocatif($logementPeriodeLocatif);
+                                                            $logement->addPeriode($logementPeriode);
+                                                        }
+                                                        if (isset($lpStmt)) {
+                                                            unset($lpStmt);
+                                                        }
+                                                        if (isset($lpResult)) {
+                                                            unset($lpResult);
+                                                        }
+                                                        if (isset($logementPeriode)) {
+                                                            unset($logementPeriode);
+                                                        }
+                                                        if (isset($periode)) {
+                                                            unset($periode);
+                                                        }
+                                                        if (isset($logementPeriodeLocatif)) {
+                                                            unset($logementPeriodeLocatif);
+                                                        }
+                                                    }
+                                                }
+                                            }
 //                                            fin de récupération des périodes logements
                                             $fh->addLogement($logement);
                                         }
