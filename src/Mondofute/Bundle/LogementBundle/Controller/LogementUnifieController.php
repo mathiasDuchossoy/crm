@@ -650,7 +650,7 @@ class LogementUnifieController extends Controller
      */
     public function chargerLocatifAction(Request $request)
     {
-        ini_set('memory_limit','256G');
+        ini_set('memory_limit','256M');
         //        récupère la valeur numérique de memory_limit
         $memory = intval(ini_get('memory_limit'), 10);
 //        récupère l'unite de memory_limit, le trim permet de supprimer un éventuel espace
