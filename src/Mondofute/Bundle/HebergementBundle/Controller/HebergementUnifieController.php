@@ -1787,6 +1787,19 @@ class HebergementUnifieController extends Controller
                                     $emSite->remove($codePromoHebergement);
                                 }
                             }
+
+                            /** @var FournisseurHebergement $fournisseurHebergement */
+                            foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement){
+                                foreach ($fournisseurHebergement->getLogements() as $logement)
+                                {
+                                    $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+                                    foreach ($codePromoLogements as $codePromoLogement)
+                                    {
+                                        $emSite->remove($codePromoLogement);
+                                    }
+                                }
+                            }
+
                         }
                         $emSite->remove($entityUnifieSite);
                         $emSite->flush();
@@ -1795,7 +1808,6 @@ class HebergementUnifieController extends Controller
                 if (!empty($entityUnifie)) {
 
                     $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByHebergement($entityUnifie->getHebergements()->first()->getId());
-
                     foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
                         $em->remove($prestationAnnexeHebergementUnifie);
                     }
@@ -1826,10 +1838,22 @@ class HebergementUnifieController extends Controller
                         $em->flush();
                     }
 
+                    /** @var Hebergement $hebergement */
                     foreach ($entityUnifie->getHebergements() as $hebergement) {
                         $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement));
                         foreach ($codePromoHebergements as $codePromoHebergement) {
                             $em->remove($codePromoHebergement);
+                        }
+                    }
+                    /** @var FournisseurHebergement $fournisseurHebergement */
+                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                        foreach ($fournisseurHebergement->getLogements() as $logement)
+                        {
+                            $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+                            foreach ($codePromoLogements as $codePromoLogement)
+                            {
+                                $em->remove($codePromoLogement);
+                            }
                         }
                     }
                 }
@@ -1838,6 +1862,7 @@ class HebergementUnifieController extends Controller
                 $em->flush();
             }
         } catch (ForeignKeyConstraintViolationException $except) {
+            dump($except->getMessage());die;
             /** @var ForeignKeyConstraintViolationException $except */
             switch ($except->getCode()) {
                 case 0:

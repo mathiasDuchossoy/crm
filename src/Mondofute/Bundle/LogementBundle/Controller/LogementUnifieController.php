@@ -2,10 +2,12 @@
 
 namespace Mondofute\Bundle\LogementBundle\Controller;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use JMS\JobQueueBundle\Entity\Job;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -381,6 +383,13 @@ class LogementUnifieController extends Controller
                 array(
                     'logementUnifieId' => $logementUnifie->getId()
                 ), true, 'prestationAnnexeLogement');
+            $em->persist($job);
+            $em->flush();
+
+            $job = new Job('creer:codePromoLogement',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId()
+                ), true, 'codePromoLogement');
             $em->persist($job);
             $em->flush();
 
@@ -1209,6 +1218,16 @@ class LogementUnifieController extends Controller
                             }
                         }
                     }
+
+
+                    foreach ($logementUnifieSite->getLogements() as $logement)
+                    {
+                        $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+                        foreach ($codePromoLogements as $codePromoLogement)
+                        {
+                            $emSite->remove($codePromoLogement);
+                        }
+                    }
                     
                     
                     $emSite->flush();
@@ -1234,6 +1253,15 @@ class LogementUnifieController extends Controller
                 }
 //                    $emSite->remove($logementUnifieSite);
 //                    $emSite->flush();
+
+                    foreach ($logementUnifie->getLogements() as $logement)
+                    {
+                        $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+                        foreach ($codePromoLogements as $codePromoLogement)
+                        {
+                            $em->remove($codePromoLogement);
+                        }
+                    }
             }
             
             $em->remove($logementUnifie);

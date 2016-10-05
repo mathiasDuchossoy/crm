@@ -1401,7 +1401,7 @@ class CodePromoUnifieController extends Controller
     /**
      * @param CodePromoUnifie $codePromoUnifie
      */
-    public function gestionCodePromoLogement($codePromoUnifie)
+    private function gestionCodePromoLogement($codePromoUnifie)
     {
         $em = $this->getDoctrine()->getManager();
         /** @var CodePromo $codePromo */
