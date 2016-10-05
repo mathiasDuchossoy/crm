@@ -1777,32 +1777,32 @@ class HebergementUnifieController extends Controller
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
-        $serializer = $this->container->get('jms_serializer');
         $em = $this->getDoctrine()->getManager();
-//        $data = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
         $fournisseurHebergementsJson = array();
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
-            $fournisseurHebergementJson['fournisseur']['id'] = $fournisseurHebergement->getFournisseur()->getId();
-            $fournisseurHebergementJson['fournisseur']['enseigne'] = $fournisseurHebergement->getFournisseur()->getEnseigne();
-            $fournisseurHebergementJson['logements'] = array();
+            $fournisseurHebergementJson=new \stdClass();
+            $fournisseurHebergementJson->fournisseur = new \stdClass();
+            $fournisseurHebergementJson->fournisseur->id = $fournisseurHebergement->getFournisseur()->getId();
+            $fournisseurHebergementJson->fournisseur->enseigne = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            $fournisseurHebergementJson->logements = array();
             /** @var Logement $logement */
             foreach ($fournisseurHebergement->getLogements() as $logement){
                 if($logement->getSite()->getCrm()) {
-
-
-                    $logementJson['id'] = $logement->getId();
-                    $logementJson['logementUnifie']['id'] = $logement->getLogementUnifie()->getId();
+                    $logementJson=new \stdClass();
+                    $logementJson->id = $logement->getId();
+                    $logementJson->logementUnifie=new \stdClass();
+                    $logementJson->logementUnifie->id = $logement->getLogementUnifie()->getId();
                     /** @var LogementTraduction $traduction */
                     foreach ($logement->getTraductions() as $traduction) {
                         if ($traduction->getLangue()->getCode() == $request->getLocale()) {
-                            $logementJson['nom'] = $traduction->getNom();
+                            $logementJson->nom = $traduction->getNom();
                         }
                     }
-                    $fournisseurHebergementJson['logements'][] = $logementJson;
+                    array_push($fournisseurHebergementJson->logements,$logementJson);
                 }
             }
-            $fournisseurHebergementsJson[] = $fournisseurHebergementJson;
+            array_push($fournisseurHebergementsJson,$fournisseurHebergementJson);
         }
         return new JsonResponse($fournisseurHebergementsJson);
     }
