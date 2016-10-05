@@ -10,6 +10,7 @@ use Exception;
 use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
 use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
+use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFamillePrestationAnnexe;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
@@ -665,42 +666,6 @@ class CodePromoUnifieController extends Controller
                 }
                 // *** fin gestion code promo hebergement ***
 
-                // *** gestion code promo logement ***
-                if (!empty($entity->getCodePromoLogements()) && !$entity->getCodePromoLogements()->isEmpty()) {
-                    /** @var CodePromoLogement $codePromoLogement */
-                    foreach ($entity->getCodePromoLogements() as $codePromoLogement) {
-                        $codePromoLogementSite = $entitySite->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogement) {
-                            return $element->getId() == $codePromoLogement->getId();
-                        })->first();
-                        if (false === $codePromoLogementSite) {
-                            $codePromoLogementSite = new CodePromoLogement();
-                            $entitySite->addCodePromoLogement($codePromoLogementSite);
-                            $codePromoLogementSite
-                                ->setId($codePromoLogement->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($codePromoLogementSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-
-                        $codePromoLogementSite
-                            ->setLogement($emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $codePromoLogement->getLogement()->getLogementUnifie())));
-                    }
-                }
-
-                if (!empty($entitySite->getCodePromoLogements()) && !$entitySite->getCodePromoLogements()->isEmpty()) {
-                    /** @var CodePromoLogement $codePromoLogement */
-                    foreach ($entitySite->getCodePromoLogements() as $codePromoLogementSite) {
-                        $codePromoLogement = $entity->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogementSite) {
-                            return $element->getId() == $codePromoLogementSite->getId();
-                        })->first();
-                        if (false === $codePromoLogement) {
-//                            $entitySite->removeCodePromoLogement($codePromoLogementSite);
-                            $emSite->remove($codePromoLogementSite);
-                        }
-                    }
-                }
-                // *** fin gestion code promo logement ***
-
                 // *** gestion code promo fournisseurPrestationAnnexe ***
                 if (!empty($entity->getCodePromoFournisseurPrestationAnnexes()) && !$entity->getCodePromoFournisseurPrestationAnnexes()->isEmpty()) {
                     /** @var CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnexe */
@@ -774,6 +739,21 @@ class CodePromoUnifieController extends Controller
                     }
                 }
                 // *** fin gestion code promo famillePrestationAnnexe ***
+
+                // *** gestion code promo logement ***
+                if (!empty($entitySite->getCodePromoLogements()) && !$entitySite->getCodePromoLogements()->isEmpty()) {
+                    /** @var CodePromoLogement $codePromoLogement */
+                    foreach ($entitySite->getCodePromoLogements() as $codePromoLogementSite) {
+                        $codePromoLogement = $entity->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogementSite) {
+                            return $element->getId() == $codePromoLogementSite->getId();
+                        })->first();
+                        if (false === $codePromoLogement) {
+//                            $entitySite->removeCodePromoLogement($codePromoLogementSite);
+                            $emSite->remove($codePromoLogementSite);
+                        }
+                    }
+                }
+                // *** fin gestion code promo logement ***
 
                 $entityUnifieSite
                     ->setCode($entityUnifie->getCode());
@@ -1181,14 +1161,14 @@ class CodePromoUnifieController extends Controller
             }
             // *** fin gestion code promo famillePrestationAnnexe ***
 
-            // *** gestion code promo logement ***
-            $this->gestionCodePromoLogement($codePromoUnifie);
-            // *** fin gestion code promo logement ***
-
             $em->persist($codePromoUnifie);
             $em->flush();
 
             $this->copieVersSites($codePromoUnifie);
+
+            // *** gestion code promo logement ***
+            $this->gestionCodePromoLogement($codePromoUnifie);
+            // *** fin gestion code promo logement ***
 
             // add flash messages
             /** @var Session $session */
@@ -1404,25 +1384,13 @@ class CodePromoUnifieController extends Controller
     private function gestionCodePromoLogement($codePromoUnifie)
     {
         $em = $this->getDoctrine()->getManager();
-        /** @var CodePromo $codePromo */
-        foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
-            /** @var CodePromoHebergement $codePromoHebergement */
-            foreach ($codePromo->getCodePromoHebergements() as $codePromoHebergement) {
-                $hebergementUnifieId = $codePromoHebergement->getHebergement()->getHebergementUnifie()->getId();
-                $logements = $em->getRepository(Logement::class)->findByFournisseurHebergement($codePromoHebergement->getFournisseur()->getId(), $hebergementUnifieId, $codePromo->getSite()->getId());
-                foreach ($logements as $logement) {
-                    if (false === $codePromo->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($logement) {
-                            return $element->getLogement() == $logement;
-                        })->first()
-                    ) {
-                        $codePromoLogement = new CodePromoLogement();
-                        $codePromo
-                            ->addCodePromoLogement($codePromoLogement);
-                        $codePromoLogement->setLogement($logement);
-                    }
-                }
-            }
-        }
+
+        $job = new Job('creer:codePromoLogementByCodePromoUnifie',
+            array(
+                'codePromoUnifieId' => $codePromoUnifie->getId()
+            ), true, 'codePromoLogementByCodePromoUnifie');
+        $em->persist($job);
+        $em->flush();
     }
 
     public function getFournisseurHebergementsAction($codePromoId, $fournisseurId, $siteId)
