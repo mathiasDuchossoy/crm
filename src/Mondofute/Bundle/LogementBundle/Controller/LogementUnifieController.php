@@ -650,7 +650,7 @@ class LogementUnifieController extends Controller
      */
     public function chargerLocatifAction(Request $request)
     {
-        ini_set('memory_limit','256M');
+        ini_set('memory_limit','128M');
         //        récupère la valeur numérique de memory_limit
         $memory = intval(ini_get('memory_limit'), 10);
 //        récupère l'unite de memory_limit, le trim permet de supprimer un éventuel espace
@@ -670,7 +670,7 @@ class LogementUnifieController extends Controller
                 $memoryLimit = $memory;
                 break;
         }
-        $memoryLimitPourcentage=50;
+        $memoryLimitPourcentage=80;
         $logementsRef = $request->get('logements');
 //        dump($request->get('logements'));
 //        die;
@@ -684,7 +684,7 @@ class LogementUnifieController extends Controller
                 return new JsonResponse($reponse);
             }
             $logementRef = $em->getRepository(Logement::class)->chargerPourStocks($idLogement);
-            echo memory_get_usage().PHP_EOL;
+//            echo memory_get_usage().PHP_EOL;
             $logement['id'] = $logementRef->getId();
             $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
             foreach ($logementRef->getTraductions() as $traduction) {
@@ -694,7 +694,7 @@ class LogementUnifieController extends Controller
             }
             /** @var LogementPeriode $logementPeriodeRef */
             foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
-                $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
+//                $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
                 $logementPeriode['id']=$logementPeriodeRef->getPeriode()->getId();
                 $logementPeriode['type']['id']=$logementPeriodeRef->getPeriode()->getType()->getId();
 //            $logementPeriode['debut']=$logementPeriodeRef->getPeriode()->getDebut();
