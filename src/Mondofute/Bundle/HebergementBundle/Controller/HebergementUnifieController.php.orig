@@ -40,6 +40,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -1829,8 +1830,8 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-<<<<<<< HEAD
 
+<<<<<<< HEAD
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {
         $em = $this->getDoctrine()->getManager();
@@ -1872,28 +1873,50 @@ class HebergementUnifieController extends Controller
 ////        die;
 //        return new JsonResponse('');
 //    }
+||||||| parent of cfc7aa0... gestion ligne par ligne
+=======
+    public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
+    {
+        $serializer = $this->container->get('jms_serializer');
+        $em = $this->getDoctrine()->getManager();
+//        $data = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
+        $fournisseurHebergementsJson = array();
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            $fournisseurHebergementJson['fournisseur']['id'] = $fournisseurHebergement->getFournisseur()->getId();
+            $fournisseurHebergementJson['fournisseur']['enseigne'] = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            $fournisseurHebergementJson['logements'] = array();
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                if($logement->getSite()->getCrm()) {
+
+
+                    $logementJson['id'] = $logement->getId();
+                    $logementJson['logementUnifie']['id'] = $logement->getLogementUnifie()->getId();
+                    /** @var LogementTraduction $traduction */
+                    foreach ($logement->getTraductions() as $traduction) {
+                        if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                            $logementJson['nom'] = $traduction->getNom();
+                        }
+                    }
+                    $fournisseurHebergementJson['logements'][] = $logementJson;
+                }
+            }
+            $fournisseurHebergementsJson[] = $fournisseurHebergementJson;
+        }
+        return new JsonResponse($fournisseurHebergementsJson);
+    }
+//    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
+////        dump($request);
+////        die;
+//        return new JsonResponse('');
+//    }
+>>>>>>> cfc7aa0... gestion ligne par ligne
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
     {
         ini_set('memory_limit', '256M');
 //        ini_set('max_execution_time',300);
 //        set_time_limit(300);
-||||||| parent of b2e1526... gestion de l'affichage
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie){
-        ini_set('memory_limit','1G');
-        ini_set('max_execution_time',300);
-        set_time_limit(300);
-//        echo ini_get('max_execution_time');
-//        die;
-//        $time = new \DateTime();
-//        echo $time->format('H:i:s');
-=======
-
-    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
-    {
-//        ini_set('memory_limit','1G');
-//        ini_set('max_execution_time',300);
-//        set_time_limit(300);
->>>>>>> b2e1526... gestion de l'affichage
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
         $data = array();
@@ -1912,26 +1935,10 @@ class HebergementUnifieController extends Controller
                     }
                 }
                 /** @var LogementPeriode $periode */
-<<<<<<< HEAD
                 foreach ($logement->getPeriodes() as $periode) {
                     if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
 //                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input data-logement="' . $logement->getLogementUnifie()->getId() . '" data-periode="' . $periode->getPeriode()->getId() . '" name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
                         $ligne->{'periode' . $periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
-||||||| parent of b2e1526... gestion de l'affichage
-                foreach ($logement->getPeriodes() as $periode){
-
-//                    $ligne[] = array(
-//                        "titre" => 'du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y'),
-//                        "data" => $periode->getLocatif()->getStock()
-//                    );
-//                    $ligne['"du '.$periode->getPeriode()->getDebut()->format('d-m-Y').' au '.$periode->getPeriode()->getFin()->format('d-m-Y').'"'] = $periode->getLocatif()->getStock();
-                    if($periode->getPeriode()->getType()->getId() == $idTypePeriode){
-                        $ligne->{'periode'.$periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
-=======
-                foreach ($logement->getPeriodes() as $periode) {
-                    if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
-                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input name="stocks['.$logement->getLogementUnifie()->getId().']['.$periode->getPeriode()->getId().']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
->>>>>>> b2e1526... gestion de l'affichage
                     }
                 }
                 array_push($fournisseur[1], $ligne);
