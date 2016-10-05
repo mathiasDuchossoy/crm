@@ -39,9 +39,9 @@ popup_logement_logement_show:
     methods:  GET
 
 logement_charger_locatif:
-    path:     /{id}/charger_locatif
+    path:     /charger_locatif
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:chargerLocatif" }
-    methods:  GET
+    methods:  POST
 
 popup_logement_logement_new:
     path:     /new_popup/{idFournisseurHebergement}

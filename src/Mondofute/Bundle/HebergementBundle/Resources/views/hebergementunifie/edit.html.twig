@@ -157,36 +157,82 @@
         function chargerTableauStocks(table, parametres) {
 //            console.log('logements');
 //            console.log(parametres);
-            for (var i = 0; i < parametres.logements.length; i++) {
-
-                ajouterLogementLocatifTableau(table, parametres.logements[i], parametres);
+//            for (var i = 0; i < parametres.logements.length; i++) {
+//
+//                ajouterLogementLocatifTableau(table, parametres.logements[i], parametres);
+//            }
+            var logements=Array();
+            logements['logements'] = Array();
+            for(var i =0;i<parametres.logements.length;i++){
+                logements['logements'][i]= parametres.logements[i].id;
             }
-            {#var url = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_','idLogement'}) }}";#}
-            {#url = url.replace(/_idHebergement_/g, parseInt(idHebergement));#}
-            {#$.post(#}
-            {#"{{ path('') }}"#}
-            {#);#}
+            ajouterLogementLocatifTableau(table, logements, parametres);
         }
-        function ajouterLogementLocatifTableau(table, logement, parametres) {
-            var url = "{{ path('logement_charger_locatif', {'id': '_idLogement_'}) }}";
-            url = url.replace(/_idLogement_/g, parseInt(logement.id));
-            $.get(
+        function ajouterLogementLocatifTableau(table, logements, parametres) {
+            {#var url = "{{ path('logement_charger_locatif', {'id': '_idLogement_'}) }}";#}
+            {#url = url.replace(/_idLogement_/g, parseInt(logement.id));#}
+            {#$.get(#}
+                    {#url,#}
+                    {#function (data) {#}
+                        {#var donnees = Array();#}
+                        {#donnees['logement'] = data.nom+' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';#}
+                        {#var attribut = null;#}
+                        {#for (var i = 0; i < data.periodes.length; i++) {#}
+
+                            {#if (data.periodes[i].type.id == parametres.typePeriode.id) {#}
+                                {#attribut = 'periode' + data.periodes[i].id;#}
+                                {#donnees[attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);#}
+                            {#}#}
+                        {#}#}
+{#//                    console.log(data);#}
+                       {#table.row.add(donnees).draw();#}
+
+                    {#}#}
+            {#);#}
+//            console.log(logements);
+
+//            console.log(data);
+            var url = "{{ path('logement_charger_locatif') }}";
+//            url = url.replace(/_idLogement_/g, parseInt(logement.id));
+            $.post(
                     url,
-                    function (data) {
+                    {'logements[]': logements['logements']},
+                    function (datas) {
+//                        console.log(logements);
                         var donnees = Array();
-                        donnees['logement'] = data.nom+' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
-                        var attribut = null;
-                        for (var i = 0; i < data.periodes.length; i++) {
+                        var data=null;
+                        for(var iDatas=0;iDatas<datas['logements'].length;iDatas++){
+                            donnees[iDatas] = Array();
+                            data = datas['logements'][iDatas];
+                            donnees[iDatas]['logement'] = data.nom+' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
+                            var attribut = null;
+                            for (var i = 0; i < data.periodes.length; i++) {
 
-                            if (data.periodes[i].type.id == parametres.typePeriode.id) {
-                                attribut = 'periode' + data.periodes[i].id;
-                                donnees[attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
+                                if (data.periodes[i].type.id == parametres.typePeriode.id) {
+                                    attribut = 'periode' + data.periodes[i].id;
+                                    donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
+                                }
                             }
+//                            console.log(donnees[iDatas]);
                         }
-//                    console.log(data);
-                       table.row.add(donnees).draw();
 
-                    }
+//                    console.log(data);
+                       table.rows.add(donnees).draw();
+                        if(datas['suivant'] != null){
+                            var i = 0;
+                            while(i<logements['logements'].length && logements['logements'][i] != datas['suivant']){
+                                i++;
+                            }
+                            var indice=i;
+                            var newLogements = Array();
+                            newLogements['logements']=Array();
+                            for(indice=i;indice<logements['logements'].length;indice++){
+                                newLogements['logements'].push(logements['logements'][indice]);
+                            }
+                            ajouterLogementLocatifTableau(table, newLogements, parametres);
+                        }
+
+                    },'json'
             );
         }
         function chargerOngletStocksHebergement(idHebergement) {

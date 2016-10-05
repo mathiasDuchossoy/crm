@@ -653,28 +653,65 @@ class LogementUnifieController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function chargerLocatifAction(Request $request, Logement $logementRef)
+    public function chargerLocatifAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $logement['id'] = $logementRef->getId();
-        $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
-        foreach ($logementRef->getTraductions() as $traduction) {
-            if ($traduction->getLangue()->getCode() == $request->getLocale()) {
-                $logement['nom'] = $traduction->getNom();
-            }
+        //        récupère la valeur numérique de memory_limit
+        $memory = intval(ini_get('memory_limit'), 10);
+//        récupère l'unite de memory_limit, le trim permet de supprimer un éventuel espace
+        $unite = trim(substr(ini_get('memory_limit'), strlen($memory)));
+//        conversion du memory_limit en octets
+        switch (strtolower($unite)) {
+            case "g":
+                $memoryLimit = $memory * 1024 * 1024 * 1024;
+                break;
+            case "m":
+                $memoryLimit = $memory * 1024 * 1024;
+                break;
+            case "k":
+                $memoryLimit = $memory * 1024;
+                break;
+            default:
+                $memoryLimit = $memory;
+                break;
         }
-        /** @var LogementPeriode $logementPeriodeRef */
-        foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
-            $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
-            $logementPeriode['id']=$logementPeriodeRef->getPeriode()->getId();
-            $logementPeriode['type']['id']=$logementPeriodeRef->getPeriode()->getType()->getId();
+        $memoryLimitPourcentage=70;
+        $logementsRef = $request->get('logements');
+//        dump($request->get('logements'));
+//        die;
+        $em = $this->getDoctrine()->getManager();
+        $reponse = array();
+        $logements = array();
+        foreach ($logementsRef as $indiceLogement => $idLogement){
+            if (memory_get_usage() >= (($memoryLimit * $memoryLimitPourcentage) / 100)){
+                $reponse['suivant'] = $idLogement;
+                $reponse['logements'] = $logements;
+                return new JsonResponse($reponse);
+            }
+            $logementRef = $em->getRepository(Logement::class)->find($idLogement);
+
+            $logement['id'] = $logementRef->getId();
+            $logement['logementUnifie']['id'] = $logementRef->getLogementUnifie()->getId();
+            foreach ($logementRef->getTraductions() as $traduction) {
+                if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                    $logement['nom'] = $traduction->getNom();
+                }
+            }
+            /** @var LogementPeriode $logementPeriodeRef */
+            foreach ($logementRef->getPeriodes() as $logementPeriodeRef){
+                $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriodeRef);
+                $logementPeriode['id']=$logementPeriodeRef->getPeriode()->getId();
+                $logementPeriode['type']['id']=$logementPeriodeRef->getPeriode()->getType()->getId();
 //            $logementPeriode['debut']=$logementPeriodeRef->getPeriode()->getDebut();
 //            $logementPeriode['fin']=$logementPeriodeRef->getPeriode()->getFin();
-            $logementPeriode['stock']=$logementPeriodeRef->getLocatif()->getStock();
-            $logement['periodes'][]= $logementPeriode;
+                $logementPeriode['stock']=$logementPeriodeRef->getLocatif()->getStock();
+                $logement['periodes'][]= $logementPeriode;
+            }
+            array_push($logements,$logement);
         }
-        echo memory_get_peak_usage();
-        return new JsonResponse($logement);
+        $reponse['logements']=$logements;
+        $reponse['suivant'] = null;
+//        echo memory_get_peak_usage();
+        return new JsonResponse($reponse);
     }
 
     /**
