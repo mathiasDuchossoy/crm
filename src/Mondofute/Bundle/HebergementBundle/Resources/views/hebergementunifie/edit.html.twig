@@ -158,6 +158,7 @@
 //            console.log('logements');
 //            console.log(parametres);
             for (var i = 0; i < parametres.logements.length; i++) {
+
                 ajouterLogementLocatifTableau(table, parametres.logements[i], parametres);
             }
             {#var url = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_','idLogement'}) }}";#}
