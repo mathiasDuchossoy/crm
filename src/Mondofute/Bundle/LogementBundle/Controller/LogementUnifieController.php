@@ -681,7 +681,8 @@ class LogementUnifieController extends Controller
 //        die;
         $em = $this->getDoctrine()->getManager();
         $reponse = new \stdClass();
-        $logements = array();
+
+        $reponse->logements = array();
         foreach ($logementsRef as $indiceLogement => $idLogement){
             if (memory_get_usage() >= (($memoryLimit * $memoryLimitPourcentage) / 100)){
                 $reponse->suivant = $idLogement;
@@ -713,9 +714,9 @@ class LogementUnifieController extends Controller
                 $logementPeriode->stock=$logementPeriodeRef->getLocatif()->getStock();
                 $logement->periodes[]= $logementPeriode;
             }
-            array_push($logements,$logement);
+            array_push($reponse->logements,$logement);
         }
-        $reponse->logements=$logements;
+//        $reponse->logements=$logements;
         $reponse->suivant = null;
 //        echo memory_get_peak_usage();
         return new JsonResponse($reponse);
