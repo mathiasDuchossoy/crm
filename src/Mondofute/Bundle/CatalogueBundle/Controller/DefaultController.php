@@ -46,7 +46,7 @@ class DefaultController extends Controller
                             $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
                             foreach ($logements as $logement) {
                                 foreach ($periodes as $idPeriode => $stock) {
-                                    if (!empty($stock)) {
+                                    if ($stock != "") {
                                         $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
                                     }
                                 }
