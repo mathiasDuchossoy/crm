@@ -8,6 +8,8 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineImageTraduction:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         libelle:
             type: string

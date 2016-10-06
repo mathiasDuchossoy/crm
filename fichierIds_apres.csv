@@ -1,0 +1,6 @@
+﻿media__gallery
+;id;int(11);NO;PRI;;auto_increment
+media__gallery_media
+;id;int(11);NO;PRI;;auto_increment
+media__media
+;id;int(11);NO;PRI;;auto_increment

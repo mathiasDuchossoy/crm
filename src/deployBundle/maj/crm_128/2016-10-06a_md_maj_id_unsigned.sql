@@ -1,0 +1,192 @@
+
+
+
+ALTER TABLE logement_periode_locatif DROP FOREIGN KEY FK_505E2A4AF384C1CF;
+DROP INDEX IDX_505E2A4AF384C1CF ON logement_periode_locatif;
+
+ALTER TABLE logement_periode DROP FOREIGN KEY FK_E9143DA1F384C1CF;
+DROP INDEX IDX_E9143DA1F384C1CF ON logement_periode;
+
+ALTER TABLE fournisseur_prestation_annexe_stock DROP FOREIGN KEY FK_43AC36CFF384C1CF;
+DROP INDEX IDX_43AC36CFF384C1CF ON fournisseur_prestation_annexe_stock;
+
+
+ALTER TABLE periode CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE logement_periode CHANGE periode_id periode_id INT UNSIGNED NOT NULL;
+ALTER TABLE fournisseur_prestation_annexe_stock CHANGE periode_id periode_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE logement_periode_locatif CHANGE periode_id periode_id INT UNSIGNED NOT NULL;
+
+
+ALTER TABLE logement_periode ADD CONSTRAINT FK_E9143DA1F384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+CREATE INDEX IDX_E9143DA1F384C1CF ON logement_periode (periode_id);
+ALTER TABLE fournisseur_prestation_annexe_stock ADD CONSTRAINT FK_43AC36CFF384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+CREATE INDEX IDX_43AC36CFF384C1CF ON fournisseur_prestation_annexe_stock (periode_id);
+ALTER TABLE logement_periode_locatif ADD CONSTRAINT FK_505E2A4AF384C1CF FOREIGN KEY (periode_id) REFERENCES logement_periode (periode_id);
+CREATE INDEX IDX_505E2A4AF384C1CF ON logement_periode_locatif (periode_id);
+
+
+ALTER TABLE profil_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE region_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE secteur_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE service_hebergement DROP FOREIGN KEY FK_84C8FB30ED5CA9E6;
+DROP INDEX IDX_84C8FB30ED5CA9E6 ON service_hebergement;
+
+ALTER TABLE tarif_service DROP FOREIGN KEY FK_92FCE897ED5CA9E6;
+DROP INDEX IDX_92FCE897ED5CA9E6 ON tarif_service;
+
+ALTER TABLE service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE service_hebergement CHANGE service_id service_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE tarif_service CHANGE service_id service_id INT UNSIGNED DEFAULT NULL;
+
+ALTER TABLE service_hebergement ADD CONSTRAINT FK_84C8FB30ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id);
+CREATE INDEX IDX_84C8FB30ED5CA9E6 ON service_hebergement (service_id);
+ALTER TABLE tarif_service ADD CONSTRAINT FK_92FCE897ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id);
+CREATE INDEX IDX_92FCE897ED5CA9E6 ON tarif_service (service_id);
+
+
+
+
+ALTER TABLE service_hebergement_tarif DROP FOREIGN KEY FK_EA127601ED5CA9E6;
+DROP INDEX IDX_EA127601ED5CA9E6 ON service_hebergement_tarif;
+
+ALTER TABLE service_hebergement CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE service_hebergement_tarif CHANGE service_id service_id INT UNSIGNED DEFAULT NULL;
+
+
+ALTER TABLE service_hebergement_tarif ADD CONSTRAINT FK_EA127601ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service_hebergement (id);
+CREATE INDEX IDX_EA127601ED5CA9E6 ON service_hebergement_tarif (service_id);
+
+
+ALTER TABLE service_hebergement_tarif CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+
+ALTER TABLE service DROP FOREIGN KEY FK_E19D9AD27455E3C3;
+DROP INDEX IDX_E19D9AD27455E3C3 ON service;
+
+ALTER TABLE service CHANGE sous_categorie_service_id sous_categorie_service_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE sous_categorie_service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE service ADD CONSTRAINT FK_E19D9AD27455E3C3 FOREIGN KEY (sous_categorie_service_id) REFERENCES sous_categorie_service (id);
+CREATE INDEX IDX_E19D9AD27455E3C3 ON service (sous_categorie_service_id);
+
+
+
+ALTER TABLE tarif_service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+
+ALTER TABLE service_hebergement_tarif DROP FOREIGN KEY FK_EA127601EE8717EA;
+DROP INDEX IDX_EA127601EE8717EA ON service_hebergement_tarif;
+
+ALTER TABLE tarif_service DROP FOREIGN KEY FK_92FCE897EE8717EA;
+DROP INDEX IDX_92FCE897EE8717EA ON tarif_service;
+
+ALTER TABLE periode DROP FOREIGN KEY FK_93C32DF3C54C8C93;
+DROP INDEX IDX_93C32DF3C54C8C93 ON periode;
+
+ALTER TABLE service_hebergement_tarif CHANGE type_periode_id type_periode_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE tarif_service CHANGE type_periode_id type_periode_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE periode CHANGE type_id type_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE type_periode CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE service_hebergement_tarif ADD CONSTRAINT FK_EA127601EE8717EA FOREIGN KEY (type_periode_id) REFERENCES type_periode (id);
+CREATE INDEX IDX_EA127601EE8717EA ON service_hebergement_tarif (type_periode_id);
+ALTER TABLE tarif_service ADD CONSTRAINT FK_92FCE897EE8717EA FOREIGN KEY (type_periode_id) REFERENCES type_periode (id);
+CREATE INDEX IDX_92FCE897EE8717EA ON tarif_service (type_periode_id);
+ALTER TABLE periode ADD CONSTRAINT FK_93C32DF3C54C8C93 FOREIGN KEY (type_id) REFERENCES type_periode (id);
+CREATE INDEX IDX_93C32DF3C54C8C93 ON periode (type_id);
+
+
+
+ALTER TABLE service DROP FOREIGN KEY FK_E19D9AD2C54C8C93;
+DROP INDEX IDX_E19D9AD2C54C8C93 ON service;
+
+ALTER TABLE type_service_traduction DROP FOREIGN KEY FK_3EBC41CCF05F7FC3;
+DROP INDEX IDX_3EBC41CCF05F7FC3 ON type_service_traduction;
+
+ALTER TABLE service CHANGE type_id type_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE type_service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE type_service_traduction CHANGE type_service_id type_service_id INT UNSIGNED DEFAULT NULL;
+
+ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2C54C8C93 FOREIGN KEY (type_id) REFERENCES type_service (id);
+CREATE INDEX IDX_E19D9AD2C54C8C93 ON service (type_id);
+ALTER TABLE type_service_traduction ADD CONSTRAINT FK_3EBC41CCF05F7FC3 FOREIGN KEY (type_service_id) REFERENCES type_service (id);
+CREATE INDEX IDX_3EBC41CCF05F7FC3 ON type_service_traduction (type_service_id);
+
+
+ALTER TABLE type_service_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+
+ALTER TABLE zone_touristique_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+
+ALTER TABLE service DROP FOREIGN KEY FK_E19D9AD27395634A;
+DROP INDEX IDX_E19D9AD27395634A ON service;
+
+ALTER TABLE sous_categorie_service DROP FOREIGN KEY FK_7F3BE187DF25C577;
+DROP INDEX IDX_7F3BE187DF25C577 ON sous_categorie_service;
+
+ALTER TABLE categorie_service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE service CHANGE categorie_service_id categorie_service_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE sous_categorie_service CHANGE categorie_parent_id categorie_parent_id INT UNSIGNED DEFAULT NULL;
+
+
+ALTER TABLE service ADD CONSTRAINT FK_E19D9AD27395634A FOREIGN KEY (categorie_service_id) REFERENCES categorie_service (id);
+CREATE INDEX IDX_E19D9AD27395634A ON service (categorie_service_id);
+ALTER TABLE sous_categorie_service ADD CONSTRAINT FK_7F3BE187DF25C577 FOREIGN KEY (categorie_parent_id) REFERENCES categorie_service (id);
+CREATE INDEX IDX_7F3BE187DF25C577 ON sous_categorie_service (categorie_parent_id);
+
+
+
+
+ALTER TABLE hebergement DROP FOREIGN KEY FK_4852DD9CA513A63E;
+DROP INDEX UNIQ_4852DD9CA513A63E ON hebergement;
+
+ALTER TABLE classement_hebergement CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE hebergement CHANGE classement_id classement_id INT UNSIGNED DEFAULT NULL;
+
+
+ALTER TABLE hebergement ADD CONSTRAINT FK_4852DD9CA513A63E FOREIGN KEY (classement_id) REFERENCES classement_hebergement (id);
+CREATE UNIQUE INDEX UNIQ_4852DD9CA513A63E ON hebergement (classement_id);
+
+
+ALTER TABLE departement_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE domaine_carte_identite_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE domaine_image_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+ALTER TABLE emplacement_hebergement CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+
+
+ALTER TABLE service DROP FOREIGN KEY FK_E19D9AD2FFB63470;
+DROP INDEX IDX_E19D9AD2FFB63470 ON service;
+
+ALTER TABLE hebergement_unifie DROP FOREIGN KEY FK_2C34A69CFFB63470;
+DROP INDEX IDX_2C34A69CFFB63470 ON hebergement_unifie;
+
+ALTER TABLE liste_service CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
+ALTER TABLE service CHANGE liste_service_id liste_service_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE hebergement_unifie CHANGE liste_service_id liste_service_id INT UNSIGNED DEFAULT NULL;
+
+
+ALTER TABLE service ADD CONSTRAINT FK_E19D9AD2FFB63470 FOREIGN KEY (liste_service_id) REFERENCES liste_service (id);
+CREATE INDEX IDX_E19D9AD2FFB63470 ON service (liste_service_id);
+ALTER TABLE hebergement_unifie ADD CONSTRAINT FK_2C34A69CFFB63470 FOREIGN KEY (liste_service_id) REFERENCES liste_service (id);
+CREATE INDEX IDX_2C34A69CFFB63470 ON hebergement_unifie (liste_service_id);
+
+
+
+
