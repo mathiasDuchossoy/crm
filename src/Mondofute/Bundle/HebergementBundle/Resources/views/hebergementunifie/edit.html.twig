@@ -129,9 +129,13 @@
         }
         //        copie le premier stock du logement dans le tableau sur les autres stocks
         function dupliquerStocksLogement(logementId) {
-            var valeur = $('input[data-logement=' + logementId + ']:first').val();
+            var $ref = $('input[data-logement=' + logementId + ']:first');
+            var valeur = $ref.val();
+            $ref.attr('value',valeur);
             $('input[data-logement=' + logementId + ']').each(function () {
+
                 $(this).val(valeur);
+                $(this).attr('value',valeur);
                 modificationStock($(this));
             });
         }
