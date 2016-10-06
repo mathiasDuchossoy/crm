@@ -150,7 +150,7 @@
                                 }
                             }
                             chargerProgressBar($progressBar,(parseFloat($progressBar.attr('aria-valuenow'))+parametres.pasProgressBar));
-                            if($progressBar.attr('aria-valuenow')==100){
+                            if($progressBar.attr('aria-valuenow')>100){
                                 $progressBar.closest('.progress').remove();
                             }
                         }
