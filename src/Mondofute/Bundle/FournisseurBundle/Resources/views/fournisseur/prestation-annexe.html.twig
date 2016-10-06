@@ -7,14 +7,7 @@
             {% for traduction in sousFamillePrestationAnnexe.traductions %}
                 {% if traduction.langue.code == app.request.locale %}
                     <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"
-                                           onclick="checkPrestatioAnnexe(this , 'list_prestation_annexe_' + '{{ sousFamillePrestationAnnexe.id }}');"
-                                    > {{ traduction.libelle }}
-                                </label>
-                            </div>
+                        <h3 class="panel-title">{{ traduction.libelle }}
                         </h3>
                     </div>
                 {% endif %}

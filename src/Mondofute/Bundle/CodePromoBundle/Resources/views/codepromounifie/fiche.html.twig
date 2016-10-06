@@ -18,7 +18,7 @@
 
             {% set mesSites = form.codePromos %}
             {{ form_row(form.code) }}
-            {% include '::onglets_sites.html.twig' %}
+            {% include ('::onglets_sites.html.twig') %}
 
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
@@ -36,9 +36,7 @@
                             {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
                             {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
-                            {#{{ form_row(codePromo.codePromoApplications, { 'attr' : { 'data-unique_block_prefix' : codePromo.codePromoApplications.vars['unique_block_prefix']}}) }}#}
                             {% include ('@MondofuteCodePromo/codepromounifie/code-promo-application.html.twig') %}
-                            {{ dump(codePromo.codePromoPeriodeValidites) }}
                             <h4>Periodes de validité</h4>
                             <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
                                 data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
@@ -142,16 +140,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Table -->
-                            <table class="table">
-                                ...
-                            </table>
-
                         </div>
+
+                        {#{% set keyFournisseur = 0 %}#}
+                        {#{% set keyFournisseurPrestationAnnexe = 0 %}#}
+                        {#{% set keyHebergement = 0 %}#}
+
+                        {% if panelCodePromo is defined %}
+                            {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig' ) %}
+                            {{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}
+                        {% endif %}
+
                     </div>
 
                     {% set index = (index + 1) %}
                 {% endfor %}
+
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
@@ -199,6 +203,7 @@
 
     </script>
     {{ parent() }}
+
     <script type="text/javascript">
         $(document).ready(function () {
             {% if sitesAEnregistrer is not empty %}
@@ -476,6 +481,89 @@
                 event.preventDefault();
             }
             return false;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function getFournisseurHebergements(codePromoId , fournisseurId, keyCodePromo, siteId)
+        {
+//            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
+//            {
+                var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
+                    'codePromoId' : '_codePromoId_',
+                    'fournisseurId' : '_fournisseurId_',
+                    'siteId' : '_siteId_',
+                }) }}";
+
+                path = path.replace(/_codePromoId_/g, codePromoId);
+                path = path.replace(/_fournisseurId_/g, fournisseurId);
+                path = path.replace(/_siteId_/g, siteId);
+                path = path.replace(/_siteId_/g, siteId);
+
+                $.ajax( path , {
+//                    async: false
+                }).done(function (data){
+                    data = data.replace(/__keyCodePromo__/g , keyCodePromo);
+                    $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').html(data);
+                });
+//            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId, keyCodePromo)
+        {
+//            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
+//            {
+            var path = "{{ path('codepromo_get_fournisseur_prestation_annexes' ,{
+                'codePromoId' : '_codePromoId_',
+                'fournisseurId' : '_fournisseurId_'
+            }) }}";
+
+            path = path.replace(/_codePromoId_/g, codePromoId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+            $.ajax( path , {
+//                async: false
+            }).done(function (data){
+                data = data.replace(/__keyCodePromo__/g , keyCodePromo);
+                $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').html(data);
+            });
+//            }
+
+        }
+
+        {% if panelCodePromo is defined %}
+        $( document ).ready(function() {
+        {% for keyCodePromo , codePromo in entity.codePromos  %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                {#{% if fournisseurHebergements[codePromo.id][fournisseurTypeHebergement.id] is not defined %}#}
+                    getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
+                {#{% endif %}#}
+            {% endfor %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                {#{% if fournisseurFournisseurPrestationAnnexes[codePromo.id][fournisseurPrestationAnnexe.id] is not defined %}#}
+                    getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
+                {#{% endif %}#}
+            {% endfor %}
+        {% endfor %}
+        });
+        {% endif %}
+
+
+
+        function checkChildren(element , listGroup){
+            var $element = $(element);
+            listGroup = $('#' + listGroup);
+            listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkChilFamillePrestationAnnexe(element, classFamille)
+        {
+            var $element = $(element);
+            listGroup = $('#' + $element.data('list_group'));
+            listGroup.find('input.'+classFamille+'[type=checkbox]').prop('checked', $element.prop("checked"));
         }
 
     </script>

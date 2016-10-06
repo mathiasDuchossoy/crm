@@ -1,0 +1,88 @@
+{% set familleLibelle = "" %}
+{% set keyFournisseurPrestationAnnexe = 0 %}
+{% for key, fournisseurPrestationAnnexe in fournisseurPrestationAnnexes %}
+    {% if familleLibelle != fournisseurPrestationAnnexe.familleLibelle %}
+        <li class="list-group-item">
+            <div class="checkbox">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-11"><label>
+                        <input type="checkbox"
+                               name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][famillePrestationAnnexe]"
+                               value="{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
+                               data-list_group="code_promo_{{ codePromoId }}_fournisseur_{{ fournisseurId }}_prestation_annexes"
+                                onclick="checkChilFamillePrestationAnnexe(this,'code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}')"
+                                {% if codePromo.codePromoFamillePrestationAnnexes is defined %}
+                                    {% for codePromoFamillePrestationAnnexe in codePromo.codePromoFamillePrestationAnnexes %}
+                                        {% if
+                                        codePromoFamillePrestationAnnexe.vars.value.fournisseur.id == fournisseurId
+                                        and codePromoFamillePrestationAnnexe.vars.value.famillePrestationAnnexe.id == fournisseurPrestationAnnexe.famillePrestationAnnexeId
+                                        %}
+                                            checked="checked"
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                        />
+                        {#<a#}
+                                {#data-toggle="collapse"#}
+                                {#href=""#}
+                                {#aria-expanded="true"#}
+                                {#aria-controls=""#}
+                        {#>#}
+                            {{ fournisseurPrestationAnnexe.familleLibelle }}
+                        {#</a>#}
+                        <input
+                                type="hidden"
+                               name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
+                               value="{{ fournisseurId }}"/>
+                    </label>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+        <ul class="list-group">
+    {% endif %}
+
+    <li class="list-group-item">
+        <div class="checkbox">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <label><input type="checkbox"
+                              value="{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"
+                            {#name="codePromoFournisseurPrestationAnnexes[{{ codePromoId }}][{{ fournisseurId }}][]"#}
+                            {% if codePromo.codePromoFournisseurPrestationAnnexes is defined %}
+                                {% for codePromofournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
+                                    {#{{ dump(codePromofournisseurPrestationAnnexe.vars.value) }}#}
+                                    {% if
+                                    codePromofournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseurId
+                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId
+                                    %}
+                                        {#and codePromofournisseurPrestationAnnexe.vars.value.codePromo.id == codePromoId #}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                              class="code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}"
+                              name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseurPrestationAnnexe]"
+                    >{{ fournisseurPrestationAnnexe.libelle }}
+                </label>
+                <input type="hidden"
+                       name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
+                       value="{{ fournisseurId }}"/>
+            </div>
+        </div>
+    </li>
+
+    {% set familleLibelle = fournisseurPrestationAnnexe.familleLibelle %}
+    {% if fournisseurPrestationAnnexes[key + 1] is not defined or fournisseurPrestationAnnexes[key + 1].familleLibelle != familleLibelle %}
+        </ul>
+        </li>
+    {% endif %}
+
+    {% set keyFournisseurPrestationAnnexe = keyFournisseurPrestationAnnexe + 1 %}
+{% endfor %}
+{% if fournisseurPrestationAnnexes is empty %}
+    <li class="list-group-item">
+        <div class="alert alert-info" role="alert">Il n'y a pas de prestation annexes pour ce fournisseur.</div>
+    </li>
+{% endif %}

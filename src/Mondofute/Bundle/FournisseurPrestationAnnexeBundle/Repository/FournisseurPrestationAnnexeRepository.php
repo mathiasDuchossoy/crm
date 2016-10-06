@@ -23,20 +23,44 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
             ->join('s.traductions', 'st')
             ->join('st.langue', 'l')
             ->where("l.code = '$locale'")
-            ->join('s.prestationAnnexe' , 'prestationAnnexe')
-        ;
-        if(!empty($famillePrestationAnnexeId)){
+            ->join('s.prestationAnnexe', 'prestationAnnexe');
+        if (!empty($famillePrestationAnnexeId)) {
             $qb
                 ->andWhere('prestationAnnexe.famillePrestationAnnexe = :famillePrestationAnnexeId ')
-                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
-            ;
+                ->setParameter('famillePrestationAnnexeId', $famillePrestationAnnexeId);
         }
 
 //        ->setParameter('code' , $locale)
         $qb->orderBy('s.id', 'ASC');
 
 
-
         return $qb;
+    }
+
+    public function getFournisseurPrestationAnnexes($fournisseurId, $locale)
+    {
+//        ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->select('fournisseurPrestationAnnexe.id fournisseurPrestationAnnexeId, traductions.libelle, famillePrestationAnnexe.id famillePrestationAnnexeId, traductionFamilles.libelle familleLibelle')
+            ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe' , 'fournisseurPrestationAnnexe')
+            ->join('fournisseurPrestationAnnexe.fournisseur' ,'fournisseur')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId' , $fournisseurId)
+            ->join('fournisseurPrestationAnnexe.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->andWhere('langue.code = :locale')
+            ->setParameter('locale' , $locale)
+            ->join('fournisseurPrestationAnnexe.prestationAnnexe' , 'prestationAnnexe')
+            ->join('prestationAnnexe.famillePrestationAnnexe' , 'famillePrestationAnnexe')
+            ->join('famillePrestationAnnexe.traductions' , 'traductionFamilles')
+            ->join('traductionFamilles.langue' , 'langueFamille')
+            ->andWhere('langueFamille.code = :locale')
+            ->orderBy('traductionFamilles.libelle' , 'ASC')
+        ;
+
+        $result = $q->getQuery()->getResult();
+
+        return $result;
     }
 }

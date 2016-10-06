@@ -10,6 +10,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Command;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction;
@@ -39,6 +40,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
 
         // *** RM (remontée mécanique) ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(1);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('remontée mécanique');
@@ -51,6 +53,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin RM (remontée mécanique) ***
         // *** LM (location matériel de ski) ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(2);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Location matériel de ski');
@@ -63,6 +66,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin LM (location matériel de ski) ***
         // *** ESF (ecole ski française) ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(3);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Ecole ski française');
@@ -75,6 +79,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin ESF (ecole ski française) ***
         // *** ASSURANCES ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(4);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Assurances');
@@ -87,6 +92,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin ASSURANCES ***
         // *** SERVICES HOTELIERS ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(5);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Services hôteliers');
@@ -99,6 +105,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin SERVICES HOTELIERS ***
         // *** POUR VOS ENFANTS ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(6);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Vos enfants');
@@ -111,6 +118,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin POUR VOS ENFANTS ***
         // *** MASSAGES & BIEN ETRE ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(7);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Massages & bien être');
@@ -123,6 +131,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin MASSAGES & BIEN ETRE ***
         // *** RESTAURATION ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(8);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Restauration');
@@ -135,6 +144,7 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin RESTAURATION ***
         // *** HEBERGEMENT ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
+        $famillePrestationAnnexe->setId(9);
         $famillePrestationAnnexeTraduction = new FamillePrestationAnnexeTraduction();
         $famillePrestationAnnexeTraduction->setLangue($fr);
         $famillePrestationAnnexeTraduction->setLibelle('Hébergement');
@@ -153,6 +163,8 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
 
             /** @var FamillePrestationAnnexe $famillePrestationAnnexe */
             foreach ($famillePrestationAnnexes as $famillePrestationAnnexe){
+                $metadata = $emSite->getClassMetadata(get_class($famillePrestationAnnexe));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 /** @var FamillePrestationAnnexeTraduction $traduction */
                 foreach ($famillePrestationAnnexe->getTraductions() as $traduction){
                     $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()));

@@ -25,6 +25,26 @@ Mondofute\Bundle\CodePromoBundle\Entity\CodePromo:
             targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication
             mappedBy: codePromo
             cascade: ['persist','remove']
+        codePromoFournisseurs:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur
+            mappedBy: codePromo
+            cascade: ['persist','remove']
+        codePromoHebergements:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement
+            mappedBy: codePromo
+            cascade: ['persist','remove']
+        codePromoLogements:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement
+            mappedBy: codePromo
+            cascade: ['persist','remove']
+        codePromoFournisseurPrestationAnnexes:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe
+            mappedBy: codePromo
+            cascade: ['persist','remove']
+        codePromoFamillePrestationAnnexes:
+            targetEntity: Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFamillePrestationAnnexe
+            mappedBy: codePromo
+            cascade: ['persist','remove']
     manyToMany:
         codePromoPeriodeSejours:
             targetEntity: CodePromoPeriodeSejour

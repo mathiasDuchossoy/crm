@@ -9,7 +9,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -41,6 +40,7 @@ class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
         /** @var Logement $logement */
         /** @var PrestationAnnexeHebergementUnifie $prestationAnnexeHebergementUnifie */
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+        /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine.orm.crm_entity_manager');
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         $logementUnifieId = $input->getArgument('logementUnifieId');
