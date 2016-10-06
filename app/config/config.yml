@@ -129,6 +129,7 @@ doctrine:
                     MondofuteFournisseurPrestationAnnexeBundle: ~
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -177,6 +178,7 @@ doctrine:
                     MondofuteFournisseurPrestationAnnexeBundle: ~
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -222,6 +224,7 @@ doctrine:
                     MondofuteFournisseurPrestationAnnexeBundle: ~
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
+                    MondofuteCatalogueBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

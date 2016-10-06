@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
@@ -37,6 +38,7 @@ use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
+use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -1790,16 +1792,32 @@ class HebergementUnifieController extends Controller
 
                             /** @var FournisseurHebergement $fournisseurHebergement */
                             foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement){
+                                /** @var Logement $logement */
                                 foreach ($fournisseurHebergement->getLogements() as $logement)
                                 {
+
                                     $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
                                     foreach ($codePromoLogements as $codePromoLogement)
                                     {
                                         $emSite->remove($codePromoLogement);
                                     }
+
+                                    /** @var LogementPeriode $logementPeriode */
+                                    foreach ($logement->getPeriodes() as $logementPeriode)
+                                    {
+                                        // *** suprression logement periode locatif  ***
+                                        $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                            'logement' => $logement,
+                                            'periode' => $logementPeriode->getPeriode()->getId(),
+                                            ));
+                                        if(!empty($logementPeriodeLocatif))
+                                        {
+                                            $emSite->remove($logementPeriodeLocatif);
+                                        }
+                                        // *** fin suprression logement periode locatif  ***
+                                    }
                                 }
                             }
-
                         }
                         $emSite->remove($entityUnifieSite);
                         $emSite->flush();
@@ -1854,6 +1872,20 @@ class HebergementUnifieController extends Controller
                             {
                                 $em->remove($codePromoLogement);
                             }
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($logement->getPeriodes() as $logementPeriode)
+                            {
+                                // *** suprression logement periode locatif  ***
+                                $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                    'logement' => $logement,
+                                    'periode' => $logementPeriode->getPeriode()->getId(),
+                                ));
+                                if(!empty($logementPeriodeLocatif))
+                                {
+                                    $em->remove($logementPeriodeLocatif);
+                                }
+                                // *** fin suprression logement periode locatif  ***
+                            }
                         }
                     }
                 }
@@ -1862,7 +1894,7 @@ class HebergementUnifieController extends Controller
                 $em->flush();
             }
         } catch (ForeignKeyConstraintViolationException $except) {
-            dump($except->getMessage());die;
+//            dump($except->getMessage());die;
             /** @var ForeignKeyConstraintViolationException $except */
             switch ($except->getCode()) {
                 case 0:

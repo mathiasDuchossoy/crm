@@ -1,10 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\CatalogueBundle\Entity;
-
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
+
 
 /**
  * LogementPeriodeLocatif
@@ -84,7 +83,7 @@ class LogementPeriodeLocatif
     /**
      * Get periode
      *
-     * @return LogementPeriode
+     * @return Periode
      */
     public function getPeriode()
     {
@@ -108,7 +107,7 @@ class LogementPeriodeLocatif
     /**
      * Get logement
      *
-     * @return LogementPeriode
+     * @return Logement
      */
     public function getLogement()
     {
@@ -118,7 +117,7 @@ class LogementPeriodeLocatif
     /**
      * Set logement
      *
-     * @param Periode $logement
+     * @param Logement $logement
      *
      * @return LogementPeriodeLocatif
      */
