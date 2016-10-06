@@ -8,6 +8,11 @@ Mondofute\Bundle\PeriodeBundle\Entity\Periode:
             id: true
             generator:
                 strategy: AUTO
+    indexes:
+        periode_index_debut:
+            columns: [debut]
+        periode_index_fin:
+            columns: [fin]
     fields:
         debut:
             type: date
