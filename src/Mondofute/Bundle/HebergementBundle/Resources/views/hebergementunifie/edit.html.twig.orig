@@ -89,107 +89,7 @@
         });
 <<<<<<< HEAD
         function chargerOngletStocks(idhebergement){
-||||||| parent of d3a2221... gestion progressBar
-        //        copie le premier stock du logement dans le tableau sur les autres stocks
-        function dupliquerStocksLogement(logementId) {
-            var valeur = $('input[data-logement=' + logementId + ']:first').val();
-            $('input[data-logement=' + logementId + ']').each(function () {
-                $(this).val(valeur);
-            });
-        }
-        function chargerTableauStocks(table, parametres,$progressBar) {
-            var logements = Array();
-            logements['logements'] = Array();
-            for (var i = 0; i < parametres.logements.length; i++) {
-                logements['logements'][i] = parametres.logements[i].id;
-            }
-            ajouterLogementLocatifTableau(table, logements, parametres,$progressBar);
-        }
-        function ajouterLogementLocatifTableau(table, logements, parametres,$progressBar) {
-            $.post(
-                    "{{ path('logement_charger_locatif') }}",
-                    {'logements[]': logements['logements']},
-                    function (datas) {
-                        var donnees = Array();
-                        var data = null;
-                        for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
-                            donnees[iDatas] = Array();
-                            data = datas['logements'][iDatas];
-                            donnees[iDatas]['logement'] = data.nom + ' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
-                            var attribut = null;
-                            for (var i = 0; i < data.periodes.length; i++) {
-
-                                if (data.periodes[i].type.id == parametres.typePeriode.id) {
-                                    attribut = 'periode' + data.periodes[i].id;
-                                    donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
-                                }
-                            }
-                            chargerProgressBar($progressBar,(parseFloat($progressBar.attr('aria-valuenow'))+parametres.pasProgressBar));
-                            if($progressBar.attr('aria-valuenow')==100){
-                                $progressBar.closest('.progress').remove();
-                            }
-                        }
-                        table.rows.add(donnees).draw();
-                        if (datas['suivant'] != null) {
-                            var i = 0;
-                            while (i < logements['logements'].length && logements['logements'][i] != datas['suivant']) {
-                                i++;
-                            }
-                            var indice = i;
-                            var newLogements = Array();
-                            newLogements['logements'] = Array();
-                            for (indice = i; indice < logements['logements'].length; indice++) {
-                                newLogements['logements'].push(logements['logements'][indice]);
-                            }
-                            ajouterLogementLocatifTableau(table, newLogements, parametres);
-                        }
-
-                    }, 'json'
-            );
-        }
-        function chargerOngletStocksHebergement(idHebergement) {
-//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
-            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
-            var $conteneur = $('#data_hebergement_stocks');
-            $.post("{{ path('periode_type_periode_liste') }}",
-                    function (typePeriodes) {
-                        chargerProgressBar($progressBar, 50);
-                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
-
-                            var idTypePeriode = null;
-
-                            chargerFournisseurHebergements(idHebergement, typePeriodes, function (data, idHebergement, typePeriodes) {
-                                for (var i = 0; i < typePeriodes.length; i++) {
-                                    if (typePeriodes[i].periodes.length > 0) {
-                                        idTypePeriode = typePeriodes[i].id;
-                                        $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
-
-//                                            alert(data.length);
-                                        var colonnes = [{'mDataProp': "logement", title: 'logement'}];
-                                        var debut = null;
-                                        var fin = null;
-                                        var moisDebut = null;
-                                        var jourDebut = null;
-                                        var moisFin = null;
-                                        var jourFin = null;
-                                        var attribut = null;
-                                        var stock = null;
-                                        for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
-                                            debut = new Date(typePeriodes[i].periodes[k].debut.date);
-                                            fin = new Date(typePeriodes[i].periodes[k].fin.date);
-                                            moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
-                                            jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
-                                            moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
-                                            jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
-                                            attribut = 'periode' + typePeriodes[i].periodes[k].id;
-                                            colonnes.push({
-                                                mDataProp: attribut,
-                                                title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
-                                            });
-                                        }
-
-                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
-=======
+||||||| parent of dba17c9... modif progressBar
         //        copie le premier stock du logement dans le tableau sur les autres stocks
         function dupliquerStocksLogement(logementId) {
             var valeur = $('input[data-logement=' + logementId + ']:first').val();
@@ -289,7 +189,107 @@
                                         }
 
                                         var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
->>>>>>> d3a2221... gestion progressBar
+=======
+        //        copie le premier stock du logement dans le tableau sur les autres stocks
+        function dupliquerStocksLogement(logementId) {
+            var valeur = $('input[data-logement=' + logementId + ']:first').val();
+            $('input[data-logement=' + logementId + ']').each(function () {
+                $(this).val(valeur);
+            });
+        }
+        function chargerTableauStocks(table, parametres,$progressBar) {
+            var logements = Array();
+            logements['logements'] = Array();
+            for (var i = 0; i < parametres.logements.length; i++) {
+                logements['logements'][i] = parametres.logements[i].id;
+            }
+            ajouterLogementLocatifTableau(table, logements, parametres,$progressBar);
+        }
+        function ajouterLogementLocatifTableau(table, logements, parametres,$progressBar) {
+            $.post(
+                    "{{ path('logement_charger_locatif') }}",
+                    {'logements[]': logements['logements']},
+                    function (datas) {
+                        var donnees = Array();
+                        var data = null;
+                        for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
+                            donnees[iDatas] = Array();
+                            data = datas['logements'][iDatas];
+                            donnees[iDatas]['logement'] = data.nom + ' <span data-logement_id="' + data.logementUnifie.id + '" class="duplique-stocks glyphicon glyphicon-play"></span>';
+                            var attribut = null;
+                            for (var i = 0; i < data.periodes.length; i++) {
+
+                                if (data.periodes[i].type.id == parametres.typePeriode.id) {
+                                    attribut = 'periode' + data.periodes[i].id;
+                                    donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
+                                }
+                            }
+                            chargerProgressBar($progressBar,(parseFloat($progressBar.attr('aria-valuenow'))+parametres.pasProgressBar));
+                            if($progressBar.attr('aria-valuenow')>100){
+                                $progressBar.closest('.progress').remove();
+                            }
+                        }
+                        table.rows.add(donnees).draw();
+                        if (datas['suivant'] != null) {
+                            var i = 0;
+                            while (i < logements['logements'].length && logements['logements'][i] != datas['suivant']) {
+                                i++;
+                            }
+                            var indice = i;
+                            var newLogements = Array();
+                            newLogements['logements'] = Array();
+                            for (indice = i; indice < logements['logements'].length; indice++) {
+                                newLogements['logements'].push(logements['logements'][indice]);
+                            }
+                            ajouterLogementLocatifTableau(table, newLogements, parametres, $progressBar);
+                        }
+
+                    }, 'json'
+            );
+        }
+        function chargerOngletStocksHebergement(idHebergement) {
+//            récupération de la progress-bar à gérer lors de l'ajout des onglets TypePeriode
+            var $progressBar = $('#progress-bar_onglets_type_periode_hebergement_' + idHebergement);
+            var $conteneur = $('#data_hebergement_stocks');
+            $.post("{{ path('periode_type_periode_liste') }}",
+                    function (typePeriodes) {
+                        chargerProgressBar($progressBar, 50);
+                        construireOngletsTypePeriodes($conteneur, $progressBar, function () {
+
+                            var idTypePeriode = null;
+
+                            chargerFournisseurHebergements(idHebergement, typePeriodes, function (data, idHebergement, typePeriodes) {
+                                for (var i = 0; i < typePeriodes.length; i++) {
+                                    if (typePeriodes[i].periodes.length > 0) {
+                                        idTypePeriode = typePeriodes[i].id;
+                                        $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[i].id);
+
+//                                            alert(data.length);
+                                        var colonnes = [{'mDataProp': "logement", title: 'logement'}];
+                                        var debut = null;
+                                        var fin = null;
+                                        var moisDebut = null;
+                                        var jourDebut = null;
+                                        var moisFin = null;
+                                        var jourFin = null;
+                                        var attribut = null;
+                                        var stock = null;
+                                        for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
+                                            debut = new Date(typePeriodes[i].periodes[k].debut.date);
+                                            fin = new Date(typePeriodes[i].periodes[k].fin.date);
+                                            moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
+                                            jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
+                                            moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
+                                            jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
+                                            attribut = 'periode' + typePeriodes[i].periodes[k].id;
+                                            colonnes.push({
+                                                mDataProp: attribut,
+                                                title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
+                                            });
+                                        }
+
+                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+>>>>>>> dba17c9... modif progressBar
 
         }
         function enregistrerStocks() {
