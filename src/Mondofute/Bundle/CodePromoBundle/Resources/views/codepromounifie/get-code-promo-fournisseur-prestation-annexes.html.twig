@@ -10,7 +10,7 @@
                                name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][famillePrestationAnnexe]"
                                value="{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
                                data-list_group="code_promo_{{ codePromoId }}_fournisseur_{{ fournisseurId }}_prestation_annexes"
-                                onclick="checkChilFamillePrestationAnnexe(this,'code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}')"
+                                onclick="checkChilFamillePrestationAnnexe(this,'code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}')"
                                 {% if codePromo.codePromoFamillePrestationAnnexes is defined %}
                                     {% for codePromoFamillePrestationAnnexe in codePromo.codePromoFamillePrestationAnnexes %}
                                         {% if
@@ -62,7 +62,7 @@
                                 {% endfor %}
                             {% endif %}
 
-                              class="code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}"
+                              class="code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
                               name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseurPrestationAnnexe]"
                     >{{ fournisseurPrestationAnnexe.libelle }}
                 </label>
