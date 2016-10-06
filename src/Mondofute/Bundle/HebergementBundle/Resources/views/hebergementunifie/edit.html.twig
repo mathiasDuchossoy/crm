@@ -183,7 +183,6 @@
                     function (typePeriodes) {
                         chargerProgressBar($progressBar, 50);
                         construireOngletsTypePeriodes($conteneur, $progressBar, function () {
-
                             var idTypePeriode = null;
                             chargerFournisseurHebergements(idHebergement, typePeriodes, function (data, idHebergement, typePeriodes) {
                                 for (var i = 0; i < typePeriodes.length; i++) {
