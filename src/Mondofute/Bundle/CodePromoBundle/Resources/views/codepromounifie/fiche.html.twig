@@ -559,11 +559,12 @@
             listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
-        {#{% for codePromo in codePromoUnifie.codePromos %}#}
-            {#{% if codePromo.codePromoHebergements is not empty %}#}
-                {#getFournisseurHebergements(codePromo.id , fournisseurId)#}
-            {#{% endif %}#}
-        {#{% endif %}#}
+        function checkChilFamillePrestationAnnexe(element, classFamille)
+        {
+            var $element = $(element);
+            listGroup = $('#' + $element.data('list_group'));
+            listGroup.find('input.'+classFamille+'[type=checkbox]').prop('checked', $element.prop("checked"));
+        }
 
     </script>
 
