@@ -1779,6 +1779,8 @@ class HebergementUnifieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
+        $reponse = new \stdClass();
+        $nbLogements = 0;
         $fournisseurHebergementsJson = array();
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
             $fournisseurHebergementJson=new \stdClass();
@@ -1800,11 +1802,14 @@ class HebergementUnifieController extends Controller
                         }
                     }
                     array_push($fournisseurHebergementJson->logements,$logementJson);
+                    $nbLogements++;
                 }
             }
             array_push($fournisseurHebergementsJson,$fournisseurHebergementJson);
         }
-        return new JsonResponse($fournisseurHebergementsJson);
+        $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
+        $reponse->nbLogements = $nbLogements;
+        return new JsonResponse($reponse);
     }
 //    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
 ////        dump($request);
