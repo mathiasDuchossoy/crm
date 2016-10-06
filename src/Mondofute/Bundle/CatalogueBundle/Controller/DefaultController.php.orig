@@ -25,18 +25,8 @@ class DefaultController extends Controller
     public function enregistrerStocksLocatifAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-<<<<<<< HEAD
             $retour = array('valid' => true);
             try {
-||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
-            $retour = array('valid'=>true);
-            try{
-//                $this->exception();
-=======
-            $retour = array('valid' => true);
-            try {
-//                $this->exception();
->>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
                 $mbdd = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
                 $em = $this->get('doctrine.orm.entity_manager');
                 $stocks = $request->get('stocks');
@@ -46,8 +36,8 @@ class DefaultController extends Controller
                     $champs = array('logement_id', 'periode_id', 'stock');
                     $duplicate = true;
                     $managers = array($site->getLibelle());
-<<<<<<< HEAD
                     $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
+<<<<<<< HEAD
                     foreach ($stocks as $stock) {
                         /** @var EntityManager $emSite */
                         $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
@@ -55,17 +45,7 @@ class DefaultController extends Controller
                         foreach ($logements as $logement) {
                             foreach ($stock['periodes'] as $periode) {
                                 $mbdd->addInsertLigne(array($logement->getId(), $periode['id'], $periode['stock']));
-||||||| parent of 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
-                    $mbdd->initInsertMassif($table,$champs,$duplicate,$managers);
-                    foreach ($stocks as $idLogementUnifie => $periodes) {
-                        /** @var EntityManager $emSite */
-                        $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
-                        $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
-                        foreach ($logements as $logement) {
-                            foreach ($periodes as $idPeriode => $stock){
-                                $mbdd->addInsertLigne(array($logement->getId(),$idPeriode,$stock));
-=======
-                    $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
+||||||| parent of 99c5120... gestion enregistrement quand le stock est à zéro
                     foreach ($stocks as $idLogementUnifie => $periodes) {
                         if (!empty($periodes)) {
 
@@ -78,7 +58,20 @@ class DefaultController extends Controller
                                         $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
                                     }
                                 }
->>>>>>> 0fed15c... gestion des stocks à modifier même lorsque le tableau n'est pas visible (sur le onChange des inputs, on rempli une variable javascript)
+=======
+                    foreach ($stocks as $idLogementUnifie => $periodes) {
+                        if (!empty($periodes)) {
+
+                            /** @var EntityManager $emSite */
+                            $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+                            $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
+                            foreach ($logements as $logement) {
+                                foreach ($periodes as $idPeriode => $stock) {
+                                    if ($stock != "") {
+                                        $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
+                                    }
+                                }
+>>>>>>> 99c5120... gestion enregistrement quand le stock est à zéro
                             }
                         }
                     }
