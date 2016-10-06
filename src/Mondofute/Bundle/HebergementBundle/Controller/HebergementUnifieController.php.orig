@@ -1839,46 +1839,18 @@ class HebergementUnifieController extends Controller
         $nbLogements = 0;
         $fournisseurHebergementsJson = array();
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
-<<<<<<< HEAD
             $fournisseurHebergementJson = new \stdClass();
             $fournisseurHebergementJson->fournisseur = new \stdClass();
             $fournisseurHebergementJson->fournisseur->id = $fournisseurHebergement->getFournisseur()->getId();
             $fournisseurHebergementJson->fournisseur->enseigne = $fournisseurHebergement->getFournisseur()->getEnseigne();
             $fournisseurHebergementJson->logements = array();
-||||||| parent of 7932f96... memoire
-            $fournisseurHebergementJson['fournisseur']['id'] = $fournisseurHebergement->getFournisseur()->getId();
-            $fournisseurHebergementJson['fournisseur']['enseigne'] = $fournisseurHebergement->getFournisseur()->getEnseigne();
-            $fournisseurHebergementJson['logements'] = array();
-=======
-            $fournisseurHebergementJson=new \stdClass();
-            $fournisseurHebergementJson->fournisseur = new \stdClass();
-            $fournisseurHebergementJson->fournisseur->id = $fournisseurHebergement->getFournisseur()->getId();
-            $fournisseurHebergementJson->fournisseur->enseigne = $fournisseurHebergement->getFournisseur()->getEnseigne();
-            $fournisseurHebergementJson->logements = array();
->>>>>>> 7932f96... memoire
             /** @var Logement $logement */
-<<<<<<< HEAD
             foreach ($fournisseurHebergement->getLogements() as $logement) {
                 if ($logement->getSite()->getCrm()) {
                     $logementJson = new \stdClass();
                     $logementJson->id = $logement->getId();
                     $logementJson->logementUnifie = new \stdClass();
                     $logementJson->logementUnifie->id = $logement->getLogementUnifie()->getId();
-||||||| parent of 7932f96... memoire
-            foreach ($fournisseurHebergement->getLogements() as $logement){
-                if($logement->getSite()->getCrm()) {
-
-
-                    $logementJson['id'] = $logement->getId();
-                    $logementJson['logementUnifie']['id'] = $logement->getLogementUnifie()->getId();
-=======
-            foreach ($fournisseurHebergement->getLogements() as $logement){
-                if($logement->getSite()->getCrm()) {
-                    $logementJson=new \stdClass();
-                    $logementJson->id = $logement->getId();
-                    $logementJson->logementUnifie=new \stdClass();
-                    $logementJson->logementUnifie->id = $logement->getLogementUnifie()->getId();
->>>>>>> 7932f96... memoire
                     /** @var LogementTraduction $traduction */
                     foreach ($logement->getTraductions() as $traduction) {
                         if ($traduction->getLangue()->getCode() == $request->getLocale()) {
@@ -1888,20 +1860,15 @@ class HebergementUnifieController extends Controller
 <<<<<<< HEAD
                     array_push($fournisseurHebergementJson->logements, $logementJson);
                     $nbLogements++;
-||||||| parent of 7932f96... memoire
-                    $fournisseurHebergementJson['logements'][] = $logementJson;
+||||||| parent of 6aa2a6a... gestion de la progressBar
+                    array_push($fournisseurHebergementJson->logements,$logementJson);
 =======
                     array_push($fournisseurHebergementJson->logements,$logementJson);
->>>>>>> 7932f96... memoire
+                    $nbLogements++;
+>>>>>>> 6aa2a6a... gestion de la progressBar
                 }
             }
-<<<<<<< HEAD
             array_push($fournisseurHebergementsJson, $fournisseurHebergementJson);
-||||||| parent of 7932f96... memoire
-            $fournisseurHebergementsJson[] = $fournisseurHebergementJson;
-=======
-            array_push($fournisseurHebergementsJson,$fournisseurHebergementJson);
->>>>>>> 7932f96... memoire
         }
         $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
         $reponse->nbLogements = $nbLogements;
