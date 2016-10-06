@@ -1,0 +1,33 @@
+Mondofute\Bundle\PeriodeBundle\Entity\Periode:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PeriodeBundle\Repository\PeriodeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+<<<<<<< 95fe9934cf6575f5f9225b59d746c7b5e077679c
+            options:
+                unsigned: true
+||||||| merged common ancestors
+=======
+    indexes:
+        periode_index_debut:
+            columns: [debut]
+        periode_index_fin:
+            columns: [fin]
+>>>>>>> modif récupération des type_periode
+    fields:
+        debut:
+            type: date
+        fin:
+            type: date
+        nbJour:
+            type: smallint
+    manyToOne:
+        type:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+            inversedBy: periodes
+    lifecycleCallbacks: {  }
