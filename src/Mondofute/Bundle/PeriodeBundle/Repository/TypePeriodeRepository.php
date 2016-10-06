@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\PeriodeBundle\Repository;
 
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 
@@ -13,6 +14,14 @@ use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
  */
 class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
 {
+    private $connexion;
+
+    public function __construct($em, $class)
+    {
+        parent::__construct($em, $class);
+        $this->connexion = $this->getEntityManager()->getConnection();
+    }
+
     public function chargerParDates()
     {
         $qb = $this->createQueryBuilder('type_periode_repository');
@@ -48,12 +57,56 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
 
     public function findAllArray()
     {
-        $qb = $this->createQueryBuilder('type_periode_repository')
-            ->select('type_periode_repository')
-            ->addSelect('periodes')
-            ->leftJoin('type_periode_repository.periodes', 'periodes')
-        ->orderBy('periodes.debut','ASC')
-        ->addOrderBy('periodes.fin','ASC');
-        return $qb->getQuery()->getArrayResult();
+        $sql = 'SELECT tp.id FROM type_periode AS tp';
+        $this->connexion->beginTransaction();
+        $tpStmt = $this->connexion->prepare($sql);
+        if (!$tpStmt) {
+
+        } else {
+            $result = $tpStmt->execute();
+            if (!$result) {
+                $this->connexion->rollBack();
+                $retour = false;
+            } else {
+//                    $result = $stmt->fetch();
+                while ($tpResult = $tpStmt->fetch()) {
+                    $typePeriode=array();
+                    $typePeriode['id'] = $tpResult['id'];
+                    unset($tpResult);
+//                                            recupération des traductions
+                    $sql = 'SELECT p.id, p.debut, p.fin FROM periode AS p WHERE p.type_id=?';
+                    $pStmt = $this->connexion->prepare($sql);
+                    if (!$pStmt) {
+
+                    } else {
+                        $retour = $pStmt->bindValue(1, $typePeriode['id'], Type::BIGINT);
+                        if ($retour) {
+                            $result = $pStmt->execute();
+                            if (!$result) {
+                                $this->connexion->rollBack();
+                                return false;
+                            } else {
+                                while ($pResult = $pStmt->fetch()) {
+                                    $periode=array();
+                                    $periode['id']=$pResult['id'];
+                                    $periode['debut']= new \DateTime($pResult['debut']);
+                                    $periode['fin']= new \DateTime($pResult['fin']);
+                                    $typePeriode['periodes'][] = $periode;
+                                }
+                            }
+                        }
+                    }
+                    $typePeriodes[] =$typePeriode;
+                }
+            }
+        }
+        return $typePeriodes;
+//        $qb = $this->createQueryBuilder('type_periode_repository')
+//            ->select('type_periode_repository')
+//            ->addSelect('periodes')
+//            ->leftJoin('type_periode_repository.periodes', 'periodes')
+//            ->orderBy('periodes.debut', 'ASC')
+//            ->addOrderBy('periodes.fin', 'ASC');
+//        return $qb->getQuery()->getArrayResult();
     }
 }
