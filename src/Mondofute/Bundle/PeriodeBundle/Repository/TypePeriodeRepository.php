@@ -70,8 +70,8 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
             } else {
 //                    $result = $stmt->fetch();
                 while ($tpResult = $tpStmt->fetch()) {
-                    $typePeriode=array();
-                    $typePeriode['id'] = $tpResult['id'];
+                    $typePeriode=new \stdClass();
+                    $typePeriode->id = $tpResult['id'];
                     unset($tpResult);
 //                                            recupération des traductions
                     $sql = 'SELECT p.id, p.debut, p.fin FROM periode AS p WHERE p.type_id=?';
@@ -79,7 +79,7 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
                     if (!$pStmt) {
 
                     } else {
-                        $retour = $pStmt->bindValue(1, $typePeriode['id'], Type::BIGINT);
+                        $retour = $pStmt->bindValue(1, $typePeriode->id, Type::BIGINT);
                         if ($retour) {
                             $result = $pStmt->execute();
                             if (!$result) {
@@ -87,11 +87,11 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
                                 return false;
                             } else {
                                 while ($pResult = $pStmt->fetch()) {
-                                    $periode=array();
-                                    $periode['id']=$pResult['id'];
-                                    $periode['debut']= new \DateTime($pResult['debut']);
-                                    $periode['fin']= new \DateTime($pResult['fin']);
-                                    $typePeriode['periodes'][] = $periode;
+                                    $periode=new \stdClass();
+                                    $periode->id=$pResult['id'];
+                                    $periode->debut= new \DateTime($pResult['debut']);
+                                    $periode->fin= new \DateTime($pResult['fin']);
+                                    $typePeriode->periodes[] = $periode;
                                 }
                             }
                         }
