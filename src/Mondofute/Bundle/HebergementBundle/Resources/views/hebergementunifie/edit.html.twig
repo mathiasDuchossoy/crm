@@ -34,12 +34,6 @@
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">
-        $(document).ready(function () {
-//            gestion des table de type hebergement-stocks
-//            gestion des Datatables pour les tabs bootstrap (gère l'affichage)
-            genererDataTables($('.table-hebergement-stocks'));
-        });
-
         function genererDataTables($tableau, colonnes, parametres, $progressBar, callback) {
             var table = $tableau.DataTable({
                 data: null,
@@ -88,6 +82,7 @@
         "use strict";
         var stocksModifies = Array();
         $(document).ready(function () {
+            chargerOngletStocksHebergement({{ entity.id }});
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
@@ -100,21 +95,12 @@
             });
             $(document).delegate('.table-hebergement-stocks input[name^="stocks"]', 'change', function (e) {
                 modificationStock($(this));
-//                var datas = $(this).data();
-//                if (stocksModifies[datas.logement] == null) {
-//                    stocksModifies[datas.logement] = Array();
-//                }
-//                if (stocksModifies[datas.logement][datas.periode] == null) {
-//                    stocksModifies[datas.logement][datas.periode] = 0;
-//                }
-//                stocksModifies[datas.logement][datas.periode] = $(this).val();
             });
             $(document).on('resize', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
             });
 
             $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
-            chargerOngletStocksHebergement({{ entity.id }});
         });
         function modificationStock($obj) {
             var datas = $obj.data();
@@ -131,11 +117,10 @@
         function dupliquerStocksLogement(logementId) {
             var $ref = $('input[data-logement=' + logementId + ']:first');
             var valeur = $ref.val();
-            $ref.attr('value',valeur);
+            $ref.attr('value', valeur);
             $('input[data-logement=' + logementId + ']').each(function () {
-
                 $(this).val(valeur);
-                $(this).attr('value',valeur);
+                $(this).attr('value', valeur);
                 modificationStock($(this));
             });
         }
@@ -260,25 +245,8 @@
                     }, 'json');
         }
         function genererInputStock(idLogementUnifie, idPeriode, stock) {
-//            var input = '<input data-logement="'+idLogementUnifie+'" data-periode="'+idPeriode+'" name="stocks['+idLogementUnifie+']['+idPeriode+']" class="form-control" type="text" size="2" maxlength="2" value="' +stock+ '"/>';
             return '<input data-logement="' + idLogementUnifie + '" data-periode="' + idPeriode + '" name="stocks[' + idLogementUnifie + '][' + idPeriode + ']" class="form-control" type="text" size="2" maxlength="2" value="' + stock + '"/>';
         }
-        {#function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {#}
-        {#var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";#}
-        {#url = url.replace(/_idHebergement_/g, parseInt(idHebergement));#}
-        {#url = url.replace(/_idTypePeriode_/g, parseInt(idTypePeriode));#}
-        {#$.get(#}
-        {#url,#}
-        {#function (data) {#}
-        {#if (callback != null) {#}
-        {#callback(data, idTypePeriode, typePeriode, idHebergement);#}
-        {#}#}
-        {#},#}
-        {#'json'#}
-        {#)#}
-
-        {#}#}
-
         function chargerFournisseurHebergements(idHebergement, typePeriodes, callback) {
             var url = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}";
             url = url.replace(/_idHebergement_/g, parseInt(idHebergement));
@@ -335,7 +303,7 @@
                             $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
                         }
                     }
-                },'json');
+                }, 'json');
             } else {
                 $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-info">{{ 'enregistrement_stock.aucun'|trans }}</div>');
             }
