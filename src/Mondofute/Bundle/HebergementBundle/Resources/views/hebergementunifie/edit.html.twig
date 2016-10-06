@@ -40,7 +40,7 @@
             genererDataTables($('.table-hebergement-stocks'));
         });
 
-        function genererDataTables($tableau, colonnes, parametres,$progressBar, callback) {
+        function genererDataTables($tableau, colonnes, parametres, $progressBar, callback) {
             var table = $tableau.DataTable({
                 data: null,
                 "aoColumns": colonnes,
@@ -79,7 +79,7 @@
                 }
             });
             if (callback != null) {
-                callback(table, parametres,$progressBar);
+                callback(table, parametres, $progressBar);
             }
             return table;
         }
@@ -99,14 +99,15 @@
                 dupliquerStocksLogement(datas.logement_id);
             });
             $(document).delegate('.table-hebergement-stocks input[name^="stocks"]', 'change', function (e) {
-                var datas = $(this).data();
-                if (stocksModifies[datas.logement] == null) {
-                    stocksModifies[datas.logement] = Array();
-                }
-                if (stocksModifies[datas.logement][datas.periode] == null) {
-                    stocksModifies[datas.logement][datas.periode] = 0;
-                }
-                stocksModifies[datas.logement][datas.periode] = $(this).val();
+                modificationStock($(this));
+//                var datas = $(this).data();
+//                if (stocksModifies[datas.logement] == null) {
+//                    stocksModifies[datas.logement] = Array();
+//                }
+//                if (stocksModifies[datas.logement][datas.periode] == null) {
+//                    stocksModifies[datas.logement][datas.periode] = 0;
+//                }
+//                stocksModifies[datas.logement][datas.periode] = $(this).val();
             });
             $(document).on('resize', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
@@ -115,22 +116,34 @@
             $(document).delegate('[name="btnEnregistrerStocks"]', 'click', enregistrerStocks);
             chargerOngletStocksHebergement({{ entity.id }});
         });
+        function modificationStock($obj) {
+            var datas = $obj.data();
+            console.log(datas);
+            if (stocksModifies[datas.logement] == null) {
+                stocksModifies[datas.logement] = Array();
+            }
+            if (stocksModifies[datas.logement][datas.periode] == null) {
+                stocksModifies[datas.logement][datas.periode] = 0;
+            }
+            stocksModifies[datas.logement][datas.periode] = $obj.val();
+        }
         //        copie le premier stock du logement dans le tableau sur les autres stocks
         function dupliquerStocksLogement(logementId) {
             var valeur = $('input[data-logement=' + logementId + ']:first').val();
             $('input[data-logement=' + logementId + ']').each(function () {
                 $(this).val(valeur);
+                modificationStock($(this));
             });
         }
-        function chargerTableauStocks(table, parametres,$progressBar) {
+        function chargerTableauStocks(table, parametres, $progressBar) {
             var logements = Array();
             logements['logements'] = Array();
             for (var i = 0; i < parametres.logements.length; i++) {
                 logements['logements'][i] = parametres.logements[i].id;
             }
-            ajouterLogementLocatifTableau(table, logements, parametres,$progressBar);
+            ajouterLogementLocatifTableau(table, logements, parametres, $progressBar);
         }
-        function ajouterLogementLocatifTableau(table, logements, parametres,$progressBar) {
+        function ajouterLogementLocatifTableau(table, logements, parametres, $progressBar) {
             $.post(
                     "{{ path('logement_charger_locatif') }}",
                     {'logements[]': logements['logements']},
@@ -149,8 +162,8 @@
                                     donnees[iDatas][attribut] = genererInputStock(data.logementUnifie.id, data.periodes[i].id, data.periodes[i].stock);
                                 }
                             }
-                            chargerProgressBar($progressBar,(parseFloat($progressBar.attr('aria-valuenow'))+parametres.pasProgressBar));
-                            if($progressBar.attr('aria-valuenow')>=100){
+                            chargerProgressBar($progressBar, (parseFloat($progressBar.attr('aria-valuenow')) + parametres.pasProgressBar));
+                            if ($progressBar.attr('aria-valuenow') >= 100) {
                                 $progressBar.closest('.progress').remove();
                             }
                         }
@@ -228,10 +241,10 @@
                                                 },
                                                 logements: data.fournisseurHebergements[j].logements,
                                                 nbTotalLogements: data.nbLogements,
-                                                pasProgressBar: 100/data.nbLogements
+                                                pasProgressBar: 100 / data.nbLogements
                                             };
-                                            var table = genererDataTables($tableau, colonnes, donnees,$progressBar, function (table, parametres,$progressBar) {
-                                                chargerTableauStocks(table, parametres,$progressBar);
+                                            var table = genererDataTables($tableau, colonnes, donnees, $progressBar, function (table, parametres, $progressBar) {
+                                                chargerTableauStocks(table, parametres, $progressBar);
                                             });
                                         }
                                     }
@@ -247,18 +260,18 @@
             return '<input data-logement="' + idLogementUnifie + '" data-periode="' + idPeriode + '" name="stocks[' + idLogementUnifie + '][' + idPeriode + ']" class="form-control" type="text" size="2" maxlength="2" value="' + stock + '"/>';
         }
         {#function genererTableauxStocksHebergementPeriode(idTypePeriode, idHebergement, typePeriode, callback) {#}
-            {#var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";#}
-            {#url = url.replace(/_idHebergement_/g, parseInt(idHebergement));#}
-            {#url = url.replace(/_idTypePeriode_/g, parseInt(idTypePeriode));#}
-            {#$.get(#}
-                    {#url,#}
-                    {#function (data) {#}
-                        {#if (callback != null) {#}
-                            {#callback(data, idTypePeriode, typePeriode, idHebergement);#}
-                        {#}#}
-                    {#},#}
-                    {#'json'#}
-            {#)#}
+        {#var url = "{{ path('hebergement_generer_tableaux_stocks_periode', {'idTypePeriode': '_idTypePeriode_', 'idHebergementUnifie': '_idHebergement_'}) }}";#}
+        {#url = url.replace(/_idHebergement_/g, parseInt(idHebergement));#}
+        {#url = url.replace(/_idTypePeriode_/g, parseInt(idTypePeriode));#}
+        {#$.get(#}
+        {#url,#}
+        {#function (data) {#}
+        {#if (callback != null) {#}
+        {#callback(data, idTypePeriode, typePeriode, idHebergement);#}
+        {#}#}
+        {#},#}
+        {#'json'#}
+        {#)#}
 
         {#}#}
 
@@ -302,21 +315,26 @@
         function enregistrerStocks() {
             var $element = $(this).parent();
             $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
-            var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+
+            if (stocksModifies.length > 0) {
+                var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
 //            lance la requête ajax de recherche des fournisseurs de type hébergement
-            $.ajax({
-                url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
-                type: 'POST',
-                data: {"stocks": stocksModifies},
-                success: function (json) {
-                    if (json.valid) {
-                        stocksModifies = Array();
-                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
-                    } else {
-                        $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+                $.ajax({
+                    url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                    type: 'POST',
+                    data: {"stocks": stocksModifies},
+                    success: function (json) {
+                        if (json.valid) {
+                            stocksModifies = Array();
+                            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
+                        } else {
+                            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+                        }
                     }
-                }
-            });
+                },'json');
+            } else {
+                $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-info">{{ 'enregistrement_stock.aucun'|trans }}</div>');
+            }
         }
     </script>
 {% endblock %}

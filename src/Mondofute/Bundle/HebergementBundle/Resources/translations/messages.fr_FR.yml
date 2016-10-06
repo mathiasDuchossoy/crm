@@ -39,6 +39,7 @@ tableVide: 'tableau vide'
 enregistrement_stock:
     ok: 'enregistrement du stock OK'
     pas_ok: 'erreur lors de l''enregistrement du stock'
+    aucun: 'Vous n''avez modifié aucun stock'
 page:
     premiere: 'première'
     derniere: 'dernière'
