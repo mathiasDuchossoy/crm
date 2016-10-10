@@ -4,23 +4,23 @@ namespace Mondofute\Bundle\UtilisateurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mondofute\Bundle\CoreBundle\Entity\User as User;
+use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 
 /**
  * UtilisateurUser
  */
 class UtilisateurUser extends User
 {
-//    /**
-//     * @var int
-//     */
-//    protected $id;
     /**
      * @var string
      */
     protected $name;
-    
     /**
-     * @var \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+     * @var int
+     */
+    protected  $id;
+    /**
+     * @var Utilisateur
      */
     private $utilisateur;
 
@@ -61,7 +61,7 @@ class UtilisateurUser extends User
     /**
      * Get utilisateur
      *
-     * @return \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+     * @return Utilisateur
      */
     public function getUtilisateur()
     {
@@ -71,14 +71,30 @@ class UtilisateurUser extends User
     /**
      * Set utilisateur
      *
-     * @param \Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur $utilisateur
+     * @param Utilisateur $utilisateur
      *
      * @return UtilisateurUser
      */
-    public function setUtilisateur(\Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur $utilisateur = null)
+    public function setUtilisateur(Utilisateur $utilisateur = null)
     {
         $this->utilisateur = $utilisateur;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }
