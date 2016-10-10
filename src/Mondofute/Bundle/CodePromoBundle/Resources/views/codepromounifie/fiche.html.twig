@@ -628,7 +628,6 @@
                             } ) }}";
                             path = path.replace(/_codePromoId_/g, codePromoId);
                             $.ajax(path).done(function (data) {
-                                console.log(keyCodePromo);
                                 data = data.replace(/_keyCodePromo_/g, keyCodePromo);
                                 $codeCodePromoPanelPrestationAnnexe.html(data);
                                 {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
