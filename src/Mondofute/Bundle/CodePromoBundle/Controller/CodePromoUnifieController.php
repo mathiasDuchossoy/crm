@@ -17,6 +17,7 @@ use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
+use Mondofute\Bundle\CodePromoApplicationBundle\Entity\Type;
 use Mondofute\Bundle\CodePromoBundle\Entity\Application;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoApplication;
@@ -374,6 +375,32 @@ class CodePromoUnifieController extends Controller
         /** @var CodePromoApplication $codePromoApplicationCrm */
         /** @var CodePromo $codePromo */
         foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
+            if (false === $codePromo->getCodePromoApplications()->filter(function (CodePromoApplication $element) {
+                        return $element->getApplication() == Application::logement;
+                })->first() ){
+                $codePromo->getCodePromoHebergements()->clear();
+                $codePromo->getCodePromoLogements()->clear();
+                $codePromoFournisseurs = $codePromo->getCodePromoFournisseurs()->filter(function (CodePromoFournisseur $element){
+                    return $element->getType() == Type::hebergement;
+                });
+                foreach ($codePromoFournisseurs as $codePromoFournisseur)
+                {
+                    $codePromo->getCodePromoFournisseurs()->removeElement($codePromoFournisseur);
+                }
+            }
+            if (false === $codePromo->getCodePromoApplications()->filter(function (CodePromoApplication $element) {
+                        return $element->getApplication() == Application::prestationAnnexe;
+                })->first() ){
+                $codePromo->getCodePromoFamillePrestationAnnexes()->clear();
+                $codePromo->getCodePromoFournisseurPrestationAnnexes()->clear();
+                $codePromoFournisseurs = $codePromo->getCodePromoFournisseurs()->filter(function (CodePromoFournisseur $element){
+                    return $element->getType() == Type::fournisseurPrestationAnnexe;
+                });
+                foreach ($codePromoFournisseurs as $codePromoFournisseur)
+                {
+                    $codePromo->getCodePromoFournisseurs()->removeElement($codePromoFournisseur);
+                }
+            }
             foreach ($codePromo->getCodePromoApplications() as $application) {
                 $application->setCodePromo($codePromo);
             }
@@ -1526,6 +1553,39 @@ class CodePromoUnifieController extends Controller
             'form' => $form->createView(),
             'siteId' => $siteId,
             'clients' => $clientForm
+        ));
+    }
+
+    public function getPanelHebergementAction($codePromoId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fournisseursTypeHebergement = $em->getRepository(Fournisseur::class)->rechercherTypeHebergement()->getQuery()->getResult();
+        $codePromoUnifie = new CodePromoUnifie();
+        $codePromo = $em->find(CodePromo::class ,$codePromoId );
+        $codePromoUnifie->addCodePromo($codePromo);
+        $form = $this->createForm(CodePromoUnifieType::class,  $codePromoUnifie)->createView();
+
+        return $this->render('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig', array(
+            'fournisseursTypeHebergement' => $fournisseursTypeHebergement,
+            'codePromo' => $form->children['codePromos'][0],
+            'keyCodePromo' => '_keyCodePromo_'
+        ));
+    }
+
+    public function getPrestationAnnexeAction($codePromoId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fournisseursPrestationAnnexe = $em->getRepository(Fournisseur::class)->findWithPrestationAnnexes();
+        $codePromoUnifie = new CodePromoUnifie();
+        $codePromo = $em->find(CodePromo::class ,$codePromoId );
+        $codePromoUnifie->addCodePromo($codePromo);
+        $form = $this->createForm(CodePromoUnifieType::class,  $codePromoUnifie)->createView();
+
+
+        return $this->render('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig', array(
+            'fournisseursPrestationAnnexe' => $fournisseursPrestationAnnexe,
+            'codePromo' => $form->children['codePromos'][0],
+            'keyCodePromo' => '_keyCodePromo_'
         ));
     }
 

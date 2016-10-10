@@ -10,11 +10,13 @@
         {#{% if codePromo.codePromoHebergements is not empty and fournisseurHebergements[codePromo.vars.value.id][fournisseur.id] is defined %}#}
             {#{% set hebergementExists = true %}#}
         {#{% endif %}#}
-            {% for codePromoHebergement in codePromo.codePromoHebergements %}
-                {% if codePromoHebergement.vars.value.fournisseur.id == fournisseur.id %}
-                    {% set hebergementExists = true %}
-                {% endif %}
-            {% endfor %}
+            {% if codePromo.codePromoHebergements is defined %}
+                {% for codePromoHebergement in codePromo.codePromoHebergements %}
+                    {% if codePromoHebergement.vars.value.fournisseur.id == fournisseur.id %}
+                        {% set hebergementExists = true %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading" role="tab"
@@ -25,11 +27,13 @@
                                           onclick="checkChildren(this , 'code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements')"
                                           {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
                                           name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}1][fournisseur]"
-                                        {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
-                                            {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id  and codePromoFournisseur.type.vars.value == 1%}
-                                                checked="checked"
-                                            {% endif %}
-                                        {% endfor %}
+                                        {% if codePromo.codePromoHebergements is defined %}
+                                            {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
+                                                {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id  and codePromoFournisseur.type.vars.value == 1%}
+                                                    checked="checked"
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                 >
                                 <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}1][type]" value="1"/>
                                 <a
