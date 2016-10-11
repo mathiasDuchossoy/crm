@@ -313,9 +313,9 @@
                     </div>
                 </div>
             </div>
+            {{ form_rest(form) }}
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
-            {{ form_rest(form) }}
             {{ form_end(form, {'render_rest': false}) }}
         {% endblock %}
     </section>
