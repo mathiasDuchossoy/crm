@@ -248,9 +248,6 @@ assetic:
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
-#                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
-#                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
-#                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
             filters: [?yui_js]
             output: js/jquery.min.js
         datatables_js:
@@ -268,8 +265,6 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
-#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
-#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
            filters:
                - lessphp
                - cssrewrite
