@@ -1579,6 +1579,34 @@ class HebergementUnifieController extends Controller
                             }
                             $emSite->flush();
                         }
+                        /** @var FournisseurHebergement $fournisseurHebergement */
+                        foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement){
+                            /** @var Logement $logement */
+                            foreach ($fournisseurHebergement->getLogements() as $logement)
+                            {
+
+//                                $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+//                                foreach ($codePromoLogements as $codePromoLogement)
+//                                {
+//                                    $emSite->remove($codePromoLogement);
+//                                }
+
+                                /** @var LogementPeriode $logementPeriode */
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    // *** suprression logement periode locatif  ***
+                                    $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                        'logement' => $logement,
+                                        'periode' => $logementPeriode->getPeriode()->getId(),
+                                    ));
+                                    if(!empty($logementPeriodeLocatif))
+                                    {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                    }
+                                    // *** fin suprression logement periode locatif  ***
+                                }
+                            }
+                        }
                         $emSite->remove($entityUnifieSite);
                         $emSite->flush();
                     }
@@ -1603,6 +1631,31 @@ class HebergementUnifieController extends Controller
                                     $entityVisuel->setVisuel(null);
                                     $em->remove($visuel);
                                     $this->deleteFile($visuel);
+                                }
+                            }
+                        }
+                        /** @var FournisseurHebergement $fournisseurHebergement */
+                        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                            foreach ($fournisseurHebergement->getLogements() as $logement)
+                            {
+//                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+//                                foreach ($codePromoLogements as $codePromoLogement)
+//                                {
+//                                    $em->remove($codePromoLogement);
+//                                }
+                                /** @var LogementPeriode $logementPeriode */
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    // *** suprression logement periode locatif  ***
+                                    $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                        'logement' => $logement,
+                                        'periode' => $logementPeriode->getPeriode()->getId(),
+                                    ));
+                                    if(!empty($logementPeriodeLocatif))
+                                    {
+                                        $em->remove($logementPeriodeLocatif);
+                                    }
+                                    // *** fin suprression logement periode locatif  ***
                                 }
                             }
                         }
