@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
