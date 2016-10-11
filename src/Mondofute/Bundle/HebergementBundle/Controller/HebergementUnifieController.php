@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -1579,34 +1578,6 @@ class HebergementUnifieController extends Controller
                                 }
                             }
                             $emSite->flush();
-                            /** @var FournisseurHebergement $fournisseurHebergement */
-                            foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement){
-                                /** @var Logement $logement */
-                                foreach ($fournisseurHebergement->getLogements() as $logement)
-                                {
-
-//                                $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
-//                                foreach ($codePromoLogements as $codePromoLogement)
-//                                {
-//                                    $emSite->remove($codePromoLogement);
-//                                }
-
-                                    /** @var LogementPeriode $logementPeriode */
-                                    foreach ($logement->getPeriodes() as $logementPeriode)
-                                    {
-                                        // *** suprression logement periode locatif  ***
-                                        $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
-                                            'logement' => $logement,
-                                            'periode' => $logementPeriode->getPeriode()->getId(),
-                                        ));
-                                        if(!empty($logementPeriodeLocatif))
-                                        {
-                                            $emSite->remove($logementPeriodeLocatif);
-                                        }
-                                        // *** fin suprression logement periode locatif  ***
-                                    }
-                                }
-                            }
                         }
                         $emSite->remove($entityUnifieSite);
                         $emSite->flush();
@@ -1636,31 +1607,6 @@ class HebergementUnifieController extends Controller
                             }
                         }
                         $em->flush();
-                    }
-                    /** @var FournisseurHebergement $fournisseurHebergement */
-                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
-                        foreach ($fournisseurHebergement->getLogements() as $logement)
-                        {
-//                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
-//                                foreach ($codePromoLogements as $codePromoLogement)
-//                                {
-//                                    $em->remove($codePromoLogement);
-//                                }
-                            /** @var LogementPeriode $logementPeriode */
-                            foreach ($logement->getPeriodes() as $logementPeriode)
-                            {
-                                // *** suprression logement periode locatif  ***
-                                $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
-                                    'logement' => $logement,
-                                    'periode' => $logementPeriode->getPeriode()->getId(),
-                                ));
-                                if(!empty($logementPeriodeLocatif))
-                                {
-                                    $em->remove($logementPeriodeLocatif);
-                                }
-                                // *** fin suprression logement periode locatif  ***
-                            }
-                        }
                     }
                 }
 
