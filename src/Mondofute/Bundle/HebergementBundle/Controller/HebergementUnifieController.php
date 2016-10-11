@@ -1006,8 +1006,7 @@ class HebergementUnifieController extends Controller
         FournisseurHebergement $fournisseur,
         FournisseurHebergement $fournisseurSite,
         $emSite
-    )
-    {
+    ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1136,8 +1135,11 @@ class HebergementUnifieController extends Controller
      * @param Hebergement $entitySite
      * @param EntityManager $emSite
      */
-    private function createHebergementVisuel(HebergementVisuel $entityVisuel, Hebergement $entitySite, EntityManager $emSite)
-    {
+    private function createHebergementVisuel(
+        HebergementVisuel $entityVisuel,
+        Hebergement $entitySite,
+        EntityManager $emSite
+    ) {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
