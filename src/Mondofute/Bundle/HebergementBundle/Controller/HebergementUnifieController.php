@@ -1952,19 +1952,20 @@ class HebergementUnifieController extends Controller
 //                                    $emSite->remove($codePromoLogement);
 //                                }
 
-                                /** @var LogementPeriode $logementPeriode */
-                                foreach ($logement->getPeriodes() as $logementPeriode)
-                                {
-                                    // *** suprression logement periode locatif  ***
-                                    $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
-                                        'logement' => $logement,
-                                        'periode' => $logementPeriode->getPeriode()->getId(),
-                                    ));
-                                    if(!empty($logementPeriodeLocatif))
+                                    /** @var LogementPeriode $logementPeriode */
+                                    foreach ($logement->getPeriodes() as $logementPeriode)
                                     {
-                                        $emSite->remove($logementPeriodeLocatif);
+                                        // *** suprression logement periode locatif  ***
+                                        $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                            'logement' => $logement,
+                                            'periode' => $logementPeriode->getPeriode()->getId(),
+                                        ));
+                                        if(!empty($logementPeriodeLocatif))
+                                        {
+                                            $emSite->remove($logementPeriodeLocatif);
+                                        }
+                                        // *** fin suprression logement periode locatif  ***
                                     }
-                                    // *** fin suprression logement periode locatif  ***
                                 }
                             }
                         }
@@ -2002,32 +2003,32 @@ class HebergementUnifieController extends Controller
                             }
 
                         }
-                        /** @var FournisseurHebergement $fournisseurHebergement */
-                        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
-                            foreach ($fournisseurHebergement->getLogements() as $logement)
-                            {
+                        $em->flush();
+                    }
+                    /** @var FournisseurHebergement $fournisseurHebergement */
+                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                        foreach ($fournisseurHebergement->getLogements() as $logement)
+                        {
 //                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
 //                                foreach ($codePromoLogements as $codePromoLogement)
 //                                {
 //                                    $em->remove($codePromoLogement);
 //                                }
-                                /** @var LogementPeriode $logementPeriode */
-                                foreach ($logement->getPeriodes() as $logementPeriode)
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($logement->getPeriodes() as $logementPeriode)
+                            {
+                                // *** suprression logement periode locatif  ***
+                                $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                    'logement' => $logement,
+                                    'periode' => $logementPeriode->getPeriode()->getId(),
+                                ));
+                                if(!empty($logementPeriodeLocatif))
                                 {
-                                    // *** suprression logement periode locatif  ***
-                                    $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
-                                        'logement' => $logement,
-                                        'periode' => $logementPeriode->getPeriode()->getId(),
-                                    ));
-                                    if(!empty($logementPeriodeLocatif))
-                                    {
-                                        $em->remove($logementPeriodeLocatif);
-                                    }
-                                    // *** fin suprression logement periode locatif  ***
+                                    $em->remove($logementPeriodeLocatif);
                                 }
+                                // *** fin suprression logement periode locatif  ***
                             }
                         }
-                        $em->flush();
                     }
 
                     /** @var Hebergement $hebergement */
