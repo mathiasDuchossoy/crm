@@ -26,6 +26,7 @@ class TypeService
     public function __construct()
     {
         $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->services = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -81,7 +82,7 @@ class TypeService
      */
     public function addService(\Mondofute\Bundle\ServiceBundle\Entity\Service $service)
     {
-        $this->services[] = $service;
+        $this->services[] = $service->setType($this);
 
         return $this;
     }
