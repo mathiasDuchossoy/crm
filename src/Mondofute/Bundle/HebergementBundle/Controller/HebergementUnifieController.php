@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -408,6 +409,20 @@ class HebergementUnifieController extends Controller
                             }
                         }
                         if ($present == false) {
+                            /** @var Logement $logement */
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($fournisseurSite->getLogements() as $logement)
+                            {
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    $logementPeriodeLocatifs = $emSite->getRepository(LogementPeriodeLocatif::class)->findBy(array('logement' => $logement , 'periode' => $logementPeriode->getPeriode()));
+                                    foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif)
+                                    {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                        dump('delete');
+                                    }
+                                }
+                            }
                             $entityUnifieSite->removeFournisseur($fournisseurSite);
                             $emSite->remove($fournisseurSite);
                         }

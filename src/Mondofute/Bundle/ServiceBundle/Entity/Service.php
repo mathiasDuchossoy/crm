@@ -39,7 +39,7 @@ class Service
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $serviceHebergement;
+    private $serviceHebergements;
 
     /**
      * Constructor
@@ -47,6 +47,7 @@ class Service
     public function __construct()
     {
         $this->tarifs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->serviceHebergements = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -159,7 +160,8 @@ class Service
      * @return Service
      */
     public function setCategorieService(\Mondofute\Bundle\ServiceBundle\Entity\CategorieService $categorieService = null
-    ) {
+    )
+    {
         $this->categorieService = $categorieService;
 
         return $this;
@@ -184,7 +186,8 @@ class Service
      */
     public function setSousCategorieService(
         \Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService $sousCategorieService = null
-    ) {
+    )
+    {
         $this->sousCategorieService = $sousCategorieService;
 
         return $this;
@@ -220,6 +223,7 @@ class Service
         return ' ';
     }
 
+
     /**
      * Add serviceHebergement
      *
@@ -229,7 +233,7 @@ class Service
      */
     public function addServiceHebergement(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement)
     {
-        $this->serviceHebergement[] = $serviceHebergement;
+        $this->serviceHebergements[] = $serviceHebergement->setService($this);
 
         return $this;
     }
@@ -239,19 +243,18 @@ class Service
      *
      * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
      */
-    public function removeServiceHebergement(
-        \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
-    ) {
-        $this->serviceHebergement->removeElement($serviceHebergement);
+    public function removeServiceHebergement(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement)
+    {
+        $this->serviceHebergements->removeElement($serviceHebergement);
     }
 
     /**
-     * Get serviceHebergement
+     * Get serviceHebergements
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getServiceHebergement()
+    public function getServiceHebergements()
     {
-        return $this->serviceHebergement;
+        return $this->serviceHebergements;
     }
 }

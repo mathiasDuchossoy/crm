@@ -26,4 +26,5 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie:
     manyToOne:
         listeService:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\ListeService
+            inversedBy: hebergements
     lifecycleCallbacks: {  }

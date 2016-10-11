@@ -14,6 +14,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HebergementUnifieType extends AbstractType
 {
+//    public function getDefaultOptions(array $options)
+//    {
+//        return array(
+//            'csrf_protection' => false,
+//            // Rest of options omitted
+//        );
+//    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -34,12 +42,15 @@ class HebergementUnifieType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'allow_extra_fields' => true,
+                'by_reference' => false
             ))
             ->add('fournisseurs', CollectionType::class,
                 array(
                     'entry_type' => FournisseurHebergementType::class
                 ,
                     'allow_add' => true
+                    ,'allow_delete' => true
+                    ,'by_reference' => false
                 ));
     }
 
@@ -56,6 +67,7 @@ class HebergementUnifieType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
+        parent::finishView($view, $form, $options);
         $entities = 'hebergements';
         $entitiesSelect = array();
         $entitiesSelect[] = 'station';

@@ -31,6 +31,15 @@ class LogementPeriodeLocatif
      */
     private $logement;
 
+    /**
+     * Get prixPublic
+     *
+     * @return string
+     */
+    public function getPrixPublic()
+    {
+        return $this->prixPublic;
+    }
 
     /**
      * Set prixPublic
@@ -47,13 +56,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get prixPublic
+     * Get stock
      *
-     * @return string
+     * @return integer
      */
-    public function getPrixPublic()
+    public function getStock()
     {
-        return $this->prixPublic;
+        return $this->stock;
     }
 
     /**
@@ -71,13 +80,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get stock
+     * Get periode
      *
-     * @return integer
+     * @return \Mondofute\Bundle\PeriodeBundle\Entity\Periode
      */
-    public function getStock()
+    public function getPeriode()
     {
-        return $this->stock;
+        return $this->periode;
     }
 
     /**
@@ -95,13 +104,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get periode
+     * Get logement
      *
-     * @return \Mondofute\Bundle\PeriodeBundle\Entity\Periode
+     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
      */
-    public function getPeriode()
+    public function getLogement()
     {
-        return $this->periode;
+        return $this->logement;
     }
 
     /**
@@ -116,15 +125,5 @@ class LogementPeriodeLocatif
         $this->logement = $logement;
 
         return $this;
-    }
-
-    /**
-     * Get logement
-     *
-     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
-     */
-    public function getLogement()
-    {
-        return $this->logement;
     }
 }
