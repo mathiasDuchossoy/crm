@@ -846,17 +846,17 @@ framework:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
-<<<<<<< 0335d0f2e4f1f26f218be056d3f4a28281a547f4
+<<<<<<< cf044e2fecfeb415abb113841a0d7c26c156b06a
     csrf_protection: ~
     validation:      { enabled: true, enable_annotations: true }
 #    validation:      { enabled: true }
 ||||||| merged common ancestors
-    csrf_protection: ~
-    validation:      { enable_annotations: true }
-=======
     csrf_protection: false
     validation:      { enable_annotations: true }
->>>>>>> csrf_protection a false
+=======
+    csrf_protection: true
+    validation:      { enable_annotations: true }
+>>>>>>> csrf_protection a true
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
