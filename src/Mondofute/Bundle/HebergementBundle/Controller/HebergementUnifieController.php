@@ -2014,6 +2014,8 @@ class HebergementUnifieController extends Controller
             }
         } catch (ForeignKeyConstraintViolationException $except) {
             /** @var ForeignKeyConstraintViolationException $except */
+            dump($except->getMessage());
+            die;
             switch ($except->getCode()) {
                 case 0:
                     $this->addFlash('error',
