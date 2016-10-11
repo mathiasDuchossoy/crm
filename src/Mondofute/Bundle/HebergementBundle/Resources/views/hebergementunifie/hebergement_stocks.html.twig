@@ -32,6 +32,7 @@
             </thead>
             <tbody>
             {% for logement in fournisseurHebergement.logements %}
+<<<<<<< HEAD
             {% if logement.site.crm == true %}
             <tr>
                 <td class="logement">
@@ -222,7 +223,58 @@
                                            size="2" maxlength="2" value="{{ stock }}"/>
                                 </td>
 >>>>>>> b2e1526... gestion de l'affichage
+||||||| parent of af9576c... modification hebergementunifie/hebergement_stocks
+            {% if logement.site.crm == true %}
+            <tr>
+                <td class="logement">
+                    {% for traduction in logement.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.nom }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% set break = false %}
+                {% for logementPeriode in logement.periodes %}
+                {{ dump(logementPeriode) }}
+                {% if logementPeriode.periode.type.id == typePeriode.id %}
+                <td>
+                    {% set stock = 0 %}
+                    {% for logementPeriode in logement.periodes %}
+                        {% if logementPeriode.periode == periode %}
+                            {% set stock = logementPeriode.locatif.stock %}
+                        {% endif %}
+                    {% endfor %}
+                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+                           type="text"
+                           size="2" maxlength="2" value="{{ stock }}"/>
+                </td>
+=======
+                {% if logement.site.crm == true %}
+                    <tr>
+                        <td class="logement">
+                        {% for traduction in logement.traductions %}
+                            {% if traduction.langue.code == app.request.locale %}
+                                {{ traduction.nom }}
+                            {% endif %}
+                        {% endfor %}
+                        </td>
+                        {% set break = false %}
+                        {% for logementPeriode in logement.periodes %}
+                            {% if logementPeriode.periode.type.id == typePeriode.id %}
+                        <td>
+                                {% set stock = 0 %}
+                                {% for logementPeriode in logement.periodes %}
+                                    {% if logementPeriode.periode == periode %}
+                                        {% set stock = logementPeriode.locatif.stock %}
+                                    {% endif %}
+                                {% endfor %}
+                            <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+                                   type="text"
+                                   size="2" maxlength="2" value="{{ stock }}"/>
+                        </td>
+>>>>>>> af9576c... modification hebergementunifie/hebergement_stocks
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 {% if loop.index0 > 15 %}
@@ -230,6 +282,20 @@
                 {% endif %}
                 {% endfor %}
             </tr>
+||||||| parent of af9576c... modification hebergementunifie/hebergement_stocks
+                {% if loop.index0 > 15 %}
+                    {% set break = true %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+=======
+                                {% if loop.index0 > 15 %}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+>>>>>>> af9576c... modification hebergementunifie/hebergement_stocks
                 {% endif %}
             {% endfor %}
             </tbody>
