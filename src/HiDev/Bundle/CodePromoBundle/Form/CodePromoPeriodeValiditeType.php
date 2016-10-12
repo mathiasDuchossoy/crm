@@ -26,7 +26,7 @@ class CodePromoPeriodeValiditeType extends AbstractType
                         'class' => 'form-control input-inline datetimepicker datetime',
                         'data-date-format' => 'dd/MM/yyyy HH:mm',
                         'placeholder' => 'format_date',
-                    )
+                    ),
                 ))
             ->add('dateFin', DateTimeType::class ,
                 array(
@@ -49,7 +49,10 @@ class CodePromoPeriodeValiditeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite'
+            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite',
+//            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode',
+//            'validation_groups' => array('Default','registration')
+//            'validation_groups' => array('registration')
         ));
     }
 }
