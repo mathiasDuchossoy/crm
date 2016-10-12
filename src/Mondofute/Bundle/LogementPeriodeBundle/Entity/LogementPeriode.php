@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementPeriodeBundle\Entity;
 
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 
@@ -96,7 +97,7 @@ class LogementPeriode
         return $this;
     }
     /**
-     * @var \Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
+     * @var LogementPeriodeLocatif
      */
     private $locatif;
 
@@ -104,11 +105,11 @@ class LogementPeriode
     /**
      * Set locatif
      *
-     * @param \Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif $locatif
+     * @param LogementPeriodeLocatif $locatif
      *
      * @return LogementPeriode
      */
-    public function setLocatif(\Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif $locatif = null)
+    public function setLocatif(LogementPeriodeLocatif $locatif = null)
     {
         $this->locatif = $locatif;
 
@@ -118,7 +119,7 @@ class LogementPeriode
     /**
      * Get locatif
      *
-     * @return \Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
+     * @return LogementPeriodeLocatif
      */
     public function getLocatif()
     {

@@ -139,4 +139,29 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 //        dump($result);die;
         return $result;
     }
+
+    public function getFournisseurHebergements($fournisseurId, $locale, $site = 1)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->from('MondofuteHebergementBundle:HebergementUnifie' , 'hebergementUnifie')
+            ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergementUnifie.hebergements' , 'hebergements')
+            ->join('hebergements.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->where('fournisseur = :fournisseurId')
+            ->setParameter('fournisseurId' , $fournisseurId)
+            ->andWhere('langue.code = :locale')
+            ->setParameter('locale' , $locale)
+            ->join('hebergements.site' , 'site')
+            ->andWhere('site.id = :site')
+            ->setParameter('site' , $site)
+        ;
+
+        $result = $q->getQuery()->getResult();
+
+        return $result;
+    }
 }

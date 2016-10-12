@@ -2,11 +2,14 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
 
+use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
@@ -37,7 +40,7 @@ class Fournisseur extends Moral
 
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $interlocuteurs;
     /**
@@ -49,39 +52,39 @@ class Fournisseur extends Moral
      */
     private $contient;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $fournisseurEnfants;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseurParent;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $hebergements;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $remiseClefs;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $receptions;
     /**
-     * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @var Media
      */
     private $logo;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $listeServices;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $types;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $prestationAnnexes;
 
@@ -223,7 +226,7 @@ class Fournisseur extends Moral
     /**
      * Get remiseClefs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getRemiseClefs()
     {
@@ -233,7 +236,7 @@ class Fournisseur extends Moral
     /**
      * Get receptions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getReceptions()
     {
@@ -243,7 +246,7 @@ class Fournisseur extends Moral
     /**
      * Get listeServices
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getListeServices()
     {
@@ -253,7 +256,7 @@ class Fournisseur extends Moral
     /**
      * Get interlocuteurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getInterlocuteurs()
     {
@@ -337,7 +340,7 @@ class Fournisseur extends Moral
     /**
      * Add fournisseurEnfant
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant
+     * @param Fournisseur $fournisseurEnfant
      *
      * @return Fournisseur
      */
@@ -351,7 +354,7 @@ class Fournisseur extends Moral
     /**
      * Remove fournisseurEnfant
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurEnfant
+     * @param Fournisseur $fournisseurEnfant
      */
     public function removeFournisseurEnfant(Fournisseur $fournisseurEnfant)
     {
@@ -361,7 +364,7 @@ class Fournisseur extends Moral
     /**
      * Get fournisseurEnfants
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFournisseurEnfants()
     {
@@ -371,7 +374,7 @@ class Fournisseur extends Moral
     /**
      * Get fournisseurParent
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseurParent()
     {
@@ -381,7 +384,7 @@ class Fournisseur extends Moral
     /**
      * Set fournisseurParent
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseurParent
+     * @param Fournisseur $fournisseurParent
      *
      * @return Fournisseur
      */
@@ -421,7 +424,7 @@ class Fournisseur extends Moral
     /**
      * Get hebergements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getHebergements()
     {
@@ -478,11 +481,11 @@ class Fournisseur extends Moral
     /**
      * Add listeService
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     * @param ListeService $listeService
      *
      * @return Fournisseur
      */
-    public function addListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    public function addListeService(ListeService $listeService)
     {
         $this->listeServices[] = $listeService;
 
@@ -492,9 +495,9 @@ class Fournisseur extends Moral
     /**
      * Remove listeService
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     * @param ListeService $listeService
      */
-    public function removeListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService)
+    public function removeListeService(ListeService $listeService)
     {
         $this->listeServices->removeElement($listeService);
     }
@@ -502,7 +505,7 @@ class Fournisseur extends Moral
     /**
      * Get logo
      *
-     * @return \Application\Sonata\MediaBundle\Entity\Media
+     * @return Media
      */
     public function getLogo()
     {
@@ -512,11 +515,11 @@ class Fournisseur extends Moral
     /**
      * Set logo
      *
-     * @param \Application\Sonata\MediaBundle\Entity\Media $logo
+     * @param Media $logo
      *
      * @return Fournisseur
      */
-    public function setLogo(\Application\Sonata\MediaBundle\Entity\Media $logo = null)
+    public function setLogo(Media $logo = null)
     {
         $this->logo = $logo;
 
@@ -526,11 +529,11 @@ class Fournisseur extends Moral
     /**
      * Add type
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
+     * @param FamillePrestationAnnexe $type
      *
      * @return Fournisseur
      */
-    public function addType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
+    public function addType(FamillePrestationAnnexe $type)
     {
         $this->types[] = $type;
 
@@ -540,9 +543,9 @@ class Fournisseur extends Moral
     /**
      * Remove type
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type
+     * @param FamillePrestationAnnexe $type
      */
-    public function removeType(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $type)
+    public function removeType(FamillePrestationAnnexe $type)
     {
         $this->types->removeElement($type);
     }
@@ -550,7 +553,7 @@ class Fournisseur extends Moral
     /**
      * Get types
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTypes()
     {
@@ -560,9 +563,9 @@ class Fournisseur extends Moral
     /**
      * Remove prestationAnnex
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
+     * @param FournisseurPrestationAnnexe $prestationAnnex
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
+    public function removePrestationAnnex(FournisseurPrestationAnnexe $prestationAnnex)
     {
         $this->prestationAnnexes->removeElement($prestationAnnex);
     }
@@ -570,7 +573,7 @@ class Fournisseur extends Moral
     /**
      * Get prestationAnnexes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPrestationAnnexes()
     {
@@ -601,11 +604,11 @@ class Fournisseur extends Moral
     /**
      * Add prestationAnnex
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex
+     * @param FournisseurPrestationAnnexe $prestationAnnex
      *
      * @return Fournisseur
      */
-    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnex)
+    public function addPrestationAnnex(FournisseurPrestationAnnexe $prestationAnnex)
     {
         $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
 

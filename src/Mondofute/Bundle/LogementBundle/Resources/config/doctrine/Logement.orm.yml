@@ -46,6 +46,7 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
         periodes:
             targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
             mappedBy: logement
+            cascade: ['persist','remove']
         traductions:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementTraduction
             mappedBy: logement

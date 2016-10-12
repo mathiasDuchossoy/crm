@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
+use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -390,11 +391,11 @@ class Logement
     /**
      * Add periode
      *
-     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
+     * @param LogementPeriode $periode
      *
      * @return Logement
      */
-    public function addPeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
+    public function addPeriode(LogementPeriode $periode)
     {
         $this->periodes[] = $periode;
 
@@ -404,9 +405,9 @@ class Logement
     /**
      * Remove periode
      *
-     * @param \Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode
+     * @param LogementPeriode $periode
      */
-    public function removePeriode(\Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode $periode)
+    public function removePeriode(LogementPeriode $periode)
     {
         $this->periodes->removeElement($periode);
     }

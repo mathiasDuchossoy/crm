@@ -57,6 +57,7 @@ class AppKernel extends Kernel
             new nucleus\managerBDDBundle\nucleusmanagerBDDBundle(),
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
             new Mondofute\Bundle\FournisseurPrestationAffectationBundle\MondofuteFournisseurPrestationAffectationBundle(),
+            new Mondofute\Bundle\CodePromoApplicationBundle\MondofuteCodePromoApplicationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

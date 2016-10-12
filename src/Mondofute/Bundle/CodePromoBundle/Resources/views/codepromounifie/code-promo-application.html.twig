@@ -1,0 +1,23 @@
+<div class="form-group">
+    {#<label class="col-sm-2 control-label required">Applications</label>#}
+    {{ form_label(codePromo.codePromoApplications) }}
+    <div class="col-sm-10">
+        <div id="code_promo_unifie_codePromos_{{ keyCodePromo }}_codePromoApplications" onclick=""
+             data-unique_block_prefix="_code_promo_unifie_codePromos_entry_codePromoApplications">
+            {% for key, application in applications %}
+                <div class="checkbox"><label class=""><input
+                                {% for value in codePromo.codePromoApplications.vars.value %}
+                                    {% if value.application == key %}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                                id="code_promo_unifie_codePromos_{{ keyCodePromo }}_codePromoApplications_{{ loop.index - 1 }}"
+                                name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoApplications][{{ loop.index - 1 }}][application]"
+                                onchange="displayApplicationPanel(this , '{{ keyCodePromo }}' , '{{ codePromo.vars.value.id  }}' , '{{ codePromo.vars.value.site.id  }}');"
+                                value="{{ key }}" type="checkbox">
+                        {{ application }}</label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

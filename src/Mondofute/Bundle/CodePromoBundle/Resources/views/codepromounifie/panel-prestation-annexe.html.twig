@@ -1,0 +1,78 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Prestation Annexe</h3>
+    </div>
+    <div class="panel-body">
+        {% for fournisseur in fournisseursPrestationAnnexe %}
+
+            {% set prestationAnnexeExists = false %}
+            {#{% if codePromo.codePromoFournisseurPrestationAnnexes is not empty and fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id] is defined %}#}
+                {#{% set prestationAnnexeExists = true %}#}
+            {#{% endif %}#}
+            {% for codePromoFournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
+                {% if codePromoFournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
+                    {% set prestationAnnexeExists = true %}
+                {% endif %}
+            {% endfor %}
+            {% for codePromoFamillePrestationAnnexe in codePromo.codePromoFamillePrestationAnnexes %}
+                {% if codePromoFamillePrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
+                    {% set prestationAnnexeExists = true %}
+                {% endif %}
+            {% endfor %}
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading" role="tab"
+                     id="heading_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                    <h4 class="panel-title">
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="{{ fournisseur.id }}"
+                                          onclick="checkChildren(this , 'code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes')"
+                                        {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
+                                          name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}2][fournisseur]"
+                                        {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
+                                            {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id and codePromoFournisseur.type.vars.value == 2 %}
+                                                checked="checked"
+                                            {% endif %}
+                                        {% endfor %}
+                                >
+                                <input type="hidden"
+                                       name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}2][type]"
+                                       value="2"/>
+                                <a
+                                        data-toggle="collapse"
+                                        href="#collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes"
+                                        {#onclick="getFournisseurprestation_annexes('{{ codePromo.vars.value.id }}','{{ fournisseur.id }}' , '{{ keyCodePromo }}', '{{ codePromo.vars.value.site.id }}');return false;"#}
+                                        {% if prestationAnnexeExists == true %}
+                                            aria-expanded="true"
+                                        {% else %}
+                                            aria-expanded="false"
+                                        {% endif %}
+                                        aria-controls="collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                                    {{ fournisseur.enseigne }}
+                                </a></label>
+                        </div>
+                    </h4>
+                </div>
+
+                <div id="collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes"
+                     class="panel-collapse collapse{% if prestationAnnexeExists == true %} in{% endif %}"
+                     role="tabpanel"
+                     aria-labelledby="heading_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+
+                        <!-- List group prestation_annexes -->
+                        <ul class="list-group"
+                            id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                            {#{% if prestationAnnexeExists == true %}#}
+                                {#{% include ('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-prestation-annexes.html.twig') with {#}
+                                {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],#}
+                                {#'fournisseurId': fournisseur.id,#}
+                                {#'codePromoId' : codePromo.vars.value.id#}
+                                {#} %}#}
+                            {#{% endif %}#}
+                        </ul>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -27,3 +27,23 @@ codepromo_get_clients:
     path:     /getclient/{clientName}/{siteId}/{codePromoId}
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getClients" , codePromoId: null }
     methods:  GET
+
+codepromo_get_fournisseur_hebergements:
+    path:     /getfournisseurhebergements/{codePromoId}/{fournisseurId}/{siteId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurHebergements"}
+    methods:  GET
+
+codepromo_get_fournisseur_prestation_annexes:
+    path:     /getfournisseurprestationannexes/{codePromoId}/{fournisseurId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getFournisseurPrestationAnnexes"}
+    methods:  GET
+
+codepromo_get_panel_hebergement:
+    path:     /getpanelhebergement/{codePromoId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getPanelHebergement"}
+    methods:  GET
+
+codepromo_get_panel_prestation_annexe:
+    path:     /getprestationannexe/{codePromoId}
+    defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getPrestationAnnexe"}
+    methods:  GET

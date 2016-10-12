@@ -3,6 +3,8 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 
 /**
  * HebergementUnifie
@@ -14,19 +16,19 @@ class HebergementUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $hebergements;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $fournisseurs;
     /**
-     * @var \Mondofute\Bundle\ServiceBundle\Entity\ListeService
+     * @var ListeService
      */
     private $listeService;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $services;
 
@@ -73,7 +75,7 @@ class HebergementUnifie
     /**
      * Get hebergements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getHebergements()
     {
@@ -135,7 +137,7 @@ class HebergementUnifie
     /**
      * Get fournisseurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFournisseurs()
     {
@@ -145,7 +147,7 @@ class HebergementUnifie
     /**
      * Get listeService
      *
-     * @return \Mondofute\Bundle\ServiceBundle\Entity\ListeService
+     * @return ListeService
      */
     public function getListeService()
     {
@@ -155,11 +157,11 @@ class HebergementUnifie
     /**
      * Set listeService
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService
+     * @param ListeService $listeService
      *
      * @return HebergementUnifie
      */
-    public function setListeService(\Mondofute\Bundle\ServiceBundle\Entity\ListeService $listeService = null)
+    public function setListeService(ListeService $listeService = null)
     {
         $this->listeService = $listeService;
 
@@ -193,7 +195,7 @@ class HebergementUnifie
     /**
      * Get services
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getServices()
     {

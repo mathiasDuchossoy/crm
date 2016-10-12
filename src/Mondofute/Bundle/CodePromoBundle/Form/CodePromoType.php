@@ -71,7 +71,6 @@ class CodePromoType extends AbstractType
                     'by_reference' => false,
                 )
             )
-
             ->add('codePromoClients', CollectionType::class, array(
                     'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoClientType',
                     'allow_add' => true,
@@ -82,6 +81,42 @@ class CodePromoType extends AbstractType
                 )
             )
             ->add('site', HiddenType::class, array('mapped' => false))
+            ->add('codePromoApplications', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoBundle\Form\CodePromoApplicationType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Applications',
+                    'by_reference' => true,
+                )
+            )
+            ->add('codePromoFournisseurs', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFournisseurType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo fournisseurs',
+                )
+            )
+            ->add('codePromoHebergements', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoHebergementType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo hebergements',
+                )
+            )
+            ->add('codePromoFournisseurPrestationAnnexes', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFournisseurPrestationAnnexeType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo fournisseur prestation annexes',
+                )
+            )
+            ->add('codePromoFamillePrestationAnnexes', CollectionType::class, array(
+                    'entry_type' => 'Mondofute\Bundle\CodePromoApplicationBundle\Form\CodePromoFamillePrestationAnnexeType',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'label' => 'Code promo famille prestation annexes',
+                )
+            )
         ;
     }
     

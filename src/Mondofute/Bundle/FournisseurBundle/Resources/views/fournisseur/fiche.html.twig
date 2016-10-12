@@ -269,14 +269,7 @@
                                 <div class="panel-heading">
                                     {% for traduction in famillePrestationAnnexe.traductions %}
                                         {% if traduction.langue.code == app.request.locale %}
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox"
-                                                           onclick="checkPrestatioAnnexe(this , 'famillePrestationAnnexeBody_' + '{{ famillePrestationAnnexe.id }}');"
-                                                    >
-                                                    <h3 class="panel-title"> {{ traduction.libelle }}</h3>
-                                                </label>
-                                            </div>
+                                            <h3 class="panel-title">{{ traduction.libelle }}</h3>
                                         {% endif %}
                                     {% endfor %}
                                 </div>
