@@ -411,6 +411,19 @@
                 language: "fr",
                 todayHighlight: true
             });
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+//                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
+            });
         }
 
         function addFormDeleteLink($FormLi) {
@@ -552,26 +565,39 @@
 
         }
 
-        {% if panelCodePromo is defined %}
         $( document ).ready(function() {
-            {% for keyCodePromo , codePromo in entity.codePromos  %}
-                {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                    {% for codePromoApplication in codePromo.codePromoApplications %}
-                        {% if codePromoApplication.application == 1 %}
-                            getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
-                        {% endif %}
-                    {% endfor  %}
+            {% if panelCodePromo is defined %}
+                {% for keyCodePromo , codePromo in entity.codePromos  %}
+                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                        {% for codePromoApplication in codePromo.codePromoApplications %}
+                            {% if codePromoApplication.application == 1 %}
+                                getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
+                            {% endif %}
+                        {% endfor  %}
+                    {% endfor %}
+                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                        {% for codePromoApplication in codePromo.codePromoApplications %}
+                            {% if codePromoApplication.application == 2 %}
+                                getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
+                            {% endif %}
+                        {% endfor  %}
+                    {% endfor %}
                 {% endfor %}
-                {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                    {% for codePromoApplication in codePromo.codePromoApplications %}
-                        {% if codePromoApplication.application == 2 %}
-                            getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
-                        {% endif %}
-                    {% endfor  %}
-                {% endfor %}
-            {% endfor %}
+            {% endif %}
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+//                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).on('hide', function(e){
+                return false;
             });
-        {% endif %}
+        });
 
 
 
