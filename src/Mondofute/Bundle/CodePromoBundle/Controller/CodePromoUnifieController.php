@@ -841,6 +841,8 @@ class CodePromoUnifieController extends Controller
      */
     public function editAction(Request $request, CodePromoUnifie $codePromoUnifie)
     {
+        /** @var CodePromo $codePromo */
+
         /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -849,7 +851,6 @@ class CodePromoUnifieController extends Controller
         $applications = Application::$libelles;
 
         $originalCodePromoApplications = new ArrayCollection();
-        /** @var CodePromo $codePromo */
         foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
             $originalCodePromoApplications->set($codePromo->getSite()->getId(), new ArrayCollection());
             foreach ($codePromo->getCodePromoApplications() as $codePromoApplication) {
@@ -989,6 +990,22 @@ class CodePromoUnifieController extends Controller
         if ($codeExists) {
             $this->addFlash('error', "Ce code existe déjà. ");
         }
+
+
+        $validator = $this->get('validator');
+        dump($validator);
+        $errors = null;
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo){
+            foreach ($codePromo->getCodePromoPeriodeValidites() as $validite)
+            {
+                $errors = $validator->validate($validite);
+                dump($validite);
+                dump($errors);
+            }
+        }
+        dump($errors);
+        dump($editForm->isValid());
+        die;
 
         if ($editForm->isSubmitted() && $editForm->isValid() && !$codeExists) {
             foreach ($codePromoUnifie->getCodePromos() as $codePromo) {

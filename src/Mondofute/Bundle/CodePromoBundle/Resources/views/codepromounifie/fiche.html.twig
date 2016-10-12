@@ -44,6 +44,11 @@
                                 {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
                                     <li class="element">
                                         {{ form_widget(codePromoPeriodeValidite) }}
+                                        {#<div class="input-group input-daterange">#}
+                                            {#{{ form_widget(codePromoPeriodeValidite.dateDebut) }}#}
+                                            {#<span class="input-group-addon">au</span>#}
+                                            {#{{ form_widget(codePromoPeriodeValidite.dateFin) }}#}
+                                        {#</div>#}
                                         {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
                                         {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
                                     </li>
@@ -597,6 +602,10 @@
             }).on('hide', function(e){
                 return false;
             });
+
+//            $('.input-daterange input').each(function() {
+//                $(this).datetimepicker("clearDates");
+//            });
         });
 
 
@@ -638,9 +647,11 @@
                             $.ajax(path).done(function (data) {
                                 data = data.replace(/_keyCodePromo_/g, keyCodePromo);
                                 $codeCodePromoPanelHebergement.html(data);
-                                {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                                        getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
-                                {% endfor %}
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                            getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
+                                    {% endfor %}
+                                {% endif %}
                             });
                         }
                         else{
@@ -656,9 +667,11 @@
                             $.ajax(path).done(function (data) {
                                 data = data.replace(/_keyCodePromo_/g, keyCodePromo);
                                 $codeCodePromoPanelPrestationAnnexe.html(data);
-                                {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                                    getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
-                                {% endfor %}
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                        getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
+                                    {% endfor %}
+                                {% endif %}
                             });
                         }
                         else{
@@ -683,6 +696,7 @@
                 }
             }
         }
+
     </script>
 
 {% endblock %}

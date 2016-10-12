@@ -1,0 +1,13 @@
+HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode:
+    properties:
+        dateDebut:
+            - Expression:
+#                groups: ['registration']
+                expression: "this.getDateDebut() <= this.getDateFin()"
+                message: "Cette valeur doit être inférieure à la date de fin."
+                payload:
+                    severity: error
+#            - LessThan:
+#                value: today
+#        dateFin:
+#            - GreaterThan: dateDebut
