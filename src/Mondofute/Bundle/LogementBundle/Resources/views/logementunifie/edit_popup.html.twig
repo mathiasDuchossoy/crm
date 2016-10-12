@@ -1,6 +1,16 @@
 {% extends '@MondofuteLogement/logementunifie/fiche_popup.html.twig' %}
 
-
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style type="text/css">
+        .table-tarifs-logement td {
+            height: 35px;
+        }
+    </style>
+{% endblock %}
 {% block title %}
     {{ 'logement.modification' | trans | capitalize }}
 {% endblock %}
@@ -42,78 +52,49 @@
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript">
-
         $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
             $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
         });
         function genererDataTables($tableau, colonnes, parametres, $progressBar, callback) {
-            {#var table = $tableau.DataTable({#}
-            {#data: null,#}
-            {#"aoColumns": colonnes,#}
-            {#"fnCreatedRow": function (nRow, aData, iDataIndex) {#}
-            {#//                    $(nRow).find('td').attr('style', 'vertical-align: middle;');#}
-            {#},#}
-            {#"bAutoWidth": true,#}
-            {#aoColumnDefs: [#}
-            {#{"bSortable": true, aTargets: [0]},#}
-            {#{"bSortable": false, aTargets: ['_all']},#}
-            {#],#}
-            {#paging: true,#}
-            {#info: true,#}
-            {#pageLength: 25,#}
-            {#scrollX: true,#}
-            {#scrollY: false,#}
-            {#scrollCollapse: true,#}
-            {#fixedColumns: true,#}
-            {#language: {#}
-            {#processing: "{{ 'processing'|trans }}",#}
-            {#search: "{{ 'rechercher'|trans }} :",#}
-            {#loadingRecords: "{{ 'chargementEnCours'|trans }}...",#}
-            {#"lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",#}
-            {#zeroRecords: "{{ 'zeroResultats'|trans }}",#}
-            {#emptyTable: "{{ 'tableVide'|trans }}",#}
-            {#"paginate": {#}
-            {#"first": "{{ 'page.premiere'|trans }}",#}
-            {#"last": "{{ 'page.derniere'|trans }}",#}
-            {#"next": "{{ 'page.suivante'|trans }}",#}
-            {#"previous": "{{ 'page.precedente'|trans }}"#}
-            {#},#}
-            {#aria: {#}
-            {#sortAscending: ": activer pour trier la colonne par ordre croissant",#}
-            {#sortDescending: ": activer pour trier la colonne par ordre décroissant"#}
-            {#}#}
-            {#}#}
-            {#});#}
             var table = $tableau.DataTable({
                 columns: colonnes,
-                {#paging: true,#}
+                "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                    $(nRow).find('td').attr('style', 'vertical-align: middle;');
+                },
+                paging: true,
                 info: false,
                 aoColumnDefs: [
-                    {"bSortable": true, aTargets: [0]},
-                    {"bSortable": false, aTargets: ['_all']},
+                    {"orderable": true, aTargets: 0},
+                    {"orderable": false, aTargets: ['_all']},
                 ],
-                {#pageLength: 25,#}
-                {#scrollX: true,#}
-                {#scrollY: false,#}
-                {#scrollCollapse: true,#}
-                {#language: {#}
-                {#processing: "{{ 'processing'|trans }}",#}
-                {#search: "{{ 'rechercher'|trans }} :",#}
-                {#loadingRecords: "{{ 'chargementEnCours'|trans }}...",#}
-                {#"lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",#}
-                {#zeroRecords: "{{ 'zeroResultats'|trans }}",#}
-                {#emptyTable: "{{ 'tableVide'|trans }}",#}
-                {#"paginate": {#}
-                {#"first": "{{ 'page.premiere'|trans }}",#}
-                {#"last": "{{ 'page.derniere'|trans }}",#}
-                {#"next": "{{ 'page.suivante'|trans }}",#}
-                {#"previous": "{{ 'page.precedente'|trans }}"#}
-                {#},#}
-                {#aria: {#}
-                {#sortAscending: ": activer pour trier la colonne par ordre croissant",#}
-                {#sortDescending: ": activer pour trier la colonne par ordre décroissant"#}
-                {#}#}
-                {#}#}
+                "order": [[0, "asc"]],
+                "aaSorting": [[0, 'asc']],
+                pageLength: 25,
+                scrollX: true,
+                scrollY: false,
+                scrollCollapse: true,
+                fixedColumns: true,
+                scroller: {
+                    rowHeight: 50,
+                },
+                language: {
+                    processing: "{{ 'processing'|trans }}",
+                    search: "{{ 'rechercher'|trans }} :",
+                    loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                    "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                    zeroRecords: "{{ 'zeroResultats'|trans }}",
+                    emptyTable: "{{ 'tableVide'|trans }}",
+                    "paginate": {
+                        "first": "{{ 'page.premiere'|trans }}",
+                        "last": "{{ 'page.derniere'|trans }}",
+                        "next": "{{ 'page.suivante'|trans }}",
+                        "previous": "{{ 'page.precedente'|trans }}"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                }
             });
             if (callback != null) {
                 callback(table, parametres, $progressBar);
@@ -122,7 +103,11 @@
         }
     </script>
     <script type="text/javascript">
+        // Initialisation des variables js
+        var logementUnifieId = parseInt({{ logementUnifie.id }});
         var donnees = Array();
+        var donneesModifiees = Array();
+        var urlEnregistrementTarifs = "{{ path('mondofute_catalogue_enregistrer_tarifs_locatif') }}";
         {% for logement in logementUnifie.logements %}
         {% if logement.site.crm %}
         {% for periode in logement.periodes %}
@@ -131,32 +116,49 @@
         }
         donnees[{{ periode.periode.type.id }}].push({
             'periode': '<span style="display:none;">{{ periode.periode.debut | date('Ymd') }}{{ periode.periode.fin | date('Ymd') }}</span> du {{ periode.periode.debut | date('d-m-Y') }} au {{ periode.periode.fin | date('d-m-Y') }}',
-            'prix_public': genererInput('prixPublic',{{ periode.locatif.prixPublic }},{{ periode.periode.id }}),
-            'prix_achat': genererInput('prixAchat',{{ periode.locatif.prixPublic }},{{ periode.periode.id }}),
-            'stock': genererInput('stock',{{ periode.locatif.stock }},{{ periode.periode.id }}),
+            'prix_public': genererInputTarif('prixPublic',{{ periode.locatif.prixPublic }},{{ periode.periode.id }}),
+            'prix_fournisseur': genererInputTarif('prixFournisseur',{{ periode.locatif.prixFournisseur }},{{ periode.periode.id }}),
+            'prix_achat': genererInputTarif('prixAchat',{{ periode.locatif.prixAchat }},{{ periode.periode.id }}),
+            'stock': genererInputTarif('stock',{{ periode.locatif.stock }},{{ periode.periode.id }}),
         });
         {% endfor %}
         {% endif %}
         {% endfor %}
-        function genererInput(name, valeur, idPeriode, length) {
+        // gestion des évènements
+        $(document).delegate('.table-tarifs-logement input', 'change', function (e) {
+            modificationDonneesTarifs($(this));
+        });
+        $(document).delegate('[name="btnEnregistrerTarifs"]', 'click', enregistrerTarifs);
 
-            return '<input class="form-control" name="' + name + '[' + idPeriode + ']" value="' + valeur + '"/>';
+        //        fonctions
+        function modificationDonneesTarifs($obj) {
+            var datas = $obj.data();
+            donneesModifiees[datas.periode_id] = {
+                prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val(),
+                prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val(),
+                prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val(),
+                stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
+            };
+        }
+        function genererInputTarif(name, valeur, idPeriode, length) {
+            return '<input class="form-control" data-periode_id="' + idPeriode + '" name="' + name + '[' + idPeriode + ']" value="' + valeur + '"/>';
         }
         $(document).ready(function () {
             $conteneur = $('#data_logement_locatif_tarifs');
             $.post("{{ path('periode_type_periode_liste') }}",
                     function (typePeriodes) {
-                        {#console.log(typePeriodes);#}
                         construireOngletsTypePeriodes($conteneur, null, function () {
                             var idTypePeriode = null;
                             for (var indiceTypePeriode = 0; indiceTypePeriode < typePeriodes.length; indiceTypePeriode++) {
                                 idTypePeriode = typePeriodes[indiceTypePeriode].id;
                                 if (typePeriodes[indiceTypePeriode].periodes != null) {
+                                    $progressBar = $('#data_logement_locatif_tarifs_progress-bar_type_periode_' + idTypePeriode);
                                     var colonnes = [{
                                         'mDataProp': "periode",
                                         title: 'periode',
                                     }];
                                     colonnes.push({'mDataProp': "prix_public", title: 'prix public'});
+                                    colonnes.push({'mDataProp': "prix_fournisseur", title: 'prix fournisseur'});
                                     colonnes.push({'mDataProp': "prix_achat", title: 'prix d\'achat'});
                                     colonnes.push({
                                         'mDataProp': "stock",
@@ -166,18 +168,64 @@
                                         idTypePeriode: idTypePeriode,
                                     };
                                     {#}#}
-                                    var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap" width="100%" id="tarifs-type-periode-' + idTypePeriode + '"></table>');
-                                    $('#data_logement_locatif_tarifs').find('#data_logement_locatif_tarifs_data_type_periode_' + idTypePeriode).append($tableau);
-                                    var table = genererDataTables($tableau, colonnes, parametres, null, function (table, parametres, $progressBar) {
+                                    var $tableau = $('<table class="table-tarifs-logement table table-striped nowrap display" width="100%" id="tarifs-type-periode-' + idTypePeriode + '"></table>');
+                                    $('#data_logement_locatif_tarifs').find('#data_logement_locatif_tarifs_data_type_periode_' + idTypePeriode + ' .panel-group').append($tableau);
+                                    chargerProgressBar($progressBar, '25');
+                                    genererDataTables($tableau, colonnes, parametres, $progressBar, function (table, parametres, $progressBar) {
+                                        chargerProgressBar($progressBar, '50');
                                         table.rows.add(donnees[parametres.idTypePeriode]).draw();
+                                        chargerProgressBar($progressBar, '75');
+                                        table.tables({visible: true, api: true}).columns.adjust();
+                                        chargerProgressBar($progressBar, '100');
+                                        supprimerProgressBar($progressBar);
                                     });
                                 }
                             }
+                            $conteneur.append('<button data-loading-text="<span class=\'glyphicon glyphicon-refresh glyphicon-refresh-animate\'></span> Enregistrement en cours" type="button" name="btnEnregistrerTarifs" class="btn btn-primary">Enregistrer Tarifs</button> <div name="btnEnregistrerTarifsReponse"></div>');
                         });
                     }
             );
         });
-
+        function enregistrerTarifs() {
+            $button = $(this);
+            $button.button('loading');
+            var $element = $button.parent();
+            var $reponse = $element.find('[name="btnEnregistrerTarifsReponse"]');
+            if (donneesModifiees.length > 0) {
+                $.post(
+                        urlEnregistrementTarifs,
+                        {'tarifs': donneesModifiees, 'logementUnifieId': logementUnifieId},
+                        function (data) {
+                            if (data.valid == true) {
+                                $reponse.html('<div class="alert alert-success">Les données ont bien été enregistrés</div>');
+                                $button.button('reset');
+                            } else {
+                                $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+                                $button.button('reset');
+                            }
+                        },
+                        'json'
+                ).fail(function () {
+                    $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+                    $button.button('reset');
+                })
+                ;
+            } else {
+                $reponse.html('<div class="alert alert-info">Aucune données à enregistrer</div>');
+                $button.button('reset');
+            }
+        }
+        function chargerProgressBar($progressBar, valeur) {
+            if ($progressBar != null && $progressBar.attr('role') == 'progressbar') {
+                $progressBar.attr('aria-valuenow', parseFloat(valeur));
+                $progressBar.css('width', parseFloat(valeur) + '%');
+                $progressBar.html(parseInt(valeur) + '%');
+            }
+        }
+        function supprimerProgressBar($progressBar) {
+            var $conteneur = $progressBar.closest('.progress');
+            $conteneur.remove();
+        }
         /**
          * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
          * @param $conteneur
