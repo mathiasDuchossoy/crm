@@ -846,17 +846,9 @@ framework:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
     form:            ~
-<<<<<<< cf044e2fecfeb415abb113841a0d7c26c156b06a
     csrf_protection: ~
     validation:      { enabled: true, enable_annotations: true }
 #    validation:      { enabled: true }
-||||||| merged common ancestors
-    csrf_protection: false
-    validation:      { enable_annotations: true }
-=======
-    csrf_protection: true
-    validation:      { enable_annotations: true }
->>>>>>> csrf_protection a true
     #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
@@ -1096,6 +1088,15 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+<<<<<<< 8a0275f45912120381e0805e8d7607c0dba9c667
+||||||| merged common ancestors
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+=======
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
+#               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
+#               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
+>>>>>>> gestion des tarifs avec ajout de prix_fournisseur et prix_achat
            filters:
                - lessphp
                - cssrewrite
