@@ -2,10 +2,6 @@
 
 namespace Mondofute\Bundle\CatalogueBundle\Entity;
 
-use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
-
 /**
  * LogementPeriodeLocatif
  */
@@ -30,7 +26,24 @@ class LogementPeriodeLocatif
      * @var \Mondofute\Bundle\LogementBundle\Entity\Logement
      */
     private $logement;
+    /**
+     * @var string
+     */
+    private $prixFournisseur;
+    /**
+     * @var string
+     */
+    private $prixAchat;
 
+    /**
+     * Get prixPublic
+     *
+     * @return string
+     */
+    public function getPrixPublic()
+    {
+        return $this->prixPublic;
+    }
 
     /**
      * Set prixPublic
@@ -47,13 +60,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get prixPublic
+     * Get stock
      *
-     * @return string
+     * @return integer
      */
-    public function getPrixPublic()
+    public function getStock()
     {
-        return $this->prixPublic;
+        return $this->stock;
     }
 
     /**
@@ -71,13 +84,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get stock
+     * Get periode
      *
-     * @return integer
+     * @return \Mondofute\Bundle\PeriodeBundle\Entity\Periode
      */
-    public function getStock()
+    public function getPeriode()
     {
-        return $this->stock;
+        return $this->periode;
     }
 
     /**
@@ -95,13 +108,13 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get periode
+     * Get logement
      *
-     * @return \Mondofute\Bundle\PeriodeBundle\Entity\Periode
+     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
      */
-    public function getPeriode()
+    public function getLogement()
     {
-        return $this->periode;
+        return $this->logement;
     }
 
     /**
@@ -119,12 +132,50 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get logement
+     * Get prixFournisseur
      *
-     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
+     * @return string
      */
-    public function getLogement()
+    public function getPrixFournisseur()
     {
-        return $this->logement;
+        return $this->prixFournisseur;
+    }
+
+    /**
+     * Set prixFournisseur
+     *
+     * @param string $prixFournisseur
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setPrixFournisseur($prixFournisseur)
+    {
+        $this->prixFournisseur = $prixFournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get prixAchat
+     *
+     * @return string
+     */
+    public function getPrixAchat()
+    {
+        return $this->prixAchat;
+    }
+
+    /**
+     * Set prixAchat
+     *
+     * @param string $prixAchat
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setPrixAchat($prixAchat)
+    {
+        $this->prixAchat = $prixAchat;
+
+        return $this;
     }
 }

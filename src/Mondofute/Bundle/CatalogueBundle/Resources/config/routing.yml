@@ -6,3 +6,8 @@ mondofute_catalogue_enregistrer_stock_locatif:
     path:     /catalogue/enregistrer_stocks_locatif
     defaults: { _controller: MondofuteCatalogueBundle:Default:enregistrerStocksLocatif }
     methods: POST
+
+mondofute_catalogue_enregistrer_tarifs_locatif:
+    path:     /catalogue/enregistrer_tarifs_locatif
+    defaults: { _controller: MondofuteCatalogueBundle:TarifLocatif:enregistrerTarifsLocatif }
+    methods:  POST

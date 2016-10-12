@@ -259,6 +259,7 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
 #               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
 #               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
            filters:
