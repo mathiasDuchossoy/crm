@@ -91,7 +91,13 @@
         function chargerOngletStocks(idhebergement){
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 184e95c... gestion des stocks mémoire
+||||||| parent of 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+||||||| parent of e55ad04... modif sur duplique ligne par type
+=======
+||||||| parent of c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+>>>>>>> 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
                             });
                             $conteneur.append('<button data-loading-text="<span class=\'glyphicon glyphicon-refresh glyphicon-refresh-animate\'></span> Enregistrement en cours" type="button" name="btnEnregistrerStocks" class="btn btn-default">{{ 'enregistrer.stock' | trans }}</button> <div name="btnEnregistrerStocksReponse"></div>');
                         });
@@ -182,6 +188,7 @@
                         }
                     }
             ), 'html';
+<<<<<<< HEAD
 >>>>>>> 184e95c... gestion des stocks mémoire
         }
         function enregistrerStocks() {
@@ -210,12 +217,35 @@
         });
         function chargerOngletStocks(idhebergement){
 
+||||||| parent of 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+>>>>>>> e55ad04... modif sur duplique ligne par type
+=======
+>>>>>>> c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+>>>>>>> 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
         }
         function enregistrerStocks() {
+<<<<<<< HEAD
             var $element = $(this).parent();
             $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
             var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+||||||| parent of c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+            var $element = $(this).parent();
+            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
+
+            if (stocksModifies.length > 0) {
+                var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+=======
+            var $button = $(this);
+            var $element = $button.parent();
+            var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+            $button.button('loading');
+//            $reponse.html('<div class="alert"><div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">Enregistrement en cours</div></div></div>');
+
+            if (stocksModifies.length > 0) {
+                var $stocks = $('.table-hebergement-stocks [name^="stocks"]');
+>>>>>>> c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
 //            lance la requête ajax de recherche des fournisseurs de type hébergement
+<<<<<<< HEAD
             $.ajax({
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
@@ -225,9 +255,49 @@
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
                     }else{
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+||||||| parent of c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+                $.ajax({
+                    url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                    type: 'POST',
+                    data: {"stocks": stocksModifies},
+                    success: function (json) {
+                        if (json.valid) {
+                            stocksModifies = Array();
+                            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
+                        } else {
+                            $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+                        }
+=======
+                $.ajax({
+                    url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
+                    type: 'POST',
+                    data: {"stocks": stocksModifies},
+                    success: function (json) {
+                        if (json.valid) {
+                            stocksModifies = Array();
+                            $reponse.html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
+                            $button.button('reset');
+                        } else {
+                            $reponse.html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
+                            $button.button('reset');
+                        }
+>>>>>>> c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
                     }
+<<<<<<< HEAD
                 }
             });
+||||||| parent of c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+                }, 'json');
+            } else {
+                $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-info">{{ 'enregistrement_stock.aucun'|trans }}</div>');
+            }
+=======
+                }, 'json');
+            } else {
+                $reponse.html('<div class="alert alert-info">{{ 'enregistrement_stock.aucun'|trans }}</div>');
+                $button.button('reset');
+            }
+>>>>>>> c15e521... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
         }
     </script>
 {% endblock %}
@@ -237,6 +307,7 @@
     'css/hebergement-edit.min.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
+<<<<<<< HEAD
 {% endblock %}
 ||||||| parent of 6d36bb6... gestion des stocks dans la fiche hébergement
 =======
@@ -398,5 +469,45 @@
         }
     </style>
 >>>>>>> e7607fe... gestion des stocks dans la fiche hébergement
+||||||| parent of 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
+<<<<<<< HEAD
+||||||| parent of e55ad04... modif sur duplique ligne par type
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td {
+            height: 50px;
+        }
+
+        .duplique-stocks:hover {
+            cursor: pointer;
+        }
+
+        th.logement, td.logement {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+=======
+    <style>
+        .table-hebergement-stocks th, .table-hebergement-stocks td {
+            height: 50px;
+        }
+
+        .duplique-stocks:hover {
+            cursor: pointer;
+        }
+        /*.duplique-stocks {*/
+            /*float: right;*/
+        /*}*/
+
+        th.logement, td.logement {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px;
+        }
+    </style>
+>>>>>>> e55ad04... modif sur duplique ligne par type
+=======
+>>>>>>> 1959235... gestion des tarifs avec ajout de prix_fournisseur et prix_achat
 {% endblock %}
 >>>>>>> 6d36bb6... gestion des stocks dans la fiche hébergement
