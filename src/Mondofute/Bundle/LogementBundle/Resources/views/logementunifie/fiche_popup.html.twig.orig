@@ -1,0 +1,317 @@
+{% extends '::base_popup.html.twig' %}
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+            {% set mesSites = form.logements %}
+
+            {% include '::onglets_sites.html.twig' %}
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% for logement in form.logements %}
+                    <div id="data_site_{{ logement.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ logement.vars.value.site.crm | number_format }}">
+
+                        <div style="display: none">
+                            {{ form_row(logement.fournisseurHebergement) }}
+                        </div>
+                        {{ form_row(logement.nbChambre, { 'attr' : { 'data-unique_block_prefix' : logement.nbChambre.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.capacite, { 'attr' : { 'data-unique_block_prefix' : logement.capacite.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.superficieMin, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMin.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.superficieMax, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMax.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.accesPMR, { 'attr' : { 'data-unique_block_prefix' : logement.accesPMR.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.site) }}
+                        <ul class="nav nav-tabs">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in logement.traductions %}
+                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                    <a data-toggle="tab"
+                                       href="#{{ logement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}">
+                                        {# affiche la langue en fonction de la locale#}
+                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                                {{ traductionLangue.libelle }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            {% set iTraduc = 0 %}
+                            {% for traduction in logement.traductions %}
+                                <div id="{{ logement.vars.value.site.id }}_{{ traduction.vars.value.langue.id }}"
+                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                    {% for element in traduction.children %}
+                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                        {# si le site est le crm on affiche le panel des medias #}
+                        {% if logement.vars.value.site.crm == 1 %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Photos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des photos#}
+                                    <ul class="photo" data-prototype_photo="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': logement.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for photo in logement.photos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% if ongletLogementLocatifTarifs is defined and ongletLogementLocatifTarifs == 1 %}
+                    <div id="data_logement_locatif_tarifs"
+                         class="tab-pane fade in">
+                        tarifs
+                    </div>
+                {% endif %}
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_departement_unifie_departements_entry_region");
+        {% for langue in langues %}
+        {#itemNonPersonalisable.push("_logement_unifie_departements_entry_traductions_entry_libelle_{{ langue.code }}");#}
+        {#itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
+        {% endfor %}
+        var items = [];
+        items.push("_logement_unifie_logements_entry_nbChambre");
+        items.push("_logement_unifie_logements_entry_capacite");
+        items.push("_logement_unifie_logements_entry_superficieMin");
+        items.push("_logement_unifie_logements_entry_superficieMax");
+        items.push("_logement_unifie_logements_entry_accesPMR");
+        {% for langue in langues %}
+        items.push("_logement_unifie_logements_entry_traductions_entry_nom_{{ langue.code }}");
+        items.push("_logement_unifie_logements_entry_traductions_entry_descriptif_{{ langue.code }}");
+        {% endfor %}
+    </script>
+    {# gestion des tarifs #}
+    <script type="text/javascript">
+
+    </script>
+    {{ parent() }}
+<<<<<<< HEAD
+    {% javascripts
+    'js/form.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+||||||| parent of 8a0275f... ajout du tableau des prix dans le logement
+=======
+
+>>>>>>> 8a0275f... ajout du tableau des prix dans le logement
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+    </script>
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% set elements = [ 'photo'] %}
+        {% for element in elements %}
+
+
+        var ${{ element }}CollectionHolder;
+
+        // setup an "add a image" link
+        var ${{ element }}AddLinkImage = $('<a href="#" class="add_{{ element }}_image_link_image">Ajouter {{ element }}</a>');
+        var ${{ element }}_newLinkLiImageImage = $('<li></li>').append(${{ element }}AddLinkImage);
+
+        link.{{ element }} = ${{ element }}_newLinkLiImageImage;
+
+        elements.push('{{ element }}');
+        {% endfor %}
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                // Get the ul that holds the collection of images
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+
+                // add a delete link to all of the existing image form li elements
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+
+                // add the "add a image" anchor and li to the images ul
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+
+                // count the current form inputs we have (e.g. 2), use that as the new
+                // index when inserting a new item (e.g. 2)
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input[id$=_binaryContent]').length);
+
+                window['$' + element + 'AddLinkImage'].on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new image form (see next code block)
+                    addForm(window['$' + element + 'CollectionHolder'], link[element], element);
+                });
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi, type) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype_' + type);
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a diaporama" link li
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
+{% endblock %}
