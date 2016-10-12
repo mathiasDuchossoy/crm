@@ -29,4 +29,9 @@
             <a data-toggle="tab" href="#data_hebergement_stocks">Stocks</a>
         </li>
     {% endif %}
+    {% if ongletLogementLocatifTarifs is defined and ongletLogementLocatifTarifs == 1 %}
+        <li id="onglet_data_logement_locatif_tarifs">
+            <a data-toggle="tab" href="#data_logement_locatif_tarifs">Tarifs</a>
+        </li>
+    {% endif %}
 </ul>

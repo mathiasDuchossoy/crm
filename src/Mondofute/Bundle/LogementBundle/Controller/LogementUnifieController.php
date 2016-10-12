@@ -1213,7 +1213,17 @@ class LogementUnifieController extends Controller
 
             return $this->redirectToRoute('popup_logement_logement_edit', array('id' => $logementUnifie->getId()));
         }
-
+        /** @var Logement $logement */
+        foreach ($logementUnifie->getLogements() as $logement){
+            if($logement->getSite()->getCrm()){
+                $em = $this->getDoctrine()->getManager($logement->getSite()->getLibelle());
+                /** @var LogementPeriode $periode */
+                foreach ($logement->getPeriodes() as $periode){
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($periode);
+                }
+            }
+        }
+//        die;
         return $this->render('@MondofuteLogement/logementunifie/edit_popup.html.twig', array(
             'logementUnifie' => $logementUnifie,
             'form' => $editForm->createView(),
