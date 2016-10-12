@@ -51,9 +51,9 @@ function enregistrerTarifsLocatif() {
 function modificationDonneesTarifs($obj) {
     var datas = $obj.data();
     donneesModifiees[datas.periode_id] = {
-        prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val(),
-        prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val(),
-        prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val(),
+        prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
+        prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
+        prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
         stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
     };
 }
