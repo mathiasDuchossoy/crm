@@ -74,6 +74,7 @@ class Logement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->periodes = new ArrayCollection();
     }
 
     /**
