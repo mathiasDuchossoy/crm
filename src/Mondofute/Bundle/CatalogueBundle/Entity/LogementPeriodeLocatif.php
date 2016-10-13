@@ -10,8 +10,6 @@ use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
  */
 class LogementPeriodeLocatif
 {
-
-
     /**
      * @var string
      */
@@ -31,6 +29,14 @@ class LogementPeriodeLocatif
      * @var Logement
      */
     private $logement;
+    /**
+     * @var string
+     */
+    private $prixFournisseur;
+    /**
+     * @var string
+     */
+    private $prixAchat;
 
     /**
      * Get prixPublic
@@ -103,6 +109,56 @@ class LogementPeriodeLocatif
 
         return $this;
     }
+
+    /**
+     * Get prixFournisseur
+     *
+     * @return Logement
+     * @return string
+     */
+    public function getPrixFournisseur()
+    {
+        return $this->prixFournisseur;
+    }
+
+    /**
+     * Set prixFournisseur
+     *
+     * @param string $prixFournisseur
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setPrixFournisseur($prixFournisseur)
+    {
+        $this->prixFournisseur = $prixFournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get prixAchat
+     *
+     * @return string
+     */
+    public function getPrixAchat()
+    {
+        return $this->prixAchat;
+    }
+
+    /**
+     * Set prixAchat
+     *
+     * @param string $prixAchat
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setPrixAchat($prixAchat)
+    {
+        $this->prixAchat = $prixAchat;
+
+        return $this;
+    }
+
 
     /**
      * Get logement

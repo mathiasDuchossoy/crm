@@ -247,6 +247,21 @@ assetic:
            file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
            apply_to: ".less$"
     assets:
+        type_periodes_onglets_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/type-periodes-onglets.js"
+            filters: [?yui_js]
+            output: js/type-periodes-onglets.min.js
+        progressbar_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/progressbar.js"
+            filters: [?yui_js]
+            output: js/progressbar.min.js
+        tarifs_locatif_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/tarifs-locatif.js"
+            filters: [?yui_js]
+            output: js/tarifs-locatif.min.js
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
@@ -261,6 +276,7 @@ assetic:
                 - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js"
                 - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/media/js/dataTables.bootstrap4.min.js"
                 - "%kernel.root_dir%/../app/Resources/public/DataTables-1.10.12/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"
+                - "%kernel.root_dir%/../app/Resources/public/js/datatables.js"
             filters: [?yui_js]
             output: js/datatables.min.js
         menu_css:
@@ -270,6 +286,7 @@ assetic:
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"
+               - "%kernel.root_dir%/../app/Resources/public/css/glyphicon-animation.css"
 #               - "https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"
 #               - "https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.bootstrap.min.css"
            filters:

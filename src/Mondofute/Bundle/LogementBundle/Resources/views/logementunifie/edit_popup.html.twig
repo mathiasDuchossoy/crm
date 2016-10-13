@@ -1,6 +1,16 @@
 {% extends '@MondofuteLogement/logementunifie/fiche_popup.html.twig' %}
 
-
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    <style type="text/css">
+        .table-tarifs-logement td {
+            height: 35px;
+        }
+    </style>
+{% endblock %}
 {% block title %}
     {{ 'logement.modification' | trans | capitalize }}
 {% endblock %}
@@ -17,6 +27,7 @@
         </li>
     </ul>
 
+    {% set ongletLogementLocatifTarifs=1 %}
     {{ parent() }}
 {% endblock %}
 {#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
@@ -34,6 +45,73 @@
 {% endblock %}
 
 {#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
-{% block javascript_page %}
+{% block javascripts %}
     {{ parent() }}
+    {% javascripts
+    'js/datatables.min.js'
+    'js/tarifs-locatif.min.js'
+    'js/type-periodes-onglets.min.js'
+    'js/progressbar.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        // Initialisation des variables js
+        var datatableLangue = {
+            language: {
+                processing: "{{ 'processing'|trans }}",
+                search: "{{ 'rechercher'|trans }} :",
+                loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                zeroRecords: "{{ 'zeroResultats'|trans }}",
+                emptyTable: "{{ 'tableVide'|trans }}",
+                "paginate": {
+                    "first": "{{ 'page.premiere'|trans }}",
+                    "last": "{{ 'page.derniere'|trans }}",
+                    "next": "{{ 'page.suivante'|trans }}",
+                    "previous": "{{ 'page.precedente'|trans }}"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            },
+            colonnes: [{
+                'mDataProp': "periode",
+                title: 'periode',
+            }, {'mDataProp': "prix_public", title: 'prix public'}, {
+                'mDataProp': "prix_fournisseur",
+                title: 'prix fournisseur'
+            }, {'mDataProp': "prix_achat", title: 'prix d\'achat'}, {
+                'mDataProp': "stock",
+                title: 'stock'
+            }]
+        };
+        var logementUnifieId = parseInt({{ logementUnifie.id }});
+        var donnees = Array();
+        var urlEnregistrementTarifs = "{{ path('mondofute_catalogue_enregistrer_tarifs_locatif') }}";
+        var urlChargerTypePeriodeListe = "{{ path('periode_type_periode_liste') }}";
+        var urlTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        {% for logement in logementUnifie.logements %}
+        {% if logement.site.crm %}
+        {% for periode in logement.periodes %}
+        if (donnees[{{ periode.periode.type.id }}] == null) {
+            donnees[{{ periode.periode.type.id }}] = Array();
+        }
+        donnees[{{ periode.periode.type.id }}].push({
+            'periode': '<span style="display:none;">{{ periode.periode.debut | date('Ymd') }}{{ periode.periode.fin | date('Ymd') }}</span> du {{ periode.periode.debut | date('d-m-Y') }} au {{ periode.periode.fin | date('d-m-Y') }}',
+            'prix_public': genererInputTarifLocatif('prixPublic',{{ periode.locatif.prixPublic }},{{ periode.periode.id }}),
+            'prix_fournisseur': genererInputTarifLocatif('prixFournisseur',{{ periode.locatif.prixFournisseur }},{{ periode.periode.id }}),
+            'prix_achat': genererInputTarifLocatif('prixAchat',{{ periode.locatif.prixAchat }},{{ periode.periode.id }}),
+            'stock': genererInputTarifLocatif('stock',{{ periode.locatif.stock }},{{ periode.periode.id }}),
+        });
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+
+        $(document).ready(function () {
+            $conteneur = $('#data_logement_locatif_tarifs');
+            chargerTarifsLocatif($conteneur);
+        });
+    </script>
+
 {% endblock %}

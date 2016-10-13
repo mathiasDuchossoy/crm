@@ -1,0 +1,1 @@
+ALTER TABLE logement_periode_locatif ADD prix_fournisseur NUMERIC(10, 2) NOT NULL, ADD prix_achat NUMERIC(10, 2) NOT NULL;

@@ -1,13 +1,13 @@
 parameters:
     deploy_bundle.serveurs:
         exemple.serveur1:
-            host:   localhost
-            login:  root
-            pass:   ~
+            host: localhost
+            login: root
+            pass: null
         exemple.serveur2:
-            host:   localhost
-            login:  root
-            pass:   ~
+            host: localhost
+            login: root
+            pass: null
     deploy_bundle.bases:
         exemple.bdd1:
             - exemple_nom_bdd1
@@ -17,4 +17,4 @@ parameters:
             - exemple_nom_bdd2
     deploy_bundle.dossier_defaut: maj
     deploy_bundle.type_bdd: param
-    deploy_bundle.url: ~
+    deploy_bundle.url: null
