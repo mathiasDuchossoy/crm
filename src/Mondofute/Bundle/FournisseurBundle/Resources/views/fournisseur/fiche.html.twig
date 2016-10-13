@@ -308,7 +308,8 @@
                 {% endfor %}
             </div>
 
-            <div id="values_prestation_annexe" style="display: none">
+            {#<div id="values_prestation_annexe" style="display: none">#}
+            <div id="values_prestation_annexe" >
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
             </div>
             {{ form_widget(form._token) }}
@@ -357,15 +358,6 @@
                             <h4 class="modal-title">{{ 'gestion.tarifs.service' | trans | capitalize }}</h4>
                         </div>
                         <div class="modal-body">
-                            {#<div class="row" id="modal-prototype-liste-service"#}
-                            {#data-prototype-service="#}
-                            {#"#}
-                            {#data-prototype="#}
-                            {#{% filter escape %}#}
-                            {#{% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}#}
-                            {#{% endfilter %}#}
-                            {#">#}
-                            {#</div>#}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default"
@@ -1378,7 +1370,7 @@
             if ($element.is(':checked')) {
                 if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).length != 1) {
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-//
+
                     $.ajax(path,
                         {
                             async: false,
@@ -1388,9 +1380,16 @@
 //                        $("#values_prestation_annexe").append(data);
                         $form_prestation_annexe.html(data);
                         $prestationAnnexeModal.modal();
+                        var $cancel_modal_fournisseur_prestation_annexe = $('#cancel_modal_fournisseur_prestation_annexe');
+                        $cancel_modal_fournisseur_prestation_annexe.unbind( "click" );
+                        $cancel_modal_fournisseur_prestation_annexe.on('click', function(event){
+                            $prestationAnnexeModal.unbind( "hide.bs.modal" );
+                            $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+                            $element.prop('checked', false);
+                            $editPrestationAnnexe.hide();
+                        });
                         $prestationAnnexeModal.unbind( "hide.bs.modal" );
                         $prestationAnnexeModal.on('hide.bs.modal', function (e) {
-                            alert($(this));
                             return enregisterPrestationAnnexe(prestationAnnexeId);
                         })
                     });
@@ -1413,7 +1412,7 @@
             return path;
         }
 
-        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId){
+        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId ){
             var $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
             var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
             var $prestationAnnexeModal = $('#prestationAnnexeModal');
@@ -1432,6 +1431,28 @@
             }
             $prestationAnnexeModal.modal();
             $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            var $cancel_modal_fournisseur_prestation_annexe = $('#cancel_modal_fournisseur_prestation_annexe');
+            $cancel_modal_fournisseur_prestation_annexe.unbind( "click" );
+            $cancel_modal_fournisseur_prestation_annexe.on('click', function(event){
+                $prestationAnnexeModal.unbind( "hide.bs.modal" );
+                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+                if($('#fournisseur_prestationAnnexes_'+prestationAnnexeId).data('id'))
+                {
+                    // on doit recharger les données et les mettre dans le form
+                    $.ajax(path,
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
+                    ).done(function (data) {
+                        $('#values_prestation_annexe').append(data);
+                    });
+                }
+                else{
+                    $('#prestation_annexe_'+prestationAnnexeId).prop('checked', false);
+                    $('#edit_prestation_annexe_' + prestationAnnexeId).hide();
+                }
+            });
             $prestationAnnexeModal.unbind( "hide.bs.modal" );
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
