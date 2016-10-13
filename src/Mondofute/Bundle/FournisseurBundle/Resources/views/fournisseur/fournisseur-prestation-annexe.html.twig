@@ -3,7 +3,7 @@
 {% endif %}
 {% for prestationAnnexe in form.prestationAnnexes %}
 
-    <div id="{{ prestationAnnexe.vars.id }}">
+    <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <ul class="nav nav-pills nav-justified">
             <li class="active" id="nav_pill_parametrage_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
                                                                                            href="#pill_parametrage_{{ prestationAnnexe.vars.id }}">Paramétrage</a>
