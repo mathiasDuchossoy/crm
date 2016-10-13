@@ -23,6 +23,7 @@
 
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
+                {{ form_widget(form._token) }}
                 {% for hebergement in form.hebergements %}
 
                     <div id="data_site_{{ hebergement.vars.value.site.id }}"
@@ -314,7 +315,11 @@
                 </div>
             </div>
             {{ form_row(form.submit) }}
-            {{ form_row(form._token) }}
+            {#{{ form_row(form._token) }}#}
+            {#<div>#}
+                {#{{ form_rest(form) }}#}
+            {#</div>#}
+            {#{{ form_end(form) }}#}
             {{ form_end(form, {'render_rest': false}) }}
         {% endblock %}
     </section>

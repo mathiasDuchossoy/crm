@@ -642,6 +642,20 @@ class HebergementUnifieController extends Controller
                                 }
                             }
                             // *** fin suppression des code promo logement ***
+                            /** @var Logement $logement */
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($fournisseurSite->getLogements() as $logement)
+                            {
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    $logementPeriodeLocatifs = $emSite->getRepository(LogementPeriodeLocatif::class)->findBy(array('logement' => $logement , 'periode' => $logementPeriode->getPeriode()));
+                                    foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif)
+                                    {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                        dump('delete');
+                                    }
+                                }
+                            }
                             $entityUnifieSite->removeFournisseur($fournisseurSite);
                             $emSite->remove($fournisseurSite);
                         }
@@ -1006,8 +1020,7 @@ class HebergementUnifieController extends Controller
         FournisseurHebergement $fournisseur,
         FournisseurHebergement $fournisseurSite,
         $emSite
-    )
-    {
+    ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
