@@ -34,6 +34,7 @@ class HebergementUnifieType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'allow_extra_fields' => true,
+                'by_reference' => false
             ))
             ->add('fournisseurs', CollectionType::class,
                 array(

@@ -1,0 +1,70 @@
+{% for fournisseurHebergement in fournisseurHebergements %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <h2>
+                <a data-toggle="collapse"
+                   href="#stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}">{{ fournisseurHebergement.fournisseur.enseigne }}</a>
+            </h2>
+        </div>
+    </div>
+    <div id="stocks_type_periode_{{ typePeriode.id }}_fournisseur_{{ fournisseurHebergement.fournisseur.id }}"
+         class="panel-collapse collapse in">
+        Tableau des stocks
+        <table class="table-hebergement-stocks display table table-striped nowrap"
+               cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th class="logement">Logement</th>
+
+                {% set break = false %}
+                {% for periode in typePeriode.periodes %}
+                    <th>
+                        du
+                        {{ periode.debut|date('d-m-Y') }}<br/>
+                        au
+                        {{ periode.fin|date('d-m-Y') }}
+                    </th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for logement in fournisseurHebergement.logements %}
+            {% if logement.site.crm == true %}
+            <tr>
+                <td class="logement">
+                    {% for traduction in logement.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.nom }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% set break = false %}
+                {% for logementPeriode in logement.periodes %}
+                {{ dump(logementPeriode) }}
+                {% if logementPeriode.periode.type.id == typePeriode.id %}
+                <td>
+                    {% set stock = 0 %}
+                    {% for logementPeriode in logement.periodes %}
+                        {% if logementPeriode.periode == periode %}
+                            {% set stock = logementPeriode.locatif.stock %}
+                        {% endif %}
+                    {% endfor %}
+                    <input name="stocks[{{ logement.logementUnifie.id }}][{{ logementPeriode.periode.id }}]"
+                           type="text"
+                           size="2" maxlength="2" value="{{ stock }}"/>
+                </td>
+
+                {% if loop.index0 > 15 %}
+                    {% set break = true %}
+                {% endif %}
+                {% endfor %}
+            </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endfor %}

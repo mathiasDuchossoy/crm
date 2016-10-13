@@ -1,0 +1,15 @@
+<?php
+
+namespace Mondofute\Bundle\LogementPeriodeBundle\Entity;
+
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
+
+/**
+ * LogementPeriode
+ */
+class LogementPeriode
+{
+
+
+}

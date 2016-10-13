@@ -23,6 +23,7 @@
 
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
+                {{ form_widget(form._token) }}
                 {% for hebergement in form.hebergements %}
 
                     <div id="data_site_{{ hebergement.vars.value.site.id }}"
@@ -189,6 +190,17 @@
                         {#{{ form_row(form.services) }}#}
                     </div>
                 </div>
+                {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
+                    <div id="data_hebergement_stocks" class="tab-pane fade">
+                        <div class="progress">
+                            <div id="progress-bar_onglets_type_periode_hebergement_{{ entity.id }}" class="progress-bar" role="progressbar" aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                0%
+                            </div>
+                        </div>
+                        {#{% include '@MondofuteHebergement/hebergementunifie/hebergement_stocks.html.twig' with {'hebergementUnifie' : entity, 'typePeriodes': typePeriodes} %}#}
+                    </div>
+                {% endif %}
                 <div id="data_fournisseurs" class="tab-pane fade">
                     <div class="row">
                         <div class="col-lg-12">
@@ -303,7 +315,6 @@
                 </div>
             </div>
             {{ form_row(form.submit) }}
-            {{ form_row(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
         {% endblock %}
     </section>
@@ -1033,7 +1044,6 @@
         });
     </script>
 
-
     <script type="text/javascript">
         var $visuelsCollectionHolder;
 
@@ -1093,7 +1103,6 @@
 
             });
         });
-
         function addForm($collectionHolder, $newLinkLi, type) {
             // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype_' + type);

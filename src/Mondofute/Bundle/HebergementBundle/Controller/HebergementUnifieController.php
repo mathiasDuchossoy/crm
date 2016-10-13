@@ -37,8 +37,10 @@ use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -52,12 +54,14 @@ use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
+use Nelmio\ApiDocBundle\Parser\JsonSerializableParser;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -191,7 +195,9 @@ class HebergementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Hebergement $entitySite */
-                                    $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                                    $entitySite = $entityUnifie->getHebergements()->filter(function (
+                                        Hebergement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($entitySite)) {
@@ -240,7 +246,6 @@ class HebergementUnifieController extends Controller
             }
             if (!$error) {
                 $this->copieVersSites($entityUnifie);
-//                die;
                 $this->addFlash('success', 'l\'hébergement a bien été créé');
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
@@ -638,6 +643,20 @@ class HebergementUnifieController extends Controller
                                 }
                             }
                             // *** fin suppression des code promo logement ***
+                            /** @var Logement $logement */
+                            /** @var LogementPeriode $logementPeriode */
+                            foreach ($fournisseurSite->getLogements() as $logement)
+                            {
+                                foreach ($logement->getPeriodes() as $logementPeriode)
+                                {
+                                    $logementPeriodeLocatifs = $emSite->getRepository(LogementPeriodeLocatif::class)->findBy(array('logement' => $logement , 'periode' => $logementPeriode->getPeriode()));
+                                    foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif)
+                                    {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                        dump('delete');
+                                    }
+                                }
+                            }
                             $entityUnifieSite->removeFournisseur($fournisseurSite);
                             $emSite->remove($fournisseurSite);
                         }
@@ -1002,8 +1021,7 @@ class HebergementUnifieController extends Controller
         FournisseurHebergement $fournisseur,
         FournisseurHebergement $fournisseurSite,
         $emSite
-    )
-    {
+    ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1132,8 +1150,11 @@ class HebergementUnifieController extends Controller
      * @param Hebergement $entitySite
      * @param EntityManager $emSite
      */
-    private function createHebergementVisuel(HebergementVisuel $entityVisuel, Hebergement $entitySite, EntityManager $emSite)
-    {
+    private function createHebergementVisuel(
+        HebergementVisuel $entityVisuel,
+        Hebergement $entitySite,
+        EntityManager $emSite
+    ) {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
@@ -1326,7 +1347,7 @@ class HebergementUnifieController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         $originalServices = new ArrayCollection();
@@ -1552,16 +1573,6 @@ class HebergementUnifieController extends Controller
                     $em->remove($originalFournisseurHebergement);
                 }
             }
-//            /** @var FournisseurHebergement $fournisseurHebergement */
-//            foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
-//                if (empty($fournisseurHebergement->getFournisseur())) {
-//                    //  supprime le fournisseurHebergement car plus présent
-//                    $entityUnifie->removeFournisseur($fournisseurHebergement);
-//                    $em->remove($fournisseurHebergement);
-//                } else {
-//                    $fournisseurHebergement->setHebergement($entityUnifie);
-//                }
-//            }
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -1582,7 +1593,9 @@ class HebergementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Hebergement $entitySite */
-                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($site) {
+                        $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
+                            $site
+                        ) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1592,7 +1605,10 @@ class HebergementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau hebergementVisuel
                             if (!empty($entityVisuel->getId())) {
                                 // on récupère l'hebergementVisuel pour le modifier
-                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array('hebergement' => $entitySite, 'visuel' => $originalVisuels->get($key)));
+                                $entityVisuelSite = $em->getRepository(HebergementVisuel::class)->findOneBy(array(
+                                    'hebergement' => $entitySite,
+                                    'visuel' => $originalVisuels->get($key)
+                                ));
                             }
                             // si l'hebergementVisuel est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($entityVisuel->getId()) || empty($entityVisuelSite)) {
@@ -1623,7 +1639,9 @@ class HebergementUnifieController extends Controller
                                     $traductionSites = $entityVisuelSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            HebergementVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1636,7 +1654,8 @@ class HebergementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementVisuel doit être actif sur le site ou non
                                 if (!empty($request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('hebergement_unifie')['hebergements'][$keyCrm]['visuels'][$key]['sites'])
                                 ) {
                                     $entityVisuelSite->setActif(true);
                                 } else {
@@ -1736,18 +1755,129 @@ class HebergementUnifieController extends Controller
     }
 
     /**
+     * @param HebergementUnifie $hebergementUnifie
+     */
+    public function chargerCatalogue($hebergementUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($hebergementUnifie->getFournisseurs() as $fournisseurHebergement) {
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                /** @var LogementPeriode $logementPeriode */
+                foreach ($logement->getPeriodes() as $logementPeriode) {
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriode);
+                }
+            }
+        }
+    }
+
+    public function chargerFournisseursStockslogementLocatif($fournisseurHebergements)
+    {
+        $em = $this->getDoctrine()->getManager();
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                /** @var LogementPeriode $logementPeriode */
+                foreach ($logement->getPeriodes() as $logementPeriode) {
+                    $em->getRepository(LogementPeriode::class)->chargerLocatif($logementPeriode);
+                }
+            }
+        }
+    }
+
+    public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->findBy(array('hebergement' => $idHebergementUnifie));
+        $reponse = new \stdClass();
+        $nbLogements = 0;
+        $fournisseurHebergementsJson = array();
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            $fournisseurHebergementJson=new \stdClass();
+            $fournisseurHebergementJson->fournisseur = new \stdClass();
+            $fournisseurHebergementJson->fournisseur->id = $fournisseurHebergement->getFournisseur()->getId();
+            $fournisseurHebergementJson->fournisseur->enseigne = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            $fournisseurHebergementJson->logements = array();
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement){
+                if($logement->getSite()->getCrm()) {
+                    $logementJson=new \stdClass();
+                    $logementJson->id = $logement->getId();
+                    $logementJson->logementUnifie=new \stdClass();
+                    $logementJson->logementUnifie->id = $logement->getLogementUnifie()->getId();
+                    /** @var LogementTraduction $traduction */
+                    foreach ($logement->getTraductions() as $traduction) {
+                        if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                            $logementJson->nom = $traduction->getNom();
+                        }
+                    }
+                    array_push($fournisseurHebergementJson->logements,$logementJson);
+                    $nbLogements++;
+                }
+            }
+            array_push($fournisseurHebergementsJson,$fournisseurHebergementJson);
+        }
+        $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
+        $reponse->nbLogements = $nbLogements;
+        return new JsonResponse($reponse);
+    }
+//    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
+////        dump($request);
+////        die;
+//        return new JsonResponse('');
+//    }
+    public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
+    {
+        ini_set('memory_limit', '256M');
+//        ini_set('max_execution_time',300);
+//        set_time_limit(300);
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurHebergements = $em->getRepository(FournisseurHebergement::class)->chargerPourStocks($idHebergementUnifie);
+        $data = array();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($fournisseurHebergements as $fournisseurHebergement) {
+            $fournisseur = array();
+            $fournisseur[1] = array();
+            /** @var Logement $logement */
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                $ligne = new \stdClass();
+                $ligne->logementUnifieId = $logement->getLogementUnifie()->getId();
+                /** @var LogementTraduction $traduction */
+                foreach ($logement->getTraductions() as $traduction) {
+                    if ($traduction->getLangue()->getCode() == $request->getLocale()) {
+                        $ligne->logement = $traduction->getNom();
+                    }
+                }
+                /** @var LogementPeriode $periode */
+                foreach ($logement->getPeriodes() as $periode) {
+                    if ($periode->getPeriode()->getType()->getId() == $idTypePeriode) {
+//                        $ligne->{'periode' . $periode->getPeriode()->getId()} = '<input data-logement="' . $logement->getLogementUnifie()->getId() . '" data-periode="' . $periode->getPeriode()->getId() . '" name="stocks[' . $logement->getLogementUnifie()->getId() . '][' . $periode->getPeriode()->getId() . ']" class="form-control" type="text" size="2" maxlength="2" value="' . $periode->getLocatif()->getStock() . '"/>';
+                        $ligne->{'periode' . $periode->getPeriode()->getId()} = $periode->getLocatif()->getStock();
+                    }
+                }
+                array_push($fournisseur[1], $ligne);
+            }
+            $fournisseur[0] = $fournisseurHebergement->getFournisseur()->getEnseigne();
+            $fournisseur[3] = $fournisseurHebergement->getFournisseur()->getId();
+            array_push($data, $fournisseur);
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
      * Deletes a HebergementUnifie entity.
      *
      */
     public function deleteAction(Request $request, HebergementUnifie $entityUnifie)
     {
         /** @var HebergementUnifie $entityUnifieSite */
+        $em = $this->getDoctrine()->getManager();
         try {
             $form = $this->createDeleteForm($entityUnifie);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
 
                 $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 // Parcourir les sites non CRM
@@ -1791,27 +1921,23 @@ class HebergementUnifieController extends Controller
                             }
 
                             /** @var FournisseurHebergement $fournisseurHebergement */
-                            foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement){
+                            foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement) {
                                 /** @var Logement $logement */
-                                foreach ($fournisseurHebergement->getLogements() as $logement)
-                                {
+                                foreach ($fournisseurHebergement->getLogements() as $logement) {
 
                                     $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
-                                    foreach ($codePromoLogements as $codePromoLogement)
-                                    {
+                                    foreach ($codePromoLogements as $codePromoLogement) {
                                         $emSite->remove($codePromoLogement);
                                     }
 
                                     /** @var LogementPeriode $logementPeriode */
-                                    foreach ($logement->getPeriodes() as $logementPeriode)
-                                    {
+                                    foreach ($logement->getPeriodes() as $logementPeriode) {
                                         // *** suprression logement periode locatif  ***
-                                        $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
+                                        $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class)->findOneBy(array(
                                             'logement' => $logement,
                                             'periode' => $logementPeriode->getPeriode()->getId(),
-                                            ));
-                                        if(!empty($logementPeriodeLocatif))
-                                        {
+                                        ));
+                                        if (!empty($logementPeriodeLocatif)) {
                                             $emSite->remove($logementPeriodeLocatif);
                                         }
                                         // *** fin suprression logement periode locatif  ***
@@ -1819,82 +1945,125 @@ class HebergementUnifieController extends Controller
                                 }
                             }
                         }
-                        $emSite->remove($entityUnifieSite);
-                        $emSite->flush();
+                        /** @var FournisseurHebergement $fournisseurHebergement */
+                        foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement) {
+                            /** @var Logement $logement */
+                            foreach ($fournisseurHebergement->getLogements() as $logement) {
+
+//                                $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+//                                foreach ($codePromoLogements as $codePromoLogement)
+//                                {
+//                                    $emSite->remove($codePromoLogement);
+//                                }
+
+                                /** @var LogementPeriode $logementPeriode */
+                                foreach ($logement->getPeriodes() as $logementPeriode) {
+                                    // *** suprression logement periode locatif  ***
+                                    $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class)->findOneBy(array(
+                                        'logement' => $logement,
+                                        'periode' => $logementPeriode->getPeriode()->getId(),
+                                    ));
+                                    if (!empty($logementPeriodeLocatif)) {
+                                        $emSite->remove($logementPeriodeLocatif);
+                                    }
+                                    // *** fin suprression logement periode locatif  ***
+                                }
+                            }
+                        }
                     }
+                    $emSite->remove($entityUnifieSite);
+                    $emSite->flush();
                 }
-                if (!empty($entityUnifie)) {
-
-                    $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByHebergement($entityUnifie->getHebergements()->first()->getId());
-                    foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
-                        $em->remove($prestationAnnexeHebergementUnifie);
-                    }
-
-                    if (!empty($entityUnifie->getHebergements())) {
-                        /** @var Hebergement $entity */
-                        foreach ($entityUnifie->getHebergements() as $entity) {
-//                            $entity->setClassement(null);
-                            if (!empty($entity->getMoyenComs())) {
-                                foreach ($entity->getMoyenComs() as $moyenCom) {
-                                    $entity->removeMoyenCom($moyenCom);
-                                    $em->remove($moyenCom);
-                                }
-                            }
-
-                            // si il y a des visuels pour l'entité, les supprimer
-                            if (!empty($entity->getVisuels())) {
-                                /** @var HebergementVisuel $entityVisuel */
-                                foreach ($entity->getVisuels() as $entityVisuel) {
-                                    $visuel = $entityVisuel->getVisuel();
-                                    $entityVisuel->setVisuel(null);
-                                    $em->remove($visuel);
-                                    $this->deleteFile($visuel);
-                                }
-                            }
-
-                        }
-                        $em->flush();
-                    }
-
-                    /** @var Hebergement $hebergement */
-                    foreach ($entityUnifie->getHebergements() as $hebergement) {
-                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement));
-                        foreach ($codePromoHebergements as $codePromoHebergement) {
-                            $em->remove($codePromoHebergement);
-                        }
-                    }
-                    /** @var FournisseurHebergement $fournisseurHebergement */
-                    foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
-                        foreach ($fournisseurHebergement->getLogements() as $logement)
-                        {
-                            $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
-                            foreach ($codePromoLogements as $codePromoLogement)
-                            {
-                                $em->remove($codePromoLogement);
-                            }
-                            /** @var LogementPeriode $logementPeriode */
-                            foreach ($logement->getPeriodes() as $logementPeriode)
-                            {
-                                // *** suprression logement periode locatif  ***
-                                $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class )->findOneBy(array(
-                                    'logement' => $logement,
-                                    'periode' => $logementPeriode->getPeriode()->getId(),
-                                ));
-                                if(!empty($logementPeriodeLocatif))
-                                {
-                                    $em->remove($logementPeriodeLocatif);
-                                }
-                                // *** fin suprression logement periode locatif  ***
-                            }
-                        }
-                    }
-                }
-
-                $em->remove($entityUnifie);
-                $em->flush();
             }
+            if (!empty($entityUnifie)) {
+
+                $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByHebergement($entityUnifie->getHebergements()->first()->getId());
+                foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
+                    $em->remove($prestationAnnexeHebergementUnifie);
+                }
+
+                if (!empty($entityUnifie->getHebergements())) {
+                    /** @var Hebergement $entity */
+                    foreach ($entityUnifie->getHebergements() as $entity) {
+//                            $entity->setClassement(null);
+                        if (!empty($entity->getMoyenComs())) {
+                            foreach ($entity->getMoyenComs() as $moyenCom) {
+                                $entity->removeMoyenCom($moyenCom);
+                                $em->remove($moyenCom);
+                            }
+                        }
+
+                        // si il y a des visuels pour l'entité, les supprimer
+                        if (!empty($entity->getVisuels())) {
+                            /** @var HebergementVisuel $entityVisuel */
+                            foreach ($entity->getVisuels() as $entityVisuel) {
+                                $visuel = $entityVisuel->getVisuel();
+                                $entityVisuel->setVisuel(null);
+                                $em->remove($visuel);
+                                $this->deleteFile($visuel);
+                            }
+                        }
+
+                    }
+                    $em->flush();
+                }
+                /** @var FournisseurHebergement $fournisseurHebergement */
+                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                    foreach ($fournisseurHebergement->getLogements() as $logement) {
+//                                $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+//                                foreach ($codePromoLogements as $codePromoLogement)
+//                                {
+//                                    $em->remove($codePromoLogement);
+//                                }
+                        /** @var LogementPeriode $logementPeriode */
+                        foreach ($logement->getPeriodes() as $logementPeriode) {
+                            // *** suprression logement periode locatif  ***
+                            $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class)->findOneBy(array(
+                                'logement' => $logement,
+                                'periode' => $logementPeriode->getPeriode()->getId(),
+                            ));
+                            if (!empty($logementPeriodeLocatif)) {
+                                $em->remove($logementPeriodeLocatif);
+                            }
+                            // *** fin suprression logement periode locatif  ***
+                        }
+                    }
+                }
+
+                /** @var Hebergement $hebergement */
+                foreach ($entityUnifie->getHebergements() as $hebergement) {
+                    $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement));
+                    foreach ($codePromoHebergements as $codePromoHebergement) {
+                        $em->remove($codePromoHebergement);
+                    }
+                }
+                /** @var FournisseurHebergement $fournisseurHebergement */
+                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                    foreach ($fournisseurHebergement->getLogements() as $logement) {
+                        $codePromoLogements = $em->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
+                        foreach ($codePromoLogements as $codePromoLogement) {
+                            $em->remove($codePromoLogement);
+                        }
+                        /** @var LogementPeriode $logementPeriode */
+                        foreach ($logement->getPeriodes() as $logementPeriode) {
+                            // *** suprression logement periode locatif  ***
+                            $logementPeriodeLocatif = $em->getRepository(LogementPeriodeLocatif::class)->findOneBy(array(
+                                'logement' => $logement,
+                                'periode' => $logementPeriode->getPeriode()->getId(),
+                            ));
+                            if (!empty($logementPeriodeLocatif)) {
+                                $em->remove($logementPeriodeLocatif);
+                            }
+                            // *** fin suprression logement periode locatif  ***
+                        }
+                    }
+                }
+            }
+
+            $em->remove($entityUnifie);
+            $em->flush();
+
         } catch (ForeignKeyConstraintViolationException $except) {
-//            dump($except->getMessage());die;
             /** @var ForeignKeyConstraintViolationException $except */
             switch ($except->getCode()) {
                 case 0:

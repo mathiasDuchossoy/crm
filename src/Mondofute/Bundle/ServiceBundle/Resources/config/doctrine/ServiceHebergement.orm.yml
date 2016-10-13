@@ -15,6 +15,7 @@ Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement:
             cascade: ['persist']
         service:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\Service
+            inversedBy: serviceHebergements
 
 
     oneToMany:

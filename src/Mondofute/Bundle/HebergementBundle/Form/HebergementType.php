@@ -55,6 +55,9 @@ class HebergementType extends AbstractType
             ->add('emplacements', CollectionType::class,
                 array(
                     'entry_type' => EmplacementHebergementType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
                 ))
             ->add('classement', ClassementHebergementType::class, array('locale' => $locale))
             ->add('site', HiddenType::class, array('mapped' => false))

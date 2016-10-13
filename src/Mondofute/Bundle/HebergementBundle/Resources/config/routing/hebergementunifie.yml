@@ -32,3 +32,18 @@ hebergement_hebergement_charger_liste_services_fournisseur_ajax:
     path:   /{idFournisseur}/charger_liste_services_fournisseur_ajax
     defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerListeServicesFournisseur", idFournisseur: 0}
     methods:  POST
+
+hebergement_generer_tableaux_stocks_periode:
+    path:   /{idHebergementUnifie}/{idTypePeriode}/generer_tableaux_stocks
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:creerTableauxStocksHebergementPeriode", idHebergementUnifie: 0, idTypePeriode: 0}
+    methods: GET
+
+hebergement_charger_hebergement_fournisseur:
+    path:   /{idHebergementUnifie}/charger_fournisseur_hebergement
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerFournisseurHebergement", idHebergementUnifie: 0 }
+    methods: GET
+
+#hebergement_charger_logement_locatif:
+#    path:   /{idHebergement}/charger_logement_locatif/{idLogement}
+#    defautls: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerLogementLocatif", idHebergement: 0 ,idLogement: 0 }
+#    methods: GET
