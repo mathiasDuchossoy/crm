@@ -1388,7 +1388,9 @@
 //                        $("#values_prestation_annexe").append(data);
                         $form_prestation_annexe.html(data);
                         $prestationAnnexeModal.modal();
+                        $prestationAnnexeModal.unbind( "hide.bs.modal" );
                         $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                            alert($(this));
                             return enregisterPrestationAnnexe(prestationAnnexeId);
                         })
                     });
@@ -1430,6 +1432,7 @@
             }
             $prestationAnnexeModal.modal();
             $('#enregistrer_prestation_annexe').attr("onclick","enregisterPrestationAnnexe('"+prestationAnnexeId+"')");
+            $prestationAnnexeModal.unbind( "hide.bs.modal" );
             $prestationAnnexeModal.on('hide.bs.modal', function (e) {
                 return enregisterPrestationAnnexe(prestationAnnexeId);
             })
