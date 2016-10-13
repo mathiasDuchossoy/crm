@@ -65,6 +65,8 @@ class CodePromoType extends AbstractType
                     'label' => 'Périodes de validité',
                     'by_reference' => false,
 //                    'cascade_validation' => true
+
+//                    'constraints' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode',
                 )
             )
             ->add('codePromoPeriodeSejours', CollectionType::class, array(

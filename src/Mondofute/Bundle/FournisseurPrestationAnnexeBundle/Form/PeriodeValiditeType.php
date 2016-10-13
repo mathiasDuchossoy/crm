@@ -18,27 +18,28 @@ class PeriodeValiditeType extends AbstractType
         $builder
             ->add('dateDebut', DateTimeType::class ,
                 array(
-                'required' => true,
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
-                'model_timezone' => 'EUROPE/Paris',
-                'attr' => array(
-                    'class' => 'form-control input-inline datetimepicker datetime',
-                    'data-date-format' => 'dd/MM/yyyy HH:mm',
-                    'placeholder' => 'format_date',
+                    'required' => true,
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+                    'model_timezone' => 'EUROPE/Paris',
+                    'attr' => array(
+                        'class' => 'datetimepicker',
+                        'data-date-format' => 'dd/MM/yyyy HH:mm',
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
+                    ),
+                ))
+            ->add('dateFin', DateTimeType::class,
+                array(
+                    'required' => true,
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+                    'model_timezone' => 'EUROPE/Paris',
+                    'attr' => array(
+                        'class' => 'datetimepicker',
+                        'data-date-format' => 'dd/MM/yyyy HH:mm',
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
+                    ),
                 )
-            ))
-            ->add('dateFin', DateTimeType::class
-                , array(
-                'required' => true,
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy - HH:mm',
-                'model_timezone' => 'EUROPE/Paris',
-                'attr' => array(
-                    'class' => 'datetimepicker',
-                    'placeholder' => 'format_date',
-                )
-            )
             )
         ;
     }

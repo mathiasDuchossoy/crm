@@ -258,6 +258,35 @@
             }
         }
 
+        /**
+         * @param dateDebut
+         * @param dateFin
+         * @param provenance
+         */
+        function changeDateCustom(dateDebut, dateFin, provenance )
+        {
+            $dateDebut  = $('#' + dateDebut);
+            $dateFin    = $('#' + dateFin);
+
+            if($dateDebut.val() > $dateFin.val())
+            {
+                switch (provenance){
+                    case 'dateDebut':
+                        $dateFin.val($dateDebut.val());
+                        break;
+                    case 'dateFin':
+                        $dateDebut.val($dateFin.val());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+
+                console.log('la');
+            }
+        }
+
     </script>
 
 {% endblock %}

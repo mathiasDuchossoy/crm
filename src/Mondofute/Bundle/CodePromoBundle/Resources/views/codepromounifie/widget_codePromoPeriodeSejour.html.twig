@@ -1,0 +1,11 @@
+<div class="input-daterange form-inline input-group" >
+    {{ form_widget(codePromoPeriodeSejour.dateDebut, { 'attr' : {
+        'data-unique_block_prefix' : codePromo.codePromoPeriodeSejours.vars['unique_block_prefix'],
+        'style' : 'text-align: left;'
+    }}) }}
+    <span class="input-group-addon">au</span>
+    {{ form_widget(codePromoPeriodeSejour.dateFin, { 'attr' : {
+        'data-unique_block_prefix' : codePromo.codePromoPeriodeSejours.vars['unique_block_prefix'],
+        'style' : 'text-align: left;'
+    }}) }}
+</div>

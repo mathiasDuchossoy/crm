@@ -20,6 +20,7 @@ class PeriodeType extends AbstractType
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
                     'class' => 'form-control input-inline datepicker date',
+//                    'class' => 'datepicker',
                     'data-provide' => 'datepicker-futur-tranche-cinq-ans',
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
@@ -31,6 +32,7 @@ class PeriodeType extends AbstractType
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
                     'class' => 'form-control input-inline datepicker date',
+//                    'class' => 'datepicker',
                     'data-provide' => 'datepicker-futur-tranche-cinq-ans',
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
