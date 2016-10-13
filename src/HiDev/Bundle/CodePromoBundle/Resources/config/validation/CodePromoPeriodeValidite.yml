@@ -3,10 +3,12 @@ HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode:
         dateDebut:
             - Expression:
 #                groups: ['registration']
-                expression: "this.getDateDebut() <= this.getDateFin()"
-                message: "Cette valeur doit être inférieure à la date de fin."
+#                value: this
+                expression: "this.getDateDebut() < this.getDateFin()"
+                message: "La date de début de période de validité doit être inférieure à sa date de fin."
                 payload:
                     severity: error
+#                    severity: warning
 #            - LessThan:
 #                value: today
 #        dateFin:

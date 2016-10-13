@@ -21,8 +21,8 @@ class CodePromoPeriodeSejourType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
-                    'class' => 'form-control input-inline datepicker date',
-                    'data-provide' => 'datepicker-futur-tranche-cinq-ans',
+//                    'class' => 'form-control input-inline datepicker date',
+//                    'class' => 'form-control input-inline date',
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
                 )
@@ -32,8 +32,8 @@ class CodePromoPeriodeSejourType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
-                    'class' => 'form-control input-inline datepicker date',
-                    'data-provide' => 'datepicker-futur-tranche-cinq-ans',
+//                    'class' => 'form-control input-inline datepicker date',
+//                    'class' => 'form-control input-inline date',
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
                 )
