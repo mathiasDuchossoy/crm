@@ -8,6 +8,8 @@ Mondofute\Bundle\ServiceBundle\Entity\Service:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         defaut:
             type: boolean

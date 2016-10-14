@@ -8,6 +8,8 @@ Mondofute\Bundle\ServiceBundle\Entity\CategorieService:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     oneToMany:
         sousCategories:
             targetEntity: Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService
