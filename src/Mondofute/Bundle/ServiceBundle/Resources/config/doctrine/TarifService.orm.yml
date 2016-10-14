@@ -8,6 +8,8 @@ Mondofute\Bundle\ServiceBundle\Entity\TarifService:
             id: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     oneToOne:
         tarif:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\Tarif
