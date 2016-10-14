@@ -52,17 +52,16 @@ maj\crm_122\2016-09-15a_sls_add_contraintes_logement_periode_locatif.sql
 ;maj\crm_101\2016-08-31a_md_code_promo.sql
 
 ; *** crm-116 ***
-;maj\crm_116\2016-09-06a_md_prestation_annexe.sql
-;maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
-;maj\crm_116\2016-09-13a_md_fournisseur_prestation_annexe_affectations.sql
+maj\crm_116\2016-09-06a_md_prestation_annexe.sql
+maj\crm_116\2016-09-07a_md_fournisseur_prestation_annexe.sql
+maj\crm_116\2016-09-13a_md_fournisseur_prestation_annexe_affectations.sql
 ; *** fin crm-116 ***
 
 ; *** crm-126 ***
-;maj\crm_126\2016-10-03a_md_fournisseur_prestation_annexe_stock.sql
+maj\crm_126\2016-10-03a_md_fournisseur_prestation_annexe_stock.sql
 ; *** fin crm-126 ***
 
 ; *** other ***
-<<<<<<< HEAD
 maj\others\2016-10-03a_md_maj_fos_user.sql
 ; *** fin other ***
 
@@ -71,20 +70,29 @@ maj\crm_103\2016-09-28a_md_code_promo_application.sql
 ; *** fin crm_103 ***
 
 ; *** crm_125 ***
+<<<<<<< HEAD
 maj\crm_125\2016-09-29a_md_code_promo_application.sql
 maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+||||||| parent of 10f79cb... maj-listelancer
+;maj\crm_125\2016-09-29a_md_code_promo_application.sql
+;maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+=======
+;maj\crm_125\2016-09-29a_md_code_promo_application.sql
+maj\crm_125\2016-10-06a_md_correctif_logement_periode_locatif.sql
+>>>>>>> 10f79cb... maj-listelancer
 ; *** fin crm_125 ***
+<<<<<<< HEAD
 ; *** crm_123 ***
 maj\crm_123\2016-10-12a_sls_add_tarifs.sql
 ; fin maj crm_123
-||||||| merged common ancestors
-maj\others\2016-10-03a_md_maj_fos_user.sql
-; *** fin other ***
-=======
-;maj\others\2016-10-03a_md_maj_fos_user.sql
-; *** fin other ***
+||||||| parent of 10f79cb... maj-listelancer
 
 ; *** crm-128 ***
 maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
 ; *** fin crm-128 ***
->>>>>>> 4bef68b3d1d5e18e940dc607c9eccb5ac17570f0
+=======
+
+; *** crm-128 ***
+;maj\crm_128\2016-10-06a_md_maj_id_unsigned.sql
+; *** fin crm-128 ***
+>>>>>>> 10f79cb... maj-listelancer
