@@ -712,6 +712,7 @@ class FournisseurController extends Controller
                         $em->remove($codePromoPrestationAnnexe);
                     }
                     $em->remove($originalPrestationAnnex);
+                    $this->deletePrestationsAnnexeUnifies($originalPrestationAnnex , $em);
                 } else {
                     $prestationAnnex = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($originalPrestationAnnex) {
                         return $element == $originalPrestationAnnex;
@@ -1319,6 +1320,39 @@ class FournisseurController extends Controller
         ));
     }
 
+    private function deletePrestationsAnnexeUnifies(FournisseurPrestationAnnexe $originalPrestationAnnex , EntityManager $em){
+
+        $prestationAnnexeUnifies = new ArrayCollection();
+        foreach ($originalPrestationAnnex->getPrestationAnnexeStations() as $item){
+            if(!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeStationUnifie()))
+            {
+                $prestationAnnexeUnifies->add($item->getPrestationAnnexeStationUnifie());
+            }
+        }
+        foreach ($originalPrestationAnnex->getPrestationAnnexeFournisseurs() as $item){
+            if(!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeFournisseurUnifie()))
+            {
+                $prestationAnnexeUnifies->add($item->getPrestationAnnexeFournisseurUnifie());
+            }
+        }
+        foreach ($originalPrestationAnnex->getPrestationAnnexeHebergements() as $item){
+            if(!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeHebergementUnifie()))
+            {
+                $prestationAnnexeUnifies->add($item->getPrestationAnnexeHebergementUnifie());
+            }
+        }
+        foreach ($originalPrestationAnnex->getPrestationAnnexeLogements() as $item){
+            if(!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeLogementUnifie()))
+            {
+                $prestationAnnexeUnifies->add($item->getPrestationAnnexeLogementUnifie());
+            }
+        }
+        foreach ($prestationAnnexeUnifies as $annexeUnifie)
+        {
+            $em->remove($annexeUnifie);
+        }
+    }
+
     private function gestionPrestationAnnexeLogement(PrestationAnnexeHebergement $prestationAnnexeHebergement,
                                                      FournisseurPrestationAnnexe $prestationAnnex,
                                                      $prestationAnnexeHebergementFournisseurId,
@@ -1643,6 +1677,7 @@ class FournisseurController extends Controller
                         // On doit le supprimer de l'entité parent
                         $fournisseurSite->removePrestationAnnex($prestationAnnexeSite);
                         $emSite->remove($prestationAnnexeSite);
+                        $this->deletePrestationsAnnexeUnifies($prestationAnnexeSite , $emSite);
                     } else {
                         foreach ($prestationAnnexeSite->getTarifs() as $tarifSite) {
                             $tarif = $prestationAnnexe->getTarifs()->filter(function (PrestationAnnexeTarif $element) use ($tarifSite) {
