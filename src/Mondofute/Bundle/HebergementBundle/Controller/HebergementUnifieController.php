@@ -1487,6 +1487,8 @@ class HebergementUnifieController extends Controller
                 $newHebergementVisuels->add($entityVisuel);
             }
 
+            echo memory_get_usage().PHP_EOL;
+            die;
             /** @var HebergementVisuel $originalHebergementVisuel */
             foreach ($originalHebergementVisuels as $key => $originalHebergementVisuel) {
 
@@ -1575,8 +1577,6 @@ class HebergementUnifieController extends Controller
                 }
             }
 
-            echo memory_get_usage();
-            die;
 
             // *** fin gestion suppression des fournisseurs hebergement ***
 
@@ -1586,6 +1586,7 @@ class HebergementUnifieController extends Controller
             // tableau pour la suppression des anciens visuels
             $visuelToRemoveCollection = new ArrayCollection();
             $keyCrm = $entityUnifie->getHebergements()->indexOf($entityCrm);
+
             // on parcourt les hebergementVisuels de l'hebergement crm
             foreach ($entityCrm->getVisuels() as $key => $entityVisuel) {
                 // on active le nouveau hebergementVisuel (CRM) => il doit être toujours actif
