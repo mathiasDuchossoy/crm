@@ -1090,58 +1090,61 @@ class FournisseurController extends Controller
 
                                 $prestationAnnexeHebergement->setActif($actif);
                                 $em->persist($prestationAnnexeHebergement);
+
+
                             }
+                            $this->gestionPrestationAnnexeLogement($prestationAnnexeHebergement, $prestationAnnex, $prestationAnnexeHebergementFournisseurId, $postSitesAEnregistrer, $prestationAnnexeHebergementsPosts);
 
-                            $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
-
-                            /** @var Logement $logement */
-                            /** @var LogementUnifie $logementUnifie */
-                            foreach ($logementUnifies as $logementUnifie) {
-                                $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
-                                if (empty($prestationAnnexeLogementUnifie)) {
-                                    $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
-                                    $em->persist($prestationAnnexeLogementUnifie);
-                                    /** @var LogementUnifie $logementUnifie */
-                                    /** @var Logement $logement */
-                                    foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
-                                        $prestationAnnexeLogement = new PrestationAnnexeLogement();
-                                        $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
-                                        $prestationAnnexeLogement
-                                            ->setLogement($logementPrestationAnnexeLogement)
-                                            ->setSite($logementPrestationAnnexeLogement->getSite());
-                                    }
-                                }
-
-                                foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
-                                    $prestationAnnex
-                                        ->addPrestationAnnexeLogement($prestationAnnexeLogement);
-                                }
-
-                                /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
-                                foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-
-                                    $actif = false;
-
-                                    $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
-                                        return $element->getSite() == $prestationAnnexeHebergement->getSite();
-                                    })->first();
-
-                                    $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
-                                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-
-                                    if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
-                                        and
-                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
-                                        and
-                                        (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
-                                    ) {
-                                        $actif = true;
-                                    }
-
-                                    $prestationAnnexeLogement->setActif($actif);
-                                    $em->persist($prestationAnnexeHebergement);
-                                }
-                            }
+//                            $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
+//
+//                            /** @var Logement $logement */
+//                            /** @var LogementUnifie $logementUnifie */
+//                            foreach ($logementUnifies as $logementUnifie) {
+//                                $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
+//                                if (empty($prestationAnnexeLogementUnifie)) {
+//                                    $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
+//                                    $em->persist($prestationAnnexeLogementUnifie);
+//                                    /** @var LogementUnifie $logementUnifie */
+//                                    /** @var Logement $logement */
+//                                    foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
+//                                        $prestationAnnexeLogement = new PrestationAnnexeLogement();
+//                                        $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
+//                                        $prestationAnnexeLogement
+//                                            ->setLogement($logementPrestationAnnexeLogement)
+//                                            ->setSite($logementPrestationAnnexeLogement->getSite());
+//                                    }
+//                                }
+//
+//                                foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
+//                                    $prestationAnnex
+//                                        ->addPrestationAnnexeLogement($prestationAnnexeLogement);
+//                                }
+//
+//                                /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+//                                foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+//
+//                                    $actif = false;
+//
+//                                    $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
+//                                        return $element->getSite() == $prestationAnnexeHebergement->getSite();
+//                                    })->first();
+//
+//                                    $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+//                                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+//
+//                                    if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
+//                                        and
+//                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
+//                                        and
+//                                        (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
+//                                    ) {
+//                                        $actif = true;
+//                                    }
+//
+//                                    $prestationAnnexeLogement->setActif($actif);
+//                                    $em->persist($prestationAnnexeHebergement);
+//                                }
+//                            }
                         }
                     }
                 }
@@ -1314,6 +1317,67 @@ class FournisseurController extends Controller
             'hebergements' => $hebergements,
             'stationsWithHebergement' => $stationsWithHebergement
         ));
+    }
+
+    private function gestionPrestationAnnexeLogement(PrestationAnnexeHebergement $prestationAnnexeHebergement,
+                                                     FournisseurPrestationAnnexe $prestationAnnex,
+                                                     $prestationAnnexeHebergementFournisseurId,
+                                                     $postSitesAEnregistrer,
+                                                     $prestationAnnexeHebergementsPosts
+    )
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
+
+        /** @var Logement $logement */
+        /** @var LogementUnifie $logementUnifie */
+        foreach ($logementUnifies as $logementUnifie) {
+            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
+            if (empty($prestationAnnexeLogementUnifie)) {
+                $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
+                $em->persist($prestationAnnexeLogementUnifie);
+                /** @var LogementUnifie $logementUnifie */
+                /** @var Logement $logement */
+                foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
+                    $prestationAnnexeLogement = new PrestationAnnexeLogement();
+                    $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
+                    $prestationAnnexeLogement
+                        ->setLogement($logementPrestationAnnexeLogement)
+                        ->setSite($logementPrestationAnnexeLogement->getSite());
+                }
+            }
+
+            foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
+                $prestationAnnex
+                    ->addPrestationAnnexeLogement($prestationAnnexeLogement);
+            }
+
+            /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+            foreach ($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie()->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+
+                $actif = false;
+
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
+                    return $element->getSite() == $prestationAnnexeHebergement->getSite();
+                })->first();
+
+                $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+                /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+
+                if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
+                    and
+                    in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
+                    and
+                    (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
+                ) {
+                    $actif = true;
+                }
+
+                $prestationAnnexeLogement->setActif($actif);
+                $em->persist($prestationAnnexeHebergement);
+            }
+        }
     }
 
     private
@@ -3402,6 +3466,9 @@ class FournisseurController extends Controller
                                 }
                                 $prestationAnnexe->setActif($actif);
                             }
+
+                            $this->gestionPrestationAnnexeLogement($prestationAnnexeHebergement, $fournisseurPrestationAnnexe, $fournisseurId, $sitePosts, $fournisseurIds);
+
                         }
                     }
                 }
@@ -3411,6 +3478,15 @@ class FournisseurController extends Controller
                 $fournisseurPrestationAnnexe->getPrestationAnnexeHebergements()->removeElement($prestationAnnexeHebergement);
                 if (!$affectationUnifieRemoves->contains($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie())) {
                     $affectationUnifieRemoves->add($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie());
+
+                    $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
+                    foreach ($logementUnifies as $logementUnifie) {
+                        $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($fournisseurPrestationAnnexe->getId(), $logementUnifie->getId());
+                        if (!empty($prestationAnnexeLogementUnifie)) {
+                            $em->remove($prestationAnnexeLogementUnifie);
+                            $affectationUnifieRemoves->add($prestationAnnexeLogementUnifie);
+                        }
+                    }
                 }
             }
         }
