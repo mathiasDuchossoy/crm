@@ -108,15 +108,18 @@
                             {% endif %}
                         {% endfor %}
                     {% endif %}
+                    {#{{ dump(openStation) }}#}
 
                     {% set hebergementExists = false %}
                     {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
                         {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ prestationAnnexeHebergement.vars.value.fournisseur.id ] is defined
                             and prestationAnnexeHebergement.vars.value.hebergement.station.stationUnifie.id == fournisseurProduit.stationUnifieId
+                            and prestationAnnexeHebergement.vars.value.fournisseur.id == fournisseurProduit.fournisseurId
                         %}
                             {% set hebergementExists = true %}
                         {% endif %}
                     {% endfor %}
+                    {#{{ dump(hebergementExists) }}#}
 
                     {#{% set hebergement = [] %}#}
                     {#{% set hebergementExists = false %}#}
