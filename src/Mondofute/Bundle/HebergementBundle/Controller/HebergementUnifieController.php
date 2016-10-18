@@ -1559,28 +1559,34 @@ class HebergementUnifieController extends Controller
             // ************* fin gestion des emplacements *************
 
             // *** gestion suppression fournisseurs hebergement ***
-            foreach ($originalFournisseurHebergements as $originalFournisseurHebergement)
-            {
+            try {
 
-                echo memory_get_usage().PHP_EOL;
-                if(false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement))
-                {
 
-                    // *** suppression des code promo logement ***
-                    foreach ($entityUnifie->getHebergements() as $hebergement)
-                    {
+                foreach ($originalFournisseurHebergements as $originalFournisseurHebergement) {
 
-                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()));
-                        foreach ($codePromoHebergements as $codePromoHebergement){
-                            $em->remove($codePromoHebergement);
+                    echo memory_get_usage() . PHP_EOL;
+                    if (false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement)) {
+
+                        // *** suppression des code promo logement ***
+                        foreach ($entityUnifie->getHebergements() as $hebergement) {
+
+                            $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array(
+                                'hebergement' => $hebergement->getId(),
+                                'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()
+                            ));
+                            foreach ($codePromoHebergements as $codePromoHebergement) {
+                                $em->remove($codePromoHebergement);
+                            }
                         }
-                    }
 
-                    echo memory_get_usage().PHP_EOL;
-                    die;
-                    // *** fin suppression des code promo logement ***
-                    $em->remove($originalFournisseurHebergement);
+                        echo memory_get_usage() . PHP_EOL;
+                        die;
+                        // *** fin suppression des code promo logement ***
+                        $em->remove($originalFournisseurHebergement);
+                    }
                 }
+            }catch (\Exception $exception){
+                echo $exception->getMessage();
             }
 
             // *** fin gestion suppression des fournisseurs hebergement ***
