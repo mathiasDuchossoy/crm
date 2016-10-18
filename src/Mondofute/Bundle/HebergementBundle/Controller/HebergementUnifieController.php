@@ -1595,6 +1595,7 @@ class HebergementUnifieController extends Controller
                 echo 'erreur'.$exception->getMessage();
                 die;
             }
+            echo 'ok'.PHP_EOL;
             die;
 
             // *** fin gestion suppression des fournisseurs hebergement ***
