@@ -1345,7 +1345,7 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-
+        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
@@ -1575,7 +1575,6 @@ class HebergementUnifieController extends Controller
                 }
             }
 
-            echo memory_get_usage().PHP_EOL;
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -1674,8 +1673,10 @@ class HebergementUnifieController extends Controller
                         $visuelToRemoveCollection->add($originalVisuels->get($key));
                     }
                 }
+
+                echo memory_get_usage();
+                die;
             }
-            echo memory_get_usage().PHP_EOL;
             // ***** Fin Gestion des Medias *****
 
             $this->gestionCodePromoHebergement($entityUnifie);
