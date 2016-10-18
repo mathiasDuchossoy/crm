@@ -3141,9 +3141,11 @@ class FournisseurController extends Controller
                             foreach ($prestationAnnexeFournisseur->getPrestationAnnexeFournisseurUnifie()->getPrestationAnnexeFournisseurs() as $prestationAnnexe)
                             {
                                 $actif = true;
-                                if(empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
+                                if((empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
                                     !empty($siteIds[$prestationAnnexe->getSite()->getId()]) and
                                     $siteIds[$prestationAnnexe->getSite()->getId()] == null)
+                                    or !in_array($prestationAnnexe->getSite()->getId() , $sitePosts)
+                                )
                                 {
                                     $actif = false;
                                 }
@@ -3234,9 +3236,10 @@ class FournisseurController extends Controller
                                         foreach ($prestationAnnexeFournisseur->getPrestationAnnexeFournisseurUnifie()->getPrestationAnnexeFournisseurs() as $prestationAnnexe)
                                         {
                                             $actif = true;
-                                            if(empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
+                                            if((empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
                                                 !empty($siteIds[$prestationAnnexe->getSite()->getId()]) and
                                                 $siteIds[$prestationAnnexe->getSite()->getId()] == null)
+                                                or !in_array($prestationAnnexe->getSite()->getId() , $sitePosts))
                                             {
                                                 $actif = false;
                                             }
@@ -3305,10 +3308,10 @@ class FournisseurController extends Controller
                                 foreach ($prestationAnnexeStation->getPrestationAnnexeStationUnifie()->getPrestationAnnexeStations() as $prestationAnnexe)
                                 {
                                     $actif = true;
-//                                    dump($siteIds);die;
-                                    if(empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
+                                    if((empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
                                         !empty($siteIds[$prestationAnnexe->getSite()->getId()]) and
                                         $siteIds[$prestationAnnexe->getSite()->getId()] == null)
+                                        or !in_array($prestationAnnexe->getSite()->getId() , $sitePosts))
                                     {
                                         $actif = false;
                                     }
@@ -3390,9 +3393,10 @@ class FournisseurController extends Controller
                             foreach ($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie()->getPrestationAnnexeHebergements() as $prestationAnnexe)
                             {
                                 $actif = true;
-                                if(empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
+                                if((empty($siteIds[$prestationAnnexe->getSite()->getId()]) or
                                     !empty($siteIds[$prestationAnnexe->getSite()->getId()]) and
                                     $siteIds[$prestationAnnexe->getSite()->getId()] == null)
+                                    or !in_array($prestationAnnexe->getSite()->getId() , $sitePosts))
                                 {
                                     $actif = false;
                                 }
@@ -3421,6 +3425,7 @@ class FournisseurController extends Controller
         $em->flush();
 //        die;
 
+        $this->mAJSites($fournisseur);
         if (empty($data)) {
             return new Response(0);
         }

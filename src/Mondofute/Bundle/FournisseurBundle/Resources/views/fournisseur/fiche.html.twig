@@ -308,8 +308,8 @@
                 {% endfor %}
             </div>
 
-            {#<div id="values_prestation_annexe" style="display: none">#}
-            <div id="values_prestation_annexe" >
+            <div id="values_prestation_annexe" style="display: none">
+            {#<div id="values_prestation_annexe" >#}
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
             </div>
             {{ form_widget(form._token) }}
@@ -1552,11 +1552,12 @@
                 $.post(path,{
                     data : JSON.stringify($data)
                 },function(){
-
+//                    $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+                    $prestationAnnexeModal.modal('hide');
                 },'json');
-                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-                $prestationAnnexeModal.unbind( "hide.bs.modal" );
-                $prestationAnnexeModal.modal('hide');
+//                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+//                $prestationAnnexeModal.unbind( "hide.bs.modal" );
+//                $prestationAnnexeModal.modal('hide');
                 return true;
             }
         }
