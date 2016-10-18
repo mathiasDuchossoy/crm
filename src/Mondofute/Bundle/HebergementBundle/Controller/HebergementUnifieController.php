@@ -1487,8 +1487,6 @@ class HebergementUnifieController extends Controller
                 $newHebergementVisuels->add($entityVisuel);
             }
 
-            echo memory_get_usage().PHP_EOL;
-            die;
             /** @var HebergementVisuel $originalHebergementVisuel */
             foreach ($originalHebergementVisuels as $key => $originalHebergementVisuel) {
 
@@ -1537,6 +1535,9 @@ class HebergementUnifieController extends Controller
                     }
                 }
             }
+
+            echo memory_get_usage().PHP_EOL;
+            die;
             // ************* fin suppression visuels *************
 
             // ************* gestion des emplacements *************
