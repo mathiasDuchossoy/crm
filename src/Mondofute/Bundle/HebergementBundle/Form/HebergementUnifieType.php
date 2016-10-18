@@ -36,6 +36,9 @@ class HebergementUnifieType extends AbstractType
                 'allow_extra_fields' => true,
                 'by_reference' => false
             ))
+            ->add('stocks', null, array(
+                'mapped' => false
+            ))
             ->add('fournisseurs', CollectionType::class,
                 array(
                     'entry_type' => FournisseurHebergementType::class,
