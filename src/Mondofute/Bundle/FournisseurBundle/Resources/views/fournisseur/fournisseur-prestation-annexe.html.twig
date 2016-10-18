@@ -15,7 +15,7 @@
         <div class="tab-content">
             <div id="pill_parametrage_{{ prestationAnnexe.vars.id }}" class="tab-pane fade in active">
                 <h3>Paramétrages</h3>
-                {{ form_row(prestationAnnexe.type) }}
+                {{ form_row(prestationAnnexe.type , { 'attr' : {'class' : 'fournisseur_prestation_annexe'} }) }}
 
                 <div>
                     {{ form_label(prestationAnnexe.capacite) }}

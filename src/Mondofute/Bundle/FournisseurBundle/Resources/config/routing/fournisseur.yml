@@ -53,3 +53,8 @@ fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur:
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getFournisseurPrestationAnnexeAffectationStationFournisseur" , stationId: null }
     methods:  GET
 
+fournisseur_enregistrer_fournisseur_prestation:
+    path:     /enregistrerFournisseurPrestationAnnexe/{id}/{prestationAnnexeId}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:enregisterFournisseurPrestationAnnexe"  }
+    methods:  [GET, POST]
+
