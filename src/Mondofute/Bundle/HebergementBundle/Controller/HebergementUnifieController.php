@@ -1556,8 +1556,6 @@ class HebergementUnifieController extends Controller
                 }
             }
 
-            echo memory_get_usage().PHP_EOL;
-            die;
             // ************* fin gestion des emplacements *************
 
             // *** gestion suppression fournisseurs hebergement ***
@@ -1578,6 +1576,8 @@ class HebergementUnifieController extends Controller
                 }
             }
 
+            echo memory_get_usage().PHP_EOL;
+            die;
 
             // *** fin gestion suppression des fournisseurs hebergement ***
 
