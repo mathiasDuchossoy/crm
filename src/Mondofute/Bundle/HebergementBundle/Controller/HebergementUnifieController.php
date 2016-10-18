@@ -1672,10 +1672,11 @@ class HebergementUnifieController extends Controller
                         // on stocke  l'ancien media pour le supprimer après le persist final
                         $visuelToRemoveCollection->add($originalVisuels->get($key));
                     }
+
+                    echo memory_get_usage();
+                    die;
                 }
 
-                echo memory_get_usage();
-                die;
             }
             // ***** Fin Gestion des Medias *****
 
