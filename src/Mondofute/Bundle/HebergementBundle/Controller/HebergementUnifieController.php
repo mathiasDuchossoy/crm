@@ -751,7 +751,7 @@ class HebergementUnifieController extends Controller
                 /** @var CoordonneesGPS $coordonneesGPSSite */
                 /** @var Adresse $adresseSite */
                 $adresse = $entity->getMoyenComs()->first();
-                if (!empty($entitySite->getMoyenComs())) {
+                if (!empty($entitySite->getMoyenComs()) && !$entitySite->getMoyenComs()->isEmpty()) {
                     $adresseSite = $entitySite->getMoyenComs()->first();
 //                    $adresseSite->setDateModification(new DateTime());
                 } else {
