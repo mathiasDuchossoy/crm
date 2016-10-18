@@ -1593,6 +1593,9 @@ class HebergementUnifieController extends Controller
                     // sauf  le crm (puisqu'on l'a déjà renseigné)
                     // dans le but de créer un hebegrementVisuel pour chacun
                     if ($site->getCrm() == 0) {
+
+                        echo memory_get_usage();
+                        die;
                         // on récupère l'hébegergement du site
                         /** @var Hebergement $entitySite */
                         $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
@@ -1673,8 +1676,6 @@ class HebergementUnifieController extends Controller
                         $visuelToRemoveCollection->add($originalVisuels->get($key));
                     }
 
-                    echo memory_get_usage();
-                    die;
                 }
 
             }
