@@ -1541,72 +1541,19 @@
                 var $fournisseur_prestationAnnexes = $('#fournisseur_prestationAnnexes_'+prestationAnnexeId);
                 var fournisseurId = $prestationAnnexeModal.data('fournisseur-id');
                 var fournisseurPrestationAnnexeId = $fournisseur_prestationAnnexes.data('id');
-//                var data = [];
-//                $type = $("#fournisseur_prestationAnnexes_1_type");
-////                var test = eval($type.name);
-
-//                var $data = $('#form_prestation_annexe').serializeArray();var data = {};
-//                var $data = $("#form_prestation_annexe").serializeArray().map(function(x){data[x.name] = x.value;});
                 var $data = $('#form_prestation_annexe').serializeObject();
-//                var $data = $('#form_prestation_annexe').serializeArray().reduce(function(m,o){ m[o.name] = o.value; return m;}, {})
-                console.log($data);
+//                console.log($data);
 
-//                $.each( $data, function( key, value ){
-//                    console.log(key);
-//                    console.log(value);
-//                    window[eval(value.name)] = value.name.value;
-//                    console.log(window[eval(value.name)]);
-//                });
-//                window["test"+eval($data.name)] = 'test';
-//                console.log(test);
-
-
-//                $myForm.find('input[type=text], input[type=number], input[type=radio]:checked, input[type=checkbox]:checked, select, textarea ').each(function (index,element) {
-//
-//                    var $element = $(element);
-////                    console.log(data[element.name]);
-//                    if(!data[element.name])
-//                    {
-//                        data[element.name] = {};
-//                        data[element.name]= $element.val();
-//                    }
-//                    else {
-//                        var tab = [];
-//                        for (i=0;i < data[element.name].length;i++)
-//                        {
-//                            tab.push(data[element.name][i]);
-//                        }
-//                        tab.push($element.val());
-//                        data[element.name] = tab;
-//                    }
-//                });
-//                console.log(data);
-//                console.log(JSON.stringify(data));
-//                console.log(data.serializeArray());
-//                var $form = $(this).closest('form');
                 var path = '{{ path("fournisseur_enregistrer_fournisseur_prestation" ,{ "id": "_fournisseurId_","prestationAnnexeId": "_prestationAnnexeId_"}) }}';
 
                 path = path.replace(/_fournisseurId_/g, fournisseurId);
                 path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
 
-//                console.info(data);
                 $.post(path,{
                     data : JSON.stringify($data)
                 },function(){
 
                 },'json');
-//
-//                $.ajax(
-//                        path
-//                        ,
-//                        {
-//                            type: 'POST',
-//                            data : data
-//                        }
-//                ).done(function (data){
-////                    console.log(data);
-//                });
-//                return false;
                 $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
                 $prestationAnnexeModal.unbind( "hide.bs.modal" );
                 $prestationAnnexeModal.modal('hide');
