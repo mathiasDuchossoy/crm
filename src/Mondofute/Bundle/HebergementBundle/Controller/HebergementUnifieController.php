@@ -1566,7 +1566,7 @@ class HebergementUnifieController extends Controller
                     // *** suppression des code promo logement ***
                     foreach ($entityUnifie->getHebergements() as $hebergement)
                     {
-                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $fournisseurHebergement->getFournisseur()->getId()));
+                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()));
                         foreach ($codePromoHebergements as $codePromoHebergement){
                             $em->remove($codePromoHebergement);
                         }
