@@ -1575,6 +1575,9 @@ class HebergementUnifieController extends Controller
                 }
             }
 
+            echo memory_get_usage();
+            die;
+
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -1594,8 +1597,6 @@ class HebergementUnifieController extends Controller
                     // dans le but de créer un hebegrementVisuel pour chacun
                     if ($site->getCrm() == 0) {
 
-                        echo memory_get_usage();
-                        die;
                         // on récupère l'hébegergement du site
                         /** @var Hebergement $entitySite */
                         $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
