@@ -1555,8 +1555,6 @@ class HebergementUnifieController extends Controller
                 }
             }
 
-            echo memory_get_usage();
-            die;
             // ************* fin gestion des emplacements *************
 
             // *** gestion suppression fournisseurs hebergement ***
@@ -1576,6 +1574,8 @@ class HebergementUnifieController extends Controller
                     $em->remove($originalFournisseurHebergement);
                 }
             }
+
+            echo memory_get_usage().PHP_EOL;
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -1675,6 +1675,7 @@ class HebergementUnifieController extends Controller
                     }
                 }
             }
+            echo memory_get_usage().PHP_EOL;
             // ***** Fin Gestion des Medias *****
 
             $this->gestionCodePromoHebergement($entityUnifie);
