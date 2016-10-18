@@ -1580,16 +1580,20 @@ class HebergementUnifieController extends Controller
                         }
 
                         echo memory_get_usage() . PHP_EOL;
-                        if((memory_get_usage()/1024/1024)>= (intval(ini_get('memory_limit'),10)*60/100)){
-                            die;
-                        }
+//                        if((memory_get_usage()/1024/1024)>= (intval(ini_get('memory_limit'),10)*60/100)){
+//                            die;
+//                        }
 //                        die;
                         // *** fin suppression des code promo logement ***
                         $em->remove($originalFournisseurHebergement);
+
+                        echo memory_get_usage() . PHP_EOL;
+//                        die;
                     }
                 }
             }catch (\Exception $exception){
                 echo $exception->getMessage();
+                die;
             }
 
             // *** fin gestion suppression des fournisseurs hebergement ***
