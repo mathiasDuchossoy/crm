@@ -1553,6 +1553,22 @@
                     data : JSON.stringify($data)
                 },function(){
 //                    $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+                    $prestationAnnexeModal.unbind( "hide.bs.modal" );
+                    $prestationAnnexeModal.on('hide.bs.modal', function(event){
+                        $prestationAnnexeModal.unbind( "hide.bs.modal" );
+                            // on doit recharger les données et les mettre dans le form
+
+                            var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+                            $.ajax(path2,
+                                    {
+                                        async: false,
+                                        method: 'GET'
+                                    }
+                            ).done(function (data) {
+                                $('#fournisseur_prestationAnnexes_'+prestationAnnexeId).remove();
+                                $('#values_prestation_annexe').append(data);
+                            });
+                    });
                     $prestationAnnexeModal.modal('hide');
                 },'json');
 //                $('#values_prestation_annexe').append($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
