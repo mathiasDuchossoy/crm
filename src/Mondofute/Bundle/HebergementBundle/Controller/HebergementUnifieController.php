@@ -1535,6 +1535,8 @@ class HebergementUnifieController extends Controller
                     }
                 }
             }
+            echo memory_get_usage();
+            die;
             // ************* fin suppression visuels *************
 
             // ************* gestion des emplacements *************
@@ -1574,8 +1576,7 @@ class HebergementUnifieController extends Controller
                 }
             }
             // *** fin gestion suppression des fournisseurs hebergement ***
-            echo memory_get_usage();
-            die;
+
             // ***** Gestion des Medias *****
             // CAS D'UN NOUVEAU 'HEBERGEMENT VISUEL' OU DE MODIFICATION D'UN "HEBERGEMENT VISUEL"
             /** @var HebergementVisuel $entityVisuel */
