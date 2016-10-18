@@ -1415,9 +1415,9 @@ class HebergementUnifieController extends Controller
         // *** fin récupération originals gestion fournisseurHebergement ***
 
         $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
         echo memory_get_usage().PHP_EOL;
         die;
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($entityUnifie->getHebergements() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
