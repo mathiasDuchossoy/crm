@@ -1345,7 +1345,14 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-        $request->request->remove('stocks');
+        if($request->request->count() > 0 ){
+            foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
+                dump($fournisseurHebergement);
+
+            }
+            die;
+        }
+//        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));

@@ -7,7 +7,10 @@ use Mondofute\Bundle\ServiceBundle\Form\ServiceHebergementType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +39,7 @@ class HebergementUnifieType extends AbstractType
                 'allow_extra_fields' => true,
                 'by_reference' => false
             ))
-            ->add('stocks', null, array(
+            ->add('stocks',TextType::class,array(
                 'mapped' => false
             ))
             ->add('fournisseurs', CollectionType::class,
@@ -46,8 +49,39 @@ class HebergementUnifieType extends AbstractType
                     'by_reference' => false,
                     'allow_delete' => true,
                 ));
-    }
+        $removeStocks = function($form,$stocks){
+            if(!empty($stocks)){
 
+            }
+        };
+        $builder->addEventListener(FormEvents::PRE_SET_DATA,function(FormEvent $event){
+//            $data = $event->getData();
+//            $form = $event->getForm();
+//
+////            $form
+//            echo 'post_set_data';
+//            dump($data);
+//            dump($form);
+//            die;
+        });
+        $builder->addEventListener(FormEvents::PRE_SUBMIT,function(FormEvent $event){
+            $data = $event->getData();
+            $form = $event->getForm();
+
+//            $form
+//            echo 'pre_submit';
+//            if(array_key_exists('stocks',$data)){
+//                dump($data);
+//                dump($form);
+//            }
+//            die;
+        });
+    }
+    public function supprimerStocks(FormEvent $event){
+        echo 'ok';
+        dump($event);
+        die;
+    }
     /**
      * @param OptionsResolver $resolver
      */
