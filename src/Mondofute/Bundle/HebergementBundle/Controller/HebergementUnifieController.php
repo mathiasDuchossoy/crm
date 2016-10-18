@@ -1585,16 +1585,17 @@ class HebergementUnifieController extends Controller
 //                        }
 //                        die;
                         // *** fin suppression des code promo logement ***
-                        $em->remove($originalFournisseurHebergement);
+//                        $em->remove($originalFournisseurHebergement);
 
                         echo memory_get_usage() . PHP_EOL;
 //                        die;
                     }
                 }
             }catch (\Exception $exception){
-                echo $exception->getMessage();
+                echo 'erreur'.$exception->getMessage();
                 die;
             }
+            die;
 
             // *** fin gestion suppression des fournisseurs hebergement ***
 
