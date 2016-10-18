@@ -1570,13 +1570,14 @@ class HebergementUnifieController extends Controller
                     foreach ($entityUnifie->getHebergements() as $hebergement)
                     {
 
-                        echo memory_get_usage().PHP_EOL;
-                        die;
                         $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()));
                         foreach ($codePromoHebergements as $codePromoHebergement){
                             $em->remove($codePromoHebergement);
                         }
                     }
+
+                    echo memory_get_usage().PHP_EOL;
+                    die;
                     // *** fin suppression des code promo logement ***
                     $em->remove($originalFournisseurHebergement);
                 }
