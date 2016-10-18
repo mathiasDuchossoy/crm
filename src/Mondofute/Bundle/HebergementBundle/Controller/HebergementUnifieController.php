@@ -1416,8 +1416,6 @@ class HebergementUnifieController extends Controller
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-        echo memory_get_usage().PHP_EOL;
-        die;
             foreach ($entityUnifie->getHebergements() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
@@ -1488,6 +1486,8 @@ class HebergementUnifieController extends Controller
             foreach ($entityCrm->getVisuels() as $entityVisuel) {
                 $newHebergementVisuels->add($entityVisuel);
             }
+            echo memory_get_usage();
+            die;
             /** @var HebergementVisuel $originalHebergementVisuel */
             foreach ($originalHebergementVisuels as $key => $originalHebergementVisuel) {
 
