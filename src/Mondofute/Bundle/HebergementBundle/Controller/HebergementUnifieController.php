@@ -1561,11 +1561,17 @@ class HebergementUnifieController extends Controller
             // *** gestion suppression fournisseurs hebergement ***
             foreach ($originalFournisseurHebergements as $originalFournisseurHebergement)
             {
+
+                echo memory_get_usage().PHP_EOL;
                 if(false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement))
                 {
+
                     // *** suppression des code promo logement ***
                     foreach ($entityUnifie->getHebergements() as $hebergement)
                     {
+
+                        echo memory_get_usage().PHP_EOL;
+                        die;
                         $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()));
                         foreach ($codePromoHebergements as $codePromoHebergement){
                             $em->remove($codePromoHebergement);
@@ -1575,9 +1581,6 @@ class HebergementUnifieController extends Controller
                     $em->remove($originalFournisseurHebergement);
                 }
             }
-
-            echo memory_get_usage().PHP_EOL;
-            die;
 
             // *** fin gestion suppression des fournisseurs hebergement ***
 
