@@ -3,8 +3,6 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * Region
@@ -16,48 +14,40 @@ class Region
      */
     private $id;
     /**
-     * @var Site
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     private $site;
     /**
-     * @var RegionUnifie
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie
      */
     private $regionUnifie;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $departements;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $images;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
     /**
      * @var boolean
      */
     private $actif = true;
-    /**
-     * @var Collection
-     */
-    private $videos;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new ArrayCollection();
-        $this->departements = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->photos = new ArrayCollection();
-        $this->videos = new ArrayCollection();
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -73,7 +63,7 @@ class Region
     /**
      * Get site
      *
-     * @return Site
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     public function getSite()
     {
@@ -83,11 +73,11 @@ class Region
     /**
      * Set site
      *
-     * @param Site $site
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
      *
      * @return Region
      */
-    public function setSite(Site $site = null)
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
     {
         $this->site = $site;
 
@@ -97,7 +87,7 @@ class Region
     /**
      * Get regionUnifie
      *
-     * @return RegionUnifie
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie
      */
     public function getRegionUnifie()
     {
@@ -107,11 +97,11 @@ class Region
     /**
      * Set regionUnifie
      *
-     * @param RegionUnifie $regionUnifie
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie $regionUnifie
      *
      * @return Region
      */
-    public function setRegionUnifie(RegionUnifie $regionUnifie = null)
+    public function setRegionUnifie(\Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie $regionUnifie = null)
     {
         $this->regionUnifie = $regionUnifie;
 
@@ -121,9 +111,9 @@ class Region
     /**
      * Remove traduction
      *
-     * @param RegionTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction
      */
-    public function removeTraduction(RegionTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -145,7 +135,7 @@ class Region
     /**
      * Get traductions
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTraductions()
     {
@@ -167,11 +157,11 @@ class Region
     /**
      * Add traduction
      *
-     * @param RegionTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction
      *
      * @return Region
      */
-    public function addTraduction(RegionTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction $traduction)
     {
         $this->traductions[] = $traduction->setRegion($this);
 
@@ -181,11 +171,11 @@ class Region
     /**
      * Add departement
      *
-     * @param Departement $departement
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
      *
      * @return Region
      */
-    public function addDepartement(Departement $departement)
+    public function addDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
     {
         $this->departements[] = $departement;
 
@@ -195,9 +185,9 @@ class Region
     /**
      * Remove departement
      *
-     * @param Departement $departement
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\Departement $departement
      */
-    public function removeDepartement(Departement $departement)
+    public function removeDepartement(\Mondofute\Bundle\GeographieBundle\Entity\Departement $departement)
     {
         $this->departements->removeElement($departement);
     }
@@ -205,7 +195,7 @@ class Region
     /**
      * Get departements
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDepartements()
     {
@@ -215,11 +205,11 @@ class Region
     /**
      * Add image
      *
-     * @param RegionImage $image
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image
      *
      * @return Region
      */
-    public function addImage(RegionImage $image)
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image)
     {
         $this->images[] = $image->setRegion($this);
 
@@ -229,9 +219,9 @@ class Region
     /**
      * Remove image
      *
-     * @param RegionImage $image
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image
      */
-    public function removeImage(RegionImage $image)
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\RegionImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -239,7 +229,7 @@ class Region
     /**
      * Get images
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getImages()
     {
@@ -249,11 +239,11 @@ class Region
     /**
      * Add photo
      *
-     * @param RegionPhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo
      *
      * @return Region
      */
-    public function addPhoto(RegionPhoto $photo)
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo)
     {
         $this->photos[] = $photo->setRegion($this);
 
@@ -263,9 +253,9 @@ class Region
     /**
      * Remove photo
      *
-     * @param RegionPhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo
      */
-    public function removePhoto(RegionPhoto $photo)
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -273,7 +263,7 @@ class Region
     /**
      * Get photos
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhotos()
     {
@@ -302,39 +292,5 @@ class Region
         $this->actif = $actif;
 
         return $this;
-    }
-
-    /**
-     * Add video
-     *
-     * @param RegionVideo $video
-     *
-     * @return Region
-     */
-    public function addVideo(RegionVideo $video)
-    {
-        $this->videos[] = $video->setRegion($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove video
-     *
-     * @param RegionVideo $video
-     */
-    public function removeVideo(RegionVideo $video)
-    {
-        $this->videos->removeElement($video);
-    }
-
-    /**
-     * Get videos
-     *l
-     * @return Collection
-     */
-    public function getVideos()
-    {
-        return $this->videos;
     }
 }

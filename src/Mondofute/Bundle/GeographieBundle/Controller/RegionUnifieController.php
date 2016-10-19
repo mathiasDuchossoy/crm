@@ -15,6 +15,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionPhotoTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie;
+use Mondofute\Bundle\GeographieBundle\Entity\RegionVideo;
 use Mondofute\Bundle\GeographieBundle\Form\RegionUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -176,8 +177,6 @@ class RegionUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
-
-//            $em = $this->getDoctrine()->getManager();
             $em->persist($regionUnifie);
             $em->flush();
 
@@ -758,7 +757,9 @@ class RegionUnifieController extends Controller
         $originalImages = new ArrayCollection();
         $originalRegionPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
+        $originalVideos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
+        /** @var $region $region */
         foreach ($regionUnifie->getRegions() as $region) {
             $originalRegions->add($region);
             // si l'region est celui du CRM
@@ -776,6 +777,13 @@ class RegionUnifieController extends Controller
                     // on ajoute les photo dans la collection de sauvegarde
                     $originalRegionPhotos->add($regionPhoto);
                     $originalPhotos->add($regionPhoto->getPhoto());
+                }
+
+                // on parcourt les regionVideo pour les comparer ensuite
+                /** @var RegionVideo $regionVideo */
+                foreach ($region->getVideos() as $regionVideo) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalVideos->add($regionVideo);
                 }
             }
         }
@@ -818,6 +826,15 @@ class RegionUnifieController extends Controller
                 foreach ($regionCrm->getImages() as $regionImage) {
                     $newRegionImages->add($regionImage);
                 }
+                // ** suppression videos **
+                foreach ($originalVideos as $originalVideo)
+                {
+                    if(false === $regionCrm->getVideos()->contains($originalVideo))
+                    {
+                        $em->remove($originalVideo);
+                    }
+                }
+                // ** fin suppression videos **
                 /** @var RegionImage $originalRegionImage */
                 foreach ($originalRegionImages as $key => $originalRegionImage) {
 
@@ -1108,6 +1125,9 @@ class RegionUnifieController extends Controller
                         }
                     }
                 }
+
+
+                // todo: gérer les videos pour les sites distants
                 // ***** Fin Gestion des Medias *****
                 
                 $em->persist($regionUnifie);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mondofute\Bundle\HebergementBundle\Form;
+namespace Mondofute\Bundle\GeographieBundle\Form;
 
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,11 +11,10 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class HebergementVideoType extends AbstractType
+class RegionVideoType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -34,14 +33,14 @@ class HebergementVideoType extends AbstractType
             $data = $event->getData();
             $form = $event->getForm();
 
-            // vérifie si l'objet Image est "nouveau"
+            // vérifie si l'objet Video est "nouveau"
             // Si aucune donnée n'est passée au formulaire, la donnée est "null".
-            // Ce doit être considéré comme un nouveau "Image"
+            // Ce doit être considéré comme un nouveau "Video"
             if ($data && null !== $data->getId()) {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('video', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.youtube',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_video_crm',
                         'required' => false,
                         'label' => 'video',
                     ))
@@ -55,12 +54,13 @@ class HebergementVideoType extends AbstractType
                         },
                         'mapped' => false,
                         'attr' => ['class' => 'form-inline'],
+//                        'data' => $sites,
                     ));
             } else {
                 $form
-                    ->add('visuel', 'sonata_media_type', array(
+                    ->add('video', 'sonata_media_type', array(
                         'provider' => 'sonata.media.provider.youtube',
-                        'context' => 'hebergement_visuel_crm',
+                        'context' => 'region_video_crm',
                         'required' => true,
                         'label' => 'video',
                     ))
@@ -85,20 +85,31 @@ class HebergementVideoType extends AbstractType
                 'mapped' => false
             ))
             ->add('traductions', CollectionType::class, array(
-                'entry_type' => HebergementVisuelTraductionType::class,
+                'entry_type' => RegionVideoTraductionType::class,
                 'allow_add' => true,
                 'prototype_name' => '__name_traduction__',
                 'required' => true,
             ));
     }
-
+    
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementVideo'
+            'data_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionVideo',
+            'model_class' => 'Mondofute\Bundle\GeographieBundle\Entity\RegionVideo'
         ));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'mondofute_bundle_geographiebundle_regionvideo';
+    }
+
+
 }
