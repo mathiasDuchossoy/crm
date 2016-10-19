@@ -37,7 +37,10 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
             ;
         }
 
-        $result = $qb->getQuery()->getOneOrNullResult();
+//        dump($qb->getQuery());die;
+//        $result = $qb->getQuery()->getOneOrNullResult();
+        $result = $qb->getQuery()->getFirstResult();
+//        $result = $qb->getQuery()->getResult();
 //        dump($result);die;
         return $result;
     }

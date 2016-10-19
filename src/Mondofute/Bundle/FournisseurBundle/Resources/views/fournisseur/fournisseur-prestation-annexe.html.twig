@@ -3,7 +3,7 @@
 {% endif %}
 {% for prestationAnnexe in form.prestationAnnexes %}
 
-    <div id="{{ prestationAnnexe.vars.id }}">
+    <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <ul class="nav nav-pills nav-justified">
             <li class="active" id="nav_pill_parametrage_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
                                                                                            href="#pill_parametrage_{{ prestationAnnexe.vars.id }}">Paramétrage</a>
@@ -15,7 +15,7 @@
         <div class="tab-content">
             <div id="pill_parametrage_{{ prestationAnnexe.vars.id }}" class="tab-pane fade in active">
                 <h3>Paramétrages</h3>
-                {{ form_row(prestationAnnexe.type) }}
+                {{ form_row(prestationAnnexe.type , { 'attr' : {'class' : 'fournisseur_prestation_annexe'} }) }}
 
                 <div>
                     {{ form_label(prestationAnnexe.capacite) }}

@@ -40,6 +40,7 @@
             == fournisseurProduit.fournisseurId
             and prestationAnnexeFournisseur.vars.value.site.id == site.id
             and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
+            and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId
             %}
                 {% set FournisseurExists = true %}
             {% endif %}
