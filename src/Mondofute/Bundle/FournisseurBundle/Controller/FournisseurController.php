@@ -164,7 +164,8 @@ class FournisseurController extends Controller
         $errorInterlocuteur = false;
         $interlocuteurController = new InterlocuteurController();
         $interlocuteurController->setContainer($this->container);
-        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+//        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+        if (!empty($fournisseur->getInterlocuteurs()) ) {
             $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
             if ($interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
                 $errorInterlocuteur = true;
@@ -188,11 +189,11 @@ class FournisseurController extends Controller
 
             // ***** GESTION DES INTERLOCUTEURS *****
             // Si le fournisseur a un parent, on efface la liste des interlocuteurs
-            if (!empty($fournisseur->getFournisseurParent())) {
-                $fournisseur->getInterlocuteurs()->clear();
-            } else {
+//            if (!empty($fournisseur->getFournisseurParent())) {
+//                $fournisseur->getInterlocuteurs()->clear();
+//            } else {
 //                $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
-            }
+//            }
             foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
                 $interlocuteur->setFournisseur($fournisseur);
             }
@@ -666,7 +667,8 @@ class FournisseurController extends Controller
         $errorInterlocuteur = false;
         $interlocuteurController = new InterlocuteurController();
         $interlocuteurController->setContainer($this->container);
-        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+//        if (!empty($fournisseur->getInterlocuteurs()) && empty($fournisseur->getFournisseurParent())) {
+        if (!empty($fournisseur->getInterlocuteurs()) ) {
             $interlocuteurController->newInterlocuteurUsers($fournisseur->getInterlocuteurs());
             if ($interlocuteurController->testInterlocuteursLoginExist($fournisseur->getInterlocuteurs())) {
                 $errorInterlocuteur = true;
@@ -1170,9 +1172,9 @@ class FournisseurController extends Controller
             $interlocuteurController->setContainer($this->container);
 
             // Si le fournisseur a un parent, on efface la liste des interlocuteurs
-            if (!empty($fournisseur->getFournisseurParent())) {
-                $fournisseur->getInterlocuteurs()->clear();
-            }
+//            if (!empty($fournisseur->getFournisseurParent())) {
+//                $fournisseur->getInterlocuteurs()->clear();
+//            }
 
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
