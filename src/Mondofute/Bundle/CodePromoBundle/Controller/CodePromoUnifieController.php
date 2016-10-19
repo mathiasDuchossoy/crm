@@ -170,6 +170,8 @@ class CodePromoUnifieController extends Controller
             'entity' => $codePromoUnifie,
             'form' => $form->createView(),
             'applications' => $applications,
+            'fournisseursTypeHebergement' => new ArrayCollection(),
+            'fournisseursPrestationAnnexe' => new ArrayCollection(),
         ));
     }
 
