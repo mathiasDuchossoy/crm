@@ -107,7 +107,12 @@
         {% endfor %}
         {% endif %}
         {% endfor %}
-
+        $(document).delegate('button#logement_unifie_submit', 'click', function (e) {
+            var $form = $(this).closest('form');
+            if ($form.get(0).checkValidity() == true) {
+                desactiveChamps($form, ['input[name^="prixPublic"]','input[name^="prixFournisseur"]','input[name^="prixAchat"]','input[name^="stock"]']);
+            }
+        });
         $(document).ready(function () {
             $conteneur = $('#data_logement_locatif_tarifs');
             chargerTarifsLocatif($conteneur);

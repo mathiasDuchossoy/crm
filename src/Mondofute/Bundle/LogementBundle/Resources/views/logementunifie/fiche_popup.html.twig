@@ -144,6 +144,11 @@
 
     </script>
     {{ parent() }}
+    {% javascripts
+    'js/form.min.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
     <script type="text/javascript">
         $(document).ready(function () {

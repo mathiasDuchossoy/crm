@@ -193,7 +193,8 @@
                 {% if ongletHebergementStocks is defined and ongletHebergementStocks == 1 %}
                     <div id="data_hebergement_stocks" class="tab-pane fade">
                         <div class="progress">
-                            <div id="progress-bar_onglets_type_periode_hebergement_{{ entity.id }}" class="progress-bar" role="progressbar" aria-valuenow="0"
+                            <div id="progress-bar_onglets_type_periode_hebergement_{{ entity.id }}" class="progress-bar"
+                                 role="progressbar" aria-valuenow="0"
                                  aria-valuemin="0" aria-valuemax="100" style="width:0%">
                                 0%
                             </div>
@@ -927,10 +928,10 @@
                 }
             });
         }
-//        $(document).delegate('form[name="hebergement_unifie"]','submit',function(e){
-//           var retour = $(this).submit();
-//            alert(retour);
-//        });
+        //        $(document).delegate('form[name="hebergement_unifie"]','submit',function(e){
+        //           var retour = $(this).submit();
+        //            alert(retour);
+        //        });
         $(document).ready(function () {
 
             $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {

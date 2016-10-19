@@ -412,7 +412,9 @@ class HebergementUnifieController extends Controller
                 $prestationAnnexeHebergementUnifie = new PrestationAnnexeHebergementUnifie();
                 $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergementUnifie);
                 foreach ($entityUnifie->getHebergements() as $hebergement) {
-                    $prestationAnnexeStation = $prestationAnnexeStationUnifie->getPrestationAnnexeStations()->filter(function (PrestationAnnexeStation $element) use ($hebergement) {
+                    $prestationAnnexeStation = $prestationAnnexeStationUnifie->getPrestationAnnexeStations()->filter(function (
+                        PrestationAnnexeStation $element
+                    ) use ($hebergement) {
                         return $element->getSite() == $hebergement->getSite();
                     })->first();
                     $prestationAnnexeHebergement = new PrestationAnnexeHebergement();
@@ -437,16 +439,21 @@ class HebergementUnifieController extends Controller
 
         $whereStationUnifie = $stationRef->getStationUnifie()->getId();
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
-            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(), null, $whereStationUnifie));
+            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(),
+                null, $whereStationUnifie));
             if (!$prestationAnnexeFournisseurUnifies->isEmpty()) {
                 foreach ($sites as $site) {
                     foreach ($prestationAnnexeFournisseurUnifies as $prestationAnnexeFournisseurUnifie) {
-                        $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) use ($site) {
+                        $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (
+                            PrestationAnnexeFournisseur $element
+                        ) use ($site) {
                             return $element->getSite() == $site;
                         })->first();
                         if (!empty($prestationAnnexeFournisseur)) {
                             foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
-                                $prestationAnnexeHebergement = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->filter(function (PrestationAnnexeHebergement $element) use ($prestationAnnexeFournisseur) {
+                                $prestationAnnexeHebergement = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->filter(function (
+                                    PrestationAnnexeHebergement $element
+                                ) use ($prestationAnnexeFournisseur) {
                                     return (
                                         $element->getFournisseurPrestationAnnexe() == $prestationAnnexeFournisseur->getFournisseurPrestationAnnexe()
                                         and $element->getSite() == $prestationAnnexeFournisseur->getSite()
@@ -467,13 +474,16 @@ class HebergementUnifieController extends Controller
 
         $whereStationUnifie = $stationRef->getStationUnifie()->getId();
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
-            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(), null, $whereStationUnifie));
+            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(),
+                null, $whereStationUnifie));
 
             foreach ($prestationAnnexeFournisseurUnifies as $prestationAnnexeFournisseurUnifie) {
                 $prestationAnnexeHebergementUnifie = new PrestationAnnexeHebergementUnifie();
                 $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergementUnifie);
                 foreach ($entityUnifie->getHebergements() as $hebergement) {
-                    $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) use ($hebergement) {
+                    $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (
+                        PrestationAnnexeFournisseur $element
+                    ) use ($hebergement) {
                         return $element->getSite() == $hebergement->getSite();
                     })->first();
                     $prestationAnnexeHebergement = new PrestationAnnexeHebergement();
@@ -494,14 +504,17 @@ class HebergementUnifieController extends Controller
 
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
             $whereStation = ' IS NULL';
-            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(), $whereStation));
+            $prestationAnnexeFournisseurUnifies = new ArrayCollection($em->getRepository(PrestationAnnexeFournisseurUnifie::class)->findByFournisseur($fournisseurHebergement->getFournisseur(),
+                $whereStation));
 
             foreach ($prestationAnnexeFournisseurUnifies as $prestationAnnexeFournisseurUnifie) {
 //                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                 $prestationAnnexeHebergementUnifie = new PrestationAnnexeHebergementUnifie();
                 $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergementUnifie);
                 foreach ($entityUnifie->getHebergements() as $hebergement) {
-                    $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) use ($hebergement) {
+                    $prestationAnnexeFournisseur = $prestationAnnexeFournisseurUnifie->getPrestationAnnexeFournisseurs()->filter(function (
+                        PrestationAnnexeFournisseur $element
+                    ) use ($hebergement) {
                         return $element->getSite() == $hebergement->getSite();
                     })->first();
                     $prestationAnnexeHebergement = new PrestationAnnexeHebergement();
@@ -523,7 +536,9 @@ class HebergementUnifieController extends Controller
         $tabPrestationAnnexeHebergementUnifies = new ArrayCollection();
         foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
             foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-                $itemPrestationAnnexeHebergement = $tabPrestationAnnexeHebergements->filter(function (PrestationAnnexeHebergement $element) use ($prestationAnnexeHebergement) {
+                $itemPrestationAnnexeHebergement = $tabPrestationAnnexeHebergements->filter(function (
+                    PrestationAnnexeHebergement $element
+                ) use ($prestationAnnexeHebergement) {
                     return (
                         $element->getFournisseur() == $prestationAnnexeHebergement->getFournisseur()
                         and $element->getFournisseurPrestationAnnexe() == $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()
@@ -566,11 +581,13 @@ class HebergementUnifieController extends Controller
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
             if (empty($fournisseurHebergement->getId())) {
                 $fournisseur = $fournisseurHebergement->getFournisseur();
-                $codePromoFournisseurs = new ArrayCollection($em->getRepository(CodePromoFournisseur::class)->findBy(array('fournisseur' => $fournisseur->getId(), 'type' => 1)));
+                $codePromoFournisseurs = new ArrayCollection($em->getRepository(CodePromoFournisseur::class)->findBy(array(
+                    'fournisseur' => $fournisseur->getId(),
+                    'type' => 1
+                )));
                 foreach ($entityUnifie->getHebergements() as $hebergement) {
                     foreach ($codePromoFournisseurs as $codePromoFournisseur) {
-                        if($codePromoFournisseur->getCodePromo()->getSite() == $hebergement->getSite())
-                        {
+                        if ($codePromoFournisseur->getCodePromo()->getSite() == $hebergement->getSite()) {
                             $codePromoHebergement = new CodePromoHebergement();
                             $em->persist($codePromoHebergement);
                             $codePromoHebergement
@@ -635,10 +652,12 @@ class HebergementUnifieController extends Controller
                         }
                         if ($present == false) {
                             // *** suppression des code promo logement ***
-                            foreach ($entityUnifieSite->getHebergements() as $hebergement)
-                            {
-                                $codePromoHebergements = $emSite->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $fournisseurSite->getFournisseur()->getId()));
-                                foreach ($codePromoHebergements as $codePromoHebergement){
+                            foreach ($entityUnifieSite->getHebergements() as $hebergement) {
+                                $codePromoHebergements = $emSite->getRepository(CodePromoHebergement::class)->findBy(array(
+                                    'hebergement' => $hebergement->getId(),
+                                    'fournisseur' => $fournisseurSite->getFournisseur()->getId()
+                                ));
+                                foreach ($codePromoHebergements as $codePromoHebergement) {
                                     $emSite->remove($codePromoHebergement);
                                 }
                             }
@@ -837,7 +856,9 @@ class HebergementUnifieController extends Controller
                             // *** récupération de l'hébergementVisuel correspondant sur la bdd distante ***
                             // récupérer l'hebergementVisuel original correspondant sur le crm
                             /** @var ArrayCollection $originalHebergementVisuels */
-                            $originalHebergementVisuel = $originalHebergementVisuels->filter(function (HebergementVisuel $element) use ($entityVisuel) {
+                            $originalHebergementVisuel = $originalHebergementVisuels->filter(function (
+                                HebergementVisuel $element
+                            ) use ($entityVisuel) {
                                 return $element->getVisuel() == $entityVisuel->getVisuel();
                             })->first();
                             unset($entityVisuelSite);
@@ -884,7 +905,9 @@ class HebergementUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (HebergementVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            HebergementVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -895,7 +918,8 @@ class HebergementUnifieController extends Controller
                                     else {
                                         $traductionSite = new HebergementVisuelTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $entityVisuelSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -940,18 +964,22 @@ class HebergementUnifieController extends Controller
                         $metadata = $emSite->getClassMetadata(get_class($prestationAnnexeHebergementUnifieSite));
                         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-                        $prestationAnnexeHebergement = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->filter(function (PrestationAnnexeHebergement $element) use ($site) {
+                        $prestationAnnexeHebergement = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->filter(function (
+                            PrestationAnnexeHebergement $element
+                        ) use ($site) {
                             return $element->getSite()->getId() == $site->getId();
                         })->first();
 
                         $prestationAnnexeHebergementSite = new PrestationAnnexeHebergement();
                         $prestationAnnexeHebergementUnifieSite->addPrestationAnnexeHebergement($prestationAnnexeHebergementSite);
                         $prestationAnnexeHebergementSite
-                            ->setFournisseur($emSite->find(Fournisseur::class, $prestationAnnexeHebergement->getFournisseur()))
+                            ->setFournisseur($emSite->find(Fournisseur::class,
+                                $prestationAnnexeHebergement->getFournisseur()))
                             ->setHebergement($entitySite)
                             ->setActif($prestationAnnexeHebergement->getActif())
                             ->setSite($emSite->find(Site::class, $site))
-                            ->setFournisseurPrestationAnnexe($emSite->find(FournisseurPrestationAnnexe::class, $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()));
+                            ->setFournisseurPrestationAnnexe($emSite->find(FournisseurPrestationAnnexe::class,
+                                $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()));
                     }
                 }
                 // *** fin prestationAnnexeHebergements ***
@@ -962,12 +990,16 @@ class HebergementUnifieController extends Controller
                 /** @var FournisseurHebergement $fournisseurHebergement */
                 foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                     $fournisseur = $fournisseurHebergement->getFournisseur();
-                    $codePromoHebergements = new ArrayCollection($em->getRepository(CodePromoHebergement::class)->findBySite($fournisseur->getId(), $site->getId()));
-                    $codePromoHebergementSites = new ArrayCollection($emSite->getRepository(CodePromoHebergement::class)->findBySite($fournisseur->getId(), $site->getId()));
+                    $codePromoHebergements = new ArrayCollection($em->getRepository(CodePromoHebergement::class)->findBySite($fournisseur->getId(),
+                        $site->getId()));
+                    $codePromoHebergementSites = new ArrayCollection($emSite->getRepository(CodePromoHebergement::class)->findBySite($fournisseur->getId(),
+                        $site->getId()));
                     if (!empty($codePromoHebergements) && !$codePromoHebergements->isEmpty()) {
                         /** @var CodePromoHebergement $codePromoHebergement */
                         foreach ($codePromoHebergements as $codePromoHebergement) {
-                            $codePromoHebergementSite = $codePromoHebergementSites->filter(function (CodePromoHebergement $element) use ($codePromoHebergement) {
+                            $codePromoHebergementSite = $codePromoHebergementSites->filter(function (
+                                CodePromoHebergement $element
+                            ) use ($codePromoHebergement) {
                                 return $element->getId() == $codePromoHebergement->getId();
                             })->first();
                             if (false === $codePromoHebergementSite) {
@@ -985,7 +1017,8 @@ class HebergementUnifieController extends Controller
 
                             $codePromoHebergementSite
                                 ->setCodePromo($codePromo)
-                                ->setFournisseur($emSite->find(Fournisseur::class, $codePromoHebergement->getFournisseur()))
+                                ->setFournisseur($emSite->find(Fournisseur::class,
+                                    $codePromoHebergement->getFournisseur()))
                                 ->setHebergement($entitySite);
                         }
                     }
@@ -993,7 +1026,9 @@ class HebergementUnifieController extends Controller
                     if (!empty($codePromoHebergementSites) && !$codePromoHebergementSites->isEmpty()) {
                         /** @var CodePromoHebergement $codePromoHebergement */
                         foreach ($codePromoHebergementSites as $codePromoHebergementSite) {
-                            $codePromoHebergement = $codePromoHebergements->filter(function (CodePromoHebergement $element) use ($codePromoHebergementSite) {
+                            $codePromoHebergement = $codePromoHebergements->filter(function (
+                                CodePromoHebergement $element
+                            ) use ($codePromoHebergementSite) {
                                 return $element->getId() == $codePromoHebergementSite->getId();
                             })->first();
                             if (false === $codePromoHebergement) {
@@ -1412,8 +1447,7 @@ class HebergementUnifieController extends Controller
 
         // *** récupération originals fournisseurHebergement ***
         $originalFournisseurHebergements = new ArrayCollection();
-        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement)
-        {
+        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
             $originalFournisseurHebergements->add($fournisseurHebergement);
         }
         // *** fin récupération originals gestion fournisseurHebergement ***
@@ -1562,15 +1596,15 @@ class HebergementUnifieController extends Controller
             // ************* fin gestion des emplacements *************
 
             // *** gestion suppression fournisseurs hebergement ***
-            foreach ($originalFournisseurHebergements as $originalFournisseurHebergement)
-            {
-                if(false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement))
-                {
+            foreach ($originalFournisseurHebergements as $originalFournisseurHebergement) {
+                if (false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement)) {
                     // *** suppression des code promo logement ***
-                    foreach ($entityUnifie->getHebergements() as $hebergement)
-                    {
-                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array('hebergement' => $hebergement->getId() , 'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()));
-                        foreach ($codePromoHebergements as $codePromoHebergement){
+                    foreach ($entityUnifie->getHebergements() as $hebergement) {
+                        $codePromoHebergements = $em->getRepository(CodePromoHebergement::class)->findBy(array(
+                            'hebergement' => $hebergement->getId(),
+                            'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()
+                        ));
+                        foreach ($codePromoHebergements as $codePromoHebergement) {
                             $em->remove($codePromoHebergement);
                         }
                     }
@@ -1805,17 +1839,17 @@ class HebergementUnifieController extends Controller
         $nbLogements = 0;
         $fournisseurHebergementsJson = array();
         foreach ($fournisseurHebergements as $fournisseurHebergement) {
-            $fournisseurHebergementJson=new \stdClass();
+            $fournisseurHebergementJson = new \stdClass();
             $fournisseurHebergementJson->fournisseur = new \stdClass();
             $fournisseurHebergementJson->fournisseur->id = $fournisseurHebergement->getFournisseur()->getId();
             $fournisseurHebergementJson->fournisseur->enseigne = $fournisseurHebergement->getFournisseur()->getEnseigne();
             $fournisseurHebergementJson->logements = array();
             /** @var Logement $logement */
-            foreach ($fournisseurHebergement->getLogements() as $logement){
-                if($logement->getSite()->getCrm()) {
-                    $logementJson=new \stdClass();
+            foreach ($fournisseurHebergement->getLogements() as $logement) {
+                if ($logement->getSite()->getCrm()) {
+                    $logementJson = new \stdClass();
                     $logementJson->id = $logement->getId();
-                    $logementJson->logementUnifie=new \stdClass();
+                    $logementJson->logementUnifie = new \stdClass();
                     $logementJson->logementUnifie->id = $logement->getLogementUnifie()->getId();
                     /** @var LogementTraduction $traduction */
                     foreach ($logement->getTraductions() as $traduction) {
@@ -1823,11 +1857,11 @@ class HebergementUnifieController extends Controller
                             $logementJson->nom = $traduction->getNom();
                         }
                     }
-                    array_push($fournisseurHebergementJson->logements,$logementJson);
+                    array_push($fournisseurHebergementJson->logements, $logementJson);
                     $nbLogements++;
                 }
             }
-            array_push($fournisseurHebergementsJson,$fournisseurHebergementJson);
+            array_push($fournisseurHebergementsJson, $fournisseurHebergementJson);
         }
         $reponse->fournisseurHebergements = $fournisseurHebergementsJson;
         $reponse->nbLogements = $nbLogements;

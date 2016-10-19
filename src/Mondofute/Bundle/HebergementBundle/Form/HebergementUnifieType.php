@@ -46,11 +46,14 @@ class HebergementUnifieType extends AbstractType
                     'allow_delete' => true,
                 ));
     }
-    public function supprimerStocks(FormEvent $event){
+
+    public function supprimerStocks(FormEvent $event)
+    {
         echo 'ok';
         dump($event);
         die;
     }
+
     /**
      * @param OptionsResolver $resolver
      */
