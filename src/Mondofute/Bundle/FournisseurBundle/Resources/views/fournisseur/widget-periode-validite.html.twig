@@ -1,6 +1,6 @@
 <div class="form-inline input-group" style="width: 100%;">
     {{ form_widget(periodeValidite.dateDebut, { 'attr' : {
-        'onchange' : 'changeDateCustom("'~periodeValidite.dateDebut.vars.id~'" , "'~periodeValidite.dateFin.vars.id~'" , "dateDebut");'
+        'onchange' : 'changeDateTimes("'~periodeValidite.dateDebut.vars.id~'" , "'~periodeValidite.dateFin.vars.id~'" , "dateDebut");'
     }}) }}
     <span class="input-group-addon"  style="
     border-width: 1px 0;
@@ -14,6 +14,6 @@
 "
     >au</span>
     {{ form_widget(periodeValidite.dateFin, { 'attr' : {
-        'onchange' : 'changeDateCustom( "'~periodeValidite.dateDebut.vars.id~'" , "'~periodeValidite.dateFin.vars.id~'" , "dateFin");'
+        'onchange' : 'changeDateTimes( "'~periodeValidite.dateDebut.vars.id~'" , "'~periodeValidite.dateFin.vars.id~'" , "dateFin");'
     }}) }}
 </div>

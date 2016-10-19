@@ -1,7 +1,7 @@
 <div class="form-inline input-group" style="width: 100%;">
     {{ form_widget(codePromoPeriodeValidite.dateDebut, { 'attr' : {
         'data-unique_block_prefix' : codePromo.codePromoPeriodeValidites.vars['unique_block_prefix'],
-        'onchange' : 'changeDateCustom("'~codePromoPeriodeValidite.dateDebut.vars.id~'" , "'~codePromoPeriodeValidite.dateFin.vars.id~'" , "dateDebut");'
+        'onchange' : 'changeDateTimes("'~codePromoPeriodeValidite.dateDebut.vars.id~'" , "'~codePromoPeriodeValidite.dateFin.vars.id~'" , "dateDebut");'
     }}) }}
     <span class="input-group-addon"  style="
     border-width: 1px 0;
@@ -16,6 +16,6 @@
     >au</span>
     {{ form_widget(codePromoPeriodeValidite.dateFin, { 'attr' : {
         'data-unique_block_prefix' : codePromo.codePromoPeriodeValidites.vars['unique_block_prefix'] ,
-        'onchange' : 'changeDateCustom( "'~codePromoPeriodeValidite.dateDebut.vars.id~'" , "'~codePromoPeriodeValidite.dateFin.vars.id~'" , "dateFin");'
+        'onchange' : 'changeDateTimes( "'~codePromoPeriodeValidite.dateDebut.vars.id~'" , "'~codePromoPeriodeValidite.dateFin.vars.id~'" , "dateFin");'
     }}) }}
 </div>
