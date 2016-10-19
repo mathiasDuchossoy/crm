@@ -15,6 +15,9 @@ class CodePromoPeriodeValiditeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dateStart = new \DateTime('now');
+        $dateEnd   = clone $dateStart;
+
         $builder
             ->add('dateDebut', DateTimeType::class ,
                 array(
@@ -23,10 +26,11 @@ class CodePromoPeriodeValiditeType extends AbstractType
                     'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
                     'model_timezone' => 'EUROPE/Paris',
                     'attr' => array(
-                        'class' => 'form-control input-inline datetimepicker datetime',
+//                        'class' => 'form-control input-inline datetimepicker datetime',
+                        'class' => 'datetimepicker',
                         'data-date-format' => 'dd/MM/yyyy HH:mm',
-                        'placeholder' => 'format_date',
-                    )
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
+                    ),
                 ))
             ->add('dateFin', DateTimeType::class ,
                 array(
@@ -35,9 +39,11 @@ class CodePromoPeriodeValiditeType extends AbstractType
                     'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
                     'model_timezone' => 'EUROPE/Paris',
                     'attr' => array(
-                        'class' => 'form-control input-inline datetimepicker datetime',
+//                        'class' => 'form-control input-inline datetimepicker datetime',
+                        'class' => 'datetimepicker',
                         'data-date-format' => 'dd/MM/yyyy HH:mm',
-                        'placeholder' => 'format_date',
+//                        'placeholder' => 'format_date',
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
                     )
                 ))
         ;
@@ -49,7 +55,10 @@ class CodePromoPeriodeValiditeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite'
+            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite',
+//            'data_class' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode',
+//            'validation_groups' => array('Default','registration')
+//            'validation_groups' => array('registration')
         ));
     }
 }

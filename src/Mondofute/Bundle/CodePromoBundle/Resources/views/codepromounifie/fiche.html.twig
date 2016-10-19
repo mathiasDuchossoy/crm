@@ -39,26 +39,32 @@
                             {% include ('@MondofuteCodePromo/codepromounifie/code-promo-application.html.twig') %}
                             <h4>Periodes de validité</h4>
                             <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
-                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">
+                                data-prototype="
+                                            {% filter escape %}
+                                            {% include('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeValidite.html.twig') with {'codePromoPeriodeValidite': codePromo.codePromoPeriodeValidites.vars.prototype} %}
+                                            {% endfilter %}">
+                                {#data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">#}
                                 {# iterate over each existing tag and render its only field: name #}
                                 {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
                                     <li class="element">
-                                        {{ form_widget(codePromoPeriodeValidite) }}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
-                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+                                        {% include ('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeValidite.html.twig') %}
                                     </li>
                                 {% endfor %}
                             </ul>
 
                             <h4>Periodes de séjour</h4>
                             <ul class="code_promo_periode_sejour_{{ codePromo.vars.value.site.id }}"
-                                data-prototype="{{ form_widget(codePromo.codePromoPeriodeSejours.vars.prototype)|e('html_attr') }}">
+                                data-prototype="
+                                            {% filter escape %}
+                                            {% include('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeSejour.html.twig') with {'codePromoPeriodeSejour': codePromo.codePromoPeriodeSejours.vars.prototype} %}
+                                            {% endfilter %}
+                                ">
                                 {# iterate over each existing tag and render its only field: name #}
                                 {% for codePromoPeriodeSejour in codePromo.codePromoPeriodeSejours %}
+                                    {#<li class="element">#}
                                     <li class="element">
-                                        {{ form_widget(codePromoPeriodeSejour) }}
-                                        {#{{ form_row(codePromoPeriodeSejour.dateDebut) }}#}
-                                        {#{{ form_row(codePromoPeriodeSejour.dateFin) }}#}
+
+                                        {% include ('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeSejour.html.twig')  with {'codePromoPeriodeSejour' : codePromoPeriodeSejour  } %}
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -142,10 +148,6 @@
                             </div>
                         </div>
 
-                        {#{% set keyFournisseur = 0 %}#}
-                        {#{% set keyFournisseurPrestationAnnexe = 0 %}#}
-                        {#{% set keyHebergement = 0 %}#}
-
                         {% if panelCodePromo is defined %}
                             {% set applicationLogementSelected = false %}
                             {% set applicationPrestationAnnexeSelected = false %}
@@ -168,7 +170,6 @@
                                 {% endif %}
                             </div>
                         {% endif %}
-
                     </div>
 
                     {% set index = (index + 1) %}
@@ -353,54 +354,44 @@
 
         jQuery(document).ready(function () {
             elements.forEach(function (element) {
-                // Get the ul that holds the collection of images
                 window['$' + element + 'CollectionHolder'] = $('ul.' + element);
-
-                // add a delete link to all of the existing image form li elements
                 window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
                     addFormDeleteLink($(this));
                 });
-
-                // add the "add a image" anchor and li to the images ul
                 window['$' + element + 'CollectionHolder'].append(link[element]);
-
-                // count the current form inputs we have (e.g. 2), use that as the new
-                // index when inserting a new item (e.g. 2)
                 window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input').length);
-
                 window['$' + element + 'AddLink'].on('click', function (e) {
-                    // prevent the link from creating a "#" on the URL
                     e.preventDefault();
-
-                    // add a new image form (see next code block)
                     addForm(window['$' + element + 'CollectionHolder'], link[element]);
                 });
             });
         });
 
         function addForm($collectionHolder, $newLinkLi) {
-            // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype');
-
-            // get the new index
             var index = $collectionHolder.data('index');
-
-            // Replace '__name__' in the prototype's HTML to
-            // instead be a number based on how many items we have
             var newForm = prototype.replace(/__name__/g, index);
-
-            // increase the index with one for the next item
             $collectionHolder.data('index', index + 1);
-
-            // Display the form in the page in an li, before the "Add a diaporama" link li
             var $newFormLi = $('<li class="element"></li>').append(newForm);
             $newLinkLi.before($newFormLi);
 
             addFormDeleteLink($newFormLi);
 
-//            $('.datepicker ').datepicker();
 
-            $('.datepicker').datepicker({
+//            $('.datepicker').datepicker({
+//                todayBtn: "linked",
+//                format: "dd/mm/yyyy",
+//                autoclose: "true",
+//                pickerPosition: "bottom-left",
+//                startView: "day",
+//                minView: "month",
+//                daysOfWeekHighlighted: [0, 6],
+//                language: "fr",
+//                todayHighlight: true
+//            });
+
+
+            $('.input-daterange').datepicker({
                 todayBtn: "linked",
                 format: "dd/mm/yyyy",
                 autoclose: "true",
@@ -419,11 +410,8 @@
                 startDate: 'today',
                 pickerPosition: "top-right",
                 language: 'fr',
-//                wheelViewModeNavigationInverseDirection: true,
                 minuteStep: 30
-            }).on('hide', function(e){
-                return false;
-            });
+            }).removeClass('datetimepicker');
         }
 
         function addFormDeleteLink($FormLi) {
@@ -594,8 +582,18 @@
                 language: 'fr',
 //                wheelViewModeNavigationInverseDirection: true,
                 minuteStep: 30
-            }).on('hide', function(e){
-                return false;
+            }).removeClass('datetimepicker');
+
+            $('.input-daterange').datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
             });
         });
 
@@ -603,8 +601,8 @@
 
         function checkChildren(element , listGroup){
             var $element = $(element);
-            var listGroup = $('#' + listGroup);
-            listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            var $listGroup = $('#' + listGroup);
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
         function checkChilFamillePrestationAnnexe(element, classFamille)
@@ -638,9 +636,11 @@
                             $.ajax(path).done(function (data) {
                                 data = data.replace(/_keyCodePromo_/g, keyCodePromo);
                                 $codeCodePromoPanelHebergement.html(data);
-                                {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                                        getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
-                                {% endfor %}
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                            getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
+                                    {% endfor %}
+                                {% endif %}
                             });
                         }
                         else{
@@ -656,9 +656,11 @@
                             $.ajax(path).done(function (data) {
                                 data = data.replace(/_keyCodePromo_/g, keyCodePromo);
                                 $codeCodePromoPanelPrestationAnnexe.html(data);
-                                {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                                    getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
-                                {% endfor %}
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                        getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
+                                    {% endfor %}
+                                {% endif %}
                             });
                         }
                         else{
@@ -683,6 +685,7 @@
                 }
             }
         }
+
     </script>
 
 {% endblock %}

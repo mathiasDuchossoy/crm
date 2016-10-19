@@ -17,7 +17,11 @@ class CodePromoUnifieType extends AbstractType
     {
 //        dump($builder->getData());die;
         $builder
-            ->add('codePromos', CollectionType::class, array('entry_type' => CodePromoType::class , 'options' => array('clients' => $options['clients'])))
+            ->add('codePromos', CollectionType::class, array(
+                'entry_type' => CodePromoType::class ,
+                'options' => array('clients' => $options['clients']),
+//                'cascade_validation' => true
+                ))
             ->add('code')
         ;
     }
@@ -29,7 +33,8 @@ class CodePromoUnifieType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class'    => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie',
-            'clients'       => array()
+            'clients'       => array(),
+//            'validation_groups' => array('Default' , 'registration')
         ));
     }
 }
