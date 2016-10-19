@@ -47,17 +47,17 @@
         $( document ).ready(function() {
             $('#mondofute_periode_bundle_periode_debut').on( 'change' , function ()
             {
-                $element = $(this);
-                dateDebut = $element.data('date_debut');
-                dateFin = $element.data('date_fin');
-                changeDateCustom( dateDebut, dateFin, 'dateDebut' );
+                var $element = $(this);
+                var dateDebut = $element.data('date_debut');
+                var dateFin = $element.data('date_fin');
+                compareDates( dateDebut, dateFin, 'dateDebut' );
             });
             $('#mondofute_periode_bundle_periode_fin').on( 'change' , function ()
             {
-                $element = $(this);
-                dateDebut = $element.data('date_debut');
-                dateFin = $element.data('date_fin');
-                changeDateCustom(dateDebut, dateFin, 'dateFin' );
+                var $element = $(this);
+                var dateDebut = $element.data('date_debut');
+                var dateFin = $element.data('date_fin');
+                compareDates(dateDebut, dateFin, 'dateFin' );
             });
         });
     </script>

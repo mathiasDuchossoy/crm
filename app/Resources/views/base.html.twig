@@ -263,12 +263,18 @@
          * @param dateFin
          * @param provenance
          */
-        function changeDateCustom(dateDebut, dateFin, provenance )
+        function changeDateTimes(dateDebut, dateFin, provenance )
         {
-            $dateDebut  = $('#' + dateDebut);
-            $dateFin    = $('#' + dateFin);
+            var $dateDebut  = $('#' + dateDebut);
+            var dateDebutSplit = $dateDebut.val().split(" - ");
+            var dateTimeDebut = new Date(dateDebutSplit[0].split("/").reverse().join("-") + ' ' + dateDebutSplit[1]);
+            console.log(dateTimeDebut);
 
-            if($dateDebut.val() > $dateFin.val())
+            var $dateFin    = $('#' + dateFin);
+            var dateFinSplit = $dateFin.val().split(" - ");
+            var dateTimeFin = new Date(dateFinSplit[0].split("/").reverse().join("-") + ' ' + dateFinSplit[1]);
+
+            if(dateTimeDebut > dateTimeFin)
             {
                 switch (provenance){
                     case 'dateDebut':
@@ -281,9 +287,28 @@
                         break;
                 }
             }
-            else {
+        }
 
-                console.log('la');
+
+        function compareDates(dateDebut, dateFin, provenance) {
+
+            var $dateDebut  = $('#' + dateDebut);
+            var dateDebutObject =  new Date($dateDebut.val().split("/").reverse().join("-"));
+            var $dateFin    = $('#' + dateFin);
+            var dateFinObject =  new Date($dateFin.val().split("/").reverse().join("-"));
+
+            if(dateDebutObject > dateFinObject)
+            {
+                switch (provenance){
+                    case 'dateDebut':
+                        $dateFin.val($dateDebut.val());
+                        break;
+                    case 'dateFin':
+                        $dateDebut.val($dateFin.val());
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
