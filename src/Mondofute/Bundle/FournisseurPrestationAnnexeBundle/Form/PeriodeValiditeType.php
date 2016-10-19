@@ -18,61 +18,29 @@ class PeriodeValiditeType extends AbstractType
         $builder
             ->add('dateDebut', DateTimeType::class ,
                 array(
-                'required' => true,
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
-                'model_timezone' => 'EUROPE/Paris',
-                'attr' => array(
-                    'class' => 'form-control input-inline datetimepicker datetime',
-                    'data-date-format' => 'dd/MM/yyyy HH:mm',
-                    'placeholder' => 'format_date',
-                )
-            ))
-            ->add('dateFin', DateTimeType::class
-                , array(
-                'required' => true,
-                'widget' => 'single_text',
-//                'format' => 'yyyy-MM-dd\'T\'HH:mm:ssZZZZZ',
-                'format' => 'dd/MM/yyyy - HH:mm',
-//                'format' => 'dd/MM/yyyy - HH:mm',
-//                'format' => 'dd/MM/yyyy - kk:mm',
-//                'model_timezone' => 'UTC',
-                'model_timezone' => 'EUROPE/Paris',
-//                'view_timezone' => 'GMT',
-//                'view_timezone' => 'Europe/Paris',
-//                'attr' => array(
-//                    'class' => 'form-control input-inline datetimepicker datetime',
-//                    'data-date-format' => 'dd/MM/yyyy HH:mm',
-//                    'placeholder' => 'format_date',
-//                )
-                'attr' => array(
-                    'class' => 'datetimepicker',
-                    'placeholder' => 'format_date',
+                    'required' => true,
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+                    'model_timezone' => 'EUROPE/Paris',
+                    'attr' => array(
+                        'class' => 'datetimepicker',
+                        'data-date-format' => 'dd/MM/yyyy HH:mm',
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
+                    ),
+                ))
+            ->add('dateFin', DateTimeType::class,
+                array(
+                    'required' => true,
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
+                    'model_timezone' => 'EUROPE/Paris',
+                    'attr' => array(
+                        'class' => 'datetimepicker',
+                        'data-date-format' => 'dd/MM/yyyy HH:mm',
+                        'placeholder' => 'jj/mm/aaaa - hh:mm',
+                    ),
                 )
             )
-            )
-//            ->add('dateDebut', DateType::class, array(
-//                'required' => true,
-//                'widget' => 'single_text',
-//                'format' => 'dd/mm/yyyy hh:ii:ss',
-//                'attr' => array(
-//                    'class' => 'form-control input-inline datepicker date',
-////                    'data-provide' => 'datepicker-futur-tranche-cinq-ans',
-//                    'data-date-format' => 'dd/mm/yyyy hh:ii:ss',
-//                    'placeholder' => 'format_date',
-//                )
-//            ))
-//            ->add('dateFin', DateType::class, array(
-//                'required' => true,
-//                'widget' => 'single_text',
-//                'format' => 'dd/mm/yyyy hh:ii:ss',
-//                'attr' => array(
-//                    'class' => 'form-control input-inline datepicker date',
-////                    'data-provide' => 'datepicker-futur-tranche-cinq-ans',
-//                    'data-date-format' => 'dd/mm/yyyy hh:ii:ss',
-//                    'placeholder' => 'format_date',
-//                )
-//            ))
         ;
     }
     

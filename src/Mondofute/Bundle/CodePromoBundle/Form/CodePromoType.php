@@ -3,8 +3,10 @@
 namespace Mondofute\Bundle\CodePromoBundle\Form;
 
 use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
+use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use HiDev\Bundle\CodePromoBundle\Entity\TypeRemise;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
+use HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -56,11 +58,15 @@ class CodePromoType extends AbstractType
             ))
             ->add('actif')
             ->add('codePromoPeriodeValidites', CollectionType::class, array(
-                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType',
+//                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType',
+                    'entry_type' => CodePromoPeriodeValiditeType::class ,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Périodes de validité',
                     'by_reference' => false,
+//                    'cascade_validation' => true
+
+//                    'constraints' => 'HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriode',
                 )
             )
             ->add('codePromoPeriodeSejours', CollectionType::class, array(

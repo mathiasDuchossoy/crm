@@ -1,9 +1,15 @@
 {{ form_row(tarif.prixPublic) }}
 <h3>Périodes de validité</h3>
-<ul class="periode_validites{{ name }}{{ index }}" data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">
+<ul class="periode_validites{{ name }}{{ index }}"
+    {#data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">#}
+    data-prototype="
+    {% filter escape %}
+        {% include('@MondofuteFournisseur/fournisseur/widget-periode-validite.html.twig') with {'periodeValidite': tarif.periodeValidites.vars.prototype} %}
+    {% endfilter %}">
     {% for periodeValidite in tarif.periodeValidites %}
         <li class="li_periode_validite">
-            {{ form_widget(periodeValidite) }}
+            {#{{ form_widget(periodeValidite) }}#}
+            {% include ('@MondofuteFournisseur/fournisseur/widget-periode-validite.html.twig')  with {'periodeValidite' : periodeValidite  } %}
         </li>
     {% endfor %}
 </ul>

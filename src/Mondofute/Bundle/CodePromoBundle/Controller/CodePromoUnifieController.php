@@ -843,6 +843,7 @@ class CodePromoUnifieController extends Controller
      */
     public function editAction(Request $request, CodePromoUnifie $codePromoUnifie)
     {
+        /** @var CodePromo $codePromo */
         /** @var CodePromoClient $codePromoClient */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -851,7 +852,6 @@ class CodePromoUnifieController extends Controller
         $applications = Application::$libelles;
 
         $originalCodePromoApplications = new ArrayCollection();
-        /** @var CodePromo $codePromo */
         foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
             $originalCodePromoApplications->set($codePromo->getSite()->getId(), new ArrayCollection());
             foreach ($codePromo->getCodePromoApplications() as $codePromoApplication) {
@@ -887,17 +887,6 @@ class CodePromoUnifieController extends Controller
 //                }
             }
         }
-//        foreach ($fournisseurHebergements as $codePomoId => $fournisseurHebergement) {
-//            foreach ($fournisseurHebergement as $fournisseurId => $item) {
-//                $siteId = $codePromoUnifie->getCodePromos()->filter(function (CodePromo $element) use ($codePomoId) {
-//                    return $element->getId() == $codePomoId;
-//                })->first()->getSite()->getId();
-//                $hebergements = $em->getRepository(HebergementUnifie::class)->getFournisseurHebergements($fournisseurId, $this->container->getParameter('locale'), $siteId);
-//                foreach ($hebergements as $hebergement) {
-//                    $fournisseurHebergement->get($fournisseurId)->add($hebergement);
-//                }
-//            }
-//        }
         // *** fin gestion code promo hebergement ***
 
         // *** gestion code promo fournisseurPrestationAnnexe ***
@@ -914,15 +903,6 @@ class CodePromoUnifieController extends Controller
 //                }
             }
         }
-//        foreach ($fournisseurFournisseurPrestationAnnexes as $codePomoId => $fournisseurFournisseurPrestationAnnexe) {
-//            foreach ($fournisseurFournisseurPrestationAnnexe as $fournisseurId => $item) {
-//                $fournisseurPrestationAnnexes = $em->getRepository(FournisseurPrestationAnnexe::class)->getFournisseurPrestationAnnexes($fournisseurId, $this->container->getParameter('locale'));
-//                foreach ($fournisseurPrestationAnnexes as $fournisseurPrestationAnnexe) {
-//                    $fournisseurFournisseurPrestationAnnexe->get($fournisseurId)->add($fournisseurPrestationAnnexe);
-//                }
-//            }
-//        }
-//        dump($fournisseurFournisseurPrestationAnnexes);die;
         // *** fin gestion code promo fournisseurPrestationAnnexe ***
 
 
@@ -992,7 +972,26 @@ class CodePromoUnifieController extends Controller
             $this->addFlash('error', "Ce code existe déjà. ");
         }
 
-        if ($editForm->isSubmitted() && $editForm->isValid() && !$codeExists) {
+        // *** vérification si la date de début  n'est pas supérieur à la date de fin ***
+        $validator = $this->get('validator');
+        $errorPeriodeValidites = new ArrayCollection();
+        foreach ($codePromoUnifie->getCodePromos() as $codePromo){
+            foreach ($codePromo->getCodePromoPeriodeValidites() as $validite)
+            {
+                $error = $validator->validate($validite);
+                if(count($error) > 0)
+                {
+                    foreach ($error as $item)
+                    {
+                        $this->addFlash('error', $item->getMessage());
+                    }
+                    $errorPeriodeValidites->add($validator->validate($validite));
+                }
+            }
+        }
+        // *** FIN vérification si la date de début  n'est pas supérieur à la date de fin ***
+
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$codeExists && $errorPeriodeValidites->isEmpty()) {
             foreach ($codePromoUnifie->getCodePromos() as $codePromo) {
                 if (false === in_array($codePromo->getSite()->getId(), $sitesAEnregistrer)) {
                     $codePromo->setActifSite(false);
