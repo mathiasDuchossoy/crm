@@ -247,6 +247,11 @@ assetic:
            file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
            apply_to: ".less$"
     assets:
+        form_js:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/js/form.js"
+            filters: [?yui_js]
+            output: js/form.min.js
         type_periodes_onglets_js:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/js/type-periodes-onglets.js"

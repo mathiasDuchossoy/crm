@@ -1345,13 +1345,10 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-        if($request->request->count() > 0 ){
-            foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement){
-                dump($fournisseurHebergement);
-
-            }
-            die;
-        }
+//        if($request->request->count() > 0 ){
+//            dump($request->request);
+//            die;
+//        }
 //        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
@@ -1578,7 +1575,7 @@ class HebergementUnifieController extends Controller
                         }
                     }
                     // *** fin suppression des code promo logement ***
-//                    $em->remove($originalFournisseurHebergement);
+                    $em->remove($originalFournisseurHebergement);
                 }
             }
 

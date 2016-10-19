@@ -927,7 +927,12 @@
                 }
             });
         }
+//        $(document).delegate('form[name="hebergement_unifie"]','submit',function(e){
+//           var retour = $(this).submit();
+//            alert(retour);
+//        });
         $(document).ready(function () {
+
             $('#modalAjoutRemiseClef').on('hidden.bs.modal', function () {
                 $('[id$="_remiseClef"] option:selected').each(function () {
                     if ($(this).val() == 'add') {

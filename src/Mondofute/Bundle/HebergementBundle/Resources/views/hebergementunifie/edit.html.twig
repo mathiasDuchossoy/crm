@@ -30,6 +30,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts
+    'js/form.min.js'
     'js/datatables.min.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -38,7 +39,7 @@
             var table = $tableau.DataTable({
                 data: null,
                 "aoColumns": colonnes,
-                "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                "fnCreatedRow": function (nRow, aData, iDataIndex) {
                     $(nRow).find('td').attr('style', 'vertical-align: middle;');
                 },
                 "bAutoWidth": true,
@@ -84,7 +85,21 @@
     <script type="text/javascript">
         "use strict";
         var stocksModifies = Array();
+        //        $(document).delegate('form','submit',function(e){
+        //            alert($(this).checkValidity());
+        ////            activeChamps($(this),['input[name^="stocks"]']);
+        ////            $(this).find('button[type="submit"]').
+        //        });
+        $(document).delegate('button#hebergement_unifie_submit', 'click', function (e) {
+            var $form = $(this).closest('form');
+            if ($form.get(0).checkValidity() == true) {
+                desactiveChamps($form, ['input[name^="stocks"]']);
+            }
+        });
         $(document).ready(function () {
+//            transforme le button submit en bouton de type button
+
+//            $('button#hebergement_unifie_submit').attr('type','button');
             chargerOngletStocksHebergement({{ entity.id }});
             $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
                 $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
@@ -94,7 +109,7 @@
             });
             $(document).delegate('.duplique-stocks', 'click', function (e) {
                 var datas = $(this).data();
-                dupliquerStocksLogement(datas.logement_id,datas.periode_type_id);
+                dupliquerStocksLogement(datas.logement_id, datas.periode_type_id);
             });
             $(document).delegate('.table-hebergement-stocks input[name^="stocks"]', 'change', function (e) {
                 modificationStock($(this));
@@ -116,11 +131,11 @@
             stocksModifies[datas.logement][datas.periode] = $obj.val();
         }
         //        copie le premier stock du logement dans le tableau sur les autres stocks
-        function dupliquerStocksLogement(logementId,typePeriodeId) {
-            var $ref = $('input[data-logement=' + logementId + '][data-type_periode='+typePeriodeId+']:first');
+        function dupliquerStocksLogement(logementId, typePeriodeId) {
+            var $ref = $('input[data-logement=' + logementId + '][data-type_periode=' + typePeriodeId + ']:first');
             var valeur = $ref.val();
             $ref.attr('value', valeur);
-            $('input[data-logement=' + logementId + '][data-type_periode='+typePeriodeId+']').each(function () {
+            $('input[data-logement=' + logementId + '][data-type_periode=' + typePeriodeId + ']').each(function () {
                 $(this).val(valeur);
                 $(this).attr('value', valeur);
                 modificationStock($(this));
@@ -144,7 +159,7 @@
                         for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
                             donnees[iDatas] = Array();
                             data = datas['logements'][iDatas];
-                            donnees[iDatas]['logement'] = '<div><span data-logement_id="' + data.logementUnifie.id + '" data-periode_type_id="'+parametres.typePeriode.id+'" title="copie le stock de la première période de ce logement sur toutes les périodes du logement" class="duplique-stocks glyphicon glyphicon-play pull-right"> </span>'+data.nom + '</div>';
+                            donnees[iDatas]['logement'] = '<div><span data-logement_id="' + data.logementUnifie.id + '" data-periode_type_id="' + parametres.typePeriode.id + '" title="copie le stock de la première période de ce logement sur toutes les périodes du logement" class="duplique-stocks glyphicon glyphicon-play pull-right"> </span>' + data.nom + '</div>';
                             var attribut = null;
                             for (var i = 0; i < data.periodes.length; i++) {
 
@@ -314,10 +329,10 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('[name="btnEnregistrerStocks"]').on('click',enregistrerStocks);
+            $('[name="btnEnregistrerStocks"]').on('click', enregistrerStocks);
             chargerOngletStocks({{ entity.id }});
         });
-        function chargerOngletStocks(idhebergement){
+        function chargerOngletStocks(idhebergement) {
 
         }
         function enregistrerStocks() {
@@ -329,10 +344,10 @@
                 url: "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
                 type: 'POST',
                 data: $stocks,
-                success: function (json){
-                    if(json.valid){
+                success: function (json) {
+                    if (json.valid) {
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-success">{{ 'enregistrement_stock.ok'|trans }}</div>');
-                    }else{
+                    } else {
                         $element.find('[name="btnEnregistrerStocksReponse"]').html('<div class="alert alert-danger">{{ 'enregistrement_stock.pas_ok'|trans }}</div>');
                     }
                 }
@@ -353,8 +368,9 @@
         .duplique-stocks:hover {
             cursor: pointer;
         }
+
         /*.duplique-stocks {*/
-            /*float: right;*/
+        /*float: right;*/
         /*}*/
 
         th.logement, td.logement {
