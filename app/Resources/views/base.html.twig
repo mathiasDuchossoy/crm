@@ -268,7 +268,6 @@
             var $dateDebut  = $('#' + dateDebut);
             var dateDebutSplit = $dateDebut.val().split(" - ");
             var dateTimeDebut = new Date(dateDebutSplit[0].split("/").reverse().join("-") + ' ' + dateDebutSplit[1]);
-            console.log(dateTimeDebut);
 
             var $dateFin    = $('#' + dateFin);
             var dateFinSplit = $dateFin.val().split(" - ");
@@ -291,7 +290,6 @@
 
 
         function compareDates(dateDebut, dateFin, provenance) {
-
             var $dateDebut  = $('#' + dateDebut);
             var dateDebutObject =  new Date($dateDebut.val().split("/").reverse().join("-"));
             var $dateFin    = $('#' + dateFin);
