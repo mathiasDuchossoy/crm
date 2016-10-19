@@ -4,14 +4,19 @@
 "use strict";
 
 /**
- * Gestion des évènement
+ * Gestion des évènements
  */
+//  ajoute des fonctionnalités aux éléments button[type="submit"]
 $(document).delegate('button[type="submit"]', 'click', function (e) {
+    // charge le form contenant le bouton cliqué
     var $form = $(this).closest('form');
+    // vérifie la validité du formulaire
     if ($form.get(0).checkValidity() == true) {
+        // si le formulaire est valide donne l'attribut data-loading-text au bouton submit si ce dernier n'en a pas
         if ($(this).attr('data-loading-text') == null) {
             $(this).attr('data-loading-text', '<span class=\'glyphicon glyphicon-refresh glyphicon-refresh-animate\'></span> Enregistrement en cours');
         }
+        // affiche la donnée data-loading-text (message de chargement dans le bouton submit)
         $(this).button('loading');
     }
 });

@@ -247,6 +247,12 @@ assetic:
            file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
            apply_to: ".less$"
     assets:
+        hebergement_edit_js:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-fonctions.js"
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-evenements.js"
+            filters: [?yui_js]
+            output: js/hebergement-edit.min.js
         form_js:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/js/form.js"
@@ -284,6 +290,33 @@ assetic:
                 - "%kernel.root_dir%/../app/Resources/public/js/datatables.js"
             filters: [?yui_js]
             output: js/datatables.min.js
+        bootstrap_js:
+           inputs:
+               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
+           filters: [?yui_js]
+           output: js/bootstrap.js
+        bootstrap_datepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.nl.min.js"
+              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min.js"
+              - "%kernel.root_dir%/../app/Resources/public/js/datepicker-type.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datepicker.js
+        bootstrap_datetimepicker_js:
+            inputs:
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.de.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.nl.js"
+              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
+            filters: [?yui_js]
+            output: js/bootstrap-datetimepicker.js
         menu_css:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
@@ -317,6 +350,12 @@ assetic:
              - lessphp
              - cssrewrite
           output: css/bootstrap-datetimepicker.css
+        hebergement_edit_css:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/css/hebergement-edit.css"
+#            filters:
+#                - lessphp
+            output: css/hebergement-edit.min.css
         bootstrap_glyphicons_ttf:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
@@ -338,33 +377,6 @@ assetic:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2"
            output: "fonts/glyphicons-halflings-regular.woff2"
 
-        bootstrap_js:
-           inputs:
-               - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
-           filters: [?yui_js]
-           output: js/bootstrap.js
-        bootstrap_datepicker_js:
-            inputs:
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.fr.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.es.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.nl.min.js"
-              - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/locales/bootstrap-datepicker.ru.min.js"
-              - "%kernel.root_dir%/../app/Resources/public/js/datepicker-type.js"
-            filters: [?yui_js]
-            output: js/bootstrap-datepicker.js
-        bootstrap_datetimepicker_js:
-            inputs:
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js"
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js"
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.de.js"
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.nl.js"
-              - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
-            filters: [?yui_js]
-            output: js/bootstrap-datetimepicker.js
 
 
 fos_user:
