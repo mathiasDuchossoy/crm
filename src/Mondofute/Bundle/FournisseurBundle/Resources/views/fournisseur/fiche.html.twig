@@ -1255,20 +1255,20 @@
         function fournisseurParentSelect(optionVal) {
 
             var $fournisseur_contient = $('#fournisseur_contient');
-            var $interlocuteur_panels = $('#interlocuteur_panels');
+//            var $interlocuteur_panels = $('#interlocuteur_panels');
             if (optionVal) {
-                $interlocuteur_panels.hide();
+//                $interlocuteur_panels.hide();
                 $fournisseur_contient.val(1);
                 $fournisseur_contient.find('option:not(:selected)').prop('disabled', 'disabled');
-                var $values_interlocuteurs = $('#values-interlocuteurs');
-                $values_interlocuteurs.children().each(function (index, element) {
-                    var index = element.id.split('_')[2];
-                    $('#row_interlocuteur_' + index).remove();
-                });
-                $values_interlocuteurs.html("");
+//                var $values_interlocuteurs = $('#values-interlocuteurs');
+//                $values_interlocuteurs.children().each(function (index, element) {
+//                    var index = element.id.split('_')[2];
+//                    $('#row_interlocuteur_' + index).remove();
+//                });
+//                $values_interlocuteurs.html("");
             }
             else {
-                $interlocuteur_panels.show();
+//                $interlocuteur_panels.show();
                 $fournisseur_contient.find('option:not(:selected)').prop('disabled', false);
             }
         }
