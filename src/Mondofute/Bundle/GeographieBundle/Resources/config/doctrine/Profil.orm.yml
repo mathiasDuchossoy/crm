@@ -34,6 +34,10 @@ Mondofute\Bundle\GeographieBundle\Entity\Profil:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto
             mappedBy: profil
             cascade: ['persist' , 'remove']
+        videos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilVideo
+            mappedBy: profil
+            cascade: ['persist' , 'remove']
     manyToMany:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station

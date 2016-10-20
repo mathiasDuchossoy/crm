@@ -1,0 +1,30 @@
+Mondofute\Bundle\GeographieBundle\Entity\ProfilVideo:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\ProfilVideoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        profil:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
+            inversedBy: videos
+        video:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ProfilVideoTraduction
+            mappedBy: video
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }
