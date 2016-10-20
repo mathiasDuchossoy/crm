@@ -115,6 +115,7 @@ class Fournisseur extends Moral
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
@@ -389,8 +390,7 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    )
-    {
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -558,6 +558,7 @@ class Fournisseur extends Moral
     {
         return $this->types;
     }
+
 
     /**
      * Remove prestationAnnex

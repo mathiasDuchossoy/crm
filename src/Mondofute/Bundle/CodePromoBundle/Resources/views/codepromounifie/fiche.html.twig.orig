@@ -1,0 +1,710 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.codePromos %}
+            {{ form_row(form.code) }}
+            {% include ('::onglets_sites.html.twig') %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for keyCodePromo, codePromo in form.codePromos %}
+                    <div id="data_site_{{ codePromo.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ codePromo.vars.value.site.crm | number_format }}">
+                        {{ form_row(codePromo.site) }}
+                        <ul class="nav nav-tabs">
+                            {{ form_row(codePromo.libelle, { 'attr' : { 'data-unique_block_prefix' : codePromo.libelle.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.clientAffectation, { 'attr' : { 'data-site' : codePromo.vars.value.site.id , 'data-unique_block_prefix' : codePromo.clientAffectation.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.typeRemise, { 'attr' : { 'data-unique_block_prefix' : codePromo.typeRemise.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : codePromo.valeurRemise.vars['unique_block_prefix'] }}) }}
+                            {{ form_row(codePromo.prixMini, { 'type' : 'number' ,  'attr' : { 'step' : 'any', 'data-unique_block_prefix' : codePromo.prixMini.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.usageCodePromo, { 'attr' : { 'data-unique_block_prefix' : codePromo.usageCodePromo.vars['unique_block_prefix']}}) }}
+                            {{ form_row(codePromo.actif, { 'attr' : { 'data-unique_block_prefix' : codePromo.actif.vars['unique_block_prefix']}}) }}
+                            {% include ('@MondofuteCodePromo/codepromounifie/code-promo-application.html.twig') %}
+                            <h4>Periodes de validité</h4>
+                            <ul class="code_promo_periode_validite_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="
+                                            {% filter escape %}
+                                            {% include('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeValidite.html.twig') with {'codePromoPeriodeValidite': codePromo.codePromoPeriodeValidites.vars.prototype} %}
+                                            {% endfilter %}">
+                                {#data-prototype="{{ form_widget(codePromo.codePromoPeriodeValidites.vars.prototype)|e('html_attr') }}">#}
+                                {# iterate over each existing tag and render its only field: name #}
+                                {% for codePromoPeriodeValidite in codePromo.codePromoPeriodeValidites %}
+                                    <li class="element">
+<<<<<<< HEAD
+                                        {% include ('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeValidite.html.twig') %}
+||||||| parent of b7ec0c0... avancement sur validation date debut < date fin
+                                        {{ form_widget(codePromoPeriodeValidite) }}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+=======
+                                        {{ form_widget(codePromoPeriodeValidite) }}
+                                        {#<div class="input-group input-daterange">#}
+                                            {#{{ form_widget(codePromoPeriodeValidite.dateDebut) }}#}
+                                            {#<span class="input-group-addon">au</span>#}
+                                            {#{{ form_widget(codePromoPeriodeValidite.dateFin) }}#}
+                                        {#</div>#}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateDebut) }}#}
+                                        {#{{ form_row(codePromoPeriodeValidite.dateFin) }}#}
+>>>>>>> b7ec0c0... avancement sur validation date debut < date fin
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            <h4>Periodes de séjour</h4>
+                            <ul class="code_promo_periode_sejour_{{ codePromo.vars.value.site.id }}"
+                                data-prototype="
+                                            {% filter escape %}
+                                            {% include('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeSejour.html.twig') with {'codePromoPeriodeSejour': codePromo.codePromoPeriodeSejours.vars.prototype} %}
+                                            {% endfilter %}
+                                ">
+                                {# iterate over each existing tag and render its only field: name #}
+                                {% for codePromoPeriodeSejour in codePromo.codePromoPeriodeSejours %}
+                                    {#<li class="element">#}
+                                    <li class="element">
+
+                                        {% include ('@MondofuteCodePromo/codepromounifie/widget_codePromoPeriodeSejour.html.twig')  with {'codePromoPeriodeSejour' : codePromoPeriodeSejour  } %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </ul>
+                        <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}"
+                            {% if codePromo.vars.value.clientAffectation != 2 %}
+                                style="display: none"
+                            {% endif %}
+                        >
+                            <!-- Default panel contents -->
+                            <div class="panel-heading">Client</div>
+                            <div class="panel-body">
+                                <div class="col-sm-12">
+                                    <div class="form-group" >
+                                        <div class="panel panel-default">
+                                            <!-- Default panel contents -->
+                                            <div class="panel-heading">Liste</div>
+                                            <div class="panel-body">
+                                                <div id="list_client_{{ codePromo.vars.value.site.id }}">
+                                                    {% if codePromoClients is defined %}
+                                                        {% for codePromoClient in codePromoClients %}
+                                                            {% if codePromoClient.codePromo.site.id == codePromo.vars.value.site.id %}
+                                                                <div class="col-sm-2"></div>
+                                                                <div class="col-sm-10">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input type="checkbox"
+                                                                                   checked="checked"
+                                                                                   value="{{ codePromoClient.client.id }}"
+                                                                                   name="client_{{ codePromo.vars.value.site.id }}[]"
+                                                                                   id="checkbox_client_{{ codePromoClient.client.id }}_{{ codePromo.vars.value.site.id }}">
+                                                                            {{ codePromoClient.client.nom }} {{ codePromoClient.client.prenom }}
+                                                                        </label></div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-default">
+                                            <!-- Default panel contents -->
+                                            <div class="panel-heading">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="input-group">
+                                                            <div class="input-group-btn">
+                                                                <button type="button" class="btn btn-default" aria-label="Left Align"
+                                                                        onclick="searchClient('{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}');"
+                                                                >
+                                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                                </button>
+                                                            </div>
+                                                            <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text"
+                                                                   onkeypress="testEnterSearchClient(event,'{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}')"
+                                                                   class="form-control" placeholder="Rechercher...">
+                                                        </div><!-- /input-group -->
+                                                    </div><!-- /.col-lg-6 -->
+                                                    <div class="col-sm-6">
+                                                        <div class="progress" style="display: none;margin-bottom: 0px;margin-top: 7px;">
+                                                            {#<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">#}
+                                                            {#0%#}
+                                                            {#</div>#}
+                                                            {#<div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">#}
+                                                                {#<span class="sr-only">45% Complete</span>#}
+                                                            {#</div>#}
+                                                            <div class="progress-bar progress-bar-striped" role="progressbar"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="result_search_{{ codePromo.vars.value.site.id }}">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if panelCodePromo is defined %}
+                            {% set applicationLogementSelected = false %}
+                            {% set applicationPrestationAnnexeSelected = false %}
+                            {% for codePromoApplication in codePromo.codePromoApplications.vars.value %}
+                                {% if codePromoApplication.application == 1 %}
+                                    {% set applicationLogementSelected = true %}
+                                {% endif %}
+                                {% if codePromoApplication.application == 2 %}
+                                    {% set applicationPrestationAnnexeSelected = true %}
+                                {% endif %}
+                            {% endfor  %}
+                            <div id="code_code_promo_panel_hebergement_{{ keyCodePromo }}" >
+                                {% if applicationLogementSelected == true %}
+                                    {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig' ) %}
+                                {% endif %}
+                            </div>
+                            <div id="code_code_promo_panel_prestation_annexe_{{ keyCodePromo }}" >
+                                {% if applicationPrestationAnnexeSelected == true %}
+                                    {{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% set index = (index + 1) %}
+                {% endfor %}
+
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_libelle");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_typeRemise");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_valeurRemise");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_prixMini");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
+        //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_actif");
+
+        var items = [];
+                items.push("_code_promo_unifie_codePromos_entry_libelle");
+                items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+                items.push("_code_promo_unifie_codePromos_entry_typeRemise");
+                items.push("_code_promo_unifie_codePromos_entry_valeurRemise");
+                items.push("_code_promo_unifie_codePromos_entry_prixMini");
+                items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
+                items.push("_code_promo_unifie_codePromos_entry_actif");
+
+    </script>
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+
+        function sortSousFamilleByFamille(element) {
+            $element = $(element);
+            var familleCodePromoId = $element.val();
+            $('[data-unique_block_prefix="_prestation_annexe_unifie_codePromos_entry_sousFamilleCodePromo"]').each(function (index, select) {
+                $select = $(select);
+                if ($select.data('index') == $element.data('index')) {
+                    $select.find('option').each(function (index, option) {
+                        $option = $(option);
+                        if ($option.data('famille_prestation_annexe_id')) {
+                            if ($option.data('famille_prestation_annexe_id') != familleCodePromoId) {
+                                $option.hide();
+                                $option.prop("selected", false);
+                            }
+                            else {
+                                $option.show();
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        $('[data-unique_block_prefix="_prestation_annexe_unifie_codePromos_entry_familleCodePromo"]').each(function (index, select) {
+            sortSousFamilleByFamille(select);
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var elements = [];
+        var link = {};
+        {% set elements = {} %}
+        {% for site in sites %}
+        {% set elements = elements|merge( ['code_promo_periode_validite_' ~ site.id  , 'code_promo_periode_sejour_' ~ site.id]) %}
+        {% endfor %}
+        {#{% set elements = ['code_promo_periode_validite' , 'code_promo_periode_sejour'] %}#}
+
+        {% for element in elements %}
+
+        var ${{ element }}CollectionHolder;
+
+        // setup an "add a image" link
+        var ${{ element }}AddLink = $('<a href="#" class="add_{{ element }}_link">Ajouter</a>');
+        var ${{ element }}_newLinkLi = $('<li></li>').append(${{ element }}AddLink);
+
+        link.{{ element }} = ${{ element }}_newLinkLi;
+
+        elements.push('{{ element }}');
+        {% endfor %}
+
+        jQuery(document).ready(function () {
+            elements.forEach(function (element) {
+                window['$' + element + 'CollectionHolder'] = $('ul.' + element);
+                window['$' + element + 'CollectionHolder'].find('li.element').each(function () {
+                    addFormDeleteLink($(this));
+                });
+                window['$' + element + 'CollectionHolder'].append(link[element]);
+                window['$' + element + 'CollectionHolder'].data('index', window['$' + element + 'CollectionHolder'].find(':input').length);
+                window['$' + element + 'AddLink'].on('click', function (e) {
+                    e.preventDefault();
+                    addForm(window['$' + element + 'CollectionHolder'], link[element]);
+                });
+            });
+        });
+
+        function addForm($collectionHolder, $newLinkLi) {
+            var prototype = $collectionHolder.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<li class="element"></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+
+            addFormDeleteLink($newFormLi);
+
+
+//            $('.datepicker').datepicker({
+//                todayBtn: "linked",
+//                format: "dd/mm/yyyy",
+//                autoclose: "true",
+//                pickerPosition: "bottom-left",
+//                startView: "day",
+//                minView: "month",
+//                daysOfWeekHighlighted: [0, 6],
+//                language: "fr",
+//                todayHighlight: true
+//            });
+
+
+            $('.input-daterange').datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            });
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).removeClass('datetimepicker');
+        }
+
+        function addFormDeleteLink($FormLi) {
+            var $removeFormA = $('<a href="#">Supprimer</a>');
+            $FormLi.append($removeFormA);
+
+            $removeFormA.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the diaporama form
+                $FormLi.remove();
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        function searchClient(codePromoId, siteId) {
+            $input_search_client = $('#input_search_client_' + siteId)
+            $input_search_client.popover('hide');
+            var $progressBar = $('.progress-bar');
+            var $progress = $('.progress');
+            var clienVal = $input_search_client.val();
+            if (clienVal) {
+                $progressBar.addClass("active");
+                $progress.show();
+                var path;
+                if(codePromoId != ''){
+                    path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_', 'codePromoId':'_codePromoId_' }) }}";
+                    path = path.replace(/_codePromoId_/g, codePromoId);
+                }else{
+                    path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_' }) }}";
+                }
+                path = path.replace(/_clientName_/g, clienVal);
+                path = path.replace(/_siteId_/g, siteId);
+                $.ajax(path,
+                    {
+                    }
+                ).done(function (data) {
+                    $("#result_search_" + siteId).html(data);
+                    $progressBar.removeClass("active");
+                    $progress.hide();
+                })
+                ;
+            }
+            else{
+                $input_search_client.popover({
+                    content: 'Veuillez renseigner le champs.'
+                }).popover('show');
+            }
+        }
+
+        function moveInputClient(element, clientId , siteId){
+            $element = $(element);
+            if($element.is(":checked")){
+                var $listeClient = $("#list_client_" + siteId);
+                $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
+                if($div.length > 0){
+                    $listeClient.find("#checkbox_client_"+ clientId +"_"+siteId).prop( "checked" , true);
+                    $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
+                }
+                else {
+                    $listeClient.append($("#client_"+ clientId +"_"+siteId ));
+                }
+            }
+        }
+
+        function displayPanelClient(element){
+            var $element = $(element);
+            var site = $element.data('site');
+            if($element.val() == 2){
+                $('#panel_client_' + site).show();
+            }
+            else {
+                $('#panel_client_' + site).hide();
+            }
+        }
+
+        function testEnterSearchClient(event,codePromoId, siteId){
+//            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
+            var eCode = event.keyCode
+//            alert ("The Unicode character code is: " + chCode);
+//            alert ("The Unicode character code is: " + eCode);
+            if(eCode == 13 ){
+                searchClient(codePromoId, siteId)
+                event.preventDefault();
+            }
+            return false;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function getFournisseurHebergements(codePromoId , fournisseurId, keyCodePromo, siteId)
+        {
+//            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
+//            {
+                var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
+                    'codePromoId' : '_codePromoId_',
+                    'fournisseurId' : '_fournisseurId_',
+                    'siteId' : '_siteId_',
+                }) }}";
+
+                path = path.replace(/_codePromoId_/g, codePromoId);
+                path = path.replace(/_fournisseurId_/g, fournisseurId);
+                path = path.replace(/_siteId_/g, siteId);
+                path = path.replace(/_siteId_/g, siteId);
+
+                $.ajax( path , {
+//                    async: false
+                }).done(function (data){
+                    data = data.replace(/__keyCodePromo__/g , keyCodePromo);
+                    $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').html(data);
+                });
+//            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId, keyCodePromo)
+        {
+//            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
+//            {
+            var path = "{{ path('codepromo_get_fournisseur_prestation_annexes' ,{
+                'codePromoId' : '_codePromoId_',
+                'fournisseurId' : '_fournisseurId_'
+            }) }}";
+
+            path = path.replace(/_codePromoId_/g, codePromoId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+            $.ajax( path , {
+//                async: false
+            }).done(function (data){
+                data = data.replace(/__keyCodePromo__/g , keyCodePromo);
+                $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').html(data);
+            });
+//            }
+
+        }
+
+        $( document ).ready(function() {
+            {% if panelCodePromo is defined %}
+                {% for keyCodePromo , codePromo in entity.codePromos  %}
+                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                        {% for codePromoApplication in codePromo.codePromoApplications %}
+                            {% if codePromoApplication.application == 1 %}
+                                getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
+                            {% endif %}
+                        {% endfor  %}
+                    {% endfor %}
+                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                        {% for codePromoApplication in codePromo.codePromoApplications %}
+                            {% if codePromoApplication.application == 2 %}
+                                getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
+                            {% endif %}
+                        {% endfor  %}
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+//                wheelViewModeNavigationInverseDirection: true,
+                minuteStep: 30
+            }).removeClass('datetimepicker');
+
+            $('.input-daterange').datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            });
+
+//            $('.input-daterange input').each(function() {
+//                $(this).datetimepicker("clearDates");
+//            });
+        });
+
+
+
+        function checkChildren(element , listGroup){
+            var $element = $(element);
+            var $listGroup = $('#' + listGroup);
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkChilFamillePrestationAnnexe(element, classFamille)
+        {
+            var $element = $(element);
+            var listGroup = $('#' + $element.data('list_group'));
+            listGroup.find('input.'+classFamille+'[type=checkbox]').prop('checked', $element.prop("checked"));
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function displayApplicationPanel(element, keyCodePromo, codePromoId, siteId )
+        {
+            var $element = $(element);
+            var val = $element.val();
+            var path;
+            var $codeCodePromoPanelHebergement = $('#code_code_promo_panel_hebergement_' + keyCodePromo);
+            var $codeCodePromoPanelPrestationAnnexe = $('#code_code_promo_panel_prestation_annexe_' + keyCodePromo);
+//
+            if($element.is(':checked'))
+            {
+                switch (val)
+                {
+                    case '1':
+                        if ($('#code_code_promo_panel_hebergement_' + keyCodePromo + ' > *').length == 0){
+                            path = "{{ path('codepromo_get_panel_hebergement', {
+                                'codePromoId' : '_codePromoId_'
+                            } ) }}";
+                            path = path.replace(/_codePromoId_/g, codePromoId);
+                            $.ajax(path).done(function (data) {
+                                data = data.replace(/_keyCodePromo_/g, keyCodePromo);
+                                $codeCodePromoPanelHebergement.html(data);
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                            getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
+                                    {% endfor %}
+                                {% endif %}
+                            });
+                        }
+                        else{
+                            $codeCodePromoPanelHebergement.show();
+                        }
+                        break;
+                    case '2':
+                        if ($('#code_code_promo_panel_prestation_annexe_' + keyCodePromo + ' > *').length == 0){
+                            path = "{{ path('codepromo_get_panel_prestation_annexe', {
+                                'codePromoId' : '_codePromoId_'
+                            } ) }}";
+                            path = path.replace(/_codePromoId_/g, codePromoId);
+                            $.ajax(path).done(function (data) {
+                                data = data.replace(/_keyCodePromo_/g, keyCodePromo);
+                                $codeCodePromoPanelPrestationAnnexe.html(data);
+                                {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                        getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
+                                    {% endfor %}
+                                {% endif %}
+                            });
+                        }
+                        else{
+                            $codeCodePromoPanelPrestationAnnexe.show();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+                switch (val)
+                {
+                    case '1':
+                        $codeCodePromoPanelHebergement.hide();
+                        break;
+                    case '2':
+                        $codeCodePromoPanelPrestationAnnexe.hide();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+    </script>
+
+{% endblock %}

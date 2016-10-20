@@ -63,6 +63,10 @@ class Logement
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $periodes;
 
     /**
      * Constructor
@@ -70,6 +74,7 @@ class Logement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->periodes = new ArrayCollection();
     }
 
     /**
@@ -80,6 +85,15 @@ class Logement
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -318,8 +332,7 @@ class Logement
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    )
-    {
+    ) {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
@@ -382,10 +395,6 @@ class Logement
 
         return $this;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $periodes;
 
 
     /**

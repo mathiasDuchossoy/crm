@@ -84,3 +84,7 @@ mondofute_periode:
 
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+#mondofute_catalogue:
+#    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
+#    prefix:   /catalogue/

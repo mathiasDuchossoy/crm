@@ -97,6 +97,14 @@ class TypePeriode
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Add periode
      *
      * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode

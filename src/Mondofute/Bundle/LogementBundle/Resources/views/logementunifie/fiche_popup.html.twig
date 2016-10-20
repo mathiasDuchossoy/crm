@@ -89,6 +89,12 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                {% if ongletLogementLocatifTarifs is defined and ongletLogementLocatifTarifs == 1 %}
+                    <div id="data_logement_locatif_tarifs"
+                         class="tab-pane fade in">
+                        tarifs
+                    </div>
+                {% endif %}
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
@@ -133,7 +139,16 @@
         items.push("_logement_unifie_logements_entry_traductions_entry_descriptif_{{ langue.code }}");
         {% endfor %}
     </script>
+    {# gestion des tarifs #}
+    <script type="text/javascript">
+
+    </script>
     {{ parent() }}
+    {% javascripts
+    'js/form.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     <script type="text/javascript">
         $(document).ready(function () {
             {% if sitesAEnregistrer is not empty %}
@@ -213,7 +228,6 @@
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
         });
     </script>
-
 
     <script type="text/javascript">
         var elements = [];
