@@ -1324,14 +1324,6 @@ class DepartementUnifieController extends Controller
         ));
     }
 
-    private function deleteFile($visuel)
-    {
-        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
-            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
-        }
-    }
-
-
     /**
      * Deletes a DepartementUnifie entity.
      *
