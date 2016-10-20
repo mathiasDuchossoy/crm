@@ -190,9 +190,13 @@ class RegionUnifieController extends Controller
                 foreach ($regionSites as $regionSite) {
                     $regionVideoSite = clone $regionVideo;
                     $regionSite->addVideo($regionVideoSite);
-                    if (!in_array($regionSite->getSite()->getId(), $request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
-                        $regionVideoSite->setActif(false);
+                    $actif = false;
+                    if (!empty($request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
+                        if (in_array($regionSite->getSite()->getId(), $request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
                     }
+                    $regionVideoSite->setActif($actif);
                 }
             }
             // *** gestion des videos ***

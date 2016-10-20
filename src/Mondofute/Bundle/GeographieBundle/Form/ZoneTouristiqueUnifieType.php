@@ -58,6 +58,13 @@ class ZoneTouristiqueUnifieType extends AbstractType
                         $zoneTouristiqueCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
+                foreach ($zoneTouristique->children['videos'] as $key => $video) {
+                    if ($video->vars['value']->getActif() == true) {
+
+                        $siteId = $zoneTouristique->vars['value']->getSite()->getId();
+                        $zoneTouristiqueCrm->children['videos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
             }
 
         }

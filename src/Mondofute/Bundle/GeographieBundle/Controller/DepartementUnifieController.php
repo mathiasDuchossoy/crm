@@ -89,8 +89,8 @@ class DepartementUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Departement $entity */
-            foreach ($departementUnifie->getDepartements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($departementUnifie->getDepartements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -193,9 +193,13 @@ class DepartementUnifieController extends Controller
                 foreach ($departementSites as $departementSite) {
                     $departementVideoSite = clone $departementVideo;
                     $departementSite->addVideo($departementVideoSite);
-                    if (!in_array($departementSite->getSite()->getId(), $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
-                        $departementVideoSite->setActif(false);
+                    $actif = false;
+                    if (!empty($request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
+                        if (in_array($departementSite->getSite()->getId(), $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
                     }
+                    $departementVideoSite->setActif($actif);
                 }
             }
             // *** gestion des videos ***
@@ -328,24 +332,6 @@ class DepartementUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les departements qui ne doivent pas être enregistrer
-     * @param DepartementUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerDepartements(DepartementUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getDepartements() as $departement) {
-            if (!in_array($departement->getSite()->getId(), $sitesAEnregistrer)) {
-                $departement->setDepartementUnifie(null);
-                $entity->removeDepartement($departement);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité station
      * @param DepartementUnifie $entity
      */
@@ -382,8 +368,7 @@ class DepartementUnifieController extends Controller
                     ->setSite($site)
                     ->setDepartementUnifie($entitySite)
                     ->setRegion($region)
-                    ->setActif($departement->getActif())
-                ;
+                    ->setActif($departement->getActif());
 
 //            Gestion des traductions
                 foreach ($departement->getTraductions() as $departementTraduc) {
@@ -647,30 +632,24 @@ class DepartementUnifieController extends Controller
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                             $cloneVideo->setContext('departement_video_' . $departementSite->getSite()->getLibelle());
                             // on supprime l'ancien photo
-                            if(!empty($departementVideoSite->getVideo()) )
-                            {
+                            if (!empty($departementVideoSite->getVideo())) {
                                 $emSite->remove($departementVideoSite->getVideo());
                                 $this->deleteFile($departementVideoSite->getVideo());
                             }
                             $departementVideoSite
-                                ->setVideo($cloneVideo)
-                            ;
+                                ->setVideo($cloneVideo);
                         }
                         $departementVideoSite
-                            ->setActif($departementVideo->getActif())
-                        ;
+                            ->setActif($departementVideo->getActif());
                         // *** traductions ***
-                        foreach ($departementVideo->getTraductions() as $traduction)
-                        {
-                            $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction)
-                            {
+                        foreach ($departementVideo->getTraductions() as $traduction) {
+                            $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
-                            if(false === $traductionSite)
-                            {
+                            if (false === $traductionSite) {
                                 $traductionSite = new DepartementVideoTraduction();
                                 $departementVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class , $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -702,7 +681,6 @@ class DepartementUnifieController extends Controller
         }
         $this->ajouterDepartementUnifieSiteDistant($entity->getId(), $entity->getDepartements());
     }
-
 
     /**
      * Création d'un nouveau departementImage
@@ -752,7 +730,6 @@ class DepartementUnifieController extends Controller
         }
     }
 
-
     /**
      * Création d'un nouveau departementPhoto
      * @param DepartementPhoto $departementPhoto
@@ -801,6 +778,12 @@ class DepartementUnifieController extends Controller
         }
     }
 
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
+        }
+    }
 
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
@@ -875,7 +858,7 @@ class DepartementUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Departement $entity */
             foreach ($departementUnifie->getDepartements() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -913,7 +896,7 @@ class DepartementUnifieController extends Controller
                 foreach ($departement->getVideos() as $departementVideo) {
                     // on ajoute les photo dans la collection de sauvegarde
                     $originalDepartementVideos->add($departementVideo);
-                    $originalVideos->set($departementVideo->getId() , $departementVideo->getVideo());
+                    $originalVideos->set($departementVideo->getId(), $departementVideo->getVideo());
                 }
             }
         }
@@ -930,10 +913,10 @@ class DepartementUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($departementUnifie->getDepartements() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($departementUnifie->getDepartements() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -1085,14 +1068,11 @@ class DepartementUnifieController extends Controller
             /** @var DepartementVideo $departementVideo */
             foreach ($departementCrm->getVideos() as $key => $departementVideo) {
                 foreach ($departementSites as $departementSite) {
-                    if (empty($departementVideo->getId()) ) {
+                    if (empty($departementVideo->getId())) {
                         $departementVideoSite = clone $departementVideo;
-                    }
-                    else
-                    {
-                        $departementVideoSite = $em->getRepository(DepartementVideo::class)->findOneBy(array('video' => $originalVideos->get($departementVideo->getId()) , 'departement' => $departementSite));
-                        if($originalVideos->get($departementVideo->getId()) != $departementVideo->getVideo())
-                        {
+                    } else {
+                        $departementVideoSite = $em->getRepository(DepartementVideo::class)->findOneBy(array('video' => $originalVideos->get($departementVideo->getId()), 'departement' => $departementSite));
+                        if ($originalVideos->get($departementVideo->getId()) != $departementVideo->getVideo()) {
                             $em->remove($departementVideoSite->getVideo());
                             $this->deleteFile($departementVideoSite->getVideo());
                             $departementVideoSite->setVideo($departementVideo->getVideo());
@@ -1108,14 +1088,11 @@ class DepartementUnifieController extends Controller
                     $departementVideoSite->setActif($actif);
 
                     // *** traductions ***
-                    foreach ($departementVideo->getTraductions() as $traduction)
-                    {
-                        $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction)
-                        {
+                    foreach ($departementVideo->getTraductions() as $traduction) {
+                        $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction) {
                             return $element->getLangue() == $traduction->getLangue();
                         })->first();
-                        if(false === $traductionSite)
-                        {
+                        if (false === $traductionSite) {
                             $traductionSite = new DepartementVideoTraduction();
                             $departementVideoSite->addTraduction($traductionSite);
                             $traductionSite->setLangue($traduction->getLangue());
@@ -1308,7 +1285,7 @@ class DepartementUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($departementUnifie);
             $em->flush();
 
@@ -1331,7 +1308,7 @@ class DepartementUnifieController extends Controller
                 }
                 $em->flush();
             }
-            
+
             $this->addFlash('success', 'le département a bien été modifié');
 
             return $this->redirectToRoute('geographie_departement_edit', array('id' => $departementUnifie->getId()));
@@ -1346,14 +1323,6 @@ class DepartementUnifieController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
-
-    private function deleteFile($visuel)
-    {
-        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
-            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
-        }
-    }
-
 
     /**
      * Deletes a DepartementUnifie entity.
@@ -1379,7 +1348,7 @@ class DepartementUnifieController extends Controller
                         $emSite->remove($departementUnifieSite);
                         $departementSite = $departementUnifieSite->getDepartements()->first();
 
-                        if(!empty($departementSite)){
+                        if (!empty($departementSite)) {
                             // si il y a des images pour l'entité, les supprimer
                             if (!empty($departementSite->getImages())) {
                                 /** @var DepartementImage $departementImageSite */
@@ -1472,6 +1441,24 @@ class DepartementUnifieController extends Controller
         }
         $this->addFlash('success', 'le département a bien été supprimé');
         return $this->redirectToRoute('geographie_departement_index');
+    }
+
+    /**
+     * retirer de l'entité les departements qui ne doivent pas être enregistrer
+     * @param DepartementUnifie $entity
+     * @param array $sitesAEnregistrer
+     *
+     * @return $this
+     */
+    private function supprimerDepartements(DepartementUnifie $entity, array $sitesAEnregistrer)
+    {
+        foreach ($entity->getDepartements() as $departement) {
+            if (!in_array($departement->getSite()->getId(), $sitesAEnregistrer)) {
+                $departement->setDepartementUnifie(null);
+                $entity->removeDepartement($departement);
+            }
+        }
+        return $this;
     }
 
 }

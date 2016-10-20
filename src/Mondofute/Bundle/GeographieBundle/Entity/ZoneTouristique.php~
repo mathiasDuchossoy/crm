@@ -3,10 +3,6 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\StationBundle\Entity\Station;
-
 
 /**
  * ZoneTouristique
@@ -18,48 +14,40 @@ class ZoneTouristique
      */
     private $id;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $traductions;
     /**
-     * @var Site
+     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     private $site;
     /**
-     * @var ZoneTouristiqueUnifie
+     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
      */
     private $zoneTouristiqueUnifie;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $stations;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $images;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
     /**
      * @var boolean
      */
     private $actif = true;
-    /**
-     * @var Collection
-     */
-    private $videos;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new ArrayCollection();
-        $this->stations = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->photos = new ArrayCollection();
-        $this->videos = new ArrayCollection();
+        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -75,9 +63,9 @@ class ZoneTouristique
     /**
      * Remove traduction
      *
-     * @param ZoneTouristiqueTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
      */
-    public function removeTraduction(ZoneTouristiqueTraduction $traduction)
+    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -85,7 +73,7 @@ class ZoneTouristique
     /**
      * Get site
      *
-     * @return Site
+     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
      */
     public function getSite()
     {
@@ -95,11 +83,11 @@ class ZoneTouristique
     /**
      * Set site
      *
-     * @param Site $site
+     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
      *
      * @return ZoneTouristique
      */
-    public function setSite(Site $site = null)
+    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
     {
         $this->site = $site;
 
@@ -109,7 +97,7 @@ class ZoneTouristique
     /**
      * Get zoneTouristiqueUnifie
      *
-     * @return ZoneTouristiqueUnifie
+     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie
      */
     public function getZoneTouristiqueUnifie()
     {
@@ -119,11 +107,11 @@ class ZoneTouristique
     /**
      * Set zoneTouristiqueUnifie
      *
-     * @param ZoneTouristiqueUnifie $zoneTouristiqueUnifie
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie $zoneTouristiqueUnifie
      *
      * @return ZoneTouristique
      */
-    public function setZoneTouristiqueUnifie(ZoneTouristiqueUnifie $zoneTouristiqueUnifie = null)
+    public function setZoneTouristiqueUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie $zoneTouristiqueUnifie = null)
     {
         $this->zoneTouristiqueUnifie = $zoneTouristiqueUnifie;
 
@@ -147,7 +135,7 @@ class ZoneTouristique
     /**
      * Get traductions
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTraductions()
     {
@@ -169,11 +157,11 @@ class ZoneTouristique
     /**
      * Add traduction
      *
-     * @param ZoneTouristiqueTraduction $traduction
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction
      *
      * @return ZoneTouristique
      */
-    public function addTraduction(ZoneTouristiqueTraduction $traduction)
+    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction $traduction)
     {
         $this->traductions[] = $traduction->setZoneTouristique($this);
 
@@ -183,11 +171,11 @@ class ZoneTouristique
     /**
      * Add station
      *
-     * @param Station $station
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
      *
      * @return ZoneTouristique
      */
-    public function addStation(Station $station)
+    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations[] = $station;
 
@@ -197,9 +185,9 @@ class ZoneTouristique
     /**
      * Remove station
      *
-     * @param Station $station
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
      */
-    public function removeStation(Station $station)
+    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -207,7 +195,7 @@ class ZoneTouristique
     /**
      * Get stations
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getStations()
     {
@@ -217,11 +205,11 @@ class ZoneTouristique
     /**
      * Add image
      *
-     * @param ZoneTouristiqueImage $image
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image
      *
      * @return ZoneTouristique
      */
-    public function addImage(ZoneTouristiqueImage $image)
+    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image)
     {
         $this->images[] = $image->setZoneTouristique($this);
 
@@ -231,9 +219,9 @@ class ZoneTouristique
     /**
      * Remove image
      *
-     * @param ZoneTouristiqueImage $image
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image
      */
-    public function removeImage(ZoneTouristiqueImage $image)
+    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -241,7 +229,7 @@ class ZoneTouristique
     /**
      * Get images
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getImages()
     {
@@ -251,11 +239,11 @@ class ZoneTouristique
     /**
      * Add photo
      *
-     * @param ZoneTouristiquePhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo
      *
      * @return ZoneTouristique
      */
-    public function addPhoto(ZoneTouristiquePhoto $photo)
+    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo)
     {
         $this->photos[] = $photo->setZoneTouristique($this);
 
@@ -265,9 +253,9 @@ class ZoneTouristique
     /**
      * Remove photo
      *
-     * @param ZoneTouristiquePhoto $photo
+     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo
      */
-    public function removePhoto(ZoneTouristiquePhoto $photo)
+    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -275,7 +263,7 @@ class ZoneTouristique
     /**
      * Get photos
      *
-     * @return Collection
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhotos()
     {
@@ -304,39 +292,5 @@ class ZoneTouristique
         $this->actif = $actif;
 
         return $this;
-    }
-
-    /**
-     * Add video
-     *
-     * @param ZoneTouristiqueVideo $video
-     *
-     * @return ZoneTouristique
-     */
-    public function addVideo(ZoneTouristiqueVideo $video)
-    {
-        $this->videos[] = $video->setZoneTouristique($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove video
-     *
-     * @param ZoneTouristiqueVideo $video
-     */
-    public function removeVideo(ZoneTouristiqueVideo $video)
-    {
-        $this->videos->removeElement($video);
-    }
-
-    /**
-     * Get videos
-     *
-     * @return Collection
-     */
-    public function getVideos()
-    {
-        return $this->videos;
     }
 }
