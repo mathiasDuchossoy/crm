@@ -61,7 +61,9 @@ class DomaineType extends AbstractType
 //                'required' => true,
             ))
             ->add('imagesParent')
-            ->add('photosParent');
+            ->add('photosParent')
+            ->add('videosParent')
+        ;
     }
 
     /**

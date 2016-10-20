@@ -121,7 +121,9 @@ class DomaineUnifieController extends Controller
                 if (empty($domaine->getDomaineParent())) {
                     $domaine
                         ->setPhotosParent(false)
-                        ->setImagesParent(false);
+                        ->setImagesParent(false)
+                        ->setVideosParent(false)
+                    ;
                 }
             }
 
@@ -531,10 +533,12 @@ class DomaineUnifieController extends Controller
                     $domaineParent = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
                     $photosParent = $domaine->getPhotosParent();
                     $imagesParent = $domaine->getImagesParent();
+                    $videosParent = $domaine->getVideosParent();
                 } else {
                     $domaineParent = null;
                     $photosParent = false;
                     $imagesParent = false;
+                    $videosParent = false;
                 }
 
                 if (!empty($domaine->getDomaineCarteIdentite())) {
@@ -567,6 +571,7 @@ class DomaineUnifieController extends Controller
                     ->setDomaineCarteIdentite($domaineCarteIdentite)
                     ->setImagesParent($imagesParent)
                     ->setPhotosParent($photosParent)
+                    ->setVideosParent($videosParent)
                     ->setActif($domaine->getActif());
 
 //            Gestion des traductions
@@ -1126,7 +1131,9 @@ class DomaineUnifieController extends Controller
                     if (empty($domaine->getDomaineParent())) {
                         $domaine
                             ->setPhotosParent(false)
-                            ->setImagesParent(false);
+                            ->setImagesParent(false)
+                            ->setVideosParent(false)
+                        ;
                     }
                 }
 

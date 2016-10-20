@@ -19,6 +19,10 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
             type: boolean
             options:
                 default: false
+        videosParent:
+            type: boolean
+            options:
+                default: false
         actif:
             type: boolean
             options:

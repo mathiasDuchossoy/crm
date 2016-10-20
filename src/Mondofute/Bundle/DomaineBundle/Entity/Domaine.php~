@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\DomaineBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
  * Domaine
@@ -28,27 +29,27 @@ class Domaine
      */
     private $domaineUnifie;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $sousDomaines;
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\Domaine
+     * @var Domaine
      */
     private $domaineParent;
     /**
-     * @var \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     * @var DomaineCarteIdentite
      */
     private $domaineCarteIdentite;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $images;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $photos;
     /**
@@ -63,6 +64,10 @@ class Domaine
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var Collection
+     */
+    private $videos;
 
     /**
      * Constructor
@@ -70,6 +75,10 @@ class Domaine
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->sousDomaines = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     /**
@@ -191,11 +200,11 @@ class Domaine
     /**
      * Add sousDomaine
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine
+     * @param Domaine $sousDomaine
      *
      * @return Domaine
      */
-    public function addSousDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine)
+    public function addSousDomaine(Domaine $sousDomaine)
     {
         $this->sousDomaines[] = $sousDomaine->setDomaineParent($this);
 
@@ -205,9 +214,9 @@ class Domaine
     /**
      * Remove sousDomaine
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine
+     * @param Domaine $sousDomaine
      */
-    public function removeSousDomaine(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $sousDomaine)
+    public function removeSousDomaine(Domaine $sousDomaine)
     {
         $this->sousDomaines->removeElement($sousDomaine);
     }
@@ -215,7 +224,7 @@ class Domaine
     /**
      * Get sousDomaines
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getSousDomaines()
     {
@@ -225,7 +234,7 @@ class Domaine
     /**
      * Get domaineParent
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\Domaine
+     * @return Domaine
      */
     public function getDomaineParent()
     {
@@ -235,11 +244,11 @@ class Domaine
     /**
      * Set domaineParent
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaineParent
+     * @param Domaine $domaineParent
      *
      * @return Domaine
      */
-    public function setDomaineParent(\Mondofute\Bundle\DomaineBundle\Entity\Domaine $domaineParent = null)
+    public function setDomaineParent(Domaine $domaineParent = null)
     {
         $this->domaineParent = $domaineParent;
 
@@ -249,7 +258,7 @@ class Domaine
     /**
      * Get domaineCarteIdentite
      *
-     * @return \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite
+     * @return DomaineCarteIdentite
      */
     public function getDomaineCarteIdentite()
     {
@@ -259,11 +268,11 @@ class Domaine
     /**
      * Set domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param DomaineCarteIdentite $domaineCarteIdentite
      *
      * @return Domaine
      */
-    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    public function setDomaineCarteIdentite(DomaineCarteIdentite $domaineCarteIdentite = null)
     {
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
@@ -273,11 +282,11 @@ class Domaine
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return Domaine
      */
-    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station;
 
@@ -287,9 +296,9 @@ class Domaine
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -297,7 +306,7 @@ class Domaine
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -307,11 +316,11 @@ class Domaine
     /**
      * Add image
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image
+     * @param DomaineImage $image
      *
      * @return Domaine
      */
-    public function addImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image)
+    public function addImage(DomaineImage $image)
     {
         $this->images[] = $image->setDomaine($this);
 
@@ -321,9 +330,9 @@ class Domaine
     /**
      * Remove image
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image
+     * @param DomaineImage $image
      */
-    public function removeImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineImage $image)
+    public function removeImage(DomaineImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -331,7 +340,7 @@ class Domaine
     /**
      * Get images
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getImages()
     {
@@ -341,11 +350,11 @@ class Domaine
     /**
      * Add photo
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo
+     * @param DomainePhoto $photo
      *
      * @return Domaine
      */
-    public function addPhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo)
+    public function addPhoto(DomainePhoto $photo)
     {
         $this->photos[] = $photo->setDomaine($this);
 
@@ -355,9 +364,9 @@ class Domaine
     /**
      * Remove photo
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo
+     * @param DomainePhoto $photo
      */
-    public function removePhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto $photo)
+    public function removePhoto(DomainePhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -365,7 +374,7 @@ class Domaine
     /**
      * Get photos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhotos()
     {
@@ -442,5 +451,39 @@ class Domaine
         $this->actif = $actif;
 
         return $this;
+    }
+
+    /**
+     * Add video
+     *
+     * @param DomaineVideo $video
+     *
+     * @return Domaine
+     */
+    public function addVideo(DomaineVideo $video)
+    {
+        $this->videos[] = $video->setDomaine($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove video
+     *
+     * @param DomaineVideo $video
+     */
+    public function removeVideo(DomaineVideo $video)
+    {
+        $this->videos->removeElement($video);
+    }
+
+    /**
+     * Get videos
+     *
+     * @return Collection
+     */
+    public function getVideos()
+    {
+        return $this->videos;
     }
 }

@@ -68,6 +68,10 @@ class Domaine
      * @var Collection
      */
     private $videos;
+    /**
+     * @var boolean
+     */
+    private $videosParent = false;
 
     /**
      * Constructor
@@ -485,5 +489,29 @@ class Domaine
     public function getVideos()
     {
         return $this->videos;
+    }
+
+    /**
+     * Get videosParent
+     *
+     * @return boolean
+     */
+    public function getVideosParent()
+    {
+        return $this->videosParent;
+    }
+
+    /**
+     * Set videosParent
+     *
+     * @param boolean $videosParent
+     *
+     * @return Domaine
+     */
+    public function setVideosParent($videosParent)
+    {
+        $this->videosParent = $videosParent;
+
+        return $this;
     }
 }
