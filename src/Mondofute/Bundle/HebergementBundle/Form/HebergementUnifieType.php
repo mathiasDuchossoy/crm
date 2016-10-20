@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,6 +36,7 @@ class HebergementUnifieType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'allow_extra_fields' => true,
+                'by_reference' => false
             ))
             ->add('fournisseurs', CollectionType::class,
                 array(
@@ -42,6 +45,13 @@ class HebergementUnifieType extends AbstractType
                     'by_reference' => false,
                     'allow_delete' => true,
                 ));
+    }
+
+    public function supprimerStocks(FormEvent $event)
+    {
+        echo 'ok';
+        dump($event);
+        die;
     }
 
     /**

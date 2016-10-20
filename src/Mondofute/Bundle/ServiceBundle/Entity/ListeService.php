@@ -35,6 +35,7 @@ class ListeService
     public function __construct()
     {
         $this->services = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->hebergements = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

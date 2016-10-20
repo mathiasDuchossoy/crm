@@ -1,0 +1,13 @@
+.table-hebergement-stocks th, .table-hebergement-stocks td {
+    height: 50px;
+}
+
+.duplique-stocks:hover {
+    cursor: pointer;
+}
+
+th.logement, td.logement {
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+}
