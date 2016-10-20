@@ -27,7 +27,6 @@ class DefaultController extends Controller
         if ($request->isXmlHttpRequest()) {
             $retour = array('valid' => true);
             try {
-//                $this->exception();
                 $mbdd = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
                 $em = $this->get('doctrine.orm.entity_manager');
                 $stocks = $request->get('stocks');
@@ -38,21 +37,31 @@ class DefaultController extends Controller
                     $duplicate = true;
                     $managers = array($site->getLibelle());
                     $mbdd->initInsertMassif($table, $champs, $duplicate, $managers);
-                    foreach ($stocks as $idLogementUnifie => $periodes) {
-                        if (!empty($periodes)) {
-
-                            /** @var EntityManager $emSite */
-                            $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
-                            $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
-                            foreach ($logements as $logement) {
-                                foreach ($periodes as $idPeriode => $stock) {
-                                    if ($stock != "") {
-                                        $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
-                                    }
-                                }
+                    foreach ($stocks as $stock) {
+                        /** @var EntityManager $emSite */
+                        $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+                        $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $stock['logementUnifieId']));
+                        foreach ($logements as $logement) {
+                            foreach ($stock['periodes'] as $periode) {
+                                $mbdd->addInsertLigne(array($logement->getId(), $periode['id'], $periode['stock']));
                             }
                         }
                     }
+//                    foreach ($stocks as $idLogementUnifie => $periodes) {
+//                        if (!empty($periodes)) {
+//
+//                            /** @var EntityManager $emSite */
+//                            $emSite = $this->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+//                            $logements = $emSite->getRepository(Logement::class)->findBy(array('logementUnifie' => $idLogementUnifie));
+//                            foreach ($logements as $logement) {
+//                                foreach ($periodes as $idPeriode => $stock) {
+//                                    if ($stock != "") {
+//                                        $mbdd->addInsertLigne(array($logement->getId(), $idPeriode, $stock));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                     $mbdd->insertMassif();
                 }
             } catch (\Exception $exception) {

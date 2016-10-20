@@ -4,13 +4,37 @@
 "use strict";
 function modificationStock($obj) {
     var datas = $obj.data();
-    if (stocksModifies[datas.logement] == null) {
-        stocksModifies[datas.logement] = Array();
+    var ajout = true;
+    for (var i = 0; i < stocksModifies.length; i++) {
+        if (stocksModifies[i].logementUnifieId == datas.logement) {
+            for (var j = 0; j < stocksModifies[i].periodes.length; j++) {
+                if (stocksModifies[i].periodes[j].id == datas.periode) {
+                    ajout = false;
+                    stocksModifies[i].periodes[j].stock = $obj.val();
+                    break;
+                }
+            }
+            if (ajout == true) {
+                ajout = false;
+                stocksModifies[i].periodes.push({'id': datas.periode, 'stock': $obj.val()});
+            }
+            break;
+        }
     }
-    if (stocksModifies[datas.logement][datas.periode] == null) {
-        stocksModifies[datas.logement][datas.periode] = 0;
+    if (ajout == true) {
+        var stock = {
+            'logementUnifieId': datas.logement,
+            'periodes': [{'id': datas.periode, 'stock': $obj.val()}]
+        };
+        stocksModifies.push(stock);
     }
-    stocksModifies[datas.logement][datas.periode] = $obj.val();
+    // if (stocksModifies[datas.logement] == null) {
+    //     stocksModifies[datas.logement] = Array();
+    // }
+    // if (stocksModifies[datas.logement][datas.periode] == null) {
+    //     stocksModifies[datas.logement][datas.periode] = 0;
+    // }
+    // stocksModifies[datas.logement][datas.periode] = $obj.val();
 }
 //        copie le premier stock du logement dans le tableau sur les autres stocks
 function dupliquerStocksLogement(logementId, typePeriodeId) {
