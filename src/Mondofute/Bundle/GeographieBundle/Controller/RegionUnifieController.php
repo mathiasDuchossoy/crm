@@ -602,11 +602,24 @@ class RegionUnifieController extends Controller
                             $metadata = $emSite->getClassMetadata(get_class($regionVideoSite));
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
-                        $cloneVideo = clone $regionVideo->getVideo();
-                        $cloneVideo->setContext('region_video_' . $regionSite->getSite()->getLibelle());
+
+                        if (empty($regionVideoSite->getVideo()) || $regionVideoSite->getVideo()->getId() != $regionVideo->getVideo()->getId()) {
+                            $cloneVideo = clone $regionVideo->getVideo();
+                            $metadata = $emSite->getClassMetadata(get_class($cloneVideo));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                            $cloneVideo->setContext('region_video_' . $regionSite->getSite()->getLibelle());
+                            // on supprime l'ancien photo
+                            if(!empty($regionVideoSite->getVideo()) )
+                            {
+                                $emSite->remove($regionVideoSite->getVideo());
+                                $this->deleteFile($regionVideoSite->getVideo());
+                            }
+                            $regionVideoSite
+                                ->setVideo($cloneVideo)
+                            ;
+                        }
                         $regionVideoSite
                             ->setActif($regionVideo->getActif())
-                            ->setVideo($cloneVideo)
                         ;
                         // *** traductions ***
                         foreach ($regionVideo->getTraductions() as $traduction)
@@ -623,6 +636,7 @@ class RegionUnifieController extends Controller
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
+
                         // *** fin traductions ***
                     }
                 }
@@ -841,6 +855,7 @@ class RegionUnifieController extends Controller
         $originalImages = new ArrayCollection();
         $originalRegionPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
+        $originalRegionVideos = new ArrayCollection();
         $originalVideos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         /** @var $region $region */
@@ -867,7 +882,8 @@ class RegionUnifieController extends Controller
                 /** @var RegionVideo $regionVideo */
                 foreach ($region->getVideos() as $regionVideo) {
                     // on ajoute les photo dans la collection de sauvegarde
-                    $originalVideos->add($regionVideo);
+                    $originalRegionVideos->add($regionVideo);
+                    $originalVideos->set($regionVideo->getId() , $regionVideo->getVideo());
                 }
             }
         }
@@ -958,14 +974,14 @@ class RegionUnifieController extends Controller
                 // ************* fin suppression images *************
 
                 // ** suppression videos **
-                foreach ($originalVideos as $originalVideo) {
-                    if (false === $regionCrm->getVideos()->contains($originalVideo)) {
-                        $videos = $em->getRepository(RegionVideo::class)->findBy(array('video' => $originalVideo->getVideo()));
+                foreach ($originalRegionVideos as $originalRegionVideo) {
+                    if (false === $regionCrm->getVideos()->contains($originalRegionVideo)) {
+                        $videos = $em->getRepository(RegionVideo::class)->findBy(array('video' => $originalRegionVideo->getVideo()));
                         foreach ($videos as $video) {
                             $em->remove($video);
                         }
-                        $em->remove($originalVideo->getVideo());
-                        $this->deleteFile($originalVideo->getVideo());
+                        $em->remove($originalRegionVideo->getVideo());
+                        $this->deleteFile($originalRegionVideo->getVideo());
                     }
                 }
                 // ** fin suppression videos **
@@ -980,12 +996,18 @@ class RegionUnifieController extends Controller
                 /** @var RegionVideo $regionVideo */
                 foreach ($regionCrm->getVideos() as $key => $regionVideo) {
                     foreach ($regionSites as $regionSite) {
-                        if (empty($regionVideo->getId())) {
+                        if (empty($regionVideo->getId()) ) {
                             $regionVideoSite = clone $regionVideo;
                         }
                         else
                         {
-                            $regionVideoSite = $em->getRepository(RegionVideo::class)->findOneBy(array('video' => $regionVideo->getVideo() , 'region' => $regionSite));
+                            $regionVideoSite = $em->getRepository(RegionVideo::class)->findOneBy(array('video' => $originalVideos->get($regionVideo->getId()) , 'region' => $regionSite));
+                            if($originalVideos->get($regionVideo->getId()) != $regionVideo->getVideo())
+                            {
+                                $em->remove($regionVideoSite->getVideo());
+                                $this->deleteFile($regionVideoSite->getVideo());
+                                $regionVideoSite->setVideo($regionVideo->getVideo());
+                            }
                         }
                         $regionSite->addVideo($regionVideoSite);
                         $actif = false;
@@ -1014,7 +1036,7 @@ class RegionUnifieController extends Controller
                         // *** fin traductions ***
                     }
                 }
-                // *** gestion des videos ***
+                // *** fin gestion des videos ***
 
 
                 // ************* suppression photos *************
@@ -1080,7 +1102,6 @@ class RegionUnifieController extends Controller
                 // ************* fin suppression photos *************
 
                 // ***** Gestion des Medias *****
-//            dump($regionUnifie);die;
                 // CAS D'UN NOUVEAU 'REGION IMAGE' OU DE MODIFICATION D'UN "REGION IMAGE"
                 /** @var RegionImage $regionImage */
                 // tableau pour la suppression des anciens images
@@ -1259,9 +1280,6 @@ class RegionUnifieController extends Controller
                         }
                     }
                 }
-
-
-                // todo: gérer les videos pour les sites distants
                 // ***** Fin Gestion des Medias *****
 
                 $em->persist($regionUnifie);
@@ -1321,8 +1339,6 @@ class RegionUnifieController extends Controller
     public function deleteAction(Request $request, RegionUnifie $regionUnifie)
     {
         try {
-
-
             $form = $this->createDeleteForm($regionUnifie);
             $form->handleRequest($request);
 
@@ -1364,6 +1380,14 @@ class RegionUnifieController extends Controller
                                 }
                             }
                         }
+                        // si il y a des videos pour l'entité, les supprimer
+                        if (!empty($regionSite->getVideos())) {
+                            /** @var RegionVideo $regionVideoSite */
+                            foreach ($regionSite->getVideos() as $regionVideoSite) {
+                                    $emSite->remove($regionVideoSite);
+                                    $emSite->remove($regionVideoSite->getVideo());
+                            }
+                        }
 
                         $emSite->flush();
                     }
@@ -1390,6 +1414,14 @@ class RegionUnifieController extends Controller
                                     $photo = $regionPhoto->getPhoto();
                                     $regionPhoto->setPhoto(null);
                                     $em->remove($photo);
+                                }
+                            }
+                            // si il y a des videos pour l'entité, les supprimer
+                            if (!empty($region->getVideos())) {
+                                /** @var RegionVideo $regionVideoSite */
+                                foreach ($region->getVideos() as $regionVideoSite) {
+                                    $em->remove($regionVideoSite);
+                                    $em->remove($regionVideoSite->getVideo());
                                 }
                             }
                         }
@@ -1434,159 +1466,20 @@ class RegionUnifieController extends Controller
         foreach ($regionUnifies as $regionUnifie) {
             $regionUnifieCollection->add($regionUnifie);
         }
-        dump($regionUnifieCollection);
         foreach ($sites as $site) {
             $siteEntity = $em->find(Site::class, $site);
             foreach ($regionUnifieCollection as $regionUnifie) {
                 $region = $regionUnifie->getRegions()->filter(function (Region $element) use ($siteEntity) {
                     return $element->getSite() == $siteEntity;
                 });
-                dump($region);
                 if (!empty($region)) {
 //                    $regionUnifieCollection->add($regionUnifie);
                     $regionUnifieCollection->remove($regionUnifie);
                 }
             }
         }
-        dump($regionUnifieCollection);
 
         die;
 
     }
-
-//    /**
-//     * @param RegionUnifie $entity
-//     * @return $this
-//     */
-//    private function ajouterCrm(RegionUnifie $entity)
-//    {
-//        $em = $this->getDoctrine()->getManager();
-//        $siteCrm = $em->getRepository(Site::class)->findOneBy(array('crm' => 1));
-//        $regionCrm = null;
-//        $classementReferentTmp = 0;
-//        $i = 0;
-//        // parcourir toute les regions
-//        foreach ($entity->getRegions() as $region) {
-//            //si i est égal à 0 et que le numéro de classement est inférieur au numéro de classement temporisé
-//            if ($i === 0 || $region->getSite()->getClassementReferent() < $classementReferentTmp) {
-//                $regionCrm = clone $region;
-//                $regionCrm->setSite($siteCrm);
-//                $classementReferentTmp = $region->getSite()->getClassementReferent();
-//            }
-//            $i++;
-//        }
-//
-//        if (!is_null($regionCrm)) {
-//            $entity->addRegion($regionCrm);
-//        }
-//        return $this;
-//    }
-
-//    /**
-//     * retirer la region crm
-//     * @param RegionUnifie $entity
-//     *
-//     * @return mixed
-//     */
-//    private function dissocierRegionCrm(RegionUnifie $entity)
-//    {
-//        foreach ($entity->getRegions() as $region) {
-//            if ($region->getSite()->getCrm() == 1) {
-////                $station->setStationUnifie(null);
-//                $entity->removeRegion($region);
-//                return $region;
-//            }
-//        }
-//        return false;
-//    }
-
-//    /**
-//     * Mettre à jours ou créer une nouvelle stationCrm (si elle n'existe pas)
-//     * Permet aussi la gestion des traductions si elles n'existent pas (notament dans le cas d'un ajout de langue)
-//     * Retourne vrai si elle est seulement mise à jours
-//     * Retourne faux s'il s'agit d'une nouvelle
-//     * @param RegionUnifie $regionUnifie
-//     * @param Region $regionCrm
-//     * @return bool
-//     */
-//    private function mettreAJourRegionCrm(RegionUnifie $regionUnifie, Region $regionCrm)
-//    {
-//        /** @var RegionTraduction $regionTraduc */
-//        $em = $this->getDoctrine()->getManager();
-//        $tabClassementSiteReferent = array();
-//
-////        récupère les classementReferent pour chaque site dans un tableau
-//        foreach ($regionUnifie->getRegions() as $region) {
-//            $tabClassementSiteReferent[] = $region->getSite()->getClassementReferent();
-//        }
-//
-//        // Récupèrer le site référent dans la base
-//        $siteReferent = $em->getRepository(Site::class)->findOneBy(array('classementReferent' => min($tabClassementSiteReferent)));
-//
-//        $langues = $em->getRepository(Langue::class)->findAll();
-//
-//        // Parcourir toutes les stations
-//        foreach ($regionUnifie->getRegions() as $region) {
-//
-//            // Si la site de la station est égale au site de référence
-//            if ($region->getSite() == $siteReferent) {
-////              ajouter les champs "communs"
-//                foreach ($langues as $langue) {
-////                    dump($langue);
-////                    recupere la traduction pour l'entite du site referent
-//                    $regionTraduc = $region->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
-//                        return $element->getLangue() == $langue;
-//                    })->first();
-//
-////                    récupère la traductin dans le crm
-//                    $regionTraducCrm = $regionCrm->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
-//                        return $element->getLangue() == $langue;
-//                    })->first();
-//
-//
-////                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-//                    if (is_null($regionTraduc->getLibelle())) {
-//                        $regionTraduc->setLibelle('');
-//                    }
-//                    if (is_null($regionTraduc->getDescription())) {
-//                        $regionTraduc->setDescription('');
-//                    }
-////                    Si la traduction n'existe pas dans le crm on creer une nouvelle traduction
-//                    if (empty($regionTraducCrm)) {
-//                        $regionTraducCrm = new RegionTraduction();
-//                        $regionTraducCrm->setRegion($regionCrm);
-//                        $regionTraducCrm->setLangue($langue);
-//                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-//                        $regionTraducCrm->setLibelle($regionTraduc->getLibelle());
-//                        $regionTraducCrm->setDescription($regionTraduc->getDescription());
-//                        $regionCrm->addTraduction($regionTraducCrm);
-//                    } else {
-//                        //                    copie les attributs de traduction du site référent dans les traductions du crm
-//                        $regionTraducCrm->setLibelle($regionTraduc->getLibelle());
-//                        $regionTraducCrm->setDescription($regionTraduc->getDescription());
-//                    }
-//
-//                }
-//            } else {
-//
-////                permet de vérifier si la langue existe pour les sites non referents si elle n'existe pas on la rajoute
-//                foreach ($langues as $langue) {
-//
-////                    recupere la traduction pour la langue $langue
-//                    $regionTraduc = $region->getTraductions()->filter(function (RegionTraduction $element) use ($langue) {
-//                        return $element->getLangue() == $langue;
-//                    })->first();
-//
-////                    null est interdit, si la traduction n'existe pas on passe les attributs a vide
-//                    if (is_null($regionTraduc->getLibelle())) {
-//                        $regionTraduc->setLibelle('');
-//                    }
-//                    if (is_null($regionTraduc->getDescription())) {
-//                        $regionTraduc->setDescription('');
-//                    }
-//                }
-//            }
-//        }
-//    }
-
 }

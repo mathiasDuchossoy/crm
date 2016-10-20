@@ -51,6 +51,13 @@ class DepartementType extends AbstractType
                 'by_reference' => false,
 //                'required' => false,
             ))
+            ->add('videos', CollectionType::class, array(
+                'entry_type' => DepartementVideoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => false,
+            ))
         ;
     }
 

@@ -40,4 +40,8 @@ Mondofute\Bundle\GeographieBundle\Entity\Departement:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto
             mappedBy: departement
             cascade: ['persist' , 'remove']
+        videos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementVideo
+            mappedBy: departement
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
