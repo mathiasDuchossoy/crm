@@ -54,4 +54,8 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto
             mappedBy: domaine
             cascade: ['persist' , 'remove']
+        videos:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo
+            mappedBy: domaine
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

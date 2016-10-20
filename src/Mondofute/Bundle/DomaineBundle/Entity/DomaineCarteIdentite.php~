@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\DomaineBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\UniteBundle\Entity\Distance;
 
 
 /**
@@ -38,43 +37,43 @@ class DomaineCarteIdentite
      */
     private $handiski;
     /**
-     * @var Snowpark
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
     private $snowpark;
     /**
-     * @var RemonteeMecanique
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
      */
     private $remonteeMecanique;
     /**
-     * @var NiveauSkieur
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
      */
     private $niveauSkieur;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $pistes;
     /**
-     * @var Distance
+     * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeMini;
     /**
-     * @var Distance
+     * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     private $altitudeMaxi;
     /**
-     * @var KmPistesAlpin
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin
      */
     private $kmPistesSkiAlpin;
     /**
-     * @var KmPistesNordique
+     * @var \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
      */
     private $kmPistesSkiNordique;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $images;
     /**
-     * @var Collection
+     * @var \Doctrine\Common\Collections\Collection
      */
     private $photos;
 
@@ -84,10 +83,6 @@ class DomaineCarteIdentite
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
-        $this->domaines = new ArrayCollection();
-        $this->pistes = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->photos = new ArrayCollection();
     }
 
     /**
@@ -213,7 +208,7 @@ class DomaineCarteIdentite
     /**
      * Get snowpark
      *
-     * @return Snowpark
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\Snowpark
      */
     public function getSnowpark()
     {
@@ -223,11 +218,11 @@ class DomaineCarteIdentite
     /**
      * Set snowpark
      *
-     * @param Snowpark $snowpark
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark
      *
      * @return DomaineCarteIdentite
      */
-    public function setSnowpark(Snowpark $snowpark = null)
+    public function setSnowpark(\Mondofute\Bundle\DomaineBundle\Entity\Snowpark $snowpark = null)
     {
         $this->snowpark = $snowpark;
 
@@ -261,7 +256,7 @@ class DomaineCarteIdentite
     /**
      * Get altitudeMini
      *
-     * @return Distance
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     public function getAltitudeMini()
     {
@@ -271,11 +266,11 @@ class DomaineCarteIdentite
     /**
      * Set altitudeMini
      *
-     * @param Distance $altitudeMini
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMini
      *
      * @return DomaineCarteIdentite
      */
-    public function setAltitudeMini(Distance $altitudeMini = null)
+    public function setAltitudeMini(\Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMini = null)
     {
         $this->altitudeMini = $altitudeMini;
 
@@ -285,7 +280,7 @@ class DomaineCarteIdentite
     /**
      * Get altitudeMaxi
      *
-     * @return Distance
+     * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
      */
     public function getAltitudeMaxi()
     {
@@ -295,11 +290,11 @@ class DomaineCarteIdentite
     /**
      * Set altitudeMaxi
      *
-     * @param Distance $altitudeMaxi
+     * @param \Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMaxi
      *
      * @return DomaineCarteIdentite
      */
-    public function setAltitudeMaxi(Distance $altitudeMaxi = null)
+    public function setAltitudeMaxi(\Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeMaxi = null)
     {
         $this->altitudeMaxi = $altitudeMaxi;
 
@@ -309,7 +304,7 @@ class DomaineCarteIdentite
     /**
      * Get remonteeMecanique
      *
-     * @return RemonteeMecanique
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique
      */
     public function getRemonteeMecanique()
     {
@@ -319,11 +314,11 @@ class DomaineCarteIdentite
     /**
      * Set remonteeMecanique
      *
-     * @param RemonteeMecanique $remonteeMecanique
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique
      *
      * @return DomaineCarteIdentite
      */
-    public function setRemonteeMecanique(RemonteeMecanique $remonteeMecanique = null)
+    public function setRemonteeMecanique(\Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique $remonteeMecanique = null)
     {
         $this->remonteeMecanique = $remonteeMecanique;
 
@@ -391,7 +386,7 @@ class DomaineCarteIdentite
     /**
      * Get niveauSkieur
      *
-     * @return NiveauSkieur
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur
      */
     public function getNiveauSkieur()
     {
@@ -401,11 +396,11 @@ class DomaineCarteIdentite
     /**
      * Set niveauSkieur
      *
-     * @param NiveauSkieur $niveauSkieur
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur
      *
      * @return DomaineCarteIdentite
      */
-    public function setNiveauSkieur(NiveauSkieur $niveauSkieur = null)
+    public function setNiveauSkieur(\Mondofute\Bundle\DomaineBundle\Entity\NiveauSkieur $niveauSkieur = null)
     {
         $this->niveauSkieur = $niveauSkieur;
 
@@ -415,11 +410,11 @@ class DomaineCarteIdentite
     /**
      * Add piste
      *
-     * @param Piste $piste
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
      *
      * @return DomaineCarteIdentite
      */
-    public function addPiste(Piste $piste)
+    public function addPiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
     {
         $this->pistes[] = $piste->setDomaineCarteIdentite($this);
 
@@ -429,9 +424,9 @@ class DomaineCarteIdentite
     /**
      * Remove piste
      *
-     * @param Piste $piste
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\Piste $piste
      */
-    public function removePiste(Piste $piste)
+    public function removePiste(\Mondofute\Bundle\DomaineBundle\Entity\Piste $piste)
     {
         $this->pistes->removeElement($piste);
     }
@@ -439,7 +434,7 @@ class DomaineCarteIdentite
     /**
      * Get kmPistesSkiAlpin
      *
-     * @return KmPistesAlpin
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin
      */
     public function getKmPistesSkiAlpin()
     {
@@ -449,11 +444,11 @@ class DomaineCarteIdentite
     /**
      * Set kmPistesSkiAlpin
      *
-     * @param KmPistesAlpin $kmPistesSkiAlpin
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin $kmPistesSkiAlpin
      *
      * @return DomaineCarteIdentite
      */
-    public function setKmPistesSkiAlpin(KmPistesAlpin $kmPistesSkiAlpin = null)
+    public function setKmPistesSkiAlpin(\Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin $kmPistesSkiAlpin = null)
     {
         $this->kmPistesSkiAlpin = $kmPistesSkiAlpin;
 
@@ -463,7 +458,7 @@ class DomaineCarteIdentite
     /**
      * Get kmPistesSkiNordique
      *
-     * @return KmPistesNordique
+     * @return \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique
      */
     public function getKmPistesSkiNordique()
     {
@@ -473,11 +468,11 @@ class DomaineCarteIdentite
     /**
      * Set kmPistesSkiNordique
      *
-     * @param KmPistesNordique $kmPistesSkiNordique
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique $kmPistesSkiNordique
      *
      * @return DomaineCarteIdentite
      */
-    public function setKmPistesSkiNordique(KmPistesNordique $kmPistesSkiNordique = null)
+    public function setKmPistesSkiNordique(\Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique $kmPistesSkiNordique = null)
     {
         $this->kmPistesSkiNordique = $kmPistesSkiNordique;
 
@@ -487,11 +482,11 @@ class DomaineCarteIdentite
     /**
      * Add image
      *
-     * @param DomaineCarteIdentiteImage $image
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image
      *
      * @return DomaineCarteIdentite
      */
-    public function addImage(DomaineCarteIdentiteImage $image)
+    public function addImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image)
     {
         $this->images[] = $image->setDomaineCarteIdentite($this);
 
@@ -501,9 +496,9 @@ class DomaineCarteIdentite
     /**
      * Remove image
      *
-     * @param DomaineCarteIdentiteImage $image
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image
      */
-    public function removeImage(DomaineCarteIdentiteImage $image)
+    public function removeImage(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -521,11 +516,11 @@ class DomaineCarteIdentite
     /**
      * Add photo
      *
-     * @param DomaineCarteIdentitePhoto $photo
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo
      *
      * @return DomaineCarteIdentite
      */
-    public function addPhoto(DomaineCarteIdentitePhoto $photo)
+    public function addPhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo)
     {
         $this->photos[] = $photo->setDomaineCarteIdentite($this);
 
@@ -535,9 +530,9 @@ class DomaineCarteIdentite
     /**
      * Remove photo
      *
-     * @param DomaineCarteIdentitePhoto $photo
+     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo
      */
-    public function removePhoto(DomaineCarteIdentitePhoto $photo)
+    public function removePhoto(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto $photo)
     {
         $this->photos->removeElement($photo);
     }

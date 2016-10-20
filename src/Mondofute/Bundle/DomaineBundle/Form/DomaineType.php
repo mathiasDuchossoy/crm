@@ -53,6 +53,13 @@ class DomaineType extends AbstractType
                 'by_reference' => false,
 //                'required' => true,
             ))
+            ->add('videos', CollectionType::class, array(
+                'entry_type' => DomaineVideoType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+//                'required' => true,
+            ))
             ->add('imagesParent')
             ->add('photosParent');
     }

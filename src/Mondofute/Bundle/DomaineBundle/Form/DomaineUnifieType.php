@@ -86,6 +86,13 @@ class DomaineUnifieType extends AbstractType
                         $domaineCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
+                foreach ($domaine->children['videos'] as $key => $video) {
+                    if ($video->vars['value']->getActif() == true) {
+
+                        $siteId = $domaine->vars['value']->getSite()->getId();
+                        $domaineCrm->children['videos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
             }
 
         }
