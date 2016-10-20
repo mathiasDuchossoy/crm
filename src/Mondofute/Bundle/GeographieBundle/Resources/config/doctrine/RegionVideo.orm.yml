@@ -14,14 +14,14 @@ Mondofute\Bundle\GeographieBundle\Entity\RegionVideo:
         actif:
             type: boolean
             options:
-                default: false
+                default: true
     manyToOne:
         region:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Region
             inversedBy: videos
         video:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
-            cascade: ['persist' , 'remove']
+            cascade: ['persist']
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionVideoTraduction

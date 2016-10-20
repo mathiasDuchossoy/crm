@@ -16,6 +16,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\RegionPhotoTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\RegionVideo;
+use Mondofute\Bundle\GeographieBundle\Entity\RegionVideoTraduction;
 use Mondofute\Bundle\GeographieBundle\Form\RegionUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -86,8 +87,8 @@ class RegionUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Region $entity */
-            foreach ($regionUnifie->getRegions() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($regionUnifie->getRegions() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -175,8 +176,28 @@ class RegionUnifieController extends Controller
                     }
                 }
             }
-            // ***** Fin Gestion des Medias *****
 
+            // *** gestion des videos ***
+            /** @var Region $regionCrm */
+            $regionCrm = $regionUnifie->getRegions()->filter(function (Region $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $regionSites = $regionUnifie->getRegions()->filter(function (Region $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            /** @var RegionVideo $regionVideo */
+            foreach ($regionCrm->getVideos() as $key => $regionVideo) {
+                foreach ($regionSites as $regionSite) {
+                    $regionVideoSite = clone $regionVideo;
+                    $regionSite->addVideo($regionVideoSite);
+                    if (!in_array($regionSite->getSite()->getId(), $request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
+                        $regionVideoSite->setActif(false);
+                    }
+                }
+            }
+            // *** gestion des videos ***
+            // ***** Fin Gestion des Medias *****
+//            dump($request);die;
             $em->persist($regionUnifie);
             $em->flush();
 
@@ -316,14 +337,14 @@ class RegionUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($regionSite = $emSite->getRepository(Region::class)->findOneBy(array('regionUnifie' => $entitySite))))) {
                     $regionSite = new Region();
+                    $entitySite->addRegion($regionSite);
                 }
 
 //            copie des données station
                 $regionSite
                     ->setSite($site)
                     ->setRegionUnifie($entitySite)
-                    ->setActif($region->getActif())
-                ;
+                    ->setActif($region->getActif());
 
 //            Gestion des traductions
                 foreach ($region->getTraductions() as $regionTraduc) {
@@ -343,8 +364,7 @@ class RegionUnifieController extends Controller
                     $regionTraducSite->setLangue($langue)
                         ->setLibelle($regionTraduc->getLibelle())
                         ->setDescription($regionTraduc->getDescription())
-                        ->setRegion($regionSite)
-                    ;
+                        ->setRegion($regionSite);
 
 //                ajout a la collection de traduction de la station distante
                     $regionSite->addTraduction($regionTraducSite);
@@ -566,12 +586,76 @@ class RegionUnifieController extends Controller
 
                 // ********** FIN GESTION DES MEDIAS **********
 
-                $entitySite->addRegion($regionSite);
+
+                // *** gestion video ***
+                if (!empty($region->getVideos()) && !$region->getVideos()->isEmpty()) {
+                    /** @var RegionVideo $regionVideo */
+                    foreach ($region->getVideos() as $regionVideo) {
+                        $regionVideoSite = $regionSite->getVideos()->filter(function (RegionVideo $element) use ($regionVideo) {
+                            return $element->getId() == $regionVideo->getId();
+                        })->first();
+                        if (false === $regionVideoSite) {
+                            $regionVideoSite = new RegionVideo();
+                            $regionSite->addVideo($regionVideoSite);
+                            $regionVideoSite
+                                ->setId($regionVideo->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($regionVideoSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $cloneVideo = clone $regionVideo->getVideo();
+                        $cloneVideo->setContext('region_video_' . $regionSite->getSite()->getLibelle());
+                        $regionVideoSite
+                            ->setActif($regionVideo->getActif())
+                            ->setVideo($cloneVideo)
+                        ;
+                        // *** traductions ***
+                        foreach ($regionVideo->getTraductions() as $traduction)
+                        {
+                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction)
+                            {
+                                return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                            })->first();
+                            if(false === $traductionSite)
+                            {
+                                $traductionSite = new RegionVideoTraduction();
+                                $regionVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($emSite->find(Langue::class , $traduction->getLangue()->getId()));
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+                        // *** fin traductions ***
+                    }
+                }
+
+                if (!empty($regionSite->getVideos()) && !$regionSite->getVideos()->isEmpty()) {
+                    /** @var RegionVideo $regionVideo */
+                    /** @var RegionVideo $regionVideoSite */
+                    foreach ($regionSite->getVideos() as $regionVideoSite) {
+                        $regionVideo = $region->getVideos()->filter(function (RegionVideo $element) use ($regionVideoSite) {
+                            return $element->getId() == $regionVideoSite->getId();
+                        })->first();
+                        if (false === $regionVideo) {
+                            $emSite->remove($regionVideoSite);
+                            $emSite->remove($regionVideoSite->getVideo());
+                            $this->deleteFile($regionVideoSite->getVideo());
+                        }
+                    }
+                }
+                // *** fin gestion video ***
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
         }
         $this->ajouterRegionUnifieSiteDistant($entity->getId(), $entity->getRegions());
+    }
+
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
+        }
     }
 
 
@@ -743,7 +827,7 @@ class RegionUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Region $entity */
             foreach ($regionUnifie->getRegions() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -803,10 +887,10 @@ class RegionUnifieController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             try {
-                foreach ($regionUnifie->getRegions() as $entity){
-                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                foreach ($regionUnifie->getRegions() as $entity) {
+                    if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                         $entity->setActif(false);
-                    }else{
+                    } else {
                         $entity->setActif(true);
                     }
                 }
@@ -826,15 +910,6 @@ class RegionUnifieController extends Controller
                 foreach ($regionCrm->getImages() as $regionImage) {
                     $newRegionImages->add($regionImage);
                 }
-                // ** suppression videos **
-                foreach ($originalVideos as $originalVideo)
-                {
-                    if(false === $regionCrm->getVideos()->contains($originalVideo))
-                    {
-                        $em->remove($originalVideo);
-                    }
-                }
-                // ** fin suppression videos **
                 /** @var RegionImage $originalRegionImage */
                 foreach ($originalRegionImages as $key => $originalRegionImage) {
 
@@ -881,6 +956,65 @@ class RegionUnifieController extends Controller
                     }
                 }
                 // ************* fin suppression images *************
+
+                // ** suppression videos **
+                foreach ($originalVideos as $originalVideo) {
+                    if (false === $regionCrm->getVideos()->contains($originalVideo)) {
+                        $videos = $em->getRepository(RegionVideo::class)->findBy(array('video' => $originalVideo->getVideo()));
+                        foreach ($videos as $video) {
+                            $em->remove($video);
+                        }
+                        $em->remove($originalVideo->getVideo());
+                        $this->deleteFile($originalVideo->getVideo());
+                    }
+                }
+                // ** fin suppression videos **
+                // *** gestion des videos ***
+                /** @var Region $regionCrm */
+                $regionCrm = $regionUnifie->getRegions()->filter(function (Region $element) {
+                    return $element->getSite()->getCrm() == 1;
+                })->first();
+                $regionSites = $regionUnifie->getRegions()->filter(function (Region $element) {
+                    return $element->getSite()->getCrm() == 0;
+                });
+                /** @var RegionVideo $regionVideo */
+                foreach ($regionCrm->getVideos() as $key => $regionVideo) {
+                    foreach ($regionSites as $regionSite) {
+                        if (empty($regionVideo->getId())) {
+                            $regionVideoSite = clone $regionVideo;
+                        }
+                        else
+                        {
+                            $regionVideoSite = $em->getRepository(RegionVideo::class)->findOneBy(array('video' => $regionVideo->getVideo() , 'region' => $regionSite));
+                        }
+                        $regionSite->addVideo($regionVideoSite);
+                        $actif = false;
+                        if (!empty($request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
+                            if (in_array($regionSite->getSite()->getId(), $request->get('region_unifie')['regions'][0]['videos'][$key]['sites'])) {
+                                $actif = true;
+                            }
+                        }
+                        $regionVideoSite->setActif($actif);
+
+                        // *** traductions ***
+                        foreach ($regionVideo->getTraductions() as $traduction)
+                        {
+                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction)
+                            {
+                                return $element->getLangue() == $traduction->getLangue();
+                            })->first();
+                            if(false === $traductionSite)
+                            {
+                                $traductionSite = new RegionVideoTraduction();
+                                $regionVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($traduction->getLangue());
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+                        // *** fin traductions ***
+                    }
+                }
+                // *** gestion des videos ***
 
 
                 // ************* suppression photos *************
@@ -1129,7 +1263,7 @@ class RegionUnifieController extends Controller
 
                 // todo: gérer les videos pour les sites distants
                 // ***** Fin Gestion des Medias *****
-                
+
                 $em->persist($regionUnifie);
                 $em->flush();
 
@@ -1152,9 +1286,9 @@ class RegionUnifieController extends Controller
                     }
                     $em->flush();
                 }
-                
+
             } catch (ForeignKeyConstraintViolationException $except) {
-//                dump($except);
+                dump($except);
                 switch ($except->getCode()) {
                     case 0:
                         $this->addFlash('error',
@@ -1230,7 +1364,7 @@ class RegionUnifieController extends Controller
                                 }
                             }
                         }
-                        
+
                         $emSite->flush();
                     }
                 }
