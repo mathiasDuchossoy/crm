@@ -12,6 +12,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 
 /**
  * Station
