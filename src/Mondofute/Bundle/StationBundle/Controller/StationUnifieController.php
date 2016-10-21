@@ -657,6 +657,7 @@ class StationUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($stationSite = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $entitySite))))) {
                     $stationSite = new Station();
+                    $entitySite->addStation($stationSite);
                 }
 
 //            copie des données station
@@ -812,8 +813,6 @@ class StationUnifieController extends Controller
                 }
                 // ********** FIN GESTION DES MEDIAS **********
 
-
-                $entitySite->addStation($stationSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

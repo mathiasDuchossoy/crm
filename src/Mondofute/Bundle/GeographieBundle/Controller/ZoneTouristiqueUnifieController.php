@@ -349,6 +349,7 @@ class ZoneTouristiqueUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($zoneTouristiqueSite = $emSite->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $entitySite))))) {
                     $zoneTouristiqueSite = new ZoneTouristique();
+                    $entitySite->addZoneTouristique($zoneTouristiqueSite);
                 }
 
 //            copie des données station
@@ -662,8 +663,6 @@ class ZoneTouristiqueUnifieController extends Controller
                 }
                 // *** fin gestion video ***
 
-
-                $entitySite->addZoneTouristique($zoneTouristiqueSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

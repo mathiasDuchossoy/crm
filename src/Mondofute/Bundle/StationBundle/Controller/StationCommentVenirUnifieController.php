@@ -275,6 +275,7 @@ class StationCommentVenirUnifieController extends Controller
 //            Récupération de la StationCommentVenir sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($stationCommentVenirSite = $emSite->getRepository(StationCommentVenir::class)->findOneBy(array('stationCommentVenirUnifie' => $entitySite))))) {
                     $stationCommentVenirSite = new StationCommentVenir();
+                    $entitySite->addStationCommentVenir($stationCommentVenirSite);
                 }
 
 //            copie des données StationCommentVenir
@@ -310,7 +311,6 @@ class StationCommentVenirUnifieController extends Controller
                     $stationCommentVenirSite->addTraduction($stationCommentVenirTraducSite);
                 }
 
-                $entitySite->addStationCommentVenir($stationCommentVenirSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

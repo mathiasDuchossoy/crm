@@ -361,6 +361,7 @@ class DepartementUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($departementSite = $emSite->getRepository(Departement::class)->findOneBy(array('departementUnifie' => $entitySite))))) {
                     $departementSite = new Departement();
+                    $entitySite->addDepartement($departementSite);
                 }
 
 //            copie des données station
@@ -674,7 +675,6 @@ class DepartementUnifieController extends Controller
                 }
                 // *** fin gestion video ***
 
-                $entitySite->addDepartement($departementSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

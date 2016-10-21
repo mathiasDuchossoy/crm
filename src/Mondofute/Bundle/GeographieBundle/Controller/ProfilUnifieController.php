@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilImage;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilImageTraduction;
@@ -14,6 +15,8 @@ use Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilPhotoTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie;
+use Mondofute\Bundle\GeographieBundle\Entity\ProfilVideo;
+use Mondofute\Bundle\GeographieBundle\Entity\ProfilVideoTraduction;
 use Mondofute\Bundle\GeographieBundle\Form\ProfilUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -83,8 +86,8 @@ class ProfilUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Profil $entity */
-            foreach ($profilUnifie->getProfils() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($profilUnifie->getProfils() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -174,6 +177,29 @@ class ProfilUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+            // *** gestion des videos ***
+            /** @var Profil $profilCrm */
+            $profilCrm = $profilUnifie->getProfils()->filter(function (Profil $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $profilSites = $profilUnifie->getProfils()->filter(function (Profil $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            /** @var ProfilVideo $profilVideo */
+            foreach ($profilCrm->getVideos() as $key => $profilVideo) {
+                foreach ($profilSites as $profilSite) {
+                    $profilVideoSite = clone $profilVideo;
+                    $profilSite->addVideo($profilVideoSite);
+                    $actif = false;
+                    if (!empty($request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                        if (in_array($profilSite->getSite()->getId(), $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
+                    }
+                    $profilVideoSite->setActif($actif);
+                }
+            }
+            // *** gestion des videos ***
 
             $em->persist($profilUnifie);
             $em->flush();
@@ -284,24 +310,6 @@ class ProfilUnifieController extends Controller
     }
 
     /**
-     * retirer de l'entité les profils qui ne doivent pas être enregistrer
-     * @param ProfilUnifie $entity
-     * @param array $sitesAEnregistrer
-     *
-     * @return $this
-     */
-    private function supprimerProfils(ProfilUnifie $entity, array $sitesAEnregistrer)
-    {
-        foreach ($entity->getProfils() as $profil) {
-            if (!in_array($profil->getSite()->getId(), $sitesAEnregistrer)) {
-                $profil->setProfilUnifie(null);
-                $entity->removeProfil($profil);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * Copie dans la base de données site l'entité station
      * @param ProfilUnifie $entity
      */
@@ -328,14 +336,14 @@ class ProfilUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($profilSite = $emSite->getRepository(Profil::class)->findOneBy(array('profilUnifie' => $entitySite))))) {
                     $profilSite = new Profil();
+                    $entitySite->addProfil($profilSite);
                 }
 
 //            copie des données station
                 $profilSite
                     ->setSite($site)
                     ->setProfilUnifie($entitySite)
-                    ->setActif($profil->getActif())
-                ;
+                    ->setActif($profil->getActif());
 
 //            Gestion des traductions
                 foreach ($profil->getTraductions() as $profilTraduc) {
@@ -578,16 +586,77 @@ class ProfilUnifieController extends Controller
 
                 // ********** FIN GESTION DES MEDIAS **********
 
+                // *** gestion video ***
+                if (!empty($profil->getVideos()) && !$profil->getVideos()->isEmpty()) {
+                    /** @var ProfilVideo $profilVideo */
+                    foreach ($profil->getVideos() as $profilVideo) {
+                        $profilVideoSite = $profilSite->getVideos()->filter(function (ProfilVideo $element) use ($profilVideo) {
+                            return $element->getId() == $profilVideo->getId();
+                        })->first();
+                        if (false === $profilVideoSite) {
+                            $profilVideoSite = new ProfilVideo();
+                            $profilSite->addVideo($profilVideoSite);
+                            $profilVideoSite
+                                ->setId($profilVideo->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($profilVideoSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
 
+                        if (empty($profilVideoSite->getVideo()) || $profilVideoSite->getVideo()->getId() != $profilVideo->getVideo()->getId()) {
+                            $cloneVideo = clone $profilVideo->getVideo();
+                            $metadata = $emSite->getClassMetadata(get_class($cloneVideo));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                            $cloneVideo->setContext('profil_video_' . $profilSite->getSite()->getLibelle());
+                            // on supprime l'ancien photo
+                            if (!empty($profilVideoSite->getVideo())) {
+                                $emSite->remove($profilVideoSite->getVideo());
+                                $this->deleteFile($profilVideoSite->getVideo());
+                            }
+                            $profilVideoSite
+                                ->setVideo($cloneVideo);
+                        }
+                        $profilVideoSite
+                            ->setActif($profilVideo->getActif());
+                        // *** traductions ***
+                        foreach ($profilVideo->getTraductions() as $traduction) {
+                            $traductionSite = $profilVideoSite->getTraductions()->filter(function (ProfilVideoTraduction $element) use ($traduction) {
+                                return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                            })->first();
+                            if (false === $traductionSite) {
+                                $traductionSite = new ProfilVideoTraduction();
+                                $profilVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
 
-                $entitySite->addProfil($profilSite);
+                        // *** fin traductions ***
+                    }
+                }
+
+                if (!empty($profilSite->getVideos()) && !$profilSite->getVideos()->isEmpty()) {
+                    /** @var ProfilVideo $profilVideo */
+                    /** @var ProfilVideo $profilVideoSite */
+                    foreach ($profilSite->getVideos() as $profilVideoSite) {
+                        $profilVideo = $profil->getVideos()->filter(function (ProfilVideo $element) use ($profilVideoSite) {
+                            return $element->getId() == $profilVideoSite->getId();
+                        })->first();
+                        if (false === $profilVideo) {
+                            dump('delete');
+                            $emSite->remove($profilVideoSite);
+                            $emSite->remove($profilVideoSite->getVideo());
+                            $this->deleteFile($profilVideoSite->getVideo());
+                        }
+                    }
+                }
+                // *** fin gestion video ***
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
         }
         $this->ajouterProfilUnifieSiteDistant($entity->getId(), $entity->getProfils());
     }
-
 
     /**
      * Création d'un nouveau profilImage
@@ -637,7 +706,6 @@ class ProfilUnifieController extends Controller
         }
     }
 
-
     /**
      * Création d'un nouveau profilPhoto
      * @param ProfilPhoto $profilPhoto
@@ -683,6 +751,13 @@ class ProfilUnifieController extends Controller
             $traductionSite->setLibelle($traduction->getLibelle())
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $profilPhotoSite->addTraduction($traductionSite);
+        }
+    }
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
         }
     }
 
@@ -756,7 +831,7 @@ class ProfilUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Profil $entity */
             foreach ($profilUnifie->getProfils() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -769,6 +844,8 @@ class ProfilUnifieController extends Controller
         $originalImages = new ArrayCollection();
         $originalProfilPhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
+        $originalProfilVideos = new ArrayCollection();
+        $originalVideos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($profilUnifie->getProfils() as $profil) {
             // si l'profil est celui du CRM
@@ -787,6 +864,13 @@ class ProfilUnifieController extends Controller
                     $originalProfilPhotos->add($profilPhoto);
                     $originalPhotos->add($profilPhoto->getPhoto());
                 }
+                // on parcourt les profilVideo pour les comparer ensuite
+                /** @var ProfilVideo $profilVideo */
+                foreach ($profil->getVideos() as $profilVideo) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalProfilVideos->add($profilVideo);
+                    $originalVideos->set($profilVideo->getId(), $profilVideo->getVideo());
+                }
             }
         }
 
@@ -800,10 +884,10 @@ class ProfilUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($profilUnifie->getProfils() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($profilUnifie->getProfils() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -933,8 +1017,64 @@ class ProfilUnifieController extends Controller
             }
             // ************* fin suppression photos *************
 
-            // Supprimer la relation entre la station et stationUnifie
+            // ** suppression videos **
+            foreach ($originalProfilVideos as $originalProfilVideo) {
+                if (false === $profilCrm->getVideos()->contains($originalProfilVideo)) {
+                    $videos = $em->getRepository(ProfilVideo::class)->findBy(array('video' => $originalProfilVideo->getVideo()));
+                    foreach ($videos as $video) {
+                        $em->remove($video);
+                    }
+                    $em->remove($originalProfilVideo->getVideo());
+                    $this->deleteFile($originalProfilVideo->getVideo());
+                }
+            }
+            // ** fin suppression videos **
+            // *** gestion des videos ***
+            /** @var Profil $profilCrm */
+            $profilCrm = $profilUnifie->getProfils()->filter(function (Profil $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $profilSites = $profilUnifie->getProfils()->filter(function (Profil $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            /** @var ProfilVideo $profilVideo */
+            foreach ($profilCrm->getVideos() as $key => $profilVideo) {
+                foreach ($profilSites as $profilSite) {
+                    if (empty($profilVideo->getId())) {
+                        $profilVideoSite = clone $profilVideo;
+                    } else {
+                        $profilVideoSite = $em->getRepository(ProfilVideo::class)->findOneBy(array('video' => $originalVideos->get($profilVideo->getId()), 'profil' => $profilSite));
+                        if ($originalVideos->get($profilVideo->getId()) != $profilVideo->getVideo()) {
+                            $em->remove($profilVideoSite->getVideo());
+                            $this->deleteFile($profilVideoSite->getVideo());
+                            $profilVideoSite->setVideo($profilVideo->getVideo());
+                        }
+                    }
+                    $profilSite->addVideo($profilVideoSite);
+                    $actif = false;
+                    if (!empty($request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                        if (in_array($profilSite->getSite()->getId(), $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
+                    }
+                    $profilVideoSite->setActif($actif);
 
+                    // *** traductions ***
+                    foreach ($profilVideo->getTraductions() as $traduction) {
+                        $traductionSite = $profilVideoSite->getTraductions()->filter(function (ProfilVideoTraduction $element) use ($traduction) {
+                            return $element->getLangue() == $traduction->getLangue();
+                        })->first();
+                        if (false === $traductionSite) {
+                            $traductionSite = new ProfilVideoTraduction();
+                            $profilVideoSite->addTraduction($traductionSite);
+                            $traductionSite->setLangue($traduction->getLangue());
+                        }
+                        $traductionSite->setLibelle($traduction->getLibelle());
+                    }
+                    // *** fin traductions ***
+                }
+            }
+            // *** fin gestion des videos ***
 
             // ***** Gestion des Medias *****
 //            dump($profilUnifie);die;
@@ -1117,7 +1257,7 @@ class ProfilUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
-            
+
             $em->persist($profilUnifie);
             $em->flush();
 
@@ -1185,7 +1325,15 @@ class ProfilUnifieController extends Controller
                             }
                         }
                     }
-                    
+                    // si il y a des videos pour l'entité, les supprimer
+                    if (!empty($profilSite->getVideos())) {
+                        /** @var ProfilVideo $profilVideoSite */
+                        foreach ($profilSite->getVideos() as $profilVideoSite) {
+                            $emSite->remove($profilVideoSite);
+                            $emSite->remove($profilVideoSite->getVideo());
+                        }
+                    }
+
                     $emSite->flush();
                 }
             }
@@ -1214,6 +1362,14 @@ class ProfilUnifieController extends Controller
                                 $em->remove($photo);
                             }
                         }
+                        // si il y a des videos pour l'entité, les supprimer
+                        if (!empty($profil->getVideos())) {
+                            /** @var ProfilVideo $profilVideoSite */
+                            foreach ($profil->getVideos() as $profilVideoSite) {
+                                $em->remove($profilVideoSite);
+                                $em->remove($profilVideoSite->getVideo());
+                            }
+                        }
                     }
                     $em->flush();
                 }
@@ -1227,5 +1383,23 @@ class ProfilUnifieController extends Controller
         }
         $this->addFlash('success', 'le profil a bien été supprimé');
         return $this->redirectToRoute('geographie_profil_index');
+    }
+
+    /**
+     * retirer de l'entité les profils qui ne doivent pas être enregistrer
+     * @param ProfilUnifie $entity
+     * @param array $sitesAEnregistrer
+     *
+     * @return $this
+     */
+    private function supprimerProfils(ProfilUnifie $entity, array $sitesAEnregistrer)
+    {
+        foreach ($entity->getProfils() as $profil) {
+            if (!in_array($profil->getSite()->getId(), $sitesAEnregistrer)) {
+                $profil->setProfilUnifie(null);
+                $entity->removeProfil($profil);
+            }
+        }
+        return $this;
     }
 }

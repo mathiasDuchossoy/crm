@@ -214,6 +214,7 @@ class StationCarteIdentiteUnifieController extends Controller
 //            Récupération de la stationCarteIdentite sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($stationCarteIdentiteSite = $emSite->getRepository(StationCarteIdentite::class)->findOneBy(array('stationCarteIdentiteUnifie' => $entitySite))))) {
                     $stationCarteIdentiteSite = new StationCarteIdentite();
+                    $entitySite->addStationCarteIdentite($stationCarteIdentiteSite);
                 }
 
                 // ***** adresse *****
@@ -292,7 +293,6 @@ class StationCarteIdentiteUnifieController extends Controller
 //                    $stationCarteIdentiteSite->addTraduction($stationCarteIdentiteTraducSite);
 //                }
 
-                $entitySite->addStationCarteIdentite($stationCarteIdentiteSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

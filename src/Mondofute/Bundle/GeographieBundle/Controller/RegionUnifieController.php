@@ -613,30 +613,24 @@ class RegionUnifieController extends Controller
                             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                             $cloneVideo->setContext('region_video_' . $regionSite->getSite()->getLibelle());
                             // on supprime l'ancien photo
-                            if(!empty($regionVideoSite->getVideo()) )
-                            {
+                            if (!empty($regionVideoSite->getVideo())) {
                                 $emSite->remove($regionVideoSite->getVideo());
                                 $this->deleteFile($regionVideoSite->getVideo());
                             }
                             $regionVideoSite
-                                ->setVideo($cloneVideo)
-                            ;
+                                ->setVideo($cloneVideo);
                         }
                         $regionVideoSite
-                            ->setActif($regionVideo->getActif())
-                        ;
+                            ->setActif($regionVideo->getActif());
                         // *** traductions ***
-                        foreach ($regionVideo->getTraductions() as $traduction)
-                        {
-                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction)
-                            {
+                        foreach ($regionVideo->getTraductions() as $traduction) {
+                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
-                            if(false === $traductionSite)
-                            {
+                            if (false === $traductionSite) {
                                 $traductionSite = new RegionVideoTraduction();
                                 $regionVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class , $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -667,15 +661,6 @@ class RegionUnifieController extends Controller
         }
         $this->ajouterRegionUnifieSiteDistant($entity->getId(), $entity->getRegions());
     }
-
-
-    private function deleteFile($visuel)
-    {
-        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
-            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
-        }
-    }
-
 
     /**
      * Création d'un nouveau regionImage
@@ -725,7 +710,6 @@ class RegionUnifieController extends Controller
         }
     }
 
-
     /**
      * Création d'un nouveau regionPhoto
      * @param RegionPhoto $regionPhoto
@@ -771,6 +755,13 @@ class RegionUnifieController extends Controller
             $traductionSite->setLibelle($traduction->getLibelle())
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $regionPhotoSite->addTraduction($traductionSite);
+        }
+    }
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
         }
     }
 
@@ -887,7 +878,7 @@ class RegionUnifieController extends Controller
                 foreach ($region->getVideos() as $regionVideo) {
                     // on ajoute les photo dans la collection de sauvegarde
                     $originalRegionVideos->add($regionVideo);
-                    $originalVideos->set($regionVideo->getId() , $regionVideo->getVideo());
+                    $originalVideos->set($regionVideo->getId(), $regionVideo->getVideo());
                 }
             }
         }
@@ -1000,14 +991,11 @@ class RegionUnifieController extends Controller
                 /** @var RegionVideo $regionVideo */
                 foreach ($regionCrm->getVideos() as $key => $regionVideo) {
                     foreach ($regionSites as $regionSite) {
-                        if (empty($regionVideo->getId()) ) {
+                        if (empty($regionVideo->getId())) {
                             $regionVideoSite = clone $regionVideo;
-                        }
-                        else
-                        {
-                            $regionVideoSite = $em->getRepository(RegionVideo::class)->findOneBy(array('video' => $originalVideos->get($regionVideo->getId()) , 'region' => $regionSite));
-                            if($originalVideos->get($regionVideo->getId()) != $regionVideo->getVideo())
-                            {
+                        } else {
+                            $regionVideoSite = $em->getRepository(RegionVideo::class)->findOneBy(array('video' => $originalVideos->get($regionVideo->getId()), 'region' => $regionSite));
+                            if ($originalVideos->get($regionVideo->getId()) != $regionVideo->getVideo()) {
                                 $em->remove($regionVideoSite->getVideo());
                                 $this->deleteFile($regionVideoSite->getVideo());
                                 $regionVideoSite->setVideo($regionVideo->getVideo());
@@ -1023,14 +1011,11 @@ class RegionUnifieController extends Controller
                         $regionVideoSite->setActif($actif);
 
                         // *** traductions ***
-                        foreach ($regionVideo->getTraductions() as $traduction)
-                        {
-                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction)
-                            {
+                        foreach ($regionVideo->getTraductions() as $traduction) {
+                            $traductionSite = $regionVideoSite->getTraductions()->filter(function (RegionVideoTraduction $element) use ($traduction) {
                                 return $element->getLangue() == $traduction->getLangue();
                             })->first();
-                            if(false === $traductionSite)
-                            {
+                            if (false === $traductionSite) {
                                 $traductionSite = new RegionVideoTraduction();
                                 $regionVideoSite->addTraduction($traductionSite);
                                 $traductionSite->setLangue($traduction->getLangue());
@@ -1388,8 +1373,8 @@ class RegionUnifieController extends Controller
                         if (!empty($regionSite->getVideos())) {
                             /** @var RegionVideo $regionVideoSite */
                             foreach ($regionSite->getVideos() as $regionVideoSite) {
-                                    $emSite->remove($regionVideoSite);
-                                    $emSite->remove($regionVideoSite->getVideo());
+                                $emSite->remove($regionVideoSite);
+                                $emSite->remove($regionVideoSite->getVideo());
                             }
                         }
 

@@ -561,6 +561,7 @@ class DomaineUnifieController extends Controller
 //            Récupération de la domaine sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($domaineSite = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $entitySite))))) {
                     $domaineSite = new Domaine();
+                    $entitySite->addDomaine($domaineSite);
                 }
 
 //            copie des données domaine
@@ -879,7 +880,6 @@ class DomaineUnifieController extends Controller
                 }
                 // *** fin gestion video ***
 
-                $entitySite->addDomaine($domaineSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
