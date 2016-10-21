@@ -13,6 +13,8 @@ use Mondofute\Bundle\GeographieBundle\Repository\ProfilRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Entity\StationLabel;
+use Mondofute\Bundle\StationBundle\Repository\StationLabelRepository;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -122,6 +124,17 @@ class StationType extends AbstractType
             ->add('videosParent')
             ->add('stationLabels', CollectionType::class, array(
                 'entry_type' => StationLabelType::class,
+            ))
+            ->add('stationLabels', EntityType::class, array(
+                'class' => StationLabel::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (StationLabelRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'multiple'  => true,
+                'expanded'  => true,
             ))
         ;
     }
