@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\StationBundle\Form;
 
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
+use Mondofute\Bundle\ChoixBundle\Repository\OuiNonNCRepository;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
@@ -136,6 +138,16 @@ class StationType extends AbstractType
                 'multiple'  => true,
                 'expanded'  => true,
             ))
+            ->add('stationDeSki',
+                EntityType::class,
+                array(
+                    'class' => OuiNonNC::class,
+                    'choice_label' => 'traductions[0].libelle',
+                    'query_builder' => function (OuiNonNCRepository $r) use ($locale) {
+                        return $r->getTraductionsByLocale($locale);
+                    },
+                    'label' => 'Station de ski'
+                ))
         ;
     }
 

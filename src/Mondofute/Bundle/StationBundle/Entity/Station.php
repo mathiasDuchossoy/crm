@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\StationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
@@ -11,7 +12,6 @@ use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 
 /**
  * Station
@@ -99,6 +99,10 @@ class Station
      * @var Collection
      */
     private $stationLabels;
+    /**
+     * @var OuiNonNC
+     */
+    private $stationDeSki;
 
     /**
      * Constructor
@@ -741,5 +745,29 @@ class Station
     public function getStationLabels()
     {
         return $this->stationLabels;
+    }
+
+    /**
+     * Get stationDeSki
+     *
+     * @return OuiNonNC
+     */
+    public function getStationDeSki()
+    {
+        return $this->stationDeSki;
+    }
+
+    /**
+     * Set stationDeSki
+     *
+     * @param OuiNonNC $stationDeSki
+     *
+     * @return Station
+     */
+    public function setStationDeSki(OuiNonNC $stationDeSki = null)
+    {
+        $this->stationDeSki = $stationDeSki;
+
+        return $this;
     }
 }

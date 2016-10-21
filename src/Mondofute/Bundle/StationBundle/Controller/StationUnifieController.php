@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
@@ -115,6 +116,11 @@ class StationUnifieController extends Controller
         $stationUnifie = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
+        /** @var Station $station */
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
+        }
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
@@ -686,6 +692,7 @@ class StationUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($stationSite = $emSite->getRepository(Station::class)->findOneBy(array('stationUnifie' => $entitySite))))) {
                     $stationSite = new Station();
+                    $entitySite->addStation($stationSite);
                 }
 
 //            copie des données station
@@ -703,7 +710,9 @@ class StationUnifieController extends Controller
                     ->setStationDescription($stationDescription)
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
-                    ->setActif($station->getActif());
+                    ->setActif($station->getActif())
+                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()))
+                ;
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -865,8 +874,6 @@ class StationUnifieController extends Controller
                 }
                 // ***** fin gestion station label *****
 
-
-                $entitySite->addStation($stationSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

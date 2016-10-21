@@ -48,6 +48,8 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stationMere:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             inversedBy: stations
+        stationDeSki:
+            targetEntity: Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationTraduction
