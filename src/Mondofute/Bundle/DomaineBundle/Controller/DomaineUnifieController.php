@@ -359,6 +359,25 @@ class DomaineUnifieController extends Controller
                             $domaine->addTraduction($traduction);
                         }
                     }
+
+                    // *** ajout pistes couleur si non existante ***
+                    $typePistes = $em->getRepository(TypePiste::class)->findAll();
+                    /** @var Piste $piste */
+                    /** @var TypePiste $typePiste */
+                    foreach ($typePistes as $typePiste)
+                    {
+                        $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element ) use ($typePiste){
+                            return $typePiste == $element->getTypePiste();
+                        })->first();
+                        if(false === $piste)
+                        {
+                            $piste = new Piste();
+                            $domaineCarteIdentite->addPiste($piste);
+                            $piste->setTypePiste($typePiste);
+                        }
+                    }
+                    // *** fin ajout pistes couleur si non existante ***
+
                 }
             }
             if (!$siteExiste) {
