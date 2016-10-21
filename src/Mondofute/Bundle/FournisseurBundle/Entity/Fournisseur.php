@@ -99,7 +99,6 @@ class Fournisseur extends Moral
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
         $this->prestationAnnexes = new ArrayCollection();
-//        $this->id = $this->setId(parent::getId());
     }
 
     /**
