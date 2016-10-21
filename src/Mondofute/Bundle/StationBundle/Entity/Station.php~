@@ -11,7 +11,6 @@ use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 
 /**
  * Station
@@ -95,10 +94,6 @@ class Station
      * @var boolean
      */
     private $actif = true;
-    /**
-     * @var Collection
-     */
-    private $stationLabels;
 
     /**
      * Constructor
@@ -112,7 +107,6 @@ class Station
         $this->stations = new ArrayCollection();
         $this->hebergements = new ArrayCollection();
         $this->visuels = new ArrayCollection();
-        $this->stationLabels = new ArrayCollection();
     }
 
     /**
@@ -709,37 +703,4 @@ class Station
         return $this;
     }
 
-    /**
-     * Add stationLabel
-     *
-     * @param StationLabel $stationLabel
-     *
-     * @return Station
-     */
-    public function addStationLabel(StationLabel $stationLabel)
-    {
-        $this->stationLabels[] = $stationLabel;
-
-        return $this;
-    }
-
-    /**
-     * Remove stationLabel
-     *
-     * @param StationLabel $stationLabel
-     */
-    public function removeStationLabel(StationLabel $stationLabel)
-    {
-        $this->stationLabels->removeElement($stationLabel);
-    }
-
-    /**
-     * Get stationLabels
-     *
-     * @return Collection
-     */
-    public function getStationLabels()
-    {
-        return $this->stationLabels;
-    }
 }

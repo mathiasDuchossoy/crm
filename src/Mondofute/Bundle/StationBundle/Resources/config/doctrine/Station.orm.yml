@@ -76,4 +76,6 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         profils:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Profil
             inversedBy: stations
+        stationLabels:
+            targetEntity: StationLabel
     lifecycleCallbacks: {  }
