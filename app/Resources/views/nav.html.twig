@@ -288,6 +288,21 @@
                     </ul>
                 </li>
                 {# ***** FIN FAMILLE PRESTATION ANNEXE ***** #}
+                {# ***** STATION LABEL ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'stationlabel' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'station label' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'stationlabel_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationlabel_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'stationlabel_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationlabel_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN STATION LABEL ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
