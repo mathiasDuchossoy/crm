@@ -1,0 +1,18 @@
+Mondofute\Bundle\StationBundle\Entity\StationLabel:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\StationBundle\Repository\StationLabelRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    oneToMany:
+        traductions:
+            targetEntity: StationLabelTraduction
+            mappedBy: stationLabel
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }
