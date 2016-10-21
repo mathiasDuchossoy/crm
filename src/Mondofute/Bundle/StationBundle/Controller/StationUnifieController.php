@@ -23,6 +23,7 @@ use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
+use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
@@ -208,6 +209,8 @@ class StationUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+            $this->gestionStationLabel($stationUnifie);
+
 
             $em->persist($stationUnifie);
             $em->flush();
@@ -233,6 +236,34 @@ class StationUnifieController extends Controller
             'entity' => $stationUnifie,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function gestionStationLabel($stationUnifie)
+    {
+        /** @var Station $stationSite */
+        /** @var Station $stationCrm */
+        $stationCrm = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first();
+        $stationSites = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 0;
+        });
+        foreach ($stationCrm->getStationLabels() as $stationLabel)
+        {
+            foreach ($stationSites as $stationSite)
+            {
+                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel){
+                    return $element == $stationLabel;
+                })->first();
+                if(false === $stationLabelSite)
+                {
+                    $stationSite->addStationLabel($stationLabel);
+                }
+            }
+        }
     }
 
     /**
@@ -809,6 +840,31 @@ class StationUnifieController extends Controller
                 }
                 // ********** FIN GESTION DES MEDIAS **********
 
+                // ***** gestion station label *****
+                /** @var StationLabel $stationLabel */
+                foreach ($station->getStationLabels() as $stationLabel)
+                {
+                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabel){
+                        return $element->getId() == $stationLabel->getId();
+                    })->first();
+                    if(false === $stationLabelSite)
+                    {
+                        $stationSite->addStationLabel($emSite->find(StationLabel::class , $stationLabel->getId()));
+                    }
+                }
+                /** @var StationLabel $stationLabelSite */
+                foreach ($stationSite->getStationLabels() as $stationLabelSite)
+                {
+                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabelSite){
+                        return $element->getId() == $stationLabelSite->getId();
+                    })->first();
+                    if(false === $stationLabel)
+                    {
+                        $stationSite->removeStationLabel($stationLabelSite);
+                    }
+                }
+                // ***** fin gestion station label *****
+
 
                 $entitySite->addStation($stationSite);
                 $emSite->persist($entitySite);
@@ -1181,6 +1237,7 @@ class StationUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+            $this->gestionStationLabel($stationUnifie);
 
             $em->persist($stationUnifie);
             $em->flush();
