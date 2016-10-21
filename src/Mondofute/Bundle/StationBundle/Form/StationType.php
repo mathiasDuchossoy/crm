@@ -120,6 +120,9 @@ class StationType extends AbstractType
             ))
             ->add('photosParent')
             ->add('videosParent')
+            ->add('stationLabels', CollectionType::class, array(
+                'entry_type' => StationLabelType::class,
+            ))
         ;
     }
 

@@ -1,9 +1,3 @@
-#mondofute_station_homepage:
-#    path:     /
-#    defaults: { _controller: MondofuteStationBundle:Default:index }
-
-
-
 mondofute_station_station:
     resource: "@MondofuteStationBundle/Resources/config/routing/stationunifie.yml"
     prefix:   /station
@@ -19,3 +13,7 @@ mondofute_station_stationcommentvenirunifie:
 mondofute_station_stationdescriptionunifie:
     resource: "@MondofuteStationBundle/Resources/config/routing/stationdescriptionunifie.yml"
     prefix:   /stationdescription
+
+mondofute_station_stationlabel:
+    resource: "@MondofuteStationBundle/Resources/config/routing/stationlabel.yml"
+    prefix:   /stationlabel
