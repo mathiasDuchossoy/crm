@@ -4,11 +4,14 @@ namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Controller;
 
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki;
 use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSkiType;
+use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Age;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
@@ -146,8 +149,6 @@ class ModeleDescriptionForfaitSkiController extends Controller
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-
-
             $modeleDescriptionForfaitSkiSite = clone $modeleDescriptionForfaitSki;
 
             foreach ($modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
@@ -172,6 +173,116 @@ class ModeleDescriptionForfaitSkiController extends Controller
             }
             $emSite->persist($modeleDescriptionForfaitSkiSite);
             $emSite->flush();
+        }
+    }
+
+    /**
+     * @param DomaineUnifie $domaineUnifie
+     */
+    public function copieForDomaineVersSites($domaineUnifie)
+    {
+        /** @var ModeleDescriptionForfaitSki $modeleDescriptionForfaitSki */
+        $modeleDescriptionForfaitSki = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first()->getModeleDescriptionForfaitSki();
+        $domaines = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+            return $element->getSite()->getCrm() == 0;
+        });
+        /** @var DescriptionForfaitSkiTraduction $traduction */
+        /** @var DescriptionForfaitSki $descriptionForfaitSki */
+        /** @var Site $site */
+//        $em = $this->getDoctrine()->getManager();
+//        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
+        /** @var Domaine $domaineSite */
+        foreach ($domaines as $domaine) {
+            $emSite = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
+            $domaineSite = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaineUnifie));
+
+            $modeleDescriptionForfaitSkiSite = clone $modeleDescriptionForfaitSki;
+//            $modeleDescriptionForfaitSkiSite->setId($modeleDescriptionForfaitSki->getId());
+            $metadata = $emSite->getClassMetadata(get_class($modeleDescriptionForfaitSkiSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $domaineSite->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSkiSite);
+
+            foreach ($modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
+                $metadata = $emSite->getClassMetadata(get_class($descriptionForfaitSki));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+                foreach ($descriptionForfaitSki->getTraductions() as $traduction) {
+                    $traduction->setLangue($emSite->find('MondofuteLangueBundle:Langue', $traduction->getLangue()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getPrix()->getUnite())) {
+                    $descriptionForfaitSki->getPrix()->setUnite($emSite->find('MondofuteUniteBundle:UniteTarif', $descriptionForfaitSki->getPrix()->getUnite()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getAgeMin()->getUnite())) {
+                    $descriptionForfaitSki->getAgeMin()->setUnite($emSite->find('MondofuteUniteBundle:UniteAge', $descriptionForfaitSki->getAgeMin()->getUnite()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getAgeMax()->getUnite())) {
+                    $descriptionForfaitSki->getAgeMax()->setUnite($emSite->find('MondofuteUniteBundle:UniteAge', $descriptionForfaitSki->getAgeMax()->getUnite()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getLigneDescriptionForfaitSki())) {
+                    $descriptionForfaitSki->setLigneDescriptionForfaitSki($emSite->find('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSki', $descriptionForfaitSki->getLigneDescriptionForfaitSki()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getPresent())) {
+                    $descriptionForfaitSki->setPresent($emSite->find('MondofuteChoixBundle:OuiNonNC', $descriptionForfaitSki->getPresent()->getId()));
+                }
+            }
+            $emSite->persist($domaineSite);
+            $emSite->flush();
+        }
+    }
+
+    /**
+     * @param DomaineUnifie $domaineUnifie
+     */
+    public function addModeleDescriptionForfaitSkis($domaineUnifie)
+    {
+        /** @var Domaine $domaine */
+        /** @var LigneDescriptionForfaitSkiTraduction $ligneDescriptionForfaitSkiTraduction */
+        $em = $this->getDoctrine()->getManager();
+        $domaineCrm = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first();
+        $modeleDescriptionForfaitSki = new ModeleDescriptionForfaitSki();
+        $domaineCrm->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSki);
+        // Récupérer toutes les entitées LigneDescriptionForfaitSki
+        $ligneDescriptionForfaitSkis = $em->getRepository('MondofuteDescriptionForfaitSkiBundle:LigneDescriptionForfaitSki')->findAll();
+        foreach ($ligneDescriptionForfaitSkis as $ligneDescriptionForfaitSki) {
+            $descriptionForfaitSki = new DescriptionForfaitSki();
+            $descriptionForfaitSki->setLigneDescriptionForfaitSki($ligneDescriptionForfaitSki);
+            $descriptionForfaitSki->setQuantite($ligneDescriptionForfaitSki->getQuantite());
+            $age = new Age();
+            if (!empty($ligneDescriptionForfaitSki->getAgeMin())) {
+//                $age->setUnite($ligneDescriptionForfaitSki->getAgeMin()->getUnite());
+//                $age->setValeur($ligneDescriptionForfaitSki->getAgeMin()->getValeur());
+                $age = clone  $ligneDescriptionForfaitSki->getAgeMin();
+            }
+            $descriptionForfaitSki->setAgeMin($age);
+            $age = new Age();
+            if (!empty($ligneDescriptionForfaitSki->getAgeMax())) {
+//                $age->setUnite($ligneDescriptionForfaitSki->getAgeMax()->getUnite());
+//                $age->setValeur($ligneDescriptionForfaitSki->getAgeMax()->getValeur());
+                $age = clone $ligneDescriptionForfaitSki->getAgeMax();
+            }
+            $descriptionForfaitSki->setAgeMax($age);
+            $descriptionForfaitSki->setClassement($ligneDescriptionForfaitSki->getClassement());
+            $descriptionForfaitSki->setPresent($ligneDescriptionForfaitSki->getPresent());
+            $prix = new Tarif();
+            if (!empty($ligneDescriptionForfaitSki->getPrix())) {
+                $prix = clone $ligneDescriptionForfaitSki->getPrix();
+            }
+            $descriptionForfaitSki->setPrix($prix);
+            foreach ($ligneDescriptionForfaitSki->getTraductions() as $ligneDescriptionForfaitSkiTraduction) {
+                $traduction = new DescriptionForfaitSkiTraduction();
+                $traduction->setLangue($ligneDescriptionForfaitSkiTraduction->getLangue());
+                $traduction->setDescription($ligneDescriptionForfaitSkiTraduction->getDescription());
+                $traduction->setTexteDur($ligneDescriptionForfaitSkiTraduction->getTexteDur());
+                $traduction->setLibelle($ligneDescriptionForfaitSkiTraduction->getLibelle());
+                $descriptionForfaitSki->addTraduction($traduction);
+                $this->traductionsSortByLangue($descriptionForfaitSki);
+            }
+            $modeleDescriptionForfaitSki->addDescriptionForfaitSki($descriptionForfaitSki);
         }
     }
 

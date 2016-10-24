@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Controller\ModeleDescriptionForfaitSkiController;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteTraduction;
@@ -93,6 +94,12 @@ class DomaineUnifieController extends Controller
 
         $this->ajouterDomainesDansForm($domaineUnifie);
         $this->domainesSortByAffichage($domaineUnifie);
+
+        // *** addModeleDescriptionForfaitSkis ***
+        $modeleDescriptionForfaitSkiController = new ModeleDescriptionForfaitSkiController();
+        $modeleDescriptionForfaitSkiController->setContainer($this->container);
+        $modeleDescriptionForfaitSkiController->addModeleDescriptionForfaitSkis($domaineUnifie);
+        // *** fin addModeleDescriptionForfaitSkis ***
 
         $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
@@ -250,6 +257,8 @@ class DomaineUnifieController extends Controller
                 $domaineCarteIdentiteController->copieVersSites($domaine->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie());
             }
             $this->copieVersSites($domaineUnifie);
+
+            $modeleDescriptionForfaitSkiController->copieForDomaineVersSites($domaineUnifie);
 
             // add flash messages
             $this->addFlash(
