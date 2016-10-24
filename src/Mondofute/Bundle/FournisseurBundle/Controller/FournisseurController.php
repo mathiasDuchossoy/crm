@@ -33,6 +33,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -226,6 +227,8 @@ class FournisseurController extends Controller
                 }
             }
 
+            $this->gestionInformationRM($fournisseur);
+
             $em->persist($fournisseur);
             $em->flush();
 
@@ -388,11 +391,11 @@ class FournisseurController extends Controller
                 // ***** fin gestion logo *****
 
                 // ***** gestion clause contractuelle *****
-                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
+                $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
 
                 // ***** gestion remontée RM *****
-                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
                 // ***** fin remontée RM *****
 
                 $emSite->persist($fournisseurSite);
@@ -406,7 +409,7 @@ class FournisseurController extends Controller
      * @param Fournisseur $fournisseur
      * @param Fournisseur $fournisseurSite
      */
-    private function gestionClauseContractuelle($fournisseur , $fournisseurSite)
+    private function gestionClauseContractuelleSite($fournisseur , $fournisseurSite)
     {
 
         $fournisseurSite
@@ -422,7 +425,7 @@ class FournisseurController extends Controller
      * @param Fournisseur $fournisseur
      * @param Fournisseur $fournisseurSite
      */
-    private function gestionInformationRM($fournisseur , $fournisseurSite)
+    private function gestionInformationRMSite($fournisseur , $fournisseurSite)
     {
 
         $fournisseurSite
@@ -431,6 +434,25 @@ class FournisseurController extends Controller
             ->setCommissionForfaitPeriode($fournisseur->getCommissionForfaitPeriode())
             ->setCommissionSupportMainLibre($fournisseur->getCommissionSupportMainLibre())
         ;
+    }
+
+    /**
+     * @param Fournisseur $fournisseur
+     */
+    private function gestionInformationRM($fournisseur)
+    {
+        $type = $fournisseur->getTypes()->filter(function (FamillePrestationAnnexe $element) {
+            return $element->getId() == 1;
+        })->first();
+        if(false === $type)
+        {
+            $fournisseur
+                ->setLieuRetraitForfaitSki(null)
+                ->setCommissionForfaitFamille(null)
+                ->setCommissionForfaitPeriode(null)
+                ->setCommissionSupportMainLibre(null)
+            ;
+        }
     }
 
     /**
@@ -1137,57 +1159,6 @@ class FournisseurController extends Controller
 
                             }
                             $this->gestionPrestationAnnexeLogement($prestationAnnexeHebergement, $prestationAnnex, $prestationAnnexeHebergementFournisseurId, $postSitesAEnregistrer, $prestationAnnexeHebergementsPosts);
-
-//                            $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
-//
-//                            /** @var Logement $logement */
-//                            /** @var LogementUnifie $logementUnifie */
-//                            foreach ($logementUnifies as $logementUnifie) {
-//                                $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
-//                                if (empty($prestationAnnexeLogementUnifie)) {
-//                                    $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
-//                                    $em->persist($prestationAnnexeLogementUnifie);
-//                                    /** @var LogementUnifie $logementUnifie */
-//                                    /** @var Logement $logement */
-//                                    foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
-//                                        $prestationAnnexeLogement = new PrestationAnnexeLogement();
-//                                        $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
-//                                        $prestationAnnexeLogement
-//                                            ->setLogement($logementPrestationAnnexeLogement)
-//                                            ->setSite($logementPrestationAnnexeLogement->getSite());
-//                                    }
-//                                }
-//
-//                                foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
-//                                    $prestationAnnex
-//                                        ->addPrestationAnnexeLogement($prestationAnnexeLogement);
-//                                }
-//
-//                                /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
-//                                foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-//
-//                                    $actif = false;
-//
-//                                    $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
-//                                        return $element->getSite() == $prestationAnnexeHebergement->getSite();
-//                                    })->first();
-//
-//                                    $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
-//                                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-//
-//                                    if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
-//                                        and
-//                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
-//                                        and
-//                                        (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
-//                                    ) {
-//                                        $actif = true;
-//                                    }
-//
-//                                    $prestationAnnexeLogement->setActif($actif);
-//                                    $em->persist($prestationAnnexeHebergement);
-//                                }
-//                            }
                         }
                     }
                 }
@@ -1328,6 +1299,9 @@ class FournisseurController extends Controller
             // ***** GESTION CODE PROMO *****
             $this->gestionCodePromoFournisseurPrestationAnnexe($fournisseur);
             // ***** FIN GESTION CODE PROMO *****
+
+
+            $this->gestionInformationRM($fournisseur);
 
             $em->persist($fournisseur);
             $em->flush();
@@ -2623,11 +2597,11 @@ class FournisseurController extends Controller
                 // *** fin gestion code promo fournisseurPrestationAnnexe ***
 
                 // ***** gestion clause contractuelle *****
-                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
+                $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
 
                 // ***** gestion remontée RM *****
-                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
                 // ***** fin remontée RM *****
 
                 $emSite->persist($fournisseurSite);
