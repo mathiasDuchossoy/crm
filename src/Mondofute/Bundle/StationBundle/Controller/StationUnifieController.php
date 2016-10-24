@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
@@ -23,6 +24,7 @@ use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
+use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
@@ -114,6 +116,11 @@ class StationUnifieController extends Controller
         $stationUnifie = new StationUnifie();
 
         $this->ajouterStationsDansForm($stationUnifie);
+        /** @var Station $station */
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
+        }
         $this->stationsSortByAffichage($stationUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
@@ -123,19 +130,18 @@ class StationUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Station $entity */
-            foreach ($stationUnifie->getStations() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($stationUnifie->getStations() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
 
             /** @var Station $station */
-            foreach ($stationUnifie->getStations() as $station){
-                if (empty($station->getStationMere())){
+            foreach ($stationUnifie->getStations() as $station) {
+                if (empty($station->getStationMere())) {
                     $station
                         ->setPhotosParent(false)
-                        ->setVideosParent(false)
-                    ;
+                        ->setVideosParent(false);
                 }
             }
 
@@ -209,21 +215,23 @@ class StationUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+            $this->gestionStationLabel($stationUnifie);
+
 
             $em->persist($stationUnifie);
             $em->flush();
 
 //            if (!$error) {
-                foreach ($stationUnifie->getStations() as $station) {
-                    $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                    $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                    $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
-                }
-                $this->copieVersSites($stationUnifie);
+            foreach ($stationUnifie->getStations() as $station) {
+                $stationCarteIdentiteController->copieVersSites($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                $commentVenirController->copieVersSites($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                $descriptionController->copieVersSites($station->getStationDescription()->getStationDescriptionUnifie());
+            }
+            $this->copieVersSites($stationUnifie);
 
-                $this->addFlash('success', 'La station a bien été créé.');
+            $this->addFlash('success', 'La station a bien été créé.');
 
-                return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
+            return $this->redirectToRoute('station_station_edit', array('id' => $stationUnifie->getId()));
 //            }
         }
 
@@ -234,6 +242,34 @@ class StationUnifieController extends Controller
             'entity' => $stationUnifie,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function gestionStationLabel($stationUnifie)
+    {
+        /** @var Station $stationSite */
+        /** @var Station $stationCrm */
+        $stationCrm = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first();
+        $stationSites = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 0;
+        });
+        foreach ($stationCrm->getStationLabels() as $stationLabel)
+        {
+            foreach ($stationSites as $stationSite)
+            {
+                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel){
+                    return $element == $stationLabel;
+                })->first();
+                if(false === $stationLabelSite)
+                {
+                    $stationSite->addStationLabel($stationLabel);
+                }
+            }
+        }
     }
 
     /**
@@ -387,7 +423,6 @@ class StationUnifieController extends Controller
 
                 $station->setStationDescription($stationDescription);
                 // fin description
-
 
 
             }
@@ -676,6 +711,7 @@ class StationUnifieController extends Controller
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
                     ->setActif($station->getActif())
+                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()))
                 ;
 
 //            Gestion des traductions
@@ -813,6 +849,31 @@ class StationUnifieController extends Controller
                 }
                 // ********** FIN GESTION DES MEDIAS **********
 
+                // ***** gestion station label *****
+                /** @var StationLabel $stationLabel */
+                foreach ($station->getStationLabels() as $stationLabel)
+                {
+                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabel){
+                        return $element->getId() == $stationLabel->getId();
+                    })->first();
+                    if(false === $stationLabelSite)
+                    {
+                        $stationSite->addStationLabel($emSite->find(StationLabel::class , $stationLabel->getId()));
+                    }
+                }
+                /** @var StationLabel $stationLabelSite */
+                foreach ($stationSite->getStationLabels() as $stationLabelSite)
+                {
+                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabelSite){
+                        return $element->getId() == $stationLabelSite->getId();
+                    })->first();
+                    if(false === $stationLabel)
+                    {
+                        $stationSite->removeStationLabel($stationLabelSite);
+                    }
+                }
+                // ***** fin gestion station label *****
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
@@ -949,7 +1010,7 @@ class StationUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Station $entity */
             foreach ($stationUnifie->getStations() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -988,20 +1049,19 @@ class StationUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($stationUnifie->getStations() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($stationUnifie->getStations() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
 
-            foreach ($stationUnifie->getStations() as $station){
-                if (empty($station->getStationMere())){
+            foreach ($stationUnifie->getStations() as $station) {
+                if (empty($station->getStationMere())) {
                     $station
                         ->setPhotosParent(false)
-                        ->setVideosParent(false)
-                    ;
+                        ->setVideosParent(false);
                 }
             }
 
@@ -1184,6 +1244,7 @@ class StationUnifieController extends Controller
             }
             // ***** Fin Gestion des Medias *****
 
+            $this->gestionStationLabel($stationUnifie);
 
             $em->persist($stationUnifie);
             $em->flush();
@@ -1470,15 +1531,15 @@ class StationUnifieController extends Controller
 
         $referer = $request->headers->get('referer');
 
-        foreach ($stationUnifie->getStations() as $station){
-            if(!$station->getStations()->isEmpty()){
+        foreach ($stationUnifie->getStations() as $station) {
+            if (!$station->getStations()->isEmpty()) {
                 $this->addFlash('error', 'Impossible de supprimer cette station car elle est une station mère.');
                 return $this->redirect($referer);
             }
         }
 
-        foreach ($stationUnifie->getStations() as $station){
-            if(!$station->getHebergements()->isEmpty()){
+        foreach ($stationUnifie->getStations() as $station) {
+            if (!$station->getHebergements()->isEmpty()) {
                 $this->addFlash('error', 'Impossible de supprimer cette station car elle est lié à un hébergement.');
                 return $this->redirect($referer);
             }
@@ -1488,7 +1549,7 @@ class StationUnifieController extends Controller
 
             $erreurHebergement = false;
             foreach ($stationUnifie->getStations() as $station) {
-                if(!empty($station->getHebergements())){
+                if (!empty($station->getHebergements())) {
                     if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
                         $erreurHebergement = true;
                         $this->addFlash('error', 'La station est lié à un hébergement.');
@@ -1546,7 +1607,7 @@ class StationUnifieController extends Controller
                         $station->getStationCommentVenir()->removeStation($station);
                         $station->setStationCommentVenir(null);
                     }
-                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription())) && !empty($station->getStationDescription()) ) {
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription())) && !empty($station->getStationDescription())) {
                         $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
                         $station->getStationDescription()->removeStation($station);
                         $station->setStationDescription(null);

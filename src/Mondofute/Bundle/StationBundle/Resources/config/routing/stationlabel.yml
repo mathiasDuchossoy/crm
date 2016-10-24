@@ -1,0 +1,24 @@
+stationlabel_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteStationBundle:StationLabel:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+stationlabel_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteStationBundle:StationLabel:show" }
+    methods:  GET
+
+stationlabel_new:
+    path:     /new
+    defaults: { _controller: "MondofuteStationBundle:StationLabel:new" }
+    methods:  [GET, POST]
+
+stationlabel_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteStationBundle:StationLabel:edit" }
+    methods:  [GET, POST]
+
+stationlabel_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteStationBundle:StationLabel:delete" }
+    methods:  DELETE

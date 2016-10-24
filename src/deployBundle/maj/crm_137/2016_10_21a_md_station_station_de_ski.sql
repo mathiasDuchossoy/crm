@@ -1,0 +1,3 @@
+ALTER TABLE station ADD station_de_ski_id SMALLINT UNSIGNED DEFAULT NULL;
+ALTER TABLE station ADD CONSTRAINT FK_9F39F8B194EE0004 FOREIGN KEY (station_de_ski_id) REFERENCES oui_non_nc (id);
+CREATE INDEX IDX_9F39F8B194EE0004 ON station (station_de_ski_id);
