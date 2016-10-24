@@ -4,7 +4,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
     attributeOverride:
         id:
-#            column: id
             id: true
             type: integer
             generator:
@@ -30,6 +29,40 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     fields:
         contient:
             type: integer
+            options:
+                unsigned: true
+        phototheque:
+            type: text
+#       Clauses contractuelles
+        specificiteCommission:
+            type: string
+        retrocommissionMFFinSaison:
+            type: string
+        conditionAnnulation:
+            type: smallint
+            options:
+                unsigned: true
+        relocationAnnulation:
+            type: smallint
+            options:
+                unsigned: true
+        delaiPaiementFacture:
+            type: smallint
+            options:
+                unsigned: true
+#       fin Clauses contractuelles
+#       Informations RM
+        lieuRetraitForfaitSki:
+            type: string
+        commissionForfaitFamille:
+            type: string
+        commissionForfaitPeriode:
+            type: string
+        commissionSupportMainLibre:
+            type: string
+#       Fin Informations RM
+        blocageVente:
+            type: smallint
             options:
                 unsigned: true
     oneToMany:
