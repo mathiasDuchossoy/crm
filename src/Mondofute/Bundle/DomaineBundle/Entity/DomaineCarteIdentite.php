@@ -333,7 +333,7 @@ class DomaineCarteIdentite
     /**
      * Get pistes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPistes()
     {
@@ -511,7 +511,7 @@ class DomaineCarteIdentite
     /**
      * Get images
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getImages()
     {
@@ -545,7 +545,7 @@ class DomaineCarteIdentite
     /**
      * Get photos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhotos()
     {
