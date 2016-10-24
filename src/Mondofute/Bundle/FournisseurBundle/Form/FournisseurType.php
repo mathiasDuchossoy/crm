@@ -3,8 +3,10 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+use Mondofute\Bundle\FournisseurBundle\Entity\RelocationAnnulation;
 use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
@@ -22,6 +24,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -148,20 +151,6 @@ class FournisseurType extends AbstractType
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
             ))
-//            ->add('prestationAnnexes', EntityType::class, array(
-//                'class' => FournisseurPrestationAnnexe::class,
-//                'required' => true,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un type ---",
-//                'query_builder' => function (FournisseurPrestationAnnexeRepository $r) use ($locale, $famillePrestationAnnexeId) {
-//                    return $r->getTraductionsByLocale($locale, $famillePrestationAnnexeId);
-//                },
-//                'multiple'  => true,
-//                'expanded'  => true,
-//                'attr'      => array(
-//                    'onclick' => 'javascript:updatePrestationAnnexe(this);'
-//                )
-//            ))
             ->add('prestationAnnexes', CollectionType::class, array(
                 'entry_type' => FournisseurPrestationAnnexeType::class,
                 'allow_add' => true,
@@ -174,6 +163,41 @@ class FournisseurType extends AbstractType
                     'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
                 )
             ))
+            ->add('phototheque')
+//            Clauses contractuelles
+            ->add('specificiteCommission')
+            ->add('retrocommissionMFFinSaison')
+            ->add('conditionAnnulation', ChoiceType::class, array(
+                'choices' => array(
+                    ConditionAnnulation::getLibelle(ConditionAnnulation::standard) => ConditionAnnulation::standard,
+                    ConditionAnnulation::getLibelle(ConditionAnnulation::personnalisee) => ConditionAnnulation::personnalisee
+                ),
+                'choices_as_values' => true,
+                )
+            )
+            ->add('relocationAnnulation', ChoiceType::class, array(
+                    'choices' => array(
+                        RelocationAnnulation::getLibelle(RelocationAnnulation::nsp) => RelocationAnnulation::nsp,
+                        RelocationAnnulation::getLibelle(RelocationAnnulation::oui) => RelocationAnnulation::oui,
+                        RelocationAnnulation::getLibelle(RelocationAnnulation::non) => RelocationAnnulation::non,
+                        RelocationAnnulation::getLibelle(RelocationAnnulation::casParCas) => RelocationAnnulation::casParCas
+                    ),
+                    'choices_as_values' => true,
+                )
+            )
+            ->add('delaiPaiementFacture' , IntegerType::class , array(
+                'attr' => array(
+                    'max' => 0
+                )
+            ))
+//          fin Clauses contractuelles
+//          Informations RM
+            ->add('lieuRetraitForfaitSki')
+            ->add('commissionForfaitFamille')
+            ->add('commissionForfaitPeriode')
+            ->add('commissionSupportMainLibre')
+//          Fin Informations RM
+            ->add('blocageVente')
         ;
     }
 

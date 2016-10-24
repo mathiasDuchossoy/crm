@@ -30,6 +30,7 @@
                     {{ form_row(form.enseigne) }}
                     {{ form_row(form.raisonSociale) }}
                     {{ form_row(form.logo) }}
+                    {{ form_row(form.phototheque) }}
                     {{ form_row(form.types) }}
                     {#<div id="my-popover-container" style="display: none;">#}
                         {#<div class="alert alert-danger" role="alert">#}
@@ -49,6 +50,11 @@
                         {{ form_row(form.moyenComs[0].ville) }}
                         {{ form_row(form.moyenComs[0].pays) }}
                     {% endif %}
+
+                    {# panel clause contractuelle #}
+                    {% include ('@MondofuteFournisseur/fournisseur/panel-clause-contractuelle.html.twig') %}
+                    {# fin panel clause contractuelle #}
+
 
                     {#{{ form_row(form.remiseClefs) }}#}
                     <div class="form-group ">

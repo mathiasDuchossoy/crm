@@ -102,7 +102,7 @@ class Fournisseur extends Moral
     /**
      * @var integer
      */
-    private $conditionAnnulation;
+    private $conditionAnnulation = ConditionAnnulation::standard;
     /**
      * @var integer
      */

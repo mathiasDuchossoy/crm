@@ -268,8 +268,10 @@ class FournisseurController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
+                    ->setPhototheque($fournisseur->getPhototheque())
                     ->setEnseigne($fournisseur->getEnseigne())
-                    ->setRaisonSociale($fournisseur->getRaisonSociale());
+                    ->setRaisonSociale($fournisseur->getRaisonSociale())
+                ;
 
                 foreach ($fournisseur->getTypes() as $typeFournisseur) {
                     $typeFournisseurSite = $emSite->find(FamillePrestationAnnexe::class, $typeFournisseur);
@@ -384,13 +386,31 @@ class FournisseurController extends Controller
                 }
                 // ***** fin gestion logo *****
 
+                // ***** gestion clause contractuelle *****
+                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
+                // ***** fin gestion clause contractuelle *****
+
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
             }
         }
+    }
 
+    /**
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     */
+    private function gestionClauseContractuelle($fournisseur , $fournisseurSite)
+    {
 
+        $fournisseurSite
+            ->setSpecificiteCommission($fournisseur->getSpecificiteCommission())
+            ->setRetrocommissionMFFinSaison($fournisseur->getRetrocommissionMFFinSaison())
+            ->setConditionAnnulation($fournisseur->getConditionAnnulation())
+            ->setRelocationAnnulation($fournisseur->getRelocationAnnulation())
+            ->setDelaiPaiementFacture($fournisseur->getDelaiPaiementFacture())
+        ;
     }
 
     /**
@@ -1643,7 +1663,12 @@ class FournisseurController extends Controller
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur);
             if (!empty($fournisseurSite)) {
                 $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
-                $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
+                $fournisseurSite
+                    ->setContient($fournisseur->getContient())
+                    ->setPhototheque($fournisseur->getPhototheque())
+                    ->setEnseigne($fournisseur->getEnseigne())
+                    ->setRaisonSociale($fournisseur->getRaisonSociale())
+                ;
 
                 // remove the relationship between the sousFamillePrestationAnnexeSite and the famillePrestationAnnexeSite
                 foreach ($fournisseurSite->getTypes() as $typeSite) {
@@ -2575,6 +2600,10 @@ class FournisseurController extends Controller
                     }
                 }
                 // *** fin gestion code promo fournisseurPrestationAnnexe ***
+
+                // ***** gestion clause contractuelle *****
+                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
+                // ***** fin gestion clause contractuelle *****
 
                 $emSite->persist($fournisseurSite);
                 $emSite->flush();

@@ -33,36 +33,45 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
                 unsigned: true
         phototheque:
             type: text
+            nullable: true
 #       Clauses contractuelles
         specificiteCommission:
             type: string
+            nullable: true
         retrocommissionMFFinSaison:
             type: string
+            nullable: true
         conditionAnnulation:
             type: smallint
+            nullable: true
             options:
                 unsigned: true
         relocationAnnulation:
             type: smallint
+            nullable: true
             options:
                 unsigned: true
         delaiPaiementFacture:
+            nullable: true
             type: smallint
-            options:
-                unsigned: true
 #       fin Clauses contractuelles
 #       Informations RM
         lieuRetraitForfaitSki:
             type: string
+            nullable: true
         commissionForfaitFamille:
             type: string
+            nullable: true
         commissionForfaitPeriode:
             type: string
+            nullable: true
         commissionSupportMainLibre:
             type: string
+            nullable: true
 #       Fin Informations RM
         blocageVente:
             type: smallint
+            nullable: true
             options:
                 unsigned: true
     oneToMany:
