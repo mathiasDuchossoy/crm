@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\DomaineBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 
@@ -72,6 +73,10 @@ class Domaine
      * @var boolean
      */
     private $videosParent = false;
+    /**
+     * @var ModeleDescriptionForfaitSki
+     */
+    private $modeleDescriptionForfaitSki;
 
     /**
      * Constructor
@@ -511,6 +516,30 @@ class Domaine
     public function setVideosParent($videosParent)
     {
         $this->videosParent = $videosParent;
+
+        return $this;
+    }
+
+    /**
+     * Get modeleDescriptionForfaitSki
+     *
+     * @return ModeleDescriptionForfaitSki
+     */
+    public function getModeleDescriptionForfaitSki()
+    {
+        return $this->modeleDescriptionForfaitSki;
+    }
+
+    /**
+     * Set modeleDescriptionForfaitSki
+     *
+     * @param ModeleDescriptionForfaitSki $modeleDescriptionForfaitSki
+     *
+     * @return Domaine
+     */
+    public function setModeleDescriptionForfaitSki(ModeleDescriptionForfaitSki $modeleDescriptionForfaitSki = null)
+    {
+        $this->modeleDescriptionForfaitSki = $modeleDescriptionForfaitSki;
 
         return $this;
     }
