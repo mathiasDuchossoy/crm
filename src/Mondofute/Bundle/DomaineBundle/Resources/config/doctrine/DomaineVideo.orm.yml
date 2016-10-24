@@ -1,0 +1,30 @@
+Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DomaineBundle\Repository\DomaineVideoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        domaine:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Domaine
+            inversedBy: videos
+        video:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineVideoTraduction
+            mappedBy: video
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

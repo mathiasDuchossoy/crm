@@ -482,6 +482,24 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        domaine_video_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_video_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        domaine_video_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
         domaine_carte_identite_image_crm:
             providers:
                 - sonata.media.provider.image
@@ -590,6 +608,24 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        profil_video_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_video_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        profil_video_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
         zone_touristique_image_crm:
             providers:
                 - sonata.media.provider.image
@@ -621,6 +657,24 @@ sonata_media:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
         zone_touristique_photo_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_video_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_video_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        zone_touristique_video_francefute:
             providers:
                 - sonata.media.provider.image
             formats:
@@ -662,6 +716,24 @@ sonata_media:
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}
+        departement_video_crm:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_video_skifute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        departement_video_francefute:
+            providers:
+                - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
         region_image_crm:
             providers:
                 - sonata.media.provider.image
@@ -695,6 +767,24 @@ sonata_media:
         region_photo_francefute:
             providers:
                 - sonata.media.provider.image
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_video_crm:
+            providers:
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_video_skifute:
+            providers:
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 50 , quality: 100}
+                big:   { width: 500 , quality: 100}
+        region_video_francefute:
+            providers:
+                - sonata.media.provider.youtube
             formats:
                 small: { width: 50 , quality: 100}
                 big:   { width: 500 , quality: 100}

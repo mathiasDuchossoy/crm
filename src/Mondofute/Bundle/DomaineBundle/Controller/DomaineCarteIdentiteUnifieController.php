@@ -463,6 +463,7 @@ class DomaineCarteIdentiteUnifieController extends Controller
 //            Récupération de la domaineCarteIdentite sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($domaineCarteIdentiteSite = $emSite->getRepository(DomaineCarteIdentite::class)->findOneBy(array('domaineCarteIdentiteUnifie' => $entitySite))))) {
                     $domaineCarteIdentiteSite = new DomaineCarteIdentite();
+                    $entitySite->addDomaineCarteIdentite($domaineCarteIdentiteSite);
                 }
 
 //            copie des données domaineCarteIdentite
@@ -815,7 +816,6 @@ class DomaineCarteIdentiteUnifieController extends Controller
 
                 // ********** FIN GESTION DES MEDIAS **********
 
-                $entitySite->addDomaineCarteIdentite($domaineCarteIdentiteSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

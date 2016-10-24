@@ -112,6 +112,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         logo:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
             cascade: ['persist','remove']
+#            orphanRemoval: true
     manyToMany:
         types:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe

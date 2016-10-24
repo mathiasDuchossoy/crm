@@ -111,6 +111,29 @@
 
                                 </div>
                             </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Videos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des videos#}
+                                    <ul class="video" data-prototype_video="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': departement.videos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'video'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for video in departement.videos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': video,'langues': langues, 'name': i, 'entity': 'video'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
                         {% endif %}
                         
                     </div>
@@ -241,7 +264,7 @@
     <script type="text/javascript">
         var elements = [];
         var link = {};
-        {% set elements = ['image' , 'photo'] %}
+        {% set elements = ['image' , 'photo', 'video'] %}
         {% for element in elements %}
 
         var ${{ element }}CollectionHolder;

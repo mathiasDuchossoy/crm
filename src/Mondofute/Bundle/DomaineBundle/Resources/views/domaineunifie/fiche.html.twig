@@ -66,6 +66,7 @@
                         <div id="cbox_medias_parent_{{ domaine.vars.value.site.id }}">
                             {{ form_widget(domaine.imagesParent) }}
                             {{ form_widget(domaine.photosParent) }}
+                            {{ form_widget(domaine.videosParent) }}
                         </div>
                         <br/>
 
@@ -112,6 +113,29 @@
                                         {% for photo in domaine.photos %}
                                             <li class="element">
                                                 {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}
+                                            </li>
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading"><h3 class="panel-title">
+                                        Videos
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    {#liste des videos#}
+                                    <ul class="video" data-prototype_video="
+                                            {% filter escape %}
+                                            {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.videos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'video'} %}
+                                            {% endfilter %}
+                                            ">
+                                        {% set i = 0 %}
+                                        {% for video in domaine.videos %}
+                                            <li class="element">
+                                                {% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': video,'langues': langues, 'name': i, 'entity': 'video'} %}
                                             </li>
                                             {% set i = i + 1 %}
                                         {% endfor %}
@@ -213,58 +237,6 @@
                                         {% endfor %}
                                     </div>
                                     {{ form_row( domaine.domaineCarteIdentite.site ) }}
-
-                                    {# si le site est le crm on affiche le panel des medias #}
-                                    {#{% if domaine.domaineCarteIdentite.vars.value.site.crm == 1 %}#}
-                                    {#<div class="panel panel-primary">#}
-                                    {#<div class="panel-heading"><h3 class="panel-title">#}
-                                    {#Images#}
-                                    {#</h3>#}
-                                    {#</div>#}
-                                    {#<div class="panel-body">#}
-                                                {# liste des images #}
-                                    {#<ul class="image" data-prototype_image="#}
-                                    {#{% filter escape %}#}
-                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.images.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'image'} %}#}
-                                    {#{% endfilter %}#}
-                                    {#">#}
-                                    {#{% set i = 0 %}#}
-                                    {#{% for image in domaine.domaineCarteIdentite.images %}#}
-                                    {#<li class="element">#}
-                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': image,'langues': langues, 'name': i, 'entity': 'image'} %}#}
-                                    {#</li>#}
-                                    {#{% set i = i + 1 %}#}
-                                    {#{% endfor %}#}
-                                    {#</ul>#}
-
-                                    {#</div>#}
-                                    {#</div>#}
-                                    {#<div class="panel panel-primary">#}
-                                    {#<div class="panel-heading"><h3 class="panel-title">#}
-                                    {#Photos#}
-                                    {#</h3>#}
-                                    {#</div>#}
-                                    {#<div class="panel-body">#}
-                                                {#liste des photos#}
-                                    {#<ul class="photo" data-prototype_photo="#}
-                                    {#{% filter escape %}#}
-                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': domaine.domaineCarteIdentite.photos.vars.prototype, 'langues': langues, 'name': '__name__', 'entity': 'photo'} %}#}
-                                    {#{% endfilter %}#}
-                                    {#">#}
-                                    {#{% set i = 0 %}#}
-                                    {#{% for photo in domaine.domaineCarteIdentite.photos %}#}
-                                    {#<li class="element">#}
-                                    {#{% include('@MondofuteMedia/Layout/template-media.html.twig') with {'form': photo,'langues': langues, 'name': i, 'entity': 'photo'} %}#}
-                                    {#</li>#}
-                                    {#{% set i = i + 1 %}#}
-                                    {#{% endfor %}#}
-                                    {#</ul>#}
-
-                                    {#</div>#}
-                                    {#</div>#}
-                                    {#{% endif %}#}
-
-
                                 </div>
                             </div>
                         </div>
@@ -437,7 +409,7 @@
     <script type="text/javascript">
         var elements = [];
         var link = {};
-        {% set elements = ['image' , 'photo'] %}
+        {% set elements = ['image' , 'photo', 'video'] %}
         {% for element in elements %}
 
 

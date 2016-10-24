@@ -3,6 +3,9 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
  * Profil
@@ -14,40 +17,48 @@ class Profil
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @var ProfilUnifie
      */
     private $profilUnifie;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $images;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $photos;
     /**
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var Collection
+     */
+    private $videos;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
+        $this->stations = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     /**
@@ -63,9 +74,9 @@ class Profil
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param ProfilTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function removeTraduction(ProfilTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -73,7 +84,7 @@ class Profil
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -83,11 +94,11 @@ class Profil
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return Profil
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -97,7 +108,7 @@ class Profil
     /**
      * Get profilUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie
+     * @return ProfilUnifie
      */
     public function getProfilUnifie()
     {
@@ -107,11 +118,11 @@ class Profil
     /**
      * Set profilUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie
+     * @param ProfilUnifie $profilUnifie
      *
      * @return Profil
      */
-    public function setProfilUnifie(\Mondofute\Bundle\GeographieBundle\Entity\ProfilUnifie $profilUnifie = null)
+    public function setProfilUnifie(ProfilUnifie $profilUnifie = null)
     {
         $this->profilUnifie = $profilUnifie;
 
@@ -135,7 +146,7 @@ class Profil
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -159,11 +170,11 @@ class Profil
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction
+     * @param ProfilTraduction $traduction
      *
      * @return Profil
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ProfilTraduction $traduction)
+    public function addTraduction(ProfilTraduction $traduction)
     {
         $this->traductions[] = $traduction->setProfil($this);
 
@@ -173,11 +184,11 @@ class Profil
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return Profil
      */
-    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station;
 
@@ -187,11 +198,11 @@ class Profil
     /**
      * Add image
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image
+     * @param ProfilImage $image
      *
      * @return Profil
      */
-    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image)
+    public function addImage(ProfilImage $image)
     {
         $this->images[] = $image->setProfil($this);
 
@@ -201,9 +212,9 @@ class Profil
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -211,7 +222,7 @@ class Profil
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -221,9 +232,9 @@ class Profil
     /**
      * Remove image
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image
+     * @param ProfilImage $image
      */
-    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\ProfilImage $image)
+    public function removeImage(ProfilImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -231,7 +242,7 @@ class Profil
     /**
      * Get images
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getImages()
     {
@@ -241,11 +252,11 @@ class Profil
     /**
      * Add photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo
+     * @param ProfilPhoto $photo
      *
      * @return Profil
      */
-    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo)
+    public function addPhoto(ProfilPhoto $photo)
     {
         $this->photos[] = $photo->setProfil($this);
 
@@ -255,9 +266,9 @@ class Profil
     /**
      * Remove photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo
+     * @param ProfilPhoto $photo
      */
-    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\ProfilPhoto $photo)
+    public function removePhoto(ProfilPhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -265,7 +276,7 @@ class Profil
     /**
      * Get photos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhotos()
     {
@@ -294,5 +305,39 @@ class Profil
         $this->actif = $actif;
 
         return $this;
+    }
+
+    /**
+     * Add video
+     *
+     * @param ProfilVideo $video
+     *
+     * @return Profil
+     */
+    public function addVideo(ProfilVideo $video)
+    {
+        $this->videos[] = $video->setProfil($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove video
+     *
+     * @param ProfilVideo $video
+     */
+    public function removeVideo(ProfilVideo $video)
+    {
+        $this->videos->removeElement($video);
+    }
+
+    /**
+     * Get videos
+     *
+     * @return Collection
+     */
+    public function getVideos()
+    {
+        return $this->videos;
     }
 }

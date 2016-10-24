@@ -1,0 +1,23 @@
+Mondofute\Bundle\GeographieBundle\Entity\RegionVideoTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\RegionVideoTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        video:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionVideo
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }

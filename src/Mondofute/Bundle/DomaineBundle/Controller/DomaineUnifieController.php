@@ -18,6 +18,8 @@ use Mondofute\Bundle\DomaineBundle\Entity\DomainePhoto;
 use Mondofute\Bundle\DomaineBundle\Entity\DomainePhotoTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo;
+use Mondofute\Bundle\DomaineBundle\Entity\DomaineVideoTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin;
 use Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique;
@@ -98,8 +100,8 @@ class DomaineUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Domaine $entity */
-            foreach ($domaineUnifie->getDomaines() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($domaineUnifie->getDomaines() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -119,7 +121,9 @@ class DomaineUnifieController extends Controller
                 if (empty($domaine->getDomaineParent())) {
                     $domaine
                         ->setPhotosParent(false)
-                        ->setImagesParent(false);
+                        ->setImagesParent(false)
+                        ->setVideosParent(false)
+                    ;
                 }
             }
 
@@ -207,6 +211,31 @@ class DomaineUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
+
+
+            // *** gestion des videos ***
+            /** @var Domaine $domaineCrm */
+            $domaineCrm = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $domaineSites = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            /** @var DomaineVideo $domaineVideo */
+            foreach ($domaineCrm->getVideos() as $key => $domaineVideo) {
+                foreach ($domaineSites as $domaineSite) {
+                    $domaineVideoSite = clone $domaineVideo;
+                    $domaineSite->addVideo($domaineVideoSite);
+                    $actif = false;
+                    if (!empty($request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                        if (in_array($domaineSite->getSite()->getId(), $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
+                    }
+                    $domaineVideoSite->setActif($actif);
+                }
+            }
+            // *** gestion des videos ***
 
             $em->persist($domaineUnifie);
 
@@ -523,10 +552,12 @@ class DomaineUnifieController extends Controller
                     $domaineParent = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaine->getDomaineParent()->getDomaineUnifie()));
                     $photosParent = $domaine->getPhotosParent();
                     $imagesParent = $domaine->getImagesParent();
+                    $videosParent = $domaine->getVideosParent();
                 } else {
                     $domaineParent = null;
                     $photosParent = false;
                     $imagesParent = false;
+                    $videosParent = false;
                 }
 
                 if (!empty($domaine->getDomaineCarteIdentite())) {
@@ -549,6 +580,7 @@ class DomaineUnifieController extends Controller
 //            Récupération de la domaine sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($domaineSite = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $entitySite))))) {
                     $domaineSite = new Domaine();
+                    $entitySite->addDomaine($domaineSite);
                 }
 
 //            copie des données domaine
@@ -559,8 +591,8 @@ class DomaineUnifieController extends Controller
                     ->setDomaineCarteIdentite($domaineCarteIdentite)
                     ->setImagesParent($imagesParent)
                     ->setPhotosParent($photosParent)
-                    ->setActif($domaine->getActif())
-                ;
+                    ->setVideosParent($videosParent)
+                    ->setActif($domaine->getActif());
 
 //            Gestion des traductions
                 foreach ($domaine->getTraductions() as $domaineTraduc) {
@@ -802,14 +834,77 @@ class DomaineUnifieController extends Controller
 
                 // ********** FIN GESTION DES MEDIAS **********
 
-                $entitySite->addDomaine($domaineSite);
+
+                // *** gestion video ***
+                if (!empty($domaine->getVideos()) && !$domaine->getVideos()->isEmpty()) {
+                    /** @var DomaineVideo $domaineVideo */
+                    foreach ($domaine->getVideos() as $domaineVideo) {
+                        $domaineVideoSite = $domaineSite->getVideos()->filter(function (DomaineVideo $element) use ($domaineVideo) {
+                            return $element->getId() == $domaineVideo->getId();
+                        })->first();
+                        if (false === $domaineVideoSite) {
+                            $domaineVideoSite = new DomaineVideo();
+                            $domaineSite->addVideo($domaineVideoSite);
+                            $domaineVideoSite
+                                ->setId($domaineVideo->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($domaineVideoSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        if (empty($domaineVideoSite->getVideo()) || $domaineVideoSite->getVideo()->getId() != $domaineVideo->getVideo()->getId()) {
+                            $cloneVideo = clone $domaineVideo->getVideo();
+                            $metadata = $emSite->getClassMetadata(get_class($cloneVideo));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                            $cloneVideo->setContext('domaine_video_' . $domaineSite->getSite()->getLibelle());
+                            // on supprime l'ancien photo
+                            if (!empty($domaineVideoSite->getVideo())) {
+                                $emSite->remove($domaineVideoSite->getVideo());
+                                $this->deleteFile($domaineVideoSite->getVideo());
+                            }
+                            $domaineVideoSite
+                                ->setVideo($cloneVideo);
+                        }
+                        $domaineVideoSite
+                            ->setActif($domaineVideo->getActif());
+                        // *** traductions ***
+                        foreach ($domaineVideo->getTraductions() as $traduction) {
+                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction) {
+                                return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                            })->first();
+                            if (false === $traductionSite) {
+                                $traductionSite = new DomaineVideoTraduction();
+                                $domaineVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+
+                        // *** fin traductions ***
+                    }
+                }
+
+                if (!empty($domaineSite->getVideos()) && !$domaineSite->getVideos()->isEmpty()) {
+                    /** @var DomaineVideo $domaineVideo */
+                    /** @var DomaineVideo $domaineVideoSite */
+                    foreach ($domaineSite->getVideos() as $domaineVideoSite) {
+                        $domaineVideo = $domaine->getVideos()->filter(function (DomaineVideo $element) use ($domaineVideoSite) {
+                            return $element->getId() == $domaineVideoSite->getId();
+                        })->first();
+                        if (false === $domaineVideo) {
+                            $emSite->remove($domaineVideoSite);
+                            $emSite->remove($domaineVideoSite->getVideo());
+                            $this->deleteFile($domaineVideoSite->getVideo());
+                        }
+                    }
+                }
+                // *** fin gestion video ***
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
         }
         $this->ajouterDomaineUnifieSiteDistant($entity->getId(), $entity->getDomaines());
     }
-
 
     /**
      * Création d'un nouveau domaineImage
@@ -859,7 +954,6 @@ class DomaineUnifieController extends Controller
         }
     }
 
-
     /**
      * Création d'un nouveau domainePhoto
      * @param DomainePhoto $domainePhoto
@@ -905,6 +999,13 @@ class DomaineUnifieController extends Controller
             $traductionSite->setLibelle($traduction->getLibelle())
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $domainePhotoSite->addTraduction($traductionSite);
+        }
+    }
+
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
         }
     }
 
@@ -979,7 +1080,7 @@ class DomaineUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Domaine $entity */
             foreach ($domaineUnifie->getDomaines() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -992,6 +1093,8 @@ class DomaineUnifieController extends Controller
         $originalImages = new ArrayCollection();
         $originalDomainePhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
+        $originalDomaineVideos = new ArrayCollection();
+        $originalVideos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($domaineUnifie->getDomaines() as $domaine) {
             // si l'domaine est celui du CRM
@@ -1010,6 +1113,13 @@ class DomaineUnifieController extends Controller
                     $originalDomainePhotos->add($domainePhoto);
                     $originalPhotos->add($domainePhoto->getPhoto());
                 }
+                // on parcourt les domaineVideo pour les comparer ensuite
+                /** @var DomaineVideo $domaineVideo */
+                foreach ($domaine->getVideos() as $domaineVideo) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalDomaineVideos->add($domaineVideo);
+                    $originalVideos->set($domaineVideo->getId() , $domaineVideo->getVideo());
+                }
             }
         }
 
@@ -1026,10 +1136,10 @@ class DomaineUnifieController extends Controller
             $domaineCarteIdentiteUnifieController = new DomaineCarteIdentiteUnifieController();
             $domaineCarteIdentiteUnifieController->setContainer($this->container);
             try {
-                foreach ($domaineUnifie->getDomaines() as $entity){
-                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                foreach ($domaineUnifie->getDomaines() as $entity) {
+                    if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                         $entity->setActif(false);
-                    }else{
+                    } else {
                         $entity->setActif(true);
                     }
                 }
@@ -1040,7 +1150,9 @@ class DomaineUnifieController extends Controller
                     if (empty($domaine->getDomaineParent())) {
                         $domaine
                             ->setPhotosParent(false)
-                            ->setImagesParent(false);
+                            ->setImagesParent(false)
+                            ->setVideosParent(false)
+                        ;
                     }
                 }
 
@@ -1168,6 +1280,74 @@ class DomaineUnifieController extends Controller
                     }
                 }
                 // ************* fin suppression photos *************
+
+
+                // ** suppression videos **
+                foreach ($originalDomaineVideos as $originalDomaineVideo) {
+                    if (false === $domaineCrm->getVideos()->contains($originalDomaineVideo)) {
+                        $videos = $em->getRepository(DomaineVideo::class)->findBy(array('video' => $originalDomaineVideo->getVideo()));
+                        foreach ($videos as $video) {
+                            $em->remove($video);
+                        }
+                        $em->remove($originalDomaineVideo->getVideo());
+                        $this->deleteFile($originalDomaineVideo->getVideo());
+                    }
+                }
+                // ** fin suppression videos **
+                // *** gestion des videos ***
+                /** @var Domaine $domaineCrm */
+                $domaineCrm = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+                    return $element->getSite()->getCrm() == 1;
+                })->first();
+                $domaineSites = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
+                    return $element->getSite()->getCrm() == 0;
+                });
+                /** @var DomaineVideo $domaineVideo */
+                foreach ($domaineCrm->getVideos() as $key => $domaineVideo) {
+                    foreach ($domaineSites as $domaineSite) {
+                        if (empty($domaineVideo->getId()) ) {
+                            $domaineVideoSite = clone $domaineVideo;
+                        }
+                        else
+                        {
+                            $domaineVideoSite = $em->getRepository(DomaineVideo::class)->findOneBy(array('video' => $originalVideos->get($domaineVideo->getId()) , 'domaine' => $domaineSite));
+                            if($originalVideos->get($domaineVideo->getId()) != $domaineVideo->getVideo())
+                            {
+                                $em->remove($domaineVideoSite->getVideo());
+                                $this->deleteFile($domaineVideoSite->getVideo());
+                                $domaineVideoSite->setVideo($domaineVideo->getVideo());
+                            }
+                        }
+                        $domaineSite->addVideo($domaineVideoSite);
+                        $actif = false;
+                        if (!empty($request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                            if (in_array($domaineSite->getSite()->getId(), $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                                $actif = true;
+                            }
+                        }
+                        $domaineVideoSite->setActif($actif);
+
+                        // *** traductions ***
+                        foreach ($domaineVideo->getTraductions() as $traduction)
+                        {
+                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction)
+                            {
+                                return $element->getLangue() == $traduction->getLangue();
+                            })->first();
+                            if(false === $traductionSite)
+                            {
+                                $traductionSite = new DomaineVideoTraduction();
+                                $domaineVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($traduction->getLangue());
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+                        // *** fin traductions ***
+                    }
+                }
+                // *** fin gestion des videos ***
+
+
 
                 // ***** carte d'identité *****
                 $this->carteIdentiteEdit($request, $domaineUnifie);
@@ -1599,6 +1779,14 @@ class DomaineUnifieController extends Controller
                                 }
                             }
                         }
+                        // si il y a des videos pour l'entité, les supprimer
+                        if (!empty($domaineSite->getVideos())) {
+                            /** @var DomaineVideo $domaineVideoSite */
+                            foreach ($domaineSite->getVideos() as $domaineVideoSite) {
+                                $emSite->remove($domaineVideoSite);
+                                $emSite->remove($domaineVideoSite->getVideo());
+                            }
+                        }
 
                         $emSite->flush();
                     }
@@ -1627,6 +1815,14 @@ class DomaineUnifieController extends Controller
                             $photo = $domainePhoto->getPhoto();
                             $domainePhoto->setPhoto(null);
                             $em->remove($photo);
+                        }
+                    }
+                    // si il y a des videos pour l'entité, les supprimer
+                    if (!empty($domaine->getVideos())) {
+                        /** @var DomaineVideo $domaineVideoSite */
+                        foreach ($domaine->getVideos() as $domaineVideoSite) {
+                            $em->remove($domaineVideoSite);
+                            $em->remove($domaineVideoSite->getVideo());
                         }
                     }
 

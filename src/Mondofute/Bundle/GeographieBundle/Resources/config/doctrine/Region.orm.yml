@@ -37,4 +37,8 @@ Mondofute\Bundle\GeographieBundle\Entity\Region:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionPhoto
             mappedBy: region
             cascade: ['persist' , 'remove']
+        videos:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\RegionVideo
+            mappedBy: region
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
