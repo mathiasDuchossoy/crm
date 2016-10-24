@@ -3,6 +3,11 @@
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
+use Mondofute\Bundle\UniteBundle\Entity\Age;
+use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 
 /**
  * DescriptionForfaitSki
@@ -25,37 +30,37 @@ class DescriptionForfaitSki
     private $classement;
 
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\Tarif
+     * @var Tarif
      */
     private $prix;
 
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\Age
+     * @var Age
      */
     private $ageMin;
 
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\Age
+     * @var Age
      */
     private $ageMax;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
 
     /**
-     * @var \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     * @var OuiNonNC
      */
     private $present;
 
     /**
-     * @var \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki
+     * @var LigneDescriptionForfaitSki
      */
     private $ligneDescriptionForfaitSki;
 
     /**
-     * @var \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
+     * @var ModeleDescriptionForfaitSki
      */
     private $modele;
 
@@ -64,7 +69,7 @@ class DescriptionForfaitSki
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -128,9 +133,9 @@ class DescriptionForfaitSki
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
+     * @param DescriptionForfaitSkiTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
+    public function removeTraduction(DescriptionForfaitSkiTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -138,7 +143,7 @@ class DescriptionForfaitSki
     /**
      * Get present
      *
-     * @return \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC
+     * @return OuiNonNC
      */
     public function getPresent()
     {
@@ -148,11 +153,11 @@ class DescriptionForfaitSki
     /**
      * Set present
      *
-     * @param \Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present
+     * @param OuiNonNC $present
      *
      * @return DescriptionForfaitSki
      */
-    public function setPresent(\Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC $present = null)
+    public function setPresent(OuiNonNC $present = null)
     {
         $this->present = $present;
 
@@ -162,7 +167,7 @@ class DescriptionForfaitSki
     /**
      * Get ligneDescriptionForfaitSki
      *
-     * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki
+     * @return LigneDescriptionForfaitSki
      */
     public function getLigneDescriptionForfaitSki()
     {
@@ -172,11 +177,11 @@ class DescriptionForfaitSki
     /**
      * Set ligneDescriptionForfaitSki
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki
+     * @param LigneDescriptionForfaitSki $ligneDescriptionForfaitSki
      *
      * @return DescriptionForfaitSki
      */
-    public function setLigneDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki = null)
+    public function setLigneDescriptionForfaitSki(LigneDescriptionForfaitSki $ligneDescriptionForfaitSki = null)
     {
         $this->ligneDescriptionForfaitSki = $ligneDescriptionForfaitSki;
 
@@ -186,7 +191,7 @@ class DescriptionForfaitSki
     /**
      * Get modele
      *
-     * @return \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
+     * @return ModeleDescriptionForfaitSki
      */
     public function getModele()
     {
@@ -196,11 +201,11 @@ class DescriptionForfaitSki
     /**
      * Set modele
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki $modele
+     * @param ModeleDescriptionForfaitSki $modele
      *
      * @return DescriptionForfaitSki
      */
-    public function setModele(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki $modele = null)
+    public function setModele(ModeleDescriptionForfaitSki $modele = null)
     {
         $this->modele = $modele;
 
@@ -210,7 +215,7 @@ class DescriptionForfaitSki
     public function __clone()
     {
         /** @var DescriptionForfaitSkiTraduction $traduction */
-        $this->id = null;
+//        $this->id = null;
         $traductions = $this->getTraductions();
         $this->traductions = new ArrayCollection();
         if (count($traductions) > 0) {
@@ -228,7 +233,7 @@ class DescriptionForfaitSki
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -248,7 +253,7 @@ class DescriptionForfaitSki
     /**
      * Get ageMin
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
+     * @return Age
      */
     public function getAgeMin()
     {
@@ -258,11 +263,11 @@ class DescriptionForfaitSki
     /**
      * Set ageMin
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMin
+     * @param Age $ageMin
      *
      * @return DescriptionForfaitSki
      */
-    public function setAgeMin(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMin = null)
+    public function setAgeMin(Age $ageMin = null)
     {
         $this->ageMin = $ageMin;
 
@@ -272,7 +277,7 @@ class DescriptionForfaitSki
     /**
      * Get ageMax
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Age
+     * @return Age
      */
     public function getAgeMax()
     {
@@ -282,11 +287,11 @@ class DescriptionForfaitSki
     /**
      * Set ageMax
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Age $ageMax
+     * @param Age $ageMax
      *
      * @return DescriptionForfaitSki
      */
-    public function setAgeMax(\Mondofute\Bundle\UniteBundle\Entity\Age $ageMax = null)
+    public function setAgeMax(Age $ageMax = null)
     {
         $this->ageMax = $ageMax;
 
@@ -296,7 +301,7 @@ class DescriptionForfaitSki
     /**
      * Get prix
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Tarif
+     * @return Tarif
      */
     public function getPrix()
     {
@@ -306,11 +311,11 @@ class DescriptionForfaitSki
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction
+     * @param DescriptionForfaitSkiTraduction $traduction
      *
      * @return DescriptionForfaitSki
      */
-    public function addTraduction(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction $traduction)
+    public function addTraduction(DescriptionForfaitSkiTraduction $traduction)
     {
         $this->traductions[] = $traduction->setDescriptionForfaitSki($this);
 
@@ -320,11 +325,11 @@ class DescriptionForfaitSki
     /**
      * Set prix
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Tarif $prix
+     * @param Tarif $prix
      *
      * @return DescriptionForfaitSki
      */
-    public function setPrix(\Mondofute\Bundle\UniteBundle\Entity\Tarif $prix = null)
+    public function setPrix(Tarif $prix = null)
     {
         $this->prix = $prix;
 

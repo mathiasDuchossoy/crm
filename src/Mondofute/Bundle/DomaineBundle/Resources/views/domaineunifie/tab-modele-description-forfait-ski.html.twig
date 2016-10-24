@@ -1,0 +1,74 @@
+{% if domaine.vars.value.site.crm == 1 %}
+    <div id="data_modele_description_forfait_ski" class="tab-pane fade in">
+        {% for key , descriptionForfaitSki in domaine.modeleDescriptionForfaitSki.descriptionForfaitSkis %}
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">
+                        Fiche {{ key + 1 }}
+                    </h3></div>
+                <div class="panel-body">
+
+
+                    {{ form_row(descriptionForfaitSki.quantite) }}
+                    {{ form_row(descriptionForfaitSki.classement) }}
+                    {{ form_row(descriptionForfaitSki.present) }}
+                    <div class="form-group"><label class="col-sm-2 control-label">Prix</label>
+                        <div class="col-sm-10">
+                            <div id="domaine_unifie_domaines_0_modeleDescriptionForfaitSki_descriptionForfaitSkis_{{ key }}_prix"
+                                 class="form-inline">
+                                {{ form_widget(descriptionForfaitSki.prix.valeur, {'type' : 'number'}) }}
+                                {{ form_widget(descriptionForfaitSki.prix.unite) }}
+                            </div>
+                        </div>
+                    </div>
+                    {#{{ form_row(descriptionForfaitSki.prix , {'attr' : { 'class' : 'form-inline'}}) }}#}
+                    <div class="form-group"><label class="col-sm-2 control-label">Age min</label>
+                        <div class="col-sm-10">
+                            <div id="domaine_unifie_domaines_0_modeleDescriptionForfaitSki_descriptionForfaitSkis_{{ key }}_ageMin"
+                                 class="form-inline">
+                                {{ form_widget(descriptionForfaitSki.ageMin.valeur, {'type' : 'number'}) }}
+                                {{ form_widget(descriptionForfaitSki.ageMin.unite) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-sm-2 control-label">Age max</label>
+                        <div class="col-sm-10">
+                            <div id="domaine_unifie_domaines_0_modeleDescriptionForfaitSki_descriptionForfaitSkis_{{ key }}_ageMax"
+                                 class="form-inline">
+                                {{ form_row(descriptionForfaitSki.ageMax.valeur, {'type' : 'number'}) }}
+                                {{ form_row(descriptionForfaitSki.ageMax.unite) }}
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs">
+                        {% set iTraduc = 0 %}
+                        {% for traduction in descriptionForfaitSki.traductions %}
+                            <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                                <a data-toggle="tab"
+                                   href="#{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}">
+                                    {# affiche la langue en fonction de la locale#}
+                                    {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                        {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                            {{ traductionLangue.libelle }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content">
+                        {% set iTraduc = 0 %}
+                        {% for traduction in descriptionForfaitSki.traductions %}
+                            <div id="{{ descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.id }}_{{ traduction.vars.value.langue.id }}"
+                                 class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                                {#{{ form_row(traduction) }}#}
+                                {% for element in traduction.children %}
+                                    {{ form_row(element) }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

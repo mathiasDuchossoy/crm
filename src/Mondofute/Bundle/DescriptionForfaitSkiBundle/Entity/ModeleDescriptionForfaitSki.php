@@ -1,8 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 
 /**
  * ModeleDescriptionForfaitSki
@@ -15,7 +16,7 @@ class ModeleDescriptionForfaitSki
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $descriptionForfaitSkis;
 
@@ -24,7 +25,7 @@ class ModeleDescriptionForfaitSki
      */
     public function __construct()
     {
-        $this->descriptionForfaitSkis = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->descriptionForfaitSkis = new ArrayCollection();
     }
 
     /**
@@ -38,13 +39,21 @@ class ModeleDescriptionForfaitSki
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Add descriptionForfaitSki
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki
+     * @param DescriptionForfaitSki $descriptionForfaitSki
      *
      * @return ModeleDescriptionForfaitSki
      */
-    public function addDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki)
+    public function addDescriptionForfaitSki(DescriptionForfaitSki $descriptionForfaitSki)
     {
         $this->descriptionForfaitSkis[] = $descriptionForfaitSki->setModele($this);
 
@@ -54,9 +63,9 @@ class ModeleDescriptionForfaitSki
     /**
      * Remove descriptionForfaitSki
      *
-     * @param \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki
+     * @param DescriptionForfaitSki $descriptionForfaitSki
      */
-    public function removeDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki)
+    public function removeDescriptionForfaitSki(DescriptionForfaitSki $descriptionForfaitSki)
     {
         $this->descriptionForfaitSkis->removeElement($descriptionForfaitSki);
     }
@@ -64,7 +73,7 @@ class ModeleDescriptionForfaitSki
     public function __clone()
     {
         /** @var DescriptionForfaitSki $descriptionsForfaitSki */
-        $this->id = null;
+//        $this->id = null;
         $descriptionsForfaitSkis = $this->getDescriptionForfaitSkis();
         $this->descriptionForfaitSkis = new ArrayCollection();
         if (count($descriptionsForfaitSkis) > 0) {
@@ -79,7 +88,7 @@ class ModeleDescriptionForfaitSki
     /**
      * Get descriptionForfaitSkis
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDescriptionForfaitSkis()
     {
