@@ -197,7 +197,9 @@ class FournisseurType extends AbstractType
             ->add('commissionForfaitPeriode')
             ->add('commissionSupportMainLibre')
 //          Fin Informations RM
-            ->add('blocageVente')
+            ->add('blocageVente' , IntegerType::class , array(
+                'label' => 'Blocage vente J-'
+            ))
         ;
     }
 

@@ -269,6 +269,7 @@ class FournisseurController extends Controller
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
                     ->setPhototheque($fournisseur->getPhototheque())
+                    ->setBlocageVente($fournisseur->getBlocageVente())
                     ->setEnseigne($fournisseur->getEnseigne())
                     ->setRaisonSociale($fournisseur->getRaisonSociale())
                 ;
@@ -390,6 +391,10 @@ class FournisseurController extends Controller
                 $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
 
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
+
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
@@ -410,6 +415,21 @@ class FournisseurController extends Controller
             ->setConditionAnnulation($fournisseur->getConditionAnnulation())
             ->setRelocationAnnulation($fournisseur->getRelocationAnnulation())
             ->setDelaiPaiementFacture($fournisseur->getDelaiPaiementFacture())
+        ;
+    }
+
+    /**
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     */
+    private function gestionInformationRM($fournisseur , $fournisseurSite)
+    {
+
+        $fournisseurSite
+            ->setLieuRetraitForfaitSki($fournisseur->getLieuRetraitForfaitSki())
+            ->setCommissionForfaitFamille($fournisseur->getCommissionForfaitFamille())
+            ->setCommissionForfaitPeriode($fournisseur->getCommissionForfaitPeriode())
+            ->setCommissionSupportMainLibre($fournisseur->getCommissionSupportMainLibre())
         ;
     }
 
@@ -1666,6 +1686,7 @@ class FournisseurController extends Controller
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
                     ->setPhototheque($fournisseur->getPhototheque())
+                    ->setBlocageVente($fournisseur->getBlocageVente())
                     ->setEnseigne($fournisseur->getEnseigne())
                     ->setRaisonSociale($fournisseur->getRaisonSociale())
                 ;
@@ -2604,6 +2625,10 @@ class FournisseurController extends Controller
                 // ***** gestion clause contractuelle *****
                 $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
+
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
 
                 $emSite->persist($fournisseurSite);
                 $emSite->flush();

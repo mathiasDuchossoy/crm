@@ -32,6 +32,7 @@
                     {{ form_row(form.logo) }}
                     {{ form_row(form.phototheque) }}
                     {{ form_row(form.types) }}
+                    {{ form_row(form.blocageVente) }}
                     {#<div id="my-popover-container" style="display: none;">#}
                         {#<div class="alert alert-danger" role="alert">#}
                             {#<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>#}
@@ -54,6 +55,10 @@
                     {# panel clause contractuelle #}
                     {% include ('@MondofuteFournisseur/fournisseur/panel-clause-contractuelle.html.twig') %}
                     {# fin panel clause contractuelle #}
+
+                    {# panel information RM #}
+                    {% include ('@MondofuteFournisseur/fournisseur/panel-information-rm.html.twig') %}
+                    {# fin panel information RM #}
 
 
                     {#{{ form_row(form.remiseClefs) }}#}
