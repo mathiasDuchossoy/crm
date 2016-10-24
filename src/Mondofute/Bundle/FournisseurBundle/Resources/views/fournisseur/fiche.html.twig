@@ -1852,4 +1852,24 @@
             return true;
         }
     </script>
+
+    {# information RM #}
+    <script type="text/javascript">
+    function displayInformationRM()
+    {
+        // fournisseur_types_1
+        var $element = $('#fournisseur_types_1');
+        var $panel_information_rm = $('#panel_information_rm');
+        if($element.is(':checked'))
+        {
+            $panel_information_rm.show();
+        }
+        else
+        {
+            $panel_information_rm.hide();
+        }
+    }
+    displayInformationRM();
+    </script>
+    {# fin information RM #}
 {% endblock %}
