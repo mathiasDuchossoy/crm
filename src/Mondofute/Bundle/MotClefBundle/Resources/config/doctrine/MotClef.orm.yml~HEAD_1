@@ -1,0 +1,24 @@
+Mondofute\Bundle\MotClefBundle\Entity\MotClef:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\MotClefBundle\Repository\MotClefRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToMany:
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: motClefs
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    lifecycleCallbacks: {  }
