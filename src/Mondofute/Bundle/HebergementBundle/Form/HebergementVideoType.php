@@ -98,8 +98,7 @@ class HebergementVideoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementVideo',
-            'model_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementVideo',
+            'data_class' => 'Mondofute\Bundle\HebergementBundle\Entity\HebergementVideo'
         ));
     }
 }

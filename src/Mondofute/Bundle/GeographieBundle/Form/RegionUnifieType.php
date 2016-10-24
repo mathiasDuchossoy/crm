@@ -55,6 +55,13 @@ class RegionUnifieType extends AbstractType
                         $regionCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
+                foreach ($region->children['videos'] as $key => $video) {
+                    if ($video->vars['value']->getActif() == true) {
+
+                        $siteId = $region->vars['value']->getSite()->getId();
+                        $regionCrm->children['videos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
             }
 
         }

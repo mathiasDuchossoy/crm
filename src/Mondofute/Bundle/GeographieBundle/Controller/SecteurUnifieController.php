@@ -319,6 +319,7 @@ class SecteurUnifieController extends Controller
 //            Récupération du secteur sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($secteurSite = $emSite->getRepository(Secteur::class)->findOneBy(array('secteurUnifie' => $entitySite))))) {
                     $secteurSite = new Secteur();
+                    $entitySite->addSecteur($secteurSite);
                 }
 //            copie des données secteur
                 $secteurSite
@@ -567,7 +568,6 @@ class SecteurUnifieController extends Controller
 
                 // ********** FIN GESTION DES MEDIAS **********
 
-                $entitySite->addSecteur($secteurSite);
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }

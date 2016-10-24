@@ -1,0 +1,30 @@
+Mondofute\Bundle\GeographieBundle\Entity\DepartementVideo:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\GeographieBundle\Repository\DepartementVideoRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        departement:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Departement
+            inversedBy: videos
+        video:
+            targetEntity: Application\Sonata\MediaBundle\Entity\Media
+            cascade: ['persist']
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\DepartementVideoTraduction
+            mappedBy: video
+            cascade: ['persist' , 'remove']
+    lifecycleCallbacks: {  }

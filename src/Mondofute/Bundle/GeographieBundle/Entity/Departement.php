@@ -3,6 +3,10 @@
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+
 
 /**
  * Departement
@@ -14,44 +18,53 @@ class Departement
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
+     * @var DepartementUnifie
      */
     private $departementUnifie;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\Region
+     * @var Region
      */
     private $region;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $images;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $photos;
     /**
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var Collection
+     */
+    private $videos;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
+        $this->region = new ArrayCollection();
+        $this->stations = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     /**
@@ -67,9 +80,9 @@ class Departement
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     * @param DepartementTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    public function removeTraduction(DepartementTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -77,7 +90,7 @@ class Departement
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -87,11 +100,11 @@ class Departement
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return Departement
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -115,7 +128,7 @@ class Departement
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -139,11 +152,11 @@ class Departement
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction
+     * @param DepartementTraduction $traduction
      *
      * @return Departement
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\DepartementTraduction $traduction)
+    public function addTraduction(DepartementTraduction $traduction)
     {
         $this->traductions[] = $traduction->setDepartement($this);
 
@@ -153,7 +166,7 @@ class Departement
     /**
      * Get departementUnifie
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie
+     * @return DepartementUnifie
      */
     public function getDepartementUnifie()
     {
@@ -163,12 +176,12 @@ class Departement
     /**
      * Set departementUnifie
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie
+     * @param DepartementUnifie $departementUnifie
      *
      * @return Departement
      */
     public function setDepartementUnifie(
-        \Mondofute\Bundle\GeographieBundle\Entity\DepartementUnifie $departementUnifie = null
+        DepartementUnifie $departementUnifie = null
     )
     {
         $this->departementUnifie = $departementUnifie;
@@ -179,7 +192,7 @@ class Departement
     /**
      * Get region
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\Region
+     * @return Region
      */
     public function getRegion()
     {
@@ -189,11 +202,11 @@ class Departement
     /**
      * Set region
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\Region $region
+     * @param Region $region
      *
      * @return Departement
      */
-    public function setRegion(\Mondofute\Bundle\GeographieBundle\Entity\Region $region = null)
+    public function setRegion(Region $region = null)
     {
         $this->region = $region;
 
@@ -203,11 +216,11 @@ class Departement
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return Departement
      */
-    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station;
 
@@ -217,9 +230,9 @@ class Departement
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -227,7 +240,7 @@ class Departement
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -237,11 +250,11 @@ class Departement
     /**
      * Add image
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image
+     * @param DepartementImage $image
      *
      * @return Departement
      */
-    public function addImage(\Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image)
+    public function addImage(DepartementImage $image)
     {
         $this->images[] = $image->setDepartement($this);
 
@@ -251,9 +264,9 @@ class Departement
     /**
      * Remove image
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image
+     * @param DepartementImage $image
      */
-    public function removeImage(\Mondofute\Bundle\GeographieBundle\Entity\DepartementImage $image)
+    public function removeImage(DepartementImage $image)
     {
         $this->images->removeElement($image);
     }
@@ -261,7 +274,7 @@ class Departement
     /**
      * Get images
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getImages()
     {
@@ -271,11 +284,11 @@ class Departement
     /**
      * Add photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo
+     * @param DepartementPhoto $photo
      *
      * @return Departement
      */
-    public function addPhoto(\Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo)
+    public function addPhoto(DepartementPhoto $photo)
     {
         $this->photos[] = $photo->setDepartement($this);
 
@@ -285,9 +298,9 @@ class Departement
     /**
      * Remove photo
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo
+     * @param DepartementPhoto $photo
      */
-    public function removePhoto(\Mondofute\Bundle\GeographieBundle\Entity\DepartementPhoto $photo)
+    public function removePhoto(DepartementPhoto $photo)
     {
         $this->photos->removeElement($photo);
     }
@@ -295,7 +308,7 @@ class Departement
     /**
      * Get photos
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPhotos()
     {
@@ -324,5 +337,39 @@ class Departement
         $this->actif = $actif;
 
         return $this;
+    }
+
+    /**
+     * Add video
+     *
+     * @param DepartementVideo $video
+     *
+     * @return Departement
+     */
+    public function addVideo(DepartementVideo $video)
+    {
+        $this->videos[] = $video->setDepartement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove video
+     *
+     * @param DepartementVideo $video
+     */
+    public function removeVideo(DepartementVideo $video)
+    {
+        $this->videos->removeElement($video);
+    }
+
+    /**
+     * Get videos
+     *
+     * @return Collection
+     */
+    public function getVideos()
+    {
+        return $this->videos;
     }
 }
