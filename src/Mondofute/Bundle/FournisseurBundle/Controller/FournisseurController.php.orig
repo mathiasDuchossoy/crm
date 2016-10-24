@@ -271,13 +271,8 @@ class FournisseurController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
-<<<<<<< HEAD
                     ->setPhototheque($fournisseur->getPhototheque())
                     ->setBlocageVente($fournisseur->getBlocageVente())
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
-=======
-                    ->setPhototheque($fournisseur->getPhototheque())
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
                     ->setEnseigne($fournisseur->getEnseigne())
                     ->setRaisonSociale($fournisseur->getRaisonSociale())
                 ;
@@ -399,22 +394,22 @@ class FournisseurController extends Controller
                 }
                 // ***** fin gestion logo *****
 
-<<<<<<< HEAD
                 // ***** gestion clause contractuelle *****
                 $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
 
+<<<<<<< HEAD
                 // ***** gestion remontée RM *****
                 $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
                 // ***** fin remontée RM *****
 
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
+||||||| parent of b91a2d1... Informations RM dans form et persist
 =======
-                // ***** gestion clause contractuelle *****
-                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
-                // ***** fin gestion clause contractuelle *****
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
 
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
+>>>>>>> b91a2d1... Informations RM dans form et persist
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
@@ -422,24 +417,13 @@ class FournisseurController extends Controller
         }
     }
 
-<<<<<<< HEAD
     /**
      * @param Fournisseur $fournisseur
      * @param Fournisseur $fournisseurSite
      */
     private function gestionClauseContractuelleSite($fournisseur , $fournisseurSite)
     {
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
-=======
-    /**
-     * @param Fournisseur $fournisseur
-     * @param Fournisseur $fournisseurSite
-     */
-    private function gestionClauseContractuelle($fournisseur , $fournisseurSite)
-    {
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
 
-<<<<<<< HEAD
         $fournisseurSite
             ->setSpecificiteCommission($fournisseur->getSpecificiteCommission())
             ->setRetrocommissionMFFinSaison($fournisseur->getRetrocommissionMFFinSaison())
@@ -450,6 +434,7 @@ class FournisseurController extends Controller
     }
 
     /**
+<<<<<<< HEAD
      * @param Fournisseur $fournisseur
      * @param Fournisseur $fournisseurSite
      */
@@ -481,19 +466,27 @@ class FournisseurController extends Controller
                 ->setCommissionSupportMainLibre(null)
             ;
         }
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
-=======
-        $fournisseurSite
-            ->setSpecificiteCommission($fournisseur->getSpecificiteCommission())
-            ->setRetrocommissionMFFinSaison($fournisseur->getRetrocommissionMFFinSaison())
-            ->setConditionAnnulation($fournisseur->getConditionAnnulation())
-            ->setRelocationAnnulation($fournisseur->getRelocationAnnulation())
-            ->setDelaiPaiementFacture($fournisseur->getDelaiPaiementFacture())
-        ;
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
     }
 
     /**
+||||||| parent of b91a2d1... Informations RM dans form et persist
+=======
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     */
+    private function gestionInformationRM($fournisseur , $fournisseurSite)
+    {
+
+        $fournisseurSite
+            ->setLieuRetraitForfaitSki($fournisseur->getLieuRetraitForfaitSki())
+            ->setCommissionForfaitFamille($fournisseur->getCommissionForfaitFamille())
+            ->setCommissionForfaitPeriode($fournisseur->getCommissionForfaitPeriode())
+            ->setCommissionSupportMainLibre($fournisseur->getCommissionSupportMainLibre())
+        ;
+    }
+
+    /**
+>>>>>>> b91a2d1... Informations RM dans form et persist
      * @param Fournisseur $fournisseurSite
      * @param $listeServices
      * @param EntityManager $emSite
@@ -1700,7 +1693,6 @@ class FournisseurController extends Controller
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur);
             if (!empty($fournisseurSite)) {
                 $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
-<<<<<<< HEAD
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
                     ->setPhototheque($fournisseur->getPhototheque())
@@ -1708,16 +1700,6 @@ class FournisseurController extends Controller
                     ->setEnseigne($fournisseur->getEnseigne())
                     ->setRaisonSociale($fournisseur->getRaisonSociale())
                 ;
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
-                $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
-=======
-                $fournisseurSite
-                    ->setContient($fournisseur->getContient())
-                    ->setPhototheque($fournisseur->getPhototheque())
-                    ->setEnseigne($fournisseur->getEnseigne())
-                    ->setRaisonSociale($fournisseur->getRaisonSociale())
-                ;
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
 
                 // remove the relationship between the sousFamillePrestationAnnexeSite and the famillePrestationAnnexeSite
                 foreach ($fournisseurSite->getTypes() as $typeSite) {
@@ -2608,22 +2590,22 @@ class FournisseurController extends Controller
                 }
                 // *** fin gestion code promo fournisseurPrestationAnnexe ***
 
-<<<<<<< HEAD
                 // ***** gestion clause contractuelle *****
                 $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
                 // ***** fin gestion clause contractuelle *****
 
+<<<<<<< HEAD
                 // ***** gestion remontée RM *****
                 $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
                 // ***** fin remontée RM *****
 
-||||||| parent of 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
+||||||| parent of b91a2d1... Informations RM dans form et persist
 =======
-                // ***** gestion clause contractuelle *****
-                $this->gestionClauseContractuelle($fournisseur , $fournisseurSite);
-                // ***** fin gestion clause contractuelle *****
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRM($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
 
->>>>>>> 881f86b... mise en place form pour clause-contractuelle, presist sites, champs nullable
+>>>>>>> b91a2d1... Informations RM dans form et persist
                 $emSite->persist($fournisseurSite);
                 $emSite->flush();
             } else {
