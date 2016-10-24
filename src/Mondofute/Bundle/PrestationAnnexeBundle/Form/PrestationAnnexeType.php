@@ -49,29 +49,6 @@ class PrestationAnnexeType extends AbstractType
                     return $r->getTraductionsByLocale($locale);
                 }
             ))
-//            ->add('sousFamillePrestationAnnexes', EntityType::class, array(
-//                'class' => SousFamillePrestationAnnexe::class,
-//                'required' => false,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir une/des sous-famille(s) ---",
-//                'query_builder' => function (SousFamillePrestationAnnexeRepository $rr) use ($locale) {
-//                    return $rr->getTraductionsByLocale($locale);
-//                },
-//                'multiple' => true
-//            ))
-//            ->add('type', ChoiceType::class, array(
-//                'choices' => array(
-//                    Type::getLibelle(Type::Individuelle) => Type::Individuelle,
-//                    Type::getLibelle(Type::Quantite) => Type::Quantite,
-//                    Type::getLibelle(Type::Forfait) => Type::Forfait,
-//                ),
-//                "placeholder" => " --- choisir un type ---",
-//                'choices_as_values' => true,
-//                'label' => 'type',
-//                'translation_domain' => 'messages',
-////                'expanded' => true,
-//                'required' => true,
-//            ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
             ))
