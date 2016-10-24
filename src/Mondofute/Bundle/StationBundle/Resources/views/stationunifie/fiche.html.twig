@@ -40,6 +40,8 @@
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.profils , { 'attr' : { 'data-unique_block_prefix' : station.profils.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationLabels , { 'attr' : { 'data-unique_block_prefix' : station.stationLabels.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.stationDeSki , { 'attr' : { 'data-unique_block_prefix' : station.stationDeSki.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
                             {% for traduction in station.traductions %}
                                 <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
