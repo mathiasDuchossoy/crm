@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la station label' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation de la station label' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ stationLabel.id }}</td>
+        </tr>
+        {% for traduction in stationLabel.traductions %}
+            {% if traduction.langue.code == app.request.locale %}
+                <tr class="row">
+                    <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+                    <td>
+                        {{ traduction.libelle }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('stationlabel_index') }}">Retour à la liste</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('stationlabel_edit', { 'id': stationLabel.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}
