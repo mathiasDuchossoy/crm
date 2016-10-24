@@ -642,7 +642,6 @@ class ProfilUnifieController extends Controller
                             return $element->getId() == $profilVideoSite->getId();
                         })->first();
                         if (false === $profilVideo) {
-                            dump('delete');
                             $emSite->remove($profilVideoSite);
                             $emSite->remove($profilVideoSite->getVideo());
                             $this->deleteFile($profilVideoSite->getVideo());
@@ -1077,7 +1076,6 @@ class ProfilUnifieController extends Controller
             // *** fin gestion des videos ***
 
             // ***** Gestion des Medias *****
-//            dump($profilUnifie);die;
             // CAS D'UN NOUVEAU 'PROFIL IMAGE' OU DE MODIFICATION D'UN "PROFIL IMAGE"
             /** @var ProfilImage $profilImage */
             // tableau pour la suppression des anciens images
@@ -1283,7 +1281,6 @@ class ProfilUnifieController extends Controller
      */
     public function deleteAction(Request $request, ProfilUnifie $profilUnifie)
     {
-//        dump($profilUnifie);die;
         $form = $this->createDeleteForm($profilUnifie);
         $form->handleRequest($request);
 
