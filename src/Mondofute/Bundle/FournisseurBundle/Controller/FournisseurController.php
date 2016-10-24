@@ -368,19 +368,23 @@ class FournisseurController extends Controller
                 // ***** gestion logo *****
                 if (!empty($fournisseur->getLogo())) {
                     $logo = $fournisseur->getLogo();
-//                if (!empty($fournisseurSite->getLogo())){
-//                    $logoSite = $fournisseurSite->getLogo();
-//                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
-
-                    $cloneVisuel = clone $logo;
-                    $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-                    $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-
-                    // on supprime l'ancien visuel
-                    $fournisseurSite->setLogo(null);
-//                        $emSite->remove($logoSite);
-
-                    $fournisseurSite->setLogo($cloneVisuel);
+                    if(empty($fournisseurSite->getLogo()) || $logo->getId() != $fournisseurSite->getLogo()->getId())
+                    {
+                        $cloneVisuel = clone $logo;
+                        $metadata = $emSite->getClassMetadata(get_class($cloneVisuel));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+                        if(!empty($fournisseurSite->getLogo())){
+                            $emSite->remove($fournisseurSite->getLogo());
+                        }
+                        $fournisseurSite->setLogo($cloneVisuel);
+                    }
+                }
+                else{
+                    if(!empty($fournisseurSite->getLogo())){
+                        $emSite->remove($fournisseurSite->getLogo());
+                        $fournisseurSite->setLogo(null);
+                    }
                 }
                 // ***** fin gestion logo *****
 
@@ -1098,56 +1102,6 @@ class FournisseurController extends Controller
                             }
                             $this->gestionPrestationAnnexeLogement($prestationAnnexeHebergement, $prestationAnnex, $prestationAnnexeHebergementFournisseurId, $postSitesAEnregistrer, $prestationAnnexeHebergementsPosts);
 
-//                            $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
-//
-//                            /** @var Logement $logement */
-//                            /** @var LogementUnifie $logementUnifie */
-//                            foreach ($logementUnifies as $logementUnifie) {
-//                                $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
-//                                if (empty($prestationAnnexeLogementUnifie)) {
-//                                    $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
-//                                    $em->persist($prestationAnnexeLogementUnifie);
-//                                    /** @var LogementUnifie $logementUnifie */
-//                                    /** @var Logement $logement */
-//                                    foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
-//                                        $prestationAnnexeLogement = new PrestationAnnexeLogement();
-//                                        $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
-//                                        $prestationAnnexeLogement
-//                                            ->setLogement($logementPrestationAnnexeLogement)
-//                                            ->setSite($logementPrestationAnnexeLogement->getSite());
-//                                    }
-//                                }
-//
-//                                foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
-//                                    $prestationAnnex
-//                                        ->addPrestationAnnexeLogement($prestationAnnexeLogement);
-//                                }
-//
-//                                /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
-//                                foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-//
-//                                    $actif = false;
-//
-//                                    $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
-//                                        return $element->getSite() == $prestationAnnexeHebergement->getSite();
-//                                    })->first();
-//
-//                                    $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
-//                                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-//
-//                                    if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
-//                                        and
-//                                        in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
-//                                        and
-//                                        (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
-//                                    ) {
-//                                        $actif = true;
-//                                    }
-//
-//                                    $prestationAnnexeLogement->setActif($actif);
-//                                    $em->persist($prestationAnnexeHebergement);
-//                                }
-//                            }
                         }
                     }
                 }
@@ -1172,10 +1126,6 @@ class FournisseurController extends Controller
             $interlocuteurController->setContainer($this->container);
 
             // Si le fournisseur a un parent, on efface la liste des interlocuteurs
-//            if (!empty($fournisseur->getFournisseurParent())) {
-//                $fournisseur->getInterlocuteurs()->clear();
-//            }
-
             foreach ($originalInterlocuteurs as $interlocuteur) {
                 if (false === $fournisseur->getInterlocuteurs()->contains($interlocuteur)) {
 
@@ -1289,12 +1239,20 @@ class FournisseurController extends Controller
             $this->gestionCodePromoFournisseurPrestationAnnexe($fournisseur);
             // ***** FIN GESTION CODE PROMO *****
 
+
+
+            if(!empty($fournisseur->getLogo()) && empty($request->request->get('fournisseur')['logo']))
+            {
+                $em->remove($fournisseur->getLogo());
+                $fournisseur->setLogo(null);
+            }
+
             $em->persist($fournisseur);
             $em->flush();
 
             $this->mAJSites($fournisseur);
 
-            if (!empty($originalLogo) && $originalLogo != $fournisseur->getLogo()) {
+            if (empty($fournisseur->getLogo()) && !empty($originalLogo) || !empty($originalLogo) && $originalLogo != $fournisseur->getLogo()) {
                 $em->remove($originalLogo);
                 $em->flush();
             }
@@ -2470,64 +2428,22 @@ class FournisseurController extends Controller
                 // ***** gestion logo *****
                 if (!empty($fournisseur->getLogo())) {
                     $logo = $fournisseur->getLogo();
-//                    dump($fournisseurSite->getLogo());die;
-                    if (!empty($fournisseurSite->getLogo())) {
-                        $logoSite = $fournisseurSite->getLogo();
-                        if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
-
-                            $cloneVisuel = clone $logo;
-                            $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-                            $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-
-                            // on supprime l'ancien visuel
-                            $fournisseurSite->setLogo(null);
-                            $emSite->remove($logoSite);
-
-                            $fournisseurSite->setLogo($cloneVisuel);
+                    if(empty($fournisseurSite->getLogo()) || $logo->getId() != $fournisseurSite->getLogo()->getId())
+                    {
+                        $cloneVisuel = clone $logo;
+                        $metadata = $emSite->getClassMetadata(get_class($cloneVisuel));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
+                        if(!empty($fournisseurSite->getLogo())){
+                            $emSite->remove($fournisseurSite->getLogo());
                         }
-                    } else {
-//                        // on lui clone l'image
-//                        $cloneVisuel = clone $logo;
-//                        // **** récupération du visuel physique ****
-//                        $pool = $this->container->get('sonata.media.pool');
-//                        $provider = $pool->getProvider($cloneVisuel->getProviderName());
-//                        $provider->getReferenceImage($cloneVisuel);
-//
-//                        $cloneVisuel->setBinaryContent($this->container->getParameter('chemin_media') . $provider->getReferenceImage($cloneVisuel));
-//
-//                        $cloneVisuel->setProviderReference($logo->getProviderReference());
-//                        $cloneVisuel->setName($logo->getName());
-//                        // **** fin récupération du visuel physique ****
-//
-//                        // on donne au nouveau visuel, le context correspondant en fonction du site
-//                        $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-//                        // on lui attache l'id de référence du visuel correspondant sur la bdd crm
-//                        $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-//
-//                        $fournisseur->setLogo($cloneVisuel);
-
-
-                        if (!empty($fournisseur->getLogo())) {
-                            $logo = $fournisseur->getLogo();
-//                if (!empty($fournisseurSite->getLogo())){
-//                    $logoSite = $fournisseurSite->getLogo();
-//                    if ($logoSite->getMetadataValue('crm_ref_id') != $logo->getId()) {
-
-                            $cloneVisuel = clone $logo;
-                            $cloneVisuel->setMetadataValue('crm_ref_id', $logo->getId());
-                            $cloneVisuel->setContext('fournisseur_logo_' . $site->getLibelle());
-
-                            // on supprime l'ancien visuel
-                            $fournisseurSite->setLogo(null);
-//                        $emSite->remove($logoSite);
-
-                            $fournisseurSite->setLogo($cloneVisuel);
-                        }
+                        $fournisseurSite->setLogo($cloneVisuel);
                     }
-                } else {
-                    if (!empty($fournisseurSite->getLogo())) {
-                        $fournisseurSite->setLogo(null);
+                }
+                else{
+                    if(!empty($fournisseurSite->getLogo())){
                         $emSite->remove($fournisseurSite->getLogo());
+                        $fournisseurSite->setLogo(null);
                     }
                 }
                 // ***** fin gestion logo *****

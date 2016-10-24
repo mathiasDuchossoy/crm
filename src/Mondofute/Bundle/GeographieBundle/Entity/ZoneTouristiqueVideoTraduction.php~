@@ -1,0 +1,26 @@
+<?php
+
+namespace Mondofute\Bundle\GeographieBundle\Entity;
+
+/**
+ * ZoneTouristiqueVideoTraduction
+ */
+class ZoneTouristiqueVideoTraduction
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

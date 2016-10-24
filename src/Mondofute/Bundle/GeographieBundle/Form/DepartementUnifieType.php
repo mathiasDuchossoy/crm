@@ -83,6 +83,14 @@ class DepartementUnifieType extends AbstractType
                         $departementCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
+                foreach ($departement->children['videos'] as $key => $video) {
+                    if ($video->vars['value']->getActif() == true) {
+
+                        $siteId = $departement->vars['value']->getSite()->getId();
+//                    $departementCrm->children['videos']->children[$key]
+                        $departementCrm->children['videos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
             }
 
         }

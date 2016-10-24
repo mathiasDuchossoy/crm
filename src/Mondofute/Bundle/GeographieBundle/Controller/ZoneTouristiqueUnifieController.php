@@ -16,6 +16,8 @@ use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhoto;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhotoTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueUnifie;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueVideo;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueVideoTraduction;
 use Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -87,8 +89,8 @@ class ZoneTouristiqueUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ZoneTouristique $entity */
-            foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -179,6 +181,31 @@ class ZoneTouristiqueUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
 
+            // *** gestion des videos ***
+            /** @var ZoneTouristique $zoneTouristiqueCrm */
+            $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                return $element->getSite()->getCrm() == 1;
+            })->first();
+            $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                return $element->getSite()->getCrm() == 0;
+            });
+            /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
+            foreach ($zoneTouristiqueCrm->getVideos() as $key => $zoneTouristiqueVideo) {
+                foreach ($zoneTouristiqueSites as $zoneTouristiqueSite) {
+                    $zoneTouristiqueVideoSite = clone $zoneTouristiqueVideo;
+                    $zoneTouristiqueSite->addVideo($zoneTouristiqueVideoSite);
+                    $actif = false;
+                    if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                        if (in_array($zoneTouristiqueSite->getSite()->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                            $actif = true;
+                        }
+                    }
+                    $zoneTouristiqueVideoSite->setActif($actif);
+                }
+            }
+            // *** gestion des videos ***
+
+
 //            $em = $this->getDoctrine()->getManager();
             $em->persist($zoneTouristiqueUnifie);
             $em->flush();
@@ -217,8 +244,7 @@ class ZoneTouristiqueUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($zoneTouristique->getTraductions()->filter(function (ZoneTouristiqueTraduction $element) use
-                        (
+                        if ($zoneTouristique->getTraductions()->filter(function (ZoneTouristiqueTraduction $element) use (
                             $langue
                         ) {
                             return $element->getLangue() == $langue;
@@ -323,14 +349,14 @@ class ZoneTouristiqueUnifieController extends Controller
 //            Récupération de la station sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($zoneTouristiqueSite = $emSite->getRepository(ZoneTouristique::class)->findOneBy(array('zoneTouristiqueUnifie' => $entitySite))))) {
                     $zoneTouristiqueSite = new ZoneTouristique();
+                    $entitySite->addZoneTouristique($zoneTouristiqueSite);
                 }
 
 //            copie des données station
                 $zoneTouristiqueSite
                     ->setSite($site)
                     ->setZoneTouristiqueUnifie($entitySite)
-                    ->setActif($zoneTouristique->getActif())
-                ;
+                    ->setActif($zoneTouristique->getActif());
 
 //            Gestion des traductions
                 foreach ($zoneTouristique->getTraductions() as $zoneTouristiqueTraduc) {
@@ -571,9 +597,72 @@ class ZoneTouristiqueUnifieController extends Controller
                 }
 
                 // ********** FIN GESTION DES MEDIAS **********
-                
-                
-                $entitySite->addZoneTouristique($zoneTouristiqueSite);
+
+
+                // *** gestion video ***
+                if (!empty($zoneTouristique->getVideos()) && !$zoneTouristique->getVideos()->isEmpty()) {
+                    /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
+                    foreach ($zoneTouristique->getVideos() as $zoneTouristiqueVideo) {
+                        $zoneTouristiqueVideoSite = $zoneTouristiqueSite->getVideos()->filter(function (ZoneTouristiqueVideo $element) use ($zoneTouristiqueVideo) {
+                            return $element->getId() == $zoneTouristiqueVideo->getId();
+                        })->first();
+                        if (false === $zoneTouristiqueVideoSite) {
+                            $zoneTouristiqueVideoSite = new ZoneTouristiqueVideo();
+                            $zoneTouristiqueSite->addVideo($zoneTouristiqueVideoSite);
+                            $zoneTouristiqueVideoSite
+                                ->setId($zoneTouristiqueVideo->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($zoneTouristiqueVideoSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        if (empty($zoneTouristiqueVideoSite->getVideo()) || $zoneTouristiqueVideoSite->getVideo()->getId() != $zoneTouristiqueVideo->getVideo()->getId()) {
+                            $cloneVideo = clone $zoneTouristiqueVideo->getVideo();
+                            $metadata = $emSite->getClassMetadata(get_class($cloneVideo));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                            $cloneVideo->setContext('zone_touristique_video_' . $zoneTouristiqueSite->getSite()->getLibelle());
+                            // on supprime l'ancien photo
+                            if (!empty($zoneTouristiqueVideoSite->getVideo())) {
+                                $emSite->remove($zoneTouristiqueVideoSite->getVideo());
+                                $this->deleteFile($zoneTouristiqueVideoSite->getVideo());
+                            }
+                            $zoneTouristiqueVideoSite
+                                ->setVideo($cloneVideo);
+                        }
+                        $zoneTouristiqueVideoSite
+                            ->setActif($zoneTouristiqueVideo->getActif());
+                        // *** traductions ***
+                        foreach ($zoneTouristiqueVideo->getTraductions() as $traduction) {
+                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (ZoneTouristiqueVideoTraduction $element) use ($traduction) {
+                                return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                            })->first();
+                            if (false === $traductionSite) {
+                                $traductionSite = new ZoneTouristiqueVideoTraduction();
+                                $zoneTouristiqueVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+
+                        // *** fin traductions ***
+                    }
+                }
+
+                if (!empty($zoneTouristiqueSite->getVideos()) && !$zoneTouristiqueSite->getVideos()->isEmpty()) {
+                    /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
+                    /** @var ZoneTouristiqueVideo $zoneTouristiqueVideoSite */
+                    foreach ($zoneTouristiqueSite->getVideos() as $zoneTouristiqueVideoSite) {
+                        $zoneTouristiqueVideo = $zoneTouristique->getVideos()->filter(function (ZoneTouristiqueVideo $element) use ($zoneTouristiqueVideoSite) {
+                            return $element->getId() == $zoneTouristiqueVideoSite->getId();
+                        })->first();
+                        if (false === $zoneTouristiqueVideo) {
+                            $emSite->remove($zoneTouristiqueVideoSite);
+                            $emSite->remove($zoneTouristiqueVideoSite->getVideo());
+                            $this->deleteFile($zoneTouristiqueVideoSite->getVideo());
+                        }
+                    }
+                }
+                // *** fin gestion video ***
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
@@ -629,7 +718,6 @@ class ZoneTouristiqueUnifieController extends Controller
         }
     }
 
-
     /**
      * Création d'un nouveau zoneTouristiquePhoto
      * @param ZoneTouristiquePhoto $zoneTouristiquePhoto
@@ -678,6 +766,12 @@ class ZoneTouristiqueUnifieController extends Controller
         }
     }
 
+    private function deleteFile($visuel)
+    {
+        if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
+            unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
+        }
+    }
 
     /**
      * Ajoute la reference site unifie dans les sites n'ayant pas de station a enregistrer
@@ -751,7 +845,7 @@ class ZoneTouristiqueUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var ZoneTouristique $entity */
             foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -765,6 +859,8 @@ class ZoneTouristiqueUnifieController extends Controller
         $originalImages = new ArrayCollection();
         $originalZoneTouristiquePhotos = new ArrayCollection();
         $originalPhotos = new ArrayCollection();
+        $originalZoneTouristiqueVideos = new ArrayCollection();
+        $originalVideos = new ArrayCollection();
 //          Créer un ArrayCollection des objets de stations courants dans la base de données
         foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $zoneTouristique) {
             $originalZoneTouristiques->add($zoneTouristique);
@@ -784,6 +880,13 @@ class ZoneTouristiqueUnifieController extends Controller
                     $originalZoneTouristiquePhotos->add($zoneTouristiquePhoto);
                     $originalPhotos->add($zoneTouristiquePhoto->getPhoto());
                 }
+                // on parcourt les zoneTouristiqueVideo pour les comparer ensuite
+                /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
+                foreach ($zoneTouristique->getVideos() as $zoneTouristiqueVideo) {
+                    // on ajoute les photo dans la collection de sauvegarde
+                    $originalZoneTouristiqueVideos->add($zoneTouristiqueVideo);
+                    $originalVideos->set($zoneTouristiqueVideo->getId(), $zoneTouristiqueVideo->getVideo());
+                }
             }
         }
 
@@ -801,10 +904,10 @@ class ZoneTouristiqueUnifieController extends Controller
 //        dump($editForm);die();
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
-                foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity){
-                    if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+                foreach ($zoneTouristiqueUnifie->getZoneTouristiques() as $entity) {
+                    if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                         $entity->setActif(false);
-                    }else{
+                    } else {
                         $entity->setActif(true);
                     }
                 }
@@ -933,7 +1036,69 @@ class ZoneTouristiqueUnifieController extends Controller
                     }
                 }
                 // ************* fin suppression photos *************
-                
+
+
+                // ** suppression videos **
+                foreach ($originalZoneTouristiqueVideos as $originalZoneTouristiqueVideo) {
+                    if (false === $zoneTouristiqueCrm->getVideos()->contains($originalZoneTouristiqueVideo)) {
+                        $videos = $em->getRepository(ZoneTouristiqueVideo::class)->findBy(array('video' => $originalZoneTouristiqueVideo->getVideo()));
+                        foreach ($videos as $video) {
+                            $em->remove($video);
+                        }
+                        $em->remove($originalZoneTouristiqueVideo->getVideo());
+                        $this->deleteFile($originalZoneTouristiqueVideo->getVideo());
+                    }
+                }
+                // ** fin suppression videos **
+                // *** gestion des videos ***
+                /** @var ZoneTouristique $zoneTouristiqueCrm */
+                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                    return $element->getSite()->getCrm() == 1;
+                })->first();
+                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                    return $element->getSite()->getCrm() == 0;
+                });
+                /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
+                foreach ($zoneTouristiqueCrm->getVideos() as $key => $zoneTouristiqueVideo) {
+                    foreach ($zoneTouristiqueSites as $zoneTouristiqueSite) {
+                        if (empty($zoneTouristiqueVideo->getId())) {
+                            $zoneTouristiqueVideoSite = clone $zoneTouristiqueVideo;
+                        } else {
+                            $zoneTouristiqueVideoSite = $em->getRepository(ZoneTouristiqueVideo::class)->findOneBy(array('video' => $originalVideos->get($zoneTouristiqueVideo->getId()), 'zoneTouristique' => $zoneTouristiqueSite));
+                            if ($originalVideos->get($zoneTouristiqueVideo->getId()) != $zoneTouristiqueVideo->getVideo()) {
+                                $em->remove($zoneTouristiqueVideoSite->getVideo());
+                                $this->deleteFile($zoneTouristiqueVideoSite->getVideo());
+                                $zoneTouristiqueVideoSite->setVideo($zoneTouristiqueVideo->getVideo());
+                            }
+                        }
+                        $zoneTouristiqueSite->addVideo($zoneTouristiqueVideoSite);
+                        $actif = false;
+                        if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                            if (in_array($zoneTouristiqueSite->getSite()->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                                $actif = true;
+                            }
+                        }
+                        $zoneTouristiqueVideoSite->setActif($actif);
+
+                        // *** traductions ***
+                        foreach ($zoneTouristiqueVideo->getTraductions() as $traduction) {
+                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (ZoneTouristiqueVideoTraduction $element) use ($traduction) {
+                                return $element->getLangue() == $traduction->getLangue();
+                            })->first();
+                            if (false === $traductionSite) {
+                                $traductionSite = new ZoneTouristiqueVideoTraduction();
+                                $zoneTouristiqueVideoSite->addTraduction($traductionSite);
+                                $traductionSite->setLangue($traduction->getLangue());
+                            }
+                            $traductionSite->setLibelle($traduction->getLibelle());
+                        }
+                        // *** fin traductions ***
+                    }
+                }
+                // *** fin gestion des videos ***
+
+
+
                 // ***** Gestion des Medias *****
                 // CAS D'UN NOUVEAU 'ZoneTouristique IMAGE' OU DE MODIFICATION D'UN "ZoneTouristique IMAGE"
                 /** @var ZoneTouristiqueImage $zoneTouristiqueImage */
@@ -1114,7 +1279,7 @@ class ZoneTouristiqueUnifieController extends Controller
                     }
                 }
                 // ***** Fin Gestion des Medias *****
-                
+
                 $em->persist($zoneTouristiqueUnifie);
                 $em->flush();
 
@@ -1197,8 +1362,17 @@ class ZoneTouristiqueUnifieController extends Controller
                                 }
                             }
                         }
-                        
-                        
+
+                        // si il y a des videos pour l'entité, les supprimer
+                        if (!empty($zoneTouristiqueSite->getVideos())) {
+                            /** @var ZoneTouristiqueVideo $zoneTouristiqueVideoSite */
+                            foreach ($zoneTouristiqueSite->getVideos() as $zoneTouristiqueVideoSite) {
+                                $emSite->remove($zoneTouristiqueVideoSite);
+                                $emSite->remove($zoneTouristiqueVideoSite->getVideo());
+                            }
+                        }
+
+
                         $emSite->flush();
                     }
                 }
@@ -1227,13 +1401,21 @@ class ZoneTouristiqueUnifieController extends Controller
                                     $em->remove($photo);
                                 }
                             }
+                            // si il y a des videos pour l'entité, les supprimer
+                            if (!empty($zoneTouristique->getVideos())) {
+                                /** @var ZoneTouristiqueVideo $zoneTouristiqueVideoSite */
+                                foreach ($zoneTouristique->getVideos() as $zoneTouristiqueVideoSite) {
+                                    $em->remove($zoneTouristiqueVideoSite);
+                                    $em->remove($zoneTouristiqueVideoSite->getVideo());
+                                }
+                            }
                         }
                         $em->flush();
                     }
 //                    $emSite->remove($zoneTouristiqueUnifieSite);
 //                    $emSite->flush();
                 }
-                
+
                 $em->remove($zoneTouristiqueUnifie);
                 $em->flush();
             } catch (ForeignKeyConstraintViolationException $except) {

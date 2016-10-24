@@ -53,6 +53,13 @@ class ProfilUnifieType extends AbstractType
                         $profilCrm->children['photos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
                     }
                 }
+                foreach ($profil->children['videos'] as $key => $video) {
+                    if ($video->vars['value']->getActif() == true) {
+
+                        $siteId = $profil->vars['value']->getSite()->getId();
+                        $profilCrm->children['videos']->children[$key]->children['sites']->children[$siteId]->vars['attr'] = array('checked' => 'checked');
+                    }
+                }
             }
 
         }
