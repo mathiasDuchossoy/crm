@@ -2,6 +2,10 @@
  * Created by Stephane on 19/10/2016.
  */
 "use strict";
+var nbObjetsStocksModifies = 3;
+if (maxInputVars == null) {
+    var maxInputVars = 1000;
+}
 function modificationStock($obj) {
     var datas = $obj.data();
     var ajout = true;
@@ -14,11 +18,13 @@ function modificationStock($obj) {
                     break;
                 }
             }
-            if (ajout == true) {
-                ajout = false;
-                stocksModifies[i].periodes.push({'id': datas.periode, 'stock': $obj.val()});
+            if (stocksModifies[i].periodes.length < parseInt(maxInputVars / nbObjetsStocksModifies)) {
+                if (ajout == true) {
+                    ajout = false;
+                    stocksModifies[i].periodes.push({'id': datas.periode, 'stock': $obj.val()});
+                }
+                break;
             }
-            break;
         }
     }
     if (ajout == true) {
@@ -225,30 +231,87 @@ function chargerOngletStocksHebergement(idHebergement) {
             });
         }, 'json');
 }
+// function enregistrerStocks() {
+//     var $button = $(this);
+//     var $element = $button.parent();
+//     var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+//     $button.button('loading');
+//     if (stocksModifies.length > 0) {
+// //            lance la requête ajax de recherche des fournisseurs de type hébergement
+//         $.ajax({
+//             url: urls.catalogueEnregistrerStockLocatif,
+//             type: 'POST',
+//             data: {"stocks": stocksModifies},
+//             success: function (json) {
+//                 if (json.valid) {
+//                     stocksModifies = Array();
+//                     $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
+//                     $button.button('reset');
+//                 } else {
+//                     $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
+//                     $button.button('reset');
+//                 }
+//             }
+//         }, 'json');
+//     } else {
+//         $reponse.html('<div class="alert alert-info">' + langue.enregistrer.stock_aucun + '</div>');
+//         $button.button('reset');
+//     }
+// }
 function enregistrerStocks() {
     var $button = $(this);
     var $element = $button.parent();
     var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+    $reponse.html('');
     $button.button('loading');
     if (stocksModifies.length > 0) {
+        // for(var i=0;i<stocksModifies.length;i++){
+        enregistrerStock($button, $reponse, 0);
+        // }
 //            lance la requête ajax de recherche des fournisseurs de type hébergement
-        $.ajax({
-            url: urls.catalogueEnregistrerStockLocatif,
-            type: 'POST',
-            data: {"stocks": stocksModifies},
-            success: function (json) {
-                if (json.valid) {
-                    stocksModifies = Array();
-                    $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
-                    $button.button('reset');
-                } else {
-                    $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
-                    $button.button('reset');
-                }
-            }
-        }, 'json');
+//         $.ajax({
+//             url: urls.catalogueEnregistrerStockLocatif,
+//             type: 'POST',
+//             data: {"stocks": stocksModifies},
+//             success: function (json) {
+//                 if (json.valid) {
+//                     stocksModifies = Array();
+//                     $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
+//                     $button.button('reset');
+//                 } else {
+//                     $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
+//                     $button.button('reset');
+//                 }
+//             }
+//         }, 'json');
     } else {
         $reponse.html('<div class="alert alert-info">' + langue.enregistrer.stock_aucun + '</div>');
         $button.button('reset');
     }
+}
+function enregistrerStock($button, $reponse, indice) {
+    var stocks = Array();
+    stocks.push(stocksModifies[indice]);
+
+    $.ajax({
+        url: urls.catalogueEnregistrerStockLocatif,
+        type: 'POST',
+        data: {"stocks": stocks},
+        success: function (json) {
+            if (json.valid) {
+                indice++;
+                if (stocksModifies[indice] == null) {
+                    stocksModifies = new Array();
+                    $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
+                    $button.button('reset');
+                }
+                else {
+                    enregistrerStock($button, $reponse, indice);
+                }
+            } else {
+                $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
+                $button.button('reset');
+            }
+        }
+    }, 'json');
 }

@@ -50,12 +50,31 @@ function enregistrerTarifsLocatif() {
  */
 function modificationDonneesTarifs($obj) {
     var datas = $obj.data();
-    donneesModifiees[datas.periode_id] = {
-        prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
-    };
+    var remplace = false;
+    for (var i = 0; i < donneesModifiees.length; i++) {
+        //  test si les tarifs pour la periode modifiée sont déjà présents afin de les modifier si l'élément est déjà présent
+        if (donneesModifiees[i].periodeId == datas.periode_id) {
+            donneesModifiees[i] = {
+                periodeId: datas.periode_id,
+                prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
+            };
+            remplace = true;
+            break;
+        }
+    }
+    if (remplace == false) {
+        //  tarifs à modifier non présent dans le tableau des "donneesModifiees" nous insérons alors dans le tableau un nouvel élement
+        donneesModifiees.push({
+            periodeId: datas.periode_id,
+            prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
+        });
+    }
 }
 /**
  * Création d'un champ texte pour le tableau des tarifs location
