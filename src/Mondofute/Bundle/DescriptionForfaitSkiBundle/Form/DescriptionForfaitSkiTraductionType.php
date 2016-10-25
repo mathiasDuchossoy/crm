@@ -17,7 +17,7 @@ class DescriptionForfaitSkiTraductionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle')
+            ->add('libelle' , null, array('mapped' => false))
             ->add('texteDur')
             ->add('description', TextareaType::class, array('required' => false))
             ->add('langue', HiddenType::class, array('mapped' => false));
