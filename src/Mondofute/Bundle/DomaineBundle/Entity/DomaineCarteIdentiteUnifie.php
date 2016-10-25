@@ -1,7 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\DomaineBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * DomaineCarteIdentiteUnifie
@@ -13,7 +15,7 @@ class DomaineCarteIdentiteUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $domaineCarteIdentites;
 
@@ -22,7 +24,7 @@ class DomaineCarteIdentiteUnifie
      */
     public function __construct()
     {
-        $this->domaineCarteIdentites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->domaineCarteIdentites = new ArrayCollection();
     }
 
     /**
@@ -36,11 +38,19 @@ class DomaineCarteIdentiteUnifie
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Remove domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param DomaineCarteIdentite $domaineCarteIdentite
      */
-    public function removeDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
+    public function removeDomaineCarteIdentite(DomaineCarteIdentite $domaineCarteIdentite)
     {
         $this->domaineCarteIdentites->removeElement($domaineCarteIdentite);
     }
@@ -48,7 +58,7 @@ class DomaineCarteIdentiteUnifie
     /**
      * Get domaineCarteIdentites
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDomaineCarteIdentites()
     {
@@ -68,11 +78,11 @@ class DomaineCarteIdentiteUnifie
     /**
      * Add domaineCarteIdentite
      *
-     * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite
+     * @param DomaineCarteIdentite $domaineCarteIdentite
      *
      * @return DomaineCarteIdentiteUnifie
      */
-    public function addDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite)
+    public function addDomaineCarteIdentite(DomaineCarteIdentite $domaineCarteIdentite)
     {
         $this->domaineCarteIdentites[] = $domaineCarteIdentite->setDomaineCarteIdentiteUnifie($this);
 

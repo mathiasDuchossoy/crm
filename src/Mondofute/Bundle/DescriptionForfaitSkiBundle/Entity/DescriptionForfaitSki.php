@@ -83,6 +83,14 @@ class DescriptionForfaitSki
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get quantite
      *
      * @return float
@@ -215,7 +223,7 @@ class DescriptionForfaitSki
     public function __clone()
     {
         /** @var DescriptionForfaitSkiTraduction $traduction */
-//        $this->id = null;
+        $this->id = null;
         $traductions = $this->getTraductions();
         $this->traductions = new ArrayCollection();
         if (count($traductions) > 0) {

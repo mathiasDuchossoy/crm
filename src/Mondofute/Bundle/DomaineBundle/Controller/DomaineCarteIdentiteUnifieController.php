@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite;
@@ -458,11 +459,18 @@ class DomaineCarteIdentiteUnifieController extends Controller
                 $entitySite = $emSite->find(DomaineCarteIdentiteUnifie::class, $entity->getId());
                 if (empty($entitySite)) {
                     $entitySite = new DomaineCarteIdentiteUnifie();
+                    $entitySite->setId($entity->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entitySite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
 //            Récupération de la domaineCarteIdentite sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($domaineCarteIdentiteSite = $emSite->getRepository(DomaineCarteIdentite::class)->findOneBy(array('domaineCarteIdentiteUnifie' => $entitySite))))) {
                     $domaineCarteIdentiteSite = new DomaineCarteIdentite();
+                    $domaineCarteIdentiteSite->setId($domaineCarteIdentite->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($domaineCarteIdentiteSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
                     $entitySite->addDomaineCarteIdentite($domaineCarteIdentiteSite);
                 }
 
