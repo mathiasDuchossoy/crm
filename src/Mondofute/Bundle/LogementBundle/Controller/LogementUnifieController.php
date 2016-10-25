@@ -1243,6 +1243,7 @@ class LogementUnifieController extends Controller
             'sites' => $sites,
             'langues' => $langues,
             'fournisseurHebergement' => $fournisseurHebergement,
+            'maxInputVars' => ini_get('max_input_vars'),
         ));
     }
 
