@@ -187,6 +187,7 @@ class ModeleDescriptionForfaitSkiController extends Controller
      */
     public function copieToDomaineVersSites($domaineUnifie,  $domaineUnifieSite)
     {
+<<<<<<< HEAD
         $domaineSite = $domaineUnifieSite->getDomaines()->first();
         $domaine = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($domaineSite) {
             return $element->getSite()->getId() == $domaineSite->getSite()->getId();
@@ -304,6 +305,126 @@ class ModeleDescriptionForfaitSkiController extends Controller
      * @param DomaineUnifie $domaineUnifie
      */
     public function majDomaines($domaineUnifie){
+||||||| parent of 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
+=======
+        $domaineSite = $domaineUnifieSite->getDomaines()->first();
+        $domaine = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($domaineSite) {
+            return $element->getSite()->getId() == $domaineSite->getSite()->getId();
+        })->first();
+        /** @var DescriptionForfaitSkiTraduction $traduction */
+        /** @var DescriptionForfaitSki $descriptionForfaitSki */
+        /** @var Site $site */
+        /** @var Domaine $domaineSite */
+        /** @var Domaine $domaine */
+//        foreach ($domaines as $domaine) {
+
+            $emSite = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
+//            $domaineSite = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaineUnifie->getId()));
+
+            $modeleDescriptionForfaitSki = $domaine->getModeleDescriptionForfaitSki();
+            $modeleDescriptionForfaitSkiSite = $domaineSite->getModeleDescriptionForfaitSki();
+            if(empty($modeleDescriptionForfaitSki))
+            {
+                $this->majDomaines($domaineUnifie);
+            }
+
+            if(empty($modeleDescriptionForfaitSkiSite))
+            {
+                $modeleDescriptionForfaitSkiSite = new ModeleDescriptionForfaitSki();
+                $modeleDescriptionForfaitSkiSite->setId($modeleDescriptionForfaitSki->getId());
+                $metadata = $emSite->getClassMetadata(get_class($modeleDescriptionForfaitSkiSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+                $domaineSite->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSkiSite);
+            }
+
+            foreach ($modeleDescriptionForfaitSki->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
+                $descriptionForfaitSkiSite = $modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis()->filter(function (DescriptionForfaitSki $element) use ( $descriptionForfaitSki){
+                    return $element->getLigneDescriptionForfaitSki()->getId() == $descriptionForfaitSki->getLigneDescriptionForfaitSki()->getId();
+                })->first();
+                if (false === $descriptionForfaitSkiSite)
+                {
+                    $descriptionForfaitSkiSite = new DescriptionForfaitSki();
+
+                    $descriptionForfaitSkiSite->setId($descriptionForfaitSki->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($descriptionForfaitSkiSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+                    $modeleDescriptionForfaitSkiSite->addDescriptionForfaitSki($descriptionForfaitSkiSite);
+                    $descriptionForfaitSkiSite->setLigneDescriptionForfaitSki($emSite->find(LigneDescriptionForfaitSki::class , $descriptionForfaitSki->getLigneDescriptionForfaitSki()));
+                }
+
+                $descriptionForfaitSkiSite
+                    ->setQuantite($descriptionForfaitSki->getQuantite())
+                    ->setClassement($descriptionForfaitSki->getClassement())
+                    ->setPresent($emSite->find(OuiNonNC::class , $descriptionForfaitSki->getPresent()))
+                ;
+
+                // *** gestion prix ***
+                if(empty($prix = $descriptionForfaitSkiSite->getPrix()))
+                {
+                    $prix = new Tarif();
+                    $descriptionForfaitSkiSite->setPrix($prix);
+                }
+                $prix
+                    ->setValeur($descriptionForfaitSki->getPrix()->getValeur())
+                    ->setUnite($emSite->find(UniteTarif::class, $descriptionForfaitSki->getPrix()->getUnite()))
+                ;
+                // *** fin gestion prix ***
+
+                // *** gestion ageMin ***
+                if(empty($ageMin = $descriptionForfaitSkiSite->getAgeMin()))
+                {
+                    $ageMin = new Age();
+                    $descriptionForfaitSkiSite->setAgeMin($ageMin);
+                }
+                $ageMin
+                    ->setValeur($descriptionForfaitSki->getAgeMin()->getValeur())
+                    ->setUnite($emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMin()->getUnite()))
+                ;
+                // *** fin gestion ageMin ***
+
+                // *** gestion ageMax ***
+                if(empty($ageMax = $descriptionForfaitSkiSite->getAgeMax()))
+                {
+                    $ageMax = new Age();
+                    $descriptionForfaitSkiSite->setAgeMax($ageMax);
+                }
+                $ageMax
+                    ->setValeur($descriptionForfaitSki->getAgeMax()->getValeur())
+                    ->setUnite($emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMax()->getUnite()))
+                ;
+                // *** fin gestion ageMax ***
+
+                // *** traduction ***
+                foreach ($descriptionForfaitSki->getTraductions() as $traduction)
+                {
+                    $traductionSite = $descriptionForfaitSkiSite->getTraductions()->filter(function (DescriptionForfaitSkiTraduction $element) use ($traduction)
+                    {
+                        return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                    })->first();
+                    if(false === $traductionSite)
+                    {
+                        $traductionSite = new DescriptionForfaitSkiTraduction();
+                        $descriptionForfaitSkiSite->addTraduction($traductionSite);
+                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+                    }
+                    $traductionSite
+                        ->setLibelle($traduction->getLibelle())
+                        ->setDescription($traduction->getDescription())
+                        ->setTexteDur($traduction->getTexteDur())
+                    ;
+                }
+                // *** fin traduction ***
+            }
+//        }
+    }
+
+    /**
+     * @param DomaineUnifie $domaineUnifie
+     */
+    public function majDomaines($domaineUnifie){
+>>>>>>> 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
         /** @var ModeleDescriptionForfaitSki $modeleDescriptionForfaitSki */
         $modeleDescriptionForfaitSki = $domaineUnifie->getDomaines()->filter(function (Domaine $element) {
             return $element->getSite()->getCrm() == 1;
@@ -318,13 +439,37 @@ class ModeleDescriptionForfaitSkiController extends Controller
 //        $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         /** @var Domaine $domaine */
         foreach ($domaines as $domaine) {
+<<<<<<< HEAD
 
             if(empty($modeleDescriptionForfaitSkiSite = $domaine->getModeleDescriptionForfaitSki()))
             {
                 $modeleDescriptionForfaitSkiSite = new ModeleDescriptionForfaitSki();
                 $domaine->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSkiSite);
             }
+||||||| parent of 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
+            $emSite = $this->getDoctrine()->getManager($domaine->getSite()->getLibelle());
+            $domaineSite = $emSite->getRepository(Domaine::class)->findOneBy(array('domaineUnifie' => $domaineUnifie));
 
+            $modeleDescriptionForfaitSkiSite = clone $modeleDescriptionForfaitSki;
+//            $modeleDescriptionForfaitSkiSite->setId($modeleDescriptionForfaitSki->getId());
+            $metadata = $emSite->getClassMetadata(get_class($modeleDescriptionForfaitSkiSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+            $domaineSite->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSkiSite);
+
+            foreach ($modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
+                $metadata = $emSite->getClassMetadata(get_class($descriptionForfaitSki));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+=======
+
+            if(empty($modeleDescriptionForfaitSkiSite = $domaine->getModeleDescriptionForfaitSki()))
+            {
+                $modeleDescriptionForfaitSkiSite = new ModeleDescriptionForfaitSki();
+                $domaine->setModeleDescriptionForfaitSki($modeleDescriptionForfaitSkiSite);
+            }
+>>>>>>> 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
+
+<<<<<<< HEAD
             foreach ($modeleDescriptionForfaitSki->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
                 $descriptionForfaitSkiSite = $modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis()->filter(function (DescriptionForfaitSki $element) use ( $descriptionForfaitSki){
                     return $element->getLigneDescriptionForfaitSki() == $descriptionForfaitSki->getLigneDescriptionForfaitSki();
@@ -347,6 +492,39 @@ class ModeleDescriptionForfaitSkiController extends Controller
                 {
                     $prix = new Tarif();
                     $descriptionForfaitSkiSite->setPrix($prix);
+||||||| parent of 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
+                foreach ($descriptionForfaitSki->getTraductions() as $traduction) {
+                    $traduction->setLangue($emSite->find('MondofuteLangueBundle:Langue', $traduction->getLangue()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getPrix()->getUnite())) {
+                    $descriptionForfaitSki->getPrix()->setUnite($emSite->find('MondofuteUniteBundle:UniteTarif', $descriptionForfaitSki->getPrix()->getUnite()->getId()));
+                }
+                if (!empty($descriptionForfaitSki->getAgeMin()->getUnite())) {
+                    $descriptionForfaitSki->getAgeMin()->setUnite($emSite->find('MondofuteUniteBundle:UniteAge', $descriptionForfaitSki->getAgeMin()->getUnite()->getId()));
+=======
+            foreach ($modeleDescriptionForfaitSki->getDescriptionForfaitSkis() as $descriptionForfaitSki) {
+                $descriptionForfaitSkiSite = $modeleDescriptionForfaitSkiSite->getDescriptionForfaitSkis()->filter(function (DescriptionForfaitSki $element) use ( $descriptionForfaitSki){
+                    return $element->getLigneDescriptionForfaitSki() == $descriptionForfaitSki->getLigneDescriptionForfaitSki();
+                })->first();
+                if (false === $descriptionForfaitSkiSite)
+                {
+                    $descriptionForfaitSkiSite = new DescriptionForfaitSki();
+                    $modeleDescriptionForfaitSkiSite->addDescriptionForfaitSki($descriptionForfaitSkiSite);
+                    $descriptionForfaitSkiSite->setLigneDescriptionForfaitSki($descriptionForfaitSki->getLigneDescriptionForfaitSki());
+                }
+
+                $descriptionForfaitSkiSite
+                    ->setQuantite($descriptionForfaitSki->getQuantite())
+                    ->setClassement($descriptionForfaitSki->getClassement())
+                    ->setPresent($descriptionForfaitSki->getPresent())
+                ;
+
+                // *** gestion prix ***
+                if(empty($prix = $descriptionForfaitSkiSite->getPrix()))
+                {
+                    $prix = new Tarif();
+                    $descriptionForfaitSkiSite->setPrix($prix);
+>>>>>>> 61aa21f... debug liaison domaine -> CI, persist medeleDescriptionFS by Domaine
                 }
                 $prix
                     ->setValeur($descriptionForfaitSki->getPrix()->getValeur())
