@@ -1,0 +1,3 @@
+mondofute_mot_clef_homepage:
+    path:     /
+    defaults: { _controller: MondofuteMotClefBundle:Default:index }
