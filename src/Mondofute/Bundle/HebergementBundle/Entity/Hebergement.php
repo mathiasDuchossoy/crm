@@ -588,6 +588,7 @@ class Hebergement
     }
 
     /**
+<<<<<<< HEAD
      * Get coupDeCoeur
      *
      * @return HebergementCoupDeCoeur
@@ -618,6 +619,75 @@ class Hebergement
     }
 
     /**
+||||||| parent of fd39b4e... création bundle, entités mis en place + sql et deploybundle,
+=======
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+
+        return $this;
+    }
+<<<<<<< b62042932404edbd0486b874ceacc33a2e43ade9:src/Mondofute/Bundle/HebergementBundle/Entity/Hebergement.php
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+
+    /**
+>>>>>>> fd39b4e... création bundle, entités mis en place + sql et deploybundle,
      * Add motClef
      *
      * @param MotClef $motClef
@@ -651,6 +721,7 @@ class Hebergement
     {
         return $this->motClefs;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -899,7 +970,12 @@ class Hebergement
      * @var Station
      */
     private $station;
+||||||| parent of 1a163b6... création bundle, entités mis en place + sql et deploybundle,
+=======
+<<<<<<< 20055fcb29cb019ada845d194034c1d992fed3c0
+>>>>>>> 1a163b6... création bundle, entités mis en place + sql et deploybundle,
 
+<<<<<<< HEAD
     /**
      * @var ClassementHebergement
      */
@@ -42053,6 +42129,13 @@ class Hebergement
 >>>>>>> CRM-151
 =======
 >>>>>>> 9686e78... debug hebergement et ModeleDescriptionForfaitSkiController
+||||||| parent of 1a163b6... création bundle, entités mis en place + sql et deploybundle,
+=======
+||||||| merged common ancestors
+=======
+>>>>>>> création bundle, entités mis en place + sql et deploybundle,:src/Mondofute/Bundle/HebergementBundle/Entity/Hebergement.php.orig
+>>>>>>> création bundle, entités mis en place + sql et deploybundle,
+>>>>>>> 1a163b6... création bundle, entités mis en place + sql et deploybundle,
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
