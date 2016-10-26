@@ -1918,7 +1918,7 @@ class HebergementUnifieController extends Controller
                 $this->copieVersSites($entityUnifie, $originalHebergementVisuels);
 
                 // on parcourt les médias à supprimer
-                if (!$coupDeCoeurRemove->isEmpty()) {
+                if (!empty($visuelToRemoveCollection)) {
                     foreach ($visuelToRemoveCollection as $item) {
                         if (!empty($item)) {
                             $this->deleteFile($item);
