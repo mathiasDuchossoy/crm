@@ -63,7 +63,7 @@ class TarifLocatifController extends Controller
                         $retour['valid'] = true;
                     }
                 } else {
-                    $retour['message'] = 'erreur sur l\'identifiant du logement';
+                    $retour['message'] = 'erreur sur l\'identifiant du logement' . $logementUnifieId;
                 }
                 return new JsonResponse($retour);
             } catch (\Exception $except) {
