@@ -1857,6 +1857,13 @@ class Hebergement
      * @var boolean
      */
     private $actif = true;
+<<<<<<< HEAD
+||||||| parent of df53520... mise en place bdd, enitities et majlislancer
+<<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+=======
+<<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
+<<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+>>>>>>> df53520... mise en place bdd, enitities et majlislancer
     /**
 <<<<<<< HEAD
      * @var Collection
@@ -4224,6 +4231,31 @@ class Hebergement
 >>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 =======
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
+||||||| parent of df53520... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> mise en place bdd, enitities et majlislancer
+=======
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> mise en place bdd, enitities et majlislancer
+>>>>>>> df53520... mise en place bdd, enitities et majlislancer
 
     /**
      * Constructor
@@ -4582,6 +4614,13 @@ class Hebergement
 
         return $this;
     }
+<<<<<<< HEAD
+||||||| parent of df53520... mise en place bdd, enitities et majlislancer
+<<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+=======
+<<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
+<<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+>>>>>>> df53520... mise en place bdd, enitities et majlislancer
 
     /**
 <<<<<<< HEAD
@@ -6597,7 +6636,48 @@ class Hebergement
         return $this->motClefs;
     }
 >>>>>>> mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 >>>>>>> 997839e... mise en place bdd, enitities et majlislancer
+||||||| parent of df53520... mise en place bdd, enitities et majlislancer
+=======
+||||||| merged common ancestors
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+        $this->motClefs[] = $motClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> mise en place bdd, enitities et majlislancer
+>>>>>>> df53520... mise en place bdd, enitities et majlislancer
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
