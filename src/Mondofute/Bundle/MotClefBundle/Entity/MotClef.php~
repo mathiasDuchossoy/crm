@@ -1,0 +1,63 @@
+<?php
+
+namespace Mondofute\Bundle\MotClefBundle\Entity;
+
+/**
+ * MotClef
+ */
+class MotClef
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $libelle;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return MotClef
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+}
+
