@@ -72,6 +72,7 @@ class Hebergement
      * @var boolean
      */
     private $actif = true;
+<<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
     /**
      * @var Collection
@@ -1803,6 +1804,13 @@ class Hebergement
      */
     private $motClefs;
 >>>>>>> mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> mise en place bdd, enitities et majlislancer
 
     /**
      * Constructor
@@ -2161,6 +2169,7 @@ class Hebergement
 
         return $this;
     }
+<<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
 
     /**
@@ -2295,6 +2304,43 @@ class Hebergement
     {
         $this->motClefs->removeElement($motClef);
         $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+        $this->motClefs[] = $motClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
     }
 
     /**
