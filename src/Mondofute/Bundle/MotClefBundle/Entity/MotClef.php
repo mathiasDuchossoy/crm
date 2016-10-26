@@ -1,9 +1,11 @@
 <?php
 
 namespace Mondofute\Bundle\MotClefBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
  * MotClef
@@ -22,18 +24,17 @@ class MotClef
     /**
      * @var Collection
      */
-    private $traductions;
-    /**
-     * @var Collection
-     */
     private $hebergements;
+    /**
+     * @var Langue
+     */
+    private $langue;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->traductions = new ArrayCollection();
         $this->hebergements = new ArrayCollection();
     }
 
@@ -80,40 +81,6 @@ class MotClef
     }
 
     /**
-     * Add traduction
-     *
-     * @param MotClefTraduction $traduction
-     *
-     * @return MotClef
-     */
-    public function addTraduction(MotClefTraduction $traduction)
-    {
-        $this->traductions[] = $traduction;
-
-        return $this;
-    }
-
-    /**
-     * Remove traduction
-     *
-     * @param MotClefTraduction $traduction
-     */
-    public function removeTraduction(MotClefTraduction $traduction)
-    {
-        $this->traductions->removeElement($traduction);
-    }
-
-    /**
-     * Get traductions
-     *
-     * @return Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
      * Add hebergement
      *
      * @param Hebergement $hebergement
@@ -145,5 +112,29 @@ class MotClef
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+
+    /**
+     * Set langue
+     *
+     * @param Langue $langue
+     *
+     * @return MotClef
+     */
+    public function setLangue(Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
     }
 }
