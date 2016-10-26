@@ -16,6 +16,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 <<<<<<< HEAD
 use Doctrine\Common\Collections\Collection;
+<<<<<<< HEAD
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 ||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 =======
@@ -1721,6 +1722,10 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+||||||| parent of 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+=======
+use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+>>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
@@ -1778,6 +1783,7 @@ class Hebergement
      */
     private $actif = true;
     /**
+<<<<<<< HEAD
      * @var Collection
      */
     private $motClefs;
@@ -1820,6 +1826,13 @@ class Hebergement
 ||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 =======
     /**
+||||||| parent of 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+=======
+     * @var Collection
+     */
+    private $motClefs;
+    /**
+>>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
@@ -1831,16 +1844,25 @@ class Hebergement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
-        $this->moyenComs = new ArrayCollection();
         $this->emplacements = new ArrayCollection();
+<<<<<<< HEAD
 <<<<<<< HEAD
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
 ||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 =======
+||||||| parent of 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+=======
+        $this->moyenComs = new ArrayCollection();
+>>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
         $this->visuels = new ArrayCollection();
+<<<<<<< HEAD
 >>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+||||||| parent of 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+=======
+        $this->motClefs = new ArrayCollection();
+>>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
     }
 
     /**
@@ -2397,17 +2419,51 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        if(!empty($coupDeCoeur))
-        {
-            $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
-        }
-        else{
-            $this->coupDeCoeur = null;
-        }
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
 
         return $this;
     }
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+<<<<<<< HEAD
 >>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+||||||| parent of 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+=======
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
