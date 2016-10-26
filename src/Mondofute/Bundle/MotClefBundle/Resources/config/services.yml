@@ -1,0 +1,4 @@
+services:
+#    mondofute_mot_clef.example:
+#        class: Mondofute\Bundle\MotClefBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
