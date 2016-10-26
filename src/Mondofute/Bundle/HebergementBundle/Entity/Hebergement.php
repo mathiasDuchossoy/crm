@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
@@ -61,6 +62,10 @@ class Hebergement
      */
     private $actif = true;
     /**
+     * @var Collection
+     */
+    private $motClefs;
+    /**
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
@@ -71,9 +76,10 @@ class Hebergement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
-        $this->moyenComs = new ArrayCollection();
         $this->emplacements = new ArrayCollection();
+        $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
+        $this->motClefs = new ArrayCollection();
     }
 
     /**
@@ -441,14 +447,44 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        if(!empty($coupDeCoeur))
-        {
-            $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
-        }
-        else{
-            $this->coupDeCoeur = null;
-        }
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
 
         return $this;
+    }
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
     }
 }
