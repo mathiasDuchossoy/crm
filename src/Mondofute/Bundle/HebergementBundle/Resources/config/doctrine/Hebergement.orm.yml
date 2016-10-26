@@ -48,6 +48,7 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementCoupDeCoeur
             mappedBy: hebergement
             cascade: ['persist','remove']
+            orphanRemoval: true
     manyToMany:
         moyenComs:
             targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
