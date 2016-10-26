@@ -9,24 +9,24 @@ use Mondofute\Bundle\CoupDeCoeurBundle\Entity\CoupDeCoeur;
  */
 class HebergementCoupDeCoeur extends CoupDeCoeur
 {
-    /**
-     * @var int
-     */
-    private $id;
+//    /**
+//     * @var int
+//     */
+//    protected $id;
     /**
      * @var Hebergement
      */
     private $hebergement;
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+//    /**
+//     * Get id
+//     *
+//     * @return int
+//     */
+//    public function getId()
+//    {
+//        return $this->id;
+//    }
 
     /**
      * Get hebergement
@@ -47,7 +47,7 @@ class HebergementCoupDeCoeur extends CoupDeCoeur
      */
     public function setHebergement(Hebergement $hebergement = null)
     {
-        $this->hebergement = $hebergement->setCoupDeCoeur($this);
+        $this->hebergement = $hebergement;
 
         return $this;
     }

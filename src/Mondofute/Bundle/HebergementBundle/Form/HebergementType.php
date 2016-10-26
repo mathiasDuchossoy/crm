@@ -70,7 +70,11 @@ class HebergementType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'required' => false,
-            ));
+            ))
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
+                'required' => false
+            ])
+        ;
     }
 
     /**

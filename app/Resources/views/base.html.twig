@@ -310,6 +310,25 @@
             }
         }
 
+        function displayCoupDeCoeur(elementId) {
+            $element = $("#" + elementId);
+            $buttonEdit = $("#" + elementId + '_edit');
+            $buttonRemove = $("#" + elementId + '_remove');
+            if ($element.is(":visible")) {
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function (index, input) {
+                    $(input).val('');
+                })
+            }
+            else {
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
+        }
+
     </script>
 
 {% endblock %}
