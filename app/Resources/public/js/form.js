@@ -18,7 +18,9 @@ $(document).delegate('button[type="submit"]', 'click', function (e) {
         }
         // affiche la donnée data-loading-text (message de chargement dans le bouton submit)
         $(this).button('loading');
+        return true;
     }
+    return false;
 });
 
 /**
