@@ -125,6 +125,7 @@ class Hebergement
      * @var Collection
      */
     private $motClefs;
+<<<<<<< HEAD
     /**
      * @var HebergementCoupDeCoeur
      */
@@ -1955,8 +1956,21 @@ class Hebergement
      */
     private $motClefs;
 >>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 >>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
 >>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
+||||||| parent of 26ff9b2... création bundle, entités mis en place + sql et deploybundle,
+>>>>>>> 2562faca76d25dccba2639625e824c3a56b749f4
+=======
+>>>>>>> 2562faca76d25dccba2639625e824c3a56b749f4
+||||||| parent of b5a1adb... création bundle, entités mis en place + sql et deploybundle,
+=======
+    /**
+     * @var HebergementCoupDeCoeur
+     */
+    private $coupDeCoeur;
+>>>>>>> b5a1adb... création bundle, entités mis en place + sql et deploybundle,
+>>>>>>> 26ff9b2... création bundle, entités mis en place + sql et deploybundle,
 
     /**
      * Constructor
@@ -2542,6 +2556,30 @@ class Hebergement
 >>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
 =======
+
+    /**
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+
+        return $this;
+    }
 
     /**
      * Add motClef
