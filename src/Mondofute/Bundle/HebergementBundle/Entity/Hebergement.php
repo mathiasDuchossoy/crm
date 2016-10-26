@@ -491,6 +491,7 @@ class Hebergement
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Get coupDeCoeur
      *
      * @return HebergementCoupDeCoeur
@@ -2558,6 +2559,10 @@ class Hebergement
 =======
 
     /**
+||||||| parent of da4240e... création bundle, entités mis en place + sql et deploybundle,
+=======
+<<<<<<< HEAD
+>>>>>>> da4240e... création bundle, entités mis en place + sql et deploybundle,
      * Get coupDeCoeur
      *
      * @return HebergementCoupDeCoeur
@@ -2586,6 +2591,36 @@ class Hebergement
 
         return $this;
     }
+
+    /**
+||||||| parent of fd39b4e... création bundle, entités mis en place + sql et deploybundle,
+=======
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+
+        return $this;
+    }
+<<<<<<< b62042932404edbd0486b874ceacc33a2e43ade9:src/Mondofute/Bundle/HebergementBundle/Entity/Hebergement.php
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
 
     /**
      * Add motClef
@@ -2622,6 +2657,7 @@ class Hebergement
     {
         return $this->motClefs;
     }
+<<<<<<< HEAD
 >>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
 <<<<<<< HEAD
 ||||||| merged common ancestors
@@ -4672,6 +4708,57 @@ class Hebergement
 >>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
 >>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
 >>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
+||||||| parent of 2a97d3f... création bundle, entités mis en place + sql et deploybundle,
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 2562faca76d25dccba2639625e824c3a56b749f4
+=======
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+
+    /**
+>>>>>>> fd39b4e... création bundle, entités mis en place + sql et deploybundle,
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+<<<<<<< HEAD
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 2562faca76d25dccba2639625e824c3a56b749f4
+||||||| parent of da4240e... création bundle, entités mis en place + sql et deploybundle,
+=======
+>>>>>>> création bundle, entités mis en place + sql et deploybundle,:src/Mondofute/Bundle/HebergementBundle/Entity/Hebergement.php.orig
+>>>>>>> da4240e... création bundle, entités mis en place + sql et deploybundle,
+>>>>>>> 2a97d3f... création bundle, entités mis en place + sql et deploybundle,
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
