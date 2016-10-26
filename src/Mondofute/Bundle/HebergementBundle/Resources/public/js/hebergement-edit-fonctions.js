@@ -161,7 +161,7 @@ function chargerOngletStocksHebergement(idHebergement) {
                             var attribut = null;
                             var stock = null;
                             for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
-                                // console.log(typePeriodes[i].periodes[k].debut.date);
+                                console.log(typePeriodes[i].periodes[k].debut.date);
                                 debut = new Date(typePeriodes[i].periodes[k].debut.date.replace(/-/g, "/"));
                                 fin = new Date(typePeriodes[i].periodes[k].fin.date.replace(/-/g, "/"));
                                 console.log(debut);
