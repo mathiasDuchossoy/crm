@@ -2397,7 +2397,13 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+        if(!empty($coupDeCoeur))
+        {
+            $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+        }
+        else{
+            $this->coupDeCoeur = null;
+        }
 
         return $this;
     }
