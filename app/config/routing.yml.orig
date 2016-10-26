@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 mondofute_mot_clef:
     resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
     prefix:   /
@@ -107,6 +108,10 @@ fos_user:
 #    prefix:   /catalogue/
 ||||||| merged common ancestors
 =======
+||||||| parent of 0bc217a... mise en place bdd, enitities et majlislancer
+=======
+<<<<<<< d2b0b0d12cef2407e07ecbbf1e23324b58ffcb34
+>>>>>>> 0bc217a... mise en place bdd, enitities et majlislancer
 mondofute_mot_clef:
     resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
     prefix:   /
@@ -201,4 +206,123 @@ fos_user:
 #mondofute_catalogue:
 #    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
 #    prefix:   /catalogue/
+<<<<<<< HEAD
 >>>>>>> 744a77b661548bae9c01d58d78bbfeb42a47a2dc
+||||||| parent of 34e2061... mise en place bdd, enitities et majlislancer
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+<<<<<<< HEAD
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+||||||| parent of 0bc217a... mise en place bdd, enitities et majlislancer
+=======
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+mondofute_mot_clef:
+    resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_coup_de_coeur:
+    resource: "@MondofuteCoupDeCoeurBundle/Resources/config/routing.yml"
+    prefix:   /
+
+||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
+=======
+mondofute_mot_clef:
+    resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
+    prefix:   /
+
+>>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+mondofute_fournisseur_prestation_affectation:
+    resource: "@MondofuteFournisseurPrestationAffectationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_fournisseur_prestation_annexe:
+    resource: "@MondofuteFournisseurPrestationAnnexeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_code_promo_application:
+    resource: "@MondofuteCodePromoApplicationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_prestationannexe:
+    resource: "@MondofutePrestationAnnexeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_code_promo:
+    resource: "@MondofuteCodePromoBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_core:
+    resource: "@MondofuteCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_client:
+    resource: "@MondofuteClientBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_utilisateur:
+    resource: "@MondofuteUtilisateurBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_fournisseur:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_accueil:
+    resource: "@MondofuteAccueilBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_hebergement:
+    resource: "@MondofuteHebergementBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_catalogue:
+    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_domaine:
+    resource: "@MondofuteDomaineBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_station:
+    resource: "@MondofuteStationBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_geographie:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_descriptionforfaitski:
+    resource: "@MondofuteDescriptionForfaitSkiBundle/Resources/config/routing.yml"
+    prefix: /
+
+mondofute_unite:
+    resource: "@MondofuteUniteBundle/Resources/config/routing.yml"
+    prefix: /
+
+mondofute_remise_clef:
+    resource: "@MondofuteRemiseClefBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_logement:
+    resource: "@MondofuteLogementBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_service:
+    resource: "@MondofuteServiceBundle/Resources/config/routing.yml"
+    prefix:   /
+
+mondofute_periode:
+    resource: "@MondofutePeriodeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+#mondofute_catalogue:
+#    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
+#    prefix:   /catalogue/
+>>>>>>> mise en place bdd, enitities et majlislancer
+>>>>>>> 0bc217a... mise en place bdd, enitities et majlislancer
+>>>>>>> 34e2061... mise en place bdd, enitities et majlislancer
