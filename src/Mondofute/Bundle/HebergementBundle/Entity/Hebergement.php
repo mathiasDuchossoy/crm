@@ -106,8 +106,13 @@ class Hebergement
      */
     private $actif = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+<<<<<<< HEAD
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
     /**
      * @var Collection
      */
@@ -1838,6 +1843,7 @@ class Hebergement
 >>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 =======
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
 ||||||| merged common ancestors
 =======
     /**
@@ -1919,6 +1925,16 @@ class Hebergement
     private $motClefs;
 >>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+||||||| parent of 5262f9d... mise en place bdd, enitities et majlislancer
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
 
     /**
      * Constructor
@@ -2293,8 +2309,13 @@ class Hebergement
         return $this;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+<<<<<<< HEAD
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
 
     /**
 <<<<<<< HEAD
@@ -2401,6 +2422,7 @@ class Hebergement
 >>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 =======
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
 ||||||| merged common ancestors
 =======
 
@@ -4492,6 +4514,46 @@ class Hebergement
 >>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 >>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+||||||| parent of 5262f9d... mise en place bdd, enitities et majlislancer
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+        $this->motClefs[] = $motClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
