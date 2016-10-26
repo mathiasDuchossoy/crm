@@ -14,8 +14,13 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+<<<<<<< HEAD
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+=======
+use Doctrine\Common\Collections\Collection;
+>>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
@@ -72,6 +77,7 @@ class Hebergement
      * @var boolean
      */
     private $actif = true;
+<<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
     /**
@@ -1811,6 +1817,13 @@ class Hebergement
      */
     private $motClefs;
 >>>>>>> mise en place bdd, enitities et majlislancer
+||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+=======
+    /**
+     * @var HebergementCoupDeCoeur
+     */
+    private $coupDeCoeur;
+>>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 
     /**
      * Constructor
@@ -1818,10 +1831,16 @@ class Hebergement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->moyenComs = new ArrayCollection();
         $this->emplacements = new ArrayCollection();
+<<<<<<< HEAD
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
+||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+=======
+        $this->visuels = new ArrayCollection();
+>>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
     }
 
     /**
@@ -2169,6 +2188,7 @@ class Hebergement
 
         return $this;
     }
+<<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
 
@@ -2355,6 +2375,33 @@ class Hebergement
         return $this->motClefs;
     }
 >>>>>>> mise en place bdd, enitities et majlislancer
+||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+=======
+
+    /**
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+
+        return $this;
+    }
+>>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
