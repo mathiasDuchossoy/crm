@@ -1,4 +1,2 @@
-CREATE TABLE hebergement_coup_de_coeur (id INT AUTO_INCREMENT NOT NULL, DateHeureDebut DATETIME NOT NULL, DateHeureFin DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
-ALTER TABLE hebergement ADD coup_de_coeur_id INT DEFAULT NULL;
-ALTER TABLE hebergement ADD CONSTRAINT FK_4852DD9C18DC2A91 FOREIGN KEY (coup_de_coeur_id) REFERENCES hebergement_coup_de_coeur (id);
-CREATE UNIQUE INDEX UNIQ_4852DD9C18DC2A91 ON hebergement (coup_de_coeur_id);
+CREATE TABLE hebergement_coup_de_coeur (id INT UNSIGNED AUTO_INCREMENT NOT NULL, hebergement_id INT UNSIGNED DEFAULT NULL, DateHeureDebut DATETIME NOT NULL, DateHeureFin DATETIME NOT NULL, UNIQUE INDEX UNIQ_6F40B3C823BB0F66 (hebergement_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE hebergement_coup_de_coeur ADD CONSTRAINT FK_6F40B3C823BB0F66 FOREIGN KEY (hebergement_id) REFERENCES hebergement (id);

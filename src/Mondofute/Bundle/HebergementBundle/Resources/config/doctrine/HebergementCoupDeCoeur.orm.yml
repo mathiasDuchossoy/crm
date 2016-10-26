@@ -13,5 +13,5 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementCoupDeCoeur:
     oneToOne:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
-            mappedBy: coupDeCoeur
+            inversedBy: coupDeCoeur
     lifecycleCallbacks: {  }
