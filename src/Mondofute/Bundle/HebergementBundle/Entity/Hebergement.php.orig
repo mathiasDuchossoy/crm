@@ -61,7 +61,6 @@ class Hebergement
      * @var boolean
      */
     private $actif = true;
-<<<<<<< HEAD
     /**
      * @var Collection
      */
@@ -70,13 +69,6 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
-||||||| merged common ancestors
-=======
-    /**
-     * @var Collection
-     */
-    private $motClefs;
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 
     /**
      * Constructor
@@ -435,9 +427,9 @@ class Hebergement
 
         return $this;
     }
-<<<<<<< HEAD
 
     /**
+<<<<<<< HEAD
      * Get coupDeCoeur
      *
      * @return HebergementCoupDeCoeur
@@ -468,44 +460,33 @@ class Hebergement
     }
 
     /**
-     * Add motClef
-     *
-     * @param MotClef $motClef
-     *
-     * @return Hebergement
-     */
-    public function addMotClef(MotClef $motClef)
-    {
-//        $this->motClefs[] = $motClef;
-        $this->motClefs[] = $motClef->addHebergement($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove motClef
-     *
-     * @param MotClef $motClef
-     */
-    public function removeMotClef(MotClef $motClef)
-    {
-        $this->motClefs->removeElement($motClef);
-        $motClef->removeHebergement($this);
-    }
-
-    /**
-     * Get motClefs
-     *
-     * @return Collection
-     */
-    public function getMotClefs()
-    {
-        return $this->motClefs;
-    }
-||||||| merged common ancestors
+||||||| parent of fd39b4e... création bundle, entités mis en place + sql et deploybundle,
 =======
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
 
     /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
+
+        return $this;
+    }
+
+    /**
+>>>>>>> fd39b4e... création bundle, entités mis en place + sql et deploybundle,
      * Add motClef
      *
      * @param MotClef $motClef
@@ -540,5 +521,4 @@ class Hebergement
     {
         return $this->motClefs;
     }
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 }
