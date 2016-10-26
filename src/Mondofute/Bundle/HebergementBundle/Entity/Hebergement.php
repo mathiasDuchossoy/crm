@@ -65,6 +65,10 @@ class Hebergement
      * @var Collection
      */
     private $motClefs;
+    /**
+     * @var HebergementCoupDeCoeur
+     */
+    private $coupDeCoeur;
 
     /**
      * Constructor
@@ -420,6 +424,30 @@ class Hebergement
     public function setActif($actif)
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
 
         return $this;
     }
