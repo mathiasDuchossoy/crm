@@ -1,0 +1,18 @@
+Mondofute\Bundle\CoupDeCoeurBundle\Entity\CoupDeCoeur:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: Mondofute\Bundle\CoupDeCoeurBundle\Repository\CoupDeCoeurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        dateHeureDebut:
+            type: datetime
+            column: DateHeureDebut
+        dateHeureFin:
+            type: datetime
+            column: DateHeureFin
+    lifecycleCallbacks: {  }

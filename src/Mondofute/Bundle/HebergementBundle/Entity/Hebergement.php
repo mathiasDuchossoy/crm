@@ -3,12 +3,12 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
 use Nucleus\MoyenComBundle\Entity\MoyenCommunication;
 use Symfony\Component\Translation\DataCollectorTranslator;
-use Symfony\Component\Translation\Translator;
 
 /**
  * Hebergement
@@ -20,7 +20,7 @@ class Hebergement
      */
     private $hebergementUnifie;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
@@ -41,7 +41,7 @@ class Hebergement
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $moyenComs;
     /**
@@ -49,17 +49,21 @@ class Hebergement
      */
     private $typeHebergement;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $emplacements;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $visuels;
     /**
      * @var boolean
      */
     private $actif = true;
+    /**
+     * @var HebergementCoupDeCoeur
+     */
+    private $coupDeCoeur;
 
     /**
      * Constructor
@@ -67,7 +71,9 @@ class Hebergement
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->moyenComs = new ArrayCollection();
         $this->emplacements = new ArrayCollection();
+        $this->visuels = new ArrayCollection();
     }
 
     /**
@@ -112,7 +118,7 @@ class Hebergement
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -266,7 +272,7 @@ class Hebergement
     /**
      * Get moyenComs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMoyenComs()
     {
@@ -341,7 +347,7 @@ class Hebergement
     /**
      * Get emplacements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEmplacements()
     {
@@ -361,11 +367,11 @@ class Hebergement
     /**
      * Add visuel
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel
+     * @param HebergementVisuel $visuel
      *
      * @return Hebergement
      */
-    public function addVisuel(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel)
+    public function addVisuel(HebergementVisuel $visuel)
     {
         $this->visuels[] = $visuel->setHebergement($this);
 
@@ -375,9 +381,9 @@ class Hebergement
     /**
      * Remove visuel
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel
+     * @param HebergementVisuel $visuel
      */
-    public function removeVisuel(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $visuel)
+    public function removeVisuel(HebergementVisuel $visuel)
     {
         $this->visuels->removeElement($visuel);
     }
@@ -385,7 +391,7 @@ class Hebergement
     /**
      * Get visuels
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getVisuels()
     {
@@ -412,6 +418,30 @@ class Hebergement
     public function setActif($actif)
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * Get coupDeCoeur
+     *
+     * @return HebergementCoupDeCoeur
+     */
+    public function getCoupDeCoeur()
+    {
+        return $this->coupDeCoeur;
+    }
+
+    /**
+     * Set coupDeCoeur
+     *
+     * @param HebergementCoupDeCoeur $coupDeCoeur
+     *
+     * @return Hebergement
+     */
+    public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
+    {
+        $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
 
         return $this;
     }

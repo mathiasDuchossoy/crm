@@ -1,3 +1,7 @@
+mondofute_coup_de_coeur:
+    resource: "@MondofuteCoupDeCoeurBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_fournisseur_prestation_affectation:
     resource: "@MondofuteFournisseurPrestationAffectationBundle/Resources/config/routing.yml"
     prefix:   /

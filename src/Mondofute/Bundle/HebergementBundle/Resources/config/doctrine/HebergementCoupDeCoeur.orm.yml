@@ -1,0 +1,17 @@
+Mondofute\Bundle\HebergementBundle\Entity\HebergementCoupDeCoeur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementCoupDeCoeurRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            generator:
+#                strategy: AUTO
+    oneToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            mappedBy: coupDeCoeur
+    lifecycleCallbacks: {  }

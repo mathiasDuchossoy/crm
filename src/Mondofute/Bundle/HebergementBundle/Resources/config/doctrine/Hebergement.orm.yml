@@ -44,6 +44,10 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
             cascade: ['persist','remove']
+        coupDeCoeur:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementCoupDeCoeur
+            inversedBy: hebergement
+            cascade: ['persist','remove']
     manyToMany:
         moyenComs:
             targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
