@@ -51,4 +51,5 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         motClefs:
             targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
             mappedBy: hebergements
+            cascade: ['persist']
     lifecycleCallbacks: {  }
