@@ -34,6 +34,8 @@
                         {#{{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}#}
                         {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
+                        {#{{ form_row(hebergement.motClefs) }}#}
+                        {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefs , 'siteId' : hebergement.vars.value.site.id} %}
                         {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur }%}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Emplacements</label>
@@ -55,7 +57,7 @@
                                             {{ form_widget(emplacement.checkbox, attrCheckbox) }}
                                         </div>
                                         <div class="form-group form-inline">
-                                            <label  class="col-sm-2 control-label">Distance 1</label>
+                                            <label class="col-sm-2 control-label">Distance 1</label>
                                             <div class="col-sm-10">
                                                 <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance1">
                                                     <div class="form-group">
@@ -76,7 +78,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group  form-inline">
-                                            <label  class="col-sm-2 control-label">Distance 2</label>
+                                            <label class="col-sm-2 control-label">Distance 2</label>
                                             <div class="col-sm-10">
                                                 <div id="hebergement_unifie_hebergements_{{ loop.parent.loop.index0 }}_emplacements_{{ emplacement.vars.name }}_distance2">
                                                     <div class="form-group">
@@ -341,124 +343,13 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="modalRechercherFournisseur" tabindex="-1" role="dialog"
-         aria-labelledby="modalRechercherFournisseurLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="modalRechercherFournisseurLabel">Rechercher un fournisseur</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="rechercherFournisseur" class="form-horizontal">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <label for="rechercheFournisseurEnseigne">Enseigne</label> <input
-                                        id="rechercheFournisseurEnseigne" name="rechercheFournisseurEnseigne"
-                                        type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-2 col-lg-push-9">
 
-                                <button title="{{ 'rechercher.fournisseur' | trans }}" type="button"
-                                        onclick="rechercherFournisseursHebergement($('#rechercheFournisseurEnseigne'))"
-                                        class="btn btn-default">
-                                    Rechercher
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="resultatRechercheFournisseur">
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-rechercher-fournisseur.html.twig') %}
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-remise-clef.html.twig') %}
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-ajout-reception.html.twig') %}
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-liste-logements.html.twig') %}
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-tarif-service.html.twig') %}
 
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- Modal -->
-    <div class="modal fade" id="modalAjoutRemiseClef" tabindex="-1" role="dialog"
-         aria-labelledby="modalAjoutRemiseClefLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Ajouter une remise de clef</h4>
-                </div>
-                <div class="modal-body">
-                    {{ render(controller("MondofuteRemiseClefBundle:RemiseClef:newSimple")) }}
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- Modal -->
-    <div class="modal fade" id="modalAjoutReception" tabindex="-1" role="dialog"
-         aria-labelledby="modalAjoutReception" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Ajouter une réception</h4>
-                </div>
-                <div class="modal-body">
-                    {{ render(controller("MondofuteHebergementBundle:Reception:newSimple")) }}
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <div class="modal fade" id="modalListeLogements" tabindex="-1" role="dialog" aria-labelledby="modalListeLogements"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  ">
-            <div class="modal-content" style="  height: auto;
-  min-height: 100vh;">
-                <div class="modal-header">
-                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">{{ 'liste.logements'|trans }}</h4>
-                </div>
-                <div class="modal-body" style="height: 95vh;">
-                    <iframe src="" frameborder="0" id="iframeListeLogements" style="width: 100%;height:100%"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="modalTarifsService" tabindex="-1" role="dialog"
-         aria-labelledby="modalTarifService">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-label="{{ 'fermer' | trans | capitalize }}"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">{{ 'gestion.tarifs.service' | trans | capitalize }}</h4>
-                </div>
-                <div class="modal-body">
-                    {#<div class="row" id="modal-prototype-liste-service"#}
-                    {#data-prototype-service="#}
-                    {#"#}
-                    {#data-prototype="#}
-                    {#{% filter escape %}#}
-                    {#{% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}#}
-                    {#{% endfilter %}#}
-                    {#">#}
-                    {#</div>#}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default"
-                            data-dismiss="modal">{{ 'fermer' | trans | capitalize }}</button>
-                    <button type="button" class="btn btn-default valider-tarifs-service"
-                            id="valider-tarifs-service" data-index-liste-service="" data-index-service=""
-                    >{{ 'valider' | trans | capitalize }}</button>
-                    {#<div id="index-tarif-service" data-index=""></div>#}
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -1147,6 +1038,70 @@
                 $FormLi.remove();
             });
         }
+
+        // *** gestion select2 ***
+        $(".js-mot-clef-multiple").select2({
+            width: '100%',
+            ajax: {
+                url: "{{ path('mondofute_get_mot_clef_like') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        langue: $(this).data('langue'),
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            minimumInputLength: 1,
+//            data: data,
+            tags: true,
+            createTag: function (params) {
+                return {
+                    id: params.term,
+                    text: params.term,
+                    isNew : true
+                }
+            },
+            insertTag: function (data, tag) {
+                // Insert the tag at the end of the results
+                data.push(tag);
+            }
+        });
+
+        var $eventSelect = $(".js-mot-clef-multiple");
+        $eventSelect.on("select2:select", function (e) {
+
+            var langue = $(this).data('langue');
+            var id  = e.params.data.id;
+            if(e.params.data.isNew){
+                // append the new option element prenamently:
+                // store the new tag:
+                $.ajax("{{ path('mondofute_mot_clef_new') }}",{
+                    data: {
+                        value: e.params.data.text,
+                        langue: langue
+                    },
+                    async: false
+                }).done(function (data) {
+                    id = data;
+                });
+            }
+            $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+id+'">'+e.params.data.text+'</option>');
+        });
+        // *** fin gestion select2 ***
 
         $('.datetimepicker').datetimepicker({
             format: 'dd/mm/yyyy - hh:ii',
