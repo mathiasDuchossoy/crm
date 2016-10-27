@@ -84,19 +84,6 @@ class HebergementType extends AbstractType
                 )
             )
         ;
-            ))
-            ->add('motClefs', EntityType::class, array(
-                'class' => MotClef::class,
-                "choice_label" => "libelle",
-                'multiple'  => true,
-//                'expanded'  => true,
-                'attr' => [
-//                    'class' => 'js-mot-clef-multiple'
-                ],
-                'required' => false,
-                )
-            )
-        ;
     }
 
     /**
