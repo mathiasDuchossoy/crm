@@ -41,7 +41,8 @@
     "eternicode/bootstrap-datepicker": "1.6.1",
     "nucleus/managerBDDBundle": "dev-master",
     "components/bootstrap-datetimepicker": "^2.3",
-    "components/jqueryui": "1.12.0.1"
+    "components/jqueryui": "1.12.0.1",
+    "ivaynberg/select2": "^4.0"
   },
   "repositories": [
     {
