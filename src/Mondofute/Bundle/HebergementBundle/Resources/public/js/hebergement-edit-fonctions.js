@@ -76,7 +76,7 @@ function ajouterLogementLocatifTableau(table, logements, parametres, $progressBa
                     }
                 }
                 chargerProgressBar($progressBar, (parseFloat($progressBar.attr('aria-valuenow')) + parametres.pasProgressBar));
-                if ($progressBar.attr('aria-valuenow') >= 100) {
+                if ($progressBar.attr('aria-valuenow') >= 99) {
                     $progressBar.closest('.progress').remove();
                 }
             }
