@@ -199,7 +199,8 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         if (isset($em)) {
             unset($em);
         }
-        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.id=? AND l.site_id=?';
+//        récupération de logement[id] et logementUnifie[id]
+        $sql = 'SELECT l.id, lu.id AS logementUnifieId FROM logement AS l LEFT JOIN logement_unifie AS lu ON lu.id=l.logement_unifie_id WHERE l.id=? AND l.site_id=?';
         $this->connexion->beginTransaction();
         $lStmt = $this->connexion->prepare($sql);
         if (!$lStmt) {
