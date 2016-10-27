@@ -1,0 +1,33 @@
+
+<div class="modal fade" id="modalTarifsService" tabindex="-1" role="dialog"
+     aria-labelledby="modalTarifService">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="{{ 'fermer' | trans | capitalize }}"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{ 'gestion.tarifs.service' | trans | capitalize }}</h4>
+            </div>
+            <div class="modal-body">
+                {#<div class="row" id="modal-prototype-liste-service"#}
+                {#data-prototype-service="#}
+                {#"#}
+                {#data-prototype="#}
+                {#{% filter escape %}#}
+                {#{% include '@MondofuteService/listeservice/prototype-liste-service.html.twig' with {'form': form.listeServices.vars.prototype} %}#}
+                {#{% endfilter %}#}
+                {#">#}
+                {#</div>#}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">{{ 'fermer' | trans | capitalize }}</button>
+                <button type="button" class="btn btn-default valider-tarifs-service"
+                        id="valider-tarifs-service" data-index-liste-service="" data-index-service=""
+                >{{ 'valider' | trans | capitalize }}</button>
+                {#<div id="index-tarif-service" data-index=""></div>#}
+            </div>
+        </div>
+    </div>
+</div>
