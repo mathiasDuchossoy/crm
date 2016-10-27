@@ -2328,7 +2328,8 @@ class Hebergement
      */
     public function addMotClef(MotClef $motClef)
     {
-        $this->motClefs[] = $motClef;
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
 
         return $this;
     }
@@ -2341,6 +2342,7 @@ class Hebergement
     public function removeMotClef(MotClef $motClef)
     {
         $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
     }
 
     /**
