@@ -71,8 +71,8 @@ class HebergementType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'required' => false,
-<<<<<<< HEAD
             ))
+<<<<<<< HEAD
             ->add('motClefs', EntityType::class, array(
                 'class' => MotClef::class,
                 "choice_label" => "libelle",
@@ -87,13 +87,21 @@ class HebergementType extends AbstractType
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
-        ;
-||||||| parent of 28a452b... changement structure
-            ));
+||||||| parent of 8134a76... hebergement-mot-clef finis
 =======
-            ))
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
         ;
->>>>>>> 28a452b... changement structure
     }
 
     /**
