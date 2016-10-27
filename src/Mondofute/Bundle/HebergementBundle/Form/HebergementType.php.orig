@@ -74,6 +74,7 @@ class HebergementType extends AbstractType
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 6137c0f... coup de coeur sans renseigner de date
             ))
 =======
@@ -133,7 +134,12 @@ class HebergementType extends AbstractType
             ))
 >>>>>>> 6137c0f... coup de coeur sans renseigner de date
 <<<<<<< HEAD
+||||||| parent of ed2015e... hebergement-mot-clef finis
+<<<<<<< HEAD
+=======
+>>>>>>> ed2015e... hebergement-mot-clef finis
             ))
+<<<<<<< HEAD
             ->add('motClefs', EntityType::class, array(
                 'class' => MotClef::class,
                 "choice_label" => "libelle",
@@ -151,6 +157,7 @@ class HebergementType extends AbstractType
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
+<<<<<<< HEAD
 <<<<<<< HEAD
         ;
 ||||||| parent of 28a452b... changement structure
@@ -399,7 +406,15 @@ class HebergementType extends AbstractType
     }
 }
 ||||||| merged common ancestors
+||||||| parent of ed2015e... hebergement-mot-clef finis
+        ;
+||||||| parent of 28a452b... changement structure
+            ));
 =======
+||||||| parent of 8134a76... hebergement-mot-clef finis
+>>>>>>> ed2015e... hebergement-mot-clef finis
+=======
+<<<<<<< HEAD
 <?php
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
@@ -809,8 +824,23 @@ class HebergementType extends AbstractType
 >>>>>>> coup de coeur sans renseigner de date
 >>>>>>> 04f7e6b... coup de coeur sans renseigner de date
 >>>>>>> 227d62a... coup de coeur sans renseigner de date
+||||||| parent of ed2015e... hebergement-mot-clef finis
+            ))
+=======
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
+>>>>>>> ed2015e... hebergement-mot-clef finis
         ;
->>>>>>> 28a452b... changement structure
     }
 
     /**
