@@ -49,11 +49,17 @@ class MotClef
     }
 
     /**
+     * Set id
+     *
      * @param int $id
+     *
+     * @return MotClef
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
