@@ -1,8 +1,8 @@
 <?php
 
 namespace Mondofute\Bundle\CoupDeCoeurBundle\Entity;
-
 use DateTime;
+
 
 /**
  * CoupDeCoeur
@@ -10,7 +10,7 @@ use DateTime;
 abstract class CoupDeCoeur
 {
     /**
-     * @var int
+     * @var integer
      */
     private $id;
 
@@ -28,7 +28,7 @@ abstract class CoupDeCoeur
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -54,6 +54,10 @@ abstract class CoupDeCoeur
      */
     public function setDateHeureDebut($dateHeureDebut)
     {
+        if(empty($dateHeureDebut) && !empty($this->getDateHeureFin()))
+        {
+            $dateHeureDebut = new DateTime();
+        }
         $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
@@ -83,4 +87,3 @@ abstract class CoupDeCoeur
         return $this;
     }
 }
-

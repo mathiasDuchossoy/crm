@@ -40,6 +40,22 @@
                             <a class="btn btn-default"
                                href="{{ path('hebergement_hebergement_edit', { 'id': hebergementUnifie.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
+                        {% set coupDeCoeur = false %}
+                        {% for hebergement in hebergementUnifie.hebergements %}
+                            {% if hebergement.coupDeCoeur is not null %}
+                                {% set coupDeCoeur = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if coupDeCoeur == true %}
+                            <li>
+                                {{ form_start(formsDeletes[hebergementUnifie.id]) }}
+                                <button type="submit" id="form_delete" name="form[delete]" class="btn-default btn">Supprimer coup de coeur
+                                </button>
+                                {#{{ form_widget(formsDeletes[hebergementUnifie.id].delete) }}#}
+                                {{ form_widget(formsDeletes[hebergementUnifie.id]._token) }}
+                                {{ form_end(formsDeletes[hebergementUnifie.id] , {'render_rest': false} ) }}
+                            </li>
+                        {% endif %}
                     </ul>
                 </td>
             </tr>

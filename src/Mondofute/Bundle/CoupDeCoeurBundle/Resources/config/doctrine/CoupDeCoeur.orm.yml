@@ -14,7 +14,9 @@ Mondofute\Bundle\CoupDeCoeurBundle\Entity\CoupDeCoeur:
         dateHeureDebut:
             type: datetime
             column: DateHeureDebut
+            nullable: true
         dateHeureFin:
             type: datetime
             column: DateHeureFin
+            nullable: true
     lifecycleCallbacks: {  }
