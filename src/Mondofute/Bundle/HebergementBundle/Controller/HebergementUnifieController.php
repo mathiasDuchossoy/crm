@@ -816,26 +816,33 @@ class HebergementUnifieController extends Controller
                     $langue = $emSite->getRepository(Langue::class)->findOneBy(array('id' => $entityTraduc->getLangue()->getId()));
 
 //                récupération de la traduction sur le site distant ou création d'une nouvelle traduction si elle n'existe pas
-                    if (empty(($entityTraducSite = $emSite->getRepository(HebergementTraduction::class)->findOneBy(array(
+                    if (empty($entityTraducSite = $emSite->getRepository(HebergementTraduction::class)->findOneBy(array(
                         'hebergement' => $entitySite,
                         'langue' => $langue
-                    ))))
+                    )))
                     ) {
                         $entityTraducSite = new HebergementTraduction();
+                        $entitySite->addTraduction($entityTraducSite);
+                        $entityTraducSite
+                            ->setLangue($langue)
+                        ;
                     }
 
 //                copie des données traductions
-                    $entityTraducSite->setLangue($langue)
+                    $entityTraducSite
                         ->setActivites($entityTraduc->getActivites())
                         ->setAvisMondofute($entityTraduc->getActivites())
                         ->setBienEtre($entityTraduc->getBienEtre())
                         ->setNom($entityTraduc->getNom())
                         ->setPourLesEnfants($entityTraduc->getPourLesEnfants())
                         ->setRestauration($entityTraduc->getRestauration())
-                        ->setHebergement($entityTraduc->getHebergement());
+                        ->setAccroche($entityTraduc->getAccroche())
+                        ->setGeneralite($entityTraduc->getGeneralite())
+                        ->setAvisHebergement($entityTraduc->getAvisHebergement())
+                        ->setAvisLogement($entityTraduc->getAvisLogement())
+                    ;
 
 //                ajout a la collection de traduction de l'hébergement
-                    $entitySite->addTraduction($entityTraducSite);
                 }
 
                 // ********** GESTION DES MEDIAS **********

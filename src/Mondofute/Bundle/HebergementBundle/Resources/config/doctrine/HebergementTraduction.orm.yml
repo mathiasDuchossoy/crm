@@ -25,6 +25,14 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction:
             type: text
         activites:
             type: text
+        accroche:
+            type: text
+        generalite:
+            type: text
+        avisHebergement:
+            type: text
+        avisLogement:
+            type: text
     manyToOne:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement

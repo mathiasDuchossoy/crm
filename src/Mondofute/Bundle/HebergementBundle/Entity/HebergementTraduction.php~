@@ -51,22 +51,6 @@ class HebergementTraduction
      * @var Langue
      */
     private $langue;
-    /**
-     * @var string
-     */
-    private $accroche;
-    /**
-     * @var string
-     */
-    private $generalite;
-    /**
-     * @var string
-     */
-    private $avisHebergement;
-    /**
-     * @var string
-     */
-    private $avisLogement;
 
     /**
      * HebergementTraduction constructor.
@@ -80,6 +64,7 @@ class HebergementTraduction
         $this->restauration = '';
         $this->pourLesEnfants = '';
     }
+
 
     /**
      * Get id
@@ -279,102 +264,6 @@ class HebergementTraduction
     public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
-
-        return $this;
-    }
-
-    /**
-     * Get accroche
-     *
-     * @return string
-     */
-    public function getAccroche()
-    {
-        return $this->accroche;
-    }
-
-    /**
-     * Set accroche
-     *
-     * @param string $accroche
-     *
-     * @return HebergementTraduction
-     */
-    public function setAccroche($accroche)
-    {
-        $this->accroche = $accroche;
-
-        return $this;
-    }
-
-    /**
-     * Get generalite
-     *
-     * @return string
-     */
-    public function getGeneralite()
-    {
-        return $this->generalite;
-    }
-
-    /**
-     * Set generalite
-     *
-     * @param string $generalite
-     *
-     * @return HebergementTraduction
-     */
-    public function setGeneralite($generalite)
-    {
-        $this->generalite = $generalite;
-
-        return $this;
-    }
-
-    /**
-     * Get avisHebergement
-     *
-     * @return string
-     */
-    public function getAvisHebergement()
-    {
-        return $this->avisHebergement;
-    }
-
-    /**
-     * Set avisHebergement
-     *
-     * @param string $avisHebergement
-     *
-     * @return HebergementTraduction
-     */
-    public function setAvisHebergement($avisHebergement)
-    {
-        $this->avisHebergement = $avisHebergement;
-
-        return $this;
-    }
-
-    /**
-     * Get avisLogement
-     *
-     * @return string
-     */
-    public function getAvisLogement()
-    {
-        return $this->avisLogement;
-    }
-
-    /**
-     * Set avisLogement
-     *
-     * @param string $avisLogement
-     *
-     * @return HebergementTraduction
-     */
-    public function setAvisLogement($avisLogement)
-    {
-        $this->avisLogement = $avisLogement;
 
         return $this;
     }
