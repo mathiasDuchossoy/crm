@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\MotClefBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+
 /**
  * MotClef
  */
@@ -16,7 +20,22 @@ class MotClef
      * @var string
      */
     private $libelle;
+    /**
+     * @var Collection
+     */
+    private $hebergements;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->hebergements = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -59,5 +78,62 @@ class MotClef
 
         return $this;
     }
-}
 
+    /**
+     * Add hebergement
+     *
+     * @param Hebergement $hebergement
+     *
+     * @return MotClef
+     */
+    public function addHebergement(Hebergement $hebergement)
+    {
+        $this->hebergements[] = $hebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove hebergement
+     *
+     * @param Hebergement $hebergement
+     */
+    public function removeHebergement(Hebergement $hebergement)
+    {
+        $this->hebergements->removeElement($hebergement);
+    }
+
+    /**
+     * Get hebergements
+     *
+     * @return Collection
+     */
+    public function getHebergements()
+    {
+        return $this->hebergements;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+
+    /**
+     * Set langue
+     *
+     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     *
+     * @return MotClef
+     */
+    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+}
