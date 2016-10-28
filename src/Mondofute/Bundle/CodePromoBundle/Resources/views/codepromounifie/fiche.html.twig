@@ -622,66 +622,68 @@
             var path;
             var $codeCodePromoPanelHebergement = $('#code_code_promo_panel_hebergement_' + keyCodePromo);
             var $codeCodePromoPanelPrestationAnnexe = $('#code_code_promo_panel_prestation_annexe_' + keyCodePromo);
-//
-            if($element.is(':checked'))
+            if(codePromoId)
             {
-                switch (val)
+                if($element.is(':checked'))
                 {
-                    case '1':
-                        if ($('#code_code_promo_panel_hebergement_' + keyCodePromo + ' > *').length == 0){
-                            path = "{{ path('codepromo_get_panel_hebergement', {
-                                'codePromoId' : '_codePromoId_'
-                            } ) }}";
-                            path = path.replace(/_codePromoId_/g, codePromoId);
-                            $.ajax(path).done(function (data) {
-                                data = data.replace(/_keyCodePromo_/g, keyCodePromo);
-                                $codeCodePromoPanelHebergement.html(data);
-                                {% if fournisseursTypeHebergement is defined %}
+                    switch (val)
+                    {
+                        case '1':
+                            if ($('#code_code_promo_panel_hebergement_' + keyCodePromo + ' > *').length == 0){
+                                path = "{{ path('codepromo_get_panel_hebergement', {
+                                    'codePromoId' : '_codePromoId_'
+                                } ) }}";
+                                path = path.replace(/_codePromoId_/g, codePromoId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyCodePromo_/g, keyCodePromo);
+                                    $codeCodePromoPanelHebergement.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
                                     {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                                            getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
+                                    getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
                                     {% endfor %}
-                                {% endif %}
-                            });
-                        }
-                        else{
-                            $codeCodePromoPanelHebergement.show();
-                        }
-                        break;
-                    case '2':
-                        if ($('#code_code_promo_panel_prestation_annexe_' + keyCodePromo + ' > *').length == 0){
-                            path = "{{ path('codepromo_get_panel_prestation_annexe', {
-                                'codePromoId' : '_codePromoId_'
-                            } ) }}";
-                            path = path.replace(/_codePromoId_/g, codePromoId);
-                            $.ajax(path).done(function (data) {
-                                data = data.replace(/_keyCodePromo_/g, keyCodePromo);
-                                $codeCodePromoPanelPrestationAnnexe.html(data);
-                                {% if fournisseursTypeHebergement is defined %}
+                                    {% endif %}
+                                });
+                            }
+                            else{
+                                $codeCodePromoPanelHebergement.show();
+                            }
+                            break;
+                        case '2':
+                            if ($('#code_code_promo_panel_prestation_annexe_' + keyCodePromo + ' > *').length == 0){
+                                path = "{{ path('codepromo_get_panel_prestation_annexe', {
+                                    'codePromoId' : '_codePromoId_'
+                                } ) }}";
+                                path = path.replace(/_codePromoId_/g, codePromoId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyCodePromo_/g, keyCodePromo);
+                                    $codeCodePromoPanelPrestationAnnexe.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
                                     {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                                        getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
+                                    getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
                                     {% endfor %}
-                                {% endif %}
-                            });
-                        }
-                        else{
-                            $codeCodePromoPanelPrestationAnnexe.show();
-                        }
-                        break;
-                    default:
-                        break;
+                                    {% endif %}
+                                });
+                            }
+                            else{
+                                $codeCodePromoPanelPrestationAnnexe.show();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            else {
-                switch (val)
-                {
-                    case '1':
-                        $codeCodePromoPanelHebergement.hide();
-                        break;
-                    case '2':
-                        $codeCodePromoPanelPrestationAnnexe.hide();
-                        break;
-                    default:
-                        break;
+                else {
+                    switch (val)
+                    {
+                        case '1':
+                            $codeCodePromoPanelHebergement.hide();
+                            break;
+                        case '2':
+                            $codeCodePromoPanelPrestationAnnexe.hide();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
