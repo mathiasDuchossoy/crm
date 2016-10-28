@@ -131,6 +131,7 @@ doctrine:
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
                     MondofuteCatalogueBundle: ~
+                    MondofuteMotClefBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -180,6 +181,7 @@ doctrine:
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
                     MondofuteCatalogueBundle: ~
+                    MondofuteMotClefBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -226,6 +228,7 @@ doctrine:
                     MondofuteFournisseurPrestationAffectationBundle: ~
                     MondofuteCodePromoApplicationBundle: ~
                     MondofuteCatalogueBundle: ~
+                    MondofuteMotClefBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -316,6 +319,16 @@ assetic:
               - "%kernel.root_dir%/../vendor/components/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.ru.js"
             filters: [?yui_js]
             output: js/bootstrap-datetimepicker.js
+        select2_js:
+            inputs:
+              - "%%kernel.root_dir%/../vendor/ivaynberg/select2/dist/js/select2.full.js"
+              - "%%kernel.root_dir%/../vendor/ivaynberg/select2/dist/js/select2.js"
+            filters: [?yui_js]
+            output: js/select2.js
+        select2_css:
+            inputs:
+              - "%%kernel.root_dir%/../vendor/ivaynberg/select2/dist/css/select2.css"
+            output: css/select2.css
         menu_css:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
