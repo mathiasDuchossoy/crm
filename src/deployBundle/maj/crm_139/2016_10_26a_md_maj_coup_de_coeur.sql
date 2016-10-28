@@ -1,0 +1,1 @@
+ALTER TABLE hebergement_coup_de_coeur CHANGE DateHeureDebut DateHeureDebut DATETIME DEFAULT NULL, CHANGE DateHeureFin DateHeureFin DATETIME DEFAULT NULL;
