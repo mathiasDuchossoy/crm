@@ -99,10 +99,11 @@
 <<<<<<< HEAD
 maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
 maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
-||||||| parent of 0c04256... suppression du coup de coeur dans les listes d'hébergement
-maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
-=======
+||||||| parent of 5d8c8fb... merge pull
 ;maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
 maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
->>>>>>> 0c04256... suppression du coup de coeur dans les listes d'hébergement
+=======
+;maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
+;maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
+>>>>>>> 5d8c8fb... merge pull
 ; *** fin crm_139 ***
