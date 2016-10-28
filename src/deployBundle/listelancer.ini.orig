@@ -732,13 +732,14 @@ maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
 ; *** fin crm-137 ***
 
 ; *** crm_140 ***
-<<<<<<< HEAD
 ;maj\crm_140\2016_10_26a_md_mot_clef.sql
 ; *** fin crm_140 ***
 
 ; *** crm_139 ***
+<<<<<<< HEAD
 maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
 maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
+<<<<<<< c57331eecef491517b385be17557f2107357b347
 ; *** fin crm_139 ***
 <<<<<<< 0846c6fcf30967b0020f60262dfffff76f741546
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
@@ -790,11 +791,51 @@ maj\crm_140\2016_10_26a_md_mot_clef.sql
 =======
 
 ; *** crm_139 ***
+||||||| merged common ancestors
+; *** fin crm_139 ***
+||||||| parent of fd39b4e... création bundle, entités mis en place + sql et deploybundle,
+maj\crm_140\2016_10_26a_md_mot_clef.sql
+; *** fin crm_140 ***
+=======
+maj\crm_140\2016_10_26a_md_mot_clef.sql
+; *** fin crm_140 ***
+
+; *** crm_139 ***
+=======
+||||||| parent of 0c04256... suppression du coup de coeur dans les listes d'hébergement
+>>>>>>> suppression du coup de coeur dans les listes d'hébergement
 maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
+<<<<<<< c57331eecef491517b385be17557f2107357b347
 ; *** fin crm_139 ***
 >>>>>>> fd39b4e... création bundle, entités mis en place + sql et deploybundle,
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
 >>>>>>> 74ecc5c... création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< 67ab7c2551b8281024267e4b930ce6e75109cb51
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
 >>>>>>> c72cf81... création bundle, entités mis en place + sql et deploybundle,
+<<<<<<< HEAD
 >>>>>>> f11db06... création bundle, entités mis en place + sql et deploybundle,
+||||||| parent of f519968... suppression du coup de coeur dans les listes d'hébergement
+=======
+||||||| parent of ab1c127... suppression du coup de coeur dans les listes d'hébergement
+=======
+||||||| merged common ancestors
+=======
+||||||| parent of 890bc79... suppression du coup de coeur dans les listes d'hébergement
+=======
+||||||| merged common ancestors
+; *** fin crm_139 ***
+>>>>>>> fd39b4e... création bundle, entités mis en place + sql et deploybundle,
+=======
+=======
+;maj\crm_139\2016_10_26a_md_coup_de_coeur.sql
+maj\crm_139\2016_10_26a_md_maj_coup_de_coeur.sql
+>>>>>>> 0c04256... suppression du coup de coeur dans les listes d'hébergement
+; *** fin crm_139 ***
+>>>>>>> suppression du coup de coeur dans les listes d'hébergement
+>>>>>>> 890bc79... suppression du coup de coeur dans les listes d'hébergement
+>>>>>>> suppression du coup de coeur dans les listes d'hébergement
+>>>>>>> ab1c127... suppression du coup de coeur dans les listes d'hébergement
+>>>>>>> f519968... suppression du coup de coeur dans les listes d'hébergement
