@@ -1,0 +1,35 @@
+<div class="modal fade" id="modalRechercherFournisseur" tabindex="-1" role="dialog"
+     aria-labelledby="modalRechercherFournisseurLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="modalRechercherFournisseurLabel">Rechercher un fournisseur</h4>
+            </div>
+            <div class="modal-body">
+                <form id="rechercherFournisseur" class="form-horizontal">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="rechercheFournisseurEnseigne">Enseigne</label> <input
+                                    id="rechercheFournisseurEnseigne" name="rechercheFournisseurEnseigne"
+                                    type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-lg-push-9">
+
+                            <button title="{{ 'rechercher.fournisseur' | trans }}" type="button"
+                                    onclick="rechercherFournisseursHebergement($('#rechercheFournisseurEnseigne'))"
+                                    class="btn btn-default">
+                                Rechercher
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div id="resultatRechercheFournisseur">
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
