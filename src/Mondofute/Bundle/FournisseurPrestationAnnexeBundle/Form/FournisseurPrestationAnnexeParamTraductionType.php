@@ -5,20 +5,19 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FournisseurPrestationAnnexeTraductionType extends AbstractType
+class FournisseurPrestationAnnexeParamTraductionType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle')
+            ->add('libelleParam')
+            ->add('libelleFournisseurPrestationAnnexeParam')
             ->add('langue', EntityType::class, array(
                 'class' => Langue::class,
                 'choice_label' => 'id',
@@ -33,12 +32,22 @@ class FournisseurPrestationAnnexeTraductionType extends AbstractType
     }
     
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction'
+            'data_class' => 'Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParamTraduction'
         ));
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'mondofute_bundle_fournisseurprestationannexebundle_fournisseurprestationannexeparamtraduction';
+    }
+
+
 }

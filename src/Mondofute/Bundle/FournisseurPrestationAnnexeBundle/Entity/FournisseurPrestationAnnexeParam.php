@@ -30,7 +30,7 @@ class FournisseurPrestationAnnexeParam
     /**
      * @var integer
      */
-    private $modeAffectation;
+    private $modeAffectation = 1;
     /**
      * @var FournisseurPrestationAnnexeCapacite
      */
