@@ -58,6 +58,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\FournisseurPrestationAnnexeBundle\MondofuteFournisseurPrestationAnnexeBundle(),
             new Mondofute\Bundle\FournisseurPrestationAffectationBundle\MondofuteFournisseurPrestationAffectationBundle(),
             new Mondofute\Bundle\CodePromoApplicationBundle\MondofuteCodePromoApplicationBundle(),
+            new Mondofute\Bundle\MotClefBundle\MondofuteMotClefBundle(),
             new Mondofute\Bundle\CoupDeCoeurBundle\MondofuteCoupDeCoeurBundle(),
         );
 

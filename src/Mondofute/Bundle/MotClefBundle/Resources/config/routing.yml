@@ -1,0 +1,8 @@
+mondofute_get_mot_clef_like:
+    path: motclef/getmotclefslike/{langue}
+    defaults: { _controller: MondofuteMotClefBundle:MotClef:getmotclefslike , langue: 'fr_FR'  }
+    methods: ['GET']
+
+mondofute_mot_clef_new:
+    path: motclef/ajax/new
+    defaults: { _controller: MondofuteMotClefBundle:MotClef:ajaxNew }

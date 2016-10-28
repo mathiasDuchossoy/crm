@@ -41,6 +41,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -1074,6 +1075,10 @@ class HebergementUnifieController extends Controller
                 }
                 // *** fin gestion code promo hebergement ***
 
+                // *** gestion motClef ***
+                $this->gestionMotClef($entity, $entitySite, $emSite);
+                // *** fin gestion motClef ***
+
 
                 // *** gestion coupDeCoeur ***
                 if(empty($entity->getCoupDeCoeur()))
@@ -1180,14 +1185,16 @@ class HebergementUnifieController extends Controller
     }
 
     /**
-     * @param $fournisseur
-     * @param $fournisseurSite
+     * @param FournisseurHebergement $fournisseur
+     * @param FournisseurHebergement $fournisseurSite
+     * @param EntityManager $emSite
      */
     public function dupliqueFounisseurHebergement(
-        FournisseurHebergement $fournisseur,
-        FournisseurHebergement $fournisseurSite,
+        $fournisseur,
+        $fournisseurSite,
         $emSite
-    ) {
+    )
+    {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1320,7 +1327,8 @@ class HebergementUnifieController extends Controller
         HebergementVisuel $entityVisuel,
         Hebergement $entitySite,
         EntityManager $emSite
-    ) {
+    )
+    {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
@@ -1358,6 +1366,35 @@ class HebergementUnifieController extends Controller
             $traductionSite->setLibelle($traduction->getLibelle())
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $entityVisuelSite->addTraduction($traductionSite);
+        }
+    }
+
+    /**
+     * @param Hebergement $entity
+     * @param Hebergement $entitySite
+     * @param EntityManager $emSite
+     */
+    private function gestionMotClef($entity, $entitySite, $emSite)
+    {
+        /** @var MotClef $motClef */
+        /** @var MotClef $motClefSite */
+        foreach ($entitySite->getMotClefs() as $motClefSite) {
+            $motClef = $entity->getMotClefs()->filter(function (MotClef $element) use ($motClefSite) {
+                return $element->getId() == $motClefSite->getId();
+            })->first();
+            if (false === $motClef) {
+                $entitySite->removeMotClef($motClefSite);
+            }
+        }
+
+        foreach ($entity->getMotClefs() as $motClef) {
+            $motClefSite = $entitySite->getMotClefs()->filter(function (MotClef $element) use ($motClef) {
+                return $element->getId() == $motClef->getId();
+            })->first();
+            if (false === $motClefSite) {
+                $motClefSite = $emSite->find(MotClef::class, $motClef);
+                $entitySite->addMotClef($motClefSite);
+            }
         }
     }
 
@@ -1511,11 +1548,6 @@ class HebergementUnifieController extends Controller
      */
     public function editAction(Request $request, HebergementUnifie $entityUnifie)
     {
-//        if($request->request->count() > 0 ){
-//            dump($request->request);
-//            die;
-//        }
-//        $request->request->remove('stocks');
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
@@ -1549,6 +1581,7 @@ class HebergementUnifieController extends Controller
 
         $originalHebergementVisuels = new ArrayCollection();
         $originalVisuels = new ArrayCollection();
+        $originalMotClefs = new ArrayCollection();
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         /** @var Hebergement $entity */
         foreach ($entityUnifie->getHebergements() as $entity) {
@@ -1561,6 +1594,10 @@ class HebergementUnifieController extends Controller
                     $originalHebergementVisuels->add($entityVisuel);
                     $originalVisuels->add($entityVisuel->getVisuel());
                 }
+            }
+            $originalMotClefs->set($entity->getId(), new ArrayCollection());
+            foreach ($entity->getMotClefs() as $motClef) {
+                $originalMotClefs->get($entity->getId())->add($motClef);
             }
         }
 
@@ -1706,9 +1743,9 @@ class HebergementUnifieController extends Controller
             }
             // ************* fin suppression visuels *************
 
-            // ************* gestion des emplacements *************
             /** @var Hebergement $entity */
             foreach ($entityUnifie->getHebergements() as $keyHebergement => $entity) {
+                // ************* gestion des emplacements *************
                 foreach ($entity->getEmplacements() as $keyEmplacement => $emplacement) {
                     if (empty($request->request->get('hebergement_unifie')['hebergements'][$keyHebergement]['emplacements'][$keyEmplacement]['checkbox'])) {
                         $entity->removeEmplacement($emplacement);
@@ -1722,9 +1759,21 @@ class HebergementUnifieController extends Controller
                         }
                     }
                 }
+                // ************* fin gestion des emplacements *************
+                // *** gestion des motclefs ***
+                /** @var MotClef $motClef */
+                foreach ($entity->getMotClefs() as $motClef) {
+                    if (!$motClef->getHebergements()->contains($entity)) {
+                        $motClef->addHebergement($entity);
+                    }
+                }
+                foreach ($originalMotClefs->get($entity->getId()) as $motClef) {
+                    if (false === $entity->getMotClefs()->contains($motClef)) {
+                        $motClef->removeHebergement($entity);
+                    }
+                }
+                // *** fin gestion des motclefs ***
             }
-
-            // ************* fin gestion des emplacements *************
 
             // *** gestion suppression fournisseurs hebergement ***
             foreach ($originalFournisseurHebergements as $originalFournisseurHebergement) {

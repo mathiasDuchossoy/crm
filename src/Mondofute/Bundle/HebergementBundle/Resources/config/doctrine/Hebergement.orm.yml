@@ -53,4 +53,8 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         moyenComs:
             targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
             cascade: ['persist']
+        motClefs:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
+            mappedBy: hebergements
+            cascade: ['persist']
     lifecycleCallbacks: {  }

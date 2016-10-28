@@ -1,3 +1,7 @@
+mondofute_mot_clef:
+    resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_coup_de_coeur:
     resource: "@MondofuteCoupDeCoeurBundle/Resources/config/routing.yml"
     prefix:   /
