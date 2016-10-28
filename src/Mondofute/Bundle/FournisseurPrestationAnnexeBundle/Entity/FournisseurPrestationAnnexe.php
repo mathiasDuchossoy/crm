@@ -39,7 +39,7 @@ class FournisseurPrestationAnnexe
      */
     private $fournisseurPrestationAnnexeStocks;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $params;
 
@@ -50,6 +50,7 @@ class FournisseurPrestationAnnexe
     {
         $this->traductions = new ArrayCollection();
         $this->fournisseurPrestationAnnexeStocks = new ArrayCollection();
+        $this->params = new ArrayCollection();
     }
 
     /**
@@ -213,7 +214,7 @@ class FournisseurPrestationAnnexe
     /**
      * Get params
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getParams()
     {
