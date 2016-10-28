@@ -97,11 +97,6 @@ class HebergementType extends AbstractType
                 )
             )
         ;
-            ))
-            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
-                'required' => false
-            ])
-        ;
     }
 
     /**
