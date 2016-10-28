@@ -1,0 +1,46 @@
+<div>
+    <h3>Mot clefs</h3>
+    <ul class="nav nav-tabs" role="tablist">
+        {% for keyLangue, langue in langues %}
+            <li role="presentation" {% if keyLangue == 0 %}class="active"{% endif %}>
+                <a href="#mot-clef-site-{{ siteId }}-langue-{{ langue.id }}"
+                   aria-controls="mot-clef-site-{{ siteId }}-langue-{{ langue.id }}" role="tab" data-toggle="tab">
+                    {% for traduction in langue.traductions %}
+                        {% if (traduction.langueTraduction.code == app.request.locale) %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content">
+        {% for keyLangue, langue in langues %}
+            <div role="tabpanel" class="tab-pane  {% if keyLangue == 0 %}active{% endif %}"
+                 id="mot-clef-site-{{ siteId }}-langue-{{ langue.id }}">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label required" for="{{ motClefs.vars.id }}_{{ langue.id }}">VOUS ALLEZ AIMER ...</label>
+                    <div class="col-sm-10">
+                        <select id="{{ motClefs.vars.id }}_{{ langue.id }}" name="{{ motClefs.vars.full_name }}"
+                                class="form-control js-mot-clef-multiple" multiple="multiple"
+                                data-langue="{{ langue.id }}">
+                            {% for motClef in motClefs.vars.choices %}
+                                {% if motClef.data.langue.id == langue.id %}
+                                    <option value="{{ motClef.value }}"
+                                            {% for motClefVal in motClefs.vars.value %}
+                                                {% if motClefVal == motClef.value %}
+                                                    selected="selected"
+                                                {% endif %}
+                                            {% endfor %}
+                                    >{{ motClef.label }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
