@@ -33,6 +33,7 @@ class FournisseurPrestationAnnexeType extends AbstractType
                 'entry_type' => FournisseurPrestationAnnexeParamType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'by_reference' => false,
                 'prototype_name' => '__name_param__'
             ))
         ;

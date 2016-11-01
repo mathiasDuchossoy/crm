@@ -8,11 +8,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParamTraduction;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 
 /**
  * FournisseurPrestationAnnexeParam
@@ -30,7 +25,7 @@ class FournisseurPrestationAnnexeParam
     /**
      * @var integer
      */
-    private $modeAffectation = 1;
+    private $modeAffectation;
     /**
      * @var FournisseurPrestationAnnexeCapacite
      */
@@ -196,7 +191,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addTarif(PrestationAnnexeTarif $tarif)
     {
-        $this->tarifs[] = $tarif;
+        $this->tarifs[] = $tarif->setParam($this);
 
         return $this;
     }
@@ -230,7 +225,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addTraduction(FournisseurPrestationAnnexeParamTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setParam($this);
 
         return $this;
     }
@@ -264,7 +259,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addPrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
     {
-        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur;
+        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur->setParam($this);
 
         return $this;
     }
@@ -298,7 +293,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addPrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
     {
-        $this->prestationAnnexeStations[] = $prestationAnnexeStation;
+        $this->prestationAnnexeStations[] = $prestationAnnexeStation->setParam($this);
 
         return $this;
     }
@@ -332,7 +327,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addPrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
-        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement->setParam($this);
 
         return $this;
     }
@@ -366,7 +361,7 @@ class FournisseurPrestationAnnexeParam
      */
     public function addPrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
     {
-        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement;
+        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement->setParam($this);
 
         return $this;
     }

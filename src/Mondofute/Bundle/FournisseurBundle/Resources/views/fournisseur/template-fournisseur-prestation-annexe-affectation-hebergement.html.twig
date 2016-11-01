@@ -22,7 +22,7 @@
                                 {% if HebergementExists == true %}
                                     checked="checked"
                                 {% endif %}
-                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
+                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ keyParam }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
                         >
                         {{ hebergement.nom }}
                     </label>

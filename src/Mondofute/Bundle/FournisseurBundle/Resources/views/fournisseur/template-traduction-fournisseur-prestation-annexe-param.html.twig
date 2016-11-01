@@ -1,0 +1,63 @@
+<ul class="nav nav-tabs" role="tablist">
+    {% set firstOnglet = true %}
+    {% for langue in langues %}
+        <li role="presentation"
+                {% if firstOnglet %}
+                    class="active"
+                    {% set firstOnglet = false %}
+                {% endif %}
+        ><a href="#onglet-param-{{ index }}-{{ keyParam }}-{{ langue.id }}"
+            aria-controls="onglet-{{ index }}-{{ keyParam }}-{{ langue.id }}" role="tab"
+            data-toggle="tab">
+                {% for traductionLangue in  langue.traductions %}
+                    {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                        {{ traductionLangue.libelle }}
+                    {% endif %}
+                {% endfor %}
+            </a></li>
+    {% endfor %}
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content {{ entity }}s_{{ name }}">
+    {% set paramLibelleParam = traductions.vars.prototype.libelleParam %}
+    {% set paramLibelleFournisseurPrestationAnnexeParam = traductions.vars.prototype.libelleFournisseurPrestationAnnexeParam %}
+    {% set paramLangue = traductions.vars.prototype.langue %}
+    {% for keyLangue, langue in langues %}
+        {% set tradExists = false %}
+        <div role="tabpanel" class="tab-pane
+                    {% if keyLangue == 0 %}
+                    active
+                    {% endif %}"
+             id="onglet-param-{{ index }}-{{ keyParam }}-{{ langue.id }}"
+        >
+            {% for keyTraduction, traduction in traductions %}
+                    {% if traduction.vars.value.langue.id == langue.id %}
+                        {{ form_widget(traduction) }}
+                        {% set tradExists = true %}
+                    {% endif %}
+            {% endfor %}
+            {% if tradExists == false %}
+                <div class="form-group"><label class="col-sm-2 control-label required"
+                                               for="fournisseur_prestationAnnexes_{{ index }}_params_{{ keyParam }}_traductions_{{ keyLangue }}_libelleParam">Libelle
+                        param</label>
+                    <div class="col-sm-10"><input
+                                id="fournisseur_prestationAnnexes_{{ index }}_params_{{ keyParam }}_traductions_{{ keyLangue }}_libelleParam"
+                                name="fournisseur[prestationAnnexes][{{ index }}][params][{{ keyParam }}][traductions][{{ keyLangue }}][libelleParam]"
+                                required="required" maxlength="255" class="form-control" type="text"></div>
+                </div>
+                <div class="form-group"><label class="col-sm-2 control-label required"
+                                               for="fournisseur_prestationAnnexes_{{ index }}_params_{{ keyParam }}_traductions_{{ keyLangue }}_libelleFournisseurPrestationAnnexeParam">Libelle
+                        fournisseur prestation annexe param</label>
+                    <div class="col-sm-10"><input
+                                id="fournisseur_prestationAnnexes_{{ index }}_params_{{ keyParam }}_traductions_{{ keyLangue }}_libelleFournisseurPrestationAnnexeParam"
+                                name="fournisseur[prestationAnnexes][{{ index }}][params][{{ keyParam }}][traductions][{{ keyLangue }}][libelleFournisseurPrestationAnnexeParam]"
+                                required="required" maxlength="255" class="form-control" type="text"></div>
+                </div>
+                <input type="hidden"
+                       name="fournisseur[prestationAnnexes][{{ index }}][params][{{ keyParam }}][traductions][{{ keyLangue }}][langue]"
+                       value="{{ langue.id }}">
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

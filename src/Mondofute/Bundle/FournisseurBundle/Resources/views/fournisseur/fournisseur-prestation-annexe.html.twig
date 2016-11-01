@@ -9,13 +9,13 @@
         <div>
             <ul class="params{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
                     {% filter escape %}
-                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'param' : prestationAnnexe.params.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'name' : '__name__'} %}
+                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'param' : prestationAnnexe.params.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'keyParam' : '__name_param__'} %}
                     {% endfilter %}
                         ">
                 {# iterate over each existing tag and render its only field: name #}
                 {% for keyParam, param in prestationAnnexe.params %}
                     <li class="li_param">
-                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'name' : keyParam} %}
+                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'index' : prestationAnnexe.vars.value.prestationAnnexe.id } %}
                     </li>
                 {% endfor %}
             </ul>
@@ -31,9 +31,9 @@
             $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.data('index', $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.li_param').length);
             $addTagLinkParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.on('click', function (e) {
                 e.preventDefault();
-                addTagForm($collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLiParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name__');
+                addTagForm($collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLiParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name_param__');
             });
-        }
+        };
         if (window.jQuery) {
             var $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
             var $addTagLinkParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_param_link">Ajouter</a>');
