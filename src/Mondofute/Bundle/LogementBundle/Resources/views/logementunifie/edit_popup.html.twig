@@ -56,6 +56,7 @@
     {% endjavascripts %}
     <script type="text/javascript">
         // Initialisation des variables js
+        var maxInputVars = parseInt({{ maxInputVars }});
         var datatableLangue = {
             language: {
                 processing: "{{ 'processing'|trans }}",

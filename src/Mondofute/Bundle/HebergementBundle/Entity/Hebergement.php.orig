@@ -70,13 +70,13 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
-||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
 =======
     /**
      * @var Collection
      */
     private $motClefs;
->>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 
     /**
      * Constructor
@@ -502,7 +502,7 @@ class Hebergement
     {
         return $this->motClefs;
     }
-||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
 =======
 
     /**
@@ -514,7 +514,8 @@ class Hebergement
      */
     public function addMotClef(MotClef $motClef)
     {
-        $this->motClefs[] = $motClef;
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
 
         return $this;
     }
@@ -527,6 +528,7 @@ class Hebergement
     public function removeMotClef(MotClef $motClef)
     {
         $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
     }
 
     /**
@@ -538,5 +540,5 @@ class Hebergement
     {
         return $this->motClefs;
     }
->>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 }

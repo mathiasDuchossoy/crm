@@ -1,20 +1,8 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
+<<<<<<< 90bd8752aeb70e50e748ec765c7fffde126512e7
 mondofute_mot_clef:
     resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
     prefix:   /
 
-mondofute_coup_de_coeur:
-    resource: "@MondofuteCoupDeCoeurBundle/Resources/config/routing.yml"
-    prefix:   /
-
-||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
-=======
-mondofute_mot_clef:
-    resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
-    prefix:   /
-
->>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
 mondofute_fournisseur_prestation_affectation:
     resource: "@MondofuteFournisseurPrestationAffectationBundle/Resources/config/routing.yml"
     prefix:   /
@@ -107,10 +95,6 @@ fos_user:
 #    prefix:   /catalogue/
 ||||||| merged common ancestors
 =======
-mondofute_mot_clef:
-    resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
-    prefix:   /
-
 mondofute_fournisseur_prestation_affectation:
     resource: "@MondofuteFournisseurPrestationAffectationBundle/Resources/config/routing.yml"
     prefix:   /
@@ -201,4 +185,4 @@ fos_user:
 #mondofute_catalogue:
 #    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
 #    prefix:   /catalogue/
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+>>>>>>> suppression des fichiers .orig
