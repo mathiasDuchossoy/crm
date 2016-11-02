@@ -44,12 +44,12 @@ class TarifLocatifController extends Controller
                             $em = $this->getDoctrine()->getManager($site->getLibelle());
                             $logements = $em->getRepository(Logement::class)->findBy(array('logementUnifie' => $logementUnifieId));
                             foreach ($logements as $logement) {
-                                foreach ($tarifs as $idPeriode => $tarif) {
+                                foreach ($tarifs as $tarif) {
                                     if ($tarif != '') {
 //                                        dump($tarif['prixPublic']);die;
                                         $mbdd->addInsertLigne(array(
                                             $logement->getId(),
-                                            $idPeriode,
+                                            $tarif['periodeId'],
                                             $tarif['stock'],
                                             $tarif['prixPublic'],
                                             $tarif['prixFournisseur'],
@@ -63,7 +63,7 @@ class TarifLocatifController extends Controller
                         $retour['valid'] = true;
                     }
                 } else {
-                    $retour['message'] = 'erreur sur l\'identifiant du logement';
+                    $retour['message'] = 'erreur sur l\'identifiant du logement' . $logementUnifieId;
                 }
                 return new JsonResponse($retour);
             } catch (\Exception $except) {

@@ -695,6 +695,7 @@ class LogementUnifieController extends Controller
             foreach ($logementRef->getTraductions() as $traduction) {
                 if ($traduction->getLangue()->getCode() == $request->getLocale()) {
                     $logement->nom = $traduction->getNom();
+                    break;
                 }
             }
             /** @var LogementPeriode $logementPeriodeRef */
@@ -1243,6 +1244,7 @@ class LogementUnifieController extends Controller
             'sites' => $sites,
             'langues' => $langues,
             'fournisseurHebergement' => $fournisseurHebergement,
+            'maxInputVars' => ini_get('max_input_vars'),
         ));
     }
 
