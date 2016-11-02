@@ -161,10 +161,20 @@ function chargerOngletStocksHebergement(idHebergement) {
                             var attribut = null;
                             var stock = null;
                             for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
+<<<<<<< HEAD
                                 // console.log(typePeriodes[i].periodes[k].debut.date.substring(0,10));
                                 debut = new Date(typePeriodes[i].periodes[k].debut.date.substring(0, 10).replace(/-/g, "/"));
                                 fin = new Date(typePeriodes[i].periodes[k].debut.date.substring(0, 10).replace(/-/g, "/"));
                                 // console.log(debut);
+||||||| parent of 90bd875... correctif enregistrement par paquet des stocks, correctif affichage periode dans tableau des stocks pour safari, correctif souci lors de l'enregistrement d'un hébergement (ajout du return true/false dans form.js)
+                                debut = new Date(typePeriodes[i].periodes[k].debut.date);
+                                fin = new Date(typePeriodes[i].periodes[k].fin.date);
+=======
+                                // console.log(typePeriodes[i].periodes[k].debut.date);
+                                debut = new Date(typePeriodes[i].periodes[k].debut.date.replace(/-/g, "/"));
+                                fin = new Date(typePeriodes[i].periodes[k].fin.date.replace(/-/g, "/"));
+                                console.log(debut);
+>>>>>>> 90bd875... correctif enregistrement par paquet des stocks, correctif affichage periode dans tableau des stocks pour safari, correctif souci lors de l'enregistrement d'un hébergement (ajout du return true/false dans form.js)
                                 moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
                                 jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
                                 moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);

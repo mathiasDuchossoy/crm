@@ -1,0 +1,15 @@
+<<<<<<< 3f4a6fa87d725effea53f3d700f9688ad7c31a43
+mondofute_get_mot_clef_like:
+    path: motclef/getmotclefslike/{langue}
+    defaults: { _controller: MondofuteMotClefBundle:MotClef:getmotclefslike , langue: 'fr_FR'  }
+    methods: ['GET']
+
+mondofute_mot_clef_new:
+    path: motclef/ajax/new
+    defaults: { _controller: MondofuteMotClefBundle:MotClef:ajaxNew }
+||||||| merged common ancestors
+=======
+mondofute_mot_clef_homepage:
+    path:     /
+    defaults: { _controller: MondofuteMotClefBundle:Default:index }
+>>>>>>> mise en place bdd, enitities et majlislancer
