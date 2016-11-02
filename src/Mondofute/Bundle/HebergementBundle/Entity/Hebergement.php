@@ -109,10 +109,18 @@ class Hebergement
 <<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+<<<<<<< HEAD
 ||||||| parent of 6384184... mise en place bdd, enitities et majlislancer
 =======
 <<<<<<< HEAD
 >>>>>>> 6384184... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+<<<<<<< HEAD
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
+>>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
     /**
      * @var Collection
      */
@@ -1925,6 +1933,7 @@ class Hebergement
     private $motClefs;
 >>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
+<<<<<<< HEAD
 ||||||| parent of 6384184... mise en place bdd, enitities et majlislancer
 =======
 ||||||| parent of f6df5f9... mise en place bdd, enitities et majlislancer
@@ -1935,6 +1944,19 @@ class Hebergement
     private $motClefs;
 >>>>>>> f6df5f9... mise en place bdd, enitities et majlislancer
 >>>>>>> 6384184... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+||||||| parent of 5262f9d... mise en place bdd, enitities et majlislancer
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
+>>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
 
     /**
      * Constructor
@@ -2312,10 +2334,18 @@ class Hebergement
 <<<<<<< HEAD
 <<<<<<< b2f51bef12678cd5338e60b5d4abd76a031998e7
 <<<<<<< 33d972edc0ce676ad13fe75c5879134f38593fbb
+<<<<<<< HEAD
 ||||||| parent of 6384184... mise en place bdd, enitities et majlislancer
 =======
 <<<<<<< HEAD
 >>>>>>> 6384184... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+<<<<<<< HEAD
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
+>>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
 
     /**
 <<<<<<< HEAD
@@ -4514,6 +4544,7 @@ class Hebergement
 >>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 >>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
+<<<<<<< HEAD
 ||||||| parent of 6384184... mise en place bdd, enitities et majlislancer
 =======
 ||||||| parent of f6df5f9... mise en place bdd, enitities et majlislancer
@@ -4554,6 +4585,49 @@ class Hebergement
     }
 >>>>>>> f6df5f9... mise en place bdd, enitities et majlislancer
 >>>>>>> 6384184... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+||||||| parent of 04442cd... mise en place bdd, enitities et majlislancer
+=======
+||||||| parent of 5262f9d... mise en place bdd, enitities et majlislancer
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+        $this->motClefs[] = $motClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> 5262f9d... mise en place bdd, enitities et majlislancer
+>>>>>>> 04442cd... mise en place bdd, enitities et majlislancer
+>>>>>>> 932a17f66f539f15cf65502141dfd39dba014c90
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
