@@ -19,7 +19,6 @@ class FournisseurPrestationAnnexeTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
-//            ->add('langue', HiddenType::class, array('mapped' => false))
             ->add('langue', EntityType::class, array(
                 'class' => Langue::class,
                 'choice_label' => 'id',

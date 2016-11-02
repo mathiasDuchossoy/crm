@@ -39,4 +39,12 @@ class ModeAffectation
     {
         return constant($type);
     }
+
+    /**
+     * @return int
+     */
+    public function getDefaultValue()
+    {
+        return $this::Station;
+    }
 }

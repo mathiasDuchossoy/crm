@@ -1,7 +1,9 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
+
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
@@ -18,6 +20,10 @@ class PrestationAnnexeStation extends FournisseurPrestationAffectation
      * @var Station
      */
     private $station;
+    /**
+     * @var FournisseurPrestationAnnexeParam
+     */
+    private $param;
 
     /**
      * Get prestationAnnexeStationUnifie
@@ -63,6 +69,30 @@ class PrestationAnnexeStation extends FournisseurPrestationAffectation
     public function setStation(Station $station = null)
     {
         $this->station = $station;
+
+        return $this;
+    }
+
+    /**
+     * Get param
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function getParam()
+    {
+        return $this->param;
+    }
+
+    /**
+     * Set param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     *
+     * @return PrestationAnnexeStation
+     */
+    public function setParam(FournisseurPrestationAnnexeParam $param = null)
+    {
+        $this->param = $param;
 
         return $this;
     }

@@ -54,8 +54,8 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
         $prestationAnnexeLogementUnifies = new ArrayCollection();
         foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie)
         {
-            $fournisseurPrestationAnnexeId = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->first()->getFournisseurPrestationAnnexe()->getId();
-            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($fournisseurPrestationAnnexeId  , $logementUnifieId);
+            $paramId = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->first()->getParam()->getId();
+            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($paramId  , $logementUnifieId);
             $prestationAnnexeLogementUnifies->add($prestationAnnexeLogementUnifie);
             $em->persist($prestationAnnexeLogementUnifie);
             foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement)
@@ -65,7 +65,7 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
                     return $element->getSite() == $prestationAnnexeHebergement->getSite();
                 })->first();
 
-                $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+                $capacite = $prestationAnnexeHebergement->getParam()->getCapacite();
                 $actif = false;
                 if(empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax())  )
                 {

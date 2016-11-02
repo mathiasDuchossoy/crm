@@ -19,6 +19,10 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
      * @var Fournisseur
      */
     private $fournisseur;
+    /**
+     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    private $station;
 
     /**
      * Get prestationAnnexeFournisseurUnifie
@@ -64,6 +68,30 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
     public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get station
+     *
+     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     */
+    public function getStation()
+    {
+        return $this->station;
+    }
+
+    /**
+     * Set station
+     *
+     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     *
+     * @return PrestationAnnexeFournisseur
+     */
+    public function setStation(\Mondofute\Bundle\StationBundle\Entity\Station $station = null)
+    {
+        $this->station = $station;
 
         return $this;
     }
