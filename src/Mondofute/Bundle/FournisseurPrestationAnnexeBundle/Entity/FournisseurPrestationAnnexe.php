@@ -10,6 +10,7 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 
 /**
@@ -21,22 +22,6 @@ class FournisseurPrestationAnnexe
      * @var int
      */
     private $id;
-    /**
-     * @var integer
-     */
-    private $type;
-    /**
-     * @var FournisseurPrestationAnnexeCapacite
-     */
-    private $capacite;
-    /**
-     * @var FournisseurPrestationAnnexeDureeSejour
-     */
-    private $dureeSejour;
-    /**
-     * @var Collection
-     */
-    private $tarifs;
     /**
      * @var Fournisseur
      */
@@ -50,42 +35,22 @@ class FournisseurPrestationAnnexe
      */
     private $prestationAnnexe;
     /**
-     * @var integer
-     */
-    private $modeAffectation = ModeAffectation::Station;
-    /**
-     * @var Collection
-     */
-    private $prestationAnnexeFournisseurs;
-    /**
-     * @var Collection
-     */
-    private $prestationAnnexeHebergements;
-    /**
-     * @var Collection
-     */
-    private $prestationAnnexeLogements;
-    /**
-     * @var Collection
-     */
-    private $prestationAnnexeStations;
-    /**
      * @var Collection
      */
     private $fournisseurPrestationAnnexeStocks;
+    /**
+     * @var Collection
+     */
+    private $params;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tarifs = new ArrayCollection();
         $this->traductions = new ArrayCollection();
-        $this->prestationAnnexeFournisseurs = new ArrayCollection();
-        $this->prestationAnnexeHebergements = new ArrayCollection();
-        $this->prestationAnnexeLogements = new ArrayCollection();
-        $this->prestationAnnexeStations = new ArrayCollection();
         $this->fournisseurPrestationAnnexeStocks = new ArrayCollection();
+        $this->params = new ArrayCollection();
     }
 
     /**
@@ -104,112 +69,6 @@ class FournisseurPrestationAnnexe
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get capacite
-     *
-     * @return FournisseurPrestationAnnexeCapacite
-     */
-    public function getCapacite()
-    {
-        return $this->capacite;
-    }
-
-    /**
-     * Set capacite
-     *
-     * @param FournisseurPrestationAnnexeCapacite $capacite
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setCapacite(FournisseurPrestationAnnexeCapacite $capacite = null)
-    {
-        $this->capacite = $capacite;
-
-        return $this;
-    }
-
-    /**
-     * Get dureeSejour
-     *
-     * @return FournisseurPrestationAnnexeDureeSejour
-     */
-    public function getDureeSejour()
-    {
-        return $this->dureeSejour;
-    }
-
-    /**
-     * Set dureeSejour
-     *
-     * @param FournisseurPrestationAnnexeDureeSejour $dureeSejour
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setDureeSejour(FournisseurPrestationAnnexeDureeSejour $dureeSejour = null)
-    {
-        $this->dureeSejour = $dureeSejour;
-
-        return $this;
-    }
-
-    /**
-     * Add tarif
-     *
-     * @param PrestationAnnexeTarif $tarif
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addTarif(PrestationAnnexeTarif $tarif)
-    {
-        $this->tarifs[] = $tarif->setPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove tarif
-     *
-     * @param PrestationAnnexeTarif $tarif
-     */
-    public function removeTarif(PrestationAnnexeTarif $tarif)
-    {
-        $this->tarifs->removeElement($tarif);
-    }
-
-    /**
-     * Get tarifs
-     *
-     * @return Collection
-     */
-    public function getTarifs()
-    {
-        return $this->tarifs;
     }
 
     /**
@@ -295,166 +154,6 @@ class FournisseurPrestationAnnexe
     }
 
     /**
-     * Get modeAffectation
-     *
-     * @return integer
-     */
-    public function getModeAffectation()
-    {
-        return $this->modeAffectation;
-    }
-
-    /**
-     * Set modeAffectation
-     *
-     * @param integer $modeAffectation
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function setModeAffectation($modeAffectation)
-    {
-        $this->modeAffectation = $modeAffectation;
-
-        return $this;
-    }
-
-    /**
-     * Add prestationAnnexeFournisseur
-     *
-     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addPrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
-    {
-        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur->setFournisseurPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnexeFournisseur
-     *
-     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
-     */
-    public function removePrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
-    {
-        $this->prestationAnnexeFournisseurs->removeElement($prestationAnnexeFournisseur);
-    }
-
-    /**
-     * Get prestationAnnexeFournisseurs
-     *
-     * @return Collection
-     */
-    public function getPrestationAnnexeFournisseurs()
-    {
-        return $this->prestationAnnexeFournisseurs;
-    }
-
-    /**
-     * Add prestationAnnexeHebergement
-     *
-     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addPrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
-    {
-        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement->setFournisseurPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnexeHebergement
-     *
-     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
-     */
-    public function removePrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
-    {
-        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
-    }
-
-    /**
-     * Get prestationAnnexeHebergements
-     *
-     * @return Collection
-     */
-    public function getPrestationAnnexeHebergements()
-    {
-        return $this->prestationAnnexeHebergements;
-    }
-
-    /**
-     * Add prestationAnnexeLogement
-     *
-     * @param PrestationAnnexeLogement $prestationAnnexeLogement
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addPrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
-    {
-        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement->setFournisseurPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnexeLogement
-     *
-     * @param PrestationAnnexeLogement $prestationAnnexeLogement
-     */
-    public function removePrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
-    {
-        $this->prestationAnnexeLogements->removeElement($prestationAnnexeLogement);
-    }
-
-    /**
-     * Get prestationAnnexeLogements
-     *
-     * @return Collection
-     */
-    public function getPrestationAnnexeLogements()
-    {
-        return $this->prestationAnnexeLogements;
-    }
-
-    /**
-     * Add prestationAnnexeStation
-     *
-     * @param PrestationAnnexeStation $prestationAnnexeStation
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function addPrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
-    {
-        $this->prestationAnnexeStations[] = $prestationAnnexeStation->setFournisseurPrestationAnnexe($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove prestationAnnexeStation
-     *
-     * @param PrestationAnnexeStation $prestationAnnexeStation
-     */
-    public function removePrestationAnnexeStation(PrestationAnnexeStation $prestationAnnexeStation)
-    {
-        $this->prestationAnnexeStations->removeElement($prestationAnnexeStation);
-    }
-
-    /**
-     * Get prestationAnnexeStations
-     *
-     * @return Collection
-     */
-    public function getPrestationAnnexeStations()
-    {
-        return $this->prestationAnnexeStations;
-    }
-
-    /**
      * Add fournisseurPrestationAnnexeStock
      *
      * @param FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
@@ -486,5 +185,39 @@ class FournisseurPrestationAnnexe
     public function getFournisseurPrestationAnnexeStocks()
     {
         return $this->fournisseurPrestationAnnexeStocks;
+    }
+
+    /**
+     * Add param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addParam(FournisseurPrestationAnnexeParam $param)
+    {
+        $this->params[] = $param->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     */
+    public function removeParam(FournisseurPrestationAnnexeParam $param)
+    {
+        $this->params->removeElement($param);
+    }
+
+    /**
+     * Get params
+     *
+     * @return Collection
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 }

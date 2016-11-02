@@ -1808,6 +1808,7 @@ class HebergementUnifieController extends Controller
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
             'sites' => $sites,
+            'maxInputVars' => ini_get('max_input_vars'),
             'langues' => $langues,
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),

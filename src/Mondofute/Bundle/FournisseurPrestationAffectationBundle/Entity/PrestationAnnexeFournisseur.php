@@ -3,7 +3,8 @@
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
  * PrestationAnnexeFournisseur
@@ -20,9 +21,13 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
      */
     private $fournisseur;
     /**
-     * @var \Mondofute\Bundle\StationBundle\Entity\Station
+     * @var Station
      */
     private $station;
+    /**
+     * @var FournisseurPrestationAnnexeParam
+     */
+    private $param;
 
     /**
      * Get prestationAnnexeFournisseurUnifie
@@ -75,7 +80,7 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
     /**
      * Get station
      *
-     * @return \Mondofute\Bundle\StationBundle\Entity\Station
+     * @return Station
      */
     public function getStation()
     {
@@ -85,13 +90,37 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
     /**
      * Set station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return PrestationAnnexeFournisseur
      */
-    public function setStation(\Mondofute\Bundle\StationBundle\Entity\Station $station = null)
+    public function setStation(Station $station = null)
     {
         $this->station = $station;
+
+        return $this;
+    }
+
+    /**
+     * Get param
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function getParam()
+    {
+        return $this->param;
+    }
+
+    /**
+     * Set param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     *
+     * @return PrestationAnnexeFournisseur
+     */
+    public function setParam(FournisseurPrestationAnnexeParam $param = null)
+    {
+        $this->param = $param;
 
         return $this;
     }
