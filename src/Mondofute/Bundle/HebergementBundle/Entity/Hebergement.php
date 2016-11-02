@@ -1823,6 +1823,7 @@ class Hebergement
      */
     private $motClefs;
 >>>>>>> mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 ||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 =======
     /**
@@ -1837,6 +1838,16 @@ class Hebergement
      */
     private $coupDeCoeur;
 >>>>>>> 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
+||||||| merged common ancestors
+=======
+||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
+>>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 
     /**
      * Constructor
@@ -2397,6 +2408,7 @@ class Hebergement
         return $this->motClefs;
     }
 >>>>>>> mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 ||||||| parent of 8ec36cd... création bundle, entités mis en place + sql et deploybundle,
 =======
 
@@ -2470,6 +2482,48 @@ class Hebergement
         return $this->motClefs;
     }
 >>>>>>> 7e6c28e... création bundle, entités mis en place + sql et deploybundle,
+||||||| merged common ancestors
+=======
+||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
+>>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
