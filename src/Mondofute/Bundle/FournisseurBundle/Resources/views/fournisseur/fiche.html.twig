@@ -1625,34 +1625,36 @@
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
             {% set index = prestationAnnexe.prestationAnnexe.id %}
 
-            var $collectionHolder{{ index }};
-            var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
-            var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
-            $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
-            $collectionHolder{{ index }}.find('.li_tarif').each(function () {
+
+            var $collectionHolderperiodeParam_{{ index }};
+            var $addTagLinkperiodeParam_{{ index }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+            var $newLinkLiperiodeParam_{{ index }} = $('<li></li>').append($addTagLinkperiodeParam_{{ index }});
+            $collectionHolderperiodeParam_{{ index }} = $('ul.params{{ index }}');
+            $collectionHolderperiodeParam_{{ index }}.find('.li_param').each(function () {
                 addTagFormDeleteLink($(this));
             });
-            $collectionHolder{{ index }}.append($newLinkLi{{ index }});
-            $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
-            $addTagLink{{ index }}.on('click', function (e) {
+            $collectionHolderperiodeParam_{{ index }}.append($newLinkLiperiodeParam_{{ index }});
+            $collectionHolderperiodeParam_{{ index }}.data('index', $collectionHolderperiodeParam_{{ index }}.find('.li_param').length);
+            $addTagLinkperiodeParam_{{ index }}.on('click', function (e) {
                 e.preventDefault();
-                addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+                addTagForm($collectionHolderperiodeParam_{{ index }}, $newLinkLiperiodeParam_{{ index }} , '__name_param__');
             });
 
             {% for keyParam, param in prestationAnnexe.params %}
 
-                var $collectionHolderperiodeParam_{{ keyParam }}_{{ index }};
-                var $addTagLinkperiodeParam_{{ keyParam }}_{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-                var $newLinkLiperiodeParam_{{ keyParam }}_{{ index }} = $('<li></li>').append($addTagLinkperiodeParam_{{ keyParam }}_{{ index }});
-                $collectionHolderperiodeParam_{{ keyParam }}_{{ index }} = $('ul.params{{ index }}');
-                $collectionHolderperiodeParam_{{ keyParam }}_{{ index }}.find('.li_param').each(function () {
+
+                var $collectionHolder_{{ keyParam }}_{{ index }};
+                var $addTagLink_{{ keyParam }}_{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+                var $newLinkLi_{{ keyParam }}_{{ index }} = $('<li></li>').append($addTagLink_{{ keyParam }}_{{ index }});
+                $collectionHolder_{{ keyParam }}_{{ index }} = $('ul.tarifs_{{ keyParam }}_{{ index }}');
+                $collectionHolder_{{ keyParam }}_{{ index }}.find('.li_tarif').each(function () {
                     addTagFormDeleteLink($(this));
                 });
-                $collectionHolderperiodeParam_{{ keyParam }}_{{ index }}.append($newLinkLiperiodeParam_{{ keyParam }}_{{ index }});
-                $collectionHolderperiodeParam_{{ keyParam }}_{{ index }}.data('index', $collectionHolderperiodeParam_{{ keyParam }}_{{ index }}.find('.li_param').length);
-                $addTagLinkperiodeParam_{{ keyParam }}_{{ index }}.on('click', function (e) {
+                $collectionHolder_{{ keyParam }}_{{ index }}.append($newLinkLi_{{ keyParam }}_{{ index }});
+                $collectionHolder_{{ keyParam }}_{{ index }}.data('index', $collectionHolder_{{ keyParam }}_{{ index }}.find('.li_tarif').length);
+                $addTagLink_{{ keyParam }}_{{ index }}.on('click', function (e) {
                     e.preventDefault();
-                    addTagForm($collectionHolderperiodeParam_{{ keyParam }}_{{ index }}, $newLinkLiperiodeParam_{{ keyParam }}_{{ index }} , '__name_param__');
+                    addTagForm($collectionHolder_{{ keyParam }}_{{ index }}, $newLinkLi_{{ keyParam }}_{{ index }} , '__name__');
                 });
 
                 {% for key, tarif in param.tarifs %}
@@ -1744,7 +1746,6 @@
 
         function chargerAffectationStationFournisseurs(prestationAnnexeId, siteId, stationId, paramIndex) {
             var path;
-
             var templateStationId = '';
             var fournisseurId = '{{ fournisseur.id }}';
 
@@ -1762,14 +1763,14 @@
             path = path.replace(/_fournisseurId_/g, fournisseurId);
             path = path.replace(/_paramIndex_/g, paramIndex);
 
-            if ($('#collapse_station_' + prestationAnnexeId + "_" + siteId + "_" + stationId).is(':hidden')) {
+            if ($('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).is(':hidden')) {
                 $.ajax(path,
                         {
                             async: false,
                             method: 'GET'
                         }
                 ).done(function (data) {
-                    $('#collapse_station_' + prestationAnnexeId + "_" + siteId + "_" + stationId).html(data);
+                    $('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).html(data);
                 });
             }
         }
@@ -1824,8 +1825,8 @@
 
     </script>
     <script type="text/javascript">
-        function manageSelectionPrestationAnnexeSite(prestationAnnexeId, siteId) {
-            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '[]"]');
+        function manageSelectionPrestationAnnexeSite(prestationAnnexeId, siteId, keyParam) {
+            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '_' + keyParam + '[]"]');
             var sitesCked = [];
             $(sitesCkbox).each(function (index, e) {
                 if ($(this).is(':checked')) {
@@ -1836,29 +1837,28 @@
                 return false;
             }
 
-            $contenuOngletSite = $('#data_site_' + prestationAnnexeId + '_' + siteId);
+            $contenuOngletSite = $('#data_site_' + prestationAnnexeId + '_' + keyParam + '_' + siteId);
 
             $(sitesCkbox).each(function (index, e) {
                 $e = $(e);
                 if (!$(this).is(':checked')) {
-                    if ($('#onglet_data_site_' + prestationAnnexeId + '_' + $e.val()).hasClass('active')) {
-                        $("[id^='data_site_" + prestationAnnexeId + "_]").each(function (value, element) {
-
+                    if ($('#onglet_data_site_' + prestationAnnexeId + '_' + keyParam + '_' + $e.val()).hasClass('active')) {
+                        $("[id^='data_site_" + prestationAnnexeId + '_' + keyParam + "_]").each(function (value, element) {
                             if (!$(element).hasClass('active')) {
                                 $("#onglet_" + element.id + " a").tab('show');
                                 return false;
                             }
                         });
                     }
-                    $("#onglet_data_site_" + prestationAnnexeId + "_" + $(this).attr('data-site-id')).hide();
+                    $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + $(this).attr('data-site-id')).hide();
 
                 } else {
-                    $("#onglet_data_site_" + prestationAnnexeId + "_" + $(this).attr('data-site-id')).show();
+                    $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + $(this).attr('data-site-id')).show();
                 }
             });
 
-            var siteIdFirst = $('[id^="siteAEnregistrer_' + prestationAnnexeId + '_"]:checked').first().attr('data-site-id');
-            $("#onglet_data_site_" + prestationAnnexeId + "_" + siteIdFirst + " a").tab('show');
+            var siteIdFirst = $('[id^="siteAEnregistrer_' + prestationAnnexeId + '_' + keyParam + '_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + siteIdFirst + " a").tab('show');
 
             return true;
         }

@@ -52,7 +52,6 @@
                 {{ site.libelle }}
             </a>
         </li>
-        {#{% endif %}#}
     {% endfor %}
 </ul>
 <div class="tab-content" style="padding:20px;">
@@ -65,61 +64,51 @@
             {% set stationIdTemp = '' %}
             {% for keyProduit, fournisseurProduit in fournisseurProduits %}
                 {% if fournisseurProduit.siteId == site.id %}
+                    {% if stationIdTemp !=  fournisseurProduit.stationUnifieId %}
+                        {% set FournisseurExists = false %}
+                        {#{% if prestationAnnexeFournisseurs is defined %}#}
+                            {#{% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}#}
+                                {#{% if#}
+                                {#prestationAnnexeFournisseur.vars.value.actif == true#}
+                                {#and prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.fournisseurId#}
+                                {#and prestationAnnexeFournisseur.vars.value.site.id == site.id#}
+                                {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined#}
+                                {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId#}
+                                {#%}#}
+                                    {#{% set FournisseurExists = true %}#}
+                                {#{% endif %}#}
+                            {#{% endfor %}#}
+                        {#{% endif %}#}
+                        {#{{ dump(FournisseurExists) }}#}
 
-                    {% set FournisseurExists = false %}
-                    {% if prestationAnnexeFournisseurs is defined %}
-                        {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
-                            {#{% if prestationAnnexeFournisseur.vars.value.fournisseur is not null#}
-                            {#%}#}
-                                {#and prestationAnnexeFournisseur.vars.value.station is not null#}
-
+                        {% set openStation = false %}
+                        {% if prestationAnnexeFournisseurs is defined %}
+                            {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
                                 {% if
                                 prestationAnnexeFournisseur.vars.value.actif == true
-                                and prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.fournisseurId
-                                and prestationAnnexeFournisseur.vars.value.site.id == site.id
                                 and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
                                 and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId
+                                and prestationAnnexeFournisseur.vars.value.site.id == site.id
                                 %}
-                                    {% set FournisseurExists = true %}
+                                    {% set openStation = true %}
                                 {% endif %}
-                            {#{% endif %}#}
-                        {% endfor %}
-                    {% endif %}
-                    {#{{ dump(FournisseurExists) }}{% set FournisseurExists = true %}#}
-
-                    {% set openStation = false %}
-                    {% for item in fournisseurProduits  %}
-                        {% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ item.fournisseurId ] is defined
-                        and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
-                        %}
-                            {% set openStation = true %}
+                            {% endfor %}
                         {% endif %}
-                    {% endfor %}
+                        {#{{ dump(openStation) }}#}
 
-                    {% if prestationAnnexeFournisseurs is defined %}
-                        {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
-                            {% if
-                            prestationAnnexeFournisseur.vars.value.actif == true
-                            and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
-                            and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId
-                            and prestationAnnexeFournisseur.vars.value.site.id == site.id
-                            %}
-                                {% set openStation = true %}
-                            {% endif %}
+                        {% set hebergementExists = false %}
+                        {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
+                            {% for  item in fournisseurProduits %}
+                                {% if fournisseurProduit.stationUnifieId == item.stationUnifieId %}
+                                    {% if hebergements[prestationAnnexeId ~ '_' ~ keyParam ~ '_' ~ site.id ~ '_' ~ prestationAnnexeHebergement.vars.value.fournisseur.id ] is defined
+                                    and prestationAnnexeHebergement.vars.value.hebergement.station.stationUnifie.id == item.stationUnifieId
+                                    and prestationAnnexeHebergement.vars.value.fournisseur.id == item.fournisseurId
+                                    %}
+                                        {% set hebergementExists = true %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endif %}
-
-                    {% set hebergementExists = false %}
-                    {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
-                        {% if hebergements[prestationAnnexeId ~ '_' ~ keyParam ~ '_' ~ site.id ~ '_' ~ prestationAnnexeHebergement.vars.value.fournisseur.id ] is defined
-                            and prestationAnnexeHebergement.vars.value.hebergement.station.stationUnifie.id == fournisseurProduit.stationUnifieId
-                            and prestationAnnexeHebergement.vars.value.fournisseur.id == fournisseurProduit.fournisseurId
-                        %}
-                            {% set hebergementExists = true %}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if stationIdTemp !=  fournisseurProduit.stationUnifieId %}
 
                         {% set stationExists = false %}
                         {% if prestationAnnexeStations is defined %}
@@ -172,12 +161,11 @@
                     {% endif %}
 
 
-                    {#{% if FournisseurExists == true or openStation == true or hebergementExists == true %}#}
-                    {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur.html.twig') %}
-                    {#{% endif %}#}
+                    {% if FournisseurExists == true or openStation == true or hebergementExists == true %}
+                        {% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur.html.twig') %}
+                    {% endif %}
 
                     {% if (fournisseurProduits[keyProduit + 1 ] is not defined)  or  (fournisseurProduits[keyProduit + 1 ].siteId != fournisseurProduit.siteId  or fournisseurProduits[keyProduit + 1 ].stationUnifieId != fournisseurProduit.stationUnifieId  ) %}
-                        {#{{ loop.index + 1  }}#}
                         </div>
                         </fieldset>
                     {% endif %}

@@ -3,9 +3,12 @@
     {% if prestationAnnexeHebergements is defined %}
         {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
             {% if prestationAnnexeHebergement.vars.value.hebergement is not null %}
-                {% if prestationAnnexeHebergement.vars.value.actif == true and prestationAnnexeHebergement.vars.value.hebergement.id
-                == hebergement.hebergementId
-                and prestationAnnexeHebergement.vars.value.site.id == site.id %}
+                {% if
+                    prestationAnnexeHebergement.vars.value.actif == true
+                    and prestationAnnexeHebergement.vars.value.hebergement.id == hebergement.hebergementId
+                    and prestationAnnexeHebergement.vars.value.site.id == site.id
+                    and hebergement.fournisseurId == prestationAnnexeHebergement.vars.value.fournisseur.id
+                %}
                     {% set HebergementExists = true %}
                 {% endif %}
             {% endif %}
