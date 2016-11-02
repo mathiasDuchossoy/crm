@@ -6,43 +6,92 @@
 /******************************************************************
  * Gestion des variables
  */
-var donneesModifiees = Array();
-
+var donneesModifiees = [];
+if (maxInputVars == null) {
+    var maxInputVars = 1000;
+}
+if (donneesModifieesNbInputsParLigne == null) {
+    var donneesModifieesNbInputsParLigne = 5;
+}
 /******************************************************************
  * Gestion des fonctions
  */
 /**
  * Appel Ajax pour l'enregistrement des Tarifs Locatif
  */
+// function enregistrerTarifsLocatif() {
+//     var $button = $(this);
+//     $button.button('loading');
+//     var $element = $button.parent();
+//     var $reponse = $element.find('[name="btnEnregistrerTarifsLocatifReponse"]');
+//     if (donneesModifiees.length > 0) {
+//         $.post(
+//             urlEnregistrementTarifs,
+//             {'tarifs': donneesModifiees, 'logementUnifieId': logementUnifieId},
+//             function (data) {
+//                 if (data.valid == true) {
+//                     $reponse.html('<div class="alert alert-success">Les données ont bien été enregistrés</div>');
+//                     $button.button('reset');
+//                     donneesModifiees = Array();
+//                 } else {
+//                     $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+//                     $button.button('reset');
+//                 }
+//             },
+//             'json'
+//         ).fail(function () {
+//             $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+//             $button.button('reset');
+//         })
+//         ;
+//     } else {
+//         $reponse.html('<div class="alert alert-info">Aucune données à enregistrer</div>');
+//         $button.button('reset');
+//     }
+// }
 function enregistrerTarifsLocatif() {
     var $button = $(this);
     $button.button('loading');
     var $element = $button.parent();
     var $reponse = $element.find('[name="btnEnregistrerTarifsLocatifReponse"]');
     if (donneesModifiees.length > 0) {
-        $.post(
-            urlEnregistrementTarifs,
-            {'tarifs': donneesModifiees, 'logementUnifieId': logementUnifieId},
-            function (data) {
-                if (data.valid == true) {
-                    $reponse.html('<div class="alert alert-success">Les données ont bien été enregistrés</div>');
-                    $button.button('reset');
-                    donneesModifiees = Array();
-                } else {
-                    $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
-                    $button.button('reset');
-                }
-            },
-            'json'
-        ).fail(function () {
-            $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
-            $button.button('reset');
-        })
-        ;
+        enregistrerTarifsLocatifPaquet($button, $reponse, 0);
     } else {
         $reponse.html('<div class="alert alert-info">Aucune données à enregistrer</div>');
         $button.button('reset');
     }
+}
+function enregistrerTarifsLocatifPaquet($button, $reponse, indice) {
+    var donnees = [];
+    // permet de limiter le nombre d'input envoyés pour eviter un débordement, le -1 est pour laisser la place pour le champ logementUnifieId
+    var indiceMax = (indice - 1 + (maxInputVars / donneesModifieesNbInputsParLigne));
+    for (var i = indice; i < indiceMax && donneesModifiees[i] != null; i++) {
+        donnees.push(donneesModifiees[i]);
+    }
+    $.post(
+        urlEnregistrementTarifs,
+        {'tarifs': donnees, 'logementUnifieId': logementUnifieId},
+        function (data) {
+            if (data.valid == true) {
+                indice = indiceMax;
+                if (donneesModifiees[indice] == null) {
+                    $reponse.html('<div class="alert alert-success">Les données ont bien été enregistrés</div>');
+                    $button.button('reset');
+                    donneesModifiees = [];
+                } else {
+                    enregistrerTarifsLocatifPaquet($button, $reponse, indice);
+                }
+            } else {
+                $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+                $button.button('reset');
+            }
+        },
+        'json'
+    ).fail(function () {
+        $reponse.html('<div class="alert alert-danger">Une erreur est survenue lors de l\'enregistrement</div>');
+        $button.button('reset');
+    })
+    ;
 }
 /**
  * ajoute à l'objet donneesModifiees[idPeriode] les tarifs et stock afin de gérer l'enregistrement
@@ -50,12 +99,31 @@ function enregistrerTarifsLocatif() {
  */
 function modificationDonneesTarifs($obj) {
     var datas = $obj.data();
-    donneesModifiees[datas.periode_id] = {
-        prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g,'.'),
-        stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
-    };
+    var remplace = false;
+    for (var i = 0; i < donneesModifiees.length; i++) {
+        //  test si les tarifs pour la periode modifiée sont déjà présents afin de les modifier si l'élément est déjà présent
+        if (donneesModifiees[i].periodeId == datas.periode_id) {
+            donneesModifiees[i] = {
+                periodeId: datas.periode_id,
+                prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
+            };
+            remplace = true;
+            break;
+        }
+    }
+    if (remplace == false) {
+        //  tarifs à modifier non présent dans le tableau des "donneesModifiees" nous insérons alors dans le tableau un nouvel élement
+        donneesModifiees.push({
+            periodeId: datas.periode_id,
+            prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
+        });
+    }
 }
 /**
  * Création d'un champ texte pour le tableau des tarifs location
