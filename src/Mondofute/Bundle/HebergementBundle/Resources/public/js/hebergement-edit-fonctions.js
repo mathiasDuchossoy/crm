@@ -2,6 +2,12 @@
  * Created by Stephane on 19/10/2016.
  */
 "use strict";
+var stocksModifies = [];
+var nbObjetsStocksModifies = 3;
+if (maxInputVars == null) {
+    var maxInputVars = 1000;
+}
+// récupère la valeur modifiée du stock, si la ligne est supérieure a maxInputVars, création une nouvelle ligne afin d'éviter un débordement
 function modificationStock($obj) {
     var datas = $obj.data();
     var ajout = true;
@@ -14,11 +20,13 @@ function modificationStock($obj) {
                     break;
                 }
             }
-            if (ajout == true) {
-                ajout = false;
-                stocksModifies[i].periodes.push({'id': datas.periode, 'stock': $obj.val()});
+            if (stocksModifies[i].periodes.length < parseInt(maxInputVars / nbObjetsStocksModifies)) {
+                if (ajout == true) {
+                    ajout = false;
+                    stocksModifies[i].periodes.push({'id': datas.periode, 'stock': $obj.val()});
+                }
+                break;
             }
-            break;
         }
     }
     if (ajout == true) {
@@ -28,13 +36,6 @@ function modificationStock($obj) {
         };
         stocksModifies.push(stock);
     }
-    // if (stocksModifies[datas.logement] == null) {
-    //     stocksModifies[datas.logement] = Array();
-    // }
-    // if (stocksModifies[datas.logement][datas.periode] == null) {
-    //     stocksModifies[datas.logement][datas.periode] = 0;
-    // }
-    // stocksModifies[datas.logement][datas.periode] = $obj.val();
 }
 //        copie le premier stock du logement dans le tableau sur les autres stocks
 function dupliquerStocksLogement(logementId, typePeriodeId) {
@@ -48,8 +49,8 @@ function dupliquerStocksLogement(logementId, typePeriodeId) {
     });
 }
 function chargerTableauStocks(table, parametres, $progressBar) {
-    var logements = Array();
-    logements['logements'] = Array();
+    var logements = [];
+    logements['logements'] = [];
     for (var i = 0; i < parametres.logements.length; i++) {
         logements['logements'][i] = parametres.logements[i].id;
     }
@@ -60,10 +61,10 @@ function ajouterLogementLocatifTableau(table, logements, parametres, $progressBa
         urls.logementChargerLocatif,
         {'logements[]': logements['logements']},
         function (datas) {
-            var donnees = Array();
+            var donnees = [];
             var data = null;
             for (var iDatas = 0; iDatas < datas['logements'].length; iDatas++) {
-                donnees[iDatas] = Array();
+                donnees[iDatas] = [];
                 data = datas['logements'][iDatas];
                 donnees[iDatas]['logement'] = '<div><span data-logement_id="' + data.logementUnifie.id + '" data-periode_type_id="' + parametres.typePeriode.id + '" title="copie le stock de la première période de ce logement sur toutes les périodes du logement" class="duplique-stocks glyphicon glyphicon-play pull-right"> </span>' + data.nom + '</div>';
                 var attribut = null;
@@ -75,7 +76,7 @@ function ajouterLogementLocatifTableau(table, logements, parametres, $progressBa
                     }
                 }
                 chargerProgressBar($progressBar, (parseFloat($progressBar.attr('aria-valuenow')) + parametres.pasProgressBar));
-                if ($progressBar.attr('aria-valuenow') >= 100) {
+                if ($progressBar.attr('aria-valuenow') >= 99) {
                     $progressBar.closest('.progress').remove();
                 }
             }
@@ -86,8 +87,8 @@ function ajouterLogementLocatifTableau(table, logements, parametres, $progressBa
                     i++;
                 }
                 var indice = i;
-                var newLogements = Array();
-                newLogements['logements'] = Array();
+                var newLogements = [];
+                newLogements['logements'] = [];
                 for (indice = i; indice < logements['logements'].length; indice++) {
                     newLogements['logements'].push(logements['logements'][indice]);
                 }
@@ -160,8 +161,10 @@ function chargerOngletStocksHebergement(idHebergement) {
                             var attribut = null;
                             var stock = null;
                             for (var k = 0; k < typePeriodes[i].periodes.length; k++) {
-                                debut = new Date(typePeriodes[i].periodes[k].debut.date);
-                                fin = new Date(typePeriodes[i].periodes[k].fin.date);
+                                // console.log(typePeriodes[i].periodes[k].debut.date.substring(0,10));
+                                debut = new Date(typePeriodes[i].periodes[k].debut.date.substring(0, 10).replace(/-/g, "/"));
+                                fin = new Date(typePeriodes[i].periodes[k].debut.date.substring(0, 10).replace(/-/g, "/"));
+                                // console.log(debut);
                                 moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
                                 jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
                                 moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
@@ -169,7 +172,7 @@ function chargerOngletStocksHebergement(idHebergement) {
                                 attribut = 'periode' + typePeriodes[i].periodes[k].id;
                                 colonnes.push({
                                     mDataProp: attribut,
-                                    title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear()
+                                    title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear().toString() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear().toString()
                                 });
                             }
                             var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
@@ -225,30 +228,70 @@ function chargerOngletStocksHebergement(idHebergement) {
             });
         }, 'json');
 }
+// function enregistrerStocks() {
+//     var $button = $(this);
+//     var $element = $button.parent();
+//     var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+//     $button.button('loading');
+//     if (stocksModifies.length > 0) {
+// //            lance la requête ajax de recherche des fournisseurs de type hébergement
+//         $.ajax({
+//             url: urls.catalogueEnregistrerStockLocatif,
+//             type: 'POST',
+//             data: {"stocks": stocksModifies},
+//             success: function (json) {
+//                 if (json.valid) {
+//                     stocksModifies = Array();
+//                     $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
+//                     $button.button('reset');
+//                 } else {
+//                     $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
+//                     $button.button('reset');
+//                 }
+//             }
+//         }, 'json');
+//     } else {
+//         $reponse.html('<div class="alert alert-info">' + langue.enregistrer.stock_aucun + '</div>');
+//         $button.button('reset');
+//     }
+// }
 function enregistrerStocks() {
     var $button = $(this);
     var $element = $button.parent();
     var $reponse = $element.find('[name="btnEnregistrerStocksReponse"]');
+    $reponse.html('');
     $button.button('loading');
     if (stocksModifies.length > 0) {
-//            lance la requête ajax de recherche des fournisseurs de type hébergement
-        $.ajax({
-            url: urls.catalogueEnregistrerStockLocatif,
-            type: 'POST',
-            data: {"stocks": stocksModifies},
-            success: function (json) {
-                if (json.valid) {
-                    stocksModifies = Array();
-                    $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
-                    $button.button('reset');
-                } else {
-                    $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
-                    $button.button('reset');
-                }
-            }
-        }, 'json');
+        enregistrerStock($button, $reponse, 0);
     } else {
         $reponse.html('<div class="alert alert-info">' + langue.enregistrer.stock_aucun + '</div>');
         $button.button('reset');
     }
+}
+// enregistrer le stock ligne par ligne
+function enregistrerStock($button, $reponse, indice) {
+    var stocks = [];
+    stocks.push(stocksModifies[indice]);
+
+    $.ajax({
+        url: urls.catalogueEnregistrerStockLocatif,
+        type: 'POST',
+        data: {"stocks": stocks},
+        success: function (json) {
+            if (json.valid) {
+                indice++;
+                if (stocksModifies[indice] == null) {
+                    stocksModifies = [];
+                    $reponse.html('<div class="alert alert-success">' + langue.enregistrer.stock_ok + '</div>');
+                    $button.button('reset');
+                }
+                else {
+                    enregistrerStock($button, $reponse, indice);
+                }
+            } else {
+                $reponse.html('<div class="alert alert-danger">' + langue.enregistrer.stock_pas_ok + '</div>');
+                $button.button('reset');
+            }
+        }
+    }, 'json');
 }

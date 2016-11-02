@@ -1,6 +1,6 @@
 {{ form_row(tarif.prixPublic) }}
 <h3>Périodes de validité</h3>
-<ul class="periode_validites{{ name }}{{ index }}"
+<ul class="periode_validites_{{ keyParam }}_{{ name }}_{{ index }}"
     {#data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">#}
     data-prototype="
     {% filter escape %}
@@ -16,21 +16,21 @@
 <script>
 
 var collectionPeriodeValidite = function() {
-    $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
-    $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function() {
+    $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('ul.periode_validites_{{ keyParam }}_{{ name }}_{{ index }}');
+    $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.find('.li_periode_validite').each(function() {
         addTagFormDeleteLink($(this));
     });
-    $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
-    $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
-    $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+    $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.append($newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }});
+    $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.data('index', $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.find('.li_periode_validite').length);
+    $addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.on('click', function (e) {
         e.preventDefault();
-        addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+        addTagForm($collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}, $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} , '__periode_validite_name__');
     });
 }
 if (window.jQuery){
-    var $collectionHolderperiode_validite{{ name }}{{ index }};
-    var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-    var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
+    var $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }};
+    var $addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+    var $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<li></li>').append($addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }});
     collectionPeriodeValidite();
     periodevaliditeDatetimePicker();
 }

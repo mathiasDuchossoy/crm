@@ -1,0 +1,26 @@
+<?php
+
+namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
+
+/**
+ * FournisseurPrestationAnnexeParamTraduction
+ */
+class FournisseurPrestationAnnexeParamTraduction
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

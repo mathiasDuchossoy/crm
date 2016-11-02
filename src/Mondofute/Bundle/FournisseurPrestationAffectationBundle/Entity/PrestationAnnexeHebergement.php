@@ -2,7 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
 
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 
 /**
@@ -20,9 +21,13 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
      */
     private $hebergement;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
+    /**
+     * @var FournisseurPrestationAnnexeParam
+     */
+    private $param;
 
     /**
      * Get prestationAnnexeHebergementUnifie
@@ -75,7 +80,7 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -85,13 +90,37 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return PrestationAnnexeHebergement
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get param
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function getParam()
+    {
+        return $this->param;
+    }
+
+    /**
+     * Set param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     *
+     * @return PrestationAnnexeHebergement
+     */
+    public function setParam(FournisseurPrestationAnnexeParam $param = null)
+    {
+        $this->param = $param;
 
         return $this;
     }

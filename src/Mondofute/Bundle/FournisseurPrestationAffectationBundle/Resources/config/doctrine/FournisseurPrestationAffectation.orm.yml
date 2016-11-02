@@ -18,6 +18,4 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\FournisseurPresta
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
-        fournisseurPrestationAnnexe:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
     lifecycleCallbacks: {  }

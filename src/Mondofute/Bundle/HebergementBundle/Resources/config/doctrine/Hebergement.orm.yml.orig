@@ -1,0 +1,62 @@
+Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\HebergementBundle\Repository\HebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            options:
+                unsigned: true
+            generator:
+                strategy: AUTO
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        hebergementUnifie:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie
+            inversedBy: hebergements
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: hebergements
+        typeHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement
+            inversedBy: hebergements
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction
+            mappedBy: hebergement
+            cascade:  ['persist' , 'remove']
+        emplacements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement
+            mappedBy: hebergement
+            cascade: ['persist','remove']
+        visuels:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel
+            mappedBy: hebergement
+            cascade: ['persist','remove']
+    oneToOne:
+        classement:
+            targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
+            cascade: ['persist','remove']
+    manyToMany:
+        moyenComs:
+            targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
+            cascade: ['persist']
+<<<<<<< 3f4a6fa87d725effea53f3d700f9688ad7c31a43
+        motClefs:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
+            mappedBy: hebergements
+            cascade: ['persist']
+||||||| merged common ancestors
+=======
+        motClefs:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
+            mappedBy: hebergements
+>>>>>>> mise en place bdd, enitities et majlislancer
+    lifecycleCallbacks: {  }

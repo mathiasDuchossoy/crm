@@ -2,139 +2,44 @@
     {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% endif %}
 {% for prestationAnnexe in form.prestationAnnexes %}
-
     <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
-        <ul class="nav nav-pills nav-justified">
-            <li class="active" id="nav_pill_parametrage_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
-                                                                                           href="#pill_parametrage_{{ prestationAnnexe.vars.id }}">Paramétrage</a>
-            </li>
-            <li id="nav_pill_affectation_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
-                                                                            href="#pill_affectation_{{ prestationAnnexe.vars.id }}">Affectation</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="pill_parametrage_{{ prestationAnnexe.vars.id }}" class="tab-pane fade in active">
-                <h3>Paramétrages</h3>
-                {{ form_row(prestationAnnexe.type , { 'attr' : {'class' : 'fournisseur_prestation_annexe'} }) }}
-
-                <div>
-                    {{ form_label(prestationAnnexe.capacite) }}
-                    <button type="button" class="btn btn-default"
-                            onclick="displayCapaciteSejour('{{ prestationAnnexe.capacite.vars.id }}');"
-                    >
-                <span id="{{ prestationAnnexe.capacite.vars.id }}_edit" class="glyphicon glyphicon-edit"
-                        {% if prestationAnnexe.capacite.vars.value is not null %}
-                            style="display: none"
-                        {% endif %}
-                      aria-hidden="true"></span>
-                        <span id="{{ prestationAnnexe.capacite.vars.id }}_remove" class="glyphicon glyphicon-remove"
-                                {% if prestationAnnexe.capacite.vars.value is null %}
-                                    style="display: none"
-                                {% endif %}
-                              aria-hidden="true"></span>
-
-                    </button>
-                    {% if prestationAnnexe.capacite.vars.value is null %}
-                        {{ form_widget(prestationAnnexe.capacite , {'attr' : { 'style' : 'display:none'}}) }}
-                    {% else %}
-                        {{ form_widget(prestationAnnexe.capacite ) }}
-                    {% endif %}
-                </div>
-                <div>
-                    {{ form_label(prestationAnnexe.dureeSejour) }}
-                    <button type="button" class="btn btn-default"
-                            onclick="displayCapaciteSejour('{{ prestationAnnexe.dureeSejour.vars.id }}');"
-                    >
-                <span id="{{ prestationAnnexe.dureeSejour.vars.id }}_edit" class="glyphicon glyphicon-edit"
-                        {% if prestationAnnexe.dureeSejour.vars.value is not null %}
-                            style="display: none"
-                        {% endif %}
-                      aria-hidden="true"></span>
-                        <span id="{{ prestationAnnexe.dureeSejour.vars.id }}_remove" class="glyphicon glyphicon-remove"
-                                {% if prestationAnnexe.dureeSejour.vars.value is null %}
-                                    style="display: none"
-                                {% endif %}
-                              aria-hidden="true"></span>
-
-                    </button>
-                    {% if prestationAnnexe.dureeSejour.vars.value is null %}
-                        {{ form_widget(prestationAnnexe.dureeSejour , {'attr' : { 'style' : 'display:none'}}) }}
-                    {% else %}
-                        {{ form_widget(prestationAnnexe.dureeSejour ) }}
-                    {% endif %}
-                    {{ form_row(prestationAnnexe.prestationAnnexe) }}
-                </div>
-                <div>
-                    {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
-                </div>
-                <h3>Tarifs</h3>
-                <ul class="tarifs{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
+        <div>
+            {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+        </div>
+        <div>
+            <ul class="params{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
                     {% filter escape %}
-                        {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'tarif' : prestationAnnexe.tarifs.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'name' : '__name__'} %}
+                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'param' : prestationAnnexe.params.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'keyParam' : '__name_param__'} %}
                     {% endfilter %}
                         ">
-                    {% for key, tarif in prestationAnnexe.tarifs %}
-                        <li class="li_tarif">
-                            {% include ('@MondofuteFournisseur/fournisseur/template-tarif.html.twig') with { 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'name' : key} %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            <div id="pill_affectation_{{ prestationAnnexe.vars.id }}" class="tab-pane fade">
-                <h3>Affectations</h3>
-                {{ form_widget(prestationAnnexe.modeAffectation , {'attr' : { 'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id}}) }}
-                <div id="div_affectation_{{ prestationAnnexe.modeAffectation.vars.id }}">
-                    {% if prestationAnnexe.vars.value.modeAffectation == 1 %}
-                        {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station.html.twig'  with {
-                        'fournisseurProduits' : stationsWithHebergement,
-                        'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,
-                        'prestationAnnexeFournisseurs' : prestationAnnexe.prestationAnnexeFournisseurs,
-                        'prestationAnnexeHebergements' : prestationAnnexe.prestationAnnexeHebergements,
-                        'prestationAnnexeStations' : prestationAnnexe.prestationAnnexeStations
-                        }  %}
-                    {% elseif prestationAnnexe.vars.value.modeAffectation == 2 %}
-                        {#{{ form_row(prestationAnnexe.prestationAnnexeFournisseurs ) }}#}
-                        {#{{ dump(prestationAnnexe.prestationAnnexeFournisseurs) }}#}
-                        {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig'  with {
-                        'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,
-                        'prestationAnnexeFournisseurs' : prestationAnnexe.prestationAnnexeFournisseurs,
-                        'prestationAnnexeHebergements' : prestationAnnexe.prestationAnnexeHebergements
-                        }  %}
-                    {% endif %}
-                </div>
-                {#{% for element in prestationAnnexe.modeAffectation %}#}
-                {#{{ form_row(element) }}#}
-                {#{% endfor %}#}
-                {#<label class="radio-inline"><input type="radio" name="optaffectation" onclick="chargerAffectations('fournisseur')" />Fournisseur</label>#}
-                {#<label class="radio-inline"><input type="radio" name="optaffectation" onclick="chargerAffectations('station')" />Station</label>#}
-
-            </div>
+                {# iterate over each existing tag and render its only field: name #}
+                {% for keyParam, param in prestationAnnexe.params %}
+                    <li class="li_param">
+                        {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'index' : prestationAnnexe.vars.value.prestationAnnexe.id } %}
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-
-
-        {#{{ dump(prestationAnnexe) }}#}
-        <script type="text/javascript">
-
-            var collectionTarif = function () {
-                $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('ul.tarifs{{ prestationAnnexe.vars.value.prestationAnnexe.id }}');
-                $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.li_tarif').each(function () {
-                    addTagFormDeleteLink($(this));
-                });
-                $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.append($newLinkLi{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
-                $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.data('index', $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.li_tarif').length);
-                $addTagLink{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.on('click', function (e) {
-                    e.preventDefault();
-                    addTagForm($collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLi{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name__');
-                });
-            }
-            if (window.jQuery) {
-
-                var $collectionHolder{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
-                var $addTagLink{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
-                var $newLinkLi{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<li></li>').append($addTagLink{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
-                collectionTarif();
-            }
-        </script>
-
     </div>
+    <script type="text/javascript">
+        var collectionParam = function () {
+            $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('ul.params{{ prestationAnnexe.vars.value.prestationAnnexe.id }}');
+            $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.li_param').each(function () {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.append($newLinkLiParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
+            $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.data('index', $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.li_param').length);
+            $addTagLinkParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.on('click', function (e) {
+                e.preventDefault();
+                addTagForm($collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLiParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name_param__');
+            });
+        };
+        if (window.jQuery) {
+            var $collectionHolderParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
+            var $addTagLinkParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+            var $newLinkLiParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<li></li>').append($addTagLinkParam{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
+            collectionParam();
+        }
+    </script>
 {% endfor %}
+

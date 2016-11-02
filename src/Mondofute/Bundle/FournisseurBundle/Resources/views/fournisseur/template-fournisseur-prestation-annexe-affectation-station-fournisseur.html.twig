@@ -1,7 +1,7 @@
 {% set hebergementExists = false %}
 {% set hebergement = [] %}
-{% if hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] is defined %}
-    {% for item in hebergements[prestationAnnexeId ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}
+{% if hebergements[prestationAnnexeId ~ '_' ~ keyParam ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] is defined %}
+    {% for item in hebergements[prestationAnnexeId ~ '_' ~ keyParam ~ '_' ~ site.id ~ '_' ~ fournisseurProduit.fournisseurId ] %}
         {% if item.stationUnifieId == fournisseurProduit.stationUnifieId %}
             {% set hebergement = hebergement|merge([item]) %}
             {#{% set hebergementExists = true %}#}
@@ -52,19 +52,19 @@
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default">
         <div class="panel-heading" role="tab"
-             id="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}">
+             id="heading_fournisseur_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}">
             <h4 class="panel-title">
                 <div class="checkbox">
                     <label><input type="checkbox"
                                 {% if FournisseurExists == true %}
                                     checked="checked"
                                 {% endif %}
-                                  name="prestation_annexe_affectation_station_fournisseur[{{ prestationAnnexeId }}][{{ fournisseurProduit.stationUnifieId }}][{{ fournisseurProduit.fournisseurId }}][{{ site.id }}]"
+                                  name="prestation_annexe_affectation_station_fournisseur[{{ prestationAnnexeId }}][{{ keyParam }}][{{ fournisseurProduit.stationUnifieId }}][{{ fournisseurProduit.fournisseurId }}][{{ site.id }}]"
                         >
                         <a class="collapsed" role="button" data-toggle="collapse"
-                           href="#collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
-                           aria-controls="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
-                           onclick="chargerHebergements('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.fournisseurId }}' , '{{ fournisseurProduit.stationUnifieId }}');return true;"
+                           href="#collapse_fournisseur_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
+                           aria-controls="collapse_fournisseur_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
+                           onclick="chargerHebergements('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.fournisseurId }}' , '{{ fournisseurProduit.stationUnifieId }}' , '{{ keyParam }}');return true;"
                            aria-expanded="
                                                 {% if hebergementExists == true %}
                                                 true
@@ -79,15 +79,15 @@
                 </div>
             </h4>
         </div>
-        <div id="collapse_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
+        <div id="collapse_fournisseur_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
              class="panel-collapse collapse
                                 {% if hebergementExists == true %}
                                 in
                                 {% endif %}
                             " role="tabpanel"
-             aria-labelledby="heading_fournisseur_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}">
+             aria-labelledby="heading_fournisseur_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}">
             <ul class="list-group"
-                id="list_hebergements_{{ prestationAnnexeId }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
+                id="list_hebergements_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}_{{ fournisseurProduit.fournisseurId }}"
             >
                 {% if hebergementExists == true %}
                     {#{% include ('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station-fournisseur-hebergement.html.twig') with {'siteId' : site.id , 'hebergements' : hebergement} %}#}
