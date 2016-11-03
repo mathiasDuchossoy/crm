@@ -54,19 +54,19 @@ class HebergementTraduction
     /**
      * @var string
      */
-    private $accroche;
+    private $accroche = '';
     /**
      * @var string
      */
-    private $generalite;
+    private $generalite = '';
     /**
      * @var string
      */
-    private $avisHebergement;
+    private $avisHebergement = '';
     /**
      * @var string
      */
-    private $avisLogement;
+    private $avisLogement = '';
 
     /**
      * HebergementTraduction constructor.
