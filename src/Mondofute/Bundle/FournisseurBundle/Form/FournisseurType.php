@@ -173,6 +173,7 @@ class FournisseurType extends AbstractType
                     ConditionAnnulation::getLibelle(ConditionAnnulation::personnalisee) => ConditionAnnulation::personnalisee
                 ),
                 'choices_as_values' => true,
+                "placeholder" => " --- choisir une condition d'annulation ---",
                 )
             )
             ->add('relocationAnnulation', ChoiceType::class, array(

@@ -108,6 +108,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         fournisseurParent:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: fournisseurEnfants
+        conditionAnnulationDescription:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulationDescription
+            cascade: ['persist']
     oneToOne:
         logo:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media

@@ -102,7 +102,7 @@ class Fournisseur extends Moral
     /**
      * @var integer
      */
-    private $conditionAnnulation = ConditionAnnulation::standard;
+    private $conditionAnnulation;
     /**
      * @var integer
      */
@@ -131,6 +131,10 @@ class Fournisseur extends Moral
      * @var integer
      */
     private $blocageVente;
+    /**
+     * @var ConditionAnnulationDescription
+     */
+    private $conditionAnnulationDescription;
 
     /**
      * Fournisseur constructor.
@@ -917,6 +921,30 @@ class Fournisseur extends Moral
     public function setBlocageVente($blocageVente)
     {
         $this->blocageVente = $blocageVente;
+
+        return $this;
+    }
+
+    /**
+     * Get conditionAnnulationDescription
+     *
+     * @return ConditionAnnulationDescription
+     */
+    public function getConditionAnnulationDescription()
+    {
+        return $this->conditionAnnulationDescription;
+    }
+
+    /**
+     * Set conditionAnnulationDescription
+     *
+     * @param ConditionAnnulationDescription $conditionAnnulationDescription
+     *
+     * @return Fournisseur
+     */
+    public function setConditionAnnulationDescription(ConditionAnnulationDescription $conditionAnnulationDescription = null)
+    {
+        $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;
     }
