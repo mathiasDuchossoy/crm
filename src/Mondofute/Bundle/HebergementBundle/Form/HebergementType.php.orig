@@ -92,9 +92,14 @@ class HebergementType extends AbstractType
                 'required' => false,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
 ||||||| parent of 5ad69d3... coup de coeur sans renseigner de date
 =======
+||||||| parent of 171ea09... coup de coeur sans renseigner de date
+=======
+<<<<<<< 975deef2587065ca8e82d964599c5e566c72481e
+>>>>>>> 171ea09... coup de coeur sans renseigner de date
 <<<<<<< 175c29c558ed6ebfdd82492529f2e29d8969bdc5
 >>>>>>> 5ad69d3... coup de coeur sans renseigner de date
 <<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
@@ -106,6 +111,7 @@ class HebergementType extends AbstractType
 <<<<<<< HEAD
 =======
 >>>>>>> coup de coeur sans renseigner de date
+<<<<<<< HEAD
 >>>>>>> 04f7e6b... coup de coeur sans renseigner de date
 ||||||| parent of 5ad69d3... coup de coeur sans renseigner de date
 =======
@@ -114,6 +120,23 @@ class HebergementType extends AbstractType
 =======
 >>>>>>> coup de coeur sans renseigner de date
 >>>>>>> 5ad69d3... coup de coeur sans renseigner de date
+||||||| parent of 171ea09... coup de coeur sans renseigner de date
+=======
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+<<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+<<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
+||||||| merged common ancestors
+<<<<<<< HEAD
+=======
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 171ea09... coup de coeur sans renseigner de date
             ))
 <<<<<<< HEAD
             ->add('motClefs', EntityType::class, array(
@@ -201,10 +224,39 @@ class HebergementType extends AbstractType
             ));
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
 ||||||| parent of 508071e... coup de coeur sans renseigner de date
+<<<<<<< 975deef2587065ca8e82d964599c5e566c72481e
+>>>>>>> coup de coeur sans renseigner de date
+||||||| merged common ancestors
+=======
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+        ;
+||||||| merged common ancestors
+            ));
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+        ;
+||||||| merged common ancestors
+            ));
+||||||| merged common ancestors
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
+                'required' => false
+            ])
+        ;
+||||||| merged common ancestors
+            ));
+=======
+<<<<<<< HEAD
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
+                'required' => false
+            ])
+||||||| parent of 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
 >>>>>>> coup de coeur sans renseigner de date
 =======
 <<<<<<< HEAD
@@ -227,6 +279,7 @@ class HebergementType extends AbstractType
             ))
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 508071e... coup de coeur sans renseigner de date
 <<<<<<< b7d7dcdc496b32a20b6a851dc27708882d9f5795
 >>>>>>> coup de coeur sans renseigner de date
@@ -242,6 +295,10 @@ class HebergementType extends AbstractType
 =======
 ||||||| parent of 5ad69d3... coup de coeur sans renseigner de date
 =======
+||||||| parent of 171ea09... coup de coeur sans renseigner de date
+=======
+<<<<<<< 975deef2587065ca8e82d964599c5e566c72481e
+>>>>>>> 171ea09... coup de coeur sans renseigner de date
 <<<<<<< 175c29c558ed6ebfdd82492529f2e29d8969bdc5
 >>>>>>> 5ad69d3... coup de coeur sans renseigner de date
 >>>>>>> coup de coeur sans renseigner de date
@@ -406,7 +463,19 @@ class HebergementType extends AbstractType
                 )
             )
 =======
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+>>>>>>> coup de coeur sans renseigner de date
 >>>>>>> 508071e... coup de coeur sans renseigner de date
+<<<<<<< 975deef2587065ca8e82d964599c5e566c72481e
+>>>>>>> coup de coeur sans renseigner de date
+||||||| merged common ancestors
+=======
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
 >>>>>>> coup de coeur sans renseigner de date
 >>>>>>> 04f7e6b... coup de coeur sans renseigner de date
         ;
@@ -673,7 +742,50 @@ class HebergementType extends AbstractType
 ||||||| parent of 28a452b... changement structure
             ));
 =======
+<<<<<<< HEAD
             ))
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
+=======
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
+||||||| merged common ancestors
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+=======
+>>>>>>> 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
         ;
 >>>>>>> 28a452b... changement structure
     }
