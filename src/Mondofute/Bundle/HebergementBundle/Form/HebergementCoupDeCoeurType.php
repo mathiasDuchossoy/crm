@@ -22,7 +22,7 @@ class HebergementCoupDeCoeurType extends AbstractType
                     'format' => 'dd/MM/yyyy - HH:mm',//yyyy-MM-dd'T'HH:mm:ssZZZZZ
                     'model_timezone' => 'EUROPE/Paris',
                     'attr' => array(
-                        'class' => 'datetimepicker',
+                        'class' => 'datetimepicker date-debut',
                         'data-date-format' => 'dd/MM/yyyy HH:mm',
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     ),

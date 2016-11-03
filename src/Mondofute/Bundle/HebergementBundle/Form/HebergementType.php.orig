@@ -71,7 +71,6 @@ class HebergementType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'required' => false,
-<<<<<<< HEAD
             ))
             ->add('motClefs', EntityType::class, array(
                 'class' => MotClef::class,
@@ -84,27 +83,17 @@ class HebergementType extends AbstractType
                 'required' => false,
                 )
             )
+<<<<<<< HEAD
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
-        ;
-||||||| merged common ancestors
-            ));
+||||||| parent of 508071e... coup de coeur sans renseigner de date
 =======
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, array(
+                'required' => false
             ))
-            ->add('motClefs', EntityType::class, array(
-                'class' => MotClef::class,
-                "choice_label" => "libelle",
-                'multiple'  => true,
-//                'expanded'  => true,
-                'attr' => [
-//                    'class' => 'js-mot-clef-multiple'
-                ],
-                'required' => false,
-                )
-            )
+>>>>>>> 508071e... coup de coeur sans renseigner de date
         ;
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
     }
 
     /**
