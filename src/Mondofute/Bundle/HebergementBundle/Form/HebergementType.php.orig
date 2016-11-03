@@ -77,6 +77,17 @@ class HebergementType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'required' => false,
+<<<<<<< HEAD
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+<<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+<<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
+||||||| merged common ancestors
+<<<<<<< HEAD
+=======
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
             ))
 <<<<<<< HEAD
             ->add('motClefs', EntityType::class, array(
@@ -90,6 +101,7 @@ class HebergementType extends AbstractType
                 'required' => false,
                 )
             )
+<<<<<<< HEAD
 <<<<<<< HEAD
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
@@ -139,6 +151,7 @@ class HebergementType extends AbstractType
             ));
 =======
 ||||||| parent of 508071e... coup de coeur sans renseigner de date
+<<<<<<< HEAD
 >>>>>>> 4d039ac... coup de coeur sans renseigner de date
 =======
 <<<<<<< HEAD
@@ -217,12 +230,44 @@ class HebergementType extends AbstractType
                 'required' => false,
 <<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
 ||||||| parent of 4d039ac... coup de coeur sans renseigner de date
+||||||| parent of f13d8ae... coup de coeur sans renseigner de date
+=======
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+        ;
+||||||| merged common ancestors
+            ));
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+        ;
+||||||| merged common ancestors
+            ));
+||||||| merged common ancestors
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
+                'required' => false
+            ])
+        ;
+||||||| merged common ancestors
+            ));
+=======
+<<<<<<< HEAD
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
+                'required' => false
+            ])
+||||||| parent of 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
+>>>>>>> f13d8ae... coup de coeur sans renseigner de date
 =======
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, array(
                 'required' => false
 >>>>>>> 4d039ac... coup de coeur sans renseigner de date
             ))
+<<<<<<< HEAD
 >>>>>>> 508071e... coup de coeur sans renseigner de date
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+=======
+<<<<<<< f60eeb09f8ca3f5508ad736d1f64aa516d49851a
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
         ;
 <<<<<<< HEAD
 ||||||| merged common ancestors
@@ -356,7 +401,50 @@ class HebergementType extends AbstractType
 ||||||| parent of 28a452b... changement structure
             ));
 =======
+<<<<<<< HEAD
             ))
+||||||| parent of 04f7e6b... coup de coeur sans renseigner de date
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
+=======
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+>>>>>>> 8134a76... hebergement-mot-clef finis
+||||||| merged common ancestors
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+=======
+>>>>>>> 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> 04f7e6b... coup de coeur sans renseigner de date
         ;
 >>>>>>> 28a452b... changement structure
     }
