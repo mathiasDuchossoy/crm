@@ -308,9 +308,9 @@ class FournisseurController extends Controller
                 if(empty($fournisseurSite->getConditionAnnulationDescription()->getId()) or $fournisseurSite->getConditionAnnulationDescription()->getId() == 1)
                 {
                     $perso = new ConditionAnnulationDescription();
-                    $perso->setDescription($fournisseur->getConditionAnnulationDescription()->getDescription());
                     $fournisseurSite->setConditionAnnulationDescription($perso);
                 }
+                $fournisseurSite->getConditionAnnulationDescription()->setDescription($fournisseur->getConditionAnnulationDescription()->getDescription());
                 $standard = $em->find(ConditionAnnulationDescription::class , 1);
                 $em->refresh($standard);
                 break;
