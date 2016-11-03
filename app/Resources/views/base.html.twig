@@ -312,9 +312,9 @@
         }
 
         function displayCoupDeCoeur(elementId) {
-            $element = $("#" + elementId);
-            $buttonEdit = $("#" + elementId + '_edit');
-            $buttonRemove = $("#" + elementId + '_remove');
+            var $element = $("#" + elementId);
+            var $buttonEdit = $("#" + elementId + '_edit');
+            var $buttonRemove = $("#" + elementId + '_remove');
             if ($element.is(":visible")) {
                 $element.hide();
                 $buttonRemove.hide();
@@ -324,6 +324,9 @@
                 })
             }
             else {
+                var dateDebut = $element.find('.date-debut').first();
+                var date = new Date();
+                $(dateDebut).val( date.toLocaleDateString() + " - " + date.toLocaleTimeString().slice(0 , 5));
                 $element.show();
                 $buttonEdit.hide();
                 $buttonRemove.show();
