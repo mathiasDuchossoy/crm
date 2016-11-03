@@ -5,7 +5,8 @@
     <div class="panel-body">
         {{ form_row(form.specificiteCommission) }}
         {{ form_row(form.retrocommissionMFFinSaison) }}
-        {{ form_row(form.conditionAnnulation) }}
+        {{ form_row(form.conditionAnnulation , { 'attr' : { 'onchange' : 'changeConditionAnnulation(this)'}}) }}
+        {{ form_widget(form.conditionAnnulationDescription.description ) }}
         {{ form_row(form.relocationAnnulation) }}
         {{ form_row(form.delaiPaiementFacture) }}
     </div>

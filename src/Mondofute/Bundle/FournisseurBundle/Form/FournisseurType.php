@@ -174,8 +174,10 @@ class FournisseurType extends AbstractType
                 ),
                 'choices_as_values' => true,
                 "placeholder" => " --- choisir une condition d'annulation ---",
+                    'required' => false
                 )
             )
+            ->add('conditionAnnulationDescription', ConditionAnnulationDescriptionType::class , [ 'required' => false])
             ->add('relocationAnnulation', ChoiceType::class, array(
                     'choices' => array(
                         RelocationAnnulation::getLibelle(RelocationAnnulation::nsp) => RelocationAnnulation::nsp,

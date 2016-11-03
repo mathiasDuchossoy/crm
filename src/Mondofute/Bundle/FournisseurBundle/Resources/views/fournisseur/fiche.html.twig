@@ -1879,6 +1879,25 @@
         }
     }
     displayInformationRM();
+
+
+    {# condtion annulation #}
+    function changeConditionAnnulation(element)
+    {
+        var $element = $(element);
+        switch($element.val()){
+            case '1':
+                $.ajax('{{ path("fournisseur_get_condition_annulation_standard") }}').done(function(data){
+                   $('#fournisseur_conditionAnnulationDescription_description').html(data);
+                });
+                break;
+            default:
+                break;
+        }
+    }
+    {# fin condtion annulation #}
+
     </script>
     {# fin information RM #}
+
 {% endblock %}
