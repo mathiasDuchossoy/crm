@@ -216,6 +216,7 @@ class HebergementType extends AbstractType
                 )
             )
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 1727cc7... coup de coeur sans renseigner de date
 ||||||| parent of f13d8ae... coup de coeur sans renseigner de date
 =======
@@ -319,9 +320,14 @@ class HebergementType extends AbstractType
 >>>>>>> f13d8ae... coup de coeur sans renseigner de date
 =======
 <<<<<<< HEAD
+||||||| parent of c185b20... coup de coeur sans renseigner de date
+=======
+<<<<<<< HEAD
+>>>>>>> c185b20... coup de coeur sans renseigner de date
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
+<<<<<<< HEAD
 ||||||| parent of 508071e... coup de coeur sans renseigner de date
 >>>>>>> coup de coeur sans renseigner de date
 >>>>>>> 04f7e6b... coup de coeur sans renseigner de date
@@ -411,7 +417,12 @@ class HebergementType extends AbstractType
 ||||||| parent of 28a452b... changement structure
             ));
 =======
+||||||| parent of c185b20... coup de coeur sans renseigner de date
+=======
+<<<<<<< 071c48d7ada3120983d1debea6e68c09880c6cf5
+>>>>>>> c185b20... coup de coeur sans renseigner de date
 ||||||| parent of 8134a76... hebergement-mot-clef finis
+<<<<<<< HEAD
 >>>>>>> ed2015e... hebergement-mot-clef finis
 =======
 <<<<<<< HEAD
@@ -826,7 +837,18 @@ class HebergementType extends AbstractType
 >>>>>>> 227d62a... coup de coeur sans renseigner de date
 ||||||| parent of ed2015e... hebergement-mot-clef finis
             ))
+||||||| parent of c185b20... coup de coeur sans renseigner de date
 =======
+||||||| merged common ancestors
+        ;
+||||||| merged common ancestors
+            ));
+=======
+||||||| parent of 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> c185b20... coup de coeur sans renseigner de date
+=======
+<<<<<<< 071c48d7ada3120983d1debea6e68c09880c6cf5
             ->add('motClefs', EntityType::class, array(
                 'class' => MotClef::class,
                 "choice_label" => "libelle",
@@ -839,7 +861,30 @@ class HebergementType extends AbstractType
                 )
             )
 >>>>>>> 8134a76... hebergement-mot-clef finis
+<<<<<<< HEAD
 >>>>>>> ed2015e... hebergement-mot-clef finis
+||||||| parent of c185b20... coup de coeur sans renseigner de date
+=======
+||||||| merged common ancestors
+            ))
+            ->add('motClefs', EntityType::class, array(
+                'class' => MotClef::class,
+                "choice_label" => "libelle",
+                'multiple'  => true,
+//                'expanded'  => true,
+                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+                ],
+                'required' => false,
+                )
+            )
+=======
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, array(
+                'required' => false
+            ))
+>>>>>>> 508071e... coup de coeur sans renseigner de date
+>>>>>>> coup de coeur sans renseigner de date
+>>>>>>> c185b20... coup de coeur sans renseigner de date
         ;
     }
 
