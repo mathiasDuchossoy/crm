@@ -248,7 +248,7 @@ class ModeleDescriptionForfaitSkiController extends Controller
                 }
                 $prix
                     ->setValeur($descriptionForfaitSki->getPrix()->getValeur())
-                    ->setUnite($emSite->find(UniteTarif::class, $descriptionForfaitSki->getPrix()->getUnite()))
+                    ->setUnite( !empty($descriptionForfaitSki->getPrix()->getUnite()) ? $emSite->find(UniteTarif::class, $descriptionForfaitSki->getPrix()->getUnite()) : null )
                 ;
                 // *** fin gestion prix ***
 
@@ -260,7 +260,7 @@ class ModeleDescriptionForfaitSkiController extends Controller
                 }
                 $ageMin
                     ->setValeur($descriptionForfaitSki->getAgeMin()->getValeur())
-                    ->setUnite($emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMin()->getUnite()))
+                    ->setUnite( !empty($descriptionForfaitSki->getAgeMin()->getUnite()) ? $emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMin()->getUnite()) : null )
                 ;
                 // *** fin gestion ageMin ***
 
@@ -272,7 +272,7 @@ class ModeleDescriptionForfaitSkiController extends Controller
                 }
                 $ageMax
                     ->setValeur($descriptionForfaitSki->getAgeMax()->getValeur())
-                    ->setUnite($emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMax()->getUnite()))
+                    ->setUnite( !empty($descriptionForfaitSki->getAgeMax()->getUnite()) ? $emSite->find(UniteAge::class, $descriptionForfaitSki->getAgeMax()->getUnite()) : null )
                 ;
                 // *** fin gestion ageMax ***
 
@@ -436,7 +436,12 @@ class ModeleDescriptionForfaitSkiController extends Controller
             }
             $descriptionForfaitSki->setAgeMax($age);
             $descriptionForfaitSki->setClassement($ligneDescriptionForfaitSki->getClassement());
-            $descriptionForfaitSki->setPresent($ligneDescriptionForfaitSki->getPresent());
+            $present = $em->find(OuiNonNC::class,3);
+            if(!empty($ligneDescriptionForfaitSki->getPresent()))
+            {
+                $present = $ligneDescriptionForfaitSki->getPresent();
+            }
+            $descriptionForfaitSki->setPresent($present);
             $prix = new Tarif();
             if (!empty($ligneDescriptionForfaitSki->getPrix())) {
                 $prix = clone $ligneDescriptionForfaitSki->getPrix();
