@@ -85,9 +85,11 @@ class HebergementType extends AbstractType
                 'required' => false,
                 )
             )
+<<<<<<< HEAD
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])
+<<<<<<< HEAD
 ||||||| parent of 8134a76... hebergement-mot-clef finis
 =======
             ->add('motClefs', EntityType::class, array(
@@ -126,7 +128,15 @@ class HebergementType extends AbstractType
     }
 }
 ||||||| merged common ancestors
+||||||| parent of 4d039ac... coup de coeur sans renseigner de date
+        ;
+||||||| merged common ancestors
+            ));
 =======
+||||||| parent of 508071e... coup de coeur sans renseigner de date
+>>>>>>> 4d039ac... coup de coeur sans renseigner de date
+=======
+<<<<<<< HEAD
 <?php
 
 namespace Mondofute\Bundle\HebergementBundle\Form;
@@ -201,25 +211,25 @@ class HebergementType extends AbstractType
                 'by_reference' => false,
                 'required' => false,
 <<<<<<< 26fcb9d9932670dd9107d98a2c846d6157bd73d5
+||||||| parent of 4d039ac... coup de coeur sans renseigner de date
+=======
+            ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, array(
+                'required' => false
+>>>>>>> 4d039ac... coup de coeur sans renseigner de date
             ))
-            ->add('motClefs', EntityType::class, array(
-                'class' => MotClef::class,
-                "choice_label" => "libelle",
-                'multiple'  => true,
-//                'expanded'  => true,
-                'attr' => [
-//                    'class' => 'js-mot-clef-multiple'
-                ],
-                'required' => false,
-                )
-            )
+>>>>>>> 508071e... coup de coeur sans renseigner de date
         ;
+<<<<<<< HEAD
 ||||||| merged common ancestors
             ));
 =======
             ))
         ;
 >>>>>>> changement structure
+||||||| parent of 4d039ac... coup de coeur sans renseigner de date
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+>>>>>>> 4d039ac... coup de coeur sans renseigner de date
     }
 
     /**

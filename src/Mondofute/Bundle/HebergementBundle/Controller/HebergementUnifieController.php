@@ -248,7 +248,7 @@ class HebergementUnifieController extends Controller
             // ***** FIN GESTION DES CODE PROMO ***
 
             // *** gestion coup de coeur ***
-            $this->gestionCoupDeCoeur($entityUnifie , $em);
+            $this->gestionCoupDeCoeur($entityUnifie);
             // *** fin gestion coup de coeur ***
 
             $em->persist($entityUnifie);
