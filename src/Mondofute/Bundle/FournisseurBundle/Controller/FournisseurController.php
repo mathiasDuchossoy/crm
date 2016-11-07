@@ -3005,7 +3005,7 @@ class FournisseurController extends Controller
                     if (empty($paramPost->dureeSejour->min) && empty($paramPost->dureeSejour->max)) {
                         $param->setDureeSejour(null);
                     } else {
-                        $capacite = $param->getDureeSejour();
+                        $dureeSejour = $param->getDureeSejour();
                         if (empty($dureeSejour)) {
                             $dureeSejour = new FournisseurPrestationAnnexeDureeSejour();
                             $param->setDureeSejour($dureeSejour);
