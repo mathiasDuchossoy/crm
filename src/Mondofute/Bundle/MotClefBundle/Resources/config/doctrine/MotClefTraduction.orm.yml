@@ -1,7 +1,7 @@
-Mondofute\Bundle\MotClefBundle\Entity\MotClef:
+Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\MotClefBundle\Repository\MotClefRepository
+    repositoryClass: Mondofute\Bundle\MotClefBundle\Repository\MotClefTraductionRepository
     id:
         id:
             type: integer
@@ -14,11 +14,10 @@ Mondofute\Bundle\MotClefBundle\Entity\MotClef:
         libelle:
             type: string
             length: 255
-    manyToMany:
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
-            inversedBy: motClefs
     manyToOne:
+        motClef:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
+            inversedBy: traductions
         langue:
             targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }
