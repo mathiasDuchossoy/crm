@@ -140,11 +140,6 @@ class FournisseurController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $locale = $request->getLocale();
-//        $famillePrestationAnnexes    = $em
-//            ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
-//            ->getQuery()
-//            ->getResult()
-//        ;
         $fournisseur = new Fournisseur();
 
         // Ajouter une nouvelle adresse au Moyen de communication du fournisseur
