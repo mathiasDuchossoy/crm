@@ -1,0 +1,2 @@
+ALTER TABLE hebergement_traduction CHANGE restauration restauration LONGTEXT DEFAULT NULL, CHANGE bien_etre bien_etre LONGTEXT DEFAULT NULL, CHANGE pour_les_enfants pour_les_enfants LONGTEXT DEFAULT NULL, CHANGE activites activites LONGTEXT DEFAULT NULL, CHANGE accroche accroche LONGTEXT DEFAULT NULL, CHANGE generalite generalite LONGTEXT DEFAULT NULL, CHANGE avis_hebergement avis_hebergement LONGTEXT DEFAULT NULL, CHANGE avis_logement avis_logement LONGTEXT DEFAULT NULL;
+
