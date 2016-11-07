@@ -103,3 +103,6 @@ fabric.properties
 /web/config.php
 /src/deployBundle/rapport/
 /components/
+
+### ignorer les origs ###
+*.orig
