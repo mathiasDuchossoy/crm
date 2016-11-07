@@ -101,6 +101,14 @@ class DomaineCarteIdentite
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Remove traduction
      *
      * @param DomaineCarteIdentiteTraduction $traduction
