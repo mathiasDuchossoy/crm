@@ -1854,6 +1854,7 @@ class Hebergement
 >>>>>>> mise en place bdd, enitities et majlislancer
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
 =======
     /**
@@ -1883,6 +1884,19 @@ class Hebergement
 ||||||| merged common ancestors
 =======
 >>>>>>> 868e3f99adcebb631dd595e858a1f4f6b235950b
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+||||||| parent of a32e7ed... mise en place bdd, enitities et majlislancer
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> a32e7ed... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+>>>>>>> 08c1e788e9cd892c6c04f6069a0d5c6f7efcdbc3
 ||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
 =======
     /**
@@ -2453,6 +2467,7 @@ class Hebergement
 >>>>>>> mise en place bdd, enitities et majlislancer
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
 =======
 
@@ -2643,6 +2658,51 @@ class Hebergement
 ||||||| merged common ancestors
 =======
 >>>>>>> 868e3f99adcebb631dd595e858a1f4f6b235950b
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+||||||| parent of a32e7ed... mise en place bdd, enitities et majlislancer
+=======
+
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+//        $this->motClefs[] = $motClef;
+        $this->motClefs[] = $motClef->addHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+        $motClef->removeHebergement($this);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> a32e7ed... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+=======
+>>>>>>> 08c1e788e9cd892c6c04f6069a0d5c6f7efcdbc3
 ||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
 =======
 
@@ -2683,6 +2743,7 @@ class Hebergement
     }
 <<<<<<< HEAD
 >>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 ||||||| merged common ancestors
@@ -4389,6 +4450,10 @@ class Hebergement
 =======
 >>>>>>> création bundle, entités mis en place + sql et deploybundle,
 >>>>>>> 868e3f99adcebb631dd595e858a1f4f6b235950b
+||||||| merged common ancestors
+=======
+>>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
+>>>>>>> 08c1e788e9cd892c6c04f6069a0d5c6f7efcdbc3
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
