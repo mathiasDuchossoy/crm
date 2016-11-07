@@ -1,0 +1,49 @@
+<div class="form-group">
+    {{ form_label(coupDeCoeur) }}
+    {{ form_errors(coupDeCoeur) }}
+
+
+    <div class="col-md-10">
+        <button type="button" class="btn btn-default"
+                onclick="displayCoupDeCoeur('{{ coupDeCoeur.vars.id }}');"
+        >
+                <span id="{{ coupDeCoeur.vars.id }}_edit" class="glyphicon glyphicon-edit"
+                        {% if coupDeCoeur.vars.value is not null %}
+                            style="display: none"
+                        {% endif %}
+                      aria-hidden="true"></span>
+            <span id="{{ coupDeCoeur.vars.id }}_remove" class="glyphicon glyphicon-remove"
+                    {% if coupDeCoeur.vars.value is null %}
+                        style="display: none"
+                    {% endif %}
+                  aria-hidden="true"></span>
+
+        </button>
+        <div id="{{ coupDeCoeur.vars.id }}" class="form-inline input-group" style="width: 100%;
+            {% if coupDeCoeur.vars.value is null %}
+                display: none;
+            {% endif %}
+                "
+        >
+            {{ form_widget(coupDeCoeur.dateHeureDebut, { 'type' : 'datetime', 'attr' : {
+                'data-unique_block_prefix' : coupDeCoeur.vars['unique_block_prefix'],
+                'onchange' : 'changeDateTimes("'~coupDeCoeur.dateHeureDebut.vars.id~'" , "'~coupDeCoeur.dateHeureFin.vars.id~'" , "dateDebut");'
+            }}) }}
+            <span class="input-group-addon" style="
+    border-width: 1px 0;
+    line-height: 1.42857;
+    margin-left: -5px;
+    margin-right: -5px;
+    min-width: 16px;
+    padding: 4px 5px;
+    text-shadow: 0 1px 0 #fff;
+    width: auto;
+"
+            >au</span>
+            {{ form_widget(coupDeCoeur.dateHeureFin, { 'type' : 'datetime', 'attr' : {
+                'data-unique_block_prefix' : coupDeCoeur.vars['unique_block_prefix'] ,
+                'onchange' : 'changeDateTimes( "'~coupDeCoeur.dateHeureDebut.vars.id~'" , "'~coupDeCoeur.dateHeureFin.vars.id~'" , "dateFin");'
+            }}) }}
+        </div>
+    </div>
+</div>

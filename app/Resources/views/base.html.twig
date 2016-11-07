@@ -311,6 +311,28 @@
             }
         }
 
+        function displayCoupDeCoeur(elementId) {
+            var $element = $("#" + elementId);
+            var $buttonEdit = $("#" + elementId + '_edit');
+            var $buttonRemove = $("#" + elementId + '_remove');
+            if ($element.is(":visible")) {
+                $element.hide();
+                $buttonRemove.hide();
+                $buttonEdit.show();
+                $element.find(':input').each(function (index, input) {
+                    $(input).val('');
+                })
+            }
+            else {
+                var dateDebut = $element.find('.date-debut').first();
+                var date = new Date();
+                $(dateDebut).val( date.toLocaleDateString() + " - " + date.toLocaleTimeString().slice(0 , 5));
+                $element.show();
+                $buttonEdit.hide();
+                $buttonRemove.show();
+            }
+        }
+
     </script>
 
 {% endblock %}

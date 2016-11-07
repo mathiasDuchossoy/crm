@@ -284,7 +284,6 @@ class StationDescriptionUnifieController extends Controller
         /** @var ArrayCollection $stationDescriptions */
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {

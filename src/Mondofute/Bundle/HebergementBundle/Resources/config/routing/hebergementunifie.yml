@@ -47,3 +47,7 @@ hebergement_charger_hebergement_fournisseur:
 #    path:   /{idHebergement}/charger_logement_locatif/{idLogement}
 #    defautls: { _controller: "MondofuteHebergementBundle:HebergementUnifie:chargerLogementLocatif", idHebergement: 0 ,idLogement: 0 }
 #    methods: GET
+hebergement_coup_de_coeur_delete:
+    path: /{id}/coupdecoeur/delete
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:coupdecoeurDelete" }
+    methods:  DELETE
