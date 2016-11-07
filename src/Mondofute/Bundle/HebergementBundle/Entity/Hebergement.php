@@ -1855,6 +1855,12 @@ class Hebergement
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+||||||| merged common ancestors
+<<<<<<<<< Temporary merge branch 1
+=======
+<<<<<<< HEAD
+>>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
 =======
     /**
@@ -1862,6 +1868,7 @@ class Hebergement
      */
     private $motClefs;
 >>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 ||||||| merged common ancestors
 =======
 ||||||| merged common ancestors
@@ -1897,6 +1904,13 @@ class Hebergement
 ||||||| merged common ancestors
 =======
 >>>>>>> 08c1e788e9cd892c6c04f6069a0d5c6f7efcdbc3
+||||||| merged common ancestors
+||||||||| merged common ancestors
+=========
+=======
+||||||| merged common ancestors
+=======
+>>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 ||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
 =======
     /**
@@ -2468,6 +2482,12 @@ class Hebergement
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+||||||| merged common ancestors
+<<<<<<<<< Temporary merge branch 1
+=======
+<<<<<<< HEAD
+>>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 ||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
 =======
 
@@ -2507,6 +2527,7 @@ class Hebergement
         return $this->motClefs;
     }
 >>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
 ||||||| merged common ancestors
 =======
 ||||||| merged common ancestors
@@ -2574,6 +2595,15 @@ class Hebergement
 <<<<<<< b62042932404edbd0486b874ceacc33a2e43ade9:src/Mondofute/Bundle/HebergementBundle/Entity/Hebergement.php
 ||||||| merged common ancestors
 ||||||| merged common ancestors
+||||||| merged common ancestors
+||||||||| merged common ancestors
+=========
+||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
+=======
+||||||| merged common ancestors
+=======
+||||||| parent of 58cece8... mise en place bdd, enitities et majlislancer
+>>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 =======
 
     /**
@@ -2611,6 +2641,7 @@ class Hebergement
     {
         return $this->motClefs;
     }
+<<<<<<< HEAD
 >>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
 =======
 
@@ -4454,6 +4485,13 @@ class Hebergement
 =======
 >>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
 >>>>>>> 08c1e788e9cd892c6c04f6069a0d5c6f7efcdbc3
+||||||| merged common ancestors
+>>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
+>>>>>>>>> Temporary merge branch 2
+=======
+>>>>>>> 58cece8... mise en place bdd, enitities et majlislancer
+>>>>>>> 6be0d00aeb82bc3feca29e3b8c54902790c61b0e
+>>>>>>> 1b7d0b7201106540028541c0ee9088274cf1089c
 }
 >>>>>>> mise en place bdd, enitities et majlislancer
 >>>>>>> mise en place bdd, enitities et majlislancer
