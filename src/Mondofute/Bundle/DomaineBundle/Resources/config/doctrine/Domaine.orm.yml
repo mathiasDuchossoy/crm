@@ -62,4 +62,8 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo
             mappedBy: domaine
             cascade: ['persist' , 'remove']
+    oneToOne:
+        modeleDescriptionForfaitSki:
+            targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

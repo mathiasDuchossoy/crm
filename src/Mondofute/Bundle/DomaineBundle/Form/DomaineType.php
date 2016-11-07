@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Form;
 
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki;
+use Mondofute\Bundle\DescriptionForfaitSkiBundle\Form\ModeleDescriptionForfaitSkiType;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\DomaineBundle\Repository\DomaineRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -63,6 +65,9 @@ class DomaineType extends AbstractType
             ->add('imagesParent')
             ->add('photosParent')
             ->add('videosParent')
+            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class , array(
+                'data_class' => ModeleDescriptionForfaitSki::class
+            ))
         ;
     }
 
