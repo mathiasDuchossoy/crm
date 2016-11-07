@@ -1,0 +1,13 @@
+<?php
+
+namespace Mondofute\Bundle\CoupDeCoeurBundle\Entity;
+
+use DateTime;
+
+/**
+ * CoupDeCoeur
+ */
+abstract class CoupDeCoeur
+{
+}
+
