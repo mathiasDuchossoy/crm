@@ -6,10 +6,10 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         id:
             type: integer
             id: true
-            options:
-                unsigned: true
             generator:
                 strategy: AUTO
+            options:
+                unsigned: true
     fields:
         actif:
             type: boolean
@@ -44,6 +44,11 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
             cascade: ['persist','remove']
+        coupDeCoeur:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementCoupDeCoeur
+            mappedBy: hebergement
+            cascade: ['persist','remove']
+            orphanRemoval: true
     manyToMany:
         moyenComs:
             targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication

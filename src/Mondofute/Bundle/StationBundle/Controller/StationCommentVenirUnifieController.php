@@ -328,7 +328,6 @@ class StationCommentVenirUnifieController extends Controller
         /** @var ArrayCollection $stationCommentVenirs */
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
-        echo $idUnifie;
         //        récupération
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->chargerSansCrmParClassementAffichage();
         foreach ($sites as $site) {
