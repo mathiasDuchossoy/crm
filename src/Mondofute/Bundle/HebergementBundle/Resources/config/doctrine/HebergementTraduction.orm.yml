@@ -19,12 +19,28 @@ Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction:
             nullable: true
         restauration:
             type: text
+            nullable: true
         bienEtre:
             type: text
+            nullable: true
         pourLesEnfants:
             type: text
+            nullable: true
         activites:
             type: text
+            nullable: true
+        accroche:
+            type: text
+            nullable: true
+        generalite:
+            type: text
+            nullable: true
+        avisHebergement:
+            type: text
+            nullable: true
+        avisLogement:
+            type: text
+            nullable: true
     manyToOne:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement

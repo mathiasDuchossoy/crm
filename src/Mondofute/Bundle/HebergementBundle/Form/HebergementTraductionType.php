@@ -19,11 +19,16 @@ class HebergementTraductionType extends AbstractType
         $builder
             ->add('nom')
             ->add('avisMondofute')
-            ->add('restauration', TextType::class, array('required' => false))
-            ->add('bienEtre', TextType::class, array('required' => false))
-            ->add('pourLesEnfants', TextType::class, array('required' => false))
-            ->add('activites', TextType::class, array('required' => false))
-            ->add('langue', HiddenType::class, array('mapped' => false));
+            ->add('restauration', null, array('required' => false))
+            ->add('bienEtre', null, array('required' => false))
+            ->add('pourLesEnfants', null, array('required' => false))
+            ->add('activites', null, array('required' => false))
+            ->add('langue', HiddenType::class, array('mapped' => false))
+            ->add('accroche', null, array('required' => false))
+            ->add('generalite', null, array('required' => false))
+            ->add('avisHebergement', null, array('required' => false))
+            ->add('avisLogement', null, array('required' => false))
+        ;
     }
 
     /**
