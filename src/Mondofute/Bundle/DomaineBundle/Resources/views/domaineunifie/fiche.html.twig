@@ -16,6 +16,7 @@
             {{ form_start(form) }}
             {% include '::coches_sites.html.twig' %}
 
+            {% set ongletModeleDescriptionForfaitSki = 1 %}
             {% set mesSites = form.domaines %}
             {% include '::onglets_sites.html.twig' %}
 
@@ -240,9 +241,12 @@
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
+                    {# tab-modele-description-forfait-ski #}
+                    {% if domaine.vars.value.site.crm == 1 %}
+                        {% include ('@MondofuteDomaine/domaineunifie/tab-modele-description-forfait-ski.html.twig') %}
+                    {% endif %}
+                    {# fin tab-modele-description-forfait-ski #}
                 {% endfor %}
             </div>
             {{ form_row(form.submit) }}
