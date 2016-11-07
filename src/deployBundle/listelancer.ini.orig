@@ -93,4 +93,9 @@
 
 ; *** crm_138 ***
 maj\crm_138\2016_10_24a_md_liaison_domaine_modele_description_forfait_ski.sql
+maj\crm_138\2016_10_28a_md_ajout_ligne_description_forfait_ski_photo_identite.sql
 ; *** fin crm_138 ***
+
+; *** crm_140 ***
+;maj\crm_140\2016_10_26a_md_mot_clef.sql
+; *** fin crm_140 ***
