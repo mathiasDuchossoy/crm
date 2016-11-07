@@ -103,3 +103,5 @@ fabric.properties
 /web/config.php
 /src/deployBundle/rapport/
 /components/
+
+*.orig
