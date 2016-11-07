@@ -34,4 +34,9 @@
             <a data-toggle="tab" href="#data_logement_locatif_tarifs">Tarifs</a>
         </li>
     {% endif %}
+    {% if ongletModeleDescriptionForfaitSki is defined and ongletModeleDescriptionForfaitSki == 1 %}
+        <li id="onglet_data_modele_description_forfait_ski">
+            <a data-toggle="tab" href="#data_modele_description_forfait_ski">Modèle description forfait ski</a>
+        </li>
+    {% endif %}
 </ul>
