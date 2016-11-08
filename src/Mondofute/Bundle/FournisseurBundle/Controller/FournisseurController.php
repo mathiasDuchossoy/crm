@@ -666,7 +666,17 @@ class FournisseurController extends Controller
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
         $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
 
-        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+        $fournisseurId =  null;
+        /** @var FamillePrestationAnnexe $type */
+        foreach ($fournisseur->getTypes() as $type)
+        {
+            if ($type->getId() == 9)
+            {
+                $fournisseurId = $fournisseur->getId();
+            }
+        }
+
+        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale') , null, null, $fournisseurId );
 
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         $hebergements = new ArrayCollection();
@@ -2895,7 +2905,7 @@ class FournisseurController extends Controller
     }
 
     public
-    function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId)
+    function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId , $fournisseurHebergementType)
     {
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
@@ -2935,7 +2945,14 @@ class FournisseurController extends Controller
                 'locale' => $this->container->getParameter('locale'),
             ));
 
-        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+
+        if ($fournisseurHebergementType == "true")
+        {
+            $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), null, null, $fournisseurId);
+        }
+        else{
+            $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+        }
 
         $hebergements = new ArrayCollection();
         foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
@@ -2962,7 +2979,7 @@ class FournisseurController extends Controller
     }
 
     public
-    function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex)
+    function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex , $fournisseurHebergementType)
     {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
@@ -3009,7 +3026,12 @@ class FournisseurController extends Controller
 //                    $prestationAnnexeFournisseur->setFournisseur($em->find(Fournisseur::class,$fournisseur['id']));
 //                    $prestationAnnexeFournisseurs->add($prestationAnnexeFournisseur);
 //                }
-                $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+                if ($fournisseurHebergementType == "true"){
+                    $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale') , null, null, $fournisseurId);
+                }
+                else{
+                    $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
+                }
 
                 return $this->render('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-station.html.twig', array(
                     'fournisseurProduits' => $stationsWithHebergement,
@@ -3026,13 +3048,12 @@ class FournisseurController extends Controller
                 ));
                 break;
             case 'fournisseur':
-                $fournisseurs = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
-//                $prestationAnnexeFournisseurs = new ArrayCollection();
-//                foreach ($fournisseurs as $fournisseur) {
-//                    $prestationAnnexeFournisseur = new PrestationAnnexeFournisseur();
-//                    $prestationAnnexeFournisseur->setFournisseur($em->find(Fournisseur::class, $fournisseur['id']));
-//                    $prestationAnnexeFournisseurs->add($prestationAnnexeFournisseur);
-//                }
+
+                if ($fournisseurHebergementType == "true") {
+                    $fournisseurs = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT, $fournisseurId);
+                } else{
+                    $fournisseurs = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
+                }
                 return $this->render('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig', array(
                     'fournisseurProduits' => $fournisseurs,
                     'prestationAnnexeId' => $prestationAnnexeId,
@@ -3091,7 +3112,7 @@ class FournisseurController extends Controller
         ));
     }
 
-    public function getFournisseurPrestationAnnexeAffectationStationFournisseurAction($prestationAnnexeId, $stationId, $siteId, $fournisseurId, $paramIndex)
+    public function getFournisseurPrestationAnnexeAffectationStationFournisseurAction($prestationAnnexeId, $stationId, $siteId, $fournisseurId, $paramIndex, $fournisseurHebergementType)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -3142,7 +3163,12 @@ class FournisseurController extends Controller
             }
         }
 
-        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), $station->getId(), $siteId);
+        if ($fournisseurHebergementType == "true"){
+            $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), $station->getId(), $siteId, $fournisseurId);
+        }
+        else{
+            $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), $station->getId(), $siteId);
+        }
 
         return $this->render('@MondofuteFournisseur/fournisseur/get-fournisseur-prestation-annexe-affectation-station-fournisseur-action.html.twig', array(
             'fournisseurProduits' => $stationsWithHebergement,
