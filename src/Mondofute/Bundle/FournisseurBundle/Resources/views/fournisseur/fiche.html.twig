@@ -65,9 +65,7 @@
                     {% include ('@MondofuteFournisseur/fournisseur/panel-information-rm.html.twig') %}
                     {# fin panel information RM #}
 
-
-                    {#{{ form_row(form.remiseClefs) }}#}
-                    <div class="form-group ">
+                    <div id="fournisseur_remise_clefs_panel" class="form-group">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <div class="row">
@@ -495,6 +493,16 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
+            if($("#fournisseur_types_9").is(':checked')){
+                $fournisseurRemiseClefsPanel.show();
+            }else{
+                $fournisseurRemiseClefsPanel.hide();
+            }
+        });
+    </script>
     <script>
         var _langues = {{ langues | serialize('json') | raw }};
         var _libelleJour = {};
@@ -1337,13 +1345,16 @@
         }
     </script>
     <script type="text/javascript">
-
         function updatePrestationAnnexe(fournisseurId, element) {
-            $element = $(element);
+            var $element = $(element);
+            var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
             $(element).find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
                 if ($(this).is(':checked')) {
+                    if(famillePrestationAnnexeId == 9){
+                        $fournisseurRemiseClefsPanel.show();
+                    }
                     var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_','fournisseurId': '_fournisseurId_'}) }}";
                     path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
                     path = path.replace(/_fournisseurId_/g, fournisseurId);
@@ -1360,6 +1371,9 @@
                     }
                 }
                 else {
+                    if(famillePrestationAnnexeId == 9){
+                        $fournisseurRemiseClefsPanel.hide();
+                    }
                     $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
                     $famillePrestationAnnexe.hide();
                     $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);

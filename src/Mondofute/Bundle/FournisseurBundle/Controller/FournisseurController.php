@@ -830,6 +830,12 @@ class FournisseurController extends Controller
             }
         }
 
+        $disabledOptionHebergement = false;
+        if(!$fournisseur->getHebergements()->isEmpty())
+        {
+            $disabledOptionHebergement = true;
+        }
+
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur && !$errorRemiseClef) {
             // *** gestion suppression prestations annexe et ses collections ***
 //            $prestation_annexe_affectation_fournisseurs = null;
@@ -850,6 +856,16 @@ class FournisseurController extends Controller
 //            }
 
             /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
+            foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe)
+            {
+                if(false === $fournisseur->getTypes()->contains($fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe()))
+                {
+                    $fournisseur->removePrestationAnnex($fournisseurPrestationAnnexe);
+                    $em->remove($fournisseurPrestationAnnexe);
+                    $this->deletePrestationsAnnexeUnifies($fournisseurPrestationAnnexe, $em);
+                }
+            }
+
             foreach ($originalPrestationAnnexes as $originalPrestationAnnex) {
                 if (false === $fournisseur->getPrestationAnnexes()->contains($originalPrestationAnnex)) {
                     $codePromoPrestationAnnexes = $em->getRepository(CodePromoFournisseurPrestationAnnexe::class)->findBy(array('fournisseurPrestationAnnexe' => $originalPrestationAnnex->getId()));
@@ -1422,7 +1438,8 @@ class FournisseurController extends Controller
             'fournisseurProduits' => $fournisseurProduits,
             'sites' => $sites,
             'hebergements' => $hebergements,
-            'stationsWithHebergement' => $stationsWithHebergement
+            'stationsWithHebergement' => $stationsWithHebergement,
+            'disabledOptionHebergement' => $disabledOptionHebergement
         ));
     }
 
