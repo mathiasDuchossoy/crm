@@ -10,6 +10,8 @@ use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFamillePrestatio
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseurPrestationAnnexe;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
+use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulationDescription;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
@@ -35,6 +37,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -218,6 +221,10 @@ class FournisseurController extends Controller
             }
 
 
+            $this->gestionInformationRM($fournisseur);
+
+            $this->gestionConditionAnnulationDescription($fournisseur);
+
             $em->persist($fournisseur);
             $em->flush();
 
@@ -242,6 +249,73 @@ class FournisseurController extends Controller
         ));
     }
 
+    private function gestionConditionAnnulationDescription(Fournisseur $fournisseur)
+    {
+        $em = $this->getDoctrine()->getManager();
+        switch ($fournisseur->getConditionAnnulation())
+        {
+            case ConditionAnnulation::standard:
+                $standard = $em->find(ConditionAnnulationDescription::class , 1);
+                $em->refresh($standard);
+                if(!empty($fournisseur->getConditionAnnulationDescription()) && $fournisseur->getConditionAnnulationDescription()->getId() != 1)
+                {
+                    $em->remove($fournisseur->getConditionAnnulationDescription());
+                }
+                $fournisseur->setConditionAnnulationDescription($standard);
+                break;
+            case ConditionAnnulation::personnalisee:
+                if(empty($fournisseur->getConditionAnnulationDescription()->getId()) or $fournisseur->getConditionAnnulationDescription()->getId() == 1)
+                {
+                    $perso = new ConditionAnnulationDescription();
+                    $perso->setDescription($fournisseur->getConditionAnnulationDescription()->getDescription());
+                    $fournisseur->setConditionAnnulationDescription($perso);
+                }
+                $standard = $em->find(ConditionAnnulationDescription::class , 1);
+                $em->refresh($standard);
+                break;
+            default:
+                if(!empty($fournisseur->getConditionAnnulationDescription()) && $fournisseur->getConditionAnnulationDescription()->getId() != 1)
+                {
+                    $em->remove($fournisseur->getConditionAnnulationDescription());
+                }
+                $fournisseur->setConditionAnnulationDescription(null);
+                break;
+        }
+    }
+
+    private function gestionConditionAnnulationDescriptionSite(Fournisseur $fournisseur ,Fournisseur $fournisseurSite , EntityManager $em)
+    {
+        switch ($fournisseurSite->getConditionAnnulation())
+        {
+            case ConditionAnnulation::standard:
+                $standard = $em->find(ConditionAnnulationDescription::class , 1);
+                $em->refresh($standard);
+                if(!empty($fournisseurSite->getConditionAnnulationDescription()) && $fournisseurSite->getConditionAnnulationDescription()->getId() != 1)
+                {
+                    $em->remove($fournisseurSite->getConditionAnnulationDescription());
+                }
+                $fournisseurSite->setConditionAnnulationDescription($standard);
+                break;
+            case ConditionAnnulation::personnalisee:
+                if(empty($fournisseurSite->getConditionAnnulationDescription()->getId()) or $fournisseurSite->getConditionAnnulationDescription()->getId() == 1)
+                {
+                    $perso = new ConditionAnnulationDescription();
+                    $fournisseurSite->setConditionAnnulationDescription($perso);
+                }
+                $fournisseurSite->getConditionAnnulationDescription()->setDescription($fournisseur->getConditionAnnulationDescription()->getDescription());
+                $standard = $em->find(ConditionAnnulationDescription::class , 1);
+                $em->refresh($standard);
+                break;
+            default:
+                if(!empty($fournisseurSite->getConditionAnnulationDescription()) && $fournisseurSite->getConditionAnnulationDescription()->getId() != 1)
+                {
+                    $em->remove($fournisseurSite->getConditionAnnulationDescription());
+                }
+                $fournisseurSite->setConditionAnnulationDescription(null);
+                break;
+        }
+    }
+
     private function copieVersSites(Fournisseur $fournisseur)
     {
         /** @var MoyenCommunication $moyenComSite */
@@ -260,8 +334,11 @@ class FournisseurController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $fournisseurSite
                     ->setContient($fournisseur->getContient())
+                    ->setPhototheque($fournisseur->getPhototheque())
+                    ->setBlocageVente($fournisseur->getBlocageVente())
                     ->setEnseigne($fournisseur->getEnseigne())
-                    ->setRaisonSociale($fournisseur->getRaisonSociale());
+                    ->setRaisonSociale($fournisseur->getRaisonSociale())
+                ;
 
                 foreach ($fournisseur->getTypes() as $typeFournisseur) {
                     $typeFournisseurSite = $emSite->find(FamillePrestationAnnexe::class, $typeFournisseur);
@@ -378,13 +455,71 @@ class FournisseurController extends Controller
                 }
                 // ***** fin gestion logo *****
 
+                // ***** gestion clause contractuelle *****
+                $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
+                // ***** fin gestion clause contractuelle *****
+
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
+
+                $this->gestionConditionAnnulationDescriptionSite($fournisseur,$fournisseurSite, $emSite);
+
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
             }
         }
+    }
 
+    /**
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     */
+    private function gestionClauseContractuelleSite($fournisseur , $fournisseurSite)
+    {
 
+        $fournisseurSite
+            ->setSpecificiteCommission($fournisseur->getSpecificiteCommission())
+            ->setRetrocommissionMFFinSaison($fournisseur->getRetrocommissionMFFinSaison())
+            ->setConditionAnnulation($fournisseur->getConditionAnnulation())
+            ->setRelocationAnnulation($fournisseur->getRelocationAnnulation())
+            ->setDelaiPaiementFacture($fournisseur->getDelaiPaiementFacture())
+        ;
+    }
+
+    /**
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     */
+    private function gestionInformationRMSite($fournisseur , $fournisseurSite)
+    {
+
+        $fournisseurSite
+            ->setLieuRetraitForfaitSki($fournisseur->getLieuRetraitForfaitSki())
+            ->setCommissionForfaitFamille($fournisseur->getCommissionForfaitFamille())
+            ->setCommissionForfaitPeriode($fournisseur->getCommissionForfaitPeriode())
+            ->setCommissionSupportMainLibre($fournisseur->getCommissionSupportMainLibre())
+        ;
+    }
+
+    /**
+     * @param Fournisseur $fournisseur
+     */
+    private function gestionInformationRM($fournisseur)
+    {
+        $type = $fournisseur->getTypes()->filter(function (FamillePrestationAnnexe $element) {
+            return $element->getId() == 1;
+        })->first();
+        if(false === $type)
+        {
+            $fournisseur
+                ->setLieuRetraitForfaitSki(null)
+                ->setCommissionForfaitFamille(null)
+                ->setCommissionForfaitPeriode(null)
+                ->setCommissionSupportMainLibre(null)
+            ;
+        }
     }
 
     /**
@@ -1244,6 +1379,10 @@ class FournisseurController extends Controller
                 $fournisseur->setLogo(null);
             }
 
+            $this->gestionInformationRM($fournisseur);
+
+            $this->gestionConditionAnnulationDescription($fournisseur);
+
             $em->persist($fournisseur);
             $em->flush();
 
@@ -1310,6 +1449,75 @@ class FournisseurController extends Controller
         foreach ($prestationAnnexeUnifies as $annexeUnifie) {
             $em->remove($annexeUnifie);
         }
+    }
+
+    private function gestionPrestationAnnexeLogement(PrestationAnnexeHebergement $prestationAnnexeHebergement,
+                                                     FournisseurPrestationAnnexe $prestationAnnex,
+                                                     $prestationAnnexeHebergementFournisseurId,
+                                                     $postSitesAEnregistrer,
+                                                     $prestationAnnexeHebergementsPosts
+    )
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
+
+        /** @var Logement $logement */
+        /** @var LogementUnifie $logementUnifie */
+        foreach ($logementUnifies as $logementUnifie) {
+            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
+            if (empty($prestationAnnexeLogementUnifie)) {
+                $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
+                $em->persist($prestationAnnexeLogementUnifie);
+                /** @var LogementUnifie $logementUnifie */
+                /** @var Logement $logement */
+                foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
+                    $prestationAnnexeLogement = new PrestationAnnexeLogement();
+                    $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
+                    $prestationAnnexeLogement
+                        ->setLogement($logementPrestationAnnexeLogement)
+                        ->setSite($logementPrestationAnnexeLogement->getSite());
+                }
+            }
+
+            foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
+                $prestationAnnex
+                    ->addPrestationAnnexeLogement($prestationAnnexeLogement);
+            }
+
+            /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+            foreach ($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie()->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+
+                $actif = false;
+
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
+                    return $element->getSite() == $prestationAnnexeHebergement->getSite();
+                })->first();
+
+                $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
+                /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+
+                if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
+                    and
+                    in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
+                    and
+                    (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
+                ) {
+                    $actif = true;
+                }
+
+                $prestationAnnexeLogement->setActif($actif);
+                $em->persist($prestationAnnexeHebergement);
+            }
+        }
+    }
+
+    public function getConditionAnnulationStandardAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $conditionAnnulationStandard = $em->find(ConditionAnnulationDescription::class , 1);
+
+        return new Response($conditionAnnulationStandard->getDescription());
     }
 
     private
@@ -1528,7 +1736,13 @@ class FournisseurController extends Controller
             $fournisseurSite = $emSite->find('MondofuteFournisseurBundle:Fournisseur', $fournisseur);
             if (!empty($fournisseurSite)) {
                 $this->dupliquerListeServicesSite($fournisseurSite, $fournisseur->getListeServices(), $emSite);
-                $fournisseurSite->setEnseigne($fournisseur->getEnseigne());
+                $fournisseurSite
+                    ->setContient($fournisseur->getContient())
+                    ->setPhototheque($fournisseur->getPhototheque())
+                    ->setBlocageVente($fournisseur->getBlocageVente())
+                    ->setEnseigne($fournisseur->getEnseigne())
+                    ->setRaisonSociale($fournisseur->getRaisonSociale())
+                ;
 
                 // remove the relationship between the sousFamillePrestationAnnexeSite and the famillePrestationAnnexeSite
                 foreach ($fournisseurSite->getTypes() as $typeSite) {
@@ -2477,6 +2691,16 @@ class FournisseurController extends Controller
                     }
                 }
                 // *** fin gestion code promo fournisseurPrestationAnnexe ***
+
+                // ***** gestion clause contractuelle *****
+                $this->gestionClauseContractuelleSite($fournisseur , $fournisseurSite);
+                // ***** fin gestion clause contractuelle *****
+
+                // ***** gestion remontée RM *****
+                $this->gestionInformationRMSite($fournisseur , $fournisseurSite);
+                // ***** fin remontée RM *****
+
+                $this->gestionConditionAnnulationDescriptionSite($fournisseur,$fournisseurSite, $emSite);
 
                 $emSite->persist($fournisseurSite);
                 $emSite->flush();

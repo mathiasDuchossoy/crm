@@ -58,3 +58,7 @@ fournisseur_enregistrer_fournisseur_prestation:
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:enregisterFournisseurPrestationAnnexe"  }
     methods:  [GET, POST]
 
+fournisseur_get_condition_annulation_standard:
+    path:     /getconditionannulationstandard
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getConditionAnnulationStandard"  }
+    methods:  GET

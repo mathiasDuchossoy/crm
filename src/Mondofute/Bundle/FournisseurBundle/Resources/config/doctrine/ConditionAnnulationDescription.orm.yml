@@ -1,0 +1,21 @@
+Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulationDescription:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\ConditionAnnulationDescriptionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        description:
+            type: text
+            nullable: true
+        standard:
+            type: boolean
+            options:
+                default: false
+    lifecycleCallbacks: {  }
