@@ -87,6 +87,54 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $prestationAnnexes;
+    /**
+     * @var string
+     */
+    private $phototheque;
+    /**
+     * @var string
+     */
+    private $specificiteCommission;
+    /**
+     * @var string
+     */
+    private $retrocommissionMFFinSaison;
+    /**
+     * @var integer
+     */
+    private $conditionAnnulation;
+    /**
+     * @var integer
+     */
+    private $relocationAnnulation;
+    /**
+     * @var integer
+     */
+    private $delaiPaiementFacture;
+    /**
+     * @var string
+     */
+    private $lieuRetraitForfaitSki;
+    /**
+     * @var string
+     */
+    private $commissionForfaitFamille;
+    /**
+     * @var string
+     */
+    private $commissionForfaitPeriode;
+    /**
+     * @var string
+     */
+    private $commissionSupportMainLibre;
+    /**
+     * @var integer
+     */
+    private $blocageVente;
+    /**
+     * @var ConditionAnnulationDescription
+     */
+    private $conditionAnnulationDescription;
 
     /**
      * Fournisseur constructor.
@@ -99,6 +147,7 @@ class Fournisseur extends Moral
         $this->receptions = new ArrayCollection();
         $this->listeServices = new ArrayCollection();
         $this->prestationAnnexes = new ArrayCollection();
+        $this->types = new ArrayCollection();
     }
 
     /**
@@ -139,9 +188,7 @@ class Fournisseur extends Moral
      *
      * @param FournisseurInterlocuteur $interlocuteur
      */
-    public function removeInterlocuteur(
-        FournisseurInterlocuteur $interlocuteur
-    )
+    public function removeInterlocuteur(FournisseurInterlocuteur $interlocuteur)
     {
         $this->interlocuteurs->removeElement($interlocuteur);
     }
@@ -392,7 +439,8 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    ) {
+    )
+    {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -561,7 +609,6 @@ class Fournisseur extends Moral
         return $this->types;
     }
 
-
     /**
      * Remove prestationAnnex
      *
@@ -583,12 +630,10 @@ class Fournisseur extends Moral
     }
 
     /**
-     * @param $prestationAnnexes
      * @return $this
      */
     public function setPrestationAnnexes()
     {
-
         $newPrestationAnnexes = new ArrayCollection();
         /** @var FournisseurPrestationAnnexe $prestationAnnex */
         foreach ($this->getPrestationAnnexes() as $prestationAnnex) {
@@ -613,6 +658,294 @@ class Fournisseur extends Moral
     public function addPrestationAnnex(FournisseurPrestationAnnexe $prestationAnnex)
     {
         $this->prestationAnnexes[] = $prestationAnnex->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Get phototheque
+     *
+     * @return string
+     */
+    public function getPhototheque()
+    {
+        return $this->phototheque;
+    }
+
+    /**
+     * Set phototheque
+     *
+     * @param string $phototheque
+     *
+     * @return Fournisseur
+     */
+    public function setPhototheque($phototheque)
+    {
+        $this->phototheque = $phototheque;
+
+        return $this;
+    }
+
+    /**
+     * Get specificiteCommission
+     *
+     * @return string
+     */
+    public function getSpecificiteCommission()
+    {
+        return $this->specificiteCommission;
+    }
+
+    /**
+     * Set specificiteCommission
+     *
+     * @param string $specificiteCommission
+     *
+     * @return Fournisseur
+     */
+    public function setSpecificiteCommission($specificiteCommission)
+    {
+        $this->specificiteCommission = $specificiteCommission;
+
+        return $this;
+    }
+
+    /**
+     * Get retrocommissionMFFinSaison
+     *
+     * @return string
+     */
+    public function getRetrocommissionMFFinSaison()
+    {
+        return $this->retrocommissionMFFinSaison;
+    }
+
+    /**
+     * Set retrocommissionMFFinSaison
+     *
+     * @param string $retrocommissionMFFinSaison
+     *
+     * @return Fournisseur
+     */
+    public function setRetrocommissionMFFinSaison($retrocommissionMFFinSaison)
+    {
+        $this->retrocommissionMFFinSaison = $retrocommissionMFFinSaison;
+
+        return $this;
+    }
+
+    /**
+     * Get conditionAnnulation
+     *
+     * @return integer
+     */
+    public function getConditionAnnulation()
+    {
+        return $this->conditionAnnulation;
+    }
+
+    /**
+     * Set conditionAnnulation
+     *
+     * @param integer $conditionAnnulation
+     *
+     * @return Fournisseur
+     */
+    public function setConditionAnnulation($conditionAnnulation)
+    {
+        $this->conditionAnnulation = $conditionAnnulation;
+
+        return $this;
+    }
+
+    /**
+     * Get relocationAnnulation
+     *
+     * @return integer
+     */
+    public function getRelocationAnnulation()
+    {
+        return $this->relocationAnnulation;
+    }
+
+    /**
+     * Set relocationAnnulation
+     *
+     * @param integer $relocationAnnulation
+     *
+     * @return Fournisseur
+     */
+    public function setRelocationAnnulation($relocationAnnulation)
+    {
+        $this->relocationAnnulation = $relocationAnnulation;
+
+        return $this;
+    }
+
+    /**
+     * Get delaiPaiementFacture
+     *
+     * @return integer
+     */
+    public function getDelaiPaiementFacture()
+    {
+        return $this->delaiPaiementFacture;
+    }
+
+    /**
+     * Set delaiPaiementFacture
+     *
+     * @param integer $delaiPaiementFacture
+     *
+     * @return Fournisseur
+     */
+    public function setDelaiPaiementFacture($delaiPaiementFacture)
+    {
+        $this->delaiPaiementFacture = $delaiPaiementFacture;
+
+        return $this;
+    }
+
+    /**
+     * Get lieuRetraitForfaitSki
+     *
+     * @return string
+     */
+    public function getLieuRetraitForfaitSki()
+    {
+        return $this->lieuRetraitForfaitSki;
+    }
+
+    /**
+     * Set lieuRetraitForfaitSki
+     *
+     * @param string $lieuRetraitForfaitSki
+     *
+     * @return Fournisseur
+     */
+    public function setLieuRetraitForfaitSki($lieuRetraitForfaitSki)
+    {
+        $this->lieuRetraitForfaitSki = $lieuRetraitForfaitSki;
+
+        return $this;
+    }
+
+    /**
+     * Get commissionForfaitFamille
+     *
+     * @return string
+     */
+    public function getCommissionForfaitFamille()
+    {
+        return $this->commissionForfaitFamille;
+    }
+
+    /**
+     * Set commissionForfaitFamille
+     *
+     * @param string $commissionForfaitFamille
+     *
+     * @return Fournisseur
+     */
+    public function setCommissionForfaitFamille($commissionForfaitFamille)
+    {
+        $this->commissionForfaitFamille = $commissionForfaitFamille;
+
+        return $this;
+    }
+
+    /**
+     * Get commissionForfaitPeriode
+     *
+     * @return string
+     */
+    public function getCommissionForfaitPeriode()
+    {
+        return $this->commissionForfaitPeriode;
+    }
+
+    /**
+     * Set commissionForfaitPeriode
+     *
+     * @param string $commissionForfaitPeriode
+     *
+     * @return Fournisseur
+     */
+    public function setCommissionForfaitPeriode($commissionForfaitPeriode)
+    {
+        $this->commissionForfaitPeriode = $commissionForfaitPeriode;
+
+        return $this;
+    }
+
+    /**
+     * Get commissionSupportMainLibre
+     *
+     * @return string
+     */
+    public function getCommissionSupportMainLibre()
+    {
+        return $this->commissionSupportMainLibre;
+    }
+
+    /**
+     * Set commissionSupportMainLibre
+     *
+     * @param string $commissionSupportMainLibre
+     *
+     * @return Fournisseur
+     */
+    public function setCommissionSupportMainLibre($commissionSupportMainLibre)
+    {
+        $this->commissionSupportMainLibre = $commissionSupportMainLibre;
+
+        return $this;
+    }
+
+    /**
+     * Get blocageVente
+     *
+     * @return integer
+     */
+    public function getBlocageVente()
+    {
+        return $this->blocageVente;
+    }
+
+    /**
+     * Set blocageVente
+     *
+     * @param integer $blocageVente
+     *
+     * @return Fournisseur
+     */
+    public function setBlocageVente($blocageVente)
+    {
+        $this->blocageVente = $blocageVente;
+
+        return $this;
+    }
+
+    /**
+     * Get conditionAnnulationDescription
+     *
+     * @return ConditionAnnulationDescription
+     */
+    public function getConditionAnnulationDescription()
+    {
+        return $this->conditionAnnulationDescription;
+    }
+
+    /**
+     * Set conditionAnnulationDescription
+     *
+     * @param ConditionAnnulationDescription $conditionAnnulationDescription
+     *
+     * @return Fournisseur
+     */
+    public function setConditionAnnulationDescription(ConditionAnnulationDescription $conditionAnnulationDescription = null)
+    {
+        $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;
     }
