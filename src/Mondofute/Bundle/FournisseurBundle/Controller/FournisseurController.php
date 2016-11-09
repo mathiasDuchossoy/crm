@@ -664,19 +664,17 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
-        $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
-
-        $fournisseurId =  null;
+        $fournisseurId = null;
         /** @var FamillePrestationAnnexe $type */
-        foreach ($fournisseur->getTypes() as $type)
-        {
-            if ($type->getId() == 9)
-            {
+        foreach ($fournisseur->getTypes() as $type) {
+            if ($type->getId() == 9) {
                 $fournisseurId = $fournisseur->getId();
             }
         }
 
-        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale') , null, null, $fournisseurId );
+        $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT, $fournisseurId);
+
+        $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), null, null, $fournisseurId);
 
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         $hebergements = new ArrayCollection();
@@ -831,8 +829,7 @@ class FournisseurController extends Controller
         }
 
         $disabledOptionHebergement = false;
-        if(!$fournisseur->getHebergements()->isEmpty())
-        {
+        if (!$fournisseur->getHebergements()->isEmpty()) {
             $disabledOptionHebergement = true;
         }
 
@@ -856,10 +853,8 @@ class FournisseurController extends Controller
 //            }
 
             /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
-            foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe)
-            {
-                if(false === $fournisseur->getTypes()->contains($fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe()))
-                {
+            foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
+                if (false === $fournisseur->getTypes()->contains($fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe())) {
                     $fournisseur->removePrestationAnnex($fournisseurPrestationAnnexe);
                     $em->remove($fournisseurPrestationAnnexe);
                     $this->deletePrestationsAnnexeUnifies($fournisseurPrestationAnnexe, $em);
@@ -2922,7 +2917,7 @@ class FournisseurController extends Controller
     }
 
     public
-    function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId , $fournisseurHebergementType)
+    function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId, $fournisseurHebergementType)
     {
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
@@ -2930,7 +2925,11 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
-        $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
+        if($fournisseurHebergementType == "true"){
+            $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT, $fournisseurId);
+        }else{
+            $fournisseurProduits = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
+        }
 
         $fournisseur = new Fournisseur();
         $fournisseurPrestationAnnexe = $em->getRepository(FournisseurPrestationAnnexe::class)->findOneBy(array('fournisseur' => $fournisseurId, 'prestationAnnexe' => $prestationAnnexeId));
@@ -2963,11 +2962,9 @@ class FournisseurController extends Controller
             ));
 
 
-        if ($fournisseurHebergementType == "true")
-        {
+        if ($fournisseurHebergementType == "true") {
             $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), null, null, $fournisseurId);
-        }
-        else{
+        } else {
             $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
         }
 
@@ -2996,7 +2993,7 @@ class FournisseurController extends Controller
     }
 
     public
-    function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex , $fournisseurHebergementType)
+    function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex, $fournisseurHebergementType)
     {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
@@ -3043,10 +3040,9 @@ class FournisseurController extends Controller
 //                    $prestationAnnexeFournisseur->setFournisseur($em->find(Fournisseur::class,$fournisseur['id']));
 //                    $prestationAnnexeFournisseurs->add($prestationAnnexeFournisseur);
 //                }
-                if ($fournisseurHebergementType == "true"){
-                    $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale') , null, null, $fournisseurId);
-                }
-                else{
+                if ($fournisseurHebergementType == "true") {
+                    $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), null, null, $fournisseurId);
+                } else {
                     $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'));
                 }
 
@@ -3068,7 +3064,7 @@ class FournisseurController extends Controller
 
                 if ($fournisseurHebergementType == "true") {
                     $fournisseurs = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT, $fournisseurId);
-                } else{
+                } else {
                     $fournisseurs = $em->getRepository(Fournisseur::class)->findFournisseurByContient(FournisseurContient::PRODUIT);
                 }
                 return $this->render('@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig', array(
@@ -3180,10 +3176,9 @@ class FournisseurController extends Controller
             }
         }
 
-        if ($fournisseurHebergementType == "true"){
+        if ($fournisseurHebergementType == "true") {
             $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), $station->getId(), $siteId, $fournisseurId);
-        }
-        else{
+        } else {
             $stationsWithHebergement = $em->getRepository(Hebergement::class)->findStationsWithHebergement($this->container->getParameter('locale'), $station->getId(), $siteId);
         }
 
@@ -3201,6 +3196,7 @@ class FournisseurController extends Controller
 
     /**
      * enregistrer fournisseur prestation annexe
+     *
      * @param Request $request
      *
      * @return Response
@@ -3209,8 +3205,6 @@ class FournisseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->get('data'));
-
-//        dump($data);
 
         $fournisseurPrestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($prestationAnnexeId) {
             return $element->getPrestationAnnexe()->getId() == $prestationAnnexeId;
@@ -3225,7 +3219,7 @@ class FournisseurController extends Controller
         $fournisseurPrestationAnnexePost = $data->fournisseur->prestationAnnexes[$prestationAnnexeId];
 
         // gestion traductions
-        $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
+        $langues = $em->getRepository(Langue::class)->findAll();
         foreach ($langues as $langue) {
             $traduction = $fournisseurPrestationAnnexe->getTraductions()->filter(function (FournisseurPrestationAnnexeTraduction $element) use ($langue) {
                 return $element->getLangue() == $langue;
@@ -3360,15 +3354,13 @@ class FournisseurController extends Controller
         }
 
         foreach ($fournisseurPrestationAnnexe->getParams() as $keyParam => $param) {
-            if( !empty($fournisseurPrestationAnnexePost->params))
-            {
+            if (!empty($fournisseurPrestationAnnexePost->params)) {
                 $paramPosts = new ArrayCollection($fournisseurPrestationAnnexePost->params);
                 if (empty($paramPosts->get($keyParam))) {
                     $fournisseurPrestationAnnexe->getParams()->removeElement($param);
                     $em->remove($param);
                 }
-            }
-            else{
+            } else {
                 $fournisseurPrestationAnnexe->getParams()->removeElement($param);
                 $em->remove($param);
             }
@@ -3402,12 +3394,14 @@ class FournisseurController extends Controller
                     $prestationAnnexeFournisseurStations = $param->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) {
                         return !empty($element->getStation());
                     });
+                    /** @var PrestationAnnexeFournisseur $item */
                     foreach ($prestationAnnexeFournisseurStations as $item) {
                         $param->getPrestationAnnexeFournisseurs()->removeElement($item);
                         if (!$affectationUnifieRemoves->contains($item->getPrestationAnnexeFournisseurUnifie())) {
                             $affectationUnifieRemoves->add($item->getPrestationAnnexeFournisseurUnifie());
                         }
                     }
+                    /** @var PrestationAnnexeStation $item */
                     foreach ($param->getPrestationAnnexeStations() as $item) {
                         $param->getPrestationAnnexeStations()->removeElement($item);
                         if (!$affectationUnifieRemoves->contains($item->getPrestationAnnexeStationUnifie())) {
@@ -3485,6 +3479,7 @@ class FournisseurController extends Controller
                     $prestationAnnexeFournisseurs = $param->getPrestationAnnexeFournisseurs()->filter(function (PrestationAnnexeFournisseur $element) {
                         return empty($element->getStation());
                     });
+                    /** @var PrestationAnnexeFournisseur $item */
                     foreach ($prestationAnnexeFournisseurs as $item) {
                         $param->getPrestationAnnexeFournisseurs()->removeElement($item);
                         if (!$affectationUnifieRemoves->contains($item->getPrestationAnnexeFournisseurUnifie())) {
@@ -3581,6 +3576,7 @@ class FournisseurController extends Controller
                     ) {
                         if (!empty($data->prestation_annexe_affectation_station[$prestationAnnexeId][$keyParam])) {
                             $stationUnifieIds = $data->prestation_annexe_affectation_station[$prestationAnnexeId][$keyParam];
+                            /** @var PrestationAnnexeStation $prestationAnnexeStation */
                             foreach ($param->getPrestationAnnexeStations() as $prestationAnnexeStation) {
                                 if (empty($stationUnifieIds[$prestationAnnexeStation->getStation()->getStationUnifie()->getId()]) or !$stationUnifieIds[$prestationAnnexeStation->getStation()->getStationUnifie()->getId()] == null) {
                                     $param->getPrestationAnnexeStations()->removeElement($prestationAnnexeStation);
@@ -3595,6 +3591,7 @@ class FournisseurController extends Controller
                                     if ($siteIds[1] != null) {
                                         foreach ($sites as $site) {
                                             if ($site->getCrm() != 1) {
+                                                /** @var Site $site */
                                                 $stationUnifieIds[$stationUnifieId][$site->getId()] = "on";
                                             }
                                         }
@@ -3636,6 +3633,7 @@ class FournisseurController extends Controller
                             }
                         }
                     } else {
+                        /** @var PrestationAnnexeStation $prestationAnnexeStation */
                         foreach ($param->getPrestationAnnexeStations() as $prestationAnnexeStation) {
                             $param->getPrestationAnnexeStations()->removeElement($prestationAnnexeStation);
                             if (!$affectationUnifieRemoves->contains($prestationAnnexeStation->getPrestationAnnexeStationUnifie())) {
@@ -3657,6 +3655,7 @@ class FournisseurController extends Controller
             ) {
                 if (!empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam])) {
                     $fournisseurIds = $data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam];
+                    /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
                     foreach ($param->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
                         if (empty($fournisseurIds[$prestationAnnexeHebergement->getFournisseur()->getId()])
                             and empty($fournisseurIds[$prestationAnnexeHebergement->getFournisseur()->getId()][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()])
@@ -3749,7 +3748,6 @@ class FournisseurController extends Controller
             // *** fin hebergement
         }
 
-//        dump($affectationUnifieRemoves);
         foreach ($affectationUnifieRemoves as $affectationUnifieRemove) {
             $em->remove($affectationUnifieRemove);
         }
