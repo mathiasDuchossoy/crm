@@ -4,7 +4,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository
     attributeOverride:
         id:
-#            column: id
             id: true
             type: integer
             generator:
@@ -30,6 +29,49 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
     fields:
         contient:
             type: integer
+            options:
+                unsigned: true
+        phototheque:
+            type: text
+            nullable: true
+#       Clauses contractuelles
+        specificiteCommission:
+            type: string
+            nullable: true
+        retrocommissionMFFinSaison:
+            type: string
+            nullable: true
+        conditionAnnulation:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        relocationAnnulation:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        delaiPaiementFacture:
+            nullable: true
+            type: smallint
+#       fin Clauses contractuelles
+#       Informations RM
+        lieuRetraitForfaitSki:
+            type: string
+            nullable: true
+        commissionForfaitFamille:
+            type: string
+            nullable: true
+        commissionForfaitPeriode:
+            type: string
+            nullable: true
+        commissionSupportMainLibre:
+            type: string
+            nullable: true
+#       Fin Informations RM
+        blocageVente:
+            type: smallint
+            nullable: true
             options:
                 unsigned: true
     oneToMany:
@@ -66,6 +108,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         fournisseurParent:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: fournisseurEnfants
+        conditionAnnulationDescription:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulationDescription
+            cascade: ['persist']
     oneToOne:
         logo:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
