@@ -1,0 +1,13 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Clauses contractuelles</h3>
+    </div>
+    <div class="panel-body">
+        {{ form_row(form.specificiteCommission) }}
+        {{ form_row(form.retrocommissionMFFinSaison) }}
+        {{ form_row(form.conditionAnnulation , { 'attr' : { 'onchange' : 'changeConditionAnnulation(this)'}}) }}
+        {{ form_widget(form.conditionAnnulationDescription.description ) }}
+        {{ form_row(form.relocationAnnulation) }}
+        {{ form_row(form.delaiPaiementFacture) }}
+    </div>
+</div>

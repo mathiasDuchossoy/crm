@@ -41,7 +41,9 @@
                             </div>
                         </div>
                     </div>
+                    {{ form_row(form.phototheque) }}
                     {{ form_row(form.types) }}
+                    {{ form_row(form.blocageVente) }}
                     {#<div id="my-popover-container" style="display: none;">#}
                     {#<div class="alert alert-danger" role="alert">#}
                     {#<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>#}
@@ -60,6 +62,15 @@
                         {{ form_row(form.moyenComs[0].ville) }}
                         {{ form_row(form.moyenComs[0].pays) }}
                     {% endif %}
+
+                    {# panel clause contractuelle #}
+                    {% include ('@MondofuteFournisseur/fournisseur/panel-clause-contractuelle.html.twig') %}
+                    {# fin panel clause contractuelle #}
+
+                    {# panel information RM #}
+                    {% include ('@MondofuteFournisseur/fournisseur/panel-information-rm.html.twig') %}
+                    {# fin panel information RM #}
+
 
                     {#{{ form_row(form.remiseClefs) }}#}
                     <div class="form-group ">
@@ -1850,4 +1861,43 @@
             return true;
         }
     </script>
+
+    {# information RM #}
+    <script type="text/javascript">
+    function displayInformationRM()
+    {
+        // fournisseur_types_1
+        var $element = $('#fournisseur_types_1');
+        var $panel_information_rm = $('#panel_information_rm');
+        if($element.is(':checked'))
+        {
+            $panel_information_rm.show();
+        }
+        else
+        {
+            $panel_information_rm.hide();
+        }
+    }
+    displayInformationRM();
+
+
+    {# condtion annulation #}
+    function changeConditionAnnulation(element)
+    {
+        var $element = $(element);
+        switch($element.val()){
+            case '1':
+                $.ajax('{{ path("fournisseur_get_condition_annulation_standard") }}').done(function(data){
+                   $('#fournisseur_conditionAnnulationDescription_description').html(data);
+                });
+                break;
+            default:
+                break;
+        }
+    }
+    {# fin condtion annulation #}
+
+    </script>
+    {# fin information RM #}
+
 {% endblock %}
