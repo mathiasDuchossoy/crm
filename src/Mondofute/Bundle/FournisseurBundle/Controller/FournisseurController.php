@@ -2678,6 +2678,9 @@ class FournisseurController extends Controller
     public
     function deleteAction(Request $request, Fournisseur $fournisseur)
     {
+        /** @var PrestationAnnexeFournisseur $prestationAnnexeFournisseur */
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
+        /** @var FournisseurPrestationAnnexeParam $param */
         /** @var EntityManager $em */
         /** @var Site $site */
         $form = $this->createDeleteForm($fournisseur);
@@ -2707,28 +2710,28 @@ class FournisseurController extends Controller
                             }
                         }
 
-                        /** @var FournisseurPrestationAnnexe $prestationAnnex */
-                        /** @var PrestationAnnexeFournisseur $prestationAnnexeFournisseur */
                         $prestationAnnexeAffectationUnifies = new ArrayCollection();
                         foreach ($fournisseurSite->getPrestationAnnexes() as $prestationAnnex) {
-                            foreach ($prestationAnnex->getPrestationAnnexeFournisseurs() as $prestationAnnexeAffectation) {
-                                if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                                    $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeFournisseurUnifie());
+                            foreach ($prestationAnnex->getParams() as $param){
+                                foreach ($param->getPrestationAnnexeFournisseurs() as $prestationAnnexeAffectation) {
+                                    if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                        $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeFournisseurUnifie());
+                                    }
                                 }
-                            }
-                            foreach ($prestationAnnex->getPrestationAnnexeHebergements() as $prestationAnnexeAffectation) {
-                                if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                                    $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeHebergementUnifie());
+                                foreach ($param->getPrestationAnnexeHebergements() as $prestationAnnexeAffectation) {
+                                    if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                        $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeHebergementUnifie());
+                                    }
                                 }
-                            }
-                            foreach ($prestationAnnex->getPrestationAnnexeLogements() as $prestationAnnexeAffectation) {
-                                if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                                    $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeLogementUnifie());
+                                foreach ($param->getPrestationAnnexeLogements() as $prestationAnnexeAffectation) {
+                                    if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                        $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeLogementUnifie());
+                                    }
                                 }
-                            }
-                            foreach ($prestationAnnex->getPrestationAnnexeStations() as $prestationAnnexeAffectation) {
-                                if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                                    $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeStationUnifie());
+                                foreach ($param->getPrestationAnnexeStations() as $prestationAnnexeAffectation) {
+                                    if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                        $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeStationUnifie());
+                                    }
                                 }
                             }
                         }
@@ -2761,29 +2764,28 @@ class FournisseurController extends Controller
                     }
                 }
 
-
-                /** @var FournisseurPrestationAnnexe $prestationAnnex */
-                /** @var PrestationAnnexeFournisseur $prestationAnnexeFournisseur */
                 $prestationAnnexeAffectationUnifies = new ArrayCollection();
                 foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
-                    foreach ($prestationAnnex->getPrestationAnnexeFournisseurs() as $prestationAnnexeAffectation) {
-                        if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                            $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeFournisseurUnifie());
+                    foreach ($prestationAnnex->getParams() as $param){
+                        foreach ($param->getPrestationAnnexeFournisseurs() as $prestationAnnexeAffectation) {
+                            if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeFournisseurUnifie());
+                            }
                         }
-                    }
-                    foreach ($prestationAnnex->getPrestationAnnexeHebergements() as $prestationAnnexeAffectation) {
-                        if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                            $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeHebergementUnifie());
+                        foreach ($param->getPrestationAnnexeHebergements() as $prestationAnnexeAffectation) {
+                            if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeHebergementUnifie());
+                            }
                         }
-                    }
-                    foreach ($prestationAnnex->getPrestationAnnexeLogements() as $prestationAnnexeAffectation) {
-                        if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                            $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeLogementUnifie());
+                        foreach ($param->getPrestationAnnexeLogements() as $prestationAnnexeAffectation) {
+                            if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeLogementUnifie());
+                            }
                         }
-                    }
-                    foreach ($prestationAnnex->getPrestationAnnexeStations() as $prestationAnnexeAffectation) {
-                        if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
-                            $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeStationUnifie());
+                        foreach ($param->getPrestationAnnexeStations() as $prestationAnnexeAffectation) {
+                            if (!$prestationAnnexeAffectationUnifies->contains($prestationAnnexeAffectation)) {
+                                $prestationAnnexeAffectationUnifies->add($prestationAnnexeAffectation->getPrestationAnnexeStationUnifie());
+                            }
                         }
                     }
                 }
