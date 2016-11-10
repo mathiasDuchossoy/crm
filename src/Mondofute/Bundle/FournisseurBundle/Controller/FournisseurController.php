@@ -3144,6 +3144,9 @@ class FournisseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->get('data'));
+//        dump($request);
+//        dump($data);
+//die;
 
         $fournisseurPrestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($prestationAnnexeId) {
             return $element->getPrestationAnnexe()->getId() == $prestationAnnexeId;
