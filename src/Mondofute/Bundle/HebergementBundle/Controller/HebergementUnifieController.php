@@ -698,20 +698,8 @@ class HebergementUnifieController extends Controller
                                 }
                             }
                             // *** fin suppression des code promo logement ***
+                            $this->deletePrestationAnnexeLogements($fournisseurSite, $emSite);
 
-                            /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-                            /** @var Logement $logement */
-                            $prestationAnnexeLogementUnifies = new ArrayCollection();
-                            foreach ($fournisseurSite->getLogements() as $logement){
-                                foreach ($logement->getPrestationAnnexeLogements() as $prestationAnnexeLogement){
-                                    if(!$prestationAnnexeLogementUnifies->contains($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie())){
-                                        $prestationAnnexeLogementUnifies->add($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie());
-                                    }
-                                }
-                            }
-                            foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie){
-                                $emSite->remove($prestationAnnexeLogementUnifie);
-                            }
                             /** @var Logement $logement */
                             /** @var LogementPeriode $logementPeriode */
 //                            foreach ($fournisseurSite->getLogements() as $logement)
@@ -1817,19 +1805,7 @@ class HebergementUnifieController extends Controller
                     }
                     // *** fin suppression des code promo logement ***
                     // *** suppression des FournisseurPrestationAnnexeLogement ***
-                    /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-                    /** @var Logement $logement */
-                    $prestationAnnexeLogementUnifies = new ArrayCollection();
-                    foreach ($originalFournisseurHebergement->getLogements() as $logement){
-                        foreach ($logement->getPrestationAnnexeLogements() as $prestationAnnexeLogement){
-                            if(!$prestationAnnexeLogementUnifies->contains($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie())){
-                                $prestationAnnexeLogementUnifies->add($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie());
-                            }
-                        }
-                    }
-                    foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie){
-                        $em->remove($prestationAnnexeLogementUnifie);
-                    }
+                    $this->deletePrestationAnnexeLogements($originalFournisseurHebergement, $em);
                     // *** fin suppression des FournisseurPrestationAnnexeLogement ***
                     $em->remove($originalFournisseurHebergement);
                 }
@@ -2147,6 +2123,46 @@ class HebergementUnifieController extends Controller
     }
 
     /**
+     * @param FournisseurHebergement $fournisseurHebergement
+     * @param EntityManager $em
+     */
+    private function deletePrestationAnnexeLogements($fournisseurHebergement, $em){
+        /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+        /** @var Logement $logement */
+        $prestationAnnexeLogementUnifies = new ArrayCollection();
+        foreach ($fournisseurHebergement->getLogements() as $logement){
+            foreach ($logement->getPrestationAnnexeLogements() as $prestationAnnexeLogement){
+                if(!$prestationAnnexeLogementUnifies->contains($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie())){
+                    $prestationAnnexeLogementUnifies->add($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie());
+                }
+            }
+        }
+        foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie){
+            $em->remove($prestationAnnexeLogementUnifie);
+        }
+    }
+
+    /**
+     * @param HebergementUnifie $entityUnifie
+     * @param EntityManager $em
+     */
+    private function deletePrestationAnnexeHebergements($entityUnifie, $em){
+        /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+        /** @var Hebergement $hebergement */
+        $prestationAnnexeHebergementUnifies = new ArrayCollection();
+        foreach ($entityUnifie->getHebergements() as $hebergement){
+            foreach ($hebergement->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement){
+                if(!$prestationAnnexeHebergementUnifies->contains($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie())){
+                    $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie());
+                }
+            }
+        }
+        foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie){
+            $em->remove($prestationAnnexeHebergementUnifie);
+        }
+    }
+
+    /**
      * Deletes a HebergementUnifie entity.
      *
      */
@@ -2223,33 +2239,11 @@ class HebergementUnifieController extends Controller
                                         }
                                         // *** fin suprression logement periode locatif  ***
                                     }
+
+                                    $this->deletePrestationAnnexeLogements($fournisseurHebergement, $emSite);
                                 }
                             }
-                        }
-                        /** @var FournisseurHebergement $fournisseurHebergement */
-                        foreach ($entityUnifieSite->getFournisseurs() as $fournisseurHebergement) {
-                            /** @var Logement $logement */
-                            foreach ($fournisseurHebergement->getLogements() as $logement) {
-
-//                                $codePromoLogements = $emSite->getRepository(CodePromoLogement::class)->findBy(array('logement' => $logement));
-//                                foreach ($codePromoLogements as $codePromoLogement)
-//                                {
-//                                    $emSite->remove($codePromoLogement);
-//                                }
-
-                                /** @var LogementPeriode $logementPeriode */
-                                foreach ($logement->getPeriodes() as $logementPeriode) {
-                                    // *** suprression logement periode locatif  ***
-                                    $logementPeriodeLocatif = $emSite->getRepository(LogementPeriodeLocatif::class)->findOneBy(array(
-                                        'logement' => $logement,
-                                        'periode' => $logementPeriode->getPeriode()->getId(),
-                                    ));
-                                    if (!empty($logementPeriodeLocatif)) {
-                                        $emSite->remove($logementPeriodeLocatif);
-                                    }
-                                    // *** fin suprression logement periode locatif  ***
-                                }
-                            }
+                            $this->deletePrestationAnnexeHebergements($entityUnifieSite, $emSite);
                         }
                     }
                     $emSite->remove($entityUnifieSite);
@@ -2309,6 +2303,8 @@ class HebergementUnifieController extends Controller
                             // *** fin suprression logement periode locatif  ***
                         }
                     }
+                    $this->deletePrestationAnnexeLogements($fournisseurHebergement, $em);
+
                 }
 
                 /** @var Hebergement $hebergement */
@@ -2339,6 +2335,7 @@ class HebergementUnifieController extends Controller
                         }
                     }
                 }
+                $this->deletePrestationAnnexeHebergements($entityUnifie, $em);
             }
 
             $em->remove($entityUnifie);
@@ -2349,7 +2346,8 @@ class HebergementUnifieController extends Controller
             switch ($except->getCode()) {
                 case 0:
                     $this->addFlash('error',
-                        'Impossible de supprimer l\'hébergement, il est utilisé par une autre entité');
+//                        'Impossible de supprimer l\'hébergement, il est utilisé par une autre entité');
+                        $except->getMessage());
                     break;
                 default:
                     $this->addFlash('error', 'une erreur inconnue');
