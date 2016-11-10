@@ -1756,6 +1756,7 @@ class FournisseurController extends Controller
                             } else {
                                 // *** suprression des tarif
                                 /** @var PrestationAnnexeTarif $tarifSite */
+                                /** @var PrestationAnnexeTarif $tarif */
                                 foreach ($paramSite->getTarifs() as $tarifSite) {
                                     $tarif = $param->getTarifs()->filter(function (PrestationAnnexeTarif $element) use ($tarifSite) {
                                         return $element->getId() == $tarifSite->getId();
@@ -1952,6 +1953,9 @@ class FournisseurController extends Controller
                         })->first();
                         if (false === $paramSite) {
                             $paramSite = new FournisseurPrestationAnnexeParam();
+                            $paramSite->setId($param->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($paramSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                             $fournisseurPrestationAnnexeSite->addParam($paramSite);
                         }
                         $paramSite
@@ -2161,6 +2165,9 @@ class FournisseurController extends Controller
                                 $prestationAnnexeHebergementUnifiesSite->add($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie());
                             }
                         }
+//                        dump($prestationAnnexeHebergementUnifies);
+//                        dump($prestationAnnexeHebergementUnifiesSite);
+//                        die;
                         /** @var PrestationAnnexeHebergementUnifie $prestationAnnexeHebergementUnifie */
                         foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
                             $prestationAnnexeHebergementUnifieSite = $prestationAnnexeHebergementUnifiesSite->filter(function (PrestationAnnexeHebergementUnifie $element) use ($prestationAnnexeHebergementUnifie) {

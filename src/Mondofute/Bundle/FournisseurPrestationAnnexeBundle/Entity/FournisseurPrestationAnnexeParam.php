@@ -87,6 +87,18 @@ class FournisseurPrestationAnnexeParam
     }
 
     /**
+     * @param int $id
+     * 
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get type
      *
      * @return integer
