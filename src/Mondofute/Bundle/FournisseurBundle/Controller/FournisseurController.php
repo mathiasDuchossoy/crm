@@ -664,6 +664,16 @@ class FournisseurController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
+
+        $disabledOptionHebergement = false;
+        if (!$fournisseur->getHebergements()->isEmpty()) {
+            $disabledOptionHebergement = true;
+            $fournisseurTypesHebergement = $em->find(FamillePrestationAnnexe::class,9);
+            if(!$fournisseur->getTypes()->contains($fournisseurTypesHebergement)){
+                $fournisseur->addType($fournisseurTypesHebergement);
+            }
+        }
+
         $fournisseurId = null;
         /** @var FamillePrestationAnnexe $type */
         foreach ($fournisseur->getTypes() as $type) {
@@ -826,11 +836,6 @@ class FournisseurController extends Controller
                     $errorRemiseClef = true;
                 }
             }
-        }
-
-        $disabledOptionHebergement = false;
-        if (!$fournisseur->getHebergements()->isEmpty()) {
-            $disabledOptionHebergement = true;
         }
 
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur && !$errorRemiseClef) {
