@@ -40,6 +40,9 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel
             mappedBy: hebergement
             cascade: ['persist','remove']
+        prestationAnnexeHebergements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement
+            mappedBy: hebergement
     oneToOne:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement

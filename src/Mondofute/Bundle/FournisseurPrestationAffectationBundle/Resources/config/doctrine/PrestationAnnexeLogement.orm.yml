@@ -8,6 +8,7 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeL
             inversedBy: prestationAnnexeLogements
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: prestationAnnexeLogements
         param:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
             inversedBy: prestationAnnexeLogements

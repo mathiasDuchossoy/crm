@@ -8,6 +8,7 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeH
             inversedBy: prestationAnnexeHebergements
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: prestationAnnexeHebergements
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         param:

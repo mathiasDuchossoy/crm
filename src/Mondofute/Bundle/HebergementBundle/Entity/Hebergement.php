@@ -69,6 +69,10 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeHebergements;
 
     /**
      * Constructor
@@ -447,11 +451,9 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        if(!empty($coupDeCoeur))
-        {
+        if (!empty($coupDeCoeur)) {
             $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
-        }
-        else{
+        } else {
             $this->coupDeCoeur = null;
         }
 
@@ -491,5 +493,39 @@ class Hebergement
     public function getMotClefs()
     {
         return $this->motClefs;
+    }
+
+    /**
+     * Add prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     *
+     * @return Hebergement
+     */
+    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     */
+    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
+    }
+
+    /**
+     * Get prestationAnnexeHebergements
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeHebergements()
+    {
+        return $this->prestationAnnexeHebergements;
     }
 }
