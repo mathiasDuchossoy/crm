@@ -1473,67 +1473,6 @@ class FournisseurController extends Controller
         }
     }
 
-    private function gestionPrestationAnnexeLogement(PrestationAnnexeHebergement $prestationAnnexeHebergement,
-                                                     FournisseurPrestationAnnexe $prestationAnnex,
-                                                     $prestationAnnexeHebergementFournisseurId,
-                                                     $postSitesAEnregistrer,
-                                                     $prestationAnnexeHebergementsPosts
-    )
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(), $prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId());
-
-        /** @var Logement $logement */
-        /** @var LogementUnifie $logementUnifie */
-        foreach ($logementUnifies as $logementUnifie) {
-            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($prestationAnnex->getId(), $logementUnifie->getId());
-            if (empty($prestationAnnexeLogementUnifie)) {
-                $prestationAnnexeLogementUnifie = new PrestationAnnexeLogementUnifie();
-                $em->persist($prestationAnnexeLogementUnifie);
-                /** @var LogementUnifie $logementUnifie */
-                /** @var Logement $logement */
-                foreach ($logementUnifie->getLogements() as $logementPrestationAnnexeLogement) {
-                    $prestationAnnexeLogement = new PrestationAnnexeLogement();
-                    $prestationAnnexeLogementUnifie->addPrestationAnnexeLogement($prestationAnnexeLogement);
-                    $prestationAnnexeLogement
-                        ->setLogement($logementPrestationAnnexeLogement)
-                        ->setSite($logementPrestationAnnexeLogement->getSite());
-                }
-            }
-
-            foreach ($prestationAnnexeLogementUnifie->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
-                $prestationAnnex
-                    ->addPrestationAnnexeLogement($prestationAnnexeLogement);
-            }
-
-            /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
-            foreach ($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie()->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-
-                $actif = false;
-
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
-                    return $element->getSite() == $prestationAnnexeHebergement->getSite();
-                })->first();
-
-                $capacite = $prestationAnnexeHebergement->getFournisseurPrestationAnnexe()->getCapacite();
-                /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-
-                if (!empty($prestationAnnexeHebergementsPosts[$prestationAnnexeHebergementFournisseurId][$prestationAnnexeHebergement->getHebergement()->getHebergementUnifie()->getId()][$prestationAnnexeHebergement->getSite()->getId()])
-                    and
-                    in_array($prestationAnnexeHebergement->getSite()->getId(), $postSitesAEnregistrer)
-                    and
-                    (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax()))
-                ) {
-                    $actif = true;
-                }
-
-                $prestationAnnexeLogement->setActif($actif);
-                $em->persist($prestationAnnexeHebergement);
-            }
-        }
-    }
-
     public function getConditionAnnulationStandardAction()
     {
         $em = $this->getDoctrine()->getManager();
