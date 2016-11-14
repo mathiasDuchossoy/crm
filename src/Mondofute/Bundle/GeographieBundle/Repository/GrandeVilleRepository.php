@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Repository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * GrandeVilleRepository
@@ -11,21 +12,60 @@ namespace Mondofute\Bundle\GeographieBundle\Repository;
 class GrandeVilleRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
+     * @return mixed
+     */
+    public function countTotal()
+    {
+        return $this->createQueryBuilder('entity')
+            ->select('COUNT(entity)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Get the paginated list of published grande ville
+     *
+     * @param int $page
+     * @param int $maxperpage
+     * @param $locale
+     * @param array $sortbyArray
+     * @param int $site
+     * @return Paginator
+     */
+    public function getList($page = 1, $maxperpage, $locale, $sortbyArray = array(), $site = 1)
+    {
+        $q = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->join('entity.traductions' , 'traductions')
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
+
+        foreach ($sortbyArray as $key => $item) {
+            $q
+                ->orderBy($key, $item);
+        }
+
+        return new Paginator($q);
+    }
+
+
+
+    /**
      * @param $locale
      * @return \Doctrine\ORM\QueryBuilder
      */
-    // récupérer les traductioin des départements crm qui sont de la langue locale
+    // récupérer les traductioin des grande ville crm qui sont de la langue locale
     public function getTraductionsByLocale($locale)
     {
-
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('grandeVille , traductions')
-            ->from('MondofuteGeographieBundle:GrandeVille', 'grandeVille')
-            ->join('grandeVille.traductions', 'traductions')
-            ->join('traductions.langue', 'langue')
-            ->where("langue.code = '$locale'");
-//        ->setParameter('code' , $locale)
-        $qb->orderBy('grandeVille.id', 'ASC');
+        $qb->select('entity , traductions')
+            ->from('MondofuteGeographieBundle:GrandeVille', 'entity')
+            ->join('entity.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->where('langue.code = :locale')
+            ->setParameter('locale', $locale)
+            ->orderBy('traductions.libelle', 'ASC')
+        ;
 
         return $qb;
     }
