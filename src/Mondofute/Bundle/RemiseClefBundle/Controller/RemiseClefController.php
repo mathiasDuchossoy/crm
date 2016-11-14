@@ -3,6 +3,8 @@
 namespace Mondofute\Bundle\RemiseClefBundle\Controller;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -76,7 +78,7 @@ class RemiseClefController extends Controller
         }
         $form = $this->createForm('Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType', $remiseClef,
             array('action' => $this->generateUrl('remiseclef_new_simple'), 'method' => 'POST'))
-            ->add('submit', SubmitType::class, array('label' => 'Create'));
+            ->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,10 +115,16 @@ class RemiseClefController extends Controller
      */
     public function copieVersSites($sites, $remiseClef)
     {
+        /** @var EntityManager $emSite */
         foreach ($sites as $site) {
             if ($site->getCrm() == false) {
                 $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                 $remiseClefSite = new RemiseClef();
+
+                $remiseClefSite->setId($remiseClef->getId());
+                $metadata = $emSite->getClassMetadata(get_class($remiseClefSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
                 $remiseClefSite->setHeureDepartCourtSejour($remiseClef->getHeureDepartCourtSejour())
                     ->setHeureDepartLongSejour($remiseClef->getHeureDepartLongSejour())
                     ->setHeureRemiseClefCourtSejour($remiseClef->getHeureRemiseClefCourtSejour())
