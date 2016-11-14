@@ -3,6 +3,9 @@
 namespace Mondofute\Bundle\RemiseClefBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 
 /**
  * RemiseClef
@@ -49,15 +52,15 @@ class RemiseClef
      */
     private $heureTardiveCourtSejour;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $fournisseurHebergements;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
@@ -82,6 +85,20 @@ class RemiseClef
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set Id
+     *
+     * @param int $id
+     *
+     * @return RemiseClef
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -255,11 +272,11 @@ class RemiseClef
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction $traduction
+     * @param RemiseClefTraduction $traduction
      *
      * @return RemiseClef
      */
-    public function addTraduction(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction $traduction)
+    public function addTraduction(RemiseClefTraduction $traduction)
     {
         $this->traductions[] = $traduction->setRemiseClef($this);
 
@@ -269,9 +286,9 @@ class RemiseClef
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction $traduction
+     * @param RemiseClefTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction $traduction)
+    public function removeTraduction(RemiseClefTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -279,13 +296,14 @@ class RemiseClef
     /**
      * Add fournisseurHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
+     * @param FournisseurHebergement $fournisseurHebergement
      *
      * @return RemiseClef
      */
     public function addFournisseurHebergement(
-        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
-    ) {
+        FournisseurHebergement $fournisseurHebergement
+    )
+    {
         $this->fournisseurHebergements[] = $fournisseurHebergement;
 
         return $this;
@@ -294,18 +312,19 @@ class RemiseClef
     /**
      * Remove fournisseurHebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
+     * @param FournisseurHebergement $fournisseurHebergement
      */
     public function removeFournisseurHebergement(
-        \Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement $fournisseurHebergement
-    ) {
+        FournisseurHebergement $fournisseurHebergement
+    )
+    {
         $this->fournisseurHebergements->removeElement($fournisseurHebergement);
     }
 
     /**
      * Get fournisseurHebergements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFournisseurHebergements()
     {
@@ -315,7 +334,7 @@ class RemiseClef
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -325,11 +344,11 @@ class RemiseClef
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return RemiseClef
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -379,7 +398,7 @@ class RemiseClef
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {

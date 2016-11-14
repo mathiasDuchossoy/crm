@@ -736,6 +736,9 @@
             $('#tabFournisseursAssocies').append(ligne);
         }
         function afficherModaleAjoutRemiseClef(idFournisseur) {
+            if (!$("#remise_clef_fournisseur option[value='"+idFournisseur+"']").length > 0){
+                $("#remise_clef_fournisseur").append('<option value="'+idFournisseur+'">'+idFournisseur+'</option>');
+            }
             $('#remise_clef_fournisseur option').each(function () {
                 if (parseInt($(this).attr('value')) == parseInt(idFournisseur)) {
                     $(this).attr('selected', 'selected');
@@ -743,6 +746,7 @@
                     $(this).removeAttr('selected');
                 }
             });
+//            $('#remise_clef_fournisseur').val(idFournisseur);
             $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
             $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
             $modalAjoutRemiseClef.modal().show();
@@ -763,6 +767,7 @@
                 success: function (data) {
                     $('#modalAjoutRemiseClef').modal('hide');
                     ajouterOptionRemiseClef(data.remiseClef.id, data.remiseClef.libelle, $('#remise_clef_fournisseur').val());
+                    $('#remise_clef_submit').replaceWith('<button type="submit" id="remise_clef_submit" name="remise_clef[submit]" class="btn-default btn">Enregistrer</button>');
                 }
             });
         }
