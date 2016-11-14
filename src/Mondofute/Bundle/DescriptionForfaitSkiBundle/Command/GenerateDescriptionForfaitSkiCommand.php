@@ -823,6 +823,39 @@ class GenerateDescriptionForfaitSkiCommand extends ContainerAwareCommand
 
             }
             $emSite->persist($ligne);
+            $i++;
+
+//              PHOTO D IDENTITE
+            $ligne = new LigneDescriptionForfaitSki();
+            $ligne->setPresent($emSite->getRepository(OuiNonNC::class)->findOneBy(array('id' => 3)));
+            $ligne->setClassement($i);
+            $ligne->setQuantite(0);
+            $ligne->setCategorie($emSite->find(LigneDescriptionForfaitSkiCategorie::class, $idCategorie));
+            foreach ($langues as $langue) {
+                $ligneTraduction = new LigneDescriptionForfaitSkiTraduction();
+                switch ($langue->getCode()) {
+                    case 'fr_FR':
+                        $ligneTraduction->setLibelle('photo d\'identité');
+                        break;
+                    case 'en_EN':
+                        $ligneTraduction->setLibelle('ID photo');
+                        break;
+                    case 'es_ES':
+                        $ligneTraduction->setLibelle('Foto de identidad');
+                        break;
+                    default:
+                        $ligneTraduction->setLibelle('photo d\'identité');
+                        break;
+                }
+                $ligneTraduction->setLangue($langue);
+                $ligneTraduction->setTexteDur('');
+                $ligneTraduction->setDescription('');
+                $ligneTraduction->setLigneDescriptionForfaitSki($ligne);
+                $emSite->persist($ligneTraduction);
+                $ligne->addTraduction($ligneTraduction);
+
+            }
+            $emSite->persist($ligne);
 
             $emSite->flush();
         }
