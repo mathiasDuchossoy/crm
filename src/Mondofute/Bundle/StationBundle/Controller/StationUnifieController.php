@@ -5,6 +5,8 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use Aamant\Distance\Distance;
 use Aamant\Distance\Providers\GoogleMapProvider;
 use Application\Sonata\MediaBundle\Entity\Media;
+use Aamant\Distance\Distance;
+use Aamant\Distance\Providers\GoogleMapProvider;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
