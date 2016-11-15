@@ -399,11 +399,11 @@ class StationUnifieController extends Controller
                     $stationCommentVenir->addTraduction($traduction);
                 }
 
-                foreach ($grandeVilles as $grandeVille) {
-                    $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
-                    $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
-                    $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
-                }
+//                foreach ($grandeVilles as $grandeVille) {
+//                    $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
+//                    $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
+//                    $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
+//                }
 
                 $station->setStationCommentVenir($stationCommentVenir);
                 // fin comment venir
