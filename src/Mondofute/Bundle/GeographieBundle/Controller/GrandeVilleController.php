@@ -282,6 +282,7 @@ class GrandeVilleController extends Controller
             }else{
                 if(!empty($grandeVille->getCoordonneesGps())){
                     $em->remove($grandeVille->getCoordonneesGps());
+                    $grandeVille->setCoordonneesGps(null);
                 }
             }
 
