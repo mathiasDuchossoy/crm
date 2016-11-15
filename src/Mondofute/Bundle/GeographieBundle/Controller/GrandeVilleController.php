@@ -295,7 +295,7 @@ class GrandeVilleController extends Controller
         }
         $langues = $em->getRepository(Langue::class)->findAll();
 
-        return $this->render('@MondofuteGeographie/grandeVille/edit.html.twig', array(
+        return $this->render('@MondofuteGeographie/grandeville/edit.html.twig', array(
             'grandeVille' => $grandeVille,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
