@@ -119,8 +119,9 @@ class StationUnifieController extends Controller
 
         $this->ajouterStationsDansForm($stationUnifie);
         /** @var Station $station */
-        foreach ($stationUnifie->getStations() as $station) {
-            $station->setStationDeSki($em->find(OuiNonNC::class, 3));
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
         }
         $this->stationsSortByAffichage($stationUnifie);
 
@@ -700,7 +701,8 @@ class StationUnifieController extends Controller
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
                     ->setActif($station->getActif())
-                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()));
+                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()))
+                ;
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -839,20 +841,24 @@ class StationUnifieController extends Controller
 
                 // ***** gestion station label *****
                 /** @var StationLabel $stationLabel */
-                foreach ($station->getStationLabels() as $stationLabel) {
-                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel) {
+                foreach ($station->getStationLabels() as $stationLabel)
+                {
+                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabel){
                         return $element->getId() == $stationLabel->getId();
                     })->first();
-                    if (false === $stationLabelSite) {
-                        $stationSite->addStationLabel($emSite->find(StationLabel::class, $stationLabel->getId()));
+                    if(false === $stationLabelSite)
+                    {
+                        $stationSite->addStationLabel($emSite->find(StationLabel::class , $stationLabel->getId()));
                     }
                 }
                 /** @var StationLabel $stationLabelSite */
-                foreach ($stationSite->getStationLabels() as $stationLabelSite) {
-                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element) use ($stationLabelSite) {
+                foreach ($stationSite->getStationLabels() as $stationLabelSite)
+                {
+                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabelSite){
                         return $element->getId() == $stationLabelSite->getId();
                     })->first();
-                    if (false === $stationLabel) {
+                    if(false === $stationLabel)
+                    {
                         $stationSite->removeStationLabel($stationLabelSite);
                     }
                 }
