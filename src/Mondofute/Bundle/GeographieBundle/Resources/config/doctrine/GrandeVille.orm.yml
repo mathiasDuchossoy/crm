@@ -21,6 +21,7 @@ Mondofute\Bundle\GeographieBundle\Entity\GrandeVille:
     oneToOne:
         coordonneesGps:
             targetEntity: Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+            cascade:  ['persist' , 'remove']
 #            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\CoordonneesGps
 
     lifecycleCallbacks: {  }

@@ -1,5 +1,6 @@
 {% extends '::base.html.twig' %}
 
+
 {% block body %}
     <section>
         <h1>
@@ -53,4 +54,13 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false&amp;language=fr"></script>
+    <script>
+        var options = {
+            types: ['(cities)']
+        };
+
+        var input = document.getElementById('grande_ville_traductions_0_libelle');
+        autocomplete = new google.maps.places.Autocomplete(input, options);
+    </script>
 {% endblock %}

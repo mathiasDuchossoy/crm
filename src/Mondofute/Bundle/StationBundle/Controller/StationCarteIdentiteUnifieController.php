@@ -16,6 +16,7 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -335,10 +336,44 @@ class StationCarteIdentiteUnifieController extends Controller
         $stationCarteIdentiteUnifie = new  StationCarteIdentiteUnifie();
         $stationCarteIdentite = $station->getStationCarteIdentite();
         $stationCarteIdentite->getAdresse()->setDateCreation();
+        $this->setGps($station);
         $stationCarteIdentiteUnifie->addStationCarteIdentite($stationCarteIdentite);
         $em->persist($stationCarteIdentiteUnifie);
 
         return $stationCarteIdentiteUnifie;
+    }
+
+    /**
+     * @param Station $station
+     */
+    private function setGps($station){
+        $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+        $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
+
+        $adresse = $station->getStationCarteIdentite()->getAdresse();
+
+        try{
+            $geocodedDatas = $geocoder->getGeocodedData($adresse->getVille());
+            $geocodedData = $geocodedDatas[0];
+        }catch (\Geocoder\Exception\NoResultException $exception){
+            $geocodedData = null;
+        }
+
+        if(!empty($geocodedData)){
+            if(empty($gps = $station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+                $gps = new CoordonneesGPS();
+                $adresse->setCoordonneeGps($gps);
+            }
+            $gps
+                ->setLatitude($geocodedData['latitude'])
+                ->setLongitude($geocodedData['longitude'])
+            ;
+        }else{
+            if(!empty($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps());
+            }
+        }
     }
 
     /**
@@ -474,6 +509,11 @@ class StationCarteIdentiteUnifieController extends Controller
     public function editEntity(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
         /** @var StationCarteIdentite $stationCarteIdentite */
+        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite){
+            foreach ($stationCarteIdentite->getStations() as $station){
+                $this->setGps($station);
+            }
+        }
         $em = $this->getDoctrine()->getEntityManager();
 
         $em->persist($stationCarteIdentiteUnifie);

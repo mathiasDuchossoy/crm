@@ -24,8 +24,8 @@ Mondofute\Bundle\StationBundle\Entity\StationCommentVenir:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction
             mappedBy: stationCommentVenir
             cascade:  ['persist' , 'remove']
+    manyToMany:
         grandeVilles:
-            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille
-            mappedBy: stationCommentVenir
+            targetEntity: Mondofute\Bundle\GeographieBundle\Entity\GrandeVille
             cascade: ['persist','remove']
     lifecycleCallbacks: {  }
