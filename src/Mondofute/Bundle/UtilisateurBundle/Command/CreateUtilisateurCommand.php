@@ -40,6 +40,7 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
         $qNom = new Question("<question>Nom: [Admin]</question>\n", 'Admin');
         $rNom = $helper->ask($input, $output, $qNom);
 
+        
         do
         {
             $qMail = new Question("<question>Mail / Login: [admin@mondofute.com]</question>\n", 'admin@mondofute.com');
