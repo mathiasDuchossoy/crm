@@ -258,6 +258,12 @@ assetic:
                 - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-evenements.js"
             filters: [?yui_js]
             output: js/hebergement-edit.min.js
+        prestation_annexe_stocks_hebergement_js:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/PrestationAnnexeBundle/Resources/public/js/prestation-annexe-stocks-hebergement-fonctions.js"
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/PrestationAnnexeBundle/Resources/public/js/prestation-annexe-stocks-hebergement-evenements.js"
+            filters: [?yui_js]
+            output: js/prestation-annexe-stocks-hebergement.min.js
         form_js:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/js/form.js"

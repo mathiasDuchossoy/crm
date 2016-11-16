@@ -2,7 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 
 /**
  * FournisseurPrestationAnnexeStockHebergement
@@ -21,30 +21,30 @@ class FournisseurPrestationAnnexeStockHebergement extends FournisseurPrestationA
     private $periode;
 
     /**
-     * @var Hebergement
+     * @var FournisseurHebergement
      */
-    private $hebergement;
+    private $fournisseurHebergement;
 
     /**
-     * Get hebergement
+     * Get fournisseurHebergement
      *
-     * @return Hebergement
+     * @return FournisseurHebergement
      */
-    public function getHebergement()
+    public function getFournisseurHebergement()
     {
-        return $this->hebergement;
+        return $this->fournisseurHebergement;
     }
 
     /**
-     * Set hebergement
+     * Set fournisseurHebergement
      *
-     * @param Hebergement $hebergement
+     * @param FournisseurHebergement $fournisseurHebergement
      *
      * @return FournisseurPrestationAnnexeStockHebergement
      */
-    public function setHebergement(Hebergement $hebergement)
+    public function setFournisseurHebergement(FournisseurHebergement $fournisseurHebergement = null)
     {
-        $this->hebergement = $hebergement;
+        $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
     }

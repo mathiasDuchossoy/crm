@@ -22,3 +22,8 @@ prestationannexe_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofutePrestationAnnexeBundle:PrestationAnnexe:delete" }
     methods:  DELETE
+
+popup_prestation_annexe_stocks_hebergement:
+    path:   /hebergement/{idFournisseurHebergement}/stocks
+    defaults: { _controller: "MondofutePrestationAnnexeBundle:PrestationAnnexe:stocksHebergement"}
+    methods:  [GET,POST]

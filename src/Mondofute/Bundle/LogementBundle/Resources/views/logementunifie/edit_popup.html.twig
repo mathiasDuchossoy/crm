@@ -89,9 +89,12 @@
         };
         var logementUnifieId = parseInt({{ logementUnifie.id }});
         var donnees = Array();
-        var urlEnregistrementTarifs = "{{ path('mondofute_catalogue_enregistrer_tarifs_locatif') }}";
-        var urlChargerTypePeriodeListe = "{{ path('periode_type_periode_liste') }}";
-        var urlTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        if(!urls){
+            var urls = {};
+        }
+        urls.urlEnregistrementTarifs = "{{ path('mondofute_catalogue_enregistrer_tarifs_locatif') }}";
+        urls.urlChargerTypePeriodeListe = "{{ path('periode_type_periode_liste') }}";
+        urls.urlTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
         {% for logement in logementUnifie.logements %}
         {% if logement.site.crm %}
         {% for periode in logement.periodes %}

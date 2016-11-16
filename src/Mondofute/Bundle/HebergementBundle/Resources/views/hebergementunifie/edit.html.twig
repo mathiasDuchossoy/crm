@@ -40,13 +40,21 @@
             }
         };
         var stocksModifies = Array();
-        var urls = {
-            'logementChargerLocatif': "{{ path('logement_charger_locatif') }}",
-            'periodeHebergementStocks': "{{ path('periode_type_periode_liste') }}",
-            'hebergementChargerHebergementFournisseur': "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}",
-            'catalogueEnregistrerStockLocatif': "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",
-            'periodeTypePeriodeOnglets': "{{ path('periode_type_periode_onglets') }}",
-        };
+        if(!urls){
+            var urls = {};
+        }
+        urls.logementChargerLocatif = "{{ path('logement_charger_locatif') }}";
+        urls.periodeHebergementStocks = "{{ path('periode_type_periode_liste') }}";
+        urls.hebergementChargerHebergementFournisseur = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}";
+        urls.catalogueEnregistrerStockLocatif = "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}";
+        urls.periodeTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        {#urls.push({#}
+            {#'logementChargerLocatif': "{{ path('logement_charger_locatif') }}",#}
+            {#'periodeHebergementStocks': "{{ path('periode_type_periode_liste') }}",#}
+            {#'hebergementChargerHebergementFournisseur': "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}",#}
+            {#'catalogueEnregistrerStockLocatif': "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}",#}
+            {#'periodeTypePeriodeOnglets': "{{ path('periode_type_periode_onglets') }}",#}
+        {#});#}
         var datatableLangue = {
             language: {
                 processing: "{{ 'processing'|trans }}",

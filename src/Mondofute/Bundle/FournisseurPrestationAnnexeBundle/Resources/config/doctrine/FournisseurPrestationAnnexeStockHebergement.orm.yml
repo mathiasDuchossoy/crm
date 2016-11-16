@@ -10,6 +10,6 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
         hebergement:
             associationKey: true
     manyToOne:
-        hebergement:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+        fournisseurHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
     lifecycleCallbacks: {  }

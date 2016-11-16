@@ -1,0 +1,272 @@
+{% extends '::base_popup.html.twig' %}
+{% block body %}
+    <form name="form-prestation-annexe-stocks-hebergement">
+        <div id="prestation-annexes-stocks-hebergements">
+
+        </div>
+    </form>
+    <button type="button" class="btn btn-default">enregistrer</button>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+        "use strict";
+        var maxInputVars = parseInt({{ maxInputVars }});
+        var langue = {
+            'enregistrer': {
+                'stock': "{{ 'enregistrer.stock' | trans }}",
+                'stock_ok': "{{ 'enregistrement_stock.ok'|trans }}",
+                'stock_pas_ok': "{{ 'enregistrement_stock.pas_ok'|trans }}",
+                'stock_aucun': "{{ 'enregistrement_stock.aucun'|trans }}",
+            }
+        };
+        var datatableLangue = {
+            language: {
+                processing: "{{ 'processing'|trans }}",
+                search: "{{ 'rechercher'|trans }} :",
+                loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                zeroRecords: "{{ 'zeroResultats'|trans }}",
+                emptyTable: "{{ 'tableVide'|trans }}",
+                "paginate": {
+                    "first": "{{ 'page.premiere'|trans }}",
+                    "last": "{{ 'page.derniere'|trans }}",
+                    "next": "{{ 'page.suivante'|trans }}",
+                    "previous": "{{ 'page.precedente'|trans }}"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        };
+        if (!urls) {
+            var urls = {};
+        }
+        urls.logementChargerLocatif = "{{ path('logement_charger_locatif') }}";
+        urls.periodeHebergementStocks = "{{ path('periode_type_periode_liste') }}";
+        urls.hebergementChargerHebergementFournisseur = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}";
+        urls.catalogueEnregistrerStockLocatif = "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}";
+        urls.periodeTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        urls.urlTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        urls.mondofute_fournisseur_prestation_annexe_stock_hebergement_charger = "{{ path('mondofute_fournisseur_prestation_annexe_stock_hebergement_charger',{idPrestationAnnexe: '__idPrestationAnnexe__',idHebergement: '__idHebergement__',idTypePeriode: '__idTypePeriode__'}) }}";
+
+        var prestationAnnexes = [];
+        {% for hebergement in fournisseurHebergement.hebergement.hebergements %}
+        {% if hebergement.site.crm == true %}
+        var hebergementId = {{ hebergement.id }};
+        {% for prestationAnnexe in hebergement.prestationAnnexes %}
+        if (!prestationAnnexe) {
+            var prestationAnnexe = {};
+        }
+        prestationAnnexe = {id: {{ prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.id }}};
+        {#{{ dump(prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe) }}#}
+        {% for tradFamille in prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe.traductions %}
+        {% if tradFamille.langue.code == app.request.locale %}
+        prestationAnnexe.famille = {
+            id: {{ prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe.id }},
+            libelle: '{{ tradFamille.libelle }}'
+        };
+        {% endif %}
+        {% endfor %}
+        {% if prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.sousFamillePrestationAnnexe is not null %}
+        {% for tradSousFamille in prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.sousFamillePrestationAnnexe.traductions %}
+        {% if tradSousFamille.langue.code == app.request.locale %}
+        prestationAnnexe.sousFamille = {
+            id: {{ prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.sousFamillePrestationAnnexe.id }},
+            libelle: '{{ tradSousFamille.libelle }}'
+        };
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        prestationAnnexe.sousFamille = null;
+        {% endif %}
+        {% for trad in prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.traductions %}
+        {% if trad.langue.code == app.request.locale %}
+        prestationAnnexe.libelle = "{{ trad.libelle }}";
+        {% endif %}
+        {% endfor %}
+        {#{{ dump(prestationAnnexe.fournisseurPrestationAnnexe.prestationAnnexe.id) }}#}
+        prestationAnnexes.push(prestationAnnexe);
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        prestationAnnexe = null;
+    </script>
+    {% javascripts
+    'js/type-periodes-onglets.min.js'
+    'js/datatables.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        //            redimensionne les datatables lorsqu'on clique sur un onglet
+        //        $(document).delegate('a[data-toggle="tab"]', 'shown.bs.tab', function (e) {
+        //            $.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
+        //            console.log($.fn.dataTable.tables({visible: true, api: true}));
+        //        });
+        $(document).ready(function () {
+            var $conteneur = $('#prestation-annexes-stocks-hebergements');
+            $.post(
+                    urls.periodeHebergementStocks,
+                    function (typePeriodes) {
+                        if (typePeriodes.length > 0) {
+                            construireOngletsTypePeriodes($conteneur, null, function () {
+                                for (var indiceTypePeriode = 0; indiceTypePeriode < typePeriodes.length; indiceTypePeriode++) {
+                                    if (typePeriodes[indiceTypePeriode].periodes != null && typePeriodes[indiceTypePeriode].periodes.length > 0) {
+
+                                        idTypePeriode = typePeriodes[indiceTypePeriode].id;
+                                        $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriodes[indiceTypePeriode].id);
+                                        var colonnes = [{
+                                            'mDataProp': 'familleSousFamille',
+                                            title: 'famille / sous famille'
+                                        }, {'mDataProp': "prestationAnnexe", title: 'prestation annexe'}];
+                                        var debut = null;
+                                        var fin = null;
+                                        var moisDebut = null;
+                                        var jourDebut = null;
+                                        var moisFin = null;
+                                        var jourFin = null;
+                                        var attribut = null;
+                                        var stock = null;
+                                        for (var k = 0; k < typePeriodes[indiceTypePeriode].periodes.length; k++) {
+                                            // console.log(typePeriodes[i].periodes[k].debut.date.substring(0,10));
+                                            debut = new Date(typePeriodes[indiceTypePeriode].periodes[k].debut.date.substring(0, 10).replace(/-/g, "/"));
+                                            fin = new Date(typePeriodes[indiceTypePeriode].periodes[k].fin.date.substring(0, 10).replace(/-/g, "/"));
+                                            // console.log(debut);
+                                            moisDebut = (debut.getMonth() + 1).toString().length > 1 ? (debut.getMonth() + 1) : '0' + (debut.getMonth() + 1);
+                                            jourDebut = debut.getDate().toString().length > 1 ? debut.getDate() : '0' + debut.getDate();
+                                            moisFin = (fin.getMonth() + 1).toString().length > 1 ? (fin.getMonth() + 1) : '0' + (fin.getMonth() + 1);
+                                            jourFin = fin.getDate().toString().length > 1 ? fin.getDate() : '0' + fin.getDate();
+                                            attribut = 'periode' + typePeriodes[indiceTypePeriode].periodes[k].id;
+                                            colonnes.push({
+                                                mDataProp: attribut,
+                                                title: 'du ' + jourDebut + '-' + moisDebut + '-' + debut.getFullYear().toString() + ' au ' + jourFin + '-' + moisFin + '-' + fin.getFullYear().toString()
+                                            });
+                                        }
+                                        var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + idTypePeriode + ' .panel-group');
+                                        var $tableau = $('<table class="table-hebergement-stocks table table-striped nowrap display" width="100%" id="type-periode-' + idTypePeriode + '-prestation-annexes"></table>');
+                                        $div.append($tableau);
+                                        var parametres = {
+                                            'donnees': {
+//                                                    hebergement: {id: idHebergement},
+                                                typePeriode: {
+                                                    id: idTypePeriode,
+                                                    periodes: typePeriodes[indiceTypePeriode].periodes
+                                                },
+                                                prestationAnnexes: prestationAnnexes,
+//                                                    fournisseur: {
+//                                                        id: data.fournisseurHebergements[j].fournisseur.id
+//                                                    },
+//                                                    logements: data.fournisseurHebergements[j].logements,
+//                                                    nbTotalLogements: data.nbLogements,
+//                                                    pasProgressBar: 100 / data.nbLogements
+                                            },
+                                            datatable: {
+                                                data: null,
+                                                "aoColumns": colonnes,
+                                                "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                                                    $(nRow).find('td').attr('style', 'vertical-align: middle;');
+                                                },
+                                                "bAutoWidth": true,
+                                                aoColumnDefs: [
+                                                    {"bSortable": true, aTargets: [0]},
+                                                    {"bSortable": true, aTargets: [1]},
+                                                    {"bSortable": false, aTargets: ['_all']},
+                                                ],
+                                                paging: true,
+                                                info: false,
+                                                pageLength: 25,
+                                                scrollX: true,
+                                                scrollY: false,
+                                                scrollCollapse: true,
+                                                fixedColumns: {leftColumns: 2},
+                                                scroller: {
+                                                    rowHeight: 30
+                                                },
+                                                language: datatableLangue.language,
+                                            }
+                                        };
+                                        var table = genererDataTables($tableau, parametres, $progressBar, function (table, parametres, $progressBar) {
+//                                            var datas = [];
+                                            var data = [];
+                                            for (var indicePrestationAnnexe = 0; indicePrestationAnnexe < parametres.donnees.prestationAnnexes.length; indicePrestationAnnexe++) {
+                                                data = [];
+                                                data['familleSousFamille'] = parametres.donnees.prestationAnnexes[indicePrestationAnnexe].famille.libelle;
+                                                if (parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille != null) {
+                                                    data['familleSousFamille'] += '/' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille.libelle;
+                                                }
+                                                data['prestationAnnexe'] = parametres.donnees.prestationAnnexes[indicePrestationAnnexe].libelle;
+//                                                alert(parametres.donnees.prestationAnnexes[indicePrestationAnnexe].libelle);
+                                                var url = urls.mondofute_fournisseur_prestation_annexe_stock_hebergement_charger;
+                                                url = url.replace(/__idPrestationAnnexe__/g, parametres.donnees.prestationAnnexes[indicePrestationAnnexe].id).replace(/__idHebergement__/g, hebergementId).replace(/__idTypePeriode__/g, parametres.donnees.typePeriode.id);
+
+                                                $.post(url, function (a,data) {
+                                                    alert(data['familleSousFamille']);
+                                                    for (var indicePeriode = 0; indicePeriode < parametres.donnees.typePeriode.periodes.length; indicePeriode++) {
+                                                        data['periode' + parametres.donnees.typePeriode.periodes[indicePeriode].id] = 0;
+                                                    }
+//                                                    alert(data['prestationAnnexe']);
+//                                                    table.rows.add([data]).draw();
+                                                });
+                                            }
+//                                            $.post()
+//                                            for(var indiceTypePeriode = 0;indiceTypePeriode<typePeriodes.length;indiceTypePeriode++){
+//
+//                                            }
+//                                            var datas = [];
+//                                            var data = [];
+//                                            for (var indicePrestation = 0; indicePrestation < prestationAnnexes.length; indicePrestation++) {
+//                                                data = [];
+//                                                data['familleSousFamille'] = prestationAnnexes[indicePrestation].famille.libelle;
+//                                                if (prestationAnnexes[indicePrestation].sousFamille != null) {
+//                                                    data['familleSousFamille'] += '/' + prestationAnnexes[indicePrestation].sousFamille.libelle;
+//                                                }
+//                                                data['prestationAnnexe'] = prestationAnnexes[indicePrestation].libelle;
+//                                                for (var indiceTypePeriode = 0; indiceTypePeriode < typePeriodes.length; indiceTypePeriode++) {
+//                                                    if (typePeriodes[indiceTypePeriode].id == parametres.donnees.typePeriode.id) {
+//                                                        for (var indicePeriode = 0; indicePeriode < typePeriodes[indiceTypePeriode].periodes.length; indicePeriode++) {
+//                                                            data['periode' + typePeriodes[indiceTypePeriode].periodes[indicePeriode].id] = 0;
+//                                                        }
+//                                                    }
+//                                                }
+//                                                datas.push(data);
+//                                            }
+//                                            data = null;
+//                                            table.rows.add(datas).draw();
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+            );
+        });
+        /**
+         * permet de construire les onglets TypePeriodes ainsi que les div pour leurs contenus
+         * @param $conteneur
+         * @param $progressBar
+         */
+        //        function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
+        //            $.post(urls.periodeTypePeriodeOnglets,
+        //                    {'idConteneur': $conteneur.attr('id')},
+        //                    function (html) {
+        //                        if ($progressBar != null) {
+        //                            chargerProgressBar($progressBar, 100);
+        //                        }
+        //                        $conteneur.html(html);
+        //                        if (callback != null) {
+        //                            callback(html);
+        //                        }
+        //                    }
+        //            ), 'html';
+        //        }
+    </script>
+{% endblock %}

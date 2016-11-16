@@ -80,6 +80,7 @@ class Hebergement
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
+        $this->prestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -493,5 +494,48 @@ class Hebergement
     {
         return $this->motClefs;
     }
+<<<<<<< HEAD
 
+||||||| merged common ancestors
+=======
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $prestationAnnexes;
+
+
+    /**
+     * Add prestationAnnex
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex
+     *
+     * @return Hebergement
+     */
+    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex)
+    {
+        $this->prestationAnnexes[] = $prestationAnnex;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnex
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex
+     */
+    public function removePrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex)
+    {
+        $this->prestationAnnexes->removeElement($prestationAnnex);
+    }
+
+    /**
+     * Get prestationAnnexes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPrestationAnnexes()
+    {
+        return $this->prestationAnnexes;
+    }
+>>>>>>> gestion stock prestations annexes
 }

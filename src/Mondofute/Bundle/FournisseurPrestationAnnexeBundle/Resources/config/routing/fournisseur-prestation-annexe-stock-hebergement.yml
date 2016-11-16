@@ -1,0 +1,4 @@
+mondofute_fournisseur_prestation_annexe_stock_hebergement_charger:
+    path:     /{idPrestationAnnexe}/{idHebergement}/{idTypePeriode}/charger/
+    defaults: { _controller: "MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeStockHebergement:chargerStockHebergement", idPrestationAnnexe: 0, idHebergement: 0, idTypePeriode: 0 }
+    methods:  [GET, POST]

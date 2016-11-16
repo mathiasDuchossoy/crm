@@ -68,6 +68,9 @@ function enregistrerTarifsLocatifPaquet($button, $reponse, indice) {
     for (var i = indice; i < indiceMax && donneesModifiees[i] != null; i++) {
         donnees.push(donneesModifiees[i]);
     }
+    if(!urlEnregistrementTarifs){
+        var urlEnregistrementTarifs = urls.urlEnregistrementTarifs;
+    }
     $.post(
         urlEnregistrementTarifs,
         {'tarifs': donnees, 'logementUnifieId': logementUnifieId},
@@ -142,6 +145,9 @@ function genererInputTarifLocatif(name, valeur, idPeriode, length) {
  */
 function chargerTarifsLocatif($conteneur) {
     var existeTypePeriode = false;
+    if(!urlChargerTypePeriodeListe){
+        var urlChargerTypePeriodeListe = urls.urlChargerTypePeriodeListe;
+    }
     $.post(urlChargerTypePeriodeListe,
         function (typePeriodes) {
             construireOngletsTypePeriodes($conteneur, null, function () {
