@@ -84,6 +84,7 @@ class Hebergement
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
+        $this->prestationAnnexeHebergements = new ArrayCollection();
     }
 
     /**
