@@ -9,6 +9,7 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Command;
 
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
 use Nucleus\MoyenComBundle\Entity\Email;
@@ -49,35 +50,72 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
         $qPwd = new Question("<question>Mot de passe: [pass]</question>\n", 'pass');
         $rPwd = $helper->ask($input, $output, $qPwd);
 
+        // ***** ENREGISTREMENT CRM*****
+        /** @var Utilisateur $utilisateur */
+        $utilisateur        = new Utilisateur();
+        $utilisateurUser    = new UtilisateurUser();
+        $mail               = new Email();
+
+        $mail->setAdresse($rMail);
+
+        $utilisateur
+            ->setPrenom($rPrenom)
+            ->setNom($rNom)
+            ->addMoyenCom($mail)
+        ;
+
+        $utilisateurUser
+            ->setUsername($rMail)
+            ->setEmail($rMail)
+            ->setPlainPassword($rPwd)
+            ->setUtilisateur($utilisateur)
+            ->setEnabled(true)
+            ->addRole($utilisateurUser::ROLE_SUPER_ADMIN)
+        ;
+
+        $em->persist($utilisateur);
+        $em->persist($utilisateurUser);
+        $em->flush();
+        // ***** FIN ENREGISTREMENT CRM*****
+
         // ***** ENREGISTREMENT *****
-        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array('crm' => 0));
         foreach ($sites as $site) {
             $emSite = $this->getContainer()->get('doctrine')->getEntityManager($site->getLibelle());
 
             /** @var Utilisateur $utilisateur */
-            $utilisateur        = new Utilisateur();
-            $utilisateurUser    = new UtilisateurUser();
+            $utilisateurSite        = new Utilisateur();
+            $utilisateurUserSite    = new UtilisateurUser();
             $mail               = new Email();
+
+            $utilisateurSite->setId($utilisateur->getId());
+            $metadata = $emSite->getClassMetadata(get_class($utilisateurSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+
+            $utilisateurUserSite->setId($utilisateurUser->getId());
+            $metadata = $emSite->getClassMetadata(get_class($utilisateurUserSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
             $mail->setAdresse($rMail);
 
-            $utilisateur
+            $utilisateurSite
                 ->setPrenom($rPrenom)
                 ->setNom($rNom)
                 ->addMoyenCom($mail)
             ;
 
-            $utilisateurUser
+            $utilisateurUserSite
                 ->setUsername($rMail)
                 ->setEmail($rMail)
                 ->setPlainPassword($rPwd)
-                ->setUtilisateur($utilisateur)
+                ->setUtilisateur($utilisateurSite)
                 ->setEnabled(true)
-                ->addRole($utilisateurUser::ROLE_SUPER_ADMIN)
+                ->addRole($utilisateurUserSite::ROLE_SUPER_ADMIN)
             ;
 
-            $emSite->persist($utilisateur);
-            $emSite->persist($utilisateurUser);
+            $emSite->persist($utilisateurSite);
+            $emSite->persist($utilisateurUserSite);
             $emSite->flush();
         }
         // ***** FIN ENREGISTREMENT *****

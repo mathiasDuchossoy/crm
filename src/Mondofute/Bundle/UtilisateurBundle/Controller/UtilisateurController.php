@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use FOS\UserBundle\Model\UserInterface;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
@@ -90,13 +91,27 @@ class UtilisateurController extends Controller
                 }
             }
 //            $utilisateur->setDateCreation();
-
             if (!$this->loginExist($utilisateurUser)) {
+
+                $em->persist($utilisateur);
+                $em->persist($utilisateurUser);
+
+                $em->flush();
+
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
                 foreach ($sites as $site) {
                     $utilisateurUserClone = clone $utilisateurUser;
+                    $utilisateurUserClone->setId($utilisateurUser->getId());
                     $utilisateurClone = clone $utilisateur;
+                    $utilisateurClone->setId($utilisateur->getId());
+
                     $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+                    $metadata = $emSite->getClassMetadata(get_class($utilisateurClone));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+                    $metadata = $emSite->getClassMetadata(get_class($utilisateurUserClone));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
                     $this->dupliquerMoyenComs($utilisateur);
 
@@ -108,10 +123,6 @@ class UtilisateurController extends Controller
                     $emSite->flush();
                 }
 
-                $em->persist($utilisateur);
-                $em->persist($utilisateurUser);
-
-                $em->flush();
 
                 // add flash messages
                 $this->addFlash(
