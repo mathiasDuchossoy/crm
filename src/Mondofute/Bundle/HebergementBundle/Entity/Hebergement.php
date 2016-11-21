@@ -69,53 +69,10 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
-<<<<<<< HEAD
-||||||| merged common ancestors
-||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
-=======
-    /**
-     * @var Collection
-     */
-    private $motClefs;
->>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
-<<<<<<< HEAD
-||||||| parent of 997839e... mise en place bdd, enitities et majlislancer
-||||||| merged common ancestors
-||||||| merged common ancestors
-=======
-    /**
-     * @var Collection
-     */
-    private $motClefs;
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
-=======
->>>>>>> création bundle, entités mis en place + sql et deploybundle,
-=======
-||||||| merged common ancestors
-||||||| merged common ancestors
-=======
-    /**
-     * @var Collection
-     */
-    private $motClefs;
->>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
-=======
->>>>>>> création bundle, entités mis en place + sql et deploybundle,
-||||||| merged common ancestors
-=======
-    /**
-     * @var Collection
-     */
-    private $motClefs;
->>>>>>> mise en place bdd, enitities et majlislancer
->>>>>>> 997839e... mise en place bdd, enitities et majlislancer
->>>>>>>>> Temporary merge branch 2
-=======
     /**
      * @var Collection
      */
     private $prestationAnnexeHebergements;
->>>>>>> CRM-150
 
     /**
      * Constructor
@@ -127,6 +84,7 @@ class Hebergement
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
+        $this->prestationAnnexeHebergements = new ArrayCollection();
     }
 
     /**
@@ -538,45 +496,6 @@ class Hebergement
         return $this->motClefs;
     }
 
-<<<<<<< HEAD
-||||||| merged common ancestors
-    /**
-     * Add motClef
-     *
-     * @param MotClef $motClef
-     *
-     * @return Hebergement
-     */
-    public function addMotClef(MotClef $motClef)
-    {
-        $this->motClefs[] = $motClef;
-
-        return $this;
-    }
-
-    /**
-     * Remove motClef
-     *
-     * @param MotClef $motClef
-     */
-    public function removeMotClef(MotClef $motClef)
-    {
-        $this->motClefs->removeElement($motClef);
-    }
-
-    /**
-     * Get motClefs
-     *
-     * @return Collection
-     */
-    public function getMotClefs()
-    {
-        return $this->motClefs;
-    }
->>>>>>> mise en place bdd, enitities et majlislancer
->>>>>>> df53520... mise en place bdd, enitities et majlislancer
->>>>>>>>> Temporary merge branch 2
-=======
     /**
      * Add prestationAnnexeHebergement
      *
@@ -610,5 +529,4 @@ class Hebergement
     {
         return $this->prestationAnnexeHebergements;
     }
->>>>>>> CRM-150
 }
