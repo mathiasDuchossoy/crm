@@ -2,6 +2,14 @@ Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\UtilisateurBundle\Repository\UtilisateurRepository
+    attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
     associationOverride:
         moyenComs:
             joinTable:
