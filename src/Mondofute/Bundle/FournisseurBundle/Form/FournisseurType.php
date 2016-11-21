@@ -40,7 +40,6 @@ class FournisseurType extends AbstractType
     {
         $fournisseurId = $builder->getData()->getId();
         $locale = $options["locale"];
-        $famillePrestationAnnexeId = $options["famillePrestationAnnexeId"];
 
         $builder
             ->add('logo', 'sonata_media_type', array(

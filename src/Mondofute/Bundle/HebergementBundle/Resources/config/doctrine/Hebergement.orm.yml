@@ -40,7 +40,7 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel
             mappedBy: hebergement
             cascade: ['persist','remove']
-        prestationAnnexes:
+        prestationAnnexeHebergements:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement
             mappedBy: hebergement
     oneToOne:

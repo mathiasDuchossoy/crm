@@ -35,7 +35,8 @@
                             <div class="col-sm-2">
                             </div>
                             <div class="col-sm-10">
-                                <button type="button" class="btn btn-default btn-xs" onclick="$('#cadre_fournisseur_logo').remove();">
+                                <button type="button" class="btn btn-default btn-xs"
+                                        onclick="$('#cadre_fournisseur_logo').remove();">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Supprimer logo
                                 </button>
                             </div>
@@ -44,13 +45,6 @@
                     {{ form_row(form.phototheque) }}
                     {{ form_row(form.types) }}
                     {{ form_row(form.blocageVente) }}
-                    {#<div id="my-popover-container" style="display: none;">#}
-                    {#<div class="alert alert-danger" role="alert">#}
-                    {#<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>#}
-                    {#<span class="sr-only">Error:</span>#}
-                    {#Enter a valid email address#}
-                    {#</div>#}
-                    {#</div>#}
 
                     {{ form_row(form.fournisseurParent) }}
                     {{ form_row(form.contient) }}
@@ -71,9 +65,7 @@
                     {% include ('@MondofuteFournisseur/fournisseur/panel-information-rm.html.twig') %}
                     {# fin panel information RM #}
 
-
-                    {#{{ form_row(form.remiseClefs) }}#}
-                    <div class="form-group ">
+                    <div id="fournisseur_remise_clefs_panel" class="form-group">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <div class="row">
@@ -89,7 +81,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
                             <div class="panel-body" id="remiseClefs" data-nb-remise-clef="{{ form.remiseClefs|length }}"
                                  data-prototype-traduction="
                          {% filter escape %}
@@ -142,8 +133,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {#{{ dump(form.remiseClefs.vars['prototype']) }}#}
-                            {#maRecetpyioType = form.reception.vars[#}
                             <div class="panel-body" id="receptions" data-nb-receptions="{{ form.receptions|length }}"
                                  data-prototype="
                     {% filter escape %}
@@ -331,7 +320,7 @@
             </div>
 
             <div id="values_prestation_annexe" style="display: none">
-                {#<div id="values_prestation_annexe" >#}
+            {#<div id="values_prestation_annexe" >#}
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
             </div>
             {{ form_widget(form._token) }}
@@ -504,6 +493,16 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        $( document ).ready(function() {
+            var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
+            if($("#fournisseur_types_9").is(':checked')){
+                $fournisseurRemiseClefsPanel.show();
+            }else{
+                $fournisseurRemiseClefsPanel.hide();
+            }
+        });
+    </script>
     <script>
         var _langues = {{ langues | serialize('json') | raw }};
         var _libelleJour = {};
@@ -1339,7 +1338,6 @@
                         first = false;
                     }
                     // do something with `item`
-//                    console.log($item);
                     $item.attr('style', 'border: 1px solid red;')
                 });
                 return false;
@@ -1347,142 +1345,16 @@
         }
     </script>
     <script type="text/javascript">
-        function updatePrestationAnnexe(fournisseurId, element) {
-            $element = $(element);
-            $(element).find('input:checkbox').each(function () {
+        {% if fournisseur.id is not null %}
+        $("#fournisseur_types_9").on('click', function (){
+            $("#fournisseur_types").find('input:checkbox').each(function(){
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
-                if ($(this).is(':checked')) {
-                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{'famillePrestationAnnexeId': '_famillePrestationAnnexeId_','fournisseurId': '_fournisseurId_'}) }}";
-                    path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
-                    path = path.replace(/_fournisseurId_/g, fournisseurId);
-//                    if($famillePrestationAnnexe.is(':hidden')) {
-                    if ($famillePrestationAnnexe.css('display') == 'none') {
-                        $.ajax(path,
-                                {
-                                    method: 'GET'
-                                }
-                        ).done(function (data) {
-                            $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
-                            $famillePrestationAnnexe.show();
-                        });
-                    }
-                }
-                else {
-                    $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
-                    $famillePrestationAnnexe.hide();
-                    $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
-                }
+                $famillePrestationAnnexe.hide();
+                $("#values_prestation_annexe").html('');
             });
-        }
-
-        function checkPrestatioAnnexe(element, test) {
-            var $element = $(element);
-            $test = $('#' + test);
-            $test.find('input:checkbox').prop('checked', $element.prop("checked"));
-        }
-
-        function displayEditPrestationAnnexe(element) {
-            var $element = $(element);
-            var prestationAnnexeId = $element.val();
-            var fournisseurId = $element.data('fournisseur_id');
-            var $form_prestation_annexe = $("#form_prestation_annexe");
-            var $prestationAnnexeModal = $('#prestationAnnexeModal');
-            $editPrestationAnnexe = $('#edit_prestation_annexe_' + prestationAnnexeId);
-            if ($element.is(':checked')) {
-                if ($('#fournisseur_prestationAnnexes_' + prestationAnnexeId).length != 1) {
-                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-
-                    $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
-                    ).done(function (data) {
-                        $form_prestation_annexe.html(data);
-                        $prestationAnnexeModal.modal();
-                        $prestationAnnexeModal.unbind("hide.bs.modal");
-                        $prestationAnnexeModal.on('hide.bs.modal', function (e) {
-                            $prestationAnnexeModal.unbind("hide.bs.modal");
-                            $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
-                            $element.prop('checked', false);
-                            $editPrestationAnnexe.hide();
-                        });
-
-                        var $enregistrer_prestation_annexe = $('#enregistrer_prestation_annexe');
-                        $enregistrer_prestation_annexe.unbind("click");
-                        $enregistrer_prestation_annexe.on('click', function () {
-                            enregisterPrestationAnnexe(prestationAnnexeId)
-                        });
-                    });
-                }
-                $editPrestationAnnexe.show();
-            } else {
-                $editPrestationAnnexe.hide();
-                $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
-            }
-        }
-
-        $(".chekbox_prestation_annexe").each(function (index, element) {
-            displayEditPrestationAnnexe(element);
         });
-
-        function getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId) {
-            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_' , 'fournisseurId': '_fournisseurId_'}) }}";
-            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
-            path = path.replace(/_fournisseurId_/g, fournisseurId);
-            return path;
-        }
-
-        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId) {
-            var $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
-            var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
-            var $prestationAnnexeModal = $('#prestationAnnexeModal');
-            var $form_prestation_annexe = $("#form_prestation_annexe");
-
-            if ($fournisseurPrestationAnnexe.length > 0) {
-                $form_prestation_annexe.html($fournisseurPrestationAnnexe);
-            } else {
-                $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
-                ).done(function (data) {
-                    $form_prestation_annexe.html(data);
-                });
-            }
-
-            $prestationAnnexeModal.modal();
-
-            $prestationAnnexeModal.unbind("hide.bs.modal");
-            $prestationAnnexeModal.on('hide.bs.modal', function (event) {
-                $prestationAnnexeModal.unbind("hide.bs.modal");
-                if ($fournisseurPrestationAnnexe.data('id')) {
-                    // on doit recharger les données et les mettre dans le form
-                    $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
-                    ).done(function (data) {
-                        $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
-                        $('#values_prestation_annexe').append(data);
-                    });
-                }
-                else {
-                    $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
-                    $('#prestation_annexe_' + prestationAnnexeId).prop('checked', false);
-                    $('#edit_prestation_annexe_' + prestationAnnexeId).hide();
-                }
-            });
-            // ** lorsque l'on clique sur enregistrer **
-            var $enregistrer_prestation_annexe = $('#enregistrer_prestation_annexe');
-            $enregistrer_prestation_annexe.unbind("click");
-            $enregistrer_prestation_annexe.on('click', function () {
-                enregisterPrestationAnnexe(prestationAnnexeId)
-            });
-        }
+        {% endif %}
 
         (function ($) {
             $.fn.serializeObject = function () {
@@ -1551,6 +1423,202 @@
             };
         })(jQuery);
 
+//        $.fn.serializeObject = function()
+//        {
+//            var o = {};
+//            var a = this.serializeArray();
+//            $.each(a, function() {
+//                if (o[this.name] !== undefined) {
+//                    if (!o[this.name].push) {
+//                        o[this.name] = [o[this.name]];
+//                    }
+//                    o[this.name].push(this.value || '');
+//                } else {
+//                    o[this.name] = this.value || '';
+//                }
+//            });
+//            return o;
+//        };
+
+        function updatePrestationAnnexe(fournisseurId, element) {
+            var $element = $(element);
+            var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
+            $element.find('input:checkbox').each(function () {
+                var famillePrestationAnnexeId = $(this).val();
+                var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
+                if ($(this).is(':checked')) {
+                    if(famillePrestationAnnexeId == 9){
+                        $fournisseurRemiseClefsPanel.show();
+                    }
+                    var path = "{{ path('fournisseur_get_prestation_annexes' ,{
+                        'famillePrestationAnnexeId': '_famillePrestationAnnexeId_',
+                        'fournisseurId': '_fournisseurId_',
+                    }) }}";
+                    path = path.replace(/_famillePrestationAnnexeId_/g, famillePrestationAnnexeId);
+                    path = path.replace(/_fournisseurId_/g, fournisseurId);
+                    if ($famillePrestationAnnexe.css('display') == 'none') {
+                        $.ajax(path,
+                            {
+                                method: 'GET',
+                                async: false
+                            }
+                        ).done(function (data) {
+                            $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
+                            $famillePrestationAnnexe.show();
+                            $famillePrestationAnnexe.find('input:checkbox').each(function (index, element) {
+                                if ($(element).is(':checked')) {
+                                    var prestationAnnexeId = $(element).val();
+                                    var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+                                    $.ajax(path2,
+                                    {
+                                        async: false,
+                                        method: 'GET'
+                                    }
+                                    ).done(function (data) {
+                                        $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
+                                        $('#values_prestation_annexe').append(data);
+                                    });
+                                    if($("#fournisseur_types_9").is(":checked")){
+                                        var path3 = '{{ path("fournisseur_enregistrer_fournisseur_prestation" ,{ "id": "_fournisseurId_","prestationAnnexeId": "_prestationAnnexeId_"}) }}';
+                                        path3 = path3.replace(/_fournisseurId_/g, fournisseurId);
+                                        path3 = path3.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+                                        $('#form_prestation_annexe').html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
+                                        var $data =  $('#form_prestation_annexe').serializeObject();
+                                        $('#values_prestation_annexe').append($('#form_prestation_annexe').html());
+                                        $.post(path3, {
+                                            data: JSON.stringify($data)
+                                        }, function () {
+                                        }, 'json');
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
+                else {
+                    if(famillePrestationAnnexeId == 9){
+                        $fournisseurRemiseClefsPanel.hide();
+                    }
+                    $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
+                    $famillePrestationAnnexe.hide();
+                    $famillePrestationAnnexe.find('input:checkbox').prop('checked', false);
+                }
+            });
+        }
+
+        function checkPrestatioAnnexe(element, test) {
+            var $element = $(element);
+            $test = $('#' + test);
+            $test.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function displayEditPrestationAnnexe(element) {
+            var $element = $(element);
+            var prestationAnnexeId = $element.val();
+            var fournisseurId = $element.data('fournisseur_id');
+            var $form_prestation_annexe = $("#form_prestation_annexe");
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            var $editPrestationAnnexe = $('#edit_prestation_annexe_' + prestationAnnexeId);
+            if ($element.is(':checked')) {
+                if ($('#fournisseur_prestationAnnexes_' + prestationAnnexeId).length != 1) {
+                    var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+
+                    $.ajax(path,
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
+                    ).done(function (data) {
+                        $form_prestation_annexe.html(data);
+                        $prestationAnnexeModal.modal();
+                        $prestationAnnexeModal.unbind("hide.bs.modal");
+                        $prestationAnnexeModal.on('hide.bs.modal', function (e) {
+                            $prestationAnnexeModal.unbind("hide.bs.modal");
+                            $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
+                            $element.prop('checked', false);
+                            $editPrestationAnnexe.hide();
+                        });
+
+                        var $enregistrer_prestation_annexe = $('#enregistrer_prestation_annexe');
+                        $enregistrer_prestation_annexe.unbind("click");
+                        $enregistrer_prestation_annexe.on('click', function () {
+                            enregisterPrestationAnnexe(prestationAnnexeId)
+                        });
+                    });
+                }
+                $editPrestationAnnexe.show();
+            } else {
+                $editPrestationAnnexe.hide();
+                $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
+            }
+        }
+
+        $(".chekbox_prestation_annexe").each(function (index, element) {
+            displayEditPrestationAnnexe(element);
+        });
+
+        function getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId) {
+            var fournisseurHebergementType = $('#fournisseur_types_9').is(':checked');
+            var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_form' ,{'prestationAnnexeId': '_prestationAnnexeId_' , 'fournisseurId': '_fournisseurId_', 'fournisseurHebergementType': '_fournisseurHebergementType_'}) }}";
+            path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_fournisseurHebergementType_/g, fournisseurHebergementType);
+            return path;
+        }
+
+        function getFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId) {
+            var $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
+            var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
+            var $prestationAnnexeModal = $('#prestationAnnexeModal');
+            var $form_prestation_annexe = $("#form_prestation_annexe");
+
+            if ($fournisseurPrestationAnnexe.length > 0) {
+                $form_prestation_annexe.html($fournisseurPrestationAnnexe);
+            } else {
+                $.ajax(path,
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
+                ).done(function (data) {
+                    $form_prestation_annexe.html(data);
+                });
+            }
+
+            $prestationAnnexeModal.modal();
+
+            $prestationAnnexeModal.unbind("hide.bs.modal");
+            $fournisseurPrestationAnnexe = $('#fournisseur_prestationAnnexes_' + prestationAnnexeId);
+            $prestationAnnexeModal.on('hide.bs.modal', function (event) {
+                $prestationAnnexeModal.unbind("hide.bs.modal");
+                if ($fournisseurPrestationAnnexe.data('id')) {
+                    // on doit recharger les données et les mettre dans le form
+                    $.ajax(path,
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
+                    ).done(function (data) {
+                        $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
+                        $('#values_prestation_annexe').append(data);
+                    });
+                }
+                else {
+                    $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
+                    $('#prestation_annexe_' + prestationAnnexeId).prop('checked', false);
+                    $('#edit_prestation_annexe_' + prestationAnnexeId).hide();
+                }
+            });
+            // ** lorsque l'on clique sur enregistrer **
+            var $enregistrer_prestation_annexe = $('#enregistrer_prestation_annexe');
+            $enregistrer_prestation_annexe.unbind("click");
+            $enregistrer_prestation_annexe.on('click', function () {
+                enregisterPrestationAnnexe(prestationAnnexeId)
+            });
+        }
+
+
+
         function enregisterPrestationAnnexe(prestationAnnexeId) {
             var $myForm = $('#form_prestation_annexe');
             if (!$myForm[0].checkValidity()) {
@@ -1563,7 +1631,6 @@
                 var fournisseurId = $prestationAnnexeModal.data('fournisseur-id');
                 var fournisseurPrestationAnnexeId = $fournisseur_prestationAnnexes.data('id');
                 var $data = $('#form_prestation_annexe').serializeObject();
-//                console.log($data);
 
                 var path = '{{ path("fournisseur_enregistrer_fournisseur_prestation" ,{ "id": "_fournisseurId_","prestationAnnexeId": "_prestationAnnexeId_"}) }}';
 
@@ -1646,37 +1713,55 @@
         {% for prestationAnnexe in fournisseur.prestationAnnexes %}
         {% set index = prestationAnnexe.prestationAnnexe.id %}
 
-        var $collectionHolder{{ index }};
-        var $addTagLink{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
-        var $newLinkLi{{ index }} = $('<li></li>').append($addTagLink{{ index }});
-        $collectionHolder{{ index }} = $('ul.tarifs{{ index }}');
-        $collectionHolder{{ index }}.find('.li_tarif').each(function () {
+
+        var $collectionHolderperiodeParam_{{ index }};
+        var $addTagLinkperiodeParam_{{ index }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+        var $newLinkLiperiodeParam_{{ index }} = $('<li></li>').append($addTagLinkperiodeParam_{{ index }});
+        $collectionHolderperiodeParam_{{ index }} = $('ul.params{{ index }}');
+        $collectionHolderperiodeParam_{{ index }}.find('.li_param').each(function () {
             addTagFormDeleteLink($(this));
         });
-        $collectionHolder{{ index }}.append($newLinkLi{{ index }});
-        $collectionHolder{{ index }}.data('index', $collectionHolder{{ index }}.find('.li_tarif').length);
-        $addTagLink{{ index }}.on('click', function (e) {
+        $collectionHolderperiodeParam_{{ index }}.append($newLinkLiperiodeParam_{{ index }});
+        $collectionHolderperiodeParam_{{ index }}.data('index', $collectionHolderperiodeParam_{{ index }}.find('.li_param').length);
+        $addTagLinkperiodeParam_{{ index }}.on('click', function (e) {
             e.preventDefault();
-            addTagForm($collectionHolder{{ index }}, $newLinkLi{{ index }} , '__name__');
+            addTagForm($collectionHolderperiodeParam_{{ index }}, $newLinkLiperiodeParam_{{ index }} , '__name_param__');
         });
 
-        {% for key, tarif in prestationAnnexe.tarifs %}
-        {% set name = key %}
-        var $collectionHolderperiode_validite{{ name }}{{ index }};
-        var $addTagLinkperiode_validite{{ name }}{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
-        var $newLinkLiperiode_validite{{ name }}{{ index }} = $('<li></li>').append($addTagLinkperiode_validite{{ name }}{{ index }});
-        $collectionHolderperiode_validite{{ name }}{{ index }} = $('ul.periode_validites{{ name }}{{ index }}');
-        $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').each(function () {
+        {% for keyParam, param in prestationAnnexe.params %}
+
+
+        var $collectionHolder_{{ keyParam }}_{{ index }};
+        var $addTagLink_{{ keyParam }}_{{ index }} = $('<a href="#" class="add_tarif_link">Ajouter</a>');
+        var $newLinkLi_{{ keyParam }}_{{ index }} = $('<li></li>').append($addTagLink_{{ keyParam }}_{{ index }});
+        $collectionHolder_{{ keyParam }}_{{ index }} = $('ul.tarifs_{{ keyParam }}_{{ index }}');
+        $collectionHolder_{{ keyParam }}_{{ index }}.find('.li_tarif').each(function () {
             addTagFormDeleteLink($(this));
         });
-        $collectionHolderperiode_validite{{ name }}{{ index }}.append($newLinkLiperiode_validite{{ name }}{{ index }});
-        $collectionHolderperiode_validite{{ name }}{{ index }}.data('index', $collectionHolderperiode_validite{{ name }}{{ index }}.find('.li_periode_validite').length);
-        $addTagLinkperiode_validite{{ name }}{{ index }}.on('click', function (e) {
+        $collectionHolder_{{ keyParam }}_{{ index }}.append($newLinkLi_{{ keyParam }}_{{ index }});
+        $collectionHolder_{{ keyParam }}_{{ index }}.data('index', $collectionHolder_{{ keyParam }}_{{ index }}.find('.li_tarif').length);
+        $addTagLink_{{ keyParam }}_{{ index }}.on('click', function (e) {
             e.preventDefault();
-            addTagForm($collectionHolderperiode_validite{{ name }}{{ index }}, $newLinkLiperiode_validite{{ name }}{{ index }} , '__periode_validite_name__');
+            addTagForm($collectionHolder_{{ keyParam }}_{{ index }}, $newLinkLi_{{ keyParam }}_{{ index }} , '__name__');
+        });
+
+        {% for key, tarif in param.tarifs %}
+        {% set name = key %}
+        var $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }};
+        var $addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
+        var $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<li></li>').append($addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }});
+        $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('ul.periode_validites_{{ keyParam }}_{{ name }}_{{ index }}');
+        $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.find('.li_periode_validite').each(function () {
+            addTagFormDeleteLink($(this));
+        });
+        $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.append($newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }});
+        $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.data('index', $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.find('.li_periode_validite').length);
+        $addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.on('click', function (e) {
+            e.preventDefault();
+            addTagForm($collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}, $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} , '__periode_validite_name__');
         });
         {% endfor %}
-
+        {% endfor %}
         {% endfor %}
 
         function periodevaliditeDatetimePicker() {
@@ -1711,19 +1796,24 @@
         });
 
         function chargerAffectations(element) {
-            $element = $(element);
-            prestationAnnexeId = $element.data('prestation-annexe-id');
-            $radioVal = $element.find('input:checked').val();
+            var $element = $(element);
+            var fournisseurHebergementType = $('#fournisseur_types_9').is(':checked');
+            var prestationAnnexeId = $element.data('prestation-annexe-id');
+            var paramIndex = $element.data('param-index');
+            var $radioVal = $element.find('input:checked').val();
             var elementId = $element.attr('id');
             var fournisseurId = '{{ fournisseur.id }}';
             var path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation' ,{
                 'affectation': '_affectation_' ,
                 'prestationAnnexeId' : '_prestationAnnexeId_',
-                'prestationAnnexeId' : '_prestationAnnexeId_',
                 'fournisseurId': '_fournisseurId_' ,
+                'paramIndex' :  '_paramIndex_',
+                'fournisseurHebergementType' :  '_fournisseurHebergementType_'
             }) }}";
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_paramIndex_/g, paramIndex);
+            path = path.replace(/_fournisseurHebergementType_/g, fournisseurHebergementType);
             switch ($radioVal) {
                 case '1':
                     path = path.replace(/_affectation_/g, 'station');
@@ -1741,48 +1831,51 @@
                         method: 'GET'
                     }
             ).done(function (data) {
-                $('#div_affectation_' + elementId).html(data);
+                $('#div_affectation_' + paramIndex + '_' + elementId).html(data);
             });
         }
 
-        function chargerAffectationStationFournisseurs(prestationAnnexeId, siteId, stationId) {
+        function chargerAffectationStationFournisseurs(prestationAnnexeId, siteId, stationId, paramIndex) {
             var path;
-
             var templateStationId = '';
             var fournisseurId = '{{ fournisseur.id }}';
+            var fournisseurHebergementType = $('#fournisseur_types_9').is(':checked');
 
             path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_station_fournisseur' ,{
                 'prestationAnnexeId' : '_prestationAnnexeId_',
                 'siteId': '_siteId_' ,
                 'stationId': '_stationId_' ,
                 'fournisseurId': '_fournisseurId_' ,
+                'paramIndex': '_paramIndex_' ,
+                'fournisseurHebergementType': '_fournisseurHebergementType_' ,
             }) }}";
 
             path = path.replace(/_stationId_/g, stationId);
-
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_siteId_/g, siteId);
             path = path.replace(/_fournisseurId_/g, fournisseurId);
-            if ($('#collapse_station_' + prestationAnnexeId + "_" + siteId + "_" + stationId).is(':hidden')) {
+            path = path.replace(/_paramIndex_/g, paramIndex);
+            path = path.replace(/_fournisseurHebergementType_/g, fournisseurHebergementType);
+
+            if ($('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).is(':hidden')) {
                 $.ajax(path,
                         {
                             async: false,
                             method: 'GET'
                         }
                 ).done(function (data) {
-                    $('#collapse_station_' + prestationAnnexeId + "_" + siteId + "_" + stationId).html(data);
+                    $('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).html(data);
                 });
             }
         }
 
-        function chargerHebergements(prestationAnnexeId, siteId, fournisseurId, stationId) {
+        function chargerHebergements(prestationAnnexeId, siteId, fournisseurId, stationId, paramIndex) {
 //            $('#collapse_fournisseur_' + fournisseurId).collapse();
             var path;
-
             var templateStationId = '';
 
             var fournisseurCurrentId = '{{ fournisseur.id }}';
-            if (stationId !== undefined && stationId !== null) {
+            if (stationId !== undefined && stationId !== null && stationId != '') {
 
                 path = "{{ path('fournisseur_get_fournisseur_prestation_annexe_affectation_hebergement' ,{
                     'prestationAnnexeId' : '_prestationAnnexeId_',
@@ -1790,10 +1883,12 @@
                     'fournisseurId': '_fournisseurId_' ,
                     'stationId': '_stationId_' ,
                     'fournisseurCurrentId': '_fournisseurCurrentId_' ,
+                    'paramIndex': '_paramIndex_' ,
                 }) }}";
 
                 path = path.replace(/_stationId_/g, stationId);
                 path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
+
                 templateStationId = stationId + "_";
             }
             else {
@@ -1802,28 +1897,30 @@
                     'siteId': '_siteId_' ,
                     'fournisseurId': '_fournisseurId_',
                     'fournisseurCurrentId': '_fournisseurCurrentId_' ,
+                    'paramIndex': '_paramIndex_' ,
                 }) }}";
             }
             path = path.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
             path = path.replace(/_siteId_/g, siteId);
             path = path.replace(/_fournisseurId_/g, fournisseurId);
             path = path.replace(/_fournisseurCurrentId_/g, fournisseurCurrentId);
-            if ($('#collapse_fournisseur_' + prestationAnnexeId + "_" + siteId + "_" + templateStationId + '' + fournisseurId).is(':hidden')) {
+            path = path.replace(/_paramIndex_/g, paramIndex);
+            if ($('#collapse_fournisseur_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).is(':hidden')) {
                 $.ajax(path,
                         {
                             async: false,
                             method: 'GET'
                         }
                 ).done(function (data) {
-                    $('#list_hebergements_' + prestationAnnexeId + "_" + siteId + "_" + templateStationId + '' + fournisseurId).html(data);
+                    $('#list_hebergements_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).html(data);
                 });
             }
         }
 
     </script>
     <script type="text/javascript">
-        function manageSelectionPrestationAnnexeSite(prestationAnnexeId, siteId) {
-            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '[]"]');
+        function manageSelectionPrestationAnnexeSite(prestationAnnexeId, siteId, keyParam) {
+            var sitesCkbox = $('input[name="sites_' + prestationAnnexeId + '_' + keyParam + '[]"]');
             var sitesCked = [];
             $(sitesCkbox).each(function (index, e) {
                 if ($(this).is(':checked')) {
@@ -1834,29 +1931,28 @@
                 return false;
             }
 
-            $contenuOngletSite = $('#data_site_' + prestationAnnexeId + '_' + siteId);
+            $contenuOngletSite = $('#data_site_' + prestationAnnexeId + '_' + keyParam + '_' + siteId);
 
             $(sitesCkbox).each(function (index, e) {
                 $e = $(e);
                 if (!$(this).is(':checked')) {
-                    if ($('#onglet_data_site_' + prestationAnnexeId + '_' + $e.val()).hasClass('active')) {
-                        $("[id^='data_site_" + prestationAnnexeId + "_]").each(function (value, element) {
-
+                    if ($('#onglet_data_site_' + prestationAnnexeId + '_' + keyParam + '_' + $e.val()).hasClass('active')) {
+                        $("[id^='data_site_" + prestationAnnexeId + '_' + keyParam + "_]").each(function (value, element) {
                             if (!$(element).hasClass('active')) {
                                 $("#onglet_" + element.id + " a").tab('show');
                                 return false;
                             }
                         });
                     }
-                    $("#onglet_data_site_" + prestationAnnexeId + "_" + $(this).attr('data-site-id')).hide();
+                    $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + $(this).attr('data-site-id')).hide();
 
                 } else {
-                    $("#onglet_data_site_" + prestationAnnexeId + "_" + $(this).attr('data-site-id')).show();
+                    $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + $(this).attr('data-site-id')).show();
                 }
             });
 
-            var siteIdFirst = $('[id^="siteAEnregistrer_' + prestationAnnexeId + '_"]:checked').first().attr('data-site-id');
-            $("#onglet_data_site_" + prestationAnnexeId + "_" + siteIdFirst + " a").tab('show');
+            var siteIdFirst = $('[id^="siteAEnregistrer_' + prestationAnnexeId + '_' + keyParam + '_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + prestationAnnexeId + '_' + keyParam + "_" + siteIdFirst + " a").tab('show');
 
             return true;
         }
@@ -1879,6 +1975,7 @@
         }
     }
     displayInformationRM();
+    {# fin information RM #}
 
 
     {# condtion annulation #}
@@ -1898,6 +1995,5 @@
     {# fin condtion annulation #}
 
     </script>
-    {# fin information RM #}
 
 {% endblock %}

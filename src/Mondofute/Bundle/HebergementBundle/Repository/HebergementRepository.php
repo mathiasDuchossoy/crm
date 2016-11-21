@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class HebergementRepository extends EntityRepository
 {
-    public function findStationsWithHebergement($locale, $stationId = null , $siteId = null)
+    public function findStationsWithHebergement($locale, $stationId = null , $siteId = null , $fournisseurId = null)
     {
 //        , station.id stationId, traductions.libelle, hebergementUnifie.id hebergementUnifieId, fournisseurHebergements.id fournisseurHebergementsId, fournisseur
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -47,6 +47,13 @@ class HebergementRepository extends EntityRepository
             $qb
                 ->andWhere('hebergement.station = :stationId')
                 ->setParameter('stationId' , $stationId)
+            ;
+        }
+        if (!empty($fournisseurId))
+        {
+            $qb
+                ->andWhere('fournisseur.id = :fournisseurId')
+                ->setParameter('fournisseurId' , $fournisseurId)
             ;
         }
 

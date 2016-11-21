@@ -21,7 +21,7 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif:
             mappedBy: tarif
             cascade: ['persist','remove']
     manyToOne:
-        prestationAnnexe:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+        param:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
             inversedBy: tarifs
     lifecycleCallbacks: {  }

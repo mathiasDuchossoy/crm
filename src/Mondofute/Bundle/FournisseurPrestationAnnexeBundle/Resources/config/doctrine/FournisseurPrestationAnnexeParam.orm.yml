@@ -1,0 +1,63 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeParamRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        type:
+            type: integer
+            options:
+                unsigned: true
+        modeAffectation:
+            type: integer
+            options:
+                unsigned: true
+
+    oneToOne:
+        capacite:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
+            options:
+                nullable: true
+            cascade: ['persist','remove']
+        dureeSejour:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour
+            options:
+                nullable: true
+            cascade: ['persist','remove']
+    oneToMany:
+        tarifs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
+            mappedBy: param
+            cascade: ['persist','remove']
+        traductions:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParamTraduction
+            mappedBy: param
+            cascade: ['persist','remove']
+        prestationAnnexeFournisseurs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur
+            mappedBy: param
+            cascade: ['persist','remove']
+        prestationAnnexeStations:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation
+            mappedBy: param
+            cascade: ['persist','remove']
+        prestationAnnexeHebergements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement
+            mappedBy: param
+            cascade: ['persist','remove']
+        prestationAnnexeLogements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
+            mappedBy: param
+            cascade: ['persist','remove']
+    manyToOne:
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            inversedBy: params
+    lifecycleCallbacks: {  }

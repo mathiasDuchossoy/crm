@@ -11,7 +11,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByCriteria($prestationAnnexeId, $logementUnifieId)
+    /**
+     * @param $paramId
+     * @param $logementUnifieId
+     * @return mixed
+     */
+    public function findByCriteria($paramId, $logementUnifieId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -20,17 +25,21 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
             ->join('prestationAnnexeLogementUnifie.prestationAnnexeLogements', 'prestationAnnexeLogements')
             ->join('prestationAnnexeLogements.logement', 'logement')
             ->join('logement.logementUnifie', 'logementUnifie')
-            ->where('prestationAnnexeLogements.fournisseurPrestationAnnexe = :prestationAnnexeId')
-            ->setParameter('prestationAnnexeId' , $prestationAnnexeId)
+            ->where('prestationAnnexeLogements.param = :paramId')
+            ->setParameter('paramId' , $paramId)
             ->andWhere('logementUnifie.id = :logementUnifieId')
             ->setParameter('logementUnifieId' ,$logementUnifieId )
         ;
 
         $result = $qb->getQuery()->getOneOrNullResult();
-//        dump($result);
-//die;
+
         return $result;
     }
+
+    /**
+     * @param $logementUnifieId
+     * @return array
+     */
     public function findByLogementUnifieId($logementUnifieId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -45,8 +54,7 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
         ;
 
         $result = $qb->getQuery()->getResult();
-        dump($result);
-        die;
+
         return $result;
     }
 }
