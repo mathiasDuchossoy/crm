@@ -2,11 +2,6 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeF
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\PrestationAnnexeFournisseurRepository
-    associationOverride:
-        fournisseurPrestationAnnexe:
-#            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
-#            targetEntity: ~
-            inversedBy: prestationAnnexeFournisseurs
     manyToOne:
         prestationAnnexeFournisseurUnifie:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie
@@ -15,4 +10,7 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeF
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         station:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+        param:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+            inversedBy: prestationAnnexeFournisseurs
     lifecycleCallbacks: {  }

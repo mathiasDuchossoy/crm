@@ -17,10 +17,17 @@ class PrestationAnnexeTarif
      */
     private $prixPublic;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+     * @var \Doctrine\Common\Collections\Collection
      */
-    private $prestationAnnexe;
+    private $periodeValidites;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->periodeValidites = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -30,6 +37,14 @@ class PrestationAnnexeTarif
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -57,26 +72,36 @@ class PrestationAnnexeTarif
     }
 
     /**
-     * Get prestationAnnexe
+     * Add periodeValidite
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
-     */
-    public function getPrestationAnnexe()
-    {
-        return $this->prestationAnnexe;
-    }
-
-    /**
-     * Set prestationAnnexe
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
      *
      * @return PrestationAnnexeTarif
      */
-    public function setPrestationAnnexe(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe = null)
+    public function addPeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
     {
-        $this->prestationAnnexe = $prestationAnnexe;
+        $this->periodeValidites[] = $periodeValidite->setTarif($this);
 
         return $this;
+    }
+
+    /**
+     * Remove periodeValidite
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite
+     */
+    public function removePeriodeValidite(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite $periodeValidite)
+    {
+        $this->periodeValidites->removeElement($periodeValidite);
+    }
+
+    /**
+     * Get periodeValidites
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPeriodeValidites()
+    {
+        return $this->periodeValidites;
     }
 }

@@ -2,15 +2,16 @@ Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeH
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository\PrestationAnnexeHebergementRepository
-#    associationOverride:
-#        fournisseurPrestationAnnexe:
-#            inversedBy: prestationAnnexeHebergements
     manyToOne:
         prestationAnnexeHebergementUnifie:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie
             inversedBy: prestationAnnexeHebergements
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: prestationAnnexeHebergements
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        param:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+            inversedBy: prestationAnnexeHebergements
     lifecycleCallbacks: {  }
