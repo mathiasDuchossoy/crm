@@ -1,7 +1,8 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie;
+
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 
 /**
@@ -18,6 +19,10 @@ class PrestationAnnexeLogement extends FournisseurPrestationAffectation
      * @var Logement
      */
     private $logement;
+    /**
+     * @var FournisseurPrestationAnnexeParam
+     */
+    private $param;
 
     /**
      * Get prestationAnnexeLogementUnifie
@@ -63,6 +68,30 @@ class PrestationAnnexeLogement extends FournisseurPrestationAffectation
     public function setLogement(Logement $logement = null)
     {
         $this->logement = $logement;
+
+        return $this;
+    }
+
+    /**
+     * Get param
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function getParam()
+    {
+        return $this->param;
+    }
+
+    /**
+     * Set param
+     *
+     * @param FournisseurPrestationAnnexeParam $param
+     *
+     * @return PrestationAnnexeLogement
+     */
+    public function setParam(FournisseurPrestationAnnexeParam $param = null)
+    {
+        $this->param = $param;
 
         return $this;
     }

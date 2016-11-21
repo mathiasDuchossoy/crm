@@ -85,7 +85,7 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         return new Paginator($q);
     }
 
-    public function findFournisseurByContient($contient)
+    public function findFournisseurByContient($contient, $fournisseurId = null)
     {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -94,6 +94,14 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
             ->where("fournisseur.contient = :contient")
             ->setParameter('contient', $contient);
         $qb->orderBy('fournisseur.id', 'ASC');
+
+        if(!empty($fournisseurId))
+        {
+            $qb
+                ->andWhere('fournisseur.id = :fournisseurId')
+                ->setParameter('fournisseurId' , $fournisseurId)
+            ;
+        }
 
         $result = $qb->getQuery()->getResult();
 //        dump($result);die;

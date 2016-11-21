@@ -4,8 +4,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 
 /**
  * PrestationAnnexeTraduction
@@ -22,16 +21,16 @@ class PrestationAnnexe
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     * @var FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
 
     /**
-     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+     * @var SousFamillePrestationAnnexe
      */
     private $sousFamillePrestationAnnexe;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $fournisseurs;
 
@@ -41,6 +40,7 @@ class PrestationAnnexe
     public function __construct()
     {
         $this->traductions = new ArrayCollection();
+        $this->fournisseurs = new ArrayCollection();
     }
 
     /**
@@ -111,7 +111,7 @@ class PrestationAnnexe
     /**
      * Get famillePrestationAnnexe
      *
-     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     * @return FamillePrestationAnnexe
      */
     public function getFamillePrestationAnnexe()
     {
@@ -121,11 +121,11 @@ class PrestationAnnexe
     /**
      * Set famillePrestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe
+     * @param FamillePrestationAnnexe $famillePrestationAnnexe
      *
      * @return PrestationAnnexe
      */
-    public function setFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe = null)
+    public function setFamillePrestationAnnexe(FamillePrestationAnnexe $famillePrestationAnnexe = null)
     {
         $this->famillePrestationAnnexe = $famillePrestationAnnexe;
 
@@ -135,7 +135,7 @@ class PrestationAnnexe
     /**
      * Get sousFamillePrestationAnnexe
      *
-     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe
+     * @return SousFamillePrestationAnnexe
      */
     public function getSousFamillePrestationAnnexe()
     {
@@ -145,11 +145,11 @@ class PrestationAnnexe
     /**
      * Set sousFamillePrestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe
      *
      * @return PrestationAnnexe
      */
-    public function setSousFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe $sousFamillePrestationAnnexe = null)
+    public function setSousFamillePrestationAnnexe(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe = null)
     {
         $this->sousFamillePrestationAnnexe = $sousFamillePrestationAnnexe;
 
@@ -159,11 +159,11 @@ class PrestationAnnexe
     /**
      * Add fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     * @param FournisseurPrestationAnnexe $fournisseur
      *
      * @return PrestationAnnexe
      */
-    public function addFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    public function addFournisseur(FournisseurPrestationAnnexe $fournisseur)
     {
         $this->fournisseurs[] = $fournisseur;
 
@@ -173,9 +173,9 @@ class PrestationAnnexe
     /**
      * Remove fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur
+     * @param FournisseurPrestationAnnexe $fournisseur
      */
-    public function removeFournisseur(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseur)
+    public function removeFournisseur(FournisseurPrestationAnnexe $fournisseur)
     {
         $this->fournisseurs->removeElement($fournisseur);
     }
@@ -183,7 +183,7 @@ class PrestationAnnexe
     /**
      * Get fournisseurs
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFournisseurs()
     {

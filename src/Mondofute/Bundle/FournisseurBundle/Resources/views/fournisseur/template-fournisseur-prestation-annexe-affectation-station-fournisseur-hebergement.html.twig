@@ -1,6 +1,4 @@
 {% for hebergement in hebergements %}
-    {#{% if hebergement.stationUnifieId == fournisseurProduit.stationId %}#}
-    {#{{ dump(hebergement) }}#}
     {% set hebergementExists = false %}
     {% if prestationAnnexeHebergements is defined %}
         {% for prestationAnnexeHebergement in prestationAnnexeHebergements %}
@@ -20,10 +18,9 @@
                                 {% if hebergementExists == true %}
                                     checked="checked"
                                 {% endif %}
-                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
+                               name="prestation_annexe_affectation_hebergement[{{ prestationAnnexeId }}][{{ keyParam }}][{{ hebergement.fournisseurId }}][{{ hebergement.hebergementUnifieId }}][{{ siteId }}]"
                         >
                         {{ hebergement.nom }}
-                        {#{{ dump(hebergements) }}#}
                     </label>
                 </div>
             </div>

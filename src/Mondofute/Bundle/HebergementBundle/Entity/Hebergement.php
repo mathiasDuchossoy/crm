@@ -69,6 +69,53 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
+<<<<<<< HEAD
+||||||| merged common ancestors
+||||||| parent of 6810fd4... mise en place bdd, enitities et majlislancer
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 6810fd4... mise en place bdd, enitities et majlislancer
+<<<<<<< HEAD
+||||||| parent of 997839e... mise en place bdd, enitities et majlislancer
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+>>>>>>> création bundle, entités mis en place + sql et deploybundle,
+=======
+||||||| merged common ancestors
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> 6052063bef0bd7f02dbfbb13aca410cbd374ba31
+=======
+>>>>>>> création bundle, entités mis en place + sql et deploybundle,
+||||||| merged common ancestors
+=======
+    /**
+     * @var Collection
+     */
+    private $motClefs;
+>>>>>>> mise en place bdd, enitities et majlislancer
+>>>>>>> 997839e... mise en place bdd, enitities et majlislancer
+>>>>>>>>> Temporary merge branch 2
+=======
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeHebergements;
+>>>>>>> CRM-150
 
     /**
      * Constructor
@@ -447,11 +494,9 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        if(!empty($coupDeCoeur))
-        {
+        if (!empty($coupDeCoeur)) {
             $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
-        }
-        else{
+        } else {
             $this->coupDeCoeur = null;
         }
 
@@ -467,7 +512,6 @@ class Hebergement
      */
     public function addMotClef(MotClef $motClef)
     {
-//        $this->motClefs[] = $motClef;
         $this->motClefs[] = $motClef->addHebergement($this);
 
         return $this;
@@ -494,4 +538,77 @@ class Hebergement
         return $this->motClefs;
     }
 
+<<<<<<< HEAD
+||||||| merged common ancestors
+    /**
+     * Add motClef
+     *
+     * @param MotClef $motClef
+     *
+     * @return Hebergement
+     */
+    public function addMotClef(MotClef $motClef)
+    {
+        $this->motClefs[] = $motClef;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClef
+     *
+     * @param MotClef $motClef
+     */
+    public function removeMotClef(MotClef $motClef)
+    {
+        $this->motClefs->removeElement($motClef);
+    }
+
+    /**
+     * Get motClefs
+     *
+     * @return Collection
+     */
+    public function getMotClefs()
+    {
+        return $this->motClefs;
+    }
+>>>>>>> mise en place bdd, enitities et majlislancer
+>>>>>>> df53520... mise en place bdd, enitities et majlislancer
+>>>>>>>>> Temporary merge branch 2
+=======
+    /**
+     * Add prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     *
+     * @return Hebergement
+     */
+    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeHebergement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     */
+    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
+        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
+    }
+
+    /**
+     * Get prestationAnnexeHebergements
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeHebergements()
+    {
+        return $this->prestationAnnexeHebergements;
+    }
+>>>>>>> CRM-150
 }

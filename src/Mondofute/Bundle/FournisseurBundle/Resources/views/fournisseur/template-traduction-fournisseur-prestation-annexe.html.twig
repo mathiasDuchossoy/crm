@@ -8,7 +8,6 @@
                 {% endif %}
         ><a href="#onglet-{{ entity }}-{{ name }}-{{ langue.id }}" aria-controls="home" role="tab"
             data-toggle="tab">
-
                 {% for traductionLangue in  langue.traductions %}
                     {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
                         {{ traductionLangue.libelle }}

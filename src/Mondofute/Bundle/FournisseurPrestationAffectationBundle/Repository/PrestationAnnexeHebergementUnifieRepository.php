@@ -83,7 +83,7 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
 
             ->join('prestationAnnexeHebergements.fournisseur' , 'fournisseur')
 
-            ->join('prestationAnnexeHebergements.fournisseurPrestationAnnexe' , 'fournisseurPrestationAnnexe')
+            ->join('prestationAnnexeHebergements.param' , 'param')
 
             ->join('prestationAnnexeHebergements.hebergement' , 'hebergement')
             ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')

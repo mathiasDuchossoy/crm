@@ -55,4 +55,7 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\LogementPhoto
             mappedBy: logement
             cascade: ['persist' , 'remove']
+        prestationAnnexeLogements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
+            mappedBy: logement
     lifecycleCallbacks: {  }
