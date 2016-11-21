@@ -10,56 +10,6 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        type:
-            type: integer
-            options:
-                unsigned: true
-        modeAffectation:
-            type: integer
-            options:
-                unsigned: true
-
-    oneToOne:
-        capacite:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
-            options:
-                nullable: true
-            cascade: ['persist','remove']
-        dureeSejour:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour
-            options:
-                nullable: true
-            cascade: ['persist','remove']
-    oneToMany:
-        tarifs:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
-            mappedBy: prestationAnnexe
-            cascade: ['persist','remove']
-        traductions:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction
-            mappedBy: prestationAnnexe
-            cascade: ['persist','remove']
-        prestationAnnexeFournisseurs:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur
-            mappedBy: fournisseurPrestationAnnexe
-            cascade: ['persist','remove']
-        prestationAnnexeStations:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation
-            mappedBy: fournisseurPrestationAnnexe
-            cascade: ['persist','remove']
-        prestationAnnexeHebergements:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement
-            mappedBy: fournisseurPrestationAnnexe
-            cascade: ['persist','remove']
-        prestationAnnexeLogements:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
-            mappedBy: fournisseurPrestationAnnexe
-            cascade: ['persist','remove']
-        fournisseurPrestationAnnexeStocks:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock
-            mappedBy: fournisseurPrestationAnnexe
-            cascade: ['persist','remove']
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
@@ -67,4 +17,17 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
         prestationAnnexe:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe
             inversedBy: fournisseurs
+    oneToMany:
+        fournisseurPrestationAnnexeStocks:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist','remove']
+        traductions:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction
+            mappedBy: prestationAnnexe
+            cascade: ['persist','remove']
+        params:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

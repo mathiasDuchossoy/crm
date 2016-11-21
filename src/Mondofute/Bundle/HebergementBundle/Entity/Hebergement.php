@@ -69,6 +69,10 @@ class Hebergement
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeHebergements;
 
     /**
      * Constructor
@@ -80,7 +84,6 @@ class Hebergement
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
-        $this->prestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -448,11 +451,9 @@ class Hebergement
      */
     public function setCoupDeCoeur(HebergementCoupDeCoeur $coupDeCoeur = null)
     {
-        if(!empty($coupDeCoeur))
-        {
+        if (!empty($coupDeCoeur)) {
             $this->coupDeCoeur = $coupDeCoeur->setHebergement($this);
-        }
-        else{
+        } else {
             $this->coupDeCoeur = null;
         }
 
@@ -468,7 +469,6 @@ class Hebergement
      */
     public function addMotClef(MotClef $motClef)
     {
-//        $this->motClefs[] = $motClef;
         $this->motClefs[] = $motClef->addHebergement($this);
 
         return $this;
@@ -494,43 +494,38 @@ class Hebergement
     {
         return $this->motClefs;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $prestationAnnexes;
-
 
     /**
-     * Add prestationAnnex
+     * Add prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
      *
      * @return Hebergement
      */
-    public function addPrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex)
+    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
-        $this->prestationAnnexes[] = $prestationAnnex;
+        $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
 
         return $this;
     }
 
     /**
-     * Remove prestationAnnex
+     * Remove prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnex)
+    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
-        $this->prestationAnnexes->removeElement($prestationAnnex);
+        $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
     }
 
     /**
-     * Get prestationAnnexes
+     * Get prestationAnnexeHebergements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getPrestationAnnexes()
+    public function getPrestationAnnexeHebergements()
     {
-        return $this->prestationAnnexes;
+        return $this->prestationAnnexeHebergements;
     }
 }

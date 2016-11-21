@@ -5,8 +5,6 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
-use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
-use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
@@ -64,9 +62,13 @@ class Logement
      */
     private $actif = true;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $periodes;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeLogements;
 
     /**
      * Constructor
@@ -75,6 +77,8 @@ class Logement
     {
         $this->traductions = new ArrayCollection();
         $this->periodes = new ArrayCollection();
+        $this->photos = new ArrayCollection();
+        $this->prestationAnnexeLogements = new ArrayCollection();
     }
 
     /**
@@ -89,6 +93,8 @@ class Logement
 
     /**
      * @param int $id
+     *
+     * @return $this
      */
     public function setId($id)
     {
@@ -332,7 +338,8 @@ class Logement
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    ) {
+    )
+    {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
@@ -396,7 +403,6 @@ class Logement
         return $this;
     }
 
-
     /**
      * Add periode
      *
@@ -424,10 +430,44 @@ class Logement
     /**
      * Get periodes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPeriodes()
     {
         return $this->periodes;
+    }
+
+    /**
+     * Add prestationAnnexeLogement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     *
+     * @return Logement
+     */
+    public function addPrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements[] = $prestationAnnexeLogement;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeLogement
+     *
+     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     */
+    public function removePrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    {
+        $this->prestationAnnexeLogements->removeElement($prestationAnnexeLogement);
+    }
+
+    /**
+     * Get prestationAnnexeLogements
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeLogements()
+    {
+        return $this->prestationAnnexeLogements;
     }
 }
