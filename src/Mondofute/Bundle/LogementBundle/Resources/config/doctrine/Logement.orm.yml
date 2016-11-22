@@ -42,6 +42,9 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
         fournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
             inversedBy: logements
+        nombreDeChambre:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre
+            inversedBy: logements
     oneToMany:
         periodes:
             targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
