@@ -12,4 +12,10 @@ Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction:
         libelle:
             type: string
             length: 255
+    manyToOne:
+        nombreDeChambre:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre
+            inversedBy: traductions
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
     lifecycleCallbacks: {  }

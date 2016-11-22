@@ -5,3 +5,7 @@ mondofute_logement_logement:
 mondofute_logement_homepage:
     path:     /
     defaults: { _controller: MondofuteLogementBundle:Default:index }
+
+mondofute_logement_nombredechambre:
+    resource: "@MondofuteLogementBundle/Resources/config/routing/nombredechambre.yml"
+    prefix:   /nombredechambre

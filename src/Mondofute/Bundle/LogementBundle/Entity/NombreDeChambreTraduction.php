@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\LogementBundle\Entity;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
  * NombreDeChambreTraduction
@@ -16,7 +17,14 @@ class NombreDeChambreTraduction
      * @var string
      */
     private $libelle;
-
+    /**
+     * @var NombreDeChambre
+     */
+    private $nombreDeChambre;
+    /**
+     * @var Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -51,5 +59,52 @@ class NombreDeChambreTraduction
 
         return $this;
     }
-}
 
+    /**
+     * Get nombreDeChambre
+     *
+     * @return NombreDeChambre
+     */
+    public function getNombreDeChambre()
+    {
+        return $this->nombreDeChambre;
+    }
+
+    /**
+     * Set nombreDeChambre
+     *
+     * @param NombreDeChambre $nombreDeChambre
+     *
+     * @return NombreDeChambreTraduction
+     */
+    public function setNombreDeChambre(NombreDeChambre $nombreDeChambre = null)
+    {
+        $this->nombreDeChambre = $nombreDeChambre;
+
+        return $this;
+    }
+
+    /**
+     * Get langue
+     *
+     * @return Langue
+     */
+    public function getLangue()
+    {
+        return $this->langue;
+    }
+
+    /**
+     * Set langue
+     *
+     * @param Langue $langue
+     *
+     * @return NombreDeChambreTraduction
+     */
+    public function setLangue(Langue $langue = null)
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+}

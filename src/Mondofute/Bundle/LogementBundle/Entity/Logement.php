@@ -69,6 +69,10 @@ class Logement
      * @var Collection
      */
     private $prestationAnnexeLogements;
+    /**
+     * @var NombreDeChambre
+     */
+    private $nombreDeChambre;
 
     /**
      * Constructor
@@ -469,5 +473,29 @@ class Logement
     public function getPrestationAnnexeLogements()
     {
         return $this->prestationAnnexeLogements;
+    }
+
+    /**
+     * Get nombreDeChambre
+     *
+     * @return NombreDeChambre
+     */
+    public function getNombreDeChambre()
+    {
+        return $this->nombreDeChambre;
+    }
+
+    /**
+     * Set nombreDeChambre
+     *
+     * @param NombreDeChambre $nombreDeChambre
+     *
+     * @return Logement
+     */
+    public function setNombreDeChambre(NombreDeChambre $nombreDeChambre = null)
+    {
+        $this->nombreDeChambre = $nombreDeChambre;
+
+        return $this;
     }
 }
