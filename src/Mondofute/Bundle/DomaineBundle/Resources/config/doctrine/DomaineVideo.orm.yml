@@ -21,7 +21,7 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo:
             inversedBy: videos
         video:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineVideoTraduction
