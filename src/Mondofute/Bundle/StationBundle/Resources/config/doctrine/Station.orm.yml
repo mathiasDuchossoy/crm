@@ -38,7 +38,6 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stationCarteIdentite:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite
             inversedBy: stations
-#            cascade:  ['detach']
         stationCommentVenir:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationCommentVenir
             inversedBy: stations
@@ -58,9 +57,6 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         stations:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
             mappedBy: stationMere
-        stations:
-            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
-            mappedBy: station
         visuels:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\StationVisuel
             mappedBy: station

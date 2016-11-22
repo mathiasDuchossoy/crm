@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\StationBundle\Controller;
 
 use ArrayIterator;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
@@ -562,19 +561,6 @@ class StationCarteIdentiteUnifieController extends Controller
         $delete = true;
         $em = $this->getDoctrine()->getEntityManager();
 
-//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)
-//        {
-//            foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-//                $stationCarteIdentite->removeMoyenCom($moyenCom);
-//                $em->remove($moyenCom);
-//
-//            }
-//        }
-
-//        if ($delete) {
-//            $em->remove($stationCarteIdentiteUnifie);
-//        }
-
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
         foreach ($sitesDistants as $siteDistant) {
@@ -584,15 +570,6 @@ class StationCarteIdentiteUnifieController extends Controller
             $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
             if (!empty($stationCarteIdentiteUnifieSite)) {
                 foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
-//                    if (count($stationCarteIdentiteSite->getStations()) == 0)
-//                    {
-//                        dump(count($stationCarteIdentiteSite->getStations()));
-//                        foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
-//                            $stationCarteIdentiteSite->removeMoyenCom($moyenCom);
-//                            $emSite->remove($moyenCom);
-//                            $emSite->flush();
-//                        }
-//                        $em->remove($stationCarteIdentite->getAltitudeVillage());
 
                     if ($stationCarteIdentiteSite->getStations()->count() <= 1 ){
                         $emSite->remove($stationCarteIdentiteSite);
@@ -604,32 +581,15 @@ class StationCarteIdentiteUnifieController extends Controller
                 }
             }
         }
-//        $em = $this->getDoctrine()->getManager();
         foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
-//            if (count($stationCarteIdentite->getStations()) == 0 && $delete) {
-//                dump(count($stationCarteIdentite->getStations()));
-//                foreach ($stationCarteIdentite->getMoyenComs() as $moyenCom) {
-//                    $stationCarteIdentite->removeMoyenCom($moyenCom);
-//                    $em->remove($moyenCom);
-////                    $em->flush();
-//                }
-                if ($stationCarteIdentite->getStations()->count() <= 1 ){
-                    $em->remove($stationCarteIdentite);
-                } else {
-                    $delete = false;
-                }
+            if ($stationCarteIdentite->getStations()->count() <= 1) {
+                $em->remove($stationCarteIdentite);
+            } else {
+                $delete = false;
+            }
         }
-//        $em->clear($stationCarteIdentiteUnifie->getStationCarteIdentites());
-//        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite)
-//        {
-//            foreach ($stationCarteIdentite->getStations() as $station)
-//            {
-//                $stationCarteIdentite->removeStation($station);
-//            }
-//        }
         if ($delete) {
             $em->remove($stationCarteIdentiteUnifie);
-//            $em->flush();
         }
     }
 
