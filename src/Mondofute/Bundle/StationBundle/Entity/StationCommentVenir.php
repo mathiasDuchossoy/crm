@@ -1,7 +1,10 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
  * StationCommentVenir
@@ -14,26 +17,26 @@ class StationCommentVenir
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
 
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
 
     /**
-     * @var \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie
+     * @var StationCommentVenirUnifie
      */
     private $stationCommentVenirUnifie;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $grandeVilles;
 
@@ -42,8 +45,8 @@ class StationCommentVenir
      */
     public function __construct()
     {
-        $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stations = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -59,11 +62,11 @@ class StationCommentVenir
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return StationCommentVenir
      */
-    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station;
 
@@ -73,9 +76,9 @@ class StationCommentVenir
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -83,7 +86,7 @@ class StationCommentVenir
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -93,9 +96,9 @@ class StationCommentVenir
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction
+     * @param StationCommentVenirTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction)
+    public function removeTraduction(StationCommentVenirTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -103,7 +106,7 @@ class StationCommentVenir
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -113,11 +116,11 @@ class StationCommentVenir
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return StationCommentVenir
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -127,7 +130,7 @@ class StationCommentVenir
     /**
      * Get stationCommentVenirUnifie
      *
-     * @return \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie
+     * @return StationCommentVenirUnifie
      */
     public function getStationCommentVenirUnifie()
     {
@@ -137,11 +140,11 @@ class StationCommentVenir
     /**
      * Set stationCommentVenirUnifie
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie $stationCommentVenirUnifie
+     * @param StationCommentVenirUnifie $stationCommentVenirUnifie
      *
      * @return StationCommentVenir
      */
-    public function setStationCommentVenirUnifie(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie $stationCommentVenirUnifie = null)
+    public function setStationCommentVenirUnifie(StationCommentVenirUnifie $stationCommentVenirUnifie = null)
     {
         $this->stationCommentVenirUnifie = $stationCommentVenirUnifie;
 
@@ -166,7 +169,7 @@ class StationCommentVenir
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -190,11 +193,11 @@ class StationCommentVenir
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction
+     * @param StationCommentVenirTraduction $traduction
      *
      * @return StationCommentVenir
      */
-    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction $traduction)
+    public function addTraduction(StationCommentVenirTraduction $traduction)
     {
         $this->traductions[] = $traduction->setStationCommentVenir($this);
 
@@ -204,11 +207,11 @@ class StationCommentVenir
     /**
      * Add grandeVille
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     * @param StationCommentVenirGrandeVille $grandeVille
      *
      * @return StationCommentVenir
      */
-    public function addGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    public function addGrandeVille(StationCommentVenirGrandeVille $grandeVille)
     {
         $this->grandeVilles[] = $grandeVille->setStationCommentVenir($this);
 
@@ -218,9 +221,9 @@ class StationCommentVenir
     /**
      * Remove grandeVille
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille
+     * @param StationCommentVenirGrandeVille $grandeVille
      */
-    public function removeGrandeVille(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille $grandeVille)
+    public function removeGrandeVille(StationCommentVenirGrandeVille $grandeVille)
     {
         $this->grandeVilles->removeElement($grandeVille);
     }
@@ -228,7 +231,7 @@ class StationCommentVenir
     /**
      * Get grandeVilles
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getGrandeVilles()
     {
