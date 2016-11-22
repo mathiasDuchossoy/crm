@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Controller;
 
+use Application\Sonata\MediaBundle\Entity\Media;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -547,6 +548,7 @@ class DomaineUnifieController extends Controller
      */
     public function copieVersSites(DomaineUnifie $entity, $originalDomaineImages = null, $originalDomainePhotos = null)
     {
+        /** @var EntityManager $emSite */
         /** @var Domaine $domaine */
         /** @var DomaineTraduction $domaineTraduc */
 //        Boucle sur les domaines afin de savoir sur quel site nous devons l'enregistrer
@@ -1016,6 +1018,7 @@ class DomaineUnifieController extends Controller
 
     private function deleteFile($visuel)
     {
+        /** @var Media $visuel */
         if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
             unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
         }
@@ -1070,7 +1073,7 @@ class DomaineUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('domaine_domaine_delete', array('id' => $domaineUnifie->getId())))
-            ->add('delete', SubmitType::class)
+            ->add('delete', SubmitType::class, ['label' => 'Supprimer'])
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -1828,12 +1831,23 @@ class DomaineUnifieController extends Controller
      */
     public function deleteAction(Request $request, DomaineUnifie $domaineUnifie)
     {
+        /** @var Domaine $domaine */
         $form = $this->createDeleteForm($domaineUnifie);
         $form->handleRequest($request);
         $domaineCarteIdentiteUnifieController = new DomaineCarteIdentiteUnifieController();
         $domaineCarteIdentiteUnifieController->setContainer($this->container);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $stationEmpty = true;
+        foreach ($domaineUnifie->getDomaines() as $domaine) {
+            if (!$domaine->getStations()->isEmpty()) {
+                if ($stationEmpty) {
+                    $this->addFlash('error', 'Impossible de supprimer le domaine, il est utilisé par une ou plusieurs stations.');
+                    $stationEmpty = false;
+                }
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid() && $stationEmpty) {
             try {
 
                 $em = $this->getDoctrine()->getManager();
@@ -1848,36 +1862,18 @@ class DomaineUnifieController extends Controller
                     if (!empty($domaineUnifieSite)) {
                         $emSite->remove($domaineUnifieSite);
 
-                        $domaineSite = $domaineUnifieSite->getDomaines()->first();
+                        if (!$domaineUnifieSite->getDomaines()->isEmpty()) {
+                            $domaineSite = $domaineUnifieSite->getDomaines()->first();
 
-                        // si il y a des images pour l'entité, les supprimer
-                        if (!empty($domaineSite->getImages())) {
-                            /** @var DomaineImage $domaineImageSite */
-                            foreach ($domaineSite->getImages() as $domaineImageSite) {
-                                $imageSite = $domaineImageSite->getImage();
-                                $domaineImageSite->setImage(null);
-                                if (!empty($imageSite)) {
-                                    $emSite->remove($imageSite);
+                            // si il y a des videos pour l'entité, les supprimer
+                            if (!empty($domaineSite->getVideos())) {
+                                /** @var DomaineVideo $domaineVideoSite */
+                                foreach ($domaineSite->getVideos() as $domaineVideoSite) {
+                                    if (!empty($domaineVideoSite->getVideo())) {
+                                        $emSite->remove($domaineVideoSite->getVideo());
+                                        $this->deleteFile($domaineVideoSite->getVideo());
+                                    }
                                 }
-                            }
-                        }
-                        // si il y a des photos pour l'entité, les supprimer
-                        if (!empty($domaineSite->getPhotos())) {
-                            /** @var DomainePhoto $domainePhotoSite */
-                            foreach ($domaineSite->getPhotos() as $domainePhotoSite) {
-                                $photoSite = $domainePhotoSite->getPhoto();
-                                $domainePhotoSite->setPhoto(null);
-                                if (!empty($photoSite)) {
-                                    $emSite->remove($photoSite);
-                                }
-                            }
-                        }
-                        // si il y a des videos pour l'entité, les supprimer
-                        if (!empty($domaineSite->getVideos())) {
-                            /** @var DomaineVideo $domaineVideoSite */
-                            foreach ($domaineSite->getVideos() as $domaineVideoSite) {
-                                $emSite->remove($domaineVideoSite);
-                                $emSite->remove($domaineVideoSite->getVideo());
                             }
                         }
 
@@ -1888,7 +1884,7 @@ class DomaineUnifieController extends Controller
                 $arrayDomaineCarteIdentiteUnifies = new ArrayCollection();
                 /** @var Domaine $domaine */
                 foreach ($domaineUnifie->getDomaines() as $domaine) {
-                    if (empty($domaine->getDomaineParent()) || (!empty($domaine->getDomaineParent()) && $domaine->getDomaineCarteIdentite() != $domaine->getDomaineParent()->getDomaineCarteIdentite())) {
+                    if (!empty($domaine->getDomaineCarteIdentite()) && (empty($domaine->getDomaineParent()) || (!empty($domaine->getDomaineParent()) && $domaine->getDomaineCarteIdentite() != $domaine->getDomaineParent()->getDomaineCarteIdentite()))) {
                         $arrayDomaineCarteIdentiteUnifies->add($domaine->getDomaineCarteIdentite()->getDomaineCarteIdentiteUnifie());
                     }
 
@@ -1929,7 +1925,7 @@ class DomaineUnifieController extends Controller
 
                 $em->flush();
             } catch (ForeignKeyConstraintViolationException $except) {
-                dump($except);
+//                dump($except);
                 switch ($except->getCode()) {
                     case 0:
                         $this->addFlash('error',
