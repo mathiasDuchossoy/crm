@@ -21,7 +21,7 @@ Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueVideo:
             inversedBy: videos
         video:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
-            cascade: ['persist']
+            cascade: ['persist', 'remove']
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueVideoTraduction
