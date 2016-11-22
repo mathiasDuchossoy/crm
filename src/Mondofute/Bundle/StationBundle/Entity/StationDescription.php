@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\StationBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+
 /**
  * StationDescription
  */
@@ -13,22 +17,22 @@ class StationDescription
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
 
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
 
     /**
-     * @var \Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie
+     * @var StationDescriptionUnifie
      */
     private $stationDescriptionUnifie;
 
@@ -37,8 +41,8 @@ class StationDescription
      */
     public function __construct()
     {
-        $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stations = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -54,11 +58,11 @@ class StationDescription
     /**
      * Add station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      *
      * @return StationDescription
      */
-    public function addStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function addStation(Station $station)
     {
         $this->stations[] = $station;
 
@@ -68,9 +72,9 @@ class StationDescription
     /**
      * Remove station
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\Station $station
+     * @param Station $station
      */
-    public function removeStation(\Mondofute\Bundle\StationBundle\Entity\Station $station)
+    public function removeStation(Station $station)
     {
         $this->stations->removeElement($station);
     }
@@ -78,7 +82,7 @@ class StationDescription
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -88,9 +92,9 @@ class StationDescription
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction
+     * @param StationDescriptionTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction)
+    public function removeTraduction(StationDescriptionTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -98,7 +102,7 @@ class StationDescription
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -122,11 +126,11 @@ class StationDescription
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction
+     * @param StationDescriptionTraduction $traduction
      *
      * @return StationDescription
      */
-    public function addTraduction(\Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction $traduction)
+    public function addTraduction(StationDescriptionTraduction $traduction)
     {
         $this->traductions[] = $traduction->setStationDescription($this);
 
@@ -136,7 +140,7 @@ class StationDescription
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -146,11 +150,11 @@ class StationDescription
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return StationDescription
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -160,7 +164,7 @@ class StationDescription
     /**
      * Get stationDescriptionUnifie
      *
-     * @return \Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie
+     * @return StationDescriptionUnifie
      */
     public function getStationDescriptionUnifie()
     {
@@ -170,11 +174,11 @@ class StationDescription
     /**
      * Set stationDescriptionUnifie
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie $stationDescriptionUnifie
+     * @param StationDescriptionUnifie $stationDescriptionUnifie
      *
      * @return StationDescription
      */
-    public function setStationDescriptionUnifie(\Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie $stationDescriptionUnifie = null)
+    public function setStationDescriptionUnifie(StationDescriptionUnifie $stationDescriptionUnifie = null)
     {
         $this->stationDescriptionUnifie = $stationDescriptionUnifie;
 
