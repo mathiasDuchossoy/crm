@@ -85,6 +85,7 @@ class Domaine
     {
         $this->traductions = new ArrayCollection();
         $this->sousDomaines = new ArrayCollection();
+        $this->stations = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->photos = new ArrayCollection();
         $this->videos = new ArrayCollection();
