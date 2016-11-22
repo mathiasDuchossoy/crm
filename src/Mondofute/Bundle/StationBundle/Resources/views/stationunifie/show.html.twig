@@ -43,23 +43,26 @@
         <tr class="row">
             <th class="col-sm-1">Distances</th>
             <td>
-                <lu>
+                <ul>
                     {% for station in stationUnifie.stations %}
                         {% if station.site.crm == 1 %}
                             {% for grandeVille in station.stationCommentVenir.grandeVilles %}
                                 {% for traduction in grandeVille.traductions %}
                                     {% if traduction.langue.code == app.request.locale %}
                                         <li>
-                                            {{ traduction.libelle }}&nbsp;=>&nbsp;
-                                            {{ distances[grandeVille.id][0].elements[0].distance.text }}&nbsp;-&nbsp;
-                                            {{ distances[grandeVille.id][0].elements[0].duration.text }}
+                                            {{ traduction.libelle }}
+                                            {% if distances[grandeVille.id][0].elements[0].distance is defined %}
+                                                &nbsp;=>&nbsp;
+                                                {{ distances[grandeVille.id][0].elements[0].distance.text }}&nbsp;-&nbsp;
+                                                {{ distances[grandeVille.id][0].elements[0].duration.text }}
+                                            {% endif %}
                                         </li>
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
-                </lu>
+                </ul>
             </td>
         </tr>
         </tbody>
