@@ -494,10 +494,6 @@ class Hebergement
     {
         return $this->motClefs;
     }
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-=======
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -537,5 +533,4 @@ class Hebergement
     {
         return $this->prestationAnnexes;
     }
->>>>>>> gestion stock prestations annexes
 }
