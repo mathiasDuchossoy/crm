@@ -10,4 +10,12 @@ Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre:
                 strategy: AUTO
             options:
                 unsigned: true
+    oneToMany:
+        logements:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            mappedBy: nombreDeChambre
+        traductions:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction
+            mappedBy: nombreDeChambre
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
