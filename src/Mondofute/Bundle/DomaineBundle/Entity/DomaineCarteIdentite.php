@@ -69,14 +69,6 @@ class DomaineCarteIdentite
      * @var KmPistesNordique
      */
     private $kmPistesSkiNordique;
-    /**
-     * @var Collection
-     */
-    private $images;
-    /**
-     * @var Collection
-     */
-    private $photos;
 
     /**
      * Constructor
@@ -86,8 +78,6 @@ class DomaineCarteIdentite
         $this->traductions = new ArrayCollection();
         $this->domaines = new ArrayCollection();
         $this->pistes = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->photos = new ArrayCollection();
     }
 
     /**
@@ -492,71 +482,4 @@ class DomaineCarteIdentite
         return $this;
     }
 
-    /**
-     * Add image
-     *
-     * @param DomaineCarteIdentiteImage $image
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function addImage(DomaineCarteIdentiteImage $image)
-    {
-        $this->images[] = $image->setDomaineCarteIdentite($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove image
-     *
-     * @param DomaineCarteIdentiteImage $image
-     */
-    public function removeImage(DomaineCarteIdentiteImage $image)
-    {
-        $this->images->removeElement($image);
-    }
-
-    /**
-     * Get images
-     *
-     * @return Collection
-     */
-    public function getImages()
-    {
-        return $this->images;
-    }
-
-    /**
-     * Add photo
-     *
-     * @param DomaineCarteIdentitePhoto $photo
-     *
-     * @return DomaineCarteIdentite
-     */
-    public function addPhoto(DomaineCarteIdentitePhoto $photo)
-    {
-        $this->photos[] = $photo->setDomaineCarteIdentite($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove photo
-     *
-     * @param DomaineCarteIdentitePhoto $photo
-     */
-    public function removePhoto(DomaineCarteIdentitePhoto $photo)
-    {
-        $this->photos->removeElement($photo);
-    }
-
-    /**
-     * Get photos
-     *
-     * @return Collection
-     */
-    public function getPhotos()
-    {
-        return $this->photos;
-    }
 }

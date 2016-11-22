@@ -47,20 +47,6 @@ class DomaineCarteIdentiteType extends AbstractType
             ))
             ->add('pistes', CollectionType::class, array(
                 'entry_type' => PisteType::class
-            ))
-            ->add('images', CollectionType::class, array(
-                'entry_type' => DomaineCarteIdentiteImageType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-//                'required' => false,
-            ))
-            ->add('photos', CollectionType::class, array(
-                'entry_type' => DomaineCarteIdentitePhotoType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-//                'required' => true,
             ));
     }
 
