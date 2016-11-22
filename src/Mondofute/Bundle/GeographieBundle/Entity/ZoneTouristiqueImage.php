@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Application\Sonata\MediaBundle\Entity\Media;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * ZoneTouristiqueImage
  */
@@ -16,15 +20,15 @@ class ZoneTouristiqueImage
      */
     private $actif = false;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     * @var ZoneTouristique
      */
     private $zoneTouristique;
     /**
-     * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @var Media
      */
     private $image;
 
@@ -33,7 +37,7 @@ class ZoneTouristiqueImage
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -73,11 +77,11 @@ class ZoneTouristiqueImage
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImageTraduction $traduction
+     * @param ZoneTouristiqueImageTraduction $traduction
      *
      * @return ZoneTouristiqueImage
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImageTraduction $traduction)
+    public function addTraduction(ZoneTouristiqueImageTraduction $traduction)
     {
         $this->traductions[] = $traduction->setImage($this);
 
@@ -87,9 +91,9 @@ class ZoneTouristiqueImage
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImageTraduction $traduction
+     * @param ZoneTouristiqueImageTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiqueImageTraduction $traduction)
+    public function removeTraduction(ZoneTouristiqueImageTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -97,7 +101,7 @@ class ZoneTouristiqueImage
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -107,7 +111,7 @@ class ZoneTouristiqueImage
     /**
      * Get zoneTouristique
      *
-     * @return \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique
+     * @return ZoneTouristique
      */
     public function getZoneTouristique()
     {
@@ -117,11 +121,11 @@ class ZoneTouristiqueImage
     /**
      * Set zoneTouristique
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique
+     * @param ZoneTouristique $zoneTouristique
      *
      * @return ZoneTouristiqueImage
      */
-    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
+    public function setZoneTouristique(ZoneTouristique $zoneTouristique = null)
     {
         $this->zoneTouristique = $zoneTouristique;
 
@@ -131,7 +135,7 @@ class ZoneTouristiqueImage
     /**
      * Get image
      *
-     * @return \Application\Sonata\MediaBundle\Entity\Media
+     * @return Media
      */
     public function getImage()
     {
@@ -141,11 +145,11 @@ class ZoneTouristiqueImage
     /**
      * Set image
      *
-     * @param \Application\Sonata\MediaBundle\Entity\Media $image
+     * @param Media $image
      *
      * @return ZoneTouristiqueImage
      */
-    public function setImage(\Application\Sonata\MediaBundle\Entity\Media $image = null)
+    public function setImage(Media $image = null)
     {
         $this->image = $image;
 
