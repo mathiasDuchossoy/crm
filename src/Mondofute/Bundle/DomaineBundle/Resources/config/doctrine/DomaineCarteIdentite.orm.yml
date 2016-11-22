@@ -30,14 +30,6 @@ Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Piste
             mappedBy: domaineCarteIdentite
             cascade:  ['persist' , 'remove']
-        images:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImage
-            mappedBy: domaineCarteIdentite
-            cascade: ['persist' , 'remove']
-        photos:
-            targetEntity: Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentitePhoto
-            mappedBy: domaineCarteIdentite
-            cascade: ['persist' , 'remove']
     oneToOne:
         handiski:
             targetEntity: Mondofute\Bundle\DomaineBundle\Entity\Handiski
