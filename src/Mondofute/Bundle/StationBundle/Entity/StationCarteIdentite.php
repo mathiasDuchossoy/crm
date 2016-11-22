@@ -2,7 +2,11 @@
 
 namespace Mondofute\Bundle\StationBundle\Entity;
 
-use Nucleus\ContactBundle\Entity\Moral;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\UniteBundle\Entity\Distance;
+use Nucleus\MoyenComBundle\Entity\Adresse;
 
 /**
  * StationCarteIdentite
@@ -13,11 +17,6 @@ class StationCarteIdentite
      * @var integer
      */
     private $id;
-
-//    /**
-//     * @var integer
-//     */
-//    private $codePostal;
 
     /**
      * @var string
@@ -40,26 +39,26 @@ class StationCarteIdentite
     private $jourFermeture;
 
     /**
-     * @var \Mondofute\Bundle\UniteBundle\Entity\Distance
+     * @var Distance
      */
     private $altitudeVillage;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $stations;
 
     /**
-     * @var \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @var Site
      */
     private $site;
 
     /**
-     * @var \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie
+     * @var StationCarteIdentiteUnifie
      */
     private $stationCarteIdentiteUnifie;
     /**
-     * @var \Nucleus\MoyenComBundle\Entity\Adresse
+     * @var Adresse
      */
     private $adresse;
 
@@ -68,32 +67,8 @@ class StationCarteIdentite
      */
     public function __construct()
     {
-        $this->stations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->stations = new ArrayCollection();
     }
-
-//    /**
-//     * Get codePostal
-//     *
-//     * @return integer
-//     */
-//    public function getCodePostal()
-//    {
-//        return $this->codePostal;
-//    }
-//
-//    /**
-//     * Set codePostal
-//     *
-//     * @param integer $codePostal
-//     *
-//     * @return StationCarteIdentite
-//     */
-//    public function setCodePostal($codePostal)
-//    {
-//        $this->codePostal = $codePostal;
-//
-//        return $this;
-//    }
 
     /**
      * Get id
@@ -204,7 +179,7 @@ class StationCarteIdentite
     /**
      * Get altitudeVillage
      *
-     * @return \Mondofute\Bundle\UniteBundle\Entity\Distance
+     * @return Distance
      */
     public function getAltitudeVillage()
     {
@@ -214,11 +189,11 @@ class StationCarteIdentite
     /**
      * Set altitudeVillage
      *
-     * @param \Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeVillage
+     * @param Distance $altitudeVillage
      *
      * @return StationCarteIdentite
      */
-    public function setAltitudeVillage(\Mondofute\Bundle\UniteBundle\Entity\Distance $altitudeVillage = null)
+    public function setAltitudeVillage(Distance $altitudeVillage = null)
     {
         $this->altitudeVillage = $altitudeVillage;
 
@@ -252,7 +227,7 @@ class StationCarteIdentite
     /**
      * Get stations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getStations()
     {
@@ -262,7 +237,7 @@ class StationCarteIdentite
     /**
      * Get site
      *
-     * @return \Mondofute\Bundle\SiteBundle\Entity\Site
+     * @return Site
      */
     public function getSite()
     {
@@ -272,11 +247,11 @@ class StationCarteIdentite
     /**
      * Set site
      *
-     * @param \Mondofute\Bundle\SiteBundle\Entity\Site $site
+     * @param Site $site
      *
      * @return StationCarteIdentite
      */
-    public function setSite(\Mondofute\Bundle\SiteBundle\Entity\Site $site = null)
+    public function setSite(Site $site = null)
     {
         $this->site = $site;
 
@@ -286,7 +261,7 @@ class StationCarteIdentite
     /**
      * Get stationCarteIdentiteUnifie
      *
-     * @return \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie
+     * @return StationCarteIdentiteUnifie
      */
     public function getStationCarteIdentiteUnifie()
     {
@@ -296,11 +271,11 @@ class StationCarteIdentite
     /**
      * Set stationCarteIdentiteUnifie
      *
-     * @param \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie $stationCarteIdentiteUnifie
+     * @param StationCarteIdentiteUnifie $stationCarteIdentiteUnifie
      *
      * @return StationCarteIdentite
      */
-    public function setStationCarteIdentiteUnifie(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie $stationCarteIdentiteUnifie = null)
+    public function setStationCarteIdentiteUnifie(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie = null)
     {
         $this->stationCarteIdentiteUnifie = $stationCarteIdentiteUnifie;
 
@@ -310,7 +285,7 @@ class StationCarteIdentite
     /**
      * Get adresse
      *
-     * @return \Nucleus\MoyenComBundle\Entity\Adresse
+     * @return Adresse
      */
     public function getAdresse()
     {
@@ -320,11 +295,11 @@ class StationCarteIdentite
     /**
      * Set adresse
      *
-     * @param \Nucleus\MoyenComBundle\Entity\Adresse $adresse
+     * @param Adresse $adresse
      *
      * @return StationCarteIdentite
      */
-    public function setAdresse(\Nucleus\MoyenComBundle\Entity\Adresse $adresse = null)
+    public function setAdresse(Adresse $adresse = null)
     {
         $this->adresse = $adresse;
 
