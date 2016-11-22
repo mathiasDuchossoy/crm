@@ -10,6 +10,7 @@ Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre:
                 strategy: AUTO
             options:
                 unsigned: true
+<<<<<<< HEAD
     fields:
         classement:
             type: integer
@@ -23,4 +24,15 @@ Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction
             mappedBy: nombreDeChambre
             cascade: ['persist','remove']
+||||||| parent of 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
+=======
+    oneToMany:
+        logements:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            mappedBy: nombreDeChambre
+        traductions:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction
+            mappedBy: nombreDeChambre
+            cascade: ['persist','remove']
+>>>>>>> 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
     lifecycleCallbacks: {  }
