@@ -1,0 +1,15 @@
+Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\NombreDeChambreTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
