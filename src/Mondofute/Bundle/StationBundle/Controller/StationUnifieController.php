@@ -5,9 +5,6 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use Aamant\Distance\Distance;
 use Aamant\Distance\Providers\GoogleMapProvider;
 use Application\Sonata\MediaBundle\Entity\Media;
-use Aamant\Distance\Distance;
-use Aamant\Distance\Providers\GoogleMapProvider;
-use Application\Sonata\MediaBundle\Entity\Media;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -120,8 +117,9 @@ class StationUnifieController extends Controller
 
         $this->ajouterStationsDansForm($stationUnifie);
         /** @var Station $station */
-        foreach ($stationUnifie->getStations() as $station) {
-            $station->setStationDeSki($em->find(OuiNonNC::class, 3));
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
         }
         $this->stationsSortByAffichage($stationUnifie);
 
