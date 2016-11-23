@@ -298,6 +298,7 @@ namespace Mondofute\Bundle\LogementBundle\Controller;
 
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -427,6 +428,7 @@ class NombreDeChambreController extends Controller
      */
     function copieVersSites($nombreDeChambre)
     {
+        /** @var EntityManager $emSite */
         /** @var NombreDeChambreTraduction $traduction */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0), array('classementAffichage' => 'ASC'));
@@ -550,7 +552,7 @@ class NombreDeChambreController extends Controller
             }
         }
 
-        return $this->redirectToRoute('nombreDeChambre_index');
+        return $this->redirectToRoute('nombredechambre_index');
     }
 }
 >>>>>>> 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql

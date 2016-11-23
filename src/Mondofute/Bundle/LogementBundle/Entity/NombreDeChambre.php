@@ -226,20 +226,6 @@ class NombreDeChambre
     }
 
     /**
-     * Add traduction
-     *
-     * @param NombreDeChambreTraduction $traduction
-     *
-     * @return NombreDeChambre
-     */
-    public function addTraduction(NombreDeChambreTraduction $traduction)
-    {
-        $this->traductions[] = $traduction->setNombreDeChambre($this);
-
-        return $this;
-    }
-
-    /**
      * Remove traduction
      *
      * @param NombreDeChambreTraduction $traduction
@@ -257,6 +243,34 @@ class NombreDeChambre
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * @param $traductions
+     * @return $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param NombreDeChambreTraduction $traduction
+     *
+     * @return NombreDeChambre
+     */
+    public function addTraduction(NombreDeChambreTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setNombreDeChambre($this);
+
+        return $this;
     }
 }
 >>>>>>> 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
