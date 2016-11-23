@@ -10,6 +10,11 @@ Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        classement:
+            type: integer
+            options:
+                unsigned: true
     oneToMany:
         logements:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement

@@ -22,6 +22,10 @@ class NombreDeChambre
      * @var Collection
      */
     private $traductions;
+    /**
+     * @var integer
+     */
+    private $classement;
 
     /**
      * Constructor
@@ -132,6 +136,30 @@ class NombreDeChambre
     public function addTraduction(NombreDeChambreTraduction $traduction)
     {
         $this->traductions[] = $traduction->setNombreDeChambre($this);
+
+        return $this;
+    }
+
+    /**
+     * Get classement
+     *
+     * @return integer
+     */
+    public function getClassement()
+    {
+        return $this->classement;
+    }
+
+    /**
+     * Set classement
+     *
+     * @param integer $classement
+     *
+     * @return NombreDeChambre
+     */
+    public function setClassement($classement)
+    {
+        $this->classement = $classement;
 
         return $this;
     }
