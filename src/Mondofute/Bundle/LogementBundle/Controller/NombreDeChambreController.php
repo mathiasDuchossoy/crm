@@ -43,7 +43,7 @@ class NombreDeChambreController extends Controller
         );
 
         $sortbyArray = array(
-            'traductions.libelle' => 'ASC'
+            'entity.classement' => 'ASC'
         );
 
         $unifies = $this->getDoctrine()->getRepository('MondofuteLogementBundle:NombreDeChambre')
