@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\LogementBundle\Entity;
 
+use Application\Sonata\MediaBundle\Entity\Media;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * LogementPhoto
  */
@@ -16,15 +20,15 @@ class LogementPhoto
      */
     private $actif = false;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Mondofute\Bundle\LogementBundle\Entity\Logement
+     * @var Logement
      */
     private $logement;
     /**
-     * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @var Media
      */
     private $photo;
 
@@ -33,7 +37,7 @@ class LogementPhoto
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -73,11 +77,11 @@ class LogementPhoto
     /**
      * Add traduction
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction $traduction
+     * @param LogementPhotoTraduction $traduction
      *
      * @return LogementPhoto
      */
-    public function addTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction $traduction)
+    public function addTraduction(LogementPhotoTraduction $traduction)
     {
         $this->traductions[] = $traduction->setPhoto($this);
 
@@ -87,9 +91,9 @@ class LogementPhoto
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction $traduction
+     * @param LogementPhotoTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction $traduction)
+    public function removeTraduction(LogementPhotoTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -97,7 +101,7 @@ class LogementPhoto
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -107,7 +111,7 @@ class LogementPhoto
     /**
      * Get logement
      *
-     * @return \Mondofute\Bundle\LogementBundle\Entity\Logement
+     * @return Logement
      */
     public function getLogement()
     {
@@ -117,11 +121,11 @@ class LogementPhoto
     /**
      * Set logement
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     * @param Logement $logement
      *
      * @return LogementPhoto
      */
-    public function setLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement = null)
+    public function setLogement(Logement $logement = null)
     {
         $this->logement = $logement;
 
@@ -131,7 +135,7 @@ class LogementPhoto
     /**
      * Get photo
      *
-     * @return \Application\Sonata\MediaBundle\Entity\Media
+     * @return Media
      */
     public function getPhoto()
     {
@@ -141,11 +145,11 @@ class LogementPhoto
     /**
      * Set photo
      *
-     * @param \Application\Sonata\MediaBundle\Entity\Media $photo
+     * @param Media $photo
      *
      * @return LogementPhoto
      */
-    public function setPhoto(\Application\Sonata\MediaBundle\Entity\Media $photo = null)
+    public function setPhoto(Media $photo = null)
     {
         $this->photo = $photo;
 
