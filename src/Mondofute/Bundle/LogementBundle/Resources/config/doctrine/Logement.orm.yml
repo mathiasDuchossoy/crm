@@ -21,10 +21,6 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             type: integer
             options:
                 unsigned: true
-        nbChambre:
-            type: smallint
-            options:
-                unsigned: true
         superficieMin:
             type: smallint
             options:
