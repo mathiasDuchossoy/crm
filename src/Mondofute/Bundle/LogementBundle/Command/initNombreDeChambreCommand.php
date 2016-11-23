@@ -39,7 +39,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $langues = $emSite->getRepository(Langue::class)->findAll();
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(1);
+            $nombreDeChambre->setId(1)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -56,7 +56,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(2);
+            $nombreDeChambre->setId(2)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -73,7 +73,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(3);
+            $nombreDeChambre->setId(3)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -90,7 +90,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(4);
+            $nombreDeChambre->setId(4)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -107,7 +107,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(5);
+            $nombreDeChambre->setId(5)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -124,7 +124,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(6);
+            $nombreDeChambre->setId(6)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -141,7 +141,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(7);
+            $nombreDeChambre->setId(7)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -158,7 +158,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(8);
+            $nombreDeChambre->setId(8)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -175,7 +175,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(9);
+            $nombreDeChambre->setId(9)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -192,7 +192,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(10);
+            $nombreDeChambre->setId(10)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -209,7 +209,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(11);
+            $nombreDeChambre->setId(11)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -226,7 +226,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(12);
+            $nombreDeChambre->setId(12)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -243,7 +243,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(13);
+            $nombreDeChambre->setId(13)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -260,7 +260,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(14);
+            $nombreDeChambre->setId(14)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -277,7 +277,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(15);
+            $nombreDeChambre->setId(15)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -294,7 +294,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(16);
+            $nombreDeChambre->setId(16)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -311,7 +311,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(17);
+            $nombreDeChambre->setId(17)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -328,7 +328,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(18);
+            $nombreDeChambre->setId(18)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -345,7 +345,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(19);
+            $nombreDeChambre->setId(19)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -362,7 +362,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(20);
+            $nombreDeChambre->setId(20)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -379,7 +379,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $emSite->persist($nombreDeChambre);
 
             $nombreDeChambre = new NombreDeChambre();
-            $nombreDeChambre->setId(21);
+            $nombreDeChambre->setId(21)->setClassement($nombreDeChambre->getId());
 
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
