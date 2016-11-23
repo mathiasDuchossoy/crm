@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html.twig' %}
 {% block title %}
     {{ 'Liste de nombre de chambre' | capitalize }}
@@ -171,3 +172,179 @@
 
     </script>
 {% endblock %}
+||||||| parent of 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
+=======
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste de nombre de chambre' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des nombre de chambre' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>{{ 'libelle' | capitalize }}</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="liste">
+        {% for nombreDeChambre in nombreDeChambres %}
+            <tr draggable="true">
+                <td class="nombre-de-chambre" data-id="{{ nombreDeChambre.id }}">
+                    <a href="{{ path('nombredechambre_show', { 'id': nombreDeChambre.id }) }}">{{ nombreDeChambre.id }}</a>
+                </td>
+                <td>
+                    {% for traduction in nombreDeChambre.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.libelle }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('nombredechambre_show', { 'id': nombreDeChambre.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('nombredechambre_edit', { 'id': nombreDeChambre.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div id="log"></div>
+    {% if  nombreDeChambres is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('nombredechambre_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $.event.props.push('dataTransfer');
+
+        $(document).ready(function () {
+            var i, $this, $log = $('#log');
+
+            $('#liste tr').on({
+                // on commence le drag
+                dragstart: function (e) {
+                    $this = $(this);
+
+                    i = $this.index();
+                    $this.css('opacity', '0.5');
+
+                    // on garde le texte en mémoire (A, B, C ou D)
+                    e.dataTransfer.setData('text', $this.html());
+                },
+                // on passe sur un élément draggable
+                dragenter: function (e) {
+                    // on augmente la taille pour montrer le draggable
+                    $(this).animate({
+                        width: '90px'
+                    }, 'fast');
+
+                    e.preventDefault();
+                },
+                // on quitte un élément draggable
+                dragleave: function () {
+                    // on remet la taille par défaut
+                    $(this).animate({
+                        width: '75px'
+                    }, 'fast');
+                },
+                // déclenché tant qu on a pas lâché l élément
+                dragover: function (e) {
+                    e.preventDefault();
+                },
+//                 on lâche l élément
+//                drop: function(e) {
+//                    // si l élément sur lequel on drop n'est pas l'élément de départ
+//                    if (i !== $(this).index()) {
+//                        // on récupère le texte initial
+//                        var data = e.dataTransfer.getData('text');
+//
+//                        // on log
+////                        $log.html(data + ' > ' + $(this).html()).fadeIn('slow').delay(1000).fadeOut();
+//
+//                        // on met le nouveau texte à la place de l ancien et inversement
+//                        $this.html($(this).html());
+//                        $(this).html(data);
+//                    }
+//
+//                    // on remet la taille par défaut
+//                    $(this).animate({
+//                        width: '75px'
+//                    }, 'fast');
+////                    alert('ici');
+//                    var nombreDeChambre = [];
+//                    $('#liste').find('.nombre-de-chambre').each(function(){
+//                        console.log($(this).data('id'));
+//                        nombreDeChambre.push($(this).data('id'));
+//                        console.log(nombreDeChambre);
+//                    });
+//                    envoyerDataClassement();
+//                    e.preventDefault();
+//                },
+                // fin du drag (même sans drop)
+                dragend: function () {
+                    $(this).css('opacity', '1');
+                }
+//                ,
+                // au clic sur un élément
+//                click: function() {
+//                    alert($(this).text() + 'coucou');
+//                }
+            });
+
+
+            $('#liste tr').on('drop', function (e) {
+                // si l élément sur lequel on drop n'est pas l'élément de départ
+                if (i !== $(this).index()) {
+                    // on récupère le texte initial
+                    var data = e.dataTransfer.getData('text');
+
+                    // on log
+//                        $log.html(data + ' > ' + $(this).html()).fadeIn('slow').delay(1000).fadeOut();
+
+                    // on met le nouveau texte à la place de l ancien et inversement
+                    $this.html($(this).html());
+                    $(this).html(data);
+                }
+
+                // on remet la taille par défaut
+                $(this).animate({
+                    width: '75px'
+                }, 'fast');
+                var nombreDeChambre = [];
+                $('#liste').find('.nombre-de-chambre').each(function () {
+                    nombreDeChambre.push($(this).data('id'));
+                });
+                $.ajax('{{ path('nombredechambre_edit_classement') }}', {
+                    data: {data: JSON.stringify(nombreDeChambre)},
+                    type: 'POST'
+                });
+                e.preventDefault();
+            });
+
+        });
+
+
+    </script>
+{% endblock %}
+>>>>>>> 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
