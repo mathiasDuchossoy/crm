@@ -308,6 +308,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * NombreDeChambre controller.
@@ -364,6 +365,12 @@ class NombreDeChambreController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $count = $em
+                ->getRepository('MondofuteLogementBundle:NombreDeChambre')
+                ->countTotal();
+
+            $nombreDeChambre->setClassement($count + 1);
+
             $em->persist($nombreDeChambre);
             $em->flush();
 
@@ -437,7 +444,9 @@ class NombreDeChambreController extends Controller
             $nombreDeChambreSite = $emSite->find(NombreDeChambre::class, $nombreDeChambre->getId());
             if (empty($nombreDeChambreSite)) {
                 $nombreDeChambreSite = new NombreDeChambre();
-                $nombreDeChambreSite->setId($nombreDeChambre->getId());
+                $nombreDeChambreSite
+                    ->setId($nombreDeChambre->getId())
+                    ->setClassement($nombreDeChambre->getClassement());
                 $metadata = $emSite->getClassMetadata(get_class($nombreDeChambreSite));
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
             }
@@ -518,6 +527,28 @@ class NombreDeChambreController extends Controller
         ));
     }
 
+    public function editClassementAction(Request $request)
+    {
+        $data = json_decode($request->get('data'));
+        $em = $this->getDoctrine()->getManager();
+
+        $sites = $em->getRepository(Site::class)->findAll();
+
+        $nombreDeChambres = new ArrayCollection();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            foreach ($data as $key => $item) {
+                $nombreDeChambre = $emSite->find(NombreDeChambre::class, $item);
+                $nombreDeChambres->add($nombreDeChambre);
+                $nombreDeChambre->setClassement($key + 1);
+                $emSite->persist($nombreDeChambre);
+            }
+            $emSite->flush();
+        }
+
+        return new Response();
+    }
+
     /**
      * Deletes a nombreDeChambre entity.
      *
@@ -528,15 +559,14 @@ class NombreDeChambreController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try{
+            try {
 
                 $em = $this->getDoctrine()->getManager();
 
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                foreach ($sites as $site)
-                {
+                foreach ($sites as $site) {
                     $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-                    $nombreDeChambreSite = $emSite->find(NombreDeChambre::class , $nombreDeChambre->getId());
+                    $nombreDeChambreSite = $emSite->find(NombreDeChambre::class, $nombreDeChambre->getId());
                     $emSite->remove($nombreDeChambreSite);
                     $emSite->flush();
                 }
@@ -545,9 +575,7 @@ class NombreDeChambreController extends Controller
                 $em->flush();
 
                 $this->addFlash('success', 'Label supprimé avec succès.');
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $this->addFlash('error', 'Le label est utilisé par une autre entité.');
             }
         }

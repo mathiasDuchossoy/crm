@@ -125,7 +125,7 @@ class NombreDeChambreRepository extends \Doctrine\ORM\EntityRepository
             ->join('traductions.langue' , 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
-            ->orderBy('traductions.libelle', 'ASC')
+            ->orderBy('entity.classement', 'ASC')//            ->orderBy('left(traductions.libelle, 2)', 'ASC')
         ;
 
         return $qb;

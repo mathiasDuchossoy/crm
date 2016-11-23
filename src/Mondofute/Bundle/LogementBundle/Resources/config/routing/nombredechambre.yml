@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 nombredechambre_index:
     path:     /list/{page}/{maxPerPage}
     defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:index", page: 1 , maxPerPage: %max_per_page% }
@@ -28,30 +27,3 @@ nombredechambre_edit_classement:
     path:     /editclassement
     defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:editClassement" }
     methods:  POST
-||||||| parent of 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
-=======
-nombredechambre_index:
-    path:     /list/{page}/{maxPerPage}
-    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:index", page: 1 , maxPerPage: %max_per_page% }
-    methods:  GET
-
-nombredechambre_show:
-    path:     /{id}/show
-    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:show" }
-    methods:  GET
-
-nombredechambre_new:
-    path:     /new
-    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:new" }
-    methods:  [GET, POST]
-
-nombredechambre_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:edit" }
-    methods:  [GET, POST]
-
-nombredechambre_delete:
-    path:     /{id}/delete
-    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:delete" }
-    methods:  DELETE
->>>>>>> 5ebee9e... CRM-155 logement - nb chambres => mise en place crud et sql
