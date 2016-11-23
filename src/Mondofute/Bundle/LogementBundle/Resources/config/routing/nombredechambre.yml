@@ -22,3 +22,8 @@ nombredechambre_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:delete" }
     methods:  DELETE
+
+nombredechambre_edit_classement:
+    path:     /editclassement
+    defaults: { _controller: "MondofuteLogementBundle:NombreDeChambre:editClassement" }
+    methods:  POST
