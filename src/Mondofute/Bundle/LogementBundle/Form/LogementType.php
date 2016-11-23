@@ -3,13 +3,13 @@
 namespace Mondofute\Bundle\LogementBundle\Form;
 
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
+use Mondofute\Bundle\LogementBundle\Repository\NombreDeChambreRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LogementType extends AbstractType
@@ -20,10 +20,10 @@ class LogementType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $locale = $options['locale'];
         $builder
             ->add('accesPMR', null, array('label' => 'Acces.PMR', 'translation_domain' => 'messages'))
             ->add('capacite')
-            ->add('nbChambre', null, array('label' => 'Nb.Chambre', 'translation_domain' => 'messages'))
             ->add('superficieMin')
             ->add('superficieMax')
             ->add('traductions', CollectionType::class, array(
@@ -37,6 +37,15 @@ class LogementType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+            ))
+            ->add('nombreDeChambre', EntityType::class, array(
+                'class' => NombreDeChambre::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                'query_builder' => function (NombreDeChambreRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'expanded' => true,
             ))
         ;
     }

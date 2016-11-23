@@ -16,6 +16,7 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
+use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
 use Mondofute\Bundle\LogementBundle\Form\LogementUnifieType;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -415,6 +416,7 @@ class LogementUnifieController extends Controller
      */
     private function copieVersSites(LogementUnifie $entity, $originalLogementPhotos = null)
     {
+        /** @var EntityManager $emSite */
         /** @var HebergementTraduction $hebergementTraduc */
 //        Boucle sur les hébergements afin de savoir sur quel site nous devons l'enregistrer
         /** @var Logement $logement */
@@ -443,12 +445,12 @@ class LogementUnifieController extends Controller
                 $logementSite->setActif($logement->getActif())
                     ->setAccesPMR($logement->getAccesPMR())
                     ->setCapacite($logement->getCapacite())
-                    ->setNbChambre($logement->getNbChambre())
                     ->setSite($site)
                     ->setSuperficieMax($logement->getSuperficieMax())
                     ->setSuperficieMin($logement->getSuperficieMin())
                     ->setLogementUnifie($entitySite)
-                    ->setFournisseurHebergement($fournisseurHebergementSite);
+                    ->setFournisseurHebergement($fournisseurHebergementSite)
+                    ->setNombreDeChambre($emSite->find(NombreDeChambre::class, $logement->getNombreDeChambre()));
 
                 /** @var LogementTraduction $traduction */
                 foreach ($logement->getTraductions() as $traduction) {
@@ -809,10 +811,10 @@ class LogementUnifieController extends Controller
                 ->setAccesPMR($logementRef->getAccesPMR())
                 ->setActif($logementRef->getActif())
                 ->setCapacite($logementRef->getCapacite())
-                ->setNbChambre($logementRef->getNbChambre())
                 ->setSite($logementRef->getSite())
                 ->setSuperficieMax($logementRef->getSuperficieMax())
-                ->setSuperficieMin($logementRef->getSuperficieMin());
+                ->setSuperficieMin($logementRef->getSuperficieMin())
+                ->setNombreDeChambre($logementRef->getNombreDeChambre());
             /** @var LogementTraduction $traductionRef */
             foreach ($logementRef->getTraductions() as $traductionRef) {
                 $trouve = false;

@@ -26,12 +26,11 @@
                         <div style="display: none">
                             {{ form_row(logement.fournisseurHebergement) }}
                         </div>
-                        {{ form_row(logement.nbChambre, { 'attr' : { 'data-unique_block_prefix' : logement.nbChambre.vars['unique_block_prefix']}}) }}
+                        {{ form_row(logement.nombreDeChambre, { 'attr' : { 'data-unique_block_prefix' : logement.nombreDeChambre.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.capacite, { 'attr' : { 'data-unique_block_prefix' : logement.capacite.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.superficieMin, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMin.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.superficieMax, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMax.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.accesPMR, { 'attr' : { 'data-unique_block_prefix' : logement.accesPMR.vars['unique_block_prefix']}}) }}
-                        {{ form_row(logement.site) }}
                         <ul class="nav nav-tabs">
                             {% set iTraduc = 0 %}
                             {% for traduction in logement.traductions %}
@@ -129,8 +128,8 @@
         {#itemNonPersonalisable.push("_departement_unifie_departements_entry_traductions_entry_description_{{ langue.code }}");#}
         {% endfor %}
         var items = [];
-        items.push("_logement_unifie_logements_entry_nbChambre");
         items.push("_logement_unifie_logements_entry_capacite");
+        items.push("_logement_unifie_logements_entry_nombreDeChambre");
         items.push("_logement_unifie_logements_entry_superficieMin");
         items.push("_logement_unifie_logements_entry_superficieMax");
         items.push("_logement_unifie_logements_entry_accesPMR");
