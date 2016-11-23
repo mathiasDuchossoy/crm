@@ -1,0 +1,26 @@
+Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\LogementBundle\Repository\NombreDeChambreRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        classement:
+            type: integer
+            options:
+                unsigned: true
+    oneToMany:
+        logements:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            mappedBy: nombreDeChambre
+        traductions:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction
+            mappedBy: nombreDeChambre
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

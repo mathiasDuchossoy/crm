@@ -21,10 +21,6 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             type: integer
             options:
                 unsigned: true
-        nbChambre:
-            type: smallint
-            options:
-                unsigned: true
         superficieMin:
             type: smallint
             options:
@@ -41,6 +37,9 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             inversedBy: logements
         fournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+            inversedBy: logements
+        nombreDeChambre:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre
             inversedBy: logements
     oneToMany:
         periodes:

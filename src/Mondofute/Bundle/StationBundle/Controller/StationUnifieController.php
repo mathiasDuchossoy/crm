@@ -117,8 +117,9 @@ class StationUnifieController extends Controller
 
         $this->ajouterStationsDansForm($stationUnifie);
         /** @var Station $station */
-        foreach ($stationUnifie->getStations() as $station) {
-            $station->setStationDeSki($em->find(OuiNonNC::class, 3));
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
         }
         $this->stationsSortByAffichage($stationUnifie);
 
