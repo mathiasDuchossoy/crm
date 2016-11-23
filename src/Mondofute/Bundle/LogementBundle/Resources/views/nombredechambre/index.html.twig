@@ -155,14 +155,10 @@
                 $(this).animate({
                     width: '75px'
                 }, 'fast');
-//                    alert('ici');
                 var nombreDeChambre = [];
                 $('#liste').find('.nombre-de-chambre').each(function () {
-//                    console.log($(this).data('id'));
                     nombreDeChambre.push($(this).data('id'));
                 });
-                console.log(JSON.stringify(nombreDeChambre));
-                console.log(nombreDeChambre);
                 $.ajax('{{ path('nombredechambre_edit_classement') }}', {
                     data: {data: JSON.stringify(nombreDeChambre)},
                     type: 'POST'
