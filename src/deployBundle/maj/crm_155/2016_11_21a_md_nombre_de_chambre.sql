@@ -6,3 +6,5 @@ ALTER TABLE nombre_de_chambre_traduction ADD CONSTRAINT FK_D18D499F2AADBACD FORE
 ALTER TABLE logement ADD nombre_de_chambre_id INT UNSIGNED DEFAULT NULL;
 ALTER TABLE logement ADD CONSTRAINT FK_F0FD445717036B1E FOREIGN KEY (nombre_de_chambre_id) REFERENCES nombre_de_chambre (id);
 CREATE INDEX IDX_F0FD445717036B1E ON logement (nombre_de_chambre_id);
+
+ALTER TABLE logement DROP nb_chambre;

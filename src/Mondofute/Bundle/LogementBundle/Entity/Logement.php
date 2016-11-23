@@ -28,10 +28,6 @@ class Logement
     /**
      * @var smallint unsigned
      */
-    private $nbChambre;
-    /**
-     * @var smallint unsigned
-     */
     private $superficieMin;
     /**
      * @var smallint unsigned
@@ -150,30 +146,6 @@ class Logement
     public function setCapacite($capacite)
     {
         $this->capacite = $capacite;
-
-        return $this;
-    }
-
-    /**
-     * Get nbChambre
-     *
-     * @return integer
-     */
-    public function getNbChambre()
-    {
-        return $this->nbChambre;
-    }
-
-    /**
-     * Set nbChambre
-     *
-     * @param integer $nbChambre
-     *
-     * @return Logement
-     */
-    public function setNbChambre($nbChambre)
-    {
-        $this->nbChambre = $nbChambre;
 
         return $this;
     }
