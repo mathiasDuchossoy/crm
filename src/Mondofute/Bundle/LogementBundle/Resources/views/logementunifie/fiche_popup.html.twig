@@ -15,6 +15,7 @@
             {% include '::coches_sites.html.twig' %}
             {% set mesSites = form.logements %}
 
+            {{ form_row(form.desactive) }}
             {% include '::onglets_sites.html.twig' %}
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}

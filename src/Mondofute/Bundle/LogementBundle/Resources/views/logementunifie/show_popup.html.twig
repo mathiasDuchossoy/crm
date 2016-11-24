@@ -1,28 +1,30 @@
 {% extends '::base_popup.html.twig' %}
 
 {% block body %}
-    <h1>LogementUnifie</h1>
-
-    <table>
+    <h1>{{ 'Visualisation du logement' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
         <tbody>
-        <tr>
-            <th>Id</th>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
             <td>{{ logementUnifie.id }}</td>
         </tr>
+
         </tbody>
     </table>
+    <div style="text-align: right">
 
-    <ul>
-        <li>
-            <a href="{{ path('popup_logement_logement_index',{'idFournisseurHebergement':fournisseurHebergement.id}) }}">{{ 'retour.liste' | trans }}</a>
-        </li>
-        <li>
-            <a href="{{ path('popup_logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('popup_logement_logement_index',{'idFournisseurHebergement':fournisseurHebergement.id}) }}">{{ 'retour.liste' | trans }}</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('popup_logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
+            </li>
+            <li>
+                {{ form(delete_form) }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * LogementUnifie
@@ -14,16 +15,24 @@ class LogementUnifie
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $logements;
+    /**
+     * @var boolean
+     */
+    private $archive = false;
+    /**
+     * @var boolean
+     */
+    private $desactive = false;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->logements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->logements = new ArrayCollection();
     }
 
     /**
@@ -50,9 +59,9 @@ class LogementUnifie
     /**
      * Remove logement
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     * @param Logement $logement
      */
-    public function removeLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    public function removeLogement(Logement $logement)
     {
         $this->logements->removeElement($logement);
         $logement->setLogementUnifie(null);
@@ -61,7 +70,7 @@ class LogementUnifie
     /**
      * Get logements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getLogements()
     {
@@ -85,13 +94,61 @@ class LogementUnifie
     /**
      * Add logement
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     * @param Logement $logement
      *
      * @return LogementUnifie
      */
-    public function addLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    public function addLogement(Logement $logement)
     {
         $this->logements[] = $logement->setLogementUnifie($this);
+
+        return $this;
+    }
+
+    /**
+     * Get archive
+     *
+     * @return boolean
+     */
+    public function getArchive()
+    {
+        return $this->archive;
+    }
+
+    /**
+     * Set archive
+     *
+     * @param boolean $archive
+     *
+     * @return LogementUnifie
+     */
+    public function setArchive($archive)
+    {
+        $this->archive = $archive;
+
+        return $this;
+    }
+
+    /**
+     * Get desactive
+     *
+     * @return boolean
+     */
+    public function getDesactive()
+    {
+        return $this->desactive;
+    }
+
+    /**
+     * Set desactive
+     *
+     * @param boolean $desactive
+     *
+     * @return LogementUnifie
+     */
+    public function setDesactive($desactive)
+    {
+        $this->desactive = $desactive;
 
         return $this;
     }

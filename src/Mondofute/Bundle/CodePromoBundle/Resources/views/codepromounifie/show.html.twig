@@ -34,11 +34,11 @@
 
         <ul class="list-unstyled">
             <li>
-                <a href="{{ path('codepromo_index') }}">Back to the list</a>
+                <a href="{{ path('codepromo_index') }}">{{ 'retour.liste' | trans }}</a>
             </li>
             <li>
                 <a class="btn btn-default"
-                   href="{{ path('codepromo_edit', { 'id': codePromoUnifie.id }) }}">Edit</a>
+                   href="{{ path('codepromo_edit', { 'id': codePromoUnifie.id }) }}">{{ 'modifier' | trans }}</a>
             </li>
             <li>
                 {{ form_start(delete_form) }}
