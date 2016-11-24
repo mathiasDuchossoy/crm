@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
+use Doctrine\ORM\EntityManager;
 
 /**
  * CodePromoLogementRepository
@@ -10,4 +11,13 @@ namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
  */
 class CodePromoLogementRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function deleteByLogement($logementId)
+    {
+        $sql = 'DELETE FROM code_promo_logement WHERE logement_id = :logementId';
+        $params = array(
+            'logementId' => $logementId,
+        );
+
+        return $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+    }
 }

@@ -1,0 +1,1 @@
+ALTER TABLE logement_unifie ADD archive TINYINT(1) DEFAULT '0' NOT NULL, ADD desactive TINYINT(1) DEFAULT '0' NOT NULL;
