@@ -1034,7 +1034,7 @@ class LogementUnifieController extends Controller
         $this->ajouterLogementsDansForm($logementUnifie);
         $this->logementsSortByAffichage($logementUnifie);
 
-        $deleteForm = $this->createDeleteForm($logementUnifie);
+        $deleteForm = $this->createDeleteFormPopup($logementUnifie);
         $editForm = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
             array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array(
@@ -1258,6 +1258,22 @@ class LogementUnifieController extends Controller
     }
 
     /**
+     * Creates a form to delete a LogementUnifie entity.
+     *
+     * @param LogementUnifie $logementUnifie The LogementUnifie entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteFormPopup(LogementUnifie $logementUnifie)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('popup_logement_logement_delete', array('id' => $logementUnifie->getId())))
+            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
      * Deletes a LogementUnifie entity.
      *
      */
@@ -1303,7 +1319,7 @@ class LogementUnifieController extends Controller
                 /* Si le logement est lié a des ventes alors on va l'archiver sinon on va le supprimer */
 //                if(!$logement->getVentes()->isEmpty && !$vente){
                 if (!$vente) {
-//                    $vente = true;
+                    $vente = true;
                 }
             }
             if ($vente) {
