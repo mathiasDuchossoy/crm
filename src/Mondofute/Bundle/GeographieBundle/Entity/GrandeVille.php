@@ -2,6 +2,10 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
+
 /**
  * GrandeVille
  */
@@ -12,11 +16,11 @@ class GrandeVille
      */
     private $id;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+     * @var CoordonneesGPS
      */
     private $coordonneesGps;
 
@@ -25,7 +29,7 @@ class GrandeVille
      */
     public function __construct()
     {
-        $this->traductions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -39,15 +43,15 @@ class GrandeVille
     }
 
     /**
-     * Add traduction
+     * Set id
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction $traduction
+     * @param int $id
      *
      * @return GrandeVille
      */
-    public function addTraduction(\Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction $traduction)
+    public function setId($id)
     {
-        $this->traductions[] = $traduction;
+        $this->id = $id;
 
         return $this;
     }
@@ -55,9 +59,9 @@ class GrandeVille
     /**
      * Remove traduction
      *
-     * @param \Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction $traduction
+     * @param GrandeVilleTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction $traduction)
+    public function removeTraduction(GrandeVilleTraduction $traduction)
     {
         $this->traductions->removeElement($traduction);
     }
@@ -65,7 +69,7 @@ class GrandeVille
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -73,9 +77,37 @@ class GrandeVille
     }
 
     /**
+     * @param $traductions
+     * @return $this
+     */
+    public function setTraductions($traductions)
+    {
+        $this->getTraductions()->clear();
+
+        foreach ($traductions as $traduction) {
+            $this->addTraduction($traduction);
+        }
+        return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param GrandeVilleTraduction $traduction
+     *
+     * @return GrandeVille
+     */
+    public function addTraduction(GrandeVilleTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setGrandeVille($this);
+
+        return $this;
+    }
+
+    /**
      * Get coordonneesGps
      *
-     * @return \Nucleus\MoyenComBundle\Entity\CoordonneesGPS
+     * @return CoordonneesGPS
      */
     public function getCoordonneesGps()
     {
@@ -85,11 +117,11 @@ class GrandeVille
     /**
      * Set coordonneesGps
      *
-     * @param \Nucleus\MoyenComBundle\Entity\CoordonneesGPS $coordonneesGps
+     * @param CoordonneesGPS $coordonneesGps
      *
      * @return GrandeVille
      */
-    public function setCoordonneesGps(\Nucleus\MoyenComBundle\Entity\CoordonneesGPS $coordonneesGps = null)
+    public function setCoordonneesGps(CoordonneesGPS $coordonneesGps = null)
     {
         $this->coordonneesGps = $coordonneesGps;
 
