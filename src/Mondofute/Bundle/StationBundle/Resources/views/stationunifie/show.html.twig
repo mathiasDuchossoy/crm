@@ -27,7 +27,44 @@
                 {% endfor %}
             {% endif %}
         {% endfor %}
-
+        <tr class="row">
+            <th class="col-sm-1">Ville</th>
+            <td>
+                {% for station in stationUnifie.stations %}
+                    {% if station.site.crm == 1 %}
+                        {{ station.stationCarteIdentite.adresse.ville }}
+                        {% if station.stationCarteIdentite.adresse.codePostal is not null %}
+                            &nbsp;({{ station.stationCarteIdentite.adresse.codePostal }})
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr class="row">
+            <th class="col-sm-1">Distances</th>
+            <td>
+                <ul>
+                    {% for station in stationUnifie.stations %}
+                        {% if station.site.crm == 1 %}
+                            {% for grandeVille in station.stationCommentVenir.grandeVilles %}
+                                {% for traduction in grandeVille.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        <li>
+                                            {{ traduction.libelle }}
+                                            {% if distances[grandeVille.id][0].elements[0].distance is defined %}
+                                                &nbsp;=>&nbsp;
+                                                {{ distances[grandeVille.id][0].elements[0].distance.text }}&nbsp;-&nbsp;
+                                                {{ distances[grandeVille.id][0].elements[0].duration.text }}
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
         </tbody>
     </table>
     <div style="text-align: right">

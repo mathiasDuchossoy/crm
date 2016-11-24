@@ -20,7 +20,8 @@ class GrandeVilleType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => GrandeVilleTraductionType::class
             ))
-            ->add('site', HiddenType::class, array('mapped' => false));
+//            ->add('site', HiddenType::class, array('mapped' => false))
+        ;
     }
 
     /**

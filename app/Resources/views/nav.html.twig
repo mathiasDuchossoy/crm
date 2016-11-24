@@ -303,6 +303,21 @@
                     </ul>
                 </li>
                 {# ***** FIN STATION LABEL ***** #}
+                {# ***** GRANDE VILLE ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'grandeville' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'grande ville' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'geographie_grandeville_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_grandeville_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'geographie_grandeville_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_grandeville_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN GRANDE VILLE ***** #}
                 {# ***** NOMBRE DE CHAMBRE ***** #}
                 <li role="presentation"
                     class="dropdown-submenu {% if 'nombredechambre' in app.request.attributes.get('_route') %} active {% endif %}">

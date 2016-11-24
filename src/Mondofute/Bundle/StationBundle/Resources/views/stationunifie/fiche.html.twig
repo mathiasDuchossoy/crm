@@ -657,4 +657,15 @@
             });
         }
     </script>
+
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBQ_mK45TpOottmscd15Ijk8HmnUNEZJLM&amp;libraries=places&amp;language=fr"></script>
+    <script>
+        var options = {
+            types: ['(cities)']
+        };
+
+        var input = document.getElementById('station_unifie_stations_0_stationCarteIdentite_adresse_ville');
+        autocomplete = new google.maps.places.Autocomplete(input, options);
+    </script>
+
 {% endblock %}
