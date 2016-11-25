@@ -21,6 +21,7 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
 use Mondofute\Bundle\LogementBundle\Form\LogementUnifieType;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -284,6 +285,7 @@ class LogementUnifieController extends Controller
      */
     public function newPopupAction(Request $request, $idFournisseurHebergement)
     {
+        /** @var Logement $logement */
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository(Site::class)->findBy(array(), array('classementAffichage' => 'asc'));
@@ -299,7 +301,13 @@ class LogementUnifieController extends Controller
         $this->ajouterLogementsDansForm($logementUnifie);
         $this->logementsSortByAffichage($logementUnifie);
 
-        /** @var Logement $logement */
+        $typePeriodes = $em->getRepository(TypePeriode::class)->findAll();
+        foreach ($logementUnifie->getLogements() as $logement) {
+            foreach ($typePeriodes as $typePeriode) {
+                $logement->addTypePeriode($typePeriode);
+            }
+        }
+
         foreach ($logementUnifie->getLogements() as $logement) {
             $logement->setFournisseurHebergement($fournisseurHebergement);
         }
@@ -319,8 +327,6 @@ class LogementUnifieController extends Controller
                     $entity->setActif(false);
                 }
             }
-
-            $em = $this->getDoctrine()->getManager();
 
             // ***** Gestion des Medias *****
             foreach ($request->get('logement_unifie')['logements'] as $key => $logement) {
@@ -408,7 +414,7 @@ class LogementUnifieController extends Controller
             'langues' => $langues,
             'logementUnifie' => $logementUnifie,
             'form' => $form->createView(),
-            'fournisseurHebergement' => $fournisseurHebergement,
+            'fournisseurHebergement' => $fournisseurHebergement
         ));
     }
 
@@ -447,6 +453,29 @@ class LogementUnifieController extends Controller
                     $entitySite->addLogement($logementSite);
                     $edit = false;
                 }
+
+                /**
+                 * gestion de logementTypePeriode
+                 *
+                 * @var TypePeriode $typePeriode
+                 */
+                foreach ($logement->getTypePeriodes() as $typePeriode) {
+                    $typePeriodeSite = $logementSite->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriode) {
+                        return $element->getId() == $typePeriode->getId();
+                    })->first();
+                    if (false === $typePeriodeSite) {
+                        $logementSite->addTypePeriode($emSite->find(TypePeriode::class, $typePeriode));
+                    }
+                }
+                foreach ($logementSite->getTypePeriodes() as $typePeriodeSite) {
+                    $typePeriode = $logement->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriodeSite) {
+                        return $element->getId() == $typePeriodeSite->getId();
+                    })->first();
+                    if (false === $typePeriode) {
+                        $logementSite->removeTypePeriode($typePeriodeSite);
+                    }
+                }
+
                 $logementSite->setActif($logement->getActif())
                     ->setAccesPMR($logement->getAccesPMR())
                     ->setCapacite($logement->getCapacite())
