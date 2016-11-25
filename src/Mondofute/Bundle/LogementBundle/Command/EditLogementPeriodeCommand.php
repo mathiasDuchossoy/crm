@@ -2,9 +2,8 @@
 
 namespace Mondofute\Bundle\LogementBundle\Command;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
-use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
-use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,40 +27,47 @@ class EditLogementPeriodeCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $today = new DateTime();
         /** @var EntityManager $em */
         $logementUnifieId = $input->getArgument('logementUnifieId');
         $em = $this->getContainer()->get('doctrine')->getManager();
-
         $connection = $em->getConnection();
-        $typePeriodes = $connection->executeQuery('SELECT id FROM type_periode')->fetchAll();
-        $logements = $connection->executeQuery('SELECT id FROM logement where logement_unifie_id = ' . $logementUnifieId)->fetchAll();
-        foreach ($logements as $logement) {
-            $logementTypePeriodes = $connection->executeQuery('SELECT type_periode_id id FROM logement_type_periode WHERE logement_id = ' . $logement['id'])->fetchAll();
-            foreach ($typePeriodes as $typePeriode) {
-                if (!in_array($typePeriode, $logementTypePeriodes)) {
-                    $requete = 'DELETE lp FROM logement_periode lp LEFT JOIN periode p ON lp.periode_id = p.id WHERE lp.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $typePeriode['id'];
-                    $connection->executeQuery($requete);
-                    $connection->executeQuery('DELETE lpl FROM logement_periode_locatif lpl LEFT JOIN periode p ON lpl.periode_id = p.id WHERE lpl.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $typePeriode['id']);
-                }
-            }
-            foreach ($logementTypePeriodes as $logementTypePeriode) {
-                $logementPeriodes = $connection->executeQuery('SELECT periode_id id FROM logement_periode lp LEFT JOIN periode p ON lp.periode_id = p.id WHERE lp.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $logementTypePeriode['id'])->fetchAll();
-                $periodes = $connection->executeQuery('SELECT id FROM periode WHERE type_id = ' . $logementTypePeriode['id'])->fetchAll();
-                $requeteLogementPeriode = 'INSERT INTO logement_periode (periode_id, logement_id, actif) VALUES ';
-                $requeteLogementPeriodeLocatif = 'INSERT INTO logement_periode_locatif (periode_id, logement_id) VALUES ';
-                $insertOk = false;
-                $sep = '';
-                foreach ($periodes as $periode) {
-                    if (!in_array($periode, $logementPeriodes)) {
-                        $requeteLogementPeriode .= $sep . '(' . $periode['id'] . ', ' . $logement['id'] . ', 1) ';
-                        $requeteLogementPeriodeLocatif .= $sep . '(' . $periode['id'] . ', ' . $logement['id'] . ') ';
-                        $sep = ', ';
-                        $insertOk = true;
+
+        $sites = $connection->executeQuery('SELECT libelle FROM site')->fetchAll();
+
+        foreach ($sites as $site) {
+            $em = $this->getContainer()->get('doctrine')->getManager($site['libelle']);
+            $connection = $em->getConnection();
+            $typePeriodes = $connection->executeQuery('SELECT id FROM type_periode')->fetchAll();
+            $logements = $connection->executeQuery('SELECT id FROM logement where logement_unifie_id = ' . $logementUnifieId)->fetchAll();
+            foreach ($logements as $logement) {
+                $logementTypePeriodes = $connection->executeQuery('SELECT type_periode_id id FROM logement_type_periode WHERE logement_id = ' . $logement['id'])->fetchAll();
+                foreach ($typePeriodes as $typePeriode) {
+                    if (!in_array($typePeriode, $logementTypePeriodes)) {
+                        $requete = 'DELETE lp FROM logement_periode lp LEFT JOIN periode p ON lp.periode_id = p.id WHERE lp.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $typePeriode['id'];
+                        $connection->executeQuery($requete);
+                        $connection->executeQuery('DELETE lpl FROM logement_periode_locatif lpl LEFT JOIN periode p ON lpl.periode_id = p.id WHERE lpl.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $typePeriode['id']);
                     }
                 }
-                if ($insertOk) {
-                    $connection->executeQuery($requeteLogementPeriode);
-                    $connection->executeQuery($requeteLogementPeriodeLocatif);
+                foreach ($logementTypePeriodes as $logementTypePeriode) {
+                    $logementPeriodes = $connection->executeQuery('SELECT periode_id id FROM logement_periode lp LEFT JOIN periode p ON lp.periode_id = p.id WHERE lp.logement_id = ' . $logement['id'] . ' AND p.type_id = ' . $logementTypePeriode['id'] . ' AND p.debut >= ' . $today->format('Y-m-d'))->fetchAll();
+                    $periodes = $connection->executeQuery('SELECT id FROM periode WHERE type_id = ' . $logementTypePeriode['id'] . ' AND debut >= ' . $today->format('Y-m-d'))->fetchAll();
+                    $requeteLogementPeriode = 'INSERT INTO logement_periode (periode_id, logement_id, actif) VALUES ';
+                    $requeteLogementPeriodeLocatif = 'INSERT INTO logement_periode_locatif (periode_id, logement_id) VALUES ';
+                    $insertOk = false;
+                    $sep = '';
+                    foreach ($periodes as $periode) {
+                        if (!in_array($periode, $logementPeriodes)) {
+                            $requeteLogementPeriode .= $sep . '(' . $periode['id'] . ', ' . $logement['id'] . ', 1) ';
+                            $requeteLogementPeriodeLocatif .= $sep . '(' . $periode['id'] . ', ' . $logement['id'] . ') ';
+                            $sep = ', ';
+                            $insertOk = true;
+                        }
+                    }
+                    if ($insertOk) {
+                        $connection->executeQuery($requeteLogementPeriode);
+                        $connection->executeQuery($requeteLogementPeriodeLocatif);
+                    }
                 }
             }
         }
