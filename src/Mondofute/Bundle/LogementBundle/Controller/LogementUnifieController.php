@@ -13,6 +13,7 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\LogementBundle\Command\EditLogementPeriodeCommand;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
@@ -24,7 +25,10 @@ use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1239,14 +1243,26 @@ class LogementUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($logementUnifie);
-            $job = new Job('mondofute_logement:edit_logement_periode_command',
-                array(
-                    'logementUnifieId' => $logementUnifie->getId(),
-                ), true, 'periode');
-            $em->persist($job);
             $em->flush();
 
             $this->copieVersSites($logementUnifie, $originalLogementPhotos);
+
+            $kernel = $this->get('kernel');
+            $application = new Application($kernel);
+            $application->setAutoExit(false);
+
+            $input = new ArrayInput(array(
+                'command' => 'mondofute_logement:edit_logement_periode_command',
+                'logementUnifieId' => $logementUnifie->getId(),
+            ));
+            $output = new NullOutput();
+            $application->run($input, $output);
+
+//            $job = new Job('mondofute_logement:edit_logement_periode_command',
+//                array(
+//                    'logementUnifieId' => $logementUnifie->getId(),
+//                ), true, 'periode');
+//            $em->persist($job);
 
             $job = new Job('edit:prestationAnnexeLogement',
                 array(
