@@ -822,10 +822,6 @@ class LogementUnifieController extends Controller
     {
         /** @var Logement $logementRef */
         foreach ($logementUnifieRef->getLogements() as $logementRef) {
-//            if(!$logementUnifie->getLogements()->contains($logementRef)){
-//                $logement = new Logement();
-//                $logementUnifie->addLogement($logement);
-//            }else{
             $trouve = false;
             /** @var Logement $l */
             foreach ($logementUnifie->getLogements() as $l) {
@@ -839,7 +835,9 @@ class LogementUnifieController extends Controller
                 $logement = new Logement();
                 $logementUnifie->addLogement($logement);
             }
-//            }
+            foreach ($logementRef->getTypePeriodes() as $typePeriode) {
+                $logement->addTypePeriode($typePeriode);
+            }
             $logement->setFournisseurHebergement($logementRef->getFournisseurHebergement())
                 ->setLogementUnifie($logementUnifie)
                 ->setAccesPMR($logementRef->getAccesPMR())
@@ -1241,6 +1239,11 @@ class LogementUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $em->persist($logementUnifie);
+            $job = new Job('mondofute_logement:edit_logement_periode_command',
+                array(
+                    'logementUnifieId' => $logementUnifie->getId(),
+                ), true, 'periode');
+            $em->persist($job);
             $em->flush();
 
             $this->copieVersSites($logementUnifie, $originalLogementPhotos);
