@@ -22,3 +22,6 @@ mondofute_geographie_zonetouristique:
     resource: "@MondofuteGeographieBundle/Resources/config/routing/zonetouristiqueunifie.yml"
     prefix:   /zonetouristique
 
+mondofute_geographie_grandeville:
+    resource: "@MondofuteGeographieBundle/Resources/config/routing/grandeville.yml"
+    prefix:   /grandeville

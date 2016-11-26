@@ -1,0 +1,24 @@
+geographie_grandeville_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteGeographieBundle:GrandeVille:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+geographie_grandeville_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteGeographieBundle:GrandeVille:show" }
+    methods:  GET
+
+geographie_grandeville_new:
+    path:     /new
+    defaults: { _controller: "MondofuteGeographieBundle:GrandeVille:new" }
+    methods:  [GET, POST]
+
+geographie_grandeville_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteGeographieBundle:GrandeVille:edit" }
+    methods:  [GET, POST]
+
+geographie_grandeville_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteGeographieBundle:GrandeVille:delete" }
+    methods:  DELETE
