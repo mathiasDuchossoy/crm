@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\StationBundle\Form;
 
+use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
+use Mondofute\Bundle\GeographieBundle\Repository\GrandeVilleRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -24,12 +27,17 @@ class StationCommentVenirType extends AbstractType
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationCommentVenirTraductionType::class
             ))
-            ->add('grandeVilles', CollectionType::class, array(
-                'entry_type' => StationCommentVenirGrandeVilleType::class,
-                'entry_options' => array('locale' => $locale),
-                'required' => false,
-//                'label_attr' => array('style' => 'display:none')
-            ))//            ->add('stationCommentVenirUnifie')
+            ->add('grandeVilles', EntityType::class, array(
+                'class' => GrandeVille::class,
+                'required' => true,
+                "choice_label" => "traductions[0].libelle",
+                "placeholder" => " --- choisir un type ---",
+                'query_builder' => function (GrandeVilleRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale);
+                },
+                'multiple'  => true,
+                'expanded'  => true
+            ))
         ;
     }
 

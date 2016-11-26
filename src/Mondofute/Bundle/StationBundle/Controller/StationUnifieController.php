@@ -2,22 +2,24 @@
 
 namespace Mondofute\Bundle\StationBundle\Controller;
 
-use Application\Sonata\MediaBundle\Entity\Media;
+use Aamant\Distance\Distance;
+use Aamant\Distance\Providers\GoogleMapProvider;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Geocoder\HttpAdapter\CurlHttpAdapter;
 use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
+use Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
-use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
@@ -32,7 +34,6 @@ use Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use ReflectionClass;
@@ -115,8 +116,9 @@ class StationUnifieController extends Controller
 
         $this->ajouterStationsDansForm($stationUnifie);
         /** @var Station $station */
-        foreach ($stationUnifie->getStations() as $station) {
-            $station->setStationDeSki($em->find(OuiNonNC::class, 3));
+        foreach ($stationUnifie->getStations() as $station)
+        {
+            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
         }
         $this->stationsSortByAffichage($stationUnifie);
 
@@ -242,6 +244,34 @@ class StationUnifieController extends Controller
     }
 
     /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function gestionStationLabel($stationUnifie)
+    {
+        /** @var Station $stationSite */
+        /** @var Station $stationCrm */
+        $stationCrm = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first();
+        $stationSites = $stationUnifie->getStations()->filter(function(Station $element) {
+            return $element->getSite()->getCrm() == 0;
+        });
+        foreach ($stationCrm->getStationLabels() as $stationLabel)
+        {
+            foreach ($stationSites as $stationSite)
+            {
+                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel){
+                    return $element == $stationLabel;
+                })->first();
+                if(false === $stationLabelSite)
+                {
+                    $stationSite->addStationLabel($stationLabel);
+                }
+            }
+        }
+    }
+
+    /**
      * Ajouter les stations qui n'ont pas encore été enregistré pour les sites existant, dans le formulaire
      * @param StationUnifie $entity
      */
@@ -293,17 +323,17 @@ class StationUnifieController extends Controller
                         }
                     }
 
-                    foreach ($grandeVilles as $grandeVille) {
-                        if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
-                            return $element->getGrandeVille() == $grandeVille;
-                        })->isEmpty()
-                        ) {
-                            $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
-                            $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
-                            $stationCommentVenirGranceVille->setStationCommentVenir($stationCommentVenir);
-                            $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
-                        }
-                    }
+//                    foreach ($grandeVilles as $grandeVille) {
+//                        if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
+//                            return $element->getGrandeVille() == $grandeVille;
+//                        })->isEmpty()
+//                        ) {
+//                            $stationCommentVenirGranceVille = new StationCommentVenirGrandeVille();
+//                            $stationCommentVenirGranceVille->setGrandeVille($grandeVille);
+//                            $stationCommentVenirGranceVille->setStationCommentVenir($stationCommentVenir);
+//                            $stationCommentVenir->addGrandeVille($stationCommentVenirGranceVille);
+//                        }
+//                    }
                     // station CV
 
                     // station description
@@ -538,37 +568,11 @@ class StationUnifieController extends Controller
     }
 
     /**
-     * @param StationUnifie $stationUnifie
-     */
-    private function gestionStationLabel($stationUnifie)
-    {
-        /** @var Station $stationSite */
-        /** @var Station $stationCrm */
-        $stationCrm = $stationUnifie->getStations()->filter(function (Station $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first();
-        $stationSites = $stationUnifie->getStations()->filter(function (Station $element) {
-            return $element->getSite()->getCrm() == 0;
-        });
-        foreach ($stationCrm->getStationLabels() as $stationLabel) {
-            foreach ($stationSites as $stationSite) {
-                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel) {
-                    return $element == $stationLabel;
-                })->first();
-                if (false === $stationLabelSite) {
-                    $stationSite->addStationLabel($stationLabel);
-                }
-            }
-        }
-    }
-
-    /**
      * Copie dans la base de données site l'entité station
      * @param StationUnifie $entity
      */
     private function copieVersSites(StationUnifie $entity, $originalStationVisuels = null)
     {
-        /** @var EntityManager $emSite */
         /** @var StationTraduction $stationTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         /** @var Station $station */
@@ -632,38 +636,28 @@ class StationUnifieController extends Controller
                     $stationCarteIdentite = null;
                 }
                 if (!empty($station->getStationCommentVenir())) {
-                    $stationCommentVenir = $emSite->getRepository(StationCommentVenir::class)->findOneBy(array('stationCommentVenirUnifie' => $station->getStationCommentVenir()->getStationCommentVenirUnifie()));
-//                    dump($stationCommentVenir);
-//                    if(empty($stationCommentVenir)){
-//                        $stationCommentVenir = new StationCommentVenir();
-//                    }
-                    if (!empty($stationCommentVenir)) {
-                        /** @var StationCommentVenirGrandeVille $grandeVille */
-                        if (!empty($stationCommentVenir->getGrandeVilles())) {
-                            if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
-                                foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                                    if ($stationCommentVenir->getGrandeVilles()->filter(function (StationCommentVenirGrandeVille $element) use ($grandeVille) {
-                                        return $element->getGrandeVille()->getId() == $grandeVille->getGrandeVille()->getId();
-                                    })->isEmpty()
-                                    ) {
-                                        $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                                        $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()));
-                                        $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
-                                    }
-                                }
+                    $stationCommentVenirSite = $emSite->getRepository(StationCommentVenir::class)->findOneBy(array('stationCommentVenirUnifie' => $station->getStationCommentVenir()->getStationCommentVenirUnifie()));
+                    /** @var StationCommentVenir $stationCommentVenirSite */
+                    if (!empty($stationCommentVenirSite)) {
+                        foreach ($stationCommentVenirSite->getGrandeVilles() as $grandeVilleSite){
+                            $grandeVille = $station->getStationCommentVenir()->getGrandeVilles()->filter(function (GrandeVille $element)use($grandeVilleSite){
+                                return $element->getId() == $grandeVilleSite->getId();
+                            })->first();
+                            if(empty($grandeVille)){
+                                $stationCommentVenirSite->removeGrandeVille($grandeVilleSite);
                             }
-                        } else {
-                            if (!empty($station->getStationCommentVenir()->getGrandeVilles())) {
-                                foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                                    $stationCommentVenirGrandeVille = new StationCommentVenirGrandeVille();
-                                    $stationCommentVenirGrandeVille->setGrandeVille($emSite->find(GrandeVille::class, $grandeVille->getGrandeVille()->getId()));
-                                    $stationCommentVenir->addGrandeVille($stationCommentVenirGrandeVille);
-                                }
+                        }
+                        foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille){
+                            $grandeVilleSite = $stationCommentVenirSite->getGrandeVilles()->filter(function (GrandeVille $element)use($grandeVille){
+                                return $element->getId() == $grandeVille->getId();
+                            })->first();
+                            if(empty($grandeVilleSite)){
+                                $stationCommentVenirSite->addGrandeVille($emSite->find(GrandeVille::class, $grandeVille));
                             }
                         }
                     }
                 } else {
-                    $stationCommentVenir = null;
+                    $stationCommentVenirSite = null;
                 }
                 if (!empty($station->getStationDescription())) {
                     $stationDescription = $emSite->getRepository(StationDescription::class)->findOneBy(array('stationDescriptionUnifie' => $station->getStationDescription()->getStationDescriptionUnifie()));
@@ -701,12 +695,13 @@ class StationUnifieController extends Controller
                     ->setDepartement($departement)
                     ->setStationMere($stationMere)
                     ->setStationCarteIdentite($stationCarteIdentite)
-                    ->setStationCommentVenir($stationCommentVenir)
+                    ->setStationCommentVenir($stationCommentVenirSite)
                     ->setStationDescription($stationDescription)
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
                     ->setActif($station->getActif())
-                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()));
+                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()))
+                ;
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -845,20 +840,24 @@ class StationUnifieController extends Controller
 
                 // ***** gestion station label *****
                 /** @var StationLabel $stationLabel */
-                foreach ($station->getStationLabels() as $stationLabel) {
-                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel) {
+                foreach ($station->getStationLabels() as $stationLabel)
+                {
+                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabel){
                         return $element->getId() == $stationLabel->getId();
                     })->first();
-                    if (false === $stationLabelSite) {
-                        $stationSite->addStationLabel($emSite->find(StationLabel::class, $stationLabel->getId()));
+                    if(false === $stationLabelSite)
+                    {
+                        $stationSite->addStationLabel($emSite->find(StationLabel::class , $stationLabel->getId()));
                     }
                 }
                 /** @var StationLabel $stationLabelSite */
-                foreach ($stationSite->getStationLabels() as $stationLabelSite) {
-                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element) use ($stationLabelSite) {
+                foreach ($stationSite->getStationLabels() as $stationLabelSite)
+                {
+                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element ) use ($stationLabelSite){
                         return $element->getId() == $stationLabelSite->getId();
                     })->first();
-                    if (false === $stationLabel) {
+                    if(false === $stationLabel)
+                    {
                         $stationSite->removeStationLabel($stationLabelSite);
                     }
                 }
@@ -873,7 +872,6 @@ class StationUnifieController extends Controller
 
     private function deleteFile($visuel)
     {
-        /** @var Media $visuel */
         if (file_exists($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg')) {
             unlink($this->container->getParameter('chemin_media') . $visuel->getContext() . '/0001/01/thumb_' . $visuel->getId() . '_reference.jpg');
         }
@@ -960,11 +958,29 @@ class StationUnifieController extends Controller
      */
     public function showAction(StationUnifie $stationUnifie)
     {
+        /** @var StationCommentVenirTraduction $stationVilleFr */
+        /** @var GrandeVilleTraduction $grandeVilleFr */
+        /** @var GrandeVille $grandeVille */
+        /** @var Station $station */
+        /** @var StationCommentVenir $item */
         $deleteForm = $this->createDeleteForm($stationUnifie);
+        $distances = new ArrayCollection();
+        foreach ($stationUnifie->getStations() as $station){
+            foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille){
+                $grandeVilleFr = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element){
+                    return $element->getLangue()->getCode() == 'fr_FR';
+                })->first();
+                $distance = new Distance(
+                    new GoogleMapProvider(new CurlHttpAdapter, 'fr-FR', GoogleMapProvider::MODE_DRIVING));
+                $result = $distance->distance($grandeVilleFr->getLibelle(), $station->getStationCarteIdentite()->getAdresse()->getVille());
+                $distances->set($grandeVille->getId(), $result);
+            }
+        }
 
         return $this->render('@MondofuteStation/stationunifie/show.html.twig', array(
             'stationUnifie' => $stationUnifie,
             'delete_form' => $deleteForm->createView(),
+            'distances' => $distances
         ));
     }
 
@@ -979,7 +995,7 @@ class StationUnifieController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('station_station_delete', array('id' => $stationUnifie->getId())))
-            ->add('delete', SubmitType::class, ['label' => 'Supprimer'])
+            ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -1538,143 +1554,105 @@ class StationUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $em = $this->getDoctrine()->getManager();
-
-            $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-            // Parcourir les sites non CRM
-            foreach ($sitesDistants as $siteDistant) {
-                // Récupérer le manager du site.
-                $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                // Récupérer l'entité sur le site distant puis la suprrimer.
-                $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
-
-                if (!empty($stationUnifieSite)) {
-
-                    $arrayStationCarteIdentiteUnifieSites = new ArrayCollection();
-                    $arrayStationCommentVenirUnifieSites = new ArrayCollection();
-                    $arrayStationDescriptionUnifieSites = new ArrayCollection();
-
-                    /** @var Station $stationSite */
-                    foreach ($stationUnifieSite->getStations() as $stationSite) {
-
-                        if ((empty($stationSite->getStationMere()) || (!empty($stationSite->getStationMere()) && $stationSite->getStationCarteIdentite() != $stationSite->getStationMere()->getStationCarteIdentite())) && !empty($stationSite->getStationCarteIdentite())) {
-                            if (!$arrayStationCarteIdentiteUnifieSites->contains($stationSite->getStationCarteIdentite()->getStationCarteIdentiteUnifie())) {
-                                $arrayStationCarteIdentiteUnifieSites->add($stationSite->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                            }
-//                                $stationSite->getStationCarteIdentite()->removeStation($stationSite);
-//                                $stationSite->setStationCarteIdentite(null);
-                        }
-                        if ((empty($stationSite->getStationMere()) || (!empty($stationSite->getStationMere()) && $stationSite->getStationCommentVenir() != $stationSite->getStationMere()->getStationCommentVenir())) && !empty($stationSite->getStationCommentVenir())) {
-                            if (!$arrayStationCommentVenirUnifieSites->contains($stationSite->getStationCommentVenir()->getStationCommentVenirUnifie())) {
-                                $arrayStationCommentVenirUnifieSites->add($stationSite->getStationCommentVenir()->getStationCommentVenirUnifie());
-                            }
-//                                $stationSite->getStationCommentVenir()->removeStation($stationSite);
-//                                $stationSite->setStationCommentVenir(null);
-                        }
-                        if ((empty($stationSite->getStationMere()) || (!empty($stationSite->getStationMere()) && $stationSite->getStationDescription() != $stationSite->getStationMere()->getStationDescription())) && !empty($stationSite->getStationDescription())) {
-                            if (!$arrayStationDescriptionUnifieSites->contains($stationSite->getStationDescription()->getStationDescriptionUnifie())) {
-                                $arrayStationDescriptionUnifieSites->add($stationSite->getStationDescription()->getStationDescriptionUnifie());
-                            }
-//                                $stationSite->getStationDescription()->removeStation($stationSite);
-//                                $stationSite->setStationDescription(null);
-                        }
-
-                        // si il y a des visuels pour l'entité, les supprimer
-                        if (!empty($stationSite->getVisuels())) {
-                            /** @var StationVisuel $stationVisuelSite */
-                            foreach ($stationSite->getVisuels() as $stationVisuelSite) {
-                                $visuelSite = $stationVisuelSite->getVisuel();
-                                $stationVisuelSite->setVisuel(null);
-                                if (!empty($visuelSite)) {
-                                    $emSite->remove($visuelSite);
-                                    $this->deleteFile($visuelSite);
-                                }
-                            }
-                        }
+            $erreurHebergement = false;
+            foreach ($stationUnifie->getStations() as $station) {
+                if (!empty($station->getHebergements())) {
+                    if (!$station->getHebergements()->isEmpty() && !$erreurHebergement) {
+                        $erreurHebergement = true;
+                        $this->addFlash('error', 'La station est lié à un hébergement.');
                     }
-
-                    $emSite->remove($stationUnifieSite);
-//                        $emSite->flush();
-
-                    foreach ($arrayStationCarteIdentiteUnifieSites as $stationCarteIdentiteUnify) {
-                        $emSite->remove($stationCarteIdentiteUnify);
-                    }
-                    foreach ($arrayStationCommentVenirUnifieSites as $stationCommentVenirUnify) {
-                        $emSite->remove($stationCommentVenirUnify);
-                    }
-                    foreach ($arrayStationDescriptionUnifieSites as $stationDescriptionUnify) {
-                        $emSite->remove($stationDescriptionUnify);
-                    }
-                    $emSite->flush();
-
                 }
             }
-            if (!empty($stationUnifie)) {
+            if (!$erreurHebergement) {
+                $em = $this->getDoctrine()->getManager();
 
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $stationUnifieSite = $emSite->find(StationUnifie::class, $stationUnifie->getId());
+
+                    if (!empty($stationUnifieSite)) {
+                        /** @var Station $stationSite */
+                        if (!empty($stationUnifieSite->getStations())) {
+                            /** @var Station $stationSite */
+                            foreach ($stationUnifieSite->getStations() as $stationSite) {
+
+                                // si il y a des visuels pour l'entité, les supprimer
+                                if (!empty($stationSite->getVisuels())) {
+                                    /** @var StationVisuel $stationVisuelSite */
+                                    foreach ($stationSite->getVisuels() as $stationVisuelSite) {
+                                        $visuelSite = $stationVisuelSite->getVisuel();
+                                        $stationVisuelSite->setVisuel(null);
+                                        if (!empty($visuelSite)) {
+                                            $emSite->remove($visuelSite);
+                                            $this->deleteFile($visuelSite);
+                                        }
+                                    }
+                                }
+                            }
+//                            $emSite->flush();
+                        }
+                        $emSite->remove($stationUnifieSite);
+                        $emSite->flush();
+                    }
+                }
                 $arrayStationCarteIdentiteUnifies = new ArrayCollection();
                 $arrayStationCommentVenirUnifies = new ArrayCollection();
                 $arrayStationDescriptionUnifies = new ArrayCollection();
                 /** @var Station $station */
                 foreach ($stationUnifie->getStations() as $station) {
-                    if (!empty($station->getStationCarteIdentite()) && (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite()))) {
-                        if (!$arrayStationCarteIdentiteUnifies->contains($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie())) {
-                            $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
-                        }
-//                            $station->getStationCarteIdentite()->removeStation($station);
-//                            $station->setStationCarteIdentite(null);
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCarteIdentite() != $station->getStationMere()->getStationCarteIdentite())) && !empty($station->getStationCarteIdentite())) {
+                        $arrayStationCarteIdentiteUnifies->add($station->getStationCarteIdentite()->getStationCarteIdentiteUnifie());
+                        $station->getStationCarteIdentite()->removeStation($station);
+                        $station->setStationCarteIdentite(null);
                     }
-                    if (!empty($station->getStationCommentVenir()) && (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir()))) {
-                        if (!$arrayStationCommentVenirUnifies->contains($station->getStationCommentVenir()->getStationCommentVenirUnifie())) {
-                            $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
-                        }
-//                            $station->getStationCommentVenir()->removeStation($station);
-//                            $station->setStationCommentVenir(null);
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationCommentVenir() != $station->getStationMere()->getStationCommentVenir())) && !empty($station->getStationCommentVenir())) {
+                        $arrayStationCommentVenirUnifies->add($station->getStationCommentVenir()->getStationCommentVenirUnifie());
+                        $station->getStationCommentVenir()->removeStation($station);
+                        $station->setStationCommentVenir(null);
                     }
-                    if (!empty($station->getStationDescription()) && (empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription()))) {
-                        if (!$arrayStationDescriptionUnifies->contains($station->getStationDescription()->getStationDescriptionUnifie())) {
-                            $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
-                        }
-//                            $station->getStationDescription()->removeStation($station);
-//                            $station->setStationDescription(null);
+                    if ((empty($station->getStationMere()) || (!empty($station->getStationMere()) && $station->getStationDescription() != $station->getStationMere()->getStationDescription())) && !empty($station->getStationDescription())) {
+                        $arrayStationDescriptionUnifies->add($station->getStationDescription()->getStationDescriptionUnifie());
+                        $station->getStationDescription()->removeStation($station);
+                        $station->setStationDescription(null);
                     }
                 }
 
-                if (!empty($stationUnifie->getStations())) {
-                    /** @var Station $station */
-                    foreach ($stationUnifie->getStations() as $station) {
-                        // si il y a des visuels pour l'entité, les supprimer
-                        if (!empty($station->getVisuels())) {
-                            /** @var StationVisuel $stationVisuel */
-                            foreach ($station->getVisuels() as $stationVisuel) {
-                                $visuel = $stationVisuel->getVisuel();
-                                $stationVisuel->setVisuel(null);
-                                $em->remove($visuel);
-                                $this->deleteFile($visuel);
+                if (!empty($stationUnifie)) {
+                    if (!empty($stationUnifie->getStations())) {
+                        /** @var Station $station */
+                        foreach ($stationUnifie->getStations() as $station) {
+                            // si il y a des visuels pour l'entité, les supprimer
+                            if (!empty($station->getVisuels())) {
+                                /** @var StationVisuel $stationVisuel */
+                                foreach ($station->getVisuels() as $stationVisuel) {
+                                    $visuel = $stationVisuel->getVisuel();
+                                    $stationVisuel->setVisuel(null);
+                                    $em->remove($visuel);
+                                    $this->deleteFile($visuel);
+                                }
                             }
                         }
+//                        $em->flush();
                     }
                 }
 
                 $em->remove($stationUnifie);
-//                    $em->flush();
 
                 foreach ($arrayStationCarteIdentiteUnifies as $stationCarteIdentiteUnify) {
-//                        $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
-//                        dump('supprimer');
-                    $em->remove($stationCarteIdentiteUnify);
+                    $stationCarteIdentiteUnifieController->deleteEntity($stationCarteIdentiteUnify);
                 }
                 foreach ($arrayStationCommentVenirUnifies as $stationCommentVenirUnify) {
-//                        $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
-//                        dump('supprimer');
-                    $em->remove($stationCommentVenirUnify);
+                    $stationCommentVenirUnifieController->deleteEntity($stationCommentVenirUnify);
                 }
                 foreach ($arrayStationDescriptionUnifies as $stationDescriptionUnify) {
-//                        $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
-//                        dump('supprimer');
-                    $em->remove($stationDescriptionUnify);
+                    $stationDescriptionUnifieController->deleteEntity($stationDescriptionUnify);
                 }
+
                 $em->flush();
-//                    die;
 
                 $this->addFlash('success', 'La station a été supprimé avec succès.');
             }

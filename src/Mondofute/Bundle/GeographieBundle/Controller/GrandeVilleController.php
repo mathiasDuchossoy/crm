@@ -2,14 +2,20 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
+use Aamant\Distance\Distance;
+use Aamant\Distance\Providers\GoogleMapProvider;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Geocoder\HttpAdapter\CurlHttpAdapter;
+use Geocoder\Provider\GoogleMaps;
+use Illuminate\Support\Facades\Lang;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
@@ -71,6 +77,29 @@ class GrandeVilleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+            $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
+
+            $traduction_fr = $grandeVille->getTraductions()->filter(function(GrandeVilleTraduction $element){
+                return $element->getLangue()->getCode() == 'fr_FR';
+            })->first();
+
+            try{
+                $geocodedDatas = $geocoder->getGeocodedData($traduction_fr->getLibelle());
+                $geocodedData = $geocodedDatas[0];
+            }catch (\Geocoder\Exception\NoResultException $exception){
+                $geocodedData = null;
+            }
+
+            if(!empty($geocodedData)){
+                $gps = new CoordonneesGPS();
+                $grandeVille->setCoordonneesGps($gps);
+                $gps
+                    ->setLatitude($geocodedData['latitude'])
+                    ->setLongitude($geocodedData['longitude'])
+                ;
+            }
+
             $em->persist($grandeVille);
             $em->flush();
 
@@ -148,6 +177,22 @@ class GrandeVilleController extends Controller
                 $metadata = $emSite->getClassMetadata(get_class($grandeVilleSite));
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
             }
+            // *** gps ***
+            if(!empty($grandeVille->getCoordonneesGps())){
+                if(empty($gps = $grandeVilleSite->getCoordonneesGps())){
+                    $gps = new CoordonneesGPS();
+                    $grandeVilleSite->setCoordonneesGps($gps);
+                }
+                $gps
+                    ->setLongitude($grandeVille->getCoordonneesGps()->getLongitude())
+                    ->setLatitude($grandeVille->getCoordonneesGps()->getLatitude())
+                ;
+            }else{
+                if(!empty($grandeVilleSite->getCoordonneesGps())){
+                    $emSite->remove($grandeVilleSite->getCoordonneesGps());
+                }
+            }
+            // *** fin gps ***
             // *** traductions ***
             foreach ($grandeVille->getTraductions() as $traduction) {
                 $traductionSite = $grandeVilleSite->getTraductions()->filter(function (GrandeVilleTraduction $element) use ($traduction) {
@@ -202,6 +247,7 @@ class GrandeVilleController extends Controller
      */
     public function editAction(Request $request, GrandeVille $grandeVille)
     {
+        $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($grandeVille);
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\GrandeVilleType', $grandeVille)
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
@@ -209,7 +255,37 @@ class GrandeVilleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+
+            $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+            $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
+
+            $traduction_fr = $grandeVille->getTraductions()->filter(function(GrandeVilleTraduction $element){
+                return $element->getLangue()->getCode() == 'fr_FR';
+            })->first();
+
+            try{
+                $geocodedDatas = $geocoder->getGeocodedData($traduction_fr->getLibelle());
+                $geocodedData = $geocodedDatas[0];
+            }catch (\Geocoder\Exception\NoResultException $exception){
+                $geocodedData = null;
+            }
+
+            if(!empty($geocodedData)){
+                if(empty($gps = $grandeVille->getCoordonneesGps())){
+                    $gps = new CoordonneesGPS();
+                    $grandeVille->setCoordonneesGps($gps);
+                }
+                $gps
+                    ->setLatitude($geocodedData['latitude'])
+                    ->setLongitude($geocodedData['longitude'])
+                ;
+            }else{
+                if(!empty($grandeVille->getCoordonneesGps())){
+                    $em->remove($grandeVille->getCoordonneesGps());
+                }
+            }
+
+            $em->flush();
 
             $this->copieVersSites($grandeVille);
 
@@ -217,11 +293,13 @@ class GrandeVilleController extends Controller
 
             return $this->redirectToRoute('geographie_grandeville_edit', array('id' => $grandeVille->getId()));
         }
+        $langues = $em->getRepository(Langue::class)->findAll();
 
         return $this->render('@MondofuteGeographie/grandeVille/edit.html.twig', array(
             'grandeVille' => $grandeVille,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
+            'langues' => $langues
         ));
     }
 
