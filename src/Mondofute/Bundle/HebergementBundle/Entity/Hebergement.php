@@ -493,15 +493,6 @@ class Hebergement
     {
         return $this->motClefs;
     }
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-<<<<<<< HEAD
-
-||||||| merged common ancestors
-=======
-=======
->>>>>>> modif hébergement
     /**
      * Add prestationAnnexeHebergement
      *
