@@ -40,6 +40,18 @@
                             {{ form_row( station.secteurs , { 'attr' : { 'data-unique_block_prefix' : station.secteurs.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.departement , { 'attr' : { 'data-unique_block_prefix' : station.departement.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.profils , { 'attr' : { 'data-unique_block_prefix' : station.profils.vars['unique_block_prefix']}}) }}
+                            {{ form_row( station.typeTaxeSejour , { 'attr' : {
+                                'data-unique_block_prefix' : station.typeTaxeSejour.vars['unique_block_prefix'],
+                                'onChange' : 'displayStationTypeTaxeSejourPrix(this , '~station.vars.value.site.id~');'
+                            }}) }}
+                            <div id="station_type_taxe_sejour_prix_{{ station.vars.value.site.id }}"
+                                    {% if station.typeTaxeSejour.vars.value != 1 %}
+                                        style="display: none"
+                                    {% endif %}
+                            >
+                                {{ form_row( station.taxeSejourPrix , { 'attr' : { 'data-unique_block_prefix' : station.taxeSejourPrix.vars['unique_block_prefix']}}) }}
+                                {{ form_row( station.taxeSejourAge , { 'attr' : { 'data-unique_block_prefix' : station.taxeSejourAge.vars['unique_block_prefix']}}) }}
+                            </div>
                             {{ form_row( station.stationLabels , { 'attr' : { 'data-unique_block_prefix' : station.stationLabels.vars['unique_block_prefix']}}) }}
                             {{ form_row( station.stationDeSki , { 'attr' : { 'data-unique_block_prefix' : station.stationDeSki.vars['unique_block_prefix']}}) }}
                             {% set iTraduc = 0 %}
@@ -74,7 +86,7 @@
                             {{ form_widget(station.photosParent) }}
                             {{ form_widget(station.videosParent) }}
                         </div>
-                        <br />
+                        <br/>
 
                         {# si le site est le crm on affiche le panel des medias #}
                         {% if station.vars.value.site.crm == 1 %}
@@ -656,9 +668,24 @@
                 $FormLi.remove();
             });
         }
+
+        // StationTaxeSejour
+        function displayStationTypeTaxeSejourPrix(element, siteId) {
+            $station_type_taxe_sejour_prix = $("#station_type_taxe_sejour_prix_" + siteId);
+            if ($(element).val() == 1) {
+                $station_type_taxe_sejour_prix.show();
+            } else {
+                $station_type_taxe_sejour_prix.hide();
+            }
+        }
+        $('form[name="station_unifie"]').find("select[id$='_typeTaxeSejour']").each(function (index, element) {
+            $(element).trigger('onchange');
+        })
+
     </script>
 
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBQ_mK45TpOottmscd15Ijk8HmnUNEZJLM&amp;libraries=places&amp;language=fr"></script>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBQ_mK45TpOottmscd15Ijk8HmnUNEZJLM&amp;libraries=places&amp;language=fr"></script>
     <script>
         var options = {
             types: ['(cities)']
