@@ -10,6 +10,15 @@ Mondofute\Bundle\LogementBundle\Entity\LogementUnifie:
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        archive:
+            type: boolean
+            options:
+                default: false
+        desactive:
+            type: boolean
+            options:
+                default: false
     oneToMany:
         logements:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
