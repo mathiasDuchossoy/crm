@@ -49,7 +49,7 @@
                                         style="display: none"
                                     {% endif %}
                             >
-                                {{ form_row( station.taxeSejourPrix , { 'attr' : { 'data-unique_block_prefix' : station.taxeSejourPrix.vars['unique_block_prefix']}}) }}
+                                {{ form_row( station.taxeSejourPrix , {'type' : 'number', 'attr' : { 'data-unique_block_prefix' : station.taxeSejourPrix.vars['unique_block_prefix']}}) }}
                                 {{ form_row( station.taxeSejourAge , { 'attr' : { 'data-unique_block_prefix' : station.taxeSejourAge.vars['unique_block_prefix']}}) }}
                             </div>
                             {{ form_row( station.stationLabels , { 'attr' : { 'data-unique_block_prefix' : station.stationLabels.vars['unique_block_prefix']}}) }}
