@@ -74,6 +74,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             nullable: true
             options:
                 unsigned: true
+        priorite:
+            type: smallint
+            options:
+                unsigned: true
     oneToMany:
         interlocuteurs:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur
