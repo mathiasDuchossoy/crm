@@ -15,7 +15,8 @@ class LogementUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('logements', CollectionType::class,
-            array('entry_type' => LogementType::class, 'entry_options' => array('locale' => $options["locale"])));
+            array('entry_type' => LogementType::class, 'entry_options' => array('locale' => $options["locale"])))
+            ->add('desactive');
     }
 
     /**

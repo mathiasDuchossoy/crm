@@ -15,17 +15,18 @@
             {% include '::coches_sites.html.twig' %}
             {% set mesSites = form.logements %}
 
+            {{ form_row(form.desactive) }}
             {% include '::onglets_sites.html.twig' %}
             <div class="tab-content" style="padding:20px;">
                 {% set iSite = 0 %}
-                {% for logement in form.logements %}
+                {% for keyLogement, logement in form.logements %}
                     <div id="data_site_{{ logement.vars.value.site.id }}"
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ logement.vars.value.site.crm | number_format }}">
-
                         <div style="display: none">
                             {{ form_row(logement.fournisseurHebergement) }}
                         </div>
+                        {{ form_row(logement.typePeriodes, { 'attr' : { 'data-unique_block_prefix' : logement.typePeriodes.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.nombreDeChambre, { 'attr' : { 'data-unique_block_prefix' : logement.nombreDeChambre.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.capacite, { 'attr' : { 'data-unique_block_prefix' : logement.capacite.vars['unique_block_prefix']}}) }}
                         {{ form_row(logement.superficieMin, { 'attr' : { 'data-unique_block_prefix' : logement.superficieMin.vars['unique_block_prefix']}}) }}

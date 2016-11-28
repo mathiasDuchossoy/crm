@@ -10,4 +10,13 @@ namespace Mondofute\Bundle\CatalogueBundle\Repository;
  */
 class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function deleteByLogement($logementId)
+    {
+        $sql = 'DELETE FROM logement_periode_locatif WHERE logement_id = :logementId';
+        $params = array(
+            'logementId' => $logementId,
+        );
+
+        return $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+    }
 }

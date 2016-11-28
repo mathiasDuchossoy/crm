@@ -4,8 +4,10 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -69,6 +71,10 @@ class Logement
      * @var NombreDeChambre
      */
     private $nombreDeChambre;
+    /**
+     * @var Collection
+     */
+    private $typePeriodes;
 
     /**
      * Constructor
@@ -79,6 +85,7 @@ class Logement
         $this->periodes = new ArrayCollection();
         $this->photos = new ArrayCollection();
         $this->prestationAnnexeLogements = new ArrayCollection();
+        $this->typePeriodes = new ArrayCollection();
     }
 
     /**
@@ -416,11 +423,11 @@ class Logement
     /**
      * Add prestationAnnexeLogement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     * @param PrestationAnnexeLogement $prestationAnnexeLogement
      *
      * @return Logement
      */
-    public function addPrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    public function addPrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
     {
         $this->prestationAnnexeLogements[] = $prestationAnnexeLogement;
 
@@ -430,9 +437,9 @@ class Logement
     /**
      * Remove prestationAnnexeLogement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement
+     * @param PrestationAnnexeLogement $prestationAnnexeLogement
      */
-    public function removePrestationAnnexeLogement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement $prestationAnnexeLogement)
+    public function removePrestationAnnexeLogement(PrestationAnnexeLogement $prestationAnnexeLogement)
     {
         $this->prestationAnnexeLogements->removeElement($prestationAnnexeLogement);
     }
@@ -469,5 +476,39 @@ class Logement
         $this->nombreDeChambre = $nombreDeChambre;
 
         return $this;
+    }
+
+    /**
+     * Add typePeriode
+     *
+     * @param TypePeriode $typePeriode
+     *
+     * @return Logement
+     */
+    public function addTypePeriode(TypePeriode $typePeriode)
+    {
+        $this->typePeriodes[] = $typePeriode;
+
+        return $this;
+    }
+
+    /**
+     * Remove typePeriode
+     *
+     * @param TypePeriode $typePeriode
+     */
+    public function removeTypePeriode(TypePeriode $typePeriode)
+    {
+        $this->typePeriodes->removeElement($typePeriode);
+    }
+
+    /**
+     * Get typePeriodes
+     *
+     * @return Collection
+     */
+    public function getTypePeriodes()
+    {
+        return $this->typePeriodes;
     }
 }

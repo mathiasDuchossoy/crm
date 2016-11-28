@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\LogementBundle\Form;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
 use Mondofute\Bundle\LogementBundle\Repository\NombreDeChambreRepository;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -45,9 +46,18 @@ class LogementType extends AbstractType
                 'query_builder' => function (NombreDeChambreRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
-                'expanded' => true,
+//                'expanded' => true,
             ))
-        ;
+            ->add('typePeriodes')
+            ->add('typePeriodes', EntityType::class, array(
+                'class' => TypePeriode::class,
+                'placeholder' => 'placeholder.choix_periode_type',
+                'choice_translation_domain' => 'messages',
+                'translation_domain' => 'messages',
+                'required' => true,
+                'expanded' => true,
+                'multiple' => true
+            ));
     }
 
     /**

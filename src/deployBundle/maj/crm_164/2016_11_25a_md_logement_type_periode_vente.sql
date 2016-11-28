@@ -1,0 +1,3 @@
+CREATE TABLE logement_type_periode (logement_id INT UNSIGNED NOT NULL, type_periode_id INT UNSIGNED NOT NULL, INDEX IDX_F43E3BFB58ABF955 (logement_id), INDEX IDX_F43E3BFBEE8717EA (type_periode_id), PRIMARY KEY(logement_id, type_periode_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE logement_type_periode ADD CONSTRAINT FK_F43E3BFB58ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id) ON DELETE CASCADE;
+ALTER TABLE logement_type_periode ADD CONSTRAINT FK_F43E3BFBEE8717EA FOREIGN KEY (type_periode_id) REFERENCES type_periode (id) ON DELETE CASCADE;

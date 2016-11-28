@@ -22,7 +22,8 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->join('lu.logements', 'l')
             ->join('l.fournisseurHebergement', 'fh')
             ->where("fh.id = :id")
-            ->setParameter('id', $fournisseurHebergement->getId());
+            ->setParameter('id', $fournisseurHebergement->getId())
+            ->andWhere('lu.archive = 0');
 //        ->setParameter('code' , $locale)
 //        $qb->orderBy('r.id', 'ASC');
 
@@ -43,6 +44,7 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->join('logements.fournisseurHebergement', 'fournisseurHebergement')
             ->andWhere('fournisseurHebergement.id = :idFournisseurHebergement')
             ->setParameter('idFournisseurHebergement', $idFournisseurHebergement)
+            ->andWhere('entity.archive = 0')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -72,7 +74,8 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('langue.code = :code')
             ->setParameter('code', $locale)
             ->setFirstResult(($page - 1) * $maxperpage)
-            ->setMaxResults($maxperpage);
+            ->setMaxResults($maxperpage)
+            ->andWhere('unifie.archive = 0');
 
         $q->setParameters(array(
             'site' => $site,
@@ -107,6 +110,7 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('hebergementUnifieId' ,$hebergementUnifieId )
             ->andWhere('fournisseurHebergement.fournisseur = :fournisseurId')
             ->setParameter('fournisseurId' , $fournisseurId)
+            ->andWhere('logementUnifie.archive = 0')
         ;
 
         $result = $qb->getQuery()->getResult();
