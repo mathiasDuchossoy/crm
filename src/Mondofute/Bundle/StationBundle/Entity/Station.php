@@ -104,6 +104,18 @@ class Station
      * @var OuiNonNC
      */
     private $stationDeSki;
+    /**
+     * @var float
+     */
+    private $taxeSejourPrix;
+    /**
+     * @var integer
+     */
+    private $taxeSejourAge;
+    /**
+     * @var integer
+     */
+    private $typeTaxeSejour = TypeTaxeSejour::NC;
 
     /**
      * Constructor
@@ -768,6 +780,78 @@ class Station
     public function setStationDeSki(OuiNonNC $stationDeSki = null)
     {
         $this->stationDeSki = $stationDeSki;
+
+        return $this;
+    }
+
+    /**
+     * Get taxeSejourPrix
+     *
+     * @return float
+     */
+    public function getTaxeSejourPrix()
+    {
+        return $this->taxeSejourPrix;
+    }
+
+    /**
+     * Set taxeSejourPrix
+     *
+     * @param float $taxeSejourPrix
+     *
+     * @return Station
+     */
+    public function setTaxeSejourPrix($taxeSejourPrix)
+    {
+        $this->taxeSejourPrix = $taxeSejourPrix;
+
+        return $this;
+    }
+
+    /**
+     * Get taxeSejourAge
+     *
+     * @return integer
+     */
+    public function getTaxeSejourAge()
+    {
+        return $this->taxeSejourAge;
+    }
+
+    /**
+     * Set taxeSejourAge
+     *
+     * @param integer $taxeSejourAge
+     *
+     * @return Station
+     */
+    public function setTaxeSejourAge($taxeSejourAge)
+    {
+        $this->taxeSejourAge = $taxeSejourAge;
+
+        return $this;
+    }
+
+    /**
+     * Get typeTaxeSejour
+     *
+     * @return integer
+     */
+    public function getTypeTaxeSejour()
+    {
+        return $this->typeTaxeSejour;
+    }
+
+    /**
+     * Set typeTaxeSejour
+     *
+     * @param integer $typeTaxeSejour
+     *
+     * @return Station
+     */
+    public function setTypeTaxeSejour($typeTaxeSejour)
+    {
+        $this->typeTaxeSejour = $typeTaxeSejour;
 
         return $this;
     }
