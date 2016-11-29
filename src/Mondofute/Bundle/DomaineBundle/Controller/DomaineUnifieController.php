@@ -1886,11 +1886,6 @@ class DomaineUnifieController extends Controller
 
     }
 
-    public function getModeleForfaitDescriptionForfaitSkiAction($id)
-    {
-
-    }
-
     /**
      * Deletes a DomaineUnifie entity.
      *
