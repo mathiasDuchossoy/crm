@@ -16,10 +16,12 @@ use Mondofute\Bundle\GeographieBundle\Repository\SecteurRepository;
 use Mondofute\Bundle\GeographieBundle\Repository\ZoneTouristiqueRepository;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationLabel;
+use Mondofute\Bundle\StationBundle\Entity\TypeTaxeSejour;
 use Mondofute\Bundle\StationBundle\Repository\StationLabelRepository;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -135,8 +137,8 @@ class StationType extends AbstractType
                 'query_builder' => function (StationLabelRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
-                'multiple'  => true,
-                'expanded'  => true,
+                'multiple' => true,
+                'expanded' => true,
             ))
             ->add('stationDeSki',
                 EntityType::class,
@@ -148,7 +150,17 @@ class StationType extends AbstractType
                     },
                     'label' => 'Station de ski'
                 ))
-        ;
+            ->add('typeTaxeSejour', ChoiceType::class, array(
+                    'choices' => array(
+                        TypeTaxeSejour::getLibelle(TypeTaxeSejour::prix) => TypeTaxeSejour::prix,
+                        TypeTaxeSejour::getLibelle(TypeTaxeSejour::pasDeTaxe) => TypeTaxeSejour::pasDeTaxe,
+                        TypeTaxeSejour::getLibelle(TypeTaxeSejour::NC) => TypeTaxeSejour::NC,
+                    ),
+                    'choices_as_values' => true
+                )
+            )
+            ->add('taxeSejourPrix')
+            ->add('taxeSejourAge');
     }
 
     /**

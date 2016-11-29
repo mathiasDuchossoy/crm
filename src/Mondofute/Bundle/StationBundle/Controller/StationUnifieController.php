@@ -32,6 +32,7 @@ use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuel;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction;
+use Mondofute\Bundle\StationBundle\Entity\TypeTaxeSejour;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -117,9 +118,8 @@ class StationUnifieController extends Controller
 
         $this->ajouterStationsDansForm($stationUnifie);
         /** @var Station $station */
-        foreach ($stationUnifie->getStations() as $station)
-        {
-            $station->setStationDeSki($em->find(OuiNonNC::class , 3 ));
+        foreach ($stationUnifie->getStations() as $station) {
+            $station->setStationDeSki($em->find(OuiNonNC::class, 3));
         }
         $this->stationsSortByAffichage($stationUnifie);
 
@@ -217,6 +217,7 @@ class StationUnifieController extends Controller
 
             $this->gestionStationLabel($stationUnifie);
 
+            $this->gestionTaxeSejour($stationUnifie);
 
             $em->persist($stationUnifie);
             $em->flush();
@@ -566,6 +567,19 @@ class StationUnifieController extends Controller
     }
 
     /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function gestionTaxeSejour($stationUnifie)
+    {
+
+        foreach ($stationUnifie->getStations() as $station) {
+            if ($station->getTypeTaxeSejour() != TypeTaxeSejour::prix) {
+                $station->setTaxeSejourPrix(null)->setTaxeSejourAge(null);
+            }
+        }
+    }
+
+    /**
      * Copie dans la base de données site l'entité station
      * @param StationUnifie $entity
      */
@@ -638,19 +652,19 @@ class StationUnifieController extends Controller
                     $stationCommentVenirSite = $emSite->getRepository(StationCommentVenir::class)->findOneBy(array('stationCommentVenirUnifie' => $station->getStationCommentVenir()->getStationCommentVenirUnifie()));
                     /** @var StationCommentVenir $stationCommentVenirSite */
                     if (!empty($stationCommentVenirSite)) {
-                        foreach ($stationCommentVenirSite->getGrandeVilles() as $grandeVilleSite){
-                            $grandeVille = $station->getStationCommentVenir()->getGrandeVilles()->filter(function (GrandeVille $element)use($grandeVilleSite){
+                        foreach ($stationCommentVenirSite->getGrandeVilles() as $grandeVilleSite) {
+                            $grandeVille = $station->getStationCommentVenir()->getGrandeVilles()->filter(function (GrandeVille $element) use ($grandeVilleSite) {
                                 return $element->getId() == $grandeVilleSite->getId();
                             })->first();
-                            if(empty($grandeVille)){
+                            if (empty($grandeVille)) {
                                 $stationCommentVenirSite->removeGrandeVille($grandeVilleSite);
                             }
                         }
-                        foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille){
-                            $grandeVilleSite = $stationCommentVenirSite->getGrandeVilles()->filter(function (GrandeVille $element)use($grandeVille){
+                        foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
+                            $grandeVilleSite = $stationCommentVenirSite->getGrandeVilles()->filter(function (GrandeVille $element) use ($grandeVille) {
                                 return $element->getId() == $grandeVille->getId();
                             })->first();
-                            if(empty($grandeVilleSite)){
+                            if (empty($grandeVilleSite)) {
                                 $stationCommentVenirSite->addGrandeVille($emSite->find(GrandeVille::class, $grandeVille));
                             }
                         }
@@ -699,7 +713,10 @@ class StationUnifieController extends Controller
                     ->setPhotosParent($photosParent)
                     ->setVideosParent($videosParent)
                     ->setActif($station->getActif())
-                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()));
+                    ->setStationDeSki($emSite->find(OuiNonNC::class, $station->getStationDeSki()->getId()))
+                    ->setTypeTaxeSejour($station->getTypeTaxeSejour())
+                    ->setTaxeSejourPrix($station->getTaxeSejourPrix())
+                    ->setTaxeSejourAge($station->getTaxeSejourAge());
 
 //            Gestion des traductions
                 foreach ($station->getTraductions() as $stationTraduc) {
@@ -960,9 +977,9 @@ class StationUnifieController extends Controller
         /** @var StationCommentVenir $item */
         $deleteForm = $this->createDeleteForm($stationUnifie);
         $distances = new ArrayCollection();
-        foreach ($stationUnifie->getStations() as $station){
-            foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille){
-                $grandeVilleFr = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element){
+        foreach ($stationUnifie->getStations() as $station) {
+            foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
+                $grandeVilleFr = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element) {
                     return $element->getLangue()->getCode() == 'fr_FR';
                 })->first();
                 $distance = new Distance(
@@ -1247,6 +1264,8 @@ class StationUnifieController extends Controller
             // ***** Fin Gestion des Medias *****
 
             $this->gestionStationLabel($stationUnifie);
+
+            $this->gestionTaxeSejour($stationUnifie);
 
             $em->persist($stationUnifie);
             $em->flush();
