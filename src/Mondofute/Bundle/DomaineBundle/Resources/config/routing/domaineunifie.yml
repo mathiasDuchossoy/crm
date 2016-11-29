@@ -22,3 +22,8 @@ domaine_domaine_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:delete" }
     methods:  DELETE
+
+domaine_domaine_get_modeledescriptionforfaitski:
+    path:     /getmodeledescriptionforfaitski/{$id}
+    defaults: { _controller: "MondofuteDomaineBundle:DomaineUnifie:getModeleForfaitDescriptionForfaitSki" }
+    methods:  GET

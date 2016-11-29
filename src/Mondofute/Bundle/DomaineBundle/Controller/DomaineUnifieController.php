@@ -243,7 +243,7 @@ class DomaineUnifieController extends Controller
                 }
             }
             // *** gestion des videos ***
-//            $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
+            $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
 
             $em->persist($domaineUnifie);
 
@@ -1601,7 +1601,6 @@ class DomaineUnifieController extends Controller
         ));
     }
 
-
     private function carteIdentiteEdit(Request $request, DomaineUnifie $domaineUnifie)
     {
         /** @var DomaineCarteIdentiteTraduction $traduction */
@@ -1813,6 +1812,11 @@ class DomaineUnifieController extends Controller
 //            $em->persist($domaine);
 //                $em->flush();
         }
+
+    }
+
+    public function getModeleForfaitDescriptionForfaitSkiAction($id)
+    {
 
     }
 
