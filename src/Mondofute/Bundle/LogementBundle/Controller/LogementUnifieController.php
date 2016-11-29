@@ -694,14 +694,20 @@ class LogementUnifieController extends Controller
     public function setDesactiveAction($id, $desactive)
     {
         $em = $this->getDoctrine()->getManager();
-        $logementUnifie = $em->find(LogementUnifie::class, $id);
-        if ($desactive == "true") {
-            $logementUnifie->setDesactive(true);
-        } else {
-            $logementUnifie->setDesactive(false);
+
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+            $logementUnifie = $emSite->find(LogementUnifie::class, $id);
+            if ($desactive == "true") {
+                $logementUnifie->setDesactive(true);
+            } else {
+                $logementUnifie->setDesactive(false);
+            }
+            $emSite->persist($logementUnifie);
+            $emSite->flush();
         }
-        $em->persist($logementUnifie);
-        $em->flush();
         return new Response();
     }
 
