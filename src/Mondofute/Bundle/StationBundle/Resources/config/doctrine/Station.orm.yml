@@ -23,6 +23,15 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             type: boolean
             options:
                 default: true
+        typeTaxeSejour:
+            type: integer
+            nullable: false
+        taxeSejourPrix:
+            type: float
+            nullable: true
+        taxeSejourAge:
+            type: integer
+            nullable: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
