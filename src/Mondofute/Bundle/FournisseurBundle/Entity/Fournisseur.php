@@ -135,6 +135,10 @@ class Fournisseur extends Moral
      * @var ConditionAnnulationDescription
      */
     private $conditionAnnulationDescription;
+    /**
+     * @var integer
+     */
+    private $priorite = Priorite::NC;
 
     /**
      * Fournisseur constructor.
@@ -951,4 +955,39 @@ class Fournisseur extends Moral
 
         return $this;
     }
+
+    /**
+     * Get priorite
+     *
+     * @return integer
+     */
+    public function getPriorite()
+    {
+        return $this->priorite;
+    }
+
+    /**
+     * Set priorite
+     *
+     * @param integer $priorite
+     *
+     * @return Fournisseur
+     */
+    public function setPriorite($priorite)
+    {
+        $this->priorite = $priorite;
+
+        return $this;
+    }
+
+    /**
+     * Get prioriteLibelle
+     *
+     * @return string
+     */
+    public function getPrioriteLibelle()
+    {
+        return Priorite::getLibelle($this->priorite);
+    }
+
 }

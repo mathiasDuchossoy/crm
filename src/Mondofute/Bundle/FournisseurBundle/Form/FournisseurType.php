@@ -6,17 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
+use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
 use Mondofute\Bundle\FournisseurBundle\Entity\RelocationAnnulation;
-use Mondofute\Bundle\FournisseurBundle\Entity\TypeFournisseur;
 use Mondofute\Bundle\FournisseurBundle\Repository\FournisseurRepository;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form\FournisseurPrestationAnnexeType;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
-use Mondofute\Bundle\PrestationAnnexeBundle\Repository\PrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
@@ -59,9 +54,9 @@ class FournisseurType extends AbstractType
                 'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
-                'multiple'  => true,
-                'expanded'  => true,
-                'attr'      => array(
+                'multiple' => true,
+                'expanded' => true,
+                'attr' => array(
                     'onclick' => "javascript:updatePrestationAnnexe('$fournisseurId',this);displayInformationRM()",
                 )
             ))
@@ -109,7 +104,7 @@ class FournisseurType extends AbstractType
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
                     'nucleus_moyencombundle_adresse',
 //                    'nucleus_moyencombundle_email',
-                    
+
                 ),
                     'allow_add' => true,
 //                    'allow_delete' => true,
@@ -158,7 +153,7 @@ class FournisseurType extends AbstractType
                 'label' => 'prestation.annexe',
                 'translation_domain' => 'messages',
                 'prototype_name' => '__prestation_annexe_name__',
-                'options'   => array(
+                'options' => array(
                     'famillePrestationAnnexeId' => $options['famillePrestationAnnexeId']
                 )
             ))
@@ -167,16 +162,16 @@ class FournisseurType extends AbstractType
             ->add('specificiteCommission')
             ->add('retrocommissionMFFinSaison')
             ->add('conditionAnnulation', ChoiceType::class, array(
-                'choices' => array(
-                    ConditionAnnulation::getLibelle(ConditionAnnulation::standard) => ConditionAnnulation::standard,
-                    ConditionAnnulation::getLibelle(ConditionAnnulation::personnalisee) => ConditionAnnulation::personnalisee
-                ),
-                'choices_as_values' => true,
-                "placeholder" => " --- choisir une condition d'annulation ---",
+                    'choices' => array(
+                        ConditionAnnulation::getLibelle(ConditionAnnulation::standard) => ConditionAnnulation::standard,
+                        ConditionAnnulation::getLibelle(ConditionAnnulation::personnalisee) => ConditionAnnulation::personnalisee
+                    ),
+                    'choices_as_values' => true,
+                    "placeholder" => " --- choisir une condition d'annulation ---",
                     'required' => false
                 )
             )
-            ->add('conditionAnnulationDescription', ConditionAnnulationDescriptionType::class , [ 'required' => false])
+            ->add('conditionAnnulationDescription', ConditionAnnulationDescriptionType::class, ['required' => false])
             ->add('relocationAnnulation', ChoiceType::class, array(
                     'choices' => array(
                         RelocationAnnulation::getLibelle(RelocationAnnulation::nsp) => RelocationAnnulation::nsp,
@@ -187,7 +182,7 @@ class FournisseurType extends AbstractType
                     'choices_as_values' => true,
                 )
             )
-            ->add('delaiPaiementFacture' , IntegerType::class , array(
+            ->add('delaiPaiementFacture', IntegerType::class, array(
                 'attr' => array(
                     'max' => 0
                 )
@@ -199,10 +194,19 @@ class FournisseurType extends AbstractType
             ->add('commissionForfaitPeriode')
             ->add('commissionSupportMainLibre')
 //          Fin Informations RM
-            ->add('blocageVente' , IntegerType::class , array(
+            ->add('blocageVente', IntegerType::class, array(
                 'label' => 'Blocage vente J-'
             ))
-        ;
+            ->add('priorite', ChoiceType::class, array(
+                    'choices' => array(
+                        Priorite::getLibelle(Priorite::NC) => Priorite::NC,
+                        Priorite::getLibelle(Priorite::priorite1) => Priorite::priorite1,
+                        Priorite::getLibelle(Priorite::priorite2) => Priorite::priorite2,
+                        Priorite::getLibelle(Priorite::priorite3) => Priorite::priorite3
+                    ),
+                    'choices_as_values' => true,
+                )
+            );
     }
 
     /**
@@ -220,7 +224,7 @@ class FournisseurType extends AbstractType
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        $arrayType = new ArrayCollection();
+//        $arrayType = new ArrayCollection();
         $view->children['logo']->children['binaryContent']->vars['attr'] = array('accept' => "image/x-png, image/gif, image/jpeg");
 
 //        if (!empty($view->vars['value']->getTypes())) {

@@ -62,3 +62,8 @@ fournisseur_get_condition_annulation_standard:
     path:     /getconditionannulationstandard
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:getConditionAnnulationStandard"  }
     methods:  GET
+
+fournisseur_set_priorite:
+    path:     /setfournisseurpriorite/{id}/{priorite}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:setPriorite"  }
+    methods:  GET
