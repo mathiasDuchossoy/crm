@@ -14,16 +14,24 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
             type: decimal
             precision: 10
             scale: '2'
+            options:
+                default: 0
         prixFournisseur:
             type: decimal
             precision: 10
             scale: '2'
+            options:
+                default: 0
         prixAchat:
             type: decimal
             precision: 10
             scale: '2'
+            options:
+                default: 0
         stock:
             type: integer
+            options:
+                default: 0
     oneToOne:
         periode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
