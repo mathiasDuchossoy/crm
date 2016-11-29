@@ -256,6 +256,9 @@ class DomaineUnifieController extends Controller
             // *** gestion des videos ***
             $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
 
+            foreach ($domaineUnifie->getDomaines() as $domaine) {
+                $em->persist($domaine->getModeleDescriptionForfaitSki());
+            }
             $em->persist($domaineUnifie);
 
             try {
