@@ -63,3 +63,7 @@ popup_logement_logement_delete:
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:deletePopup" }
     methods:  DELETE
 
+popup_logement_logement_set_desactive:
+    path:     /{id}/desactive/{desactive}
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:setDesactive" }
+    methods:  GET

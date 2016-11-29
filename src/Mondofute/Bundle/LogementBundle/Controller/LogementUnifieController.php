@@ -691,6 +691,26 @@ class LogementUnifieController extends Controller
         }
     }
 
+    public function setDesactiveAction($id, $desactive)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+            $logementUnifie = $emSite->find(LogementUnifie::class, $id);
+            if ($desactive == "true") {
+                $logementUnifie->setDesactive(true);
+            } else {
+                $logementUnifie->setDesactive(false);
+            }
+            $emSite->persist($logementUnifie);
+            $emSite->flush();
+        }
+        return new Response();
+    }
+
     /**
      * @param Request $request
      * @param $id
