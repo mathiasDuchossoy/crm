@@ -130,8 +130,7 @@ class DomaineUnifieController extends Controller
                     $domaine
                         ->setPhotosParent(false)
                         ->setImagesParent(false)
-                        ->setVideosParent(false)
-                    ;
+                        ->setVideosParent(false);
                 }
             }
 
@@ -244,15 +243,17 @@ class DomaineUnifieController extends Controller
                 }
             }
             // *** gestion des videos ***
-            $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
+//            $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
 
             $em->persist($domaineUnifie);
 
             try {
                 $em->flush();
             } catch (\Exception $e) {
-                echo "Exception Found - " . $e->getMessage() . "<br/>";
-                die;
+                $this->addFlash(
+                    'error',
+                    $e->getMessage()
+                );
             }
 
             foreach ($domaineUnifie->getDomaines() as $domaine) {
@@ -373,13 +374,11 @@ class DomaineUnifieController extends Controller
                     $typePistes = $em->getRepository(TypePiste::class)->findAll();
                     /** @var Piste $piste */
                     /** @var TypePiste $typePiste */
-                    foreach ($typePistes as $typePiste)
-                    {
-                        $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element ) use ($typePiste){
+                    foreach ($typePistes as $typePiste) {
+                        $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
                             return $typePiste == $element->getTypePiste();
                         })->first();
-                        if(false === $piste)
-                        {
+                        if (false === $piste) {
                             $piste = new Piste();
                             $domaineCarteIdentite->addPiste($piste);
                             $piste->setTypePiste($typePiste);
@@ -911,7 +910,7 @@ class DomaineUnifieController extends Controller
 
                 $modeleDescriptionForfaitSkiController = new ModeleDescriptionForfaitSkiController();
                 $modeleDescriptionForfaitSkiController->setContainer($this->container);
-                $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity , $entitySite);
+                $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity, $entitySite);
 
                 $emSite->persist($entitySite);
                 $emSite->flush();
@@ -1133,7 +1132,7 @@ class DomaineUnifieController extends Controller
                 foreach ($domaine->getVideos() as $domaineVideo) {
                     // on ajoute les photo dans la collection de sauvegarde
                     $originalDomaineVideos->add($domaineVideo);
-                    $originalVideos->set($domaineVideo->getId() , $domaineVideo->getVideo());
+                    $originalVideos->set($domaineVideo->getId(), $domaineVideo->getVideo());
                 }
             }
         }
@@ -1166,8 +1165,7 @@ class DomaineUnifieController extends Controller
                         $domaine
                             ->setPhotosParent(false)
                             ->setImagesParent(false)
-                            ->setVideosParent(false)
-                        ;
+                            ->setVideosParent(false);
                     }
                 }
 
@@ -1320,14 +1318,11 @@ class DomaineUnifieController extends Controller
                 /** @var DomaineVideo $domaineVideo */
                 foreach ($domaineCrm->getVideos() as $key => $domaineVideo) {
                     foreach ($domaineSites as $domaineSite) {
-                        if (empty($domaineVideo->getId()) ) {
+                        if (empty($domaineVideo->getId())) {
                             $domaineVideoSite = clone $domaineVideo;
-                        }
-                        else
-                        {
-                            $domaineVideoSite = $em->getRepository(DomaineVideo::class)->findOneBy(array('video' => $originalVideos->get($domaineVideo->getId()) , 'domaine' => $domaineSite));
-                            if($originalVideos->get($domaineVideo->getId()) != $domaineVideo->getVideo())
-                            {
+                        } else {
+                            $domaineVideoSite = $em->getRepository(DomaineVideo::class)->findOneBy(array('video' => $originalVideos->get($domaineVideo->getId()), 'domaine' => $domaineSite));
+                            if ($originalVideos->get($domaineVideo->getId()) != $domaineVideo->getVideo()) {
                                 $em->remove($domaineVideoSite->getVideo());
                                 $this->deleteFile($domaineVideoSite->getVideo());
                                 $domaineVideoSite->setVideo($domaineVideo->getVideo());
@@ -1343,14 +1338,11 @@ class DomaineUnifieController extends Controller
                         $domaineVideoSite->setActif($actif);
 
                         // *** traductions ***
-                        foreach ($domaineVideo->getTraductions() as $traduction)
-                        {
-                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction)
-                            {
+                        foreach ($domaineVideo->getTraductions() as $traduction) {
+                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction) {
                                 return $element->getLangue() == $traduction->getLangue();
                             })->first();
-                            if(false === $traductionSite)
-                            {
+                            if (false === $traductionSite) {
                                 $traductionSite = new DomaineVideoTraduction();
                                 $domaineVideoSite->addTraduction($traductionSite);
                                 $traductionSite->setLangue($traduction->getLangue());
@@ -1634,100 +1626,99 @@ class DomaineUnifieController extends Controller
                     }
                 }
 
-            } else if (!empty($domaine->getDomaineParent()) && $domaine->getDomaineParent()->getDomaineCarteIdentite() === $domaine->getDomaineCarteIdentite()){
+            } else if (!empty($domaine->getDomaineParent()) && $domaine->getDomaineParent()->getDomaineCarteIdentite() === $domaine->getDomaineCarteIdentite()) {
                 //
-                    // OIn fait ça
-                    $cIParent = $domaine->getDomaineParent()->getDomaineCarteIdentite();
-                    $cIOld = $domaine->getDomaineCarteIdentite();
+                // OIn fait ça
+                $cIParent = $domaine->getDomaineParent()->getDomaineCarteIdentite();
+                $cIOld = $domaine->getDomaineCarteIdentite();
 
-                    $newCI = new DomaineCarteIdentite();
-                    $altitudeMini = new Distance();
-                    $altitudeMini->setUnite($cIOld->getAltitudeMini()->getUnite());
-                    $altitudeMini->setValeur($cIOld->getAltitudeMini()->getValeur());
-                    $newCI->setAltitudeMini($altitudeMini);
+                $newCI = new DomaineCarteIdentite();
+                $altitudeMini = new Distance();
+                $altitudeMini->setUnite($cIOld->getAltitudeMini()->getUnite());
+                $altitudeMini->setValeur($cIOld->getAltitudeMini()->getValeur());
+                $newCI->setAltitudeMini($altitudeMini);
 
-                    $altitudeMaxi = new Distance();
-                    $altitudeMaxi->setUnite($cIOld->getAltitudeMaxi()->getUnite());
-                    $altitudeMaxi->setValeur($cIOld->getAltitudeMaxi()->getValeur());
-                    $newCI->setAltitudeMaxi($altitudeMaxi);
+                $altitudeMaxi = new Distance();
+                $altitudeMaxi->setUnite($cIOld->getAltitudeMaxi()->getUnite());
+                $altitudeMaxi->setValeur($cIOld->getAltitudeMaxi()->getValeur());
+                $newCI->setAltitudeMaxi($altitudeMaxi);
 
-                    $kmPistesSkiAlpin = new KmPistesAlpin();
-                    $kmPistesSkiAlpin->setLongueur(new Distance());
-                    $kmPistesSkiAlpin->getLongueur()->setUnite($cIOld->getKmPistesSkiAlpin()->getLongueur()->getUnite());
-                    $kmPistesSkiAlpin->getLongueur()->setValeur($cIOld->getKmPistesSkiAlpin()->getLongueur()->getValeur());
-                    $newCI->setKmPistesSkiAlpin($kmPistesSkiAlpin);
+                $kmPistesSkiAlpin = new KmPistesAlpin();
+                $kmPistesSkiAlpin->setLongueur(new Distance());
+                $kmPistesSkiAlpin->getLongueur()->setUnite($cIOld->getKmPistesSkiAlpin()->getLongueur()->getUnite());
+                $kmPistesSkiAlpin->getLongueur()->setValeur($cIOld->getKmPistesSkiAlpin()->getLongueur()->getValeur());
+                $newCI->setKmPistesSkiAlpin($kmPistesSkiAlpin);
 
-                    $kmPistesSkiNordique = new KmPistesNordique();
-                    $kmPistesSkiNordique->setLongueur(new Distance());
-                    $kmPistesSkiNordique->getLongueur()->setUnite($cIOld->getKmPistesSkiNordique()->getLongueur()->getUnite());
-                    $kmPistesSkiNordique->getLongueur()->setValeur($cIOld->getKmPistesSkiNordique()->getLongueur()->getValeur());
-                    $newCI->setKmPistesSkiNordique($kmPistesSkiNordique);
+                $kmPistesSkiNordique = new KmPistesNordique();
+                $kmPistesSkiNordique->setLongueur(new Distance());
+                $kmPistesSkiNordique->getLongueur()->setUnite($cIOld->getKmPistesSkiNordique()->getLongueur()->getUnite());
+                $kmPistesSkiNordique->getLongueur()->setValeur($cIOld->getKmPistesSkiNordique()->getLongueur()->getValeur());
+                $newCI->setKmPistesSkiNordique($kmPistesSkiNordique);
 
-                    //remontee mécanique
-                    $newCI->setRemonteeMecanique($cIOld->getRemonteeMecanique());
-                    //niveauSKieur
-                    $newCI->setNiveauSkieur($cIOld->getNiveauSkieur());
+                //remontee mécanique
+                $newCI->setRemonteeMecanique($cIOld->getRemonteeMecanique());
+                //niveauSKieur
+                $newCI->setNiveauSkieur($cIOld->getNiveauSkieur());
 
-                    //pistes
-                    /** @var Piste $piste */
-                    foreach ($cIOld->getPistes() as $piste) {
-                        $newPiste = new Piste();
-                        $newPiste->setTypePiste($piste->getTypePiste());
-                        $newPiste->setNombre($piste->getNombre());
-                        $newCI->addPiste($newPiste);
-                    }
+                //pistes
+                /** @var Piste $piste */
+                foreach ($cIOld->getPistes() as $piste) {
+                    $newPiste = new Piste();
+                    $newPiste->setTypePiste($piste->getTypePiste());
+                    $newPiste->setNombre($piste->getNombre());
+                    $newCI->addPiste($newPiste);
+                }
 
-                    $snowpark = new Snowpark();
-                    $newCI->setSnowpark($snowpark);
-                    $handiski = new Handiski();
-                    $newCI->setHandiski($handiski);
+                $snowpark = new Snowpark();
+                $newCI->setSnowpark($snowpark);
+                $handiski = new Handiski();
+                $newCI->setHandiski($handiski);
 
-                    foreach ($cIOld->getTraductions() as $traduction) {
-                        $newTrad = new DomaineCarteIdentiteTraduction();
-                        $newTrad
-                            ->setLangue($traduction->getLangue())
-                            ->setAccroche($traduction->getAccroche())
-                            ->setDescription($traduction->getDescription());
-                        $newCI->addTraduction($newTrad);
-                    }
+                foreach ($cIOld->getTraductions() as $traduction) {
+                    $newTrad = new DomaineCarteIdentiteTraduction();
+                    $newTrad
+                        ->setLangue($traduction->getLangue())
+                        ->setAccroche($traduction->getAccroche())
+                        ->setDescription($traduction->getDescription());
+                    $newCI->addTraduction($newTrad);
+                }
 
-                    $snowpark->setPresent($cIOld->getSnowpark()->getPresent());
-                    foreach ($cIOld->getSnowpark()->getTraductions() as $traduction) {
-                        $newTrad = new SnowparkTraduction();
-                        $newTrad
-                            ->setLangue($traduction->getLangue())
-                            ->setDescription($traduction->getDescription());
-                        $newCI->getSnowpark()->addTraduction($newTrad);
-                    }
+                $snowpark->setPresent($cIOld->getSnowpark()->getPresent());
+                foreach ($cIOld->getSnowpark()->getTraductions() as $traduction) {
+                    $newTrad = new SnowparkTraduction();
+                    $newTrad
+                        ->setLangue($traduction->getLangue())
+                        ->setDescription($traduction->getDescription());
+                    $newCI->getSnowpark()->addTraduction($newTrad);
+                }
 
-                    $handiski->setPresent($cIOld->getHandiski()->getPresent());
-                    foreach ($cIOld->getHandiski()->getTraductions() as $traduction) {
-                        $newTrad = new HandiskiTraduction();
-                        $newTrad
-                            ->setLangue($traduction->getLangue())
-                            ->setDescription($traduction->getDescription());
-                        $newCI->getHandiski()->addTraduction($newTrad);
-                    }
-                    $newCI->setSite($domaine->getDomaineCarteIdentite()->getSite());
+                $handiski->setPresent($cIOld->getHandiski()->getPresent());
+                foreach ($cIOld->getHandiski()->getTraductions() as $traduction) {
+                    $newTrad = new HandiskiTraduction();
+                    $newTrad
+                        ->setLangue($traduction->getLangue())
+                        ->setDescription($traduction->getDescription());
+                    $newCI->getHandiski()->addTraduction($newTrad);
+                }
+                $newCI->setSite($domaine->getDomaineCarteIdentite()->getSite());
 
-                    $remonteeMecanique = new RemonteeMecanique();
-                    $remonteeMecanique->setNombre($cIOld->getRemonteeMecanique()->getNombre());
-                    $newCI->setRemonteeMecanique($remonteeMecanique);
+                $remonteeMecanique = new RemonteeMecanique();
+                $remonteeMecanique->setNombre($cIOld->getRemonteeMecanique()->getNombre());
+                $newCI->setRemonteeMecanique($remonteeMecanique);
 
-                    $em->persist($newCI);
-                    $domaine->setDomaineCarteIdentite($newCI);
+                $em->persist($newCI);
+                $domaine->setDomaineCarteIdentite($newCI);
 
-                    $em->refresh($cIParent);
-                    $em->refresh($cIParent->getAltitudeMini());
-                    $em->refresh($cIParent->getAltitudeMaxi());
-                    $em->refresh($cIParent->getKmPistesSkiAlpin());
-                    $em->refresh($cIParent->getKmPistesSkiNordique());
-                    $em->refresh($cIParent->getNiveauSkieur());
-                    $em->refresh($cIParent->getSnowpark());
-                    $em->refresh($cIParent->getHandiski());
-                    $em->refresh($cIParent->getRemonteeMecanique());
-            }
-            else if(empty($domaine->getDomaineParent()) && count($domaine->getDomaineCarteIdentite()->getDomaines()) > 1){
+                $em->refresh($cIParent);
+                $em->refresh($cIParent->getAltitudeMini());
+                $em->refresh($cIParent->getAltitudeMaxi());
+                $em->refresh($cIParent->getKmPistesSkiAlpin());
+                $em->refresh($cIParent->getKmPistesSkiNordique());
+                $em->refresh($cIParent->getNiveauSkieur());
+                $em->refresh($cIParent->getSnowpark());
+                $em->refresh($cIParent->getHandiski());
+                $em->refresh($cIParent->getRemonteeMecanique());
+            } else if (empty($domaine->getDomaineParent()) && count($domaine->getDomaineCarteIdentite()->getDomaines()) > 1) {
 
                 $cIOld = $domaine->getDomaineCarteIdentite();
 
