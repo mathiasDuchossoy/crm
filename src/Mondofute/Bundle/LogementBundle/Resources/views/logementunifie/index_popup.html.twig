@@ -39,5 +39,22 @@
         }
 
     </script>
+
+    <script>
+        function logementActiver(id, desactive) {
+            var path = '{{ path('popup_logement_logement_set_desactive' , { 'id' : '_id_' , 'desactive' : '_desactive_'}) }}';
+            path = path.replace('_id_', id);
+            path = path.replace('_desactive_', desactive);
+            $.ajax(path, {});
+            if (desactive == true) {
+                $('#lien_logement_desactive_' + id).hide();
+                $('#lien_logement_active_' + id).show();
+            }
+            else {
+                $('#lien_logement_active_' + id).hide();
+                $('#lien_logement_desactive_' + id).show();
+            }
+        }
+    </script>
 {% endblock %}
 

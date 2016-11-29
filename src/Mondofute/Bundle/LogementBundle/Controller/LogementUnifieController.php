@@ -13,7 +13,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\LogementBundle\Command\EditLogementPeriodeCommand;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
@@ -686,6 +685,26 @@ class LogementUnifieController extends Controller
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $logementPhotoSite->addTraduction($traductionSite);
         }
+    }
+
+    public function setDesactiveAction($id, $desactive)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+            $logementUnifie = $emSite->find(LogementUnifie::class, $id);
+            if ($desactive == "true") {
+                $logementUnifie->setDesactive(true);
+            } else {
+                $logementUnifie->setDesactive(false);
+            }
+            $emSite->persist($logementUnifie);
+            $emSite->flush();
+        }
+        return new Response();
     }
 
     /**
