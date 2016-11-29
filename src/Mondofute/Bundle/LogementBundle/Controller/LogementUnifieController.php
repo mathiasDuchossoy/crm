@@ -13,7 +13,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\LogementBundle\Command\EditLogementPeriodeCommand;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
@@ -691,14 +690,20 @@ class LogementUnifieController extends Controller
     public function setDesactiveAction($id, $desactive)
     {
         $em = $this->getDoctrine()->getManager();
-        $logementUnifie = $em->find(LogementUnifie::class, $id);
-        if ($desactive == "true") {
-            $logementUnifie->setDesactive(true);
-        } else {
-            $logementUnifie->setDesactive(false);
+
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+
+            $logementUnifie = $emSite->find(LogementUnifie::class, $id);
+            if ($desactive == "true") {
+                $logementUnifie->setDesactive(true);
+            } else {
+                $logementUnifie->setDesactive(false);
+            }
+            $emSite->persist($logementUnifie);
+            $emSite->flush();
         }
-        $em->persist($logementUnifie);
-        $em->flush();
         return new Response();
     }
 
