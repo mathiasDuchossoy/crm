@@ -1652,6 +1652,10 @@ class DomaineUnifieController extends Controller
             return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
+        foreach ($domaineUnifie->getDomaines() as $domaine) {
+            $domaine->setModeleDescriptionForfaitSki(null);
+        }
+
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
