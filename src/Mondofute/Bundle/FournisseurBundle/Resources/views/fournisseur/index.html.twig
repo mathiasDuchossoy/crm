@@ -11,6 +11,7 @@
         <tr>
             <th>Id</th>
             <th>{{ 'enseigne' | capitalize }}</th>
+            <th>Priorité</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -22,6 +23,20 @@
                 </td>
                 <td>
                     {{ fournisseur.enseigne }}
+                </td>
+                <td>
+                    <label>
+                        <select id="fournisseur_priorite_{{ fournisseur.id }}"
+                                onchange="editFournisseurPriorite('{{ fournisseur.id }}')" class="form-control">
+                            {% for keyPriorite, priorite in priorites %}
+                                <option value="{{ keyPriorite }}"
+                                        {% if fournisseur.priorite == keyPriorite %}
+                                            selected="selected"
+                                        {% endif %}
+                                >{{ priorite }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
                 </td>
                 <td>
                     <ul class="list-unstyled">
@@ -49,4 +64,16 @@
             </li>
         </ul>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function editFournisseurPriorite(fournisseurId) {
+            var priorite = $('#fournisseur_priorite_' + fournisseurId).val();
+            var path = "{{ path('fournisseur_set_priorite' , {'id':'_fournisseur_' , 'priorite':'_priorite_'}) }}";
+            path = path.replace('_fournisseur_', fournisseurId);
+            path = path.replace('_priorite_', priorite);
+            $.ajax(path, {});
+        }
+    </script>
 {% endblock %}
