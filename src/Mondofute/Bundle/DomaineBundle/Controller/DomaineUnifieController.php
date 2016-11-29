@@ -915,6 +915,9 @@ class DomaineUnifieController extends Controller
                 $modeleDescriptionForfaitSkiController->setContainer($this->container);
                 $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity, $entitySite);
 
+                foreach ($entitySite->getDomaines() as $domaineSite) {
+                    $emSite->persist($domaineSite->getModeleDescriptionForfaitSki());
+                }
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
