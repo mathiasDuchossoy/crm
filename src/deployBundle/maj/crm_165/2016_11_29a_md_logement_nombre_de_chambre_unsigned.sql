@@ -1,0 +1,1 @@
+ALTER TABLE nombre_de_chambre_traduction CHANGE id id INT UNSIGNED AUTO_INCREMENT NOT NULL;
