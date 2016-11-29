@@ -1662,7 +1662,6 @@ class DomaineUnifieController extends Controller
         ));
     }
 
-
     private function carteIdentiteEdit(Request $request, DomaineUnifie $domaineUnifie)
     {
         /** @var DomaineCarteIdentiteTraduction $traduction */
