@@ -65,7 +65,7 @@ class DomaineType extends AbstractType
             ->add('imagesParent')
             ->add('photosParent')
             ->add('videosParent')
-            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class , array(
+            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class, array(
                 'data_class' => ModeleDescriptionForfaitSki::class
             ))
         ;
