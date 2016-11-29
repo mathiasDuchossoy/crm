@@ -33,6 +33,20 @@
                         <a class="btn btn-default"
                            href="{{ path('popup_logement_logement_edit', { 'id': logementUnifie.id }) }}">{{ 'modifier' | trans }}</a>
                     </li>
+                    <li>
+                        <a id="lien_logement_active_{{ logementUnifie.id }}" class="btn btn-default"
+                                {% if  logementUnifie.desactive == false %}
+                                    style="display: none"
+                                {% endif %}
+                           href="#"
+                           onclick="logementActiver('{{ logementUnifie.id }}',false)">{{ 'Activer' | trans }}</a>
+                        <a id="lien_logement_desactive_{{ logementUnifie.id }}" class="btn btn-default"
+                                {% if  logementUnifie.desactive == true %}
+                                    style="display: none"
+                                {% endif %}
+                           href="#"
+                           onclick="logementActiver('{{ logementUnifie.id }}',true)">{{ 'Désactiver' | trans }}</a>
+                    </li>
                 </ul>
             </td>
         </tr>
