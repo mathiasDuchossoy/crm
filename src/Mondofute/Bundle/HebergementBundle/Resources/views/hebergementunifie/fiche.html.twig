@@ -36,7 +36,7 @@
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
                         {#{{ form_row(hebergement.motClefs) }}#}
                         {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefs , 'siteId' : hebergement.vars.value.site.id} %}
-                        {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur }%}
+                        {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur } %}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Emplacements</label>
                             <div class="row">
@@ -235,85 +235,85 @@
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
-
-                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
-                                 class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12">
-                                            <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
-                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
-                                                    class="btn btn-default"
-                                                    type="button"><span
-                                                        class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
-                                            </button>
-                                        </div>
+                            {% if fournisseur.vars.value.fournisseur is not null %}
+                                <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
+                                     class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">
+                                            Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
                                     </div>
-                                    {{ form_row(fournisseur.fournisseur) }}
-                                    {{ form_row(fournisseur.telFixe) }}
-                                    {{ form_row(fournisseur.telMobile) }}
-                                    {{ form_row(fournisseur.adresse) }}
-                                    {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label required">Receptions</label>
-                                        <div class="col-sm-10">
-                                            <div id="hebergement_unifie_fournisseurs_0_receptions"
-                                                 data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
-                                                {% for reception in fournisseur.receptions.vars.choices %}
-                                                    {#Gestion du libelle à afficher#}
-                                                    {#traduction du jour#}
-                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
-                                                    {#traduction de la tranche1#}
-                                                    {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
-                                                    {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
-                                                    {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
-                                                    {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
-                                                        {#traduction de la tranche2#}
-                                                        {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
-                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
-                                                    {% endif %}
-                                                    {#affichage de la donnée#}
-                                                    {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
-                                                {% endfor %}
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
+                                                        data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
+                                                        class="btn btn-default"
+                                                        type="button"><span
+                                                            class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
+                                                </button>
                                             </div>
                                         </div>
-                                    </div>
-                                    {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                    <ul class="nav nav-tabs">
-                                        {#gestion du premier onglet#}
-                                        {% set first = true %}
-                                        {% set idLangue = 0 %}
-                                        {% for langue in langues %}
-                                            <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
-                                                <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
-                                                   data-toggle="tab" aria-expanded="true">
-                                                    {% for traduction in langue.traductions %}
-                                                        {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
-                                                            {{ traduction.libelle }}
+                                        {{ form_row(fournisseur.fournisseur) }}
+                                        {{ form_row(fournisseur.telFixe) }}
+                                        {{ form_row(fournisseur.telMobile) }}
+                                        {{ form_row(fournisseur.adresse) }}
+                                        {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label required">Receptions</label>
+                                            <div class="col-sm-10">
+                                                <div id="hebergement_unifie_fournisseurs_0_receptions"
+                                                     data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
+                                                    {% for reception in fournisseur.receptions.vars.choices %}
+                                                        {#Gestion du libelle à afficher#}
+                                                        {#traduction du jour#}
+                                                        {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
+                                                        {#traduction de la tranche1#}
+                                                        {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
+                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
+                                                        {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
+                                                        {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
+                                                            {#traduction de la tranche2#}
+                                                            {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
+                                                            {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
                                                         {% endif %}
+                                                        {#affichage de la donnée#}
+                                                        {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
                                                     {% endfor %}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                    <div class="tab-content">
-                                        {% for traduction in fournisseur.traductions %}
-                                            {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
-                                            <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
-                                                 class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
-
-                                                {{ form_widget(traduction) }}
+                                                </div>
                                             </div>
-                                        {% endfor %}
-                                    </div>
-                                    {% set nbFournisseurs = nbFournisseurs + 1 %}
-                                </div>
-                            </div>
+                                        </div>
+                                        {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                        <ul class="nav nav-tabs">
+                                            {#gestion du premier onglet#}
+                                            {% set first = true %}
+                                            {% set idLangue = 0 %}
+                                            {% for langue in langues %}
+                                                <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
+                                                    <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
+                                                       data-toggle="tab" aria-expanded="true">
+                                                        {% for traduction in langue.traductions %}
+                                                            {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
+                                                                {{ traduction.libelle }}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="tab-content">
+                                            {% for traduction in fournisseur.traductions %}
+                                                {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
+                                                <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
+                                                     class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
 
+                                                    {{ form_widget(traduction) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% set nbFournisseurs = nbFournisseurs + 1 %}
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div id="nb_fournisseurs" data-index="{{ nbFournisseurs }}">
@@ -736,8 +736,8 @@
             $('#tabFournisseursAssocies').append(ligne);
         }
         function afficherModaleAjoutRemiseClef(idFournisseur) {
-            if (!$("#remise_clef_fournisseur option[value='"+idFournisseur+"']").length > 0){
-                $("#remise_clef_fournisseur").append('<option value="'+idFournisseur+'">'+idFournisseur+'</option>');
+            if (!$("#remise_clef_fournisseur option[value='" + idFournisseur + "']").length > 0) {
+                $("#remise_clef_fournisseur").append('<option value="' + idFournisseur + '">' + idFournisseur + '</option>');
             }
             $('#remise_clef_fournisseur option').each(function () {
                 if (parseInt($(this).attr('value')) == parseInt(idFournisseur)) {
@@ -851,8 +851,10 @@
                 ajouterNouvelleReception($(this));
             });
             {% for fournisseur in form.fournisseurs %}
+            {% if fournisseur.vars.value.fournisseur is not null %}
             _fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
             ajouterLigneFournisseursAssocies({{ fournisseur.vars.value.fournisseur.id }}, '{{ fournisseur.vars.value.fournisseur.enseigne }}');
+            {% endif %}
             {% endfor %}
             {% if sitesAEnregistrer is not empty %}
 
@@ -1068,7 +1070,9 @@
                 },
                 cache: true
             },
-            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
             minimumInputLength: 1,
 //            data: data,
             tags: true,
@@ -1076,7 +1080,7 @@
                 return {
                     id: params.term,
                     text: params.term,
-                    isNew : true
+                    isNew: true
                 }
             },
             insertTag: function (data, tag) {
@@ -1089,11 +1093,11 @@
         $eventSelect.on("select2:select", function (e) {
 
             var langue = $(this).data('langue');
-            var id  = e.params.data.id;
-            if(e.params.data.isNew){
+            var id = e.params.data.id;
+            if (e.params.data.isNew) {
                 // append the new option element prenamently:
                 // store the new tag:
-                $.ajax("{{ path('mondofute_mot_clef_new') }}",{
+                $.ajax("{{ path('mondofute_mot_clef_new') }}", {
                     data: {
                         value: e.params.data.text,
                         langue: langue
@@ -1103,7 +1107,7 @@
                     id = data;
                 });
             }
-            $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+id+'">'+e.params.data.text+'</option>');
+            $(this).find('[value="' + e.params.data.id + '"]').replaceWith('<option selected value="' + id + '">' + e.params.data.text + '</option>');
         });
         // *** fin gestion select2 ***
 
@@ -1116,6 +1120,11 @@
             language: 'fr',
             minuteStep: 30
         }).removeClass('datetimepicker');
+
+        $(function () {
+            $('#hebergement_unifie_submit').prop('disabled', false);
+            $('#remise_clef_submit').prop('disabled', false);
+        });
 
     </script>
 
