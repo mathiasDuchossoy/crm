@@ -439,7 +439,6 @@
                         <div class="modal-body" id="modal-remise-clef-error"></div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                            {#<button onclick="ajouterInterlocuteur();" id="ajout_interlocuteur" type="button" data-dismiss="modal" class="btn btn-primary">#}
                             <button onclick="ajouterRemiseClef();" data-index="" id="ajouterRemiseClef" type="button"
                                     class="btn btn-primary">
                                 {{ 'ajouter' | trans }}
@@ -1006,6 +1005,9 @@
             var interlocuteurIndex = $formInterlocuteur.data('interlocuteur-index');
             var newForm = formProtoype.replace(/__name__/g, interlocuteurIndex);
             $formInterlocuteur.html(newForm);
+//            $formInterlocuteur.find('input[type=password]').each(function(index , element) {
+//                displayInputPassword($(element));
+//            });
 
             var $moyenComsInterlocuteur = $('#fournisseur_interlocuteurs_' + interlocuteurIndex + '_interlocuteur_moyenComs');
 

@@ -300,6 +300,11 @@ assetic:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.min.js"
            filters: [?yui_js]
            output: js/bootstrap.js
+        gestion_password_js:
+           inputs:
+               - "%kernel.root_dir%/../app/Resources/public/js/gestion-password.js"
+           filters: [?yui_js]
+           output: js/gestion-password.js
         bootstrap_datepicker_js:
             inputs:
               - "%kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"

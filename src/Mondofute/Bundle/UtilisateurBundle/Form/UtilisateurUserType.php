@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\UtilisateurBundle\Form;
 use FOS\UserBundle\Util\LegacyFormHelper;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -35,16 +36,22 @@ class UtilisateurUserType extends AbstractType
             // Ce doit être considéré comme un nouveau "Product"
             if ($user && null !== $user->getId()) {
                 $form
-                    ->add('plainPassword', TextType::class, array(//                'mapped' => false
+                    ->add('plainPassword', PasswordType::class, array(
                         'translation_domain' => 'FOSUserBundle',
                         'label' => 'form.new_password',
-                        'required' => false
+                        'required' => false,
+                        'attr' => [
+                            'class' => 'password'
+                        ]
                     ));
             } else {
                 $form
-                    ->add('plainPassword', TextType::class, array(//                'mapped' => false
+                    ->add('plainPassword', PasswordType::class, array(
                         'translation_domain' => 'FOSUserBundle',
                         'label' => 'form.password',
+                        'attr' => [
+                            'class' => 'password'
+                        ]
                     ));
 
             }
