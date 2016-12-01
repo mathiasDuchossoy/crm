@@ -1,0 +1,31 @@
+{% for key, hebergement in hebergements %}
+    <li class="list-group-item">
+        <div class="checkbox">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
+                            {#name="promotionHebergements[{{ promotionId }}][{{ fournisseurId }}][]"#}
+                            {% if promotion.promotionHebergements is defined %}
+                                {% for promotionHebergement in promotion.promotionHebergements %}
+                                    {% if
+                                    promotionHebergement.vars.value.fournisseur.id == fournisseurId
+                                    and promotionHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId %}
+                                        {#and promotionHebergement.vars.value.promotion.id == promotionId#}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                              name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
+                    >{{ hebergement.nom }}</label>
+                <input type="hidden"
+                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
+                       value="{{ fournisseurId }}"/>
+            </div>
+        </div>
+    </li>
+{% endfor %}
+{% if hebergements is empty %}
+    <li class="list-group-item">
+        <div class="alert alert-info" role="alert">Il n'y a pas d'hébergements pour ce fournisseur.</div>
+    </li>
+{% endif %}

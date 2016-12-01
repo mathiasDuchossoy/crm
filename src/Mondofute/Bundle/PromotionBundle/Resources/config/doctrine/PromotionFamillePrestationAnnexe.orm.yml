@@ -1,0 +1,21 @@
+Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionFamillePrestationAnnexeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        famillePrestationAnnexe:
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        promotion:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
+            inversedBy: promotionFamillePrestationAnnexes
+    lifecycleCallbacks: {  }
