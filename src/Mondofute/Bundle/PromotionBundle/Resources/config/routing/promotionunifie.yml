@@ -1,0 +1,49 @@
+promotion_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+promotion_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:show" }
+    methods:  GET
+
+promotion_new:
+    path:     /new
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:new" }
+    methods:  [GET, POST]
+
+promotion_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:edit" }
+    methods:  [GET, POST]
+
+promotion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:delete" }
+    methods:  DELETE
+
+promotion_get_clients:
+    path:     /getclient/{clientName}/{siteId}/{promotionId}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getClients" , promotionId: null }
+    methods:  GET
+
+promotion_get_fournisseur_hebergements:
+    path:     /getfournisseurhebergements/{promotionId}/{fournisseurId}/{siteId}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurHebergements"}
+    methods:  GET
+
+promotion_get_fournisseur_prestation_annexes:
+    path:     /getfournisseurprestationannexes/{promotionId}/{fournisseurId}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurPrestationAnnexes"}
+    methods:  GET
+
+promotion_get_panel_hebergement:
+    path:     /getpanelhebergement/{promotionId}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getPanelHebergement"}
+    methods:  GET
+
+promotion_get_panel_prestation_annexe:
+    path:     /getprestationannexe/{promotionId}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getPrestationAnnexe"}
+    methods:  GET

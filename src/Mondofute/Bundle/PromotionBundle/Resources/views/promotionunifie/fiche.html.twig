@@ -1,0 +1,346 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.promotions %}
+            {% include ('::onglets_sites.html.twig') %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for keyPromotion, promotion in form.promotions %}
+                    <div id="data_site_{{ promotion.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ promotion.vars.value.site.crm | number_format }}">
+                        {{ form_row(promotion.site) }}
+                        <ul class="nav nav-tabs">
+                            {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
+                            {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
+                            {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
+                            {{ form_row(promotion.typePeriodeSejour, {  'attr' : {  'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'] }}) }}
+                            {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
+                            {{ form_row(promotion.typeApplication, {  'attr' : {  'data-unique_block_prefix' : promotion.typeApplication.vars['unique_block_prefix'] }}) }}
+                            {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
+                        </ul>
+
+                        {% if panelPromotion is defined %}
+                            {% set typeAffectationLogementSelected = false %}
+                            {% set typeAffectationPrestationAnnexeSelected = false %}
+                            {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                {% if promotionTypeAffectation.typeAffectation == 1 %}
+                                    {% set typeAffectationLogementSelected = true %}
+                                {% endif %}
+                                {% if promotionTypeAffectation.typeAffectation == 2 %}
+                                    {% set typeAffectationPrestationAnnexeSelected = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <div id="promotion_panel_hebergement_{{ keyPromotion }}">
+                                {% if typeAffectationLogementSelected == true %}
+                                    {% include ('@MondofutePromotion/promotionunifie/panel-hebergement.html.twig' ) %}
+                                {% endif %}
+                            </div>
+                            <div id="promotion_panel_prestation_annexe_{{ keyPromotion }}">
+                                {% if typeAffectationPrestationAnnexeSelected == true %}
+                                    {{ include ('@MondofutePromotion/promotionunifie/panel-prestation-annexe.html.twig') }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% set index = (index + 1) %}
+                {% endfor %}
+
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_libelle");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_typeRemise");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_valeurRemise");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_prixMini");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_usagePromotion");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_actif");
+
+        var items = [];
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_libelle");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeRemise");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_valeurRemise");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typePeriodeSejour");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_valeurRemise");
+        items.push("_promotion_unifie_promotions_entry_promotionAffectations");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeApplication");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
+
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        function displayAffectationPanel(element, keyPromotion, promotionId, siteId) {
+            var $element = $(element);
+            var val = $element.val();
+            var path;
+            var $promotionPanelHebergement = $('#promotion_panel_hebergement_' + keyPromotion);
+            var $promotionPanelPrestationAnnexe = $('#promotion_panel_prestation_annexe_' + keyPromotion);
+            if (promotionId) {
+                if ($element.is(':checked')) {
+                    switch (val) {
+                        case '1':
+                            if ($('#promotion_panel_hebergement_' + keyPromotion + ' > *').length == 0) {
+                                path = "{{ path('promotion_get_panel_hebergement', {
+                                    'promotionId' : '_promotionId_'
+                                } ) }}";
+                                path = path.replace(/_promotionId_/g, promotionId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyPromotion_/g, keyPromotion);
+                                    $promotionPanelHebergement.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                    getFournisseurHebergements(promotionId, '{{ fournisseurTypeHebergement.id }}', keyPromotion, siteId);
+                                    {% endfor %}
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                                $promotionPanelHebergement.show();
+                            }
+                            break;
+                        case '2':
+                            if ($('#promotion_panel_prestation_annexe_' + keyPromotion + ' > *').length == 0) {
+                                path = "{{ path('promotion_get_panel_prestation_annexe', {
+                                    'promotionId' : '_promotionId_'
+                                } ) }}";
+                                path = path.replace(/_promotionId_/g, promotionId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyPromotion_/g, keyPromotion);
+                                    $promotionPanelPrestationAnnexe.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                    getFournisseurPrestationAnnexes(promotionId, '{{ fournisseurPrestationAnnexe.id }}', keyPromotion);
+                                    {% endfor %}
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                                $promotionPanelPrestationAnnexe.show();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    switch (val) {
+                        case '1':
+                            $promotionPanelHebergement.hide();
+                            break;
+                        case '2':
+                            $promotionPanelPrestationAnnexe.hide();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function getFournisseurHebergements(promotionId, fournisseurId, keyPromotion, siteId) {
+//            if($('#collapse_promotion_'+promotionId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
+//            {
+            var path = "{{ path('promotion_get_fournisseur_hebergements' ,{
+                'promotionId' : '_promotionId_',
+                'fournisseurId' : '_fournisseurId_',
+                'siteId' : '_siteId_',
+            }) }}";
+
+            path = path.replace(/_promotionId_/g, promotionId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_siteId_/g, siteId);
+
+            $.ajax(path, {
+//                    async: false
+            }).done(function (data) {
+                data = data.replace(/__keyPromotion__/g, keyPromotion);
+                $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_hebergements').html(data);
+            });
+//            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(promotionId, fournisseurId, keyPromotion) {
+//            if($('#collapse_promotion_'+promotionId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
+//            {
+            var path = "{{ path('promotion_get_fournisseur_prestation_annexes' ,{
+                'promotionId' : '_promotionId_',
+                'fournisseurId' : '_fournisseurId_'
+            }) }}";
+
+            path = path.replace(/_promotionId_/g, promotionId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+            $.ajax(path, {
+//                async: false
+            }).done(function (data) {
+                data = data.replace(/__keyPromotion__/g, keyPromotion);
+                $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_prestation_annexes').html(data);
+            });
+//            }
+
+        }
+
+        function checkChildren(element, listGroup) {
+            var $element = $(element);
+            var $listGroup = $('#' + listGroup);
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkChilFamillePrestationAnnexe(element, classFamille) {
+            var $element = $(element);
+            var listGroup = $('#' + $element.data('list_group'));
+            listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
+        }
+
+        $(document).ready(function () {
+            {% if panelPromotion is defined %}
+            {% for keyPromotion , promotion in entity.promotions %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
+            {% if promotionTypeAffectation.typeAffectation == 1 %}
+            getFournisseurHebergements('{{ promotion.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyPromotion }}', '{{ promotion.site.id }}');
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
+            {% if promotionTypeAffectation.typeAffectation == 2 %}
+            getFournisseurPrestationAnnexes('{{ promotion.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyPromotion }}');
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+        });
+
+    </script>
+
+{% endblock %}

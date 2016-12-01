@@ -1,0 +1,7 @@
+mondofute_promotion_promotion:
+    resource: "@MondofutePromotionBundle/Resources/config/routing/promotionunifie.yml"
+    prefix:   /promotion
+
+#mondofute_promotion_homepage:
+#    path:     /
+#    defaults: { _controller: MondofutePromotionBundle:Default:index }
