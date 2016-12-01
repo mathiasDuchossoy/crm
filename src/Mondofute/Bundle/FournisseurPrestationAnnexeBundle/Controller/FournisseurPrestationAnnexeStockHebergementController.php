@@ -17,6 +17,7 @@ class FournisseurPrestationAnnexeStockHebergementController extends Controller
     }
 
     public function chargerStockHebergementAction($idPrestationAnnexe,$idHebergement,$idTypePeriode){
-        return new JsonResponse();
+        $data['reponse'] = 'toto';
+        return new JsonResponse($data);
     }
 }
