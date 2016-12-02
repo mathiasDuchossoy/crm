@@ -1,60 +1,25 @@
-{% set stationLibelleTemp = '' %}
 {% for key, hebergement in hebergements %}
-    {#{% for stationTraduction in hebergement.station.traductions %}#}
-    {#{% if stationTraduction.langue.code == app.request.locale %}#}
-    {#{{ stationTraduction.libelle }}#}
-    {#{% endif %}#}
-    {#{% endfor %}#}
-    {% if stationLibelleTemp !=  hebergement.stationLibelle %}
+    <li class="list-group-item">
         <div class="checkbox">
-            <label><input type="checkbox"
-                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId')">{{ hebergement.stationLibelle }}
-            </label>
-        </div>
-    {% endif %}
-    {% set stationLibelleTemp = hebergement.stationLibelle %}
-    <li class="list-group-item list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="checkbox">
-                    <div class="col-sm-1"></div>
-                    <div class="col-sm-11">
-                        <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
-                                    {#name="promotionHebergements[{{ promotionId }}][{{ fournisseurId }}][]"#}
-                                    {% if promotion.promotionHebergements is defined %}
-                                        {% for promotionHebergement in promotion.promotionHebergements %}
-                                            {% if
-                                            promotionHebergement.vars.value.fournisseur.id == fournisseurId
-                                            and promotionHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId %}
-                                                {#and promotionHebergement.vars.value.promotion.id == promotionId#}
-                                                checked="checked"
-                                            {% endif %}
-                                        {% endfor %}
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
+                            {#name="promotionHebergements[{{ promotionId }}][{{ fournisseurId }}][]"#}
+                            {% if promotion.promotionHebergements is defined %}
+                                {% for promotionHebergement in promotion.promotionHebergements %}
+                                    {% if
+                                    promotionHebergement.vars.value.fournisseur.id == fournisseurId
+                                    and promotionHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId %}
+                                        {#and promotionHebergement.vars.value.promotion.id == promotionId#}
+                                        checked="checked"
                                     {% endif %}
-                                      name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
-                            >{{ hebergement.nom }}</label>
-                        <input type="hidden"
-                               name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
-                               value="{{ fournisseurId }}"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <label>
-                    <input type="checkbox"
-                            {#id="checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"#}
-                            {#onclick="checkAllPeriodeValiditeForFournisseurPrestationAnnexe(this, '{{ keyPromotion }}', '{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"#}
-                    />
-                    Toutes les périodes
-                </label>
-            </div>
-            <div class="col-sm-2">
-                <button type="button" class="btn btn-default btn-md" data-toggle="modal"
-                        data-target="#modal_promotion_logement_periode"
-                        onclick="getLogementPeriodes('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"
-                >
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Periodes de validité
-                </button>
+                                {% endfor %}
+                            {% endif %}
+                              name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
+                    >{{ hebergement.nom }}</label>
+                <input type="hidden"
+                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
+                       value="{{ fournisseurId }}"/>
             </div>
         </div>
     </li>
