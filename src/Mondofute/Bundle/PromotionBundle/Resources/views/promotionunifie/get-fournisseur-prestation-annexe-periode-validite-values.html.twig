@@ -11,7 +11,6 @@
                 <label>
                     <input name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][periodeValidites][]"
                            id="mondofute_bundle_promotionbundle_promotionunifie_promotions_{{ keyPromotion }}_periodeValidites_{{ periodeValidite.id }}"
-                           class="promotion_{{ keyPromotion }}_{{ fournisseurPrestationAnnexeId }}_periode_validite_values"
                            value="{{ periodeValidite.id }}"
                             {% for promotionPeriodeValidite in  promotionPeriodeValidites %}
                                 {% if promotionPeriodeValidite.id == periodeValidite.id %}
