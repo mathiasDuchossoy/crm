@@ -6,9 +6,6 @@
         {% for fournisseur in fournisseursPrestationAnnexe %}
 
             {% set prestationAnnexeExists = false %}
-            {#{% if promotion.promotionFournisseurPrestationAnnexes is not empty and fournisseurFournisseurPrestationAnnexes[promotion.vars.value.id][fournisseur.id] is defined %}#}
-            {#{% set prestationAnnexeExists = true %}#}
-            {#{% endif %}#}
             {% if promotion.promotionFournisseurPrestationAnnexes is defined %}
                 {% for promotionFournisseurPrestationAnnexe in promotion.promotionFournisseurPrestationAnnexes %}
                     {% if promotionFournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
@@ -68,13 +65,6 @@
                     <!-- List group prestation_annexes -->
                     <ul class="list-group"
                         id="promotion_{{ promotion.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
-                        {#{% if prestationAnnexeExists == true %}#}
-                        {#{% include ('@MondofutePromotion/promotionunifie/get-code-promo-fournisseur-prestation-annexes.html.twig') with {#}
-                        {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[promotion.vars.value.id][fournisseur.id],#}
-                        {#'fournisseurId': fournisseur.id,#}
-                        {#'promotionId' : promotion.vars.value.id#}
-                        {#} %}#}
-                        {#{% endif %}#}
                     </ul>
 
                 </div>

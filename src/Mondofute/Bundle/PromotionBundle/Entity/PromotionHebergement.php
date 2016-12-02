@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\PromotionBundle\Entity;
 
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+
 /**
  * PromotionHebergement
  */
@@ -12,15 +15,15 @@ class PromotionHebergement
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+     * @var Hebergement
      */
     private $hebergement;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @var Promotion
      */
     private $promotion;
 
@@ -35,9 +38,21 @@ class PromotionHebergement
     }
 
     /**
+     * @param int $id
+     *
+     * @return PromotionHebergement
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get hebergement
      *
-     * @return \Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+     * @return Hebergement
      */
     public function getHebergement()
     {
@@ -47,11 +62,11 @@ class PromotionHebergement
     /**
      * Set hebergement
      *
-     * @param \Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement
+     * @param Hebergement $hebergement
      *
      * @return PromotionHebergement
      */
-    public function setHebergement(\Mondofute\Bundle\HebergementBundle\Entity\Hebergement $hebergement = null)
+    public function setHebergement(Hebergement $hebergement = null)
     {
         $this->hebergement = $hebergement;
 
@@ -61,7 +76,7 @@ class PromotionHebergement
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -71,11 +86,11 @@ class PromotionHebergement
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return PromotionHebergement
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -85,7 +100,7 @@ class PromotionHebergement
     /**
      * Get promotion
      *
-     * @return \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @return Promotion
      */
     public function getPromotion()
     {
@@ -95,11 +110,11 @@ class PromotionHebergement
     /**
      * Set promotion
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion
+     * @param Promotion $promotion
      *
      * @return PromotionHebergement
      */
-    public function setPromotion(\Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion = null)
+    public function setPromotion(Promotion $promotion = null)
     {
         $this->promotion = $promotion;
 

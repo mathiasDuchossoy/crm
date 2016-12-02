@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\PromotionBundle\Entity;
 
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+
 /**
  * PromotionFamillePrestationAnnexe
  */
@@ -12,15 +15,15 @@ class PromotionFamillePrestationAnnexe
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     * @var FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @var Promotion
      */
     private $promotion;
 
@@ -35,9 +38,21 @@ class PromotionFamillePrestationAnnexe
     }
 
     /**
+     * @param int $id
+     *
+     * @return PromotionFamillePrestationAnnexe
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get famillePrestationAnnexe
      *
-     * @return \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+     * @return FamillePrestationAnnexe
      */
     public function getFamillePrestationAnnexe()
     {
@@ -47,11 +62,11 @@ class PromotionFamillePrestationAnnexe
     /**
      * Set famillePrestationAnnexe
      *
-     * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe
+     * @param FamillePrestationAnnexe $famillePrestationAnnexe
      *
      * @return PromotionFamillePrestationAnnexe
      */
-    public function setFamillePrestationAnnexe(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe $famillePrestationAnnexe = null)
+    public function setFamillePrestationAnnexe(FamillePrestationAnnexe $famillePrestationAnnexe = null)
     {
         $this->famillePrestationAnnexe = $famillePrestationAnnexe;
 
@@ -61,7 +76,7 @@ class PromotionFamillePrestationAnnexe
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -71,11 +86,11 @@ class PromotionFamillePrestationAnnexe
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return PromotionFamillePrestationAnnexe
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -85,7 +100,7 @@ class PromotionFamillePrestationAnnexe
     /**
      * Get promotion
      *
-     * @return \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @return Promotion
      */
     public function getPromotion()
     {
@@ -95,11 +110,11 @@ class PromotionFamillePrestationAnnexe
     /**
      * Set promotion
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion
+     * @param Promotion $promotion
      *
      * @return PromotionFamillePrestationAnnexe
      */
-    public function setPromotion(\Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion = null)
+    public function setPromotion(Promotion $promotion = null)
     {
         $this->promotion = $promotion;
 
