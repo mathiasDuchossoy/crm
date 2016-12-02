@@ -51,7 +51,6 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% endif %}
-                                      onclick="checkBoxAll(this, 'checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}')"
                                       class="promotion_famille_prestation_annexes_{{ keyPromotion }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
                                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseurPrestationAnnexe]"
                             >{{ fournisseurPrestationAnnexe.libelle }}
@@ -62,23 +61,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2 promotion-fournisseur-prestation-annexe-periode-{{ keyPromotion }}"
-                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <label>
                     <input type="checkbox"
-                           id="checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"
                            onclick="checkAllPeriodeValiditeForFournisseurPrestationAnnexe(this, '{{ keyPromotion }}', '{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"/>
                     Toutes les périodes
                 </label>
             </div>
-            <div class="col-sm-2 promotion-fournisseur-prestation-annexe-periode-{{ keyPromotion }}"
-                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <button type="button" class="btn btn-default btn-md" data-toggle="modal"
                         data-target="#modal_fournisseur_prestation_annexe_periode_validite"
                         onclick="getFournisseurPrestationAnnexePeriodeValidites('{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}' , '{{ keyPromotion }}')">
