@@ -37,6 +37,18 @@ class PromotionFournisseur
     }
 
     /**
+     * @param int $id
+     *
+     * @return PromotionFournisseur
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get type
      *
      * @return integer

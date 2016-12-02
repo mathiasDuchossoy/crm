@@ -103,8 +103,6 @@ class PromotionUnifieController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var Promotion $entity */
-//            $this->addPromotionPeriode($promotionUnifie, 'Validite', PromotionPeriodeValidite::class);
-//            $this->addPromotionPeriode($promotionUnifie, 'Sejour', PromotionPeriodeSejour::class);
 
             // *** gestion promotion typeAffectation ***
             $this->gestionPromotionTypeAffectation($promotionUnifie);
@@ -124,7 +122,7 @@ class PromotionUnifieController extends Controller
             try {
                 $em->flush();
 
-//                $this->copieVersSites($promotionUnifie);
+                $this->copieVersSites($promotionUnifie);
 
                 $this->addFlash('success', 'La promotion a bien été créé.');
 
@@ -262,6 +260,280 @@ class PromotionUnifieController extends Controller
                         $newTypeAffectation->setTypeAffectation($typeAffectation);
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Copie dans la base de données site l'entité promotion
+     * @param PromotionUnifie $entityUnifie
+     */
+    private function copieVersSites(PromotionUnifie $entityUnifie)
+    {
+        /** @var EntityManager $emSite */
+        /** @var Promotion $entity */
+        /** @var Promotion $entitySite */
+        /** @var Promotion $entityCrm */
+//        Boucle sur les promotions afin de savoir sur quel site nous devons l'enregistrer
+        foreach ($entityUnifie->getPromotions() as $entity) {
+            if ($entity->getSite()->getCrm() == false) {
+
+//            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
+                $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
+                $site = $emSite->find(Site::class, $entity->getSite());
+
+//            GESTION EntiteUnifie
+//            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
+                if (empty($entityUnifieSite = $emSite->find(PromotionUnifie::class, $entityUnifie))) {
+                    $entityUnifieSite = new PromotionUnifie();
+                    $entityUnifieSite->setId($entityUnifie->getId());
+                }
+
+                //  Récupération de la promotion sur le site distant si elle existe sinon créer une nouvelle entité
+                if (empty($entitySite = $emSite->getRepository(Promotion::class)->findOneBy(array('promotionUnifie' => $entityUnifieSite)))) {
+                    $entitySite = new Promotion();
+                    $entitySite
+                        ->setSite($site)
+                        ->setPromotionUnifie($entityUnifieSite);
+
+                    $entityUnifieSite->addPromotion($entitySite);
+                }
+
+                // *** gestion promotion typeAffectation ***
+                if (!empty($entity->getPromotionTypeAffectations()) && !$entity->getPromotionTypeAffectations()->isEmpty()) {
+                    /** @var PromotionTypeAffectation $promotionTypeAffectation */
+                    foreach ($entity->getPromotionTypeAffectations() as $promotionTypeAffectation) {
+                        $promotionTypeAffectationSite = $entitySite->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) use ($promotionTypeAffectation) {
+                            return $element->getId() == $promotionTypeAffectation->getId();
+                        })->first();
+                        if (false === $promotionTypeAffectationSite) {
+                            $promotionTypeAffectationSite = new PromotionTypeAffectation();
+                            $entitySite->addPromotionTypeAffectation($promotionTypeAffectationSite);
+                            $promotionTypeAffectationSite
+                                ->setId($promotionTypeAffectation->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($promotionTypeAffectationSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $promotionTypeAffectationSite
+                            ->setTypeAffectation($promotionTypeAffectation->getTypeAffectation());
+                    }
+                }
+
+                if (!empty($entitySite->getPromotionTypeAffectations()) && !$entitySite->getPromotionTypeAffectations()->isEmpty()) {
+                    /** @var PromotionTypeAffectation $promotionTypeAffectation */
+                    foreach ($entitySite->getPromotionTypeAffectations() as $promotionTypeAffectationSite) {
+                        $promotionTypeAffectation = $entity->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) use ($promotionTypeAffectationSite) {
+                            return $element->getId() == $promotionTypeAffectationSite->getId();
+                        })->first();
+                        if (false === $promotionTypeAffectation) {
+//                            $entitySite->removePromotionTypeAffectation($promotionTypeAffectationSite);
+                            $emSite->remove($promotionTypeAffectationSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion typeAffectation ***
+
+                // *** gestion promotion fournisseur ***
+                if (!empty($entity->getPromotionFournisseurs()) && !$entity->getPromotionFournisseurs()->isEmpty()) {
+                    /** @var PromotionFournisseur $promotionFournisseur */
+                    foreach ($entity->getPromotionFournisseurs() as $promotionFournisseur) {
+                        $promotionFournisseurSite = $entitySite->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseur) {
+                            return $element->getId() == $promotionFournisseur->getId();
+                        })->first();
+                        if (false === $promotionFournisseurSite) {
+                            $promotionFournisseurSite = new PromotionFournisseur();
+                            $entitySite->addPromotionFournisseur($promotionFournisseurSite);
+                            $promotionFournisseurSite
+                                ->setId($promotionFournisseur->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $promotionFournisseurSite
+                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFournisseur->getFournisseur()))
+                            ->setType($promotionFournisseur->getType());
+                    }
+                }
+
+                if (!empty($entitySite->getPromotionFournisseurs()) && !$entitySite->getPromotionFournisseurs()->isEmpty()) {
+                    /** @var PromotionFournisseur $promotionFournisseur */
+                    foreach ($entitySite->getPromotionFournisseurs() as $promotionFournisseurSite) {
+                        $promotionFournisseur = $entity->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseurSite) {
+                            return $element->getId() == $promotionFournisseurSite->getId();
+                        })->first();
+                        if (false === $promotionFournisseur) {
+//                            $entitySite->removePromotionFournisseur($promotionFournisseurSite);
+                            $emSite->remove($promotionFournisseurSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion fournisseur ***
+
+                // *** gestion promotion hebergement ***
+                if (!empty($entity->getPromotionHebergements()) && !$entity->getPromotionHebergements()->isEmpty()) {
+                    /** @var PromotionHebergement $promotionHebergement */
+                    foreach ($entity->getPromotionHebergements() as $promotionHebergement) {
+                        $promotionHebergementSite = $entitySite->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergement) {
+                            return $element->getId() == $promotionHebergement->getId();
+                        })->first();
+                        if (false === $promotionHebergementSite) {
+                            $promotionHebergementSite = new PromotionHebergement();
+                            $entitySite->addPromotionHebergement($promotionHebergementSite);
+                            $promotionHebergementSite
+                                ->setId($promotionHebergement->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($promotionHebergementSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        $promotionHebergementSite
+                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionHebergement->getFournisseur()))
+                            ->setHebergement($emSite->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $promotionHebergement->getHebergement()->getHebergementUnifie())));
+                    }
+                }
+
+                if (!empty($entitySite->getPromotionHebergements()) && !$entitySite->getPromotionHebergements()->isEmpty()) {
+                    /** @var PromotionHebergement $promotionHebergement */
+                    foreach ($entitySite->getPromotionHebergements() as $promotionHebergementSite) {
+                        $promotionHebergement = $entity->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergementSite) {
+                            return $element->getId() == $promotionHebergementSite->getId();
+                        })->first();
+                        if (false === $promotionHebergement) {
+//                            $entitySite->removePromotionHebergement($promotionHebergementSite);
+                            $emSite->remove($promotionHebergementSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion hebergement ***
+
+                // *** gestion promotion fournisseurPrestationAnnexe ***
+                if (!empty($entity->getPromotionFournisseurPrestationAnnexes()) && !$entity->getPromotionFournisseurPrestationAnnexes()->isEmpty()) {
+                    /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
+                    foreach ($entity->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexe) {
+                        $promotionFournisseurPrestationAnnexeSite = $entitySite->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexe) {
+                            return $element->getId() == $promotionFournisseurPrestationAnnexe->getId();
+                        })->first();
+                        if (false === $promotionFournisseurPrestationAnnexeSite) {
+                            $promotionFournisseurPrestationAnnexeSite = new PromotionFournisseurPrestationAnnexe();
+                            $entitySite->addPromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnexeSite);
+                            $promotionFournisseurPrestationAnnexeSite
+                                ->setId($promotionFournisseurPrestationAnnexe->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurPrestationAnnexeSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        $promotionFournisseurPrestationAnnexeSite
+                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFournisseurPrestationAnnexe->getFournisseur()))
+                            ->setFournisseurPrestationAnnexe($emSite->find(FournisseurPrestationAnnexe::class, $promotionFournisseurPrestationAnnexe->getFournisseurPrestationAnnexe()));
+                    }
+                }
+
+                if (!empty($entitySite->getPromotionFournisseurPrestationAnnexes()) && !$entitySite->getPromotionFournisseurPrestationAnnexes()->isEmpty()) {
+                    /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
+                    foreach ($entitySite->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexeSite) {
+                        $promotionFournisseurPrestationAnnexe = $entity->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexeSite) {
+                            return $element->getId() == $promotionFournisseurPrestationAnnexeSite->getId();
+                        })->first();
+                        if (false === $promotionFournisseurPrestationAnnexe) {
+//                            $entitySite->removePromotionFournisseurPrestationAnnexe($promotionFournisseurPrestationAnnexeSite);
+                            $emSite->remove($promotionFournisseurPrestationAnnexeSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion fournisseurPrestationAnnexe ***
+
+                // *** gestion promotion famillePrestationAnnexe ***
+                if (!empty($entity->getPromotionFamillePrestationAnnexes()) && !$entity->getPromotionFamillePrestationAnnexes()->isEmpty()) {
+                    /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
+                    foreach ($entity->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexe) {
+                        $promotionFamillePrestationAnnexeSite = $entitySite->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexe) {
+                            return $element->getId() == $promotionFamillePrestationAnnexe->getId();
+                        })->first();
+                        if (false === $promotionFamillePrestationAnnexeSite) {
+                            $promotionFamillePrestationAnnexeSite = new PromotionFamillePrestationAnnexe();
+                            $entitySite->addPromotionFamillePrestationAnnex($promotionFamillePrestationAnnexeSite);
+                            $promotionFamillePrestationAnnexeSite
+                                ->setId($promotionFamillePrestationAnnexe->getId());
+
+                            $metadata = $emSite->getClassMetadata(get_class($promotionFamillePrestationAnnexeSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+
+                        $promotionFamillePrestationAnnexeSite
+                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFamillePrestationAnnexe->getFournisseur()))
+                            ->setFamillePrestationAnnexe($emSite->find(FamillePrestationAnnexe::class, $promotionFamillePrestationAnnexe->getFamillePrestationAnnexe()));
+                    }
+                }
+
+                if (!empty($entitySite->getPromotionFamillePrestationAnnexes()) && !$entitySite->getPromotionFamillePrestationAnnexes()->isEmpty()) {
+                    /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
+                    foreach ($entitySite->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
+                        $promotionFamillePrestationAnnexe = $entity->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexeSite) {
+                            return $element->getId() == $promotionFamillePrestationAnnexeSite->getId();
+                        })->first();
+                        if (false === $promotionFamillePrestationAnnexe) {
+//                            $entitySite->removePromotionFamillePrestationAnnexe($promotionFamillePrestationAnnexeSite);
+                            $emSite->remove($promotionFamillePrestationAnnexeSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion famillePrestationAnnexe ***
+
+                // *** gestion promotion logement ***
+                if (!empty($entitySite->getPromotionLogements()) && !$entitySite->getPromotionLogements()->isEmpty()) {
+                    /** @var PromotionLogement $promotionLogement */
+                    foreach ($entitySite->getPromotionLogements() as $promotionLogementSite) {
+                        $promotionLogement = $entity->getPromotionLogements()->filter(function (PromotionLogement $element) use ($promotionLogementSite) {
+                            return $element->getId() == $promotionLogementSite->getId();
+                        })->first();
+                        if (false === $promotionLogement) {
+//                            $entitySite->removePromotionLogement($promotionLogementSite);
+                            $emSite->remove($promotionLogementSite);
+                        }
+                    }
+                }
+                // *** fin gestion promotion logement ***
+
+                // *** gestion type fournisseur ***
+
+                /** @var FamillePrestationAnnexe $typeFournisseur */
+                /** @var FamillePrestationAnnexe $typeFournisseurSite */
+                foreach ($entity->getTypeFournisseurs() as $typeFournisseur) {
+                    $typeFournisseurSite = $entitySite->getTypeFournisseurs()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
+                        return $element->getId() == $typeFournisseur->getId();
+                    })->first();
+                    if (false === $typeFournisseurSite) {
+                        $entitySite->addTypeFournisseur($emSite->find(FamillePrestationAnnexe::class, $typeFournisseur));
+                    }
+                }
+                foreach ($entitySite->getTypeFournisseurs() as $typeFournisseurSite) {
+                    $typeFournisseur = $entity->getTypeFournisseurs()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseurSite) {
+                        return $element->getId() == $typeFournisseurSite->getId();
+                    })->first();
+                    if (false === $typeFournisseur) {
+                        $entitySite->removeTypeFournisseur($typeFournisseurSite);
+                    }
+                }
+
+                // *** fin gestion type fournisseur ***
+
+                //  copie des données promotion
+                $entitySite
+                    ->setActif($entity->getActif())
+                    ->setLibelle($entity->getLibelle())
+                    ->setValeurRemise($entity->getValeurRemise())
+                    ->setTypePeriodeSejour($entity->getTypePeriodeSejour())
+                    ->setTypeApplication($entity->getTypeApplication())
+                    ->setTypeRemise($entity->getTypeRemise());
+
+                $emSite->persist($entityUnifieSite);
+
+                $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+
+                $emSite->flush();
             }
         }
     }
@@ -560,7 +832,7 @@ class PromotionUnifieController extends Controller
             $em->persist($promotionUnifie);
             $em->flush();
 
-//            $this->copieVersSites($promotionUnifie);
+            $this->copieVersSites($promotionUnifie);
 
             // *** gestion promotion logement ***
             $this->gestionPromotionLogement($promotionUnifie);
@@ -879,47 +1151,6 @@ class PromotionUnifieController extends Controller
         return $this->redirectToRoute('promotion_index');
     }
 
-    public function getClientsAction($clientName, $promotionId, $siteId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $entityUnifie = new PromotionUnifie();
-
-        $this->ajouterPromotionsDansForm($entityUnifie);
-        $this->promotionsSortByAffichage($entityUnifie);
-
-        $promotionClients = new ArrayCollection();
-        if (!empty($promotionId)) {
-            $promotion = $em->find(Promotion::class, $promotionId);
-            $promotionClients = $promotion->getPromotionClients();
-        }
-
-//        /** @var Promotion $promotion */
-        $clients = $em->getRepository(Client::class)->getClients($clientName);
-        $clientForm = new ArrayCollection();
-        foreach ($clients as $client) {
-
-            $clientExist = $promotionClients->filter(function (PromotionClient $element) use ($client) {
-                return $element->getClient()->getId() == $client->getId();
-            })->first();
-            if (false === $clientExist) {
-                $clientForm->add($client);
-            }
-        }
-
-//        $famillePrestationAnnexe    = $em->find(FamillePrestationAnnexe::class, $clientName);
-        $form = $this->createForm('Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType', $entityUnifie,
-            array(
-                'clients' => $clients
-            )
-        );
-
-        return $this->render('@MondofutePromotion/promotionunifie/client.html.twig', array(
-            'form' => $form->createView(),
-            'siteId' => $siteId,
-            'clients' => $clientForm
-        ));
-    }
-
     public function getPanelHebergementAction($promotionId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -952,411 +1183,4 @@ class PromotionUnifieController extends Controller
             'keyPromotion' => '_keyPromotion_'
         ));
     }
-
-    private function addPromotionPeriode(PromotionUnifie $entityUnifie, $spec, $PromotionPeriode)
-    {
-//    private function addPromotionPeriode(PromotionUnifie $entityUnifie , $spec,  ){
-        $getPromotionPeriodes = "getPromotionPeriode" . $spec . "s";
-        $addPromotionPeriode = "addPromotionPeriode" . $spec;
-        $entityCrm = $entityUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == true;
-        })->first();
-
-        if (
-            !empty($entityCrm->$getPromotionPeriodes()) &&
-            !$entityCrm->$getPromotionPeriodes()->isEmpty()
-        ) {
-            foreach ($entityUnifie->getPromotions() as $promotion) {
-                if ($promotion->getSite()->getCrm() == false &&
-                    (empty($promotion->$getPromotionPeriodes()) ||
-                        $promotion->$getPromotionPeriodes()->isEmpty())
-                ) {
-//                    /** @var PromotionPeriode $promotionPeriodeValidite */
-                    foreach ($entityCrm->$getPromotionPeriodes() as $promotionPeriode) {
-                        $promotionPeriodeSite = new $PromotionPeriode();
-                        $promotion->$addPromotionPeriode($promotionPeriodeSite);
-                        $promotionPeriodeSite
-                            ->setDateDebut($promotionPeriode->getDateDebut())
-                            ->setDateFin($promotionPeriode->getDateFin());
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Copie dans la base de données site l'entité promotion
-     * @param PromotionUnifie $entityUnifie
-     */
-    private function copieVersSites(PromotionUnifie $entityUnifie)
-    {
-        /** @var EntityManager $emSite */
-        /** @var Promotion $entity */
-        /** @var Promotion $entityCrm */
-//        Boucle sur les promotions afin de savoir sur quel site nous devons l'enregistrer
-        foreach ($entityUnifie->getPromotions() as $entity) {
-            if ($entity->getSite()->getCrm() == false) {
-
-//            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
-                $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
-                $site = $emSite->find(Site::class, $entity->getSite());
-
-//            GESTION EntiteUnifie
-//            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
-                if (empty($entityUnifieSite = $emSite->find(PromotionUnifie::class, $entityUnifie))) {
-                    $entityUnifieSite = new PromotionUnifie();
-                    $entityUnifieSite->setId($entityUnifie->getId());
-                }
-
-                //  Récupération de la promotion sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty($entitySite = $emSite->getRepository(Promotion::class)->findOneBy(array('promotionUnifie' => $entityUnifieSite)))) {
-                    $entitySite = new Promotion();
-                    $entitySite
-                        ->setSite($site)
-                        ->setPromotionUnifie($entityUnifieSite);
-
-                    $entityUnifieSite->addPromotion($entitySite);
-                }
-
-                // *** gestion promotion client ***
-                if (!empty($entity->getPromotionClients()) && !$entity->getPromotionClients()->isEmpty()) {
-                    /** @var PromotionClient $promotionClient */
-                    foreach ($entity->getPromotionClients() as $promotionClient) {
-                        $promotionClientSite = $entitySite->getPromotionClients()->filter(function (PromotionClient $element) use ($promotionClient) {
-                            return $element->getId() == $promotionClient->getId();
-                        })->first();
-                        if (false === $promotionClientSite) {
-
-                            $promotionClientSite = new PromotionClient();
-                            $entitySite->addPromotionClient($promotionClientSite);
-                            $promotionClientSite
-                                ->setId($promotionClient->getId());
-                            $metadata = $emSite->getClassMetadata(get_class($promotionClientSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $promotionPeriodeValidite = null;
-                        if (!empty($promotionClient->getPromotionPeriodeValidite())) {
-                            $promotionPeriodeValidite = $emSite->find(PromotionPeriodeValidite::class, $promotionClient->getPromotionPeriodeValidite());
-                        }
-                        $promotionClientSite
-                            ->setPromotionPeriodeValidite($promotionPeriodeValidite)
-                            ->setClient($emSite->find(Client::class, $promotionClient->getClient()))
-                            ->setUtilise($promotionClient->getUtilise());
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionClients()) && !$entitySite->getPromotionClients()->isEmpty()) {
-                    /** @var PromotionClient $promotionClient */
-                    /** @var PromotionClient $promotionClientSite */
-                    foreach ($entitySite->getPromotionClients() as $promotionClientSite) {
-                        $promotionClient = $entity->getPromotionClients()->filter(function (PromotionClient $element) use ($promotionClientSite) {
-                            return $element->getId() == $promotionClientSite->getId();
-                        })->first();
-                        if (false === $promotionClient) {
-//                            $entitySite->removePromotionClient($promotionClientSite);
-                            $emSite->remove($promotionClientSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion client ***
-
-//                 *** gestion promotion periode validité ***
-                if (!empty($entity->getPromotionPeriodeValidites()) && !$entity->getPromotionPeriodeValidites()->isEmpty()) {
-                    /** @var PromotionPeriodeValidite $promotionPeriodeValidite */
-                    foreach ($entity->getPromotionPeriodeValidites() as $promotionPeriodeValidite) {
-                        $promotionPeriodeValiditeSite = $entitySite->getPromotionPeriodeValidites()->filter(function (PromotionPeriodeValidite $element) use ($promotionPeriodeValidite) {
-                            return $element->getId() == $promotionPeriodeValidite->getId();
-                        })->first();
-                        if (false === $promotionPeriodeValiditeSite) {
-                            $promotionPeriodeValiditeSite = new PromotionPeriodeValidite();
-                            $entitySite->addPromotionPeriodeValidite($promotionPeriodeValiditeSite);
-                            $promotionPeriodeValiditeSite
-                                ->setId($promotionPeriodeValidite->getId());
-                            $metadata = $emSite->getClassMetadata(get_class($promotionPeriodeValiditeSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $promotionPeriodeValiditeSite
-                            ->setDateDebut($promotionPeriodeValidite->getDateDebut())
-                            ->setDateFin($promotionPeriodeValidite->getDateFin());
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionPeriodeValidites()) && !$entitySite->getPromotionPeriodeValidites()->isEmpty()) {
-                    /** @var PromotionPeriodeValidite $promotionPeriodeValidite */
-                    /** @var PromotionPeriodeValidite $promotionPeriodeValiditeSite */
-                    foreach ($entitySite->getPromotionPeriodeValidites() as $promotionPeriodeValiditeSite) {
-                        $promotionPeriodeValidite = $entity->getPromotionPeriodeValidites()->filter(function (PromotionPeriodeValidite $element) use ($promotionPeriodeValiditeSite) {
-                            return $element->getId() == $promotionPeriodeValiditeSite->getId();
-                        })->first();
-                        if (false === $promotionPeriodeValidite) {
-                            $promotionClientSite = $entitySite->getPromotionClients()->filter(function (PromotionClient $element) use ($promotionPeriodeValiditeSite) {
-                                return $element->getPromotionPeriodeValidite() == $promotionPeriodeValiditeSite;
-                            })->first();
-                            if (!empty($promotionClientSite)) {
-                                $promotionClientSite->setPromotionPeriodeValidite(null);
-                                $emSite->remove($promotionClientSite);
-                            }
-//                            $entitySite->removePromotionPeriodeValidite($promotionPeriodeValiditeSite);
-                            $emSite->remove($promotionPeriodeValiditeSite);
-                        }
-                    }
-                }
-//                 *** fin promotion periode validité ***
-
-                // *** gestion promotion periode séjour ***
-                if (!empty($entity->getPromotionPeriodeSejours()) && !$entity->getPromotionPeriodeSejours()->isEmpty()) {
-                    /** @var PromotionPeriodeSejour $promotionPeriodeSejour */
-                    foreach ($entity->getPromotionPeriodeSejours() as $promotionPeriodeSejour) {
-                        $promotionPeriodeSejourSite = $entitySite->getPromotionPeriodeSejours()->filter(function (PromotionPeriodeSejour $element) use ($promotionPeriodeSejour) {
-                            return $element->getId() == $promotionPeriodeSejour->getId();
-                        })->first();
-                        if (false === $promotionPeriodeSejourSite) {
-                            $promotionPeriodeSejourSite = new PromotionPeriodeSejour();
-                            $entitySite->addPromotionPeriodeSejour($promotionPeriodeSejourSite);
-                            $promotionPeriodeSejourSite
-                                ->setId($promotionPeriodeSejour->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionPeriodeSejourSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $promotionPeriodeSejourSite
-                            ->setDateDebut($promotionPeriodeSejour->getDateDebut())
-                            ->setDateFin($promotionPeriodeSejour->getDateFin());
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionPeriodeSejours()) && !$entitySite->getPromotionPeriodeSejours()->isEmpty()) {
-                    /** @var PromotionPeriodeSejour $promotionPeriodeSejour */
-                    foreach ($entitySite->getPromotionPeriodeSejours() as $promotionPeriodeSejourSite) {
-                        $promotionPeriodeSejour = $entity->getPromotionPeriodeSejours()->filter(function (PromotionPeriodeSejour $element) use ($promotionPeriodeSejourSite) {
-                            return $element->getId() == $promotionPeriodeSejourSite->getId();
-                        })->first();
-                        if (false === $promotionPeriodeSejour) {
-//                            $entitySite->removePromotionPeriodeSejour($promotionPeriodeSejourSite);
-                            $emSite->remove($promotionPeriodeSejourSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion periode séjour ***
-
-                // *** gestion promotion typeAffectation ***
-                if (!empty($entity->getPromotionTypeAffectations()) && !$entity->getPromotionTypeAffectations()->isEmpty()) {
-                    /** @var PromotionTypeAffectation $promotionTypeAffectation */
-                    foreach ($entity->getPromotionTypeAffectations() as $promotionTypeAffectation) {
-                        $promotionTypeAffectationSite = $entitySite->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) use ($promotionTypeAffectation) {
-                            return $element->getId() == $promotionTypeAffectation->getId();
-                        })->first();
-                        if (false === $promotionTypeAffectationSite) {
-                            $promotionTypeAffectationSite = new PromotionTypeAffectation();
-                            $entitySite->addPromotionTypeAffectation($promotionTypeAffectationSite);
-                            $promotionTypeAffectationSite
-                                ->setId($promotionTypeAffectation->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionTypeAffectationSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $promotionTypeAffectationSite
-                            ->setTypeAffectation($promotionTypeAffectation->getTypeAffectation());
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionTypeAffectations()) && !$entitySite->getPromotionTypeAffectations()->isEmpty()) {
-                    /** @var PromotionTypeAffectation $promotionTypeAffectation */
-                    foreach ($entitySite->getPromotionTypeAffectations() as $promotionTypeAffectationSite) {
-                        $promotionTypeAffectation = $entity->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) use ($promotionTypeAffectationSite) {
-                            return $element->getId() == $promotionTypeAffectationSite->getId();
-                        })->first();
-                        if (false === $promotionTypeAffectation) {
-//                            $entitySite->removePromotionTypeAffectation($promotionTypeAffectationSite);
-                            $emSite->remove($promotionTypeAffectationSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion typeAffectation ***
-
-                // *** gestion promotion fournisseur ***
-                if (!empty($entity->getPromotionFournisseurs()) && !$entity->getPromotionFournisseurs()->isEmpty()) {
-                    /** @var PromotionFournisseur $promotionFournisseur */
-                    foreach ($entity->getPromotionFournisseurs() as $promotionFournisseur) {
-                        $promotionFournisseurSite = $entitySite->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseur) {
-                            return $element->getId() == $promotionFournisseur->getId();
-                        })->first();
-                        if (false === $promotionFournisseurSite) {
-                            $promotionFournisseurSite = new PromotionFournisseur();
-                            $entitySite->addPromotionFournisseur($promotionFournisseurSite);
-                            $promotionFournisseurSite
-                                ->setId($promotionFournisseur->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-                        $promotionFournisseurSite
-                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFournisseur->getFournisseur()))
-                            ->setType($promotionFournisseur->getType());
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionFournisseurs()) && !$entitySite->getPromotionFournisseurs()->isEmpty()) {
-                    /** @var PromotionFournisseur $promotionFournisseur */
-                    foreach ($entitySite->getPromotionFournisseurs() as $promotionFournisseurSite) {
-                        $promotionFournisseur = $entity->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseurSite) {
-                            return $element->getId() == $promotionFournisseurSite->getId();
-                        })->first();
-                        if (false === $promotionFournisseur) {
-//                            $entitySite->removePromotionFournisseur($promotionFournisseurSite);
-                            $emSite->remove($promotionFournisseurSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion fournisseur ***
-
-                // *** gestion promotion hebergement ***
-                if (!empty($entity->getPromotionHebergements()) && !$entity->getPromotionHebergements()->isEmpty()) {
-                    /** @var PromotionHebergement $promotionHebergement */
-                    foreach ($entity->getPromotionHebergements() as $promotionHebergement) {
-                        $promotionHebergementSite = $entitySite->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergement) {
-                            return $element->getId() == $promotionHebergement->getId();
-                        })->first();
-                        if (false === $promotionHebergementSite) {
-                            $promotionHebergementSite = new PromotionHebergement();
-                            $entitySite->addPromotionHebergement($promotionHebergementSite);
-                            $promotionHebergementSite
-                                ->setId($promotionHebergement->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionHebergementSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-
-                        $promotionHebergementSite
-                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionHebergement->getFournisseur()))
-                            ->setHebergement($emSite->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $promotionHebergement->getHebergement()->getHebergementUnifie())));
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionHebergements()) && !$entitySite->getPromotionHebergements()->isEmpty()) {
-                    /** @var PromotionHebergement $promotionHebergement */
-                    foreach ($entitySite->getPromotionHebergements() as $promotionHebergementSite) {
-                        $promotionHebergement = $entity->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergementSite) {
-                            return $element->getId() == $promotionHebergementSite->getId();
-                        })->first();
-                        if (false === $promotionHebergement) {
-//                            $entitySite->removePromotionHebergement($promotionHebergementSite);
-                            $emSite->remove($promotionHebergementSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion hebergement ***
-
-                // *** gestion promotion fournisseurPrestationAnnexe ***
-                if (!empty($entity->getPromotionFournisseurPrestationAnnexes()) && !$entity->getPromotionFournisseurPrestationAnnexes()->isEmpty()) {
-                    /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
-                    foreach ($entity->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexe) {
-                        $promotionFournisseurPrestationAnnexeSite = $entitySite->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexe) {
-                            return $element->getId() == $promotionFournisseurPrestationAnnexe->getId();
-                        })->first();
-                        if (false === $promotionFournisseurPrestationAnnexeSite) {
-                            $promotionFournisseurPrestationAnnexeSite = new PromotionFournisseurPrestationAnnexe();
-                            $entitySite->addPromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnexeSite);
-                            $promotionFournisseurPrestationAnnexeSite
-                                ->setId($promotionFournisseurPrestationAnnexe->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurPrestationAnnexeSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-
-                        $promotionFournisseurPrestationAnnexeSite
-                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFournisseurPrestationAnnexe->getFournisseur()))
-                            ->setFournisseurPrestationAnnexe($emSite->find(FournisseurPrestationAnnexe::class, $promotionFournisseurPrestationAnnexe->getFournisseurPrestationAnnexe()));
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionFournisseurPrestationAnnexes()) && !$entitySite->getPromotionFournisseurPrestationAnnexes()->isEmpty()) {
-                    /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
-                    foreach ($entitySite->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexeSite) {
-                        $promotionFournisseurPrestationAnnexe = $entity->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexeSite) {
-                            return $element->getId() == $promotionFournisseurPrestationAnnexeSite->getId();
-                        })->first();
-                        if (false === $promotionFournisseurPrestationAnnexe) {
-//                            $entitySite->removePromotionFournisseurPrestationAnnexe($promotionFournisseurPrestationAnnexeSite);
-                            $emSite->remove($promotionFournisseurPrestationAnnexeSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion fournisseurPrestationAnnexe ***
-
-                // *** gestion promotion famillePrestationAnnexe ***
-                if (!empty($entity->getPromotionFamillePrestationAnnexes()) && !$entity->getPromotionFamillePrestationAnnexes()->isEmpty()) {
-                    /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
-                    foreach ($entity->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexe) {
-                        $promotionFamillePrestationAnnexeSite = $entitySite->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexe) {
-                            return $element->getId() == $promotionFamillePrestationAnnexe->getId();
-                        })->first();
-                        if (false === $promotionFamillePrestationAnnexeSite) {
-                            $promotionFamillePrestationAnnexeSite = new PromotionFamillePrestationAnnexe();
-                            $entitySite->addPromotionFamillePrestationAnnex($promotionFamillePrestationAnnexeSite);
-                            $promotionFamillePrestationAnnexeSite
-                                ->setId($promotionFamillePrestationAnnexe->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFamillePrestationAnnexeSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-                        }
-
-                        $promotionFamillePrestationAnnexeSite
-                            ->setFournisseur($emSite->find(Fournisseur::class, $promotionFamillePrestationAnnexe->getFournisseur()))
-                            ->setFamillePrestationAnnexe($emSite->find(FamillePrestationAnnexe::class, $promotionFamillePrestationAnnexe->getFamillePrestationAnnexe()));
-                    }
-                }
-
-                if (!empty($entitySite->getPromotionFamillePrestationAnnexes()) && !$entitySite->getPromotionFamillePrestationAnnexes()->isEmpty()) {
-                    /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
-                    foreach ($entitySite->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
-                        $promotionFamillePrestationAnnexe = $entity->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexeSite) {
-                            return $element->getId() == $promotionFamillePrestationAnnexeSite->getId();
-                        })->first();
-                        if (false === $promotionFamillePrestationAnnexe) {
-//                            $entitySite->removePromotionFamillePrestationAnnexe($promotionFamillePrestationAnnexeSite);
-                            $emSite->remove($promotionFamillePrestationAnnexeSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion famillePrestationAnnexe ***
-
-                // *** gestion promotion logement ***
-                if (!empty($entitySite->getPromotionLogements()) && !$entitySite->getPromotionLogements()->isEmpty()) {
-                    /** @var PromotionLogement $promotionLogement */
-                    foreach ($entitySite->getPromotionLogements() as $promotionLogementSite) {
-                        $promotionLogement = $entity->getPromotionLogements()->filter(function (PromotionLogement $element) use ($promotionLogementSite) {
-                            return $element->getId() == $promotionLogementSite->getId();
-                        })->first();
-                        if (false === $promotionLogement) {
-//                            $entitySite->removePromotionLogement($promotionLogementSite);
-                            $emSite->remove($promotionLogementSite);
-                        }
-                    }
-                }
-                // *** fin gestion promotion logement ***
-
-                $entityUnifieSite
-                    ->setCode($entityUnifie->getCode());
-                //  copie des données promotion
-                $entitySite
-                    ->setActifSite($entity->getActifSite())
-                    ->setLibelle($entity->getLibelle())
-                    ->setValeurRemise($entity->getValeurRemise())
-                    ->setPrixMini($entity->getPrixMini())
-                    ->setActif($entity->getActif())
-                    ->setClientAffectation($entity->getClientAffectation())
-                    ->setTypeRemise($entity->getTypeRemise())
-                    ->setUsagePromotion($entity->getUsagePromotion());
-
-                $emSite->persist($entityUnifieSite);
-
-                $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
-                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
-
-                $emSite->flush();
-            }
-        }
-    }
-
 }

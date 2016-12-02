@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\PromotionBundle\Entity;
 
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+
 /**
  * PromotionFournisseurPrestationAnnexe
  */
@@ -12,15 +15,15 @@ class PromotionFournisseurPrestationAnnexe
      */
     private $id;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+     * @var FournisseurPrestationAnnexe
      */
     private $fournisseurPrestationAnnexe;
     /**
-     * @var \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @var Fournisseur
      */
     private $fournisseur;
     /**
-     * @var \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @var Promotion
      */
     private $promotion;
 
@@ -35,9 +38,21 @@ class PromotionFournisseurPrestationAnnexe
     }
 
     /**
+     * @param int $id
+     *
+     * @return PromotionFournisseurPrestationAnnexe
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get fournisseurPrestationAnnexe
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+     * @return FournisseurPrestationAnnexe
      */
     public function getFournisseurPrestationAnnexe()
     {
@@ -47,11 +62,11 @@ class PromotionFournisseurPrestationAnnexe
     /**
      * Set fournisseurPrestationAnnexe
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
+     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
      *
      * @return PromotionFournisseurPrestationAnnexe
      */
-    public function setFournisseurPrestationAnnexe(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
+    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
     {
         $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
 
@@ -61,7 +76,7 @@ class PromotionFournisseurPrestationAnnexe
     /**
      * Get fournisseur
      *
-     * @return \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+     * @return Fournisseur
      */
     public function getFournisseur()
     {
@@ -71,11 +86,11 @@ class PromotionFournisseurPrestationAnnexe
     /**
      * Set fournisseur
      *
-     * @param \Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur
+     * @param Fournisseur $fournisseur
      *
      * @return PromotionFournisseurPrestationAnnexe
      */
-    public function setFournisseur(\Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur $fournisseur = null)
+    public function setFournisseur(Fournisseur $fournisseur = null)
     {
         $this->fournisseur = $fournisseur;
 
@@ -85,7 +100,7 @@ class PromotionFournisseurPrestationAnnexe
     /**
      * Get promotion
      *
-     * @return \Mondofute\Bundle\PromotionBundle\Entity\Promotion
+     * @return Promotion
      */
     public function getPromotion()
     {
@@ -95,11 +110,11 @@ class PromotionFournisseurPrestationAnnexe
     /**
      * Set promotion
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion
+     * @param Promotion $promotion
      *
      * @return PromotionFournisseurPrestationAnnexe
      */
-    public function setPromotion(\Mondofute\Bundle\PromotionBundle\Entity\Promotion $promotion = null)
+    public function setPromotion(Promotion $promotion = null)
     {
         $this->promotion = $promotion;
 

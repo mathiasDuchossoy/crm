@@ -5,11 +5,7 @@
     <div class="panel-body">
 
         {% for fournisseur in fournisseursTypeHebergement %}
-
             {% set hebergementExists = false %}
-            {#{% if promotion.promotionHebergements is not empty and fournisseurHebergements[promotion.vars.value.id][fournisseur.id] is defined %}#}
-            {#{% set hebergementExists = true %}#}
-            {#{% endif %}#}
             {% if promotion.promotionHebergements is defined %}
                 {% for promotionHebergement in promotion.promotionHebergements %}
                     {% if promotionHebergement.vars.value.fournisseur.id == fournisseur.id %}
@@ -61,20 +57,11 @@
                     <!-- List group hebergements -->
                     <ul class="list-group"
                         id="promotion_{{ promotion.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
-                        {#{% if hebergementExists == true %}#}
-                        {#{% include ('@MondofutePromotion/promotionunifie/get-code-promo-fournisseur-hebergements.html.twig') with {#}
-                        {#'hebergements' : fournisseurHebergements[promotion.vars.value.id][fournisseur.id],#}
-                        {#'fournisseurId': fournisseur.id,#}
-                        {#'promotionId' : promotion.vars.value.id#}
-                        {#} %}#}
-                        {#{% endif %}#}
                     </ul>
                 </div>
             </div>
-            {#{% set keyFournisseur = keyFournisseur + 1 %}#}
         {% endfor %}
     </div>
 </div>
 
-{#{{ include ('@MondofutePromotion/promotionunifie/panel-prestation-annexe.html.twig') }}#}
 

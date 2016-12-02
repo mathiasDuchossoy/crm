@@ -31,6 +31,18 @@ class PromotionTypeAffectation
     }
 
     /**
+     * @param int $id
+     *
+     * @return PromotionTypeAffectation
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get typeAffectation
      *
      * @return integer
