@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
@@ -136,10 +139,8 @@ class PromotionUnifieController extends Controller
 //                        $this->addFlash('error', "Add not done: " . $e->getMessage());
 //                        break;
 //                }
-
                 $this->addFlash('error', "Add not done: " . $e->getMessage());
             }
-
         }
 
         return $this->render('@MondofutePromotion/promotionunifie/new.html.twig', array(
@@ -497,7 +498,6 @@ class PromotionUnifieController extends Controller
                 // *** fin gestion promotion logement ***
 
                 // *** gestion type fournisseur ***
-
                 /** @var FamillePrestationAnnexe $typeFournisseur */
                 /** @var FamillePrestationAnnexe $typeFournisseurSite */
                 foreach ($entity->getTypeFournisseurs() as $typeFournisseur) {
@@ -516,8 +516,28 @@ class PromotionUnifieController extends Controller
                         $entitySite->removeTypeFournisseur($typeFournisseurSite);
                     }
                 }
-
                 // *** fin gestion type fournisseur ***
+
+                // *** gestion promotion periode validite ***
+                /** @var PeriodeValidite $periodeValidite */
+                /** @var PeriodeValidite $periodeValiditeSite */
+                foreach ($entity->getPeriodeValidites() as $periodeValidite) {
+                    $periodeValiditeSite = $entitySite->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($periodeValidite) {
+                        return $element->getId() == $periodeValidite->getId();
+                    })->first();
+                    if (false === $periodeValiditeSite) {
+                        $entitySite->addPeriodeValidite($emSite->find(PeriodeValidite::class, $periodeValidite));
+                    }
+                }
+                foreach ($entitySite->getPeriodeValidites() as $periodeValiditeSite) {
+                    $periodeValidite = $entity->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($periodeValiditeSite) {
+                        return $element->getId() == $periodeValiditeSite->getId();
+                    })->first();
+                    if (false === $periodeValidite) {
+                        $entitySite->removePeriodeValidite($periodeValiditeSite);
+                    }
+                }
+                // *** fin gestion promotion periode validite ***
 
                 //  copie des données promotion
                 $entitySite
@@ -1077,7 +1097,7 @@ class PromotionUnifieController extends Controller
 
 //        dump($form->children['promotions'][0]);die;
 
-        return $this->render('@MondofutePromotion/promotionunifie/get-code-promo-fournisseur-hebergements.html.twig', array(
+        return $this->render('@MondofutePromotion/promotionunifie/get-promotion-fournisseur-hebergements.html.twig', array(
             'hebergements' => $hebergements,
             'promotionId' => $promotionId,
             'fournisseurId' => $fournisseurId,
@@ -1106,12 +1126,70 @@ class PromotionUnifieController extends Controller
 
         $form = $this->createForm(PromotionUnifieType::class, $promotionUnifie)->createView();
 
-        return $this->render('@MondofutePromotion/promotionunifie/get-code-promo-fournisseur-prestation-annexes.html.twig', array(
+        return $this->render('@MondofutePromotion/promotionunifie/get-promotion-fournisseur-prestation-annexes.html.twig', array(
             'fournisseurPrestationAnnexes' => $fournisseurPrestationAnnexes,
             'promotionId' => $promotionId,
             'fournisseurId' => $fournisseurId,
             'keyPromotion' => '__keyPromotion__',
             'promotion' => $form->children['promotions'][0],
+        ));
+    }
+
+    public function getFournisseurPrestationannexePeriodeValiditeAction($fournisseurPrestationAnnexeId, $keyPromotion)
+    {
+        /** @var PeriodeValidite $periodeValidite */
+        /** @var PrestationAnnexeTarif $tarif */
+        /** @var FournisseurPrestationAnnexeParam $param */
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurPrestationAnnexe = $em->find(FournisseurPrestationAnnexe::class, $fournisseurPrestationAnnexeId);
+        $periodeValidites = new ArrayCollection();
+        foreach ($fournisseurPrestationAnnexe->getParams() as $param) {
+            foreach ($param->getTarifs() as $tarif) {
+                foreach ($tarif->getPeriodeValidites() as $periodeValidite) {
+                    $periodeValidites->add($periodeValidite);
+                }
+            }
+        }
+
+//        $promotionUnifie = new PromotionUnifie();
+//        $promotion = new Promotion();
+//        $promotionUnifie->getPromotions()->set($keyPromotion , $promotion);
+//
+//        $form = $this->createForm(PromotionUnifieType::class, $promotionUnifie)->createView();
+
+        return $this->render('@MondofutePromotion/promotionunifie/modal-body-fournisseur-prestation-annexe-periode-validite.html.twig', array(
+            'periodeValidites' => $periodeValidites,
+            'keyPromotion' => $keyPromotion,
+            'fournisseurPrestationAnnexeId' => $fournisseurPrestationAnnexeId,
+//            'form' => $form
+        ));
+    }
+
+    public function getFournisseurPrestationannexePeriodeValiditeValuesAction($fournisseurPrestationAnnexeId, $keyPromotion, $promotionId)
+    {
+        /** @var PeriodeValidite $periodeValidite */
+        /** @var PrestationAnnexeTarif $tarif */
+        /** @var FournisseurPrestationAnnexeParam $param */
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurPrestationAnnexe = $em->find(FournisseurPrestationAnnexe::class, $fournisseurPrestationAnnexeId);
+        $periodeValidites = new ArrayCollection();
+        foreach ($fournisseurPrestationAnnexe->getParams() as $param) {
+            foreach ($param->getTarifs() as $tarif) {
+                foreach ($tarif->getPeriodeValidites() as $periodeValidite) {
+                    $periodeValidites->add($periodeValidite);
+                }
+            }
+        }
+
+        $promotion = $em->find(Promotion::class, $promotionId);
+        $promotionPeriodeValidites = $promotion->getPeriodeValidites();
+
+        return $this->render('@MondofutePromotion/promotionunifie/get-fournisseur-prestation-annexe-periode-validite-values.html.twig', array(
+            'periodeValidites' => $periodeValidites,
+            'promotionId' => $promotionId,
+            'keyPromotion' => $keyPromotion,
+            'fournisseurPrestationAnnexeId' => $fournisseurPrestationAnnexeId,
+            'promotionPeriodeValidites' => $promotionPeriodeValidites
         ));
     }
 

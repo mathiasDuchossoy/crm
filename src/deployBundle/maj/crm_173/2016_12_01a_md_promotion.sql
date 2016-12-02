@@ -43,7 +43,12 @@ ALTER TABLE promotion_hebergement ADD CONSTRAINT FK_99AC1446670C757F FOREIGN KEY
 ALTER TABLE promotion_hebergement ADD CONSTRAINT FK_99AC1446139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
 ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;*/
 
-CREATE TABLE promotion_logement (id INT UNSIGNED AUTO_INCREMENT NOT NULL, logement_id INT UNSIGNED DEFAULT NULL, promotion_id INT UNSIGNED DEFAULT NULL, INDEX IDX_36A9E01358ABF955 (logement_id), INDEX IDX_36A9E013139DF194 (promotion_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+/*CREATE TABLE promotion_logement (id INT UNSIGNED AUTO_INCREMENT NOT NULL, logement_id INT UNSIGNED DEFAULT NULL, promotion_id INT UNSIGNED DEFAULT NULL, INDEX IDX_36A9E01358ABF955 (logement_id), INDEX IDX_36A9E013139DF194 (promotion_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 ALTER TABLE promotion_logement ADD CONSTRAINT FK_36A9E01358ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id);
 ALTER TABLE promotion_logement ADD CONSTRAINT FK_36A9E013139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
+ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;*/
+
+CREATE TABLE promotion_periode_validite (promotion_id INT UNSIGNED NOT NULL, periode_validite_id INT UNSIGNED NOT NULL, INDEX IDX_26B7235F139DF194 (promotion_id), INDEX IDX_26B7235FBF5863D9 (periode_validite_id), PRIMARY KEY(promotion_id, periode_validite_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_periode_validite ADD CONSTRAINT FK_26B7235F139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id) ON DELETE CASCADE;
+ALTER TABLE promotion_periode_validite ADD CONSTRAINT FK_26B7235FBF5863D9 FOREIGN KEY (periode_validite_id) REFERENCES periode_validite (id) ON DELETE CASCADE;
 ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;

@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\PromotionBundle\Form;
 
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
@@ -141,7 +142,18 @@ class PromotionType extends AbstractType
                     'allow_delete' => true,
                     'label' => 'Promotion famille prestation annexes',
                 )
-            );
+            )
+            ->add('periodeValidites', EntityType::class, array(
+                'class' => PeriodeValidite::class,
+                'required' => true,
+//                "choice_label" => "traductions[0].libelle",
+//                "placeholder" => " --- choisir un type ---",
+//                'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
+//                    return $r->getTraductionsByLocale($locale);
+//                },
+                'multiple' => true,
+                'expanded' => true,
+            ));
     }
 
     /**

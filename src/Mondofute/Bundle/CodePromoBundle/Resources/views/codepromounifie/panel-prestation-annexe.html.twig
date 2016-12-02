@@ -63,7 +63,7 @@
                         <ul class="list-group"
                             id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
                             {#{% if prestationAnnexeExists == true %}#}
-                                {#{% include ('@MondofuteCodePromo/codepromounifie/get-code-promo-fournisseur-prestation-annexes.html.twig') with {#}
+                            {#{% include ('@MondofuteCodePromo/codepromounifie/get-promotion-fournisseur-prestation-annexes.html.twig') with {#}
                                 {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],#}
                                 {#'fournisseurId': fournisseur.id,#}
                                 {#'codePromoId' : codePromo.vars.value.id#}
