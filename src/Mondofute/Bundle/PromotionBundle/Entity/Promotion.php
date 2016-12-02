@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\PromotionBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
@@ -76,6 +77,10 @@ class Promotion
      * @var Collection
      */
     private $promotionLogements;
+    /**
+     * @var Collection
+     */
+    private $periodeValidites;
 
     /**
      * Constructor
@@ -89,6 +94,7 @@ class Promotion
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionHebergements = new ArrayCollection();
         $this->promotionLogements = new ArrayCollection();
+        $this->periodeValidites = new ArrayCollection();
     }
 
     /**
@@ -529,5 +535,39 @@ class Promotion
     public function getPromotionLogements()
     {
         return $this->promotionLogements;
+    }
+
+    /**
+     * Add periodeValidite
+     *
+     * @param PeriodeValidite $periodeValidite
+     *
+     * @return Promotion
+     */
+    public function addPeriodeValidite(PeriodeValidite $periodeValidite)
+    {
+        $this->periodeValidites[] = $periodeValidite;
+
+        return $this;
+    }
+
+    /**
+     * Remove periodeValidite
+     *
+     * @param PeriodeValidite $periodeValidite
+     */
+    public function removePeriodeValidite(PeriodeValidite $periodeValidite)
+    {
+        $this->periodeValidites->removeElement($periodeValidite);
+    }
+
+    /**
+     * Get periodeValidites
+     *
+     * @return Collection
+     */
+    public function getPeriodeValidites()
+    {
+        return $this->periodeValidites;
     }
 }

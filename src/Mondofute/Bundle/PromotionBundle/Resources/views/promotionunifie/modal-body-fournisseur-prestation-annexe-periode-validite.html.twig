@@ -1,0 +1,22 @@
+
+{#{% for promotion in form.promotions %}#}
+    {#{{ dump(promotion.periodeValidites) }}#}
+    {#{{ form_row(promotion.periodeValidites) }}#}
+{#{% endfor %}#}
+<div class="form-group" id="promotion_{{ keyPromotion }}_{{ fournisseurPrestationAnnexeId }}_periode_validite_values">
+    {% for periodeValidite in periodeValidites %}
+        {#{{ dump(periodeValidite) }}#}
+        <div class="checkbox">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label>
+                    <input name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][periodeValidites][]"
+                           id="mondofute_bundle_promotionbundle_promotionunifie_promotions_{{ keyPromotion }}_periodeValidites_{{ periodeValidite.id }}"
+                           value="{{ periodeValidite.id }}" type="checkbox">
+                    {{ periodeValidite }}
+                    {#<input name="mondofute_bundle_promotionbundle_promotionunifie[promotions][0][promotionFamillePrestationAnnexes][140][fournisseur]" value="14" type="hidden">#}
+                </label>
+            </div>
+        </div>
+    {% endfor %}
+</div>

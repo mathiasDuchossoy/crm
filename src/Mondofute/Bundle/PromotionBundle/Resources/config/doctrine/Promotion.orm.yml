@@ -72,4 +72,6 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             joinTable:
                 name: 'promotion_type_fournisseur'
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+        periodeValidites:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
     lifecycleCallbacks: {  }

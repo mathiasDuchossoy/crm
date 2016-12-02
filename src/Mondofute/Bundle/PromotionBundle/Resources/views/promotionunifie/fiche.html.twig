@@ -65,6 +65,9 @@
                 {% endfor %}
 
             </div>
+            <div id="values_fournisseur_prestation_annexe_periode_validite" style="display: none">
+                {#<div id="values_fournisseur_prestation_annexe_periode_validite">#}
+            </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -88,6 +91,8 @@
             </div>
         </div>
     </div>
+
+    {% include ('@MondofutePromotion/promotionunifie/modal-promotion-fournisseur-prestation-annexe-periode-validite.html.twig') %}
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">
@@ -302,7 +307,11 @@
 //                async: false
             }).done(function (data) {
                 data = data.replace(/__keyPromotion__/g, keyPromotion);
-                $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_prestation_annexes').html(data);
+                var $promotionFournisseurPrestationannexes = $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_prestation_annexes');
+                $promotionFournisseurPrestationannexes.html(data);
+                $promotionFournisseurPrestationannexes.find('input[class^="promotion_famille_prestation_annexes_"]').each(function (index, element) {
+                    getFournisseurPrestationAnnexePeriodeValiditeValues($(element).val(), promotionId, keyPromotion);
+                })
             });
 //            }
 
@@ -340,6 +349,75 @@
             {% endfor %}
             {% endif %}
         });
+
+    </script>
+
+    <script type="text/javascript">
+        var selected = [];
+
+        function getFournisseurPrestationAnnexePeriodeValidites(fournisseurPrestationAnnexeId, keyPromotion) {
+            var path = '{{ path('promotion_get_fournisseur_prestation_annexe_periode_validite' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyPromotion' : '_keyPromotion_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id', fournisseurPrestationAnnexeId);
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-promotion', keyPromotion);
+
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($values_checkbox_fournisseur_prestation_annexe_periode_validite.length > 0) {
+                $modal_body_fournisseur_prestation_annexe_periode_validite.html($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            }
+            else {
+                $.ajax(path).done(function (data) {
+                    $modal_body_fournisseur_prestation_annexe_periode_validite.html(data);
+                })
+            }
+            selected = [];
+            $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values input:checked').each(function () {
+                selected.push($(this).attr('id'));
+            });
+            $('#modal_fournisseur_prestation_annexe_periode_validite').on('hidden.bs.modal', function (e) {
+                validerFournisseurPrestationAnnexePeriodeValidite(true);
+            })
+        }
+
+        function validerFournisseurPrestationAnnexePeriodeValidite(annuler) {
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            var fournisseurPrestationAnnexeId = $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id');
+            var keyPromotion = $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-promotion');
+            var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            var $modal_fournisseur_prestation_annexe_periode_validite = $('#modal_fournisseur_prestation_annexe_periode_validite');
+            $modal_fournisseur_prestation_annexe_periode_validite.unbind('hidden.bs.modal');
+            $modal_fournisseur_prestation_annexe_periode_validite.modal('hide');
+            if (annuler) {
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.find('input:checkbox').prop('checked', false);
+                for (var i = 0; i < selected.length; i++) {
+                    $('#' + selected[i]).prop('checked', true);
+                }
+            }
+        }
+
+        function getFournisseurPrestationAnnexePeriodeValiditeValues(fournisseurPrestationAnnexeId, promotionId, keyPromotion) {
+            var path = '{{ path('promotion_get_fournisseur_prestation_annexe_periode_validite_values' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyPromotion' : '_keyPromotion_','promotionId' : '_promotionId_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_promotionId_', promotionId);
+            $.ajax(path).done(function (data) {
+                var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+                var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('<div id="promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values"></div>');
+                $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.html(data);
+            })
+        }
+
+        function checkAllPeriodeValiditeForFournisseurPrestationAnnexe(element, keyPromotion, fournisseurPrestationAnnexeId) {
+            var $element = $(element);
+            var $listGroup = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
 
     </script>
 

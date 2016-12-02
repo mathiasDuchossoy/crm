@@ -23,11 +23,6 @@ promotion_delete:
     defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:delete" }
     methods:  DELETE
 
-promotion_get_clients:
-    path:     /getclient/{clientName}/{siteId}/{promotionId}
-    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getClients" , promotionId: null }
-    methods:  GET
-
 promotion_get_fournisseur_hebergements:
     path:     /getfournisseurhebergements/{promotionId}/{fournisseurId}/{siteId}
     defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurHebergements"}
@@ -46,4 +41,14 @@ promotion_get_panel_hebergement:
 promotion_get_panel_prestation_annexe:
     path:     /getprestationannexe/{promotionId}
     defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getPrestationAnnexe"}
+    methods:  GET
+
+promotion_get_fournisseur_prestation_annexe_periode_validite:
+    path:     /getfournisseurprestationannexeperiodevalidite/{fournisseurPrestationAnnexeId}/{keyPromotion}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurPrestationannexePeriodeValidite"}
+    methods:  GET
+
+promotion_get_fournisseur_prestation_annexe_periode_validite_values:
+    path:     /getfournisseurprestationannexeperiodevaliditevalues/{fournisseurPrestationAnnexeId}/{promotionId}/{keyPromotion}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurPrestationannexePeriodeValiditeValues"}
     methods:  GET
