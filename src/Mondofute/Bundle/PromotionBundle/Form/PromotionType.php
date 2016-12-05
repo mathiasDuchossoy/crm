@@ -122,6 +122,12 @@ class PromotionType extends AbstractType
 //                },
                 'multiple' => true,
                 'expanded' => true,
+            ))
+            ->add('logementPeriodes', CollectionType::class, array(
+                'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionLogementPeriodeType',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => 'Promotion logement periode',
             ));
     }
 
