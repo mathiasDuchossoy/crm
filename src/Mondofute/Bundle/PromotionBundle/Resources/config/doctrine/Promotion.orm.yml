@@ -75,6 +75,10 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
             mappedBy: promotion
             cascade: ['persist','remove']
+        logementPeriodes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
+            mappedBy: promotion
+            cascade: ['persist','remove']
     manyToMany:
         typeFournisseurs:
             joinTable:
