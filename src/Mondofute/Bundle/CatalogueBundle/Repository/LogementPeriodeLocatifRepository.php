@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\CatalogueBundle\Repository;
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * LogementPeriodeLocatifRepository
  *
@@ -18,5 +20,29 @@ class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
         );
 
         return $this->getEntityManager()->getConnection()->executeQuery($sql, $params);
+    }
+
+    public function findByPrixPublicNotEmpty($fournisseurId, $hebergementId)
+    {
+
+        /** @var EntityManager $em */
+        $em = $this->getEntityManager();
+        $connection = $em->getConnection();
+
+        $sql = 'select p.id periodeId, p.debut, p.fin, l.id logementId from logement_periode_locatif lpl
+                left join periode p on p.id = lpl.periode_id
+                left join logement l on l.id = lpl.logement_id
+                left join fournisseur_hebergement fh on fh.id = l.fournisseur_hebergement_id 
+                left join hebergement h on h.hebergement_unifie_id = fh.hebergement_id  
+                where lpl.prix_public > 0 
+                and fh.fournisseur_id = ' . $fournisseurId . ' 
+                and h.id = ' . $hebergementId . ' 
+                and l.site_id = h.site_id
+                group by periode_id';
+
+        $logementPeriodeLocatifs = $connection->executeQuery($sql)->fetchAll();
+
+        return $logementPeriodeLocatifs;
+
     }
 }

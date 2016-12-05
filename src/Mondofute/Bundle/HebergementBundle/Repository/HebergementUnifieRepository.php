@@ -144,20 +144,27 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
-            ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
-            ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
-            ->join('hebergementUnifie.fournisseurs', 'fournisseurHebergements')
-            ->join('fournisseurHebergements.fournisseur', 'fournisseur')
-            ->join('hebergementUnifie.hebergements', 'hebergements')
-            ->join('hebergements.traductions', 'traductions')
-            ->join('traductions.langue', 'langue')
+            ->from('MondofuteHebergementBundle:HebergementUnifie' , 'hebergementUnifie')
+            ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom, stationTraductions.libelle stationLibelle, station.id stationId ')
+            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergementUnifie.hebergements' , 'hebergements')
+            ->join('hebergements.traductions' , 'traductions')
+            ->join('traductions.langue' , 'langue')
+            ->join('hebergements.station', 'station')
+            ->join('station.traductions', 'stationTraductions')
+            ->join('stationTraductions.langue', 'stationTraductionlangue')
             ->where('fournisseur = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseurId)
             ->andWhere('langue.code = :locale')
-            ->setParameter('locale', $locale)
-            ->join('hebergements.site', 'site')
+            ->setParameter('locale' , $locale)
+            ->andWhere('stationTraductionlangue.code = :localeStation')
+            ->setParameter('localeStation', $locale)
+            ->join('hebergements.site' , 'site')
             ->andWhere('site.id = :site')
-            ->setParameter('site', $site);
+            ->setParameter('site' , $site)
+            ->orderBy('stationTraductions.libelle')
+        ;
 
         $result = $q->getQuery()->getResult();
 
