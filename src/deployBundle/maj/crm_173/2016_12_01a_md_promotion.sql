@@ -48,7 +48,15 @@ ALTER TABLE promotion_logement ADD CONSTRAINT FK_36A9E01358ABF955 FOREIGN KEY (l
 ALTER TABLE promotion_logement ADD CONSTRAINT FK_36A9E013139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
 ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;*/
 
-CREATE TABLE promotion_periode_validite (promotion_id INT UNSIGNED NOT NULL, periode_validite_id INT UNSIGNED NOT NULL, INDEX IDX_26B7235F139DF194 (promotion_id), INDEX IDX_26B7235FBF5863D9 (periode_validite_id), PRIMARY KEY(promotion_id, periode_validite_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+/*CREATE TABLE promotion_periode_validite (promotion_id INT UNSIGNED NOT NULL, periode_validite_id INT UNSIGNED NOT NULL, INDEX IDX_26B7235F139DF194 (promotion_id), INDEX IDX_26B7235FBF5863D9 (periode_validite_id), PRIMARY KEY(promotion_id, periode_validite_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 ALTER TABLE promotion_periode_validite ADD CONSTRAINT FK_26B7235F139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id) ON DELETE CASCADE;
 ALTER TABLE promotion_periode_validite ADD CONSTRAINT FK_26B7235FBF5863D9 FOREIGN KEY (periode_validite_id) REFERENCES periode_validite (id) ON DELETE CASCADE;
-ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;
+ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;*/
+
+/*CREATE TABLE promotion_logement_periode (promotion_id INT UNSIGNED NOT NULL, periode_id INT UNSIGNED NOT NULL, logement_id INT UNSIGNED NOT NULL, INDEX IDX_66D5151139DF194 (promotion_id), INDEX IDX_66D5151F384C1CF (periode_id), INDEX IDX_66D515158ABF955 (logement_id), PRIMARY KEY(promotion_id, periode_id, logement_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_logement_periode ADD CONSTRAINT FK_66D5151139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
+ALTER TABLE promotion_logement_periode ADD CONSTRAINT FK_66D5151F384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+ALTER TABLE promotion_logement_periode ADD CONSTRAINT FK_66D515158ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id);
+ALTER TABLE promotion CHANGE valeur_remise valeur_remise NUMERIC(10, 2) NOT NULL;*/
+
+ALTER TABLE promotion ADD valeur_remise NUMERIC(10, 2) DEFAULT '0' NOT NULL;

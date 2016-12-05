@@ -25,9 +25,9 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
         valeurRemise:
             type: decimal
             precision: 10
-            scale: 2
+            scale: '2'
             options:
-                unsigned: true
+                default: 0
         typePeriodeSejour:
             type: smallint
             options:
@@ -65,6 +65,10 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             cascade: ['persist','remove']
         promotionLogements:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        logementPeriodes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
             mappedBy: promotion
             cascade: ['persist','remove']
     manyToMany:

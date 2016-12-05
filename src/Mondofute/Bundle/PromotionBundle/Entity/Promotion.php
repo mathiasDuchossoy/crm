@@ -81,6 +81,10 @@ class Promotion
      * @var Collection
      */
     private $periodeValidites;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $logementPeriodes;
 
     /**
      * Constructor
@@ -569,5 +573,39 @@ class Promotion
     public function getPeriodeValidites()
     {
         return $this->periodeValidites;
+    }
+
+    /**
+     * Add logementPeriode
+     *
+     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode
+     *
+     * @return Promotion
+     */
+    public function addLogementPeriode(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode)
+    {
+        $this->logementPeriodes[] = $logementPeriode->setPromotion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove logementPeriode
+     *
+     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode
+     */
+    public function removeLogementPeriode(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode)
+    {
+        $this->logementPeriodes->removeElement($logementPeriode);
+    }
+
+    /**
+     * Get logementPeriodes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLogementPeriodes()
+    {
+        return $this->logementPeriodes;
     }
 }

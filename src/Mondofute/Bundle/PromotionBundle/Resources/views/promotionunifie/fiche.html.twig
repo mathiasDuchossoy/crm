@@ -61,12 +61,16 @@
                         {% endif %}
                     </div>
 
+                    {#{{ dump(promotion.logementPeriodes) }}#}
                     {% set index = (index + 1) %}
                 {% endfor %}
 
             </div>
             <div id="values_fournisseur_prestation_annexe_periode_validite" style="display: none">
                 {#<div id="values_fournisseur_prestation_annexe_periode_validite">#}
+            </div>
+
+            <div id="values_promotion_logement_periode">
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
@@ -93,6 +97,7 @@
     </div>
 
     {% include ('@MondofutePromotion/promotionunifie/modal-promotion-fournisseur-prestation-annexe-periode-validite.html.twig') %}
+    {% include ('@MondofutePromotion/promotionunifie/modal-promotion-logement-periode.html.twig') %}
 {% endblock %}
 {% block javascripts %}
     <script type="text/javascript">
@@ -397,6 +402,13 @@
                     $('#' + selected[i]).prop('checked', true);
                 }
             }
+            var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+            }
+            else {
+                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+            }
         }
 
         function getFournisseurPrestationAnnexePeriodeValiditeValues(fournisseurPrestationAnnexeId, promotionId, keyPromotion) {
@@ -409,6 +421,19 @@
                 var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('<div id="promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values"></div>');
                 $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
                 $values_checkbox_fournisseur_prestation_annexe_periode_validite.html(data);
+                var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+                if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                    $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                }
+                $periodeValiditeCheckboxes.change(function () {
+                    if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                        //do something
+                        $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                    }
+                    else {
+                        $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+                    }
+                });
             })
         }
 
@@ -418,6 +443,95 @@
             $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
+
+    </script>
+
+    <script>
+        function getLogementPeriodes(fournisseurId, hebergementId, keyPromotion) {
+
+            var path = '{{ path('promotion_get_logement_periode' , {'hebergementId' : '_hebergementId_','keyPromotion' : '_keyPromotion_','fournisseurId' : '_fournisseurId_'}) }}';
+            path = path.replace('_hebergementId_', hebergementId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_fournisseurId_', fournisseurId);
+
+            var $modal_body_promotion_logement_periode = $('#modal_body_promotion_logement_periode');
+
+            $modal_body_promotion_logement_periode.data('hebergement-id', hebergementId);
+            $modal_body_promotion_logement_periode.data('key-promotion', keyPromotion);
+            $modal_body_promotion_logement_periode.data('fournisseur-id', fournisseurId);
+
+            $.ajax(path).done(function (data) {
+                var $values_checkbox_promotion_logement_periode = $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_periode');
+                if ($values_checkbox_promotion_logement_periode.length == 0) {
+                    $values_checkbox_promotion_logement_periode = $('<div id="promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_periode"></div>');
+                }
+                $modal_body_promotion_logement_periode.html($values_checkbox_promotion_logement_periode);
+                $values_checkbox_promotion_logement_periode.html(data);
+            })
+        }
+
+
+        {#function getLogementPeriodeValues(fournisseurId, hebergementId, promotionId, keyPromotion) {#}
+        {#var path = '{{ path('promotion_get_fournisseur_prestation_annexe_periode_validite_values' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyPromotion' : '_keyPromotion_','promotionId' : '_promotionId_'}) }}';#}
+        {#path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);#}
+        {#path = path.replace('_keyPromotion_', keyPromotion);#}
+        {#path = path.replace('_promotionId_', promotionId);#}
+        {#$.ajax(path).done(function (data) {#}
+        {#var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');#}
+        {#var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('<div id="promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values"></div>');#}
+        {#$values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);#}
+        {#$values_checkbox_fournisseur_prestation_annexe_periode_validite.html(data);#}
+        {#var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');#}
+        {#if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {#}
+        {#$('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);#}
+        {#}#}
+        {#$periodeValiditeCheckboxes.change(function () {#}
+        {#if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {#}
+        {#//do something#}
+        {#$('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);#}
+        {#}#}
+        {#else {#}
+        {#$('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);#}
+        {#}#}
+        {#});#}
+        {#})#}
+        {#}#}
+
+        function validerPromotionLogementPeriode(annuler) {
+            var $modal_body_promotion_logement_periode = $('#modal_body_promotion_logement_periode');
+            var hebergementId = $modal_body_promotion_logement_periode.data('hebergement-id');
+            var keyPromotion = $modal_body_promotion_logement_periode.data('key-promotion');
+            var fournisseurId = $modal_body_promotion_logement_periode.data('fournisseur-id');
+            var $values_promotion_logement_periode = $('#values_promotion_logement_periode');
+            var $values_checkbox_promotion_logement_periode = $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_periode');
+            if ($values_checkbox_promotion_logement_periode.length == 0) {
+                $values_checkbox_promotion_logement_periode = $('<div id="promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_periode"></div>');
+            }
+            $values_promotion_logement_periode.append($values_checkbox_promotion_logement_periode);
+            var $modal_promotion_logement_periode = $('#modal_promotion_logement_periode');
+            $modal_promotion_logement_periode.unbind('hidden.bs.modal');
+            $modal_promotion_logement_periode.modal('hide');
+
+//            if (annuler) {
+//                $values_checkbox_fournisseur_prestation_annexe_periode_validite.find('input:checkbox').prop('checked', false);
+//                for (var i = 0; i < selected.length; i++) {
+//                    $('#' + selected[i]).prop('checked', true);
+//                }
+//            }
+//            var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+//            if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+//                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+//            }
+//            else {
+//                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+//            }
+        }
+
+        function checkListStationHebergement(checkbox, className) {
+            $('.' + className).each(function (index, element) {
+                $(element).find('input[type=checkbox]').prop('checked', $(checkbox).prop('checked'));
+            })
+        }
 
     </script>
 

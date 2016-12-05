@@ -8,10 +8,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use JMS\JobQueueBundle\Entity\Job;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
@@ -693,6 +695,15 @@ class PromotionUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        dump($request);
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            foreach ($promotion->getLogementPeriodes() as $logementPeriode) {
+                $logementPeriode->setPromotion($promotion);
+            }
+        }
+        dump($promotionUnifie);
+//        die;
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($promotionUnifie->getPromotions() as $promotion) {
                 if (false === in_array($promotion->getSite()->getId(), $sitesAEnregistrer)) {
@@ -1191,6 +1202,27 @@ class PromotionUnifieController extends Controller
             'fournisseurPrestationAnnexeId' => $fournisseurPrestationAnnexeId,
             'promotionPeriodeValidites' => $promotionPeriodeValidites
         ));
+    }
+
+    public function getLogementPeriodeAction($fournisseurId, $hebergementId, $keyPromotion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $periodes = $em->getRepository(LogementPeriodeLocatif::class)->findByPrixPublicNotEmpty($fournisseurId, $hebergementId);
+//        dump($periodes);
+        $hebergement = $em->find(Hebergement::class, $hebergementId);
+
+        $logements = $em->getRepository(Logement::class)->findByFournisseurHebergement($fournisseurId, $hebergement->getHebergementUnifie()->getId(), $hebergement->getSite()->getId());
+
+        return $this->render('@MondofutePromotion/promotionunifie/modal-body-logement-periode.html.twig', array(
+            'logementPeriodes' => $periodes,
+//            'promotionId' => $promotionId,
+            'keyPromotion' => $keyPromotion,
+            'hebergementId' => $hebergementId,
+            'logements' => $logements,
+            'fournisseurId' => $fournisseurId,
+//            'promotionPeriodeValidites' => $promotionPeriodeValidites
+        ));
+
     }
 
     /**
