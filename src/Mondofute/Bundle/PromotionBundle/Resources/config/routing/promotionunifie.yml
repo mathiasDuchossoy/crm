@@ -53,7 +53,17 @@ promotion_get_fournisseur_prestation_annexe_periode_validite_values:
     defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getFournisseurPrestationannexePeriodeValiditeValues"}
     methods:  GET
 
-promotion_get_logement_periode:
-    path:     /getlogementperiode/{fournisseurId}/{hebergementId}/{keyPromotion}
-    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getLogementPeriode"}
+promotion_get_logement:
+    path:     /getlogements/{fournisseurId}/{hebergementId}/{keyPromotion}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getLogements"}
+    methods:  GET
+
+promotion_get_periode:
+    path:     /getperiodes/{promotionId}/{keyPromotion}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getPeriodes"}
+    methods:  GET
+
+promotion_get_logement_values:
+    path:     /getlogementvalues/{fournisseurId}/{hebergementId}/{promotionId}/{keyPromotion}
+    defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getLogementValues"}
     methods:  GET
