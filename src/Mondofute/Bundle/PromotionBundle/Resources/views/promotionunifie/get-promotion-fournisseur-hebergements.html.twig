@@ -8,12 +8,12 @@
     {% if stationLibelleTemp !=  hebergement.stationLibelle %}
         <div class="checkbox">
             <label><input type="checkbox"
-                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId')">{{ hebergement.stationLibelle }}
+                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}')">{{ hebergement.stationLibelle }}
             </label>
         </div>
     {% endif %}
     {% set stationLibelleTemp = hebergement.stationLibelle %}
-    <li class="list-group-item list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId">
+    <li class="list-group-item list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}">
         <div class="row">
             <div class="col-sm-6">
                 <div class="checkbox">
@@ -31,6 +31,7 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% endif %}
+                                      class="promotion_hebergement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
                                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
                             >{{ hebergement.nom }}</label>
                         <input type="hidden"
@@ -42,18 +43,18 @@
             <div class="col-sm-2">
                 <label>
                     <input type="checkbox"
-                            {#id="checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"#}
-                            {#onclick="checkAllPeriodeValiditeForFournisseurPrestationAnnexe(this, '{{ keyPromotion }}', '{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"#}
+                           id="checkbox_all_logement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
+                           onclick="checkAllPromotionLogements(this, '{{ keyPromotion }}', '{{ fournisseurId }}', {{ hebergement.hebergementId }});"
                     />
-                    Toutes les périodes
+                    Tout les logements
                 </label>
             </div>
             <div class="col-sm-2">
                 <button type="button" class="btn btn-default btn-md" data-toggle="modal"
-                        data-target="#modal_promotion_logement_periode"
-                        onclick="getLogementPeriodes('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"
+                        data-target="#modal_promotion_logement"
+                        onclick="getPromotionLogements('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"
                 >
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Periodes de validité
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Logements
                 </button>
             </div>
         </div>
