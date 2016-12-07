@@ -8,8 +8,20 @@
     {% if stationLibelleTemp !=  hebergement.stationLibelle %}
         <div class="checkbox">
             <label><input type="checkbox"
+                          value="{{ hebergement.stationId }}"
+                        {% set keyPromotionStation = 0 %}
+                        {% for promotionStation in promotion.promotionStations %}
+                            {% if promotionStation.vars.value.station.id == hebergement.stationId and promotionStation.vars.value.fournisseur.id == fournisseurId %}
+                                checked="checked"
+                            {% endif %}
+                        {% endfor %}
+                          name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionStations][{{ fournisseurId }}0{{ hebergement.stationId }}][station]"
                           onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}')">{{ hebergement.stationLibelle }}
             </label>
+            <input type="hidden"
+                   name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionStations][{{ fournisseurId }}0{{ hebergement.stationId }}][fournisseur]"
+                   value="{{ fournisseurId }}"
+            >
         </div>
     {% endif %}
     {% set stationLibelleTemp = hebergement.stationLibelle %}

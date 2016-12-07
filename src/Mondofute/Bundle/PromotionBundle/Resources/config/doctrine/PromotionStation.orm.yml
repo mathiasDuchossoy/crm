@@ -1,0 +1,21 @@
+Mondofute\Bundle\PromotionBundle\Entity\PromotionStation:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionStationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    manyToOne:
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        promotion:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
+            inversedBy: promotionStations
+    lifecycleCallbacks: {  }
