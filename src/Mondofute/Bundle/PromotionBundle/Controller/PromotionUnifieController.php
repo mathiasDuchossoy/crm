@@ -23,10 +23,13 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeDate;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeJour;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
+use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
@@ -606,6 +609,34 @@ class PromotionUnifieController extends Controller
                 }
                 // *** fin gestion promotion periode validite ***
 
+                // *** gestion periode validite jour ***
+                if (!empty($entity->getPromotionPeriodeValiditeJour())) {
+                    if (empty($promotionPeriodeValiditeJour = $entitySite->getPromotionPeriodeValiditeJour())) {
+                        $promotionPeriodeValiditeJour = new PromotionPeriodeValiditeJour();
+                        $entitySite->setPromotionPeriodeValiditeJour($promotionPeriodeValiditeJour);
+                    }
+                    $promotionPeriodeValiditeJour
+                        ->setJourDebut($entity->getPromotionPeriodeValiditeJour()->getJourDebut())
+                        ->setJourFin($entity->getPromotionPeriodeValiditeJour()->getJourFin());
+                } else {
+                    $entitySite->setPromotionPeriodeValiditeJour();
+                }
+                // *** fin type periode validite jour ***
+
+                // *** gestion periode validite date ***
+                if (!empty($entity->getPromotionPeriodeValiditeDate())) {
+                    if (empty($promotionPeriodeValiditeDate = $entitySite->getPromotionPeriodeValiditeDate())) {
+                        $promotionPeriodeValiditeDate = new PromotionPeriodeValiditeDate();
+                        $entitySite->setPromotionPeriodeValiditeDate($promotionPeriodeValiditeDate);
+                    }
+                    $promotionPeriodeValiditeDate
+                        ->setDateDebut($entity->getPromotionPeriodeValiditeDate()->getDateDebut())
+                        ->setDateFin($entity->getPromotionPeriodeValiditeDate()->getDateFin());
+                } else {
+                    $entitySite->setPromotionPeriodeValiditeDate();
+                }
+                // *** fin type periode validite date ***
+
                 //  copie des données promotion
                 $entitySite
                     ->setActif($entity->getActif())
@@ -716,20 +747,14 @@ class PromotionUnifieController extends Controller
 
         // *** gestion promotion fournisseurPrestationAnnexe ***
         $originalPromotionFournisseurPrestationAnnexes = new ArrayCollection();
-//        $fournisseurFournisseurPrestationAnnexes = new ArrayCollection();
         foreach ($promotionUnifie->getPromotions() as $promotion) {
-//            $fournisseurFournisseurPrestationAnnexes->set($promotion->getId(), new ArrayCollection());
             $originalPromotionFournisseurPrestationAnnexes->set($promotion->getSite()->getId(), new ArrayCollection());
             /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
             foreach ($promotion->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexe) {
                 $originalPromotionFournisseurPrestationAnnexes->get($promotion->getSite()->getId())->add($promotionFournisseurPrestationAnnexe);
-//                if (empty($fournisseurFournisseurPrestationAnnexes->get($promotion->getId())->get($promotionFournisseurPrestationAnnexe->getFournisseur()->getId()))) {
-//                    $fournisseurFournisseurPrestationAnnexes->get($promotion->getId())->set($promotionFournisseurPrestationAnnexe->getFournisseur()->getId(), new ArrayCollection());
-//                }
             }
         }
         // *** fin gestion promotion fournisseurPrestationAnnexe ***
-
 
         // *** gestion promotion famillePrestationAnnexe ***
         $originalPromotionFamillePrestationAnnexes = new ArrayCollection();
@@ -843,7 +868,6 @@ class PromotionUnifieController extends Controller
                 }
             }
             // *** fin gestion promotion hebergement ***
-
 
             // *** gestion promotion station ***
             $this->gestionPromotionStation($promotionUnifie);
@@ -970,6 +994,10 @@ class PromotionUnifieController extends Controller
                 }
             }
             // *** fin gestion promotion logement periode ***
+
+            // *** gestion typePeriodeSejour ***
+            $this->gestionTypePeriodeSejour($promotionUnifie);
+            // *** fin gestion typePeriodeSejour ***
 
             $em->persist($promotionUnifie);
             $em->flush();
@@ -1232,6 +1260,30 @@ class PromotionUnifieController extends Controller
                             ->setFournisseur($fournisseurs->get($key));
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * @param PromotionUnifie $promotionUnifie
+     */
+    public function gestionTypePeriodeSejour($promotionUnifie)
+    {
+        /** @var Promotion $promotion */
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            switch ($promotion->getTypePeriodeSejour()) {
+                case TypePeriodeSejour::permanent:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeSejour::dateADate:
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeSejour::periode:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    break;
+                default:
+                    break;
             }
         }
     }
