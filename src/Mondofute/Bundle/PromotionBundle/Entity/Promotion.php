@@ -85,6 +85,14 @@ class Promotion
      * @var Collection
      */
     private $promotionStations;
+    /**
+     * @var PromotionPeriodeValiditeDate
+     */
+    private $promotionPeriodeValiditeDate;
+    /**
+     * @var PromotionPeriodeValiditeJour
+     */
+    private $promotionPeriodeValiditeJour;
 
     /**
      * Constructor
@@ -608,5 +616,53 @@ class Promotion
     public function getPromotionStations()
     {
         return $this->promotionStations;
+    }
+
+    /**
+     * Get promotionPeriodeValiditeDate
+     *
+     * @return PromotionPeriodeValiditeDate
+     */
+    public function getPromotionPeriodeValiditeDate()
+    {
+        return $this->promotionPeriodeValiditeDate;
+    }
+
+    /**
+     * Set promotionPeriodeValiditeDate
+     *
+     * @param PromotionPeriodeValiditeDate $promotionPeriodeValiditeDate
+     *
+     * @return Promotion
+     */
+    public function setPromotionPeriodeValiditeDate(PromotionPeriodeValiditeDate $promotionPeriodeValiditeDate = null)
+    {
+        $this->promotionPeriodeValiditeDate = $promotionPeriodeValiditeDate;
+
+        return $this;
+    }
+
+    /**
+     * Get promotionPeriodeValiditeJour
+     *
+     * @return PromotionPeriodeValiditeJour
+     */
+    public function getPromotionPeriodeValiditeJour()
+    {
+        return $this->promotionPeriodeValiditeJour;
+    }
+
+    /**
+     * Set promotionPeriodeValiditeJour
+     *
+     * @param PromotionPeriodeValiditeJour $promotionPeriodeValiditeJour
+     *
+     * @return Promotion
+     */
+    public function setPromotionPeriodeValiditeJour(PromotionPeriodeValiditeJour $promotionPeriodeValiditeJour = null)
+    {
+        $this->promotionPeriodeValiditeJour = $promotionPeriodeValiditeJour;
+
+        return $this;
     }
 }

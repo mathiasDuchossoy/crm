@@ -78,4 +78,13 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
         periodeValidites:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
+    oneToOne:
+        promotionPeriodeValiditeDate:
+            targetEntity: PromotionPeriodeValiditeDate
+            cascade: ['persist','remove']
+            orphanRemoval: true
+        promotionPeriodeValiditeJour:
+            targetEntity: PromotionPeriodeValiditeJour
+            cascade: ['persist','remove']
+            orphanRemoval: true
     lifecycleCallbacks: {  }

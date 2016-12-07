@@ -28,17 +28,6 @@ class PromotionType extends AbstractType
         $locale = $options["locale"];
         $builder
             ->add('libelle')
-//            ->add('clientAffectation', ChoiceType::class, array(
-//                'choices'       => array(
-//                    ClientAffectation::tous      => ClientAffectation::getLibelle(ClientAffectation::tous),
-//                    ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
-//                ),
-//                'placeholder'   => " --- Choisir l'affection --- ",
-//                'label'         => 'Affectation',
-//                'attr'          => array(
-//                    'onchange'  => 'displayPanelClient(this);',
-//                )
-//            ))
             ->add('typeRemise', ChoiceType::class, array(
                 'choices' => array(
                     TypeRemise::euro => TypeRemise::getLibelle(TypeRemise::euro),
@@ -48,7 +37,6 @@ class PromotionType extends AbstractType
                 'label' => 'Type de remise'
             ))
             ->add('valeurRemise', TextType::class)
-//            ->add('prixMini', TextType::class)
             ->add('typePeriodeSejour', ChoiceType::class, array(
                 'choices' => array(
                     TypePeriodeSejour::permanent => TypePeriodeSejour::getLibelle(TypePeriodeSejour::permanent),
@@ -58,42 +46,15 @@ class PromotionType extends AbstractType
                 'placeholder' => " --- Choisir le typePeriodeSejour --- ",
                 'label' => 'TypePeriodeSejour'
             ))
-//            ->add('promotionPeriodeValidites', CollectionType::class, array(
-////                    'entry_type' => 'HiDev\Bundle\PromotionBundle\Form\PromotionPeriodeValiditeType',
-//                    'entry_type' => PromotionPeriodeValiditeType::class ,
-//                    'allow_add' => true,
-//                    'allow_delete' => true,
-//                    'label' => 'Périodes de validité',
-//                    'by_reference' => false,
-////                    'cascade_validation' => true
-//
-////                    'constraints' => 'HiDev\Bundle\PromotionBundle\Entity\PromotionPeriode',
-//                )
-//            )
-//            ->add('promotionPeriodeSejours', CollectionType::class, array(
-//                    'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionPeriodeSejourType',
-//                    'allow_add' => true,
-//                    'allow_delete' => true,
-//                    'label' => 'Périodes de séjour',
-//                    'by_reference' => false,
-//                )
-//            )
-//            ->add('promotionClients', CollectionType::class, array(
-//                    'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionClientType',
-//                    'allow_add' => true,
-//                    'allow_delete' => true,
-//                    'label' => " --- choisir un client ---",
-//                    'by_reference' => false,
-//                    'mapped'    => false
-//                )
-//            )
+            ->add('promotionPeriodeValiditeDate', PromotionPeriodeValiditeDateType::class, ['required' => false])
+            ->add('promotionPeriodeValiditeJour', PromotionPeriodeValiditeJourType::class, ['required' => false])
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('promotionTypeAffectations', CollectionType::class, array(
                     'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionTypeAffectationType',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Affectations',
-                    'by_reference' => true,
+                    'by_reference' => true
                 )
             )
             ->add('typeApplication', ChoiceType::class, array(
@@ -161,13 +122,7 @@ class PromotionType extends AbstractType
 //                },
                 'multiple' => true,
                 'expanded' => true,
-            ))/*->add('logementPeriodes', CollectionType::class, array(
-                'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionLogementPeriodeType',
-                'allow_add' => true,
-                'allow_delete' => true,
-                'label' => 'Promotion logement periode',
-            ))*/
-        ;
+            ));
     }
 
     /**

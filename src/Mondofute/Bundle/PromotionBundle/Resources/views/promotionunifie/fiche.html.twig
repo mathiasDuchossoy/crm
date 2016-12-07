@@ -27,15 +27,32 @@
                          class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
                          data-crm="{{ promotion.vars.value.site.crm | number_format }}">
                         {{ form_row(promotion.site) }}
-                        <ul class="nav nav-tabs">
-                            {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
-                            {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
-                            {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
-                            {{ form_row(promotion.typePeriodeSejour, {  'attr' : {  'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'] }}) }}
-                            {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
-                            {{ form_row(promotion.typeApplication, {  'attr' : {  'data-unique_block_prefix' : promotion.typeApplication.vars['unique_block_prefix'] }}) }}
-                            {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
-                        </ul>
+                        {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
+                        {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
+                        {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
+                            'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');'
+                        }}) }}
+                        <div id="promotion_periode_validite_date_{{ keyPromotion }}" class="form-group"
+                                {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {% include('@MondofutePromotion/promotionunifie/widget-promotion-periode-validite-date.html.twig') with {'promotionPeriodeValiditeDate': promotion.promotionPeriodeValiditeDate} %}
+
+                            {#{{ form_row(promotion.promotionPeriodeValiditeDate, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeDate.vars['unique_block_prefix'] }}) }}#}
+                        </div>
+                        <div id="promotion_periode_validite_sejour_{{ keyPromotion }}"
+                                {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
+                        </div>
+                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
+                        {{ form_row(promotion.typeApplication, {  'attr' : {  'data-unique_block_prefix' : promotion.typeApplication.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
 
                         {% if panelPromotion is defined %}
                             {% set typeAffectationLogementSelected = false %}
@@ -199,9 +216,43 @@
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
             $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).removeClass('datetimepicker');
+
         });
 
 
+    </script>
+
+    <script type="text/javascript">
+        function displayFormTypePeriodeSejour(element, keyPromotion) {
+            var $promotion_periode_validite_date = $('#promotion_periode_validite_date_' + keyPromotion);
+            var $promotion_periode_validite_sejour = $('#promotion_periode_validite_sejour_' + keyPromotion);
+            switch ($(element).val()) {
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::permanent') }}':
+                    $promotion_periode_validite_date.hide();
+                    $promotion_periode_validite_sejour.hide();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') }}':
+                    $promotion_periode_validite_sejour.hide();
+                    $promotion_periode_validite_date.show();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}':
+                    $promotion_periode_validite_date.hide();
+                    $promotion_periode_validite_sejour.show();
+                    break;
+                default:
+                    break;
+            }
+        }
     </script>
 
     <script type="text/javascript">
@@ -579,5 +630,6 @@
 
 
     </script>
+
 
 {% endblock %}
