@@ -143,6 +143,14 @@ class PromotionType extends AbstractType
                     'label' => 'Promotion famille prestation annexes',
                 )
             )
+            ->add('promotionStations', CollectionType::class, array(
+                    'entry_type' => PromotionStationType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                    'label' => 'Promotion stations',
+                )
+            )
             ->add('periodeValidites', EntityType::class, array(
                 'class' => PeriodeValidite::class,
                 'required' => true,

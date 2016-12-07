@@ -76,15 +76,15 @@ class Promotion
     /**
      * @var Collection
      */
-    private $promotionLogements;
+    private $periodeValidites;
     /**
      * @var Collection
      */
-    private $periodeValidites;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $logementPeriodes;
+    /**
+     * @var Collection
+     */
+    private $promotionStations;
 
     /**
      * Constructor
@@ -97,8 +97,9 @@ class Promotion
         $this->promotionFamillePrestationAnnexes = new ArrayCollection();
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionHebergements = new ArrayCollection();
-        $this->promotionLogements = new ArrayCollection();
         $this->periodeValidites = new ArrayCollection();
+        $this->logementPeriodes = new ArrayCollection();
+        $this->promotionStations = new ArrayCollection();
     }
 
     /**
@@ -508,40 +509,6 @@ class Promotion
     }
 
     /**
-     * Add promotionLogement
-     *
-     * @param PromotionLogement $promotionLogement
-     *
-     * @return Promotion
-     */
-    public function addPromotionLogement(PromotionLogement $promotionLogement)
-    {
-        $this->promotionLogements[] = $promotionLogement->setPromotion($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove promotionLogement
-     *
-     * @param PromotionLogement $promotionLogement
-     */
-    public function removePromotionLogement(PromotionLogement $promotionLogement)
-    {
-        $this->promotionLogements->removeElement($promotionLogement);
-    }
-
-    /**
-     * Get promotionLogements
-     *
-     * @return Collection
-     */
-    public function getPromotionLogements()
-    {
-        return $this->promotionLogements;
-    }
-
-    /**
      * Add periodeValidite
      *
      * @param PeriodeValidite $periodeValidite
@@ -578,11 +545,11 @@ class Promotion
     /**
      * Add logementPeriode
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode
+     * @param PromotionLogementPeriode $logementPeriode
      *
      * @return Promotion
      */
-    public function addLogementPeriode(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode)
+    public function addLogementPeriode(PromotionLogementPeriode $logementPeriode)
     {
         $this->logementPeriodes[] = $logementPeriode->setPromotion($this);
 
@@ -592,9 +559,9 @@ class Promotion
     /**
      * Remove logementPeriode
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode
+     * @param PromotionLogementPeriode $logementPeriode
      */
-    public function removeLogementPeriode(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode $logementPeriode)
+    public function removeLogementPeriode(PromotionLogementPeriode $logementPeriode)
     {
         $this->logementPeriodes->removeElement($logementPeriode);
     }
@@ -602,10 +569,44 @@ class Promotion
     /**
      * Get logementPeriodes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getLogementPeriodes()
     {
         return $this->logementPeriodes;
+    }
+
+    /**
+     * Add promotionStation
+     *
+     * @param PromotionStation $promotionStation
+     *
+     * @return Promotion
+     */
+    public function addPromotionStation(PromotionStation $promotionStation)
+    {
+        $this->promotionStations[] = $promotionStation->setPromotion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionStation
+     *
+     * @param PromotionStation $promotionStation
+     */
+    public function removePromotionStation(PromotionStation $promotionStation)
+    {
+        $this->promotionStations->removeElement($promotionStation);
+    }
+
+    /**
+     * Get promotionStations
+     *
+     * @return Collection
+     */
+    public function getPromotionStations()
+    {
+        return $this->promotionStations;
     }
 }
