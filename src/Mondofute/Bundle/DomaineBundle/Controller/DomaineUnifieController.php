@@ -256,9 +256,6 @@ class DomaineUnifieController extends Controller
             // *** gestion des videos ***
             $modeleDescriptionForfaitSkiController->majDomaines($domaineUnifie);
 
-            foreach ($domaineUnifie->getDomaines() as $domaine) {
-                $em->persist($domaine->getModeleDescriptionForfaitSki());
-            }
             $em->persist($domaineUnifie);
 
             try {
@@ -952,9 +949,6 @@ class DomaineUnifieController extends Controller
                 $modeleDescriptionForfaitSkiController->setContainer($this->container);
                 $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity, $entitySite);
 
-                foreach ($entitySite->getDomaines() as $domaineSite) {
-                    $emSite->persist($domaineSite->getModeleDescriptionForfaitSki());
-                }
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
@@ -1667,6 +1661,7 @@ class DomaineUnifieController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
 
     private function carteIdentiteEdit(Request $request, DomaineUnifie $domaineUnifie)
     {
