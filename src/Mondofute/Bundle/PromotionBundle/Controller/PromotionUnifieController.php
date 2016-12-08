@@ -33,7 +33,6 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
-use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -144,6 +143,8 @@ class PromotionUnifieController extends Controller
 
                 $this->copieVersSites($promotionUnifie);
 
+                $this->gestionPromotionTypeFournisseur($promotionUnifie->getId());
+
                 $this->addFlash('success', 'La promotion a bien été créé.');
 
                 return $this->redirectToRoute('promotion_edit', array('id' => $promotionUnifie->getId()));
@@ -230,29 +231,38 @@ class PromotionUnifieController extends Controller
                     return $element->getTypeAffectation() == TypeAffectation::logement;
                 })->first()
             ) {
-//                $promotion->getPromotionHebergements()->clear();
-//                $promotion->getPromotionLogements()->clear();
-//                $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element){
-//                    return $element->getType() == Type::hebergement;
-//                });
-//                foreach ($promotionFournisseurs as $promotionFournisseur)
-//                {
-//                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
-//                }
+                $promotion->getPromotionHebergements()->clear();
+                $promotion->getLogementPeriodes()->clear();
+                $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) {
+                    return $element->getType() == TypeAffectation::logement;
+                });
+                foreach ($promotionFournisseurs as $promotionFournisseur) {
+                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
+                }
             }
             if (false === $promotion->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) {
                     return $element->getTypeAffectation() == TypeAffectation::prestationAnnexe;
                 })->first()
             ) {
-//                $promotion->getPromotionFamillePrestationAnnexes()->clear();
-//                $promotion->getPromotionFournisseurPrestationAnnexes()->clear();
-//                $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element){
-//                    return $element->getType() == Type::fournisseurPrestationAnnexe;
-//                });
-//                foreach ($promotionFournisseurs as $promotionFournisseur)
-//                {
-//                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
-//                }
+                $promotion->getPromotionFamillePrestationAnnexes()->clear();
+                $promotion->getPromotionFournisseurPrestationAnnexes()->clear();
+                $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) {
+                    return $element->getType() == TypeAffectation::prestationAnnexe;
+                });
+                foreach ($promotionFournisseurs as $promotionFournisseur) {
+                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
+                }
+            }
+            if (false === $promotion->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) {
+                    return $element->getTypeAffectation() == TypeAffectation::type;
+                })->first()
+            ) {
+                $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) {
+                    return $element->getType() == TypeAffectation::type;
+                });
+                foreach ($promotionFournisseurs as $promotionFournisseur) {
+                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
+                }
             }
             foreach ($promotion->getPromotionTypeAffectations() as $typeAffectation) {
                 $typeAffectation->setPromotion($promotion);
@@ -285,7 +295,7 @@ class PromotionUnifieController extends Controller
     /**
      * @param PromotionUnifie $promotionUnifie
      */
-    public function gestionTypePeriodeSejour($promotionUnifie)
+    private function gestionTypePeriodeSejour($promotionUnifie)
     {
         /** @var Promotion $promotion */
         foreach ($promotionUnifie->getPromotions() as $promotion) {
@@ -687,6 +697,21 @@ class PromotionUnifieController extends Controller
         }
     }
 
+    private function gestionPromotionTypeFournisseur($promotionUnifieId)
+    {
+        $kernel = $this->get('kernel');
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_promotion:promotion_type_fournisseur_command',
+            'promotionUnifieId' => $promotionUnifieId,
+        ));
+        $output = new NullOutput();
+        $application->run($input, $output);
+    }
+
     /**
      * Finds and displays a PromotionUnifie entity.
      *
@@ -1074,18 +1099,7 @@ class PromotionUnifieController extends Controller
 
             $this->copieVersSites($promotionUnifie);
 
-
-            $kernel = $this->get('kernel');
-
-            $application = new Application($kernel);
-            $application->setAutoExit(false);
-
-            $input = new ArrayInput(array(
-                'command' => 'mondofute_promotion:promotion_type_fournisseur_command',
-                'promotionUnifieId' => $promotionUnifie->getId(),
-            ));
-            $output = new NullOutput();
-            $application->run($input, $output);
+            $this->gestionPromotionTypeFournisseur($promotionUnifie->getId());
 
 //            // *** gestion promotion logement ***
 //            $this->gestionPromotionLogement($promotionUnifie);

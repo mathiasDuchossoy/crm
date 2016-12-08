@@ -69,7 +69,10 @@ use Nucleus\MoyenComBundle\Entity\Pays;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -246,6 +249,9 @@ class FournisseurController extends Controller
             $em->flush();
 
             $this->copieVersSites($fournisseur);
+
+            $this->gestionPromotionFournisseur($fournisseur);
+//            $this->gestionPromotionFamillePrestationAnnexe($fournisseur);
 
             // add flash messages
             $this->addFlash(
@@ -631,6 +637,21 @@ class FournisseurController extends Controller
                 $fournisseurSite->setConditionAnnulationDescription(null);
                 break;
         }
+    }
+
+    private function gestionPromotionFournisseur(Fournisseur $fournisseur)
+    {
+        $kernel = $this->get('kernel');
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_promotion:promotion_fournisseur_command',
+            'fournisseurId' => $fournisseur->getId(),
+        ));
+        $output = new NullOutput();
+        $application->run($input, $output);
     }
 
     /**
@@ -1020,6 +1041,9 @@ class FournisseurController extends Controller
             $em->flush();
 
             $this->mAJSites($fournisseur);
+
+            $this->gestionPromotionFournisseur($fournisseur);
+//            $this->gestionPromotionFamillePrestationAnnexe($fournisseur);
 
             if (empty($fournisseur->getLogo()) && !empty($originalLogo) || !empty($originalLogo) && $originalLogo != $fournisseur->getLogo()) {
                 $em->remove($originalLogo);
@@ -3562,6 +3586,21 @@ class FournisseurController extends Controller
                 $em->persist($prestationAnnexeHebergement);
             }
         }
+    }
+
+    private function gestionPromotionFamillePrestationAnnexe(Fournisseur $fournisseur)
+    {
+        $kernel = $this->get('kernel');
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_promotion:promotion_fournisseur_command',
+            'fournisseurId' => $fournisseur->getId(),
+        ));
+        $output = new NullOutput();
+        $application->run($input, $output);
     }
 
 }
