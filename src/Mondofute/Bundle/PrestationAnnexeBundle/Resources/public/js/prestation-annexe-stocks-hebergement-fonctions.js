@@ -91,20 +91,19 @@ $(document).ready(function () {
                                 var data = [];
                                 if (parametres.donnees.prestationAnnexes.length > 0) {
                                     parametres.pasProgressBar = 100 / parametres.donnees.prestationAnnexes.length;
-                                } else {
-                                    parametres.pasProgressBar = 100;
-                                }
-                                for (var indicePrestationAnnexe = 0; indicePrestationAnnexe < parametres.donnees.prestationAnnexes.length; indicePrestationAnnexe++) {
-
-                                    data = [];
-                                    data['familleSousFamille'] = parametres.donnees.prestationAnnexes[indicePrestationAnnexe].famille.libelle;
-                                    if (parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille != null) {
-                                        data['familleSousFamille'] += '/' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille.libelle;
-                                    }
+                                    for (var indicePrestationAnnexe = 0; indicePrestationAnnexe < parametres.donnees.prestationAnnexes.length; indicePrestationAnnexe++) {
+                                        data = [];
+                                        data['familleSousFamille'] = parametres.donnees.prestationAnnexes[indicePrestationAnnexe].famille.libelle;
+                                        if (parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille != null) {
+                                            data['familleSousFamille'] += '/' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].sousFamille.libelle;
+                                        }
 //                                            data['prestationAnnexe'] = parametres.donnees.prestationAnnexes[indicePrestationAnnexe].libelle;
-                                    data['prestationAnnexe'] = '<div><span data-fournisseur-hebergement="' + globals.fournisseurHebergementId + '" data-prestation-annexe-id="' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].id + '" data-periode-type-id="' + parametres.donnees.typePeriode.id + '" title="' + langue.dupliquePrestationAnnexeAebergementStocks.texte + '" class="duplique-prestation-annexe-hebergement-stocks glyphicon glyphicon-play pull-right cliquable"> </span>' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].libelle + '</div>';
-                                    parametres.progressBar = $progressBar;
-                                    ajouterLignePrestationAnnexeStockHebergement(table, parametres, data, indicePrestationAnnexe);
+                                        data['prestationAnnexe'] = '<div><span data-fournisseur-hebergement="' + globals.fournisseurHebergementId + '" data-prestation-annexe-id="' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].id + '" data-periode-type-id="' + parametres.donnees.typePeriode.id + '" title="' + langue.dupliquePrestationAnnexeAebergementStocks.texte + '" class="duplique-prestation-annexe-hebergement-stocks glyphicon glyphicon-play pull-right cliquable"> </span>' + parametres.donnees.prestationAnnexes[indicePrestationAnnexe].libelle + '</div>';
+                                        parametres.progressBar = $progressBar;
+                                        ajouterLignePrestationAnnexeStockHebergement(table, parametres, data, indicePrestationAnnexe);
+                                    }
+                                } else {
+                                    $progressBar.closest('.progress').remove();
                                 }
                             });
                         }

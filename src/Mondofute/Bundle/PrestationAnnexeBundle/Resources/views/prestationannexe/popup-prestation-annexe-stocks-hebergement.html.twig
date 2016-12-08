@@ -86,6 +86,7 @@
         {% if hebergement.site.crm == true %}
         globals.hebergementId = parseInt('{{ hebergement.id }}');
         {% for prestationAnnexe in hebergement.prestationAnnexeHebergements %}
+        {% if prestationAnnexe.fournisseur.id == fournisseurHebergement.fournisseur.id %}
         if (!prestationAnnexe) {
             var prestationAnnexe = {};
         }
@@ -122,6 +123,7 @@
         {% endfor %}
         {#{{ dump(prestationAnnexe.param.id) }}#}
         globals.prestationAnnexes.push(prestationAnnexe);
+        {% endif %}
         {% endfor %}
         {% endif %}
         {% endfor %}
@@ -131,7 +133,7 @@
     'js/type-periodes-onglets.min.js'
     'js/form.min.js'
     'js/datatables.min.js'
-    'js/prestation-annexe-stocks-hebergement.min.js'%}
+    'js/prestation-annexe-stocks-hebergement.min.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 

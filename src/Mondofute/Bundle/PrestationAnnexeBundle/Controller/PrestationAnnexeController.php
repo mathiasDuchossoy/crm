@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
@@ -198,13 +197,6 @@ class PrestationAnnexeController extends Controller
         $em = $this->getDoctrine();
         /** @var FournisseurHebergement $fournisseurHebergement */
         $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
-        /** @var Hebergement $hebergement */
-        $hebergement = $fournisseurHebergement->getHebergement()->getHebergements()->filter(
-            function ($hebergement) {
-                /** @var Hebergement $hebergement */
-                return $hebergement->getSite()->getCrm() == true;
-            })->first();
-//        dump($hebergement->getPrestationAnnexes()->first()->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getId());die;
         return $this->render('@MondofutePrestationAnnexe/prestationannexe/popup-prestation-annexe-stocks-hebergement.html.twig',
             array(
                 'maxInputVars' => ini_get('max_input_vars'),
