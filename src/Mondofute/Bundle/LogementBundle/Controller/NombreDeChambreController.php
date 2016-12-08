@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambreTraduction;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -100,7 +100,9 @@ class NombreDeChambreController extends Controller
     private function ajoutTraductions($nombreDeChambre, $langues)
     {
         foreach ($langues as $langue) {
-            $traduction = $nombreDeChambre->getTraductions()->filter(function (NombreDeChambreTraduction $element) use ($langue) {
+            $traduction = $nombreDeChambre->getTraductions()->filter(function (NombreDeChambreTraduction $element) use (
+                $langue
+            ) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $traduction) {
@@ -158,7 +160,9 @@ class NombreDeChambreController extends Controller
             }
             // *** traductions ***
             foreach ($nombreDeChambre->getTraductions() as $traduction) {
-                $traductionSite = $nombreDeChambreSite->getTraductions()->filter(function (NombreDeChambreTraduction $element) use ($traduction) {
+                $traductionSite = $nombreDeChambreSite->getTraductions()->filter(function (
+                    NombreDeChambreTraduction $element
+                ) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {

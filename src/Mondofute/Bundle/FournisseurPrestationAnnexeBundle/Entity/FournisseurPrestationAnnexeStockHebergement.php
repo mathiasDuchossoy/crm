@@ -10,15 +10,15 @@ use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 class FournisseurPrestationAnnexeStockHebergement extends FournisseurPrestationAnnexeStock
 {
 
-    /**
-     * @var FournisseurPrestationAnnexeStock
-     */
-    private $fournisseurPrestationAnnexe;
-
-    /**
-     * @var FournisseurPrestationAnnexeStock
-     */
-    private $periode;
+//    /**
+//     * @var FournisseurPrestationAnnexeStock
+//     */
+//    private $fournisseurPrestationAnnexe;
+//
+//    /**
+//     * @var FournisseurPrestationAnnexeStock
+//     */
+//    private $periode;
 
     /**
      * @var FournisseurHebergement

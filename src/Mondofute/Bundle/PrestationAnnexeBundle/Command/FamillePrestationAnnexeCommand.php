@@ -33,10 +33,10 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         /** @var Langue $langue */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        $fr    = $em->find(Langue::class , 1);
-        $en    = $em->find(Langue::class , 2);
+        $fr = $em->find(Langue::class, 1);
+        $en = $em->find(Langue::class, 2);
 
-        $famillePrestationAnnexes              = new ArrayCollection();
+        $famillePrestationAnnexes = new ArrayCollection();
 
         // *** RM (remontée mécanique) ***
         $famillePrestationAnnexe = new FamillePrestationAnnexe();
@@ -157,16 +157,16 @@ class FamillePrestationAnnexeCommand extends ContainerAwareCommand
         // *** Fin HEBERGEMENT ***
 
         // ***** ENREGISTREMENT *****
-        $sites      = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
         foreach ($sites as $site) {
-            $emSite         = $this->getContainer()->get('doctrine')->getManager($site->getLibelle());
+            $emSite = $this->getContainer()->get('doctrine')->getManager($site->getLibelle());
 
             /** @var FamillePrestationAnnexe $famillePrestationAnnexe */
-            foreach ($famillePrestationAnnexes as $famillePrestationAnnexe){
+            foreach ($famillePrestationAnnexes as $famillePrestationAnnexe) {
                 $metadata = $emSite->getClassMetadata(get_class($famillePrestationAnnexe));
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 /** @var FamillePrestationAnnexeTraduction $traduction */
-                foreach ($famillePrestationAnnexe->getTraductions() as $traduction){
+                foreach ($famillePrestationAnnexe->getTraductions() as $traduction) {
                     $traduction->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
                 }
                 $emSite->persist($famillePrestationAnnexe);

@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form;
 
-use Nelmio\ApiDocBundle\Tests\Fixtures\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,11 +17,10 @@ class PrestationAnnexeFournisseurType extends AbstractType
     {
         $builder
 //            ->add('prestationAnnexeFournisseurUnifie' )
-            ->add('fournisseur' )
-            ->add('site', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('fournisseur')
+            ->add('site', HiddenType::class, array('mapped' => false));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

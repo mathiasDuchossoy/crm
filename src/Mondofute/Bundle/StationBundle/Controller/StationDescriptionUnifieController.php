@@ -5,13 +5,13 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationDescriptionUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,8 +56,12 @@ class StationDescriptionUnifieController extends Controller
         $this->ajouterStationDescriptionsDansForm($stationDescriptionUnifie);
         $this->stationDescriptionsSortByAffichage($stationDescriptionUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationDescriptionUnifieType', $stationDescriptionUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationDescriptionUnifieType',
+            $stationDescriptionUnifie, array('locale' => $request->getLocale()));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
 
@@ -112,7 +116,9 @@ class StationDescriptionUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($stationDescription->getTraductions()->filter(function (StationDescriptionTraduction $element) use ($langue) {
+                        if ($stationDescription->getTraductions()->filter(function (
+                            StationDescriptionTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -341,7 +347,8 @@ class StationDescriptionUnifieController extends Controller
     private function createDeleteForm(StationDescriptionUnifie $stationDescriptionUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('stationdescription_delete', array('id' => $stationDescriptionUnifie->getId())))
+            ->setAction($this->generateUrl('stationdescription_delete',
+                array('id' => $stationDescriptionUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -391,7 +398,10 @@ class StationDescriptionUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationDescriptionUnifieType',
             $stationDescriptionUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
 //        dump($editForm);die;
 
@@ -475,7 +485,8 @@ class StationDescriptionUnifieController extends Controller
                 // Récupérer le manager du site.
                 $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
                 // Récupérer l'entité sur le site distant puis la suprrimer.
-                $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class, $stationDescriptionUnifie->getId());
+                $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class,
+                    $stationDescriptionUnifie->getId());
                 if (!empty($stationDescriptionUnifieSite)) {
                     $emSite->remove($stationDescriptionUnifieSite);
                     $emSite->flush();
@@ -516,12 +527,15 @@ class StationDescriptionUnifieController extends Controller
             // Récupérer le manager du site.
             $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
             // Récupérer l'entité sur le site distant puis la suprrimer.
-            $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class, $stationDescriptionUnifie->getId());
+            $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class,
+                $stationDescriptionUnifie->getId());
             if (!empty($stationDescriptionUnifieSite)) {
-                foreach ($stationDescriptionUnifieSite->getStationDescriptions() as $stationDescriptionSite){
-                    if ($stationDescriptionSite->getStations()->count() <= 1 ){
+                foreach ($stationDescriptionUnifieSite->getStationDescriptions() as $stationDescriptionSite) {
+                    if ($stationDescriptionSite->getStations()->count() <= 1) {
                         $emSite->remove($stationDescriptionSite);
-                    } else $delete = false;
+                    } else {
+                        $delete = false;
+                    }
                 }
                 if ($delete) {
                     $emSite->remove($stationDescriptionUnifieSite);
@@ -532,7 +546,9 @@ class StationDescriptionUnifieController extends Controller
         foreach ($stationDescriptionUnifie->getStationDescriptions() as $stationDescription) {
             if ($stationDescription->getStations()->count() <= 1) {
                 $em->remove($stationDescription);
-            } else $delete = false;
+            } else {
+                $delete = false;
+            }
         }
 
         if ($delete) {

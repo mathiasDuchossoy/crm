@@ -81,13 +81,16 @@ class SecteurUnifieController extends Controller
         $this->secteursSortByAffichage($secteurUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType', $secteurUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Secteur $entity */
-            foreach ($secteurUnifie->getSecteurs() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($secteurUnifie->getSecteurs() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -107,7 +110,10 @@ class SecteurUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Secteur $secteurSite */
-                                    $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
+                                    $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use
+                                    (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($secteurSite)) {
@@ -148,7 +154,10 @@ class SecteurUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Secteur $secteurSite */
-                                    $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use ($site) {
+                                    $secteurSite = $secteurUnifie->getSecteurs()->filter(function (Secteur $element) use
+                                    (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($secteurSite)) {
@@ -325,8 +334,7 @@ class SecteurUnifieController extends Controller
                 $secteurSite
                     ->setSite($site)
                     ->setSecteurUnifie($entitySite)
-                    ->setActif($secteur->getActif())
-                ;
+                    ->setActif($secteur->getActif());
 
 //            Gestion des traductions
                 foreach ($secteur->getTraductions() as $secteurTraduc) {
@@ -373,7 +381,10 @@ class SecteurUnifieController extends Controller
                             // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
                             // récupérer l'secteurImage original correspondant sur le crm
                             /** @var ArrayCollection $originalSecteurImages */
-                            $originalSecteurImage = $originalSecteurImages->filter(function (SecteurImage $element) use ($secteurImage) {
+                            $originalSecteurImage = $originalSecteurImages->filter(function (SecteurImage $element) use
+                            (
+                                $secteurImage
+                            ) {
                                 return $element->getImage() == $secteurImage->getImage();
                             })->first();
                             unset($secteurImageSite);
@@ -419,7 +430,9 @@ class SecteurUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (SecteurImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            SecteurImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -430,7 +443,8 @@ class SecteurUnifieController extends Controller
                                     else {
                                         $traductionSite = new SecteurImageTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $secteurImageSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -479,7 +493,10 @@ class SecteurUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'secteurPhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalSecteurPhotos */
-                            $originalSecteurPhoto = $originalSecteurPhotos->filter(function (SecteurPhoto $element) use ($secteurPhoto) {
+                            $originalSecteurPhoto = $originalSecteurPhotos->filter(function (SecteurPhoto $element) use
+                            (
+                                $secteurPhoto
+                            ) {
                                 return $element->getPhoto() == $secteurPhoto->getPhoto();
                             })->first();
                             unset($secteurPhotoSite);
@@ -525,7 +542,9 @@ class SecteurUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (SecteurPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            SecteurPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -536,7 +555,8 @@ class SecteurUnifieController extends Controller
                                     else {
                                         $traductionSite = new SecteurPhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $secteurPhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -742,7 +762,7 @@ class SecteurUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Secteur $entity */
             foreach ($secteurUnifie->getSecteurs() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -782,15 +802,18 @@ class SecteurUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($secteurUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\SecteurUnifieType', $secteurUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($secteurUnifie->getSecteurs() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($secteurUnifie->getSecteurs() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -949,7 +972,10 @@ class SecteurUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau secteurImage
                             if (!empty($secteurImage->getId())) {
                                 // on récupère l'secteurImage pour le modifier
-                                $secteurImageSite = $em->getRepository(SecteurImage::class)->findOneBy(array('secteur' => $secteurSite, 'image' => $originalImages->get($key)));
+                                $secteurImageSite = $em->getRepository(SecteurImage::class)->findOneBy(array(
+                                    'secteur' => $secteurSite,
+                                    'image' => $originalImages->get($key)
+                                ));
                             }
                             // si l'secteurImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($secteurImage->getId()) || empty($secteurImageSite)) {
@@ -980,7 +1006,9 @@ class SecteurUnifieController extends Controller
                                     $traductionSites = $secteurImageSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (SecteurImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            SecteurImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -993,7 +1021,8 @@ class SecteurUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementImage doit être actif sur le site ou non
                                 if (!empty($request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('secteur_unifie')['secteurs'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $secteurImageSite->setActif(true);
                                 } else {
@@ -1039,7 +1068,10 @@ class SecteurUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau secteurPhoto
                             if (!empty($secteurPhoto->getId())) {
                                 // on récupère l'secteurPhoto pour le modifier
-                                $secteurPhotoSite = $em->getRepository(SecteurPhoto::class)->findOneBy(array('secteur' => $secteurSite, 'photo' => $originalPhotos->get($key)));
+                                $secteurPhotoSite = $em->getRepository(SecteurPhoto::class)->findOneBy(array(
+                                    'secteur' => $secteurSite,
+                                    'photo' => $originalPhotos->get($key)
+                                ));
                             }
                             // si l'secteurPhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($secteurPhoto->getId()) || empty($secteurPhotoSite)) {
@@ -1070,7 +1102,9 @@ class SecteurUnifieController extends Controller
                                     $traductionSites = $secteurPhotoSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (SecteurPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            SecteurPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1083,7 +1117,8 @@ class SecteurUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                 if (!empty($request->get('secteur_unifie')['secteurs'][$keyCrm]['photos'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('secteur_unifie')['secteurs'][$keyCrm]['photos'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('secteur_unifie')['secteurs'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $secteurPhotoSite->setActif(true);
                                 } else {
@@ -1241,7 +1276,6 @@ class SecteurUnifieController extends Controller
         }
         return $this->redirectToRoute('geographie_secteur_index');
     }
-
 
 
 }

@@ -53,7 +53,7 @@ class CreerPeriodesCommand extends ContainerAwareCommand
                 $periodes = $periodeController->creerPeriodes($debut, $fin, $typePeriode, $nbJour);
                 if ($periodes->count() > 0) {
                     $idPeriodesMin = $periodeController->enregistrerPeriodesDansSites($periodes, $sites);
-                    $logementPeriodeControlleur->associerLogements($idPeriodesMin,$sites);
+                    $logementPeriodeControlleur->associerLogements($idPeriodesMin, $sites);
                 }
             } else {
                 $output->writeln('Le type de période spécifié n\'existe pas dans la base de données');

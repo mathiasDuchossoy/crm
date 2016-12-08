@@ -18,6 +18,9 @@ use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
+use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
@@ -29,13 +32,10 @@ use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationLabel;
 use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
-use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuel;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction;
 use Mondofute\Bundle\StationBundle\Entity\TypeTaxeSejour;
 use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use ReflectionClass;
@@ -123,8 +123,12 @@ class StationUnifieController extends Controller
         }
         $this->stationsSortByAffichage($stationUnifie);
 
-        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType', $stationUnifie,
+            array('locale' => $request->getLocale()));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
 
         $form->handleRequest($request);
 
@@ -184,7 +188,10 @@ class StationUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Station $stationSite */
-                                    $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use ($site) {
+                                    $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use
+                                    (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($stationSite)) {
@@ -287,7 +294,9 @@ class StationUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($stationCommentVenir->getTraductions()->filter(function (StationCommentVenirTraduction $element) use ($langue) {
+                        if ($stationCommentVenir->getTraductions()->filter(function (
+                            StationCommentVenirTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -322,7 +331,9 @@ class StationUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la station
-                        if ($stationDescription->getTraductions()->filter(function (StationDescriptionTraduction $element) use ($langue) {
+                        if ($stationDescription->getTraductions()->filter(function (
+                            StationDescriptionTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -473,7 +484,9 @@ class StationUnifieController extends Controller
                 $stationCarteIdentiteUnifie = $stationCarteIdentiteController->newEntity($station);
 
                 $site = $station->getSite();
-                $stationCarteIdentite = $stationCarteIdentiteUnifie->getStationCarteIdentites()->filter(function (StationCarteIdentite $element) use ($site) {
+                $stationCarteIdentite = $stationCarteIdentiteUnifie->getStationCarteIdentites()->filter(function (
+                    StationCarteIdentite $element
+                ) use ($site) {
                     return $site == $element->getSite();
                 })->first();
                 $station->setStationCarteIdentite($stationCarteIdentite);
@@ -503,7 +516,9 @@ class StationUnifieController extends Controller
                 $stationCommentVenirUnifie = $stationCommentVenirController->newEntity($station);
 
                 $site = $station->getSite();
-                $stationCommentVenir = $stationCommentVenirUnifie->getStationCommentVenirs()->filter(function (StationCommentVenir $element) use ($site) {
+                $stationCommentVenir = $stationCommentVenirUnifie->getStationCommentVenirs()->filter(function (
+                    StationCommentVenir $element
+                ) use ($site) {
                     return $site == $element->getSite();
                 })->first();
                 $station->setStationCommentVenir($stationCommentVenir);
@@ -533,7 +548,9 @@ class StationUnifieController extends Controller
                 $stationDescriptionUnifie = $stationDescriptionController->newEntity($station);
 
                 $site = $station->getSite();
-                $stationDescription = $stationDescriptionUnifie->getStationDescriptions()->filter(function (StationDescription $element) use ($site) {
+                $stationDescription = $stationDescriptionUnifie->getStationDescriptions()->filter(function (
+                    StationDescription $element
+                ) use ($site) {
                     return $site == $element->getSite();
                 })->first();
                 $station->setStationDescription($stationDescription);
@@ -556,7 +573,9 @@ class StationUnifieController extends Controller
         });
         foreach ($stationCrm->getStationLabels() as $stationLabel) {
             foreach ($stationSites as $stationSite) {
-                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel) {
+                $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use (
+                    $stationLabel
+                ) {
                     return $element == $stationLabel;
                 })->first();
                 if (false === $stationLabelSite) {
@@ -653,7 +672,9 @@ class StationUnifieController extends Controller
                     /** @var StationCommentVenir $stationCommentVenirSite */
                     if (!empty($stationCommentVenirSite)) {
                         foreach ($stationCommentVenirSite->getGrandeVilles() as $grandeVilleSite) {
-                            $grandeVille = $station->getStationCommentVenir()->getGrandeVilles()->filter(function (GrandeVille $element) use ($grandeVilleSite) {
+                            $grandeVille = $station->getStationCommentVenir()->getGrandeVilles()->filter(function (
+                                GrandeVille $element
+                            ) use ($grandeVilleSite) {
                                 return $element->getId() == $grandeVilleSite->getId();
                             })->first();
                             if (empty($grandeVille)) {
@@ -661,11 +682,14 @@ class StationUnifieController extends Controller
                             }
                         }
                         foreach ($station->getStationCommentVenir()->getGrandeVilles() as $grandeVille) {
-                            $grandeVilleSite = $stationCommentVenirSite->getGrandeVilles()->filter(function (GrandeVille $element) use ($grandeVille) {
+                            $grandeVilleSite = $stationCommentVenirSite->getGrandeVilles()->filter(function (
+                                GrandeVille $element
+                            ) use ($grandeVille) {
                                 return $element->getId() == $grandeVille->getId();
                             })->first();
                             if (empty($grandeVilleSite)) {
-                                $stationCommentVenirSite->addGrandeVille($emSite->find(GrandeVille::class, $grandeVille));
+                                $stationCommentVenirSite->addGrandeVille($emSite->find(GrandeVille::class,
+                                    $grandeVille));
                             }
                         }
                     }
@@ -763,7 +787,8 @@ class StationUnifieController extends Controller
                             // *** récupération de l'hébergementVisuel correspondant sur la bdd distante ***
                             // récupérer l'stationVisuel original correspondant sur le crm
                             /** @var ArrayCollection $originalStationVisuels */
-                            $originalStationVisuel = $originalStationVisuels->filter(function (StationVisuel $element) use ($stationVisuel) {
+                            $originalStationVisuel = $originalStationVisuels->filter(function (StationVisuel $element
+                            ) use ($stationVisuel) {
                                 return $element->getVisuel() == $stationVisuel->getVisuel();
                             })->first();
                             unset($stationVisuelSite);
@@ -810,7 +835,9 @@ class StationUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (StationVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            StationVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -821,7 +848,8 @@ class StationUnifieController extends Controller
                                     else {
                                         $traductionSite = new StationVisuelTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $stationVisuelSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -856,7 +884,9 @@ class StationUnifieController extends Controller
                 // ***** gestion station label *****
                 /** @var StationLabel $stationLabel */
                 foreach ($station->getStationLabels() as $stationLabel) {
-                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use ($stationLabel) {
+                    $stationLabelSite = $stationSite->getStationLabels()->filter(function (StationLabel $element) use (
+                        $stationLabel
+                    ) {
                         return $element->getId() == $stationLabel->getId();
                     })->first();
                     if (false === $stationLabelSite) {
@@ -865,7 +895,9 @@ class StationUnifieController extends Controller
                 }
                 /** @var StationLabel $stationLabelSite */
                 foreach ($stationSite->getStationLabels() as $stationLabelSite) {
-                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element) use ($stationLabelSite) {
+                    $stationLabel = $station->getStationLabels()->filter(function (StationLabel $element) use (
+                        $stationLabelSite
+                    ) {
                         return $element->getId() == $stationLabelSite->getId();
                     })->first();
                     if (false === $stationLabel) {
@@ -984,7 +1016,8 @@ class StationUnifieController extends Controller
                 })->first();
                 $distance = new Distance(
                     new GoogleMapProvider(new CurlHttpAdapter, 'fr-FR', GoogleMapProvider::MODE_DRIVING));
-                $result = $distance->distance($grandeVilleFr->getLibelle(), $station->getStationCarteIdentite()->getAdresse()->getVille());
+                $result = $distance->distance($grandeVilleFr->getLibelle(),
+                    $station->getStationCarteIdentite()->getAdresse()->getVille());
                 $distances->set($grandeVille->getId(), $result);
             }
         }
@@ -1063,7 +1096,10 @@ class StationUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationUnifieType',
             $stationUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 
@@ -1200,7 +1236,10 @@ class StationUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau stationVisuel
                             if (!empty($stationVisuel->getId())) {
                                 // on récupère l'stationVisuel pour le modifier
-                                $stationVisuelSite = $em->getRepository(StationVisuel::class)->findOneBy(array('station' => $stationSite, 'visuel' => $originalVisuels->get($key)));
+                                $stationVisuelSite = $em->getRepository(StationVisuel::class)->findOneBy(array(
+                                    'station' => $stationSite,
+                                    'visuel' => $originalVisuels->get($key)
+                                ));
                             }
                             // si l'stationVisuel est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($stationVisuel->getId()) || empty($stationVisuelSite)) {
@@ -1231,7 +1270,9 @@ class StationUnifieController extends Controller
                                     $traductionSites = $stationVisuelSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (StationVisuelTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            StationVisuelTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1244,7 +1285,8 @@ class StationUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementVisuel doit être actif sur le site ou non
                                 if (!empty($request->get('station_unifie')['stations'][$keyCrm]['visuels'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('station_unifie')['stations'][$keyCrm]['visuels'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('station_unifie')['stations'][$keyCrm]['visuels'][$key]['sites'])
                                 ) {
                                     $stationVisuelSite->setActif(true);
                                 } else {

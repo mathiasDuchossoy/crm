@@ -29,9 +29,9 @@
             path = path.replace(/_maxPerPage_/g, maxPerPage);
 
             $.ajax(path,
-                    {
-                        method: 'GET'
-                    }
+                {
+                    method: 'GET'
+                }
             ).done(function (data) {
                 $("#logement_list").html(data);
             })

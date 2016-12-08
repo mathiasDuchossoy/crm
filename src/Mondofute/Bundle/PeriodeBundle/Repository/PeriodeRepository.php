@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\PeriodeBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 
 /**
  * PeriodeRepository

@@ -44,7 +44,8 @@ class DescriptionForfaitSkiType extends AbstractType
                 'entry_type' => DescriptionForfaitSkiTraductionType::class,
             ))
 //            ->add('present', new OuiNonNCTye())
-            ->add('ligneDescriptionForfaitSki', HiddenType::class, array('mapped' => false))//            ->add('modele')
+            ->add('ligneDescriptionForfaitSki', HiddenType::class,
+                array('mapped' => false))//            ->add('modele')
         ;
     }
 

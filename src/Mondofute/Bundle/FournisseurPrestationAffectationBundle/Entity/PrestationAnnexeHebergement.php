@@ -46,8 +46,9 @@ class PrestationAnnexeHebergement extends FournisseurPrestationAffectation
      *
      * @return PrestationAnnexeHebergement
      */
-    public function setPrestationAnnexeHebergementUnifie(PrestationAnnexeHebergementUnifie $prestationAnnexeHebergementUnifie = null)
-    {
+    public function setPrestationAnnexeHebergementUnifie(
+        PrestationAnnexeHebergementUnifie $prestationAnnexeHebergementUnifie = null
+    ) {
         $this->prestationAnnexeHebergementUnifie = $prestationAnnexeHebergementUnifie;
 
         return $this;

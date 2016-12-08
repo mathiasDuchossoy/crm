@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\LangueBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -13,6 +14,6 @@ class LangueRepository extends EntityRepository
 {
     public function findAll()
     {
-        return $this->findBy(array(), array('id'=>'ASC'));
+        return $this->findBy(array(), array('id' => 'ASC'));
     }
 }

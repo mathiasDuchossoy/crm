@@ -21,9 +21,9 @@ class SousFamillePrestationAnnexeType extends AbstractType
                 'allow_add' => true,
                 'prototype_name' => '__name_traduction__',
                 'required' => true,
-            ))
-        ;
+            ));
     }
+
     /**
      * @param OptionsResolver $resolver
      */

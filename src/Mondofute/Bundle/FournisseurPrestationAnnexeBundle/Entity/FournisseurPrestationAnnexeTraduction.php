@@ -76,8 +76,9 @@ class FournisseurPrestationAnnexeTraduction
      *
      * @return FournisseurPrestationAnnexeTraduction
      */
-    public function setPrestationAnnexe(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe = null)
-    {
+    public function setPrestationAnnexe(
+        \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe $prestationAnnexe = null
+    ) {
         $this->prestationAnnexe = $prestationAnnexe;
 
         return $this;

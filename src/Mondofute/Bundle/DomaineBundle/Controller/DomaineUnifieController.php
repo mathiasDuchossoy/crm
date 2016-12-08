@@ -22,6 +22,7 @@ use Mondofute\Bundle\DomaineBundle\Entity\DomaineTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineVideo;
 use Mondofute\Bundle\DomaineBundle\Entity\DomaineVideoTraduction;
+use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use Mondofute\Bundle\DomaineBundle\Entity\HandiskiTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\KmPistesAlpin;
 use Mondofute\Bundle\DomaineBundle\Entity\KmPistesNordique;
@@ -34,7 +35,6 @@ use Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
-use Mondofute\Bundle\DomaineBundle\Entity\Handiski;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -102,8 +102,12 @@ class DomaineUnifieController extends Controller
         $modeleDescriptionForfaitSkiController->addModeleDescriptionForfaitSkis($domaineUnifie);
         // *** fin addModeleDescriptionForfaitSkis ***
 
-        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie,
+            array('locale' => $request->getLocale()));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -130,8 +134,7 @@ class DomaineUnifieController extends Controller
                     $domaine
                         ->setPhotosParent(false)
                         ->setImagesParent(false)
-                        ->setVideosParent(false)
-                    ;
+                        ->setVideosParent(false);
                 }
             }
 
@@ -148,7 +151,10 @@ class DomaineUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Domaine $domaineSite */
-                                    $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site) {
+                                    $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use
+                                    (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($domaineSite)) {
@@ -189,7 +195,10 @@ class DomaineUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Domaine $domaineSite */
-                                    $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site) {
+                                    $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use
+                                    (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($domaineSite)) {
@@ -236,7 +245,8 @@ class DomaineUnifieController extends Controller
                     $domaineSite->addVideo($domaineVideoSite);
                     $actif = false;
                     if (!empty($request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
-                        if (in_array($domaineSite->getSite()->getId(), $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                        if (in_array($domaineSite->getSite()->getId(),
+                            $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -308,7 +318,9 @@ class DomaineUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($domaineCarteIdentite->getTraductions()->filter(function (DomaineCarteIdentiteTraduction $element) use ($langue) {
+                        if ($domaineCarteIdentite->getTraductions()->filter(function (
+                            DomaineCarteIdentiteTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -327,7 +339,9 @@ class DomaineUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (SnowparkTraduction $element) use ($langue) {
+                        if ($domaineCarteIdentite->getSnowpark()->getTraductions()->filter(function (
+                            SnowparkTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -345,7 +359,9 @@ class DomaineUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (HandiskiTraduction $element) use ($langue) {
+                        if ($domaineCarteIdentite->getHandiski()->getTraductions()->filter(function (
+                            HandiskiTraduction $element
+                        ) use ($langue) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -373,13 +389,11 @@ class DomaineUnifieController extends Controller
                     $typePistes = $em->getRepository(TypePiste::class)->findAll();
                     /** @var Piste $piste */
                     /** @var TypePiste $typePiste */
-                    foreach ($typePistes as $typePiste)
-                    {
-                        $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element ) use ($typePiste){
+                    foreach ($typePistes as $typePiste) {
+                        $piste = $domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
                             return $typePiste == $element->getTypePiste();
                         })->first();
-                        if(false === $piste)
-                        {
+                        if (false === $piste) {
                             $piste = new Piste();
                             $domaineCarteIdentite->addPiste($piste);
                             $piste->setTypePiste($typePiste);
@@ -407,7 +421,8 @@ class DomaineUnifieController extends Controller
 
                 if (!empty($domaineCarteIdentite->getPistes())) {
                     foreach ($typePistes as $typePiste) {
-                        if (empty($domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste) {
+                        if (empty($domaineCarteIdentite->getPistes()->filter(function (Piste $element) use ($typePiste
+                        ) {
                             return $element->getTypePiste() == $typePiste;
                         })->first())
                         ) {
@@ -534,7 +549,9 @@ class DomaineUnifieController extends Controller
                 $domaineCarteIdentiteUnifie = $domaineCarteIdentiteController->newEntity($domaine, $request);
 
                 $site = $domaine->getSite();
-                $domaineCarteIdentite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (DomaineCarteIdentite $element) use ($site) {
+                $domaineCarteIdentite = $domaineCarteIdentiteUnifie->getDomaineCarteIdentites()->filter(function (
+                    DomaineCarteIdentite $element
+                ) use ($site) {
                     return $site == $element->getSite();
                 })->first();
                 $domaine->setDomaineCarteIdentite($domaineCarteIdentite);
@@ -649,7 +666,10 @@ class DomaineUnifieController extends Controller
                             // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
                             // récupérer l'domaineImage original correspondant sur le crm
                             /** @var ArrayCollection $originalDomaineImages */
-                            $originalDomaineImage = $originalDomaineImages->filter(function (DomaineImage $element) use ($domaineImage) {
+                            $originalDomaineImage = $originalDomaineImages->filter(function (DomaineImage $element) use
+                            (
+                                $domaineImage
+                            ) {
                                 return $element->getImage() == $domaineImage->getImage();
                             })->first();
                             unset($domaineImageSite);
@@ -695,7 +715,9 @@ class DomaineUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (DomaineImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DomaineImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -706,7 +728,8 @@ class DomaineUnifieController extends Controller
                                     else {
                                         $traductionSite = new DomaineImageTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $domaineImageSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -755,7 +778,10 @@ class DomaineUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'domainePhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalDomainePhotos */
-                            $originalDomainePhoto = $originalDomainePhotos->filter(function (DomainePhoto $element) use ($domainePhoto) {
+                            $originalDomainePhoto = $originalDomainePhotos->filter(function (DomainePhoto $element) use
+                            (
+                                $domainePhoto
+                            ) {
                                 return $element->getPhoto() == $domainePhoto->getPhoto();
                             })->first();
                             unset($domainePhotoSite);
@@ -801,7 +827,9 @@ class DomaineUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (DomainePhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DomainePhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -812,7 +840,8 @@ class DomaineUnifieController extends Controller
                                     else {
                                         $traductionSite = new DomainePhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $domainePhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -849,7 +878,9 @@ class DomaineUnifieController extends Controller
                 if (!empty($domaine->getVideos()) && !$domaine->getVideos()->isEmpty()) {
                     /** @var DomaineVideo $domaineVideo */
                     foreach ($domaine->getVideos() as $domaineVideo) {
-                        $domaineVideoSite = $domaineSite->getVideos()->filter(function (DomaineVideo $element) use ($domaineVideo) {
+                        $domaineVideoSite = $domaineSite->getVideos()->filter(function (DomaineVideo $element) use (
+                            $domaineVideo
+                        ) {
                             return $element->getId() == $domaineVideo->getId();
                         })->first();
                         if (false === $domaineVideoSite) {
@@ -878,13 +909,16 @@ class DomaineUnifieController extends Controller
                             ->setActif($domaineVideo->getActif());
                         // *** traductions ***
                         foreach ($domaineVideo->getTraductions() as $traduction) {
-                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction) {
+                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (
+                                DomaineVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
                             if (false === $traductionSite) {
                                 $traductionSite = new DomaineVideoTraduction();
                                 $domaineVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class,
+                                    $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -897,7 +931,9 @@ class DomaineUnifieController extends Controller
                     /** @var DomaineVideo $domaineVideo */
                     /** @var DomaineVideo $domaineVideoSite */
                     foreach ($domaineSite->getVideos() as $domaineVideoSite) {
-                        $domaineVideo = $domaine->getVideos()->filter(function (DomaineVideo $element) use ($domaineVideoSite) {
+                        $domaineVideo = $domaine->getVideos()->filter(function (DomaineVideo $element) use (
+                            $domaineVideoSite
+                        ) {
                             return $element->getId() == $domaineVideoSite->getId();
                         })->first();
                         if (false === $domaineVideo) {
@@ -911,7 +947,7 @@ class DomaineUnifieController extends Controller
 
                 $modeleDescriptionForfaitSkiController = new ModeleDescriptionForfaitSkiController();
                 $modeleDescriptionForfaitSkiController->setContainer($this->container);
-                $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity , $entitySite);
+                $modeleDescriptionForfaitSkiController->copieToDomaineVersSites($entity, $entitySite);
 
                 $emSite->persist($entitySite);
                 $emSite->flush();
@@ -1133,7 +1169,7 @@ class DomaineUnifieController extends Controller
                 foreach ($domaine->getVideos() as $domaineVideo) {
                     // on ajoute les photo dans la collection de sauvegarde
                     $originalDomaineVideos->add($domaineVideo);
-                    $originalVideos->set($domaineVideo->getId() , $domaineVideo->getVideo());
+                    $originalVideos->set($domaineVideo->getId(), $domaineVideo->getVideo());
                 }
             }
         }
@@ -1142,8 +1178,12 @@ class DomaineUnifieController extends Controller
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
-        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie,
+            array('locale' => $request->getLocale()))
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 
@@ -1166,8 +1206,7 @@ class DomaineUnifieController extends Controller
                         $domaine
                             ->setPhotosParent(false)
                             ->setImagesParent(false)
-                            ->setVideosParent(false)
-                        ;
+                            ->setVideosParent(false);
                     }
                 }
 
@@ -1320,14 +1359,14 @@ class DomaineUnifieController extends Controller
                 /** @var DomaineVideo $domaineVideo */
                 foreach ($domaineCrm->getVideos() as $key => $domaineVideo) {
                     foreach ($domaineSites as $domaineSite) {
-                        if (empty($domaineVideo->getId()) ) {
+                        if (empty($domaineVideo->getId())) {
                             $domaineVideoSite = clone $domaineVideo;
-                        }
-                        else
-                        {
-                            $domaineVideoSite = $em->getRepository(DomaineVideo::class)->findOneBy(array('video' => $originalVideos->get($domaineVideo->getId()) , 'domaine' => $domaineSite));
-                            if($originalVideos->get($domaineVideo->getId()) != $domaineVideo->getVideo())
-                            {
+                        } else {
+                            $domaineVideoSite = $em->getRepository(DomaineVideo::class)->findOneBy(array(
+                                'video' => $originalVideos->get($domaineVideo->getId()),
+                                'domaine' => $domaineSite
+                            ));
+                            if ($originalVideos->get($domaineVideo->getId()) != $domaineVideo->getVideo()) {
                                 $em->remove($domaineVideoSite->getVideo());
                                 $this->deleteFile($domaineVideoSite->getVideo());
                                 $domaineVideoSite->setVideo($domaineVideo->getVideo());
@@ -1336,21 +1375,21 @@ class DomaineUnifieController extends Controller
                         $domaineSite->addVideo($domaineVideoSite);
                         $actif = false;
                         if (!empty($request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
-                            if (in_array($domaineSite->getSite()->getId(), $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
+                            if (in_array($domaineSite->getSite()->getId(),
+                                $request->get('domaine_unifie')['domaines'][0]['videos'][$key]['sites'])) {
                                 $actif = true;
                             }
                         }
                         $domaineVideoSite->setActif($actif);
 
                         // *** traductions ***
-                        foreach ($domaineVideo->getTraductions() as $traduction)
-                        {
-                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (DomaineVideoTraduction $element) use ($traduction)
-                            {
+                        foreach ($domaineVideo->getTraductions() as $traduction) {
+                            $traductionSite = $domaineVideoSite->getTraductions()->filter(function (
+                                DomaineVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue() == $traduction->getLangue();
                             })->first();
-                            if(false === $traductionSite)
-                            {
+                            if (false === $traductionSite) {
                                 $traductionSite = new DomaineVideoTraduction();
                                 $domaineVideoSite->addTraduction($traductionSite);
                                 $traductionSite->setLangue($traduction->getLangue());
@@ -1384,7 +1423,8 @@ class DomaineUnifieController extends Controller
                         if ($site->getCrm() == 0) {
                             // on récupère l'hébegergement du site
                             /** @var Domaine $domaineSite */
-                            $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site) {
+                            $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site
+                            ) {
                                 return $element->getSite() == $site;
                             })->first();
                             // si hébergement existe
@@ -1394,7 +1434,10 @@ class DomaineUnifieController extends Controller
                                 // s'il ne s'agit pas d'un nouveau domaineImage
                                 if (!empty($domaineImage->getId())) {
                                     // on récupère l'domaineImage pour le modifier
-                                    $domaineImageSite = $em->getRepository(DomaineImage::class)->findOneBy(array('domaine' => $domaineSite, 'image' => $originalImages->get($key)));
+                                    $domaineImageSite = $em->getRepository(DomaineImage::class)->findOneBy(array(
+                                        'domaine' => $domaineSite,
+                                        'image' => $originalImages->get($key)
+                                    ));
                                 }
                                 // si l'domaineImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                                 if (empty($domaineImage->getId()) || empty($domaineImageSite)) {
@@ -1425,7 +1468,9 @@ class DomaineUnifieController extends Controller
                                         $traductionSites = $domaineImageSite->getTraductions();
                                         $traductionSite = null;
                                         if (!$traductionSites->isEmpty()) {
-                                            $traductionSite = $traductionSites->filter(function (DomaineImageTraduction $element) use ($traduction) {
+                                            $traductionSite = $traductionSites->filter(function (
+                                                DomaineImageTraduction $element
+                                            ) use ($traduction) {
                                                 return $element->getLangue() == $traduction->getLangue();
                                             })->first();
                                         }
@@ -1438,7 +1483,8 @@ class DomaineUnifieController extends Controller
                                     }
                                     // on vérifie si l'hébergementImage doit être actif sur le site ou non
                                     if (!empty($request->get('domaine_unifie')['domaines'][$keyCrm]['images'][$key]['sites']) &&
-                                        in_array($site->getId(), $request->get('domaine_unifie')['domaines'][$keyCrm]['images'][$key]['sites'])
+                                        in_array($site->getId(),
+                                            $request->get('domaine_unifie')['domaines'][$keyCrm]['images'][$key]['sites'])
                                     ) {
                                         $domaineImageSite->setActif(true);
                                     } else {
@@ -1474,7 +1520,8 @@ class DomaineUnifieController extends Controller
                         if ($site->getCrm() == 0) {
                             // on récupère l'hébegergement du site
                             /** @var Domaine $domaineSite */
-                            $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site) {
+                            $domaineSite = $domaineUnifie->getDomaines()->filter(function (Domaine $element) use ($site
+                            ) {
                                 return $element->getSite() == $site;
                             })->first();
                             // si hébergement existe
@@ -1484,7 +1531,10 @@ class DomaineUnifieController extends Controller
                                 // s'il ne s'agit pas d'un nouveau domainePhoto
                                 if (!empty($domainePhoto->getId())) {
                                     // on récupère l'domainePhoto pour le modifier
-                                    $domainePhotoSite = $em->getRepository(DomainePhoto::class)->findOneBy(array('domaine' => $domaineSite, 'photo' => $originalPhotos->get($key)));
+                                    $domainePhotoSite = $em->getRepository(DomainePhoto::class)->findOneBy(array(
+                                        'domaine' => $domaineSite,
+                                        'photo' => $originalPhotos->get($key)
+                                    ));
                                 }
                                 // si l'domainePhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                                 if (empty($domainePhoto->getId()) || empty($domainePhotoSite)) {
@@ -1515,7 +1565,9 @@ class DomaineUnifieController extends Controller
                                         $traductionSites = $domainePhotoSite->getTraductions();
                                         $traductionSite = null;
                                         if (!$traductionSites->isEmpty()) {
-                                            $traductionSite = $traductionSites->filter(function (DomainePhotoTraduction $element) use ($traduction) {
+                                            $traductionSite = $traductionSites->filter(function (
+                                                DomainePhotoTraduction $element
+                                            ) use ($traduction) {
                                                 return $element->getLangue() == $traduction->getLangue();
                                             })->first();
                                         }
@@ -1528,7 +1580,8 @@ class DomaineUnifieController extends Controller
                                     }
                                     // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                     if (!empty($request->get('domaine_unifie')['domaines'][$keyCrm]['photos'][$key]['sites']) &&
-                                        in_array($site->getId(), $request->get('domaine_unifie')['domaines'][$keyCrm]['photos'][$key]['sites'])
+                                        in_array($site->getId(),
+                                            $request->get('domaine_unifie')['domaines'][$keyCrm]['photos'][$key]['sites'])
                                     ) {
                                         $domainePhotoSite->setActif(true);
                                     } else {
@@ -1634,8 +1687,9 @@ class DomaineUnifieController extends Controller
                     }
                 }
 
-            } else if (!empty($domaine->getDomaineParent()) && $domaine->getDomaineParent()->getDomaineCarteIdentite() === $domaine->getDomaineCarteIdentite()){
-                //
+            } else {
+                if (!empty($domaine->getDomaineParent()) && $domaine->getDomaineParent()->getDomaineCarteIdentite() === $domaine->getDomaineCarteIdentite()) {
+                    //
                     // OIn fait ça
                     $cIParent = $domaine->getDomaineParent()->getDomaineCarteIdentite();
                     $cIOld = $domaine->getDomaineCarteIdentite();
@@ -1726,88 +1780,90 @@ class DomaineUnifieController extends Controller
                     $em->refresh($cIParent->getSnowpark());
                     $em->refresh($cIParent->getHandiski());
                     $em->refresh($cIParent->getRemonteeMecanique());
-            }
-            else if(empty($domaine->getDomaineParent()) && count($domaine->getDomaineCarteIdentite()->getDomaines()) > 1){
+                } else {
+                    if (empty($domaine->getDomaineParent()) && count($domaine->getDomaineCarteIdentite()->getDomaines()) > 1) {
 
-                $cIOld = $domaine->getDomaineCarteIdentite();
+                        $cIOld = $domaine->getDomaineCarteIdentite();
 
-                $newCI = new DomaineCarteIdentite();
-                $altitudeMini = new Distance();
-                $altitudeMini->setUnite($cIOld->getAltitudeMini()->getUnite());
-                $altitudeMini->setValeur($cIOld->getAltitudeMini()->getValeur());
-                $newCI->setAltitudeMini($altitudeMini);
+                        $newCI = new DomaineCarteIdentite();
+                        $altitudeMini = new Distance();
+                        $altitudeMini->setUnite($cIOld->getAltitudeMini()->getUnite());
+                        $altitudeMini->setValeur($cIOld->getAltitudeMini()->getValeur());
+                        $newCI->setAltitudeMini($altitudeMini);
 
-                $altitudeMaxi = new Distance();
-                $altitudeMaxi->setUnite($cIOld->getAltitudeMaxi()->getUnite());
-                $altitudeMaxi->setValeur($cIOld->getAltitudeMaxi()->getValeur());
-                $newCI->setAltitudeMaxi($altitudeMaxi);
+                        $altitudeMaxi = new Distance();
+                        $altitudeMaxi->setUnite($cIOld->getAltitudeMaxi()->getUnite());
+                        $altitudeMaxi->setValeur($cIOld->getAltitudeMaxi()->getValeur());
+                        $newCI->setAltitudeMaxi($altitudeMaxi);
 
-                $kmPistesSkiAlpin = new KmPistesAlpin();
-                $kmPistesSkiAlpin->setLongueur(new Distance());
-                $kmPistesSkiAlpin->getLongueur()->setUnite($cIOld->getKmPistesSkiAlpin()->getLongueur()->getUnite());
-                $kmPistesSkiAlpin->getLongueur()->setValeur($cIOld->getKmPistesSkiAlpin()->getLongueur()->getValeur());
-                $newCI->setKmPistesSkiAlpin($kmPistesSkiAlpin);
+                        $kmPistesSkiAlpin = new KmPistesAlpin();
+                        $kmPistesSkiAlpin->setLongueur(new Distance());
+                        $kmPistesSkiAlpin->getLongueur()->setUnite($cIOld->getKmPistesSkiAlpin()->getLongueur()->getUnite());
+                        $kmPistesSkiAlpin->getLongueur()->setValeur($cIOld->getKmPistesSkiAlpin()->getLongueur()->getValeur());
+                        $newCI->setKmPistesSkiAlpin($kmPistesSkiAlpin);
 
-                $kmPistesSkiNordique = new KmPistesNordique();
-                $kmPistesSkiNordique->setLongueur(new Distance());
-                $kmPistesSkiNordique->getLongueur()->setUnite($cIOld->getKmPistesSkiNordique()->getLongueur()->getUnite());
-                $kmPistesSkiNordique->getLongueur()->setValeur($cIOld->getKmPistesSkiNordique()->getLongueur()->getValeur());
-                $newCI->setKmPistesSkiNordique($kmPistesSkiNordique);
+                        $kmPistesSkiNordique = new KmPistesNordique();
+                        $kmPistesSkiNordique->setLongueur(new Distance());
+                        $kmPistesSkiNordique->getLongueur()->setUnite($cIOld->getKmPistesSkiNordique()->getLongueur()->getUnite());
+                        $kmPistesSkiNordique->getLongueur()->setValeur($cIOld->getKmPistesSkiNordique()->getLongueur()->getValeur());
+                        $newCI->setKmPistesSkiNordique($kmPistesSkiNordique);
 
-                //remontee mécanique
-                $newCI->setRemonteeMecanique($cIOld->getRemonteeMecanique());
-                //niveauSKieur
-                $newCI->setNiveauSkieur($cIOld->getNiveauSkieur());
+                        //remontee mécanique
+                        $newCI->setRemonteeMecanique($cIOld->getRemonteeMecanique());
+                        //niveauSKieur
+                        $newCI->setNiveauSkieur($cIOld->getNiveauSkieur());
 
-                //pistes
-                /** @var Piste $piste */
-                foreach ($cIOld->getPistes() as $piste) {
-                    $newPiste = new Piste();
-                    $newPiste->setTypePiste($piste->getTypePiste());
-                    $newPiste->setNombre($piste->getNombre());
-                    $newCI->addPiste($newPiste);
+                        //pistes
+                        /** @var Piste $piste */
+                        foreach ($cIOld->getPistes() as $piste) {
+                            $newPiste = new Piste();
+                            $newPiste->setTypePiste($piste->getTypePiste());
+                            $newPiste->setNombre($piste->getNombre());
+                            $newCI->addPiste($newPiste);
+                        }
+
+                        $snowpark = new Snowpark();
+                        $newCI->setSnowpark($snowpark);
+                        $handiski = new Handiski();
+                        $newCI->setHandiski($handiski);
+
+                        foreach ($cIOld->getTraductions() as $traduction) {
+                            $newTrad = new DomaineCarteIdentiteTraduction();
+                            $newTrad
+                                ->setLangue($traduction->getLangue())
+                                ->setAccroche($traduction->getAccroche())
+                                ->setDescription($traduction->getDescription());
+                            $newCI->addTraduction($newTrad);
+                        }
+
+                        $snowpark->setPresent($cIOld->getSnowpark()->getPresent());
+                        foreach ($cIOld->getSnowpark()->getTraductions() as $traduction) {
+                            $newTrad = new SnowparkTraduction();
+                            $newTrad
+                                ->setLangue($traduction->getLangue())
+                                ->setDescription($traduction->getDescription());
+                            $newCI->getSnowpark()->addTraduction($newTrad);
+                        }
+
+                        $handiski->setPresent($cIOld->getHandiski()->getPresent());
+                        foreach ($cIOld->getHandiski()->getTraductions() as $traduction) {
+                            $newTrad = new HandiskiTraduction();
+                            $newTrad
+                                ->setLangue($traduction->getLangue())
+                                ->setDescription($traduction->getDescription());
+                            $newCI->getHandiski()->addTraduction($newTrad);
+                        }
+                        $newCI->setSite($domaine->getDomaineCarteIdentite()->getSite());
+
+                        $remonteeMecanique = new RemonteeMecanique();
+                        $remonteeMecanique->setNombre($cIOld->getRemonteeMecanique()->getNombre());
+                        $newCI->setRemonteeMecanique($remonteeMecanique);
+
+                        $em->persist($newCI);
+                        $domaine->setDomaineCarteIdentite($newCI);
+
+                    }
                 }
-
-                $snowpark = new Snowpark();
-                $newCI->setSnowpark($snowpark);
-                $handiski = new Handiski();
-                $newCI->setHandiski($handiski);
-
-                foreach ($cIOld->getTraductions() as $traduction) {
-                    $newTrad = new DomaineCarteIdentiteTraduction();
-                    $newTrad
-                        ->setLangue($traduction->getLangue())
-                        ->setAccroche($traduction->getAccroche())
-                        ->setDescription($traduction->getDescription());
-                    $newCI->addTraduction($newTrad);
-                }
-
-                $snowpark->setPresent($cIOld->getSnowpark()->getPresent());
-                foreach ($cIOld->getSnowpark()->getTraductions() as $traduction) {
-                    $newTrad = new SnowparkTraduction();
-                    $newTrad
-                        ->setLangue($traduction->getLangue())
-                        ->setDescription($traduction->getDescription());
-                    $newCI->getSnowpark()->addTraduction($newTrad);
-                }
-
-                $handiski->setPresent($cIOld->getHandiski()->getPresent());
-                foreach ($cIOld->getHandiski()->getTraductions() as $traduction) {
-                    $newTrad = new HandiskiTraduction();
-                    $newTrad
-                        ->setLangue($traduction->getLangue())
-                        ->setDescription($traduction->getDescription());
-                    $newCI->getHandiski()->addTraduction($newTrad);
-                }
-                $newCI->setSite($domaine->getDomaineCarteIdentite()->getSite());
-
-                $remonteeMecanique = new RemonteeMecanique();
-                $remonteeMecanique->setNombre($cIOld->getRemonteeMecanique()->getNombre());
-                $newCI->setRemonteeMecanique($remonteeMecanique);
-
-                $em->persist($newCI);
-                $domaine->setDomaineCarteIdentite($newCI);
-
             }
         }
 
@@ -1841,7 +1897,8 @@ class DomaineUnifieController extends Controller
         foreach ($domaineUnifie->getDomaines() as $domaine) {
             if (!$domaine->getStations()->isEmpty()) {
                 if ($stationEmpty) {
-                    $this->addFlash('error', 'Impossible de supprimer le domaine, il est utilisé par une ou plusieurs stations.');
+                    $this->addFlash('error',
+                        'Impossible de supprimer le domaine, il est utilisé par une ou plusieurs stations.');
                     $stationEmpty = false;
                 }
             }

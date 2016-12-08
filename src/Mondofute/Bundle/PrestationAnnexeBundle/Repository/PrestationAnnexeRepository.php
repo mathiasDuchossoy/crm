@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -23,13 +24,11 @@ class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
             ->from('MondofutePrestationAnnexeBundle:PrestationAnnexe', 's')
             ->join('s.traductions', 'st')
             ->join('st.langue', 'l')
-            ->where("l.code = '$locale'")
-        ;
-        if(!empty($famillePrestationAnnexeId)){
+            ->where("l.code = '$locale'");
+        if (!empty($famillePrestationAnnexeId)) {
             $qb
                 ->andWhere('s.famillePrestationAnnexe = :famillePrestationAnnexeId ')
-                ->setParameter('famillePrestationAnnexeId' , $famillePrestationAnnexeId)
-            ;
+                ->setParameter('famillePrestationAnnexeId', $famillePrestationAnnexeId);
         }
 
 //        ->setParameter('code' , $locale)
@@ -37,6 +36,7 @@ class PrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb;
     }
+
     /**
      * @return mixed
      */

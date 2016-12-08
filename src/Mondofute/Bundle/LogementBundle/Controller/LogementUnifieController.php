@@ -13,7 +13,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\LogementBundle\Command\EditLogementPeriodeCommand;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhoto;
 use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
@@ -464,7 +463,9 @@ class LogementUnifieController extends Controller
                  * @var TypePeriode $typePeriode
                  */
                 foreach ($logement->getTypePeriodes() as $typePeriode) {
-                    $typePeriodeSite = $logementSite->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriode) {
+                    $typePeriodeSite = $logementSite->getTypePeriodes()->filter(function (TypePeriode $element) use (
+                        $typePeriode
+                    ) {
                         return $element->getId() == $typePeriode->getId();
                     })->first();
                     if (false === $typePeriodeSite) {
@@ -472,7 +473,9 @@ class LogementUnifieController extends Controller
                     }
                 }
                 foreach ($logementSite->getTypePeriodes() as $typePeriodeSite) {
-                    $typePeriode = $logement->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriodeSite) {
+                    $typePeriode = $logement->getTypePeriodes()->filter(function (TypePeriode $element) use (
+                        $typePeriodeSite
+                    ) {
                         return $element->getId() == $typePeriodeSite->getId();
                     })->first();
                     if (false === $typePeriode) {

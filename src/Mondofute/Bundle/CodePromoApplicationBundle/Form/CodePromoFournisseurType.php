@@ -16,11 +16,10 @@ class CodePromoFournisseurType extends AbstractType
     {
         $builder
             ->add('fournisseur')
-            ->add('type')
-//            ->add('codePromoFournisseurUnifie')
+            ->add('type')//            ->add('codePromoFournisseurUnifie')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

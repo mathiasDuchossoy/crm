@@ -5,15 +5,17 @@
 
     <table>
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for sousFamillePrestationAnnexe in sousFamillePrestationAnnexes %}
             <tr>
-                <td><a href="{{ path('sousfamilleprestationannexe_show', { 'id': sousFamillePrestationAnnexe.id }) }}">{{ sousFamillePrestationAnnexe.id }}</a></td>
+                <td>
+                    <a href="{{ path('sousfamilleprestationannexe_show', { 'id': sousFamillePrestationAnnexe.id }) }}">{{ sousFamillePrestationAnnexe.id }}</a>
+                </td>
                 <td>
                     <ul>
                         <li>

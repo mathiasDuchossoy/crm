@@ -342,6 +342,11 @@ assetic:
             inputs:
                 - "%kernel.root_dir%/../app/Resources/public/css/menu.css"
             output: css/menu.css
+
+        base_css:
+            inputs:
+                - "%kernel.root_dir%/../app/Resources/public/css/base.css"
+            output: css/base.css
         bootstrap_css:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/less/bootstrap.less"

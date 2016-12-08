@@ -27,10 +27,9 @@ class FournisseurPrestationAnnexeParamTraductionType extends AbstractType
                 'attr' => [
                     'style' => 'display:none',
                 ],
-            ))
-        ;
+            ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

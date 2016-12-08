@@ -20,14 +20,13 @@ class PrestationAnnexeStationType extends AbstractType
     {
         $builder
 //            ->add('prestationAnnexeStationUnifie')
-            ->add('station' , EntityType::class, array(
+            ->add('station', EntityType::class, array(
                 'class' => Station::class,
                 'property' => 'id'
             ))
-            ->add('site', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('site', HiddenType::class, array('mapped' => false));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

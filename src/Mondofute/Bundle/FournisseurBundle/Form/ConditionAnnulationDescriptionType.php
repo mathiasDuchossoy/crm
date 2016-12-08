@@ -13,9 +13,9 @@ class ConditionAnnulationDescriptionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('description' , null , ['required' => false]);
+        $builder->add('description', null, ['required' => false]);
     }
-    
+
     /**
      * {@inheritdoc}
      */

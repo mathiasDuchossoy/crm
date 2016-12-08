@@ -2,17 +2,13 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 
-use Mondofute\Bundle\GeographieBundle\Repository\DepartementRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\SousFamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -51,10 +47,9 @@ class PrestationAnnexeType extends AbstractType
             ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PrestationAnnexeTraductionType::class,
-            ))
-        ;
+            ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

@@ -2,12 +2,7 @@
 
 namespace HiDev\Bundle\CodePromoBundle\Controller;
 
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use HiDev\Bundle\CodePromoBundle\Entity\CodePromo;
-use HiDev\Bundle\CodePromoBundle\Form\CodePromoType;
 
 /**
  * CodePromo controller.

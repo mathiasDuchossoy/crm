@@ -7,8 +7,9 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             associationKey: true
         periode:
             associationKey: true
-        hebergement:
+        fournisseurHebergement:
             associationKey: true
+
     manyToOne:
         fournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement

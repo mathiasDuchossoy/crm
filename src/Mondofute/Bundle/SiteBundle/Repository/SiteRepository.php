@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\SiteBundle\Repository;
 
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+
 /**
  * SiteRepository
  *

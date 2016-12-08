@@ -182,8 +182,7 @@ class Departement
      */
     public function setDepartementUnifie(
         DepartementUnifie $departementUnifie = null
-    )
-    {
+    ) {
         $this->departementUnifie = $departementUnifie;
 
         return $this;

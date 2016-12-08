@@ -20,9 +20,9 @@
 
         </button>
         <div id="{{ coupDeCoeur.vars.id }}" class="form-inline input-group" style="width: 100%;
-            {% if coupDeCoeur.vars.value is null %}
+        {% if coupDeCoeur.vars.value is null %}
                 display: none;
-            {% endif %}
+        {% endif %}
                 "
         >
             {{ form_widget(coupDeCoeur.dateHeureDebut, { 'type' : 'datetime', 'attr' : {

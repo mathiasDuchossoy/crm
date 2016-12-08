@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\UtilisateurBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mondofute\Bundle\CoreBundle\Entity\User as User;
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 
 /**
  * UtilisateurUser
@@ -18,7 +17,7 @@ class UtilisateurUser extends User
     /**
      * @var int
      */
-    protected  $id;
+    protected $id;
     /**
      * @var Utilisateur
      */

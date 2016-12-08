@@ -61,8 +61,7 @@ class StationCarteIdentiteType extends AbstractType
 //                )
 //                )
 //            )
-            ->add('adresse', 'Nucleus\MoyenComBundle\Form\AdresseType')
-        ;
+            ->add('adresse', 'Nucleus\MoyenComBundle\Form\AdresseType');
     }
 
     /**

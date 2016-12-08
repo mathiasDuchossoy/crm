@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\HebergementBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -55,33 +56,31 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
-    public function findByFournisseur($fournisseurId , $locale, $site = 1 , $stationId = null){
+    public function findByFournisseur($fournisseurId, $locale, $site = 1, $stationId = null)
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('hebergementUnifie.id hebergementUnifieId, hebergements.id hebergementId, traductions.nom, fournisseur.id fournisseurId, site.id siteId , stationUnifie.id stationUnifieId')
 //        $qb->select('hebergementUnifie')
             ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
-            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
-            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
-            ->join('hebergementUnifie.hebergements' , 'hebergements')
-            ->join('hebergements.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
-            ->join('hebergements.site' , 'site')
-            ->join('hebergements.station' , 'station')
-            ->join('station.stationUnifie' , 'stationUnifie')
+            ->join('hebergementUnifie.fournisseurs', 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur', 'fournisseur')
+            ->join('hebergementUnifie.hebergements', 'hebergements')
+            ->join('hebergements.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->join('hebergements.site', 'site')
+            ->join('hebergements.station', 'station')
+            ->join('station.stationUnifie', 'stationUnifie')
             ->where('fournisseur.id = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseurId)
             ->andWhere('langue.code = :langue')
             ->setParameter('langue', $locale)
             ->andWhere('site.id = :site')
-            ->setParameter('site', $site)
-        ;
+            ->setParameter('site', $site);
 
-        if (!empty($stationId))
-        {
+        if (!empty($stationId)) {
             $qb
                 ->andWhere('stationUnifie.id = :stationId')
-                ->setParameter('stationId' , $stationId)
-            ;
+                ->setParameter('stationId', $stationId);
         }
 
         $qb->orderBy('hebergementUnifie.id', 'ASC');
@@ -115,17 +114,18 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
 //    }
 
 
-    public function findHebergementUnifiesDuFournisseur($fournisseurId ){
+    public function findHebergementUnifiesDuFournisseur($fournisseurId)
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('hebergementUnifie , hebergements')
 //        $qb->select('hebergementUnifie')
             ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
-            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
-            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
-            ->join('hebergementUnifie.hebergements' , 'hebergements')
-            ->join('hebergements.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
-            ->join('hebergements.site' , 'site')
+            ->join('hebergementUnifie.fournisseurs', 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur', 'fournisseur')
+            ->join('hebergementUnifie.hebergements', 'hebergements')
+            ->join('hebergements.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->join('hebergements.site', 'site')
             ->where('fournisseur.id = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseurId)
 //            ->andWhere('langue.code = :langue')
@@ -144,21 +144,20 @@ class HebergementUnifieRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
-            ->from('MondofuteHebergementBundle:HebergementUnifie' , 'hebergementUnifie')
+            ->from('MondofuteHebergementBundle:HebergementUnifie', 'hebergementUnifie')
             ->select('hebergementUnifie.id  hebergementUnifieId, hebergements.id hebergementId, traductions.nom')
-            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
-            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
-            ->join('hebergementUnifie.hebergements' , 'hebergements')
-            ->join('hebergements.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('hebergementUnifie.fournisseurs', 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur', 'fournisseur')
+            ->join('hebergementUnifie.hebergements', 'hebergements')
+            ->join('hebergements.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('fournisseur = :fournisseurId')
-            ->setParameter('fournisseurId' , $fournisseurId)
+            ->setParameter('fournisseurId', $fournisseurId)
             ->andWhere('langue.code = :locale')
-            ->setParameter('locale' , $locale)
-            ->join('hebergements.site' , 'site')
+            ->setParameter('locale', $locale)
+            ->join('hebergements.site', 'site')
             ->andWhere('site.id = :site')
-            ->setParameter('site' , $site)
-        ;
+            ->setParameter('site', $site);
 
         $result = $q->getQuery()->getResult();
 

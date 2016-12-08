@@ -445,8 +445,7 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    )
-    {
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -949,8 +948,9 @@ class Fournisseur extends Moral
      *
      * @return Fournisseur
      */
-    public function setConditionAnnulationDescription(ConditionAnnulationDescription $conditionAnnulationDescription = null)
-    {
+    public function setConditionAnnulationDescription(
+        ConditionAnnulationDescription $conditionAnnulationDescription = null
+    ) {
         $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;

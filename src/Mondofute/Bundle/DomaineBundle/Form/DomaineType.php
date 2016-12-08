@@ -21,13 +21,13 @@ class DomaineType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $locale             = $options['locale'];
+        $locale = $options['locale'];
         $domaineUnifieId = $options['domaineUnifieId'];
         $builder
-            ->add('domaineParent' , EntityType::class , array(
-                'class' => Domaine::class ,
+            ->add('domaineParent', EntityType::class, array(
+                'class' => Domaine::class,
                 'placeholder' => '--- choisir un domaine parent ---',
-                'required' => false ,
+                'required' => false,
                 'choice_label' => 'traductions[0].libelle',
                 'query_builder' => function (DomaineRepository $rr) use ($locale, $domaineUnifieId) {
                     return $rr->getTraductionsDomainesByLocale($locale, $domaineUnifieId);
@@ -65,10 +65,9 @@ class DomaineType extends AbstractType
             ->add('imagesParent')
             ->add('photosParent')
             ->add('videosParent')
-            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class , array(
+            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class, array(
                 'data_class' => ModeleDescriptionForfaitSki::class
-            ))
-        ;
+            ));
     }
 
     /**

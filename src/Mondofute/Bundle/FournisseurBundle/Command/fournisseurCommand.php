@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\FournisseurBundle\Command;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
@@ -13,10 +12,8 @@ use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
-use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteClassementHebergement;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,8 +35,8 @@ class fournisseurCommand extends ContainerAwareCommand
         /** @var Fournisseur $fournisseurParent */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        $sites      = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
-        $langues    = $em->getRepository(Langue::class)->findAll();
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
+        $langues = $em->getRepository(Langue::class)->findAll();
 
 
 //        $unifies = $em->getRepository(HebergementUnifie::class)->findAll();
@@ -55,16 +52,16 @@ class fournisseurCommand extends ContainerAwareCommand
 //        die;
 
 
-        for($i=1;$i<=300;$i++){
+        for ($i = 1; $i <= 300; $i++) {
             $fournisseur = new Fournisseur();
-            $fournisseur->setEnseigne('Fournisseur '.$i);
+            $fournisseur->setEnseigne('Fournisseur ' . $i);
             $fournisseur->setContient(FournisseurContient::PRODUIT);
             $em->persist($fournisseur);
             $em->flush();
         }
 
-        for($i=1;$i<=1000;$i++){
-            $fournisseurIndex  = mt_rand (1, 300);
+        for ($i = 1; $i <= 1000; $i++) {
+            $fournisseurIndex = mt_rand(1, 300);
             $hebergementUnifie = new HebergementUnifie();
 
             $fournisseur = $em->find(Fournisseur::class, $fournisseurIndex);
@@ -73,24 +70,24 @@ class fournisseurCommand extends ContainerAwareCommand
             $fournisseurHebergement->setFournisseur($fournisseur);
             $fournisseur->addHebergement($fournisseurHebergement);
 
-            foreach ($sites as $site){
+            foreach ($sites as $site) {
 
                 $hebergement = new Hebergement();
                 $hebergement->setSite($site);
                 $hebergementUnifie->addHebergement($hebergement);
                 /** @var Fournisseur $fournisseur */
-                $tab = array('1','4');
+                $tab = array('1', '4');
                 $typeHebergementId = array_rand($tab);
                 $hebergement->setTypeHebergement($em->find(TypeHebergement::class, $typeHebergementId));
-                $tab = array('1','4');
+                $tab = array('1', '4');
                 $stationId = array_rand($tab);
                 $hebergement->setStation($em->find(Station::class, $stationId));
-                $tab = array('7','8');
+                $tab = array('7', '8');
                 $classementId = array_rand($tab);
                 $classementhebergement = new ClassementHebergement();
                 $classementhebergement->setUnite($em->find(UniteClassementHebergement::class, $classementId));
                 $hebergement->setClassement($classementhebergement);
-                foreach ($langues as $langue){
+                foreach ($langues as $langue) {
                     $trad = new HebergementTraduction();
                     $hebergement->addTraduction($trad);
                     $trad->setLangue($langue);

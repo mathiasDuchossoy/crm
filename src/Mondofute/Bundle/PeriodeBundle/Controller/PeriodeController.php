@@ -173,7 +173,7 @@ class PeriodeController extends Controller
 //            calcul la date de fin (date de debut + nombre de jours)
             $finTmp->add(new \DateInterval('P' . $nbJour . 'D'));
 //            Création de la période
-            if($debutTmp->format('Y-m-d') >= $today->format('Y-m-d')) {
+            if ($debutTmp->format('Y-m-d') >= $today->format('Y-m-d')) {
 
 
                 $periode = new Periode();
@@ -203,7 +203,8 @@ class PeriodeController extends Controller
             /** @var EntityManagerInterface $emSite */
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
 //            $emSite->beginTransaction();
-            $idPeriodesMin[$site->getLibelle()] = intval($emSite->createQuery('SELECT MAX(p.id) AS id FROM '.Periode::class.' AS p')->getArrayResult()[0]['id'],10);
+            $idPeriodesMin[$site->getLibelle()] = intval($emSite->createQuery('SELECT MAX(p.id) AS id FROM ' . Periode::class . ' AS p')->getArrayResult()[0]['id'],
+                10);
 
 //            Récupération des périodes répondant aux critères dans la base de données 
             $periodesSite = $emSite->getRepository(Periode::class)->rechercherPeriodesIntervale($periodes->first()->getDebut(),
