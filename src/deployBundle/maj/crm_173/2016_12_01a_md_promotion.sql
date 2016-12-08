@@ -66,10 +66,17 @@ ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B21BDB235 FOREIGN KEY (st
 ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
 ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);*/
 
-CREATE TABLE promotion_periode_validite_date (id INT UNSIGNED AUTO_INCREMENT NOT NULL, date_debut DATETIME NOT NULL, date_fin DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+/*CREATE TABLE promotion_periode_validite_date (id INT UNSIGNED AUTO_INCREMENT NOT NULL, date_debut DATETIME NOT NULL, date_fin DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 CREATE TABLE promotion_periode_validite_jour (id INT UNSIGNED AUTO_INCREMENT NOT NULL, jour_debut INT UNSIGNED NOT NULL, jour_fin INT UNSIGNED NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 ALTER TABLE promotion ADD promotion_periode_validite_date_id INT UNSIGNED DEFAULT NULL, ADD promotion_periode_validite_jour_id INT UNSIGNED DEFAULT NULL;
 ALTER TABLE promotion ADD CONSTRAINT FK_C11D7DD1F7C2EC14 FOREIGN KEY (promotion_periode_validite_date_id) REFERENCES promotion_periode_validite_date (id);
 ALTER TABLE promotion ADD CONSTRAINT FK_C11D7DD16D59B0AF FOREIGN KEY (promotion_periode_validite_jour_id) REFERENCES promotion_periode_validite_jour (id);
 CREATE UNIQUE INDEX UNIQ_C11D7DD1F7C2EC14 ON promotion (promotion_periode_validite_date_id);
-CREATE UNIQUE INDEX UNIQ_C11D7DD16D59B0AF ON promotion (promotion_periode_validite_jour_id);
+CREATE UNIQUE INDEX UNIQ_C11D7DD16D59B0AF ON promotion (promotion_periode_validite_jour_id);*/
+
+/*CREATE TABLE promotion_fournisseur (promotion_id INT UNSIGNED NOT NULL, fournisseur_id INT UNSIGNED NOT NULL, type SMALLINT UNSIGNED NOT NULL, INDEX IDX_E76003E8139DF194 (promotion_id), INDEX IDX_E76003E8670C757F (fournisseur_id), PRIMARY KEY(promotion_id, fournisseur_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_fournisseur ADD CONSTRAINT FK_E76003E8139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
+ALTER TABLE promotion_fournisseur ADD CONSTRAINT FK_E76003E8670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);*/
+
+ALTER TABLE promotion_fournisseur DROP PRIMARY KEY;
+ALTER TABLE promotion_fournisseur ADD PRIMARY KEY (type, promotion_id, fournisseur_id);

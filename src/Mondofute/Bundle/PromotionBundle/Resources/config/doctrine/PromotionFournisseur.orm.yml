@@ -3,22 +3,17 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur:
     table: null
     repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionFournisseurRepository
     id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
-    fields:
+        promotion:
+            associationKey: true
+        fournisseur:
+            associationKey: true
         type:
             type: smallint
             options:
                 unsigned: true
     manyToOne:
-        fournisseur:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         promotion:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
-            inversedBy: promotionFournisseurs
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
     lifecycleCallbacks: {  }

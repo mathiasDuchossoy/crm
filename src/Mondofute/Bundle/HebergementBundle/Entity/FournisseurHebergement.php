@@ -215,7 +215,8 @@ class FournisseurHebergement
      */
     public function addTraduction(
         FournisseurHebergementTraduction $traduction
-    ) {
+    )
+    {
         $this->traductions[] = $traduction->setFournisseurHebergement($this);
 
         return $this;
@@ -228,7 +229,8 @@ class FournisseurHebergement
      */
     public function removeTraduction(
         FournisseurHebergementTraduction $traduction
-    ) {
+    )
+    {
         $this->traductions->removeElement($traduction);
     }
 

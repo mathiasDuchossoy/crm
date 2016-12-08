@@ -9,13 +9,17 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
-use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
@@ -29,16 +33,15 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
+use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType;
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
-use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -127,6 +130,10 @@ class PromotionUnifieController extends Controller
                     $promotion->setActif(false);
                 }
             }
+
+            // *** gestion typePeriodeSejour ***
+            $this->gestionTypePeriodeSejour($promotionUnifie);
+            // *** fin gestion typePeriodeSejour ***
 
             $em = $this->getDoctrine()->getManager();
 
@@ -276,6 +283,30 @@ class PromotionUnifieController extends Controller
     }
 
     /**
+     * @param PromotionUnifie $promotionUnifie
+     */
+    public function gestionTypePeriodeSejour($promotionUnifie)
+    {
+        /** @var Promotion $promotion */
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            switch ($promotion->getTypePeriodeSejour()) {
+                case TypePeriodeSejour::permanent:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeSejour::dateADate:
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeSejour::periode:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
      * Copie dans la base de données site l'entité promotion
      * @param PromotionUnifie $entityUnifie
      */
@@ -350,16 +381,14 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFournisseur $promotionFournisseur */
                     foreach ($entity->getPromotionFournisseurs() as $promotionFournisseur) {
                         $promotionFournisseurSite = $entitySite->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseur) {
-                            return $element->getId() == $promotionFournisseur->getId();
+                            return ($element->getPromotion()->getPromotionUnifie()->getId() == $promotionFournisseur->getPromotion()->getPromotionUnifie()->getId()
+                                and $element->getFournisseur()->getId() == $promotionFournisseur->getFournisseur()->getId()
+                                and $element->getType() == $promotionFournisseur->getType()
+                            );
                         })->first();
                         if (false === $promotionFournisseurSite) {
                             $promotionFournisseurSite = new PromotionFournisseur();
                             $entitySite->addPromotionFournisseur($promotionFournisseurSite);
-                            $promotionFournisseurSite
-                                ->setId($promotionFournisseur->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
                         $promotionFournisseurSite
                             ->setFournisseur($emSite->find(Fournisseur::class, $promotionFournisseur->getFournisseur()))
@@ -371,7 +400,9 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFournisseur $promotionFournisseur */
                     foreach ($entitySite->getPromotionFournisseurs() as $promotionFournisseurSite) {
                         $promotionFournisseur = $entity->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseurSite) {
-                            return $element->getId() == $promotionFournisseurSite->getId();
+                            return ($element->getPromotion()->getPromotionUnifie()->getId() == $promotionFournisseurSite->getPromotion()->getPromotionUnifie()->getId()
+                                and $element->getFournisseur()->getId() == $promotionFournisseurSite->getFournisseur()->getId()
+                                and $element->getType() == $promotionFournisseurSite->getType());
                         })->first();
                         if (false === $promotionFournisseur) {
 //                            $entitySite->removePromotionFournisseur($promotionFournisseurSite);
@@ -819,6 +850,9 @@ class PromotionUnifieController extends Controller
             $this->gestionPromotionFournisseur($promotionUnifie);
 
             foreach ($promotionUnifie->getPromotions() as $promotion) {
+//                if($promotion->getPromotionTypeAffectations()->contains(TypeAffectation::prestationAnnexe)){
+//                    $em->refresh($promotion->getPromotionFournisseurs());
+//                }
                 $originalPromotionFournisseurSites = $originalPromotionFournisseurs->get($promotion->getSite()->getId());
                 foreach ($promotion->getPromotionFournisseurs() as $promotionFournisseur) {
                     /** @var ArrayCollection $originalPromotionFournisseurSites */
@@ -829,16 +863,52 @@ class PromotionUnifieController extends Controller
                             and $element->getPromotion() == $promotionFournisseur->getPromotion());
                     })->first();
                     if (!empty($originalPromotionFournisseur)) {
+//                        $delete = true;
+                        // todo: voir suppression de sofurnisseur
+                        // à bloquer si type existant
+//                        foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
+//                            $type = $promotionFournisseur->getFournisseur()->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
+//                                return $element->getId() == $typeFournisseur->getId();
+//                            })->first();
+//                            if (false === $type) {
+//                                $delete = false;
+//                            }
+//                        }
+//                        if ($delete) {
                         $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
                         $promotion->addPromotionFournisseur($originalPromotionFournisseur);
+//                        }
                     }
                 }
                 foreach ($originalPromotionFournisseurSites as $originalPromotionFournisseur) {
+                    /** @var PromotionFournisseur $originalPromotionFournisseur */
                     if (false === $promotion->getPromotionFournisseurs()->contains($originalPromotionFournisseur)) {
-                        $em->remove($originalPromotionFournisseur);
+                        $delete = true;
+                        foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
+                            $type = $originalPromotionFournisseur->getFournisseur()->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
+                                return $element->getId() == $typeFournisseur->getId();
+                            })->first();
+                            if (false === $type) {
+                                $delete = false;
+                            }
+                        }
+                        if ($delete) {
+                            $em->remove($originalPromotionFournisseur);
+                        }
                     }
                 }
+
+//                foreach ($promotion->getPromotionFournisseurs() as $promotionFournisseur){
+//                    dump($promotionFournisseur);
+//                    if(!empty($em->getRepository(PromotionFournisseur::class)->findOneBy(['type' => $promotionFournisseur->getType(), 'promotion' => $promotionFournisseur->getPromotion(), 'fournisseur' => $promotionFournisseur->getFournisseur()] ))){
+//                        dump('ici');
+//                        $em->detach($promotionFournisseur);
+//                    }
+//                }
+//                dump($promotion->getPromotionFournisseurs());
             }
+//            die;
+
             // *** fin gestion promotion fournisseur ***
 
             // *** gestion promotion hebergement ***
@@ -1004,9 +1074,22 @@ class PromotionUnifieController extends Controller
 
             $this->copieVersSites($promotionUnifie);
 
-            // *** gestion promotion logement ***
-            $this->gestionPromotionLogement($promotionUnifie);
-            // *** fin gestion promotion logement ***
+
+            $kernel = $this->get('kernel');
+
+            $application = new Application($kernel);
+            $application->setAutoExit(false);
+
+            $input = new ArrayInput(array(
+                'command' => 'mondofute_promotion:promotion_type_fournisseur_command',
+                'promotionUnifieId' => $promotionUnifie->getId(),
+            ));
+            $output = new NullOutput();
+            $application->run($input, $output);
+
+//            // *** gestion promotion logement ***
+//            $this->gestionPromotionLogement($promotionUnifie);
+//            // *** fin gestion promotion logement ***
 
             // add flash messages
             /** @var Session $session */
@@ -1036,6 +1119,7 @@ class PromotionUnifieController extends Controller
      */
     private function gestionPromotionFournisseur($promotionUnifie)
     {
+        $em = $this->getDoctrine()->getManager();
         /** @var PromotionFournisseur $promotionFournisseurSite */
         /** @var PromotionFournisseur $promotionFournisseurCrm */
         /** @var PromotionFournisseur $fournisseur */
@@ -1060,14 +1144,19 @@ class PromotionUnifieController extends Controller
             if ($promotion->getSite()->getCrm() == 0) {
                 foreach ($promotionFournisseurCrms as $key => $fournisseur) {
                     $fournisseurSite = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($fournisseur) {
-                        return ($element->getFournisseur() == $fournisseur->getFournisseur() and $element->getType() == $fournisseur->getType());
+                        return ($element->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId()
+                            and $element->getType() == $fournisseur->getType()
+                            and $element->getPromotion()->getId() == $fournisseur->getPromotion()->getId()
+                        );
                     })->first();
                     if (false === $fournisseurSite) {
-                        $newFournisseur = new PromotionFournisseur();
-                        $promotion->addPromotionFournisseur($newFournisseur);
-                        $newFournisseur
-                            ->setFournisseur($fournisseur->getFournisseur())
-                            ->setType($fournisseur->getType());
+                        if (empty($em->getRepository(PromotionFournisseur::class)->findOneBy(['type' => $fournisseur->getType(), 'promotion' => $promotion, 'fournisseur' => $fournisseur->getFournisseur()]))) {
+                            $newFournisseur = new PromotionFournisseur();
+                            $promotion->addPromotionFournisseur($newFournisseur);
+                            $newFournisseur
+                                ->setFournisseur($fournisseur->getFournisseur())
+                                ->setType($fournisseur->getType());
+                        }
                     }
                 }
             }
@@ -1262,45 +1351,6 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-    }
-
-    /**
-     * @param PromotionUnifie $promotionUnifie
-     */
-    public function gestionTypePeriodeSejour($promotionUnifie)
-    {
-        /** @var Promotion $promotion */
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            switch ($promotion->getTypePeriodeSejour()) {
-                case TypePeriodeSejour::permanent:
-                    $promotion->setPromotionPeriodeValiditeDate();
-                    $promotion->setPromotionPeriodeValiditeJour();
-                    break;
-                case TypePeriodeSejour::dateADate:
-                    $promotion->setPromotionPeriodeValiditeJour();
-                    break;
-                case TypePeriodeSejour::periode:
-                    $promotion->setPromotionPeriodeValiditeDate();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * @param PromotionUnifie $promotionUnifie
-     */
-    private function gestionPromotionLogement($promotionUnifie)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $job = new Job('creer:promotionLogementByPromotionUnifie',
-            array(
-                'promotionUnifieId' => $promotionUnifie->getId()
-            ), true, 'promotionLogementByPromotionUnifie');
-        $em->persist($job);
-        $em->flush();
     }
 
     public function getFournisseurHebergementsAction($promotionId, $fournisseurId, $siteId)
@@ -1552,5 +1602,20 @@ class PromotionUnifieController extends Controller
             'promotion' => $form->children['promotions'][0],
             'keyPromotion' => '_keyPromotion_'
         ));
+    }
+
+    /**
+     * @param PromotionUnifie $promotionUnifie
+     */
+    private function gestionPromotionLogement($promotionUnifie)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $job = new Job('creer:promotionLogementByPromotionUnifie',
+            array(
+                'promotionUnifieId' => $promotionUnifie->getId()
+            ), true, 'promotionLogementByPromotionUnifie');
+        $em->persist($job);
+        $em->flush();
     }
 }

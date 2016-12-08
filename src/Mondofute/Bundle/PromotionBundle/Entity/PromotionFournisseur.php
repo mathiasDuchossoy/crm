@@ -10,10 +10,6 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 class PromotionFournisseur
 {
     /**
-     * @var int
-     */
-    private $id;
-    /**
      * @var integer
      */
     private $type;
@@ -25,28 +21,6 @@ class PromotionFournisseur
      * @var Promotion
      */
     private $promotion;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return PromotionFournisseur
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * Get type
