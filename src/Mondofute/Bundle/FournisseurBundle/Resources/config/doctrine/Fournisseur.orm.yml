@@ -105,6 +105,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
             mappedBy: fournisseur
             cascade: ['persist','remove']
+        promotionFournisseurs:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur
+            mappedBy: fournisseur
+            cascade: ['remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

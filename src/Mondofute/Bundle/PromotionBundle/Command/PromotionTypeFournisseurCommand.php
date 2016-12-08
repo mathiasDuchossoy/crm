@@ -7,6 +7,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -33,11 +34,12 @@ class PromotionTypeFournisseurCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var PromotionTypeAffectation $typeAffectation */
         /** @var Site $site */
         /** @var EntityManager $emSite */
         /** @var FamillePrestationAnnexe $typeFournisseur */
         /** @var Promotion $promotion */
-        $typeAffectationPrestationAnnexe = TypeAffectation::prestationAnnexe;
+        $typeType = TypeAffectation::type;
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $promotionUnifieId = $input->getArgument('promotionUnifieId');
         $famillePrestationannexes = $em->getRepository(FamillePrestationAnnexe::class)->findAll();
@@ -49,23 +51,29 @@ class PromotionTypeFournisseurCommand extends ContainerAwareCommand
             $connection = $em->getConnection();
             $promotionUnifie = $emSite->find(PromotionUnifie::class, $promotionUnifieId);
             foreach ($promotionUnifie->getPromotions() as $promotion) {
-                foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
-                    $fournisseurs = $emSite->getRepository(Fournisseur::class)->findByFamillePrestationAnnexe($typeFournisseur->getId());
-                    foreach ($fournisseurs as $fournisseur) {
-                        $promotionFournisseur = $emSite->getRepository(PromotionFournisseur::class)->findOneBy(array('fournisseur' => $fournisseur, 'promotion' => $promotion, 'type' => $typeAffectationPrestationAnnexe));
-                        if (empty($promotionFournisseur)) {
-                            $promotionFournisseur = new PromotionFournisseur();
-                            $promotionFournisseur
-                                ->setFournisseur($fournisseur)
-                                ->setType($typeAffectationPrestationAnnexe)
-                                ->setPromotion($promotion);
-                            $promotionFournisserExists = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseur) {
-                                return ($element->getPromotion() == $promotionFournisseur->getPromotion()
-                                    and $element->getFournisseur() == $promotionFournisseur->getFournisseur()
-                                    and $element->getType() == $promotionFournisseur->getType());
-                            })->first();
-                            if (false === $promotionFournisserExists) {
-                                $promotion->addPromotionFournisseur($promotionFournisseur);
+                foreach ($promotion->getPromotionTypeAffectations() as $typeAffectation) {
+                    if ($typeAffectation->getTypeAffectation() == $typeType) {
+                        // on parcourt les famillle de prestation annexe du fournisseur
+                        foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
+
+                            $fournisseurs = $emSite->getRepository(Fournisseur::class)->findByFamillePrestationAnnexe($typeFournisseur->getId());
+                            foreach ($fournisseurs as $fournisseur) {
+                                $promotionFournisseur = $emSite->getRepository(PromotionFournisseur::class)->findOneBy(array('fournisseur' => $fournisseur, 'promotion' => $promotion, 'type' => $typeType));
+                                if (empty($promotionFournisseur)) {
+                                    $promotionFournisseur = new PromotionFournisseur();
+                                    $promotionFournisseur
+                                        ->setFournisseur($fournisseur)
+                                        ->setType($typeType)
+                                        ->setPromotion($promotion);
+                                    $promotionFournisserExists = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($promotionFournisseur) {
+                                        return ($element->getPromotion() == $promotionFournisseur->getPromotion()
+                                            and $element->getFournisseur() == $promotionFournisseur->getFournisseur()
+                                            and $element->getType() == $promotionFournisseur->getType());
+                                    })->first();
+                                    if (false === $promotionFournisserExists) {
+                                        $promotion->addPromotionFournisseur($promotionFournisseur);
+                                    }
+                                }
                             }
                         }
                     }
@@ -75,7 +83,7 @@ class PromotionTypeFournisseurCommand extends ContainerAwareCommand
 //                        return $famillePrestationannex->getId() == $element->getId();
 //                    })->first();
 //                    if (false === $typeFournisseur and !$promotion->getPromotionTypeAffectations()->contains(TypeAffectation::prestationAnnexe)) {
-//                        $sql = 'DELETE FROM promotion_fournisseur where type = ' . $typeAffectationPrestationAnnexe . ' and promotion_id = ' . $promotion->getId();
+//                        $sql = 'DELETE FROM promotion_fournisseur where type = ' . $typeType . ' and promotion_id = ' . $promotion->getId();
 //                        $connection->executeQuery($sql);
 //                    }
 //                }

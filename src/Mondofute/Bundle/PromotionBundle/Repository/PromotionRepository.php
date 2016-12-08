@@ -10,4 +10,38 @@ namespace Mondofute\Bundle\PromotionBundle\Repository;
  */
 class PromotionRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param integer $typeId
+     * @return array
+     */
+    public function findByTypeFournisseur($typeId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('promotion')
+            ->from('MondofutePromotionBundle:Promotion', 'promotion')
+            ->join('promotion.typeFournisseurs', 'type')
+            ->where('type = :type')
+            ->setParameter('type', $typeId);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
+
+    /**
+     * @param integer $fournisseurId
+     * @return array
+     */
+    public function findByFournisseur($fournisseurId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('promotion')
+            ->from('MondofutePromotionBundle:Promotion', 'promotion')
+            ->join('promotion.promotionFournisseurs', 'promotionFournisseurs')
+            ->join('promotionFournisseurs.fournisseur', 'fournisseur')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournisseurId);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
 }

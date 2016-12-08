@@ -51,8 +51,18 @@
                             {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
                         {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
+                        <div id="promotion_type_fournisseur_{{ keyPromotion }}"
+                                {% set promotionTypeAffectationDisplay = false %}
+                                {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                    {% if promotionTypeAffectation.typeAffectation != 3 and promotionTypeAffectationDisplay == false %}
+                                        style="display: none;"
+                                        {% set promotionTypeAffectationDisplay = true %}
+                                    {% endif %}
+                                {% endfor %}
+                        >
+                            {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
+                        </div>
                         {{ form_row(promotion.typeApplication, {  'attr' : {  'data-unique_block_prefix' : promotion.typeApplication.vars['unique_block_prefix'] }}) }}
-                        {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
 
                         {% if panelPromotion is defined %}
                             {% set typeAffectationLogementSelected = false %}
@@ -262,10 +272,13 @@
             var path;
             var $promotionPanelHebergement = $('#promotion_panel_hebergement_' + keyPromotion);
             var $promotionPanelPrestationAnnexe = $('#promotion_panel_prestation_annexe_' + keyPromotion);
+            var $promotionWidgetTypeFournisseur = $('#promotion_type_fournisseur_' + keyPromotion);
             if (promotionId) {
                 if ($element.is(':checked')) {
                     switch (val) {
                         case '1':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionWidgetTypeFournisseur.hide();
                             if ($('#promotion_panel_hebergement_' + keyPromotion + ' > *').length == 0) {
                                 path = "{{ path('promotion_get_panel_hebergement', {
                                     'promotionId' : '_promotionId_'
@@ -278,6 +291,7 @@
                                     {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
                                     getFournisseurHebergements(promotionId, '{{ fournisseurTypeHebergement.id }}', keyPromotion, siteId);
                                     {% endfor %}
+                                    getPromotionPeriodes(promotionId, keyPromotion);
                                     {% endif %}
                                 });
                             }
@@ -286,6 +300,8 @@
                             }
                             break;
                         case '2':
+                            $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.hide();
                             if ($('#promotion_panel_prestation_annexe_' + keyPromotion + ' > *').length == 0) {
                                 path = "{{ path('promotion_get_panel_prestation_annexe', {
                                     'promotionId' : '_promotionId_'
@@ -305,6 +321,11 @@
                                 $promotionPanelPrestationAnnexe.show();
                             }
                             break;
+                        case '3':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.show();
+                            break;
                         default:
                             break;
                     }
@@ -313,9 +334,15 @@
                     switch (val) {
                         case '1':
                             $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.hide();
                             break;
                         case '2':
                             $promotionPanelPrestationAnnexe.hide();
+                            $promotionWidgetTypeFournisseur.hide();
+                            break;
+                        case '3':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionPanelHebergement.hide();
                             break;
                         default:
                             break;

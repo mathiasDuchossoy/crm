@@ -16,4 +16,5 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: promotionFournisseurs
     lifecycleCallbacks: {  }

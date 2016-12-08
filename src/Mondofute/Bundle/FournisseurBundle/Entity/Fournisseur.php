@@ -10,26 +10,10 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
-
-class FournisseurContient
-{
-    const PRODUIT = 1; // 1
-    const FOURNISSEUR = 2; // 10
-
-    public static $libelles = array(
-        FournisseurContient::FOURNISSEUR => 'Fournisseurs',
-        FournisseurContient::PRODUIT => 'Produits'
-    );
-
-    static public function getLibelle($permission)
-    {
-        return self::$libelles[$permission];
-    }
-
-}
 
 /**
  * Fournisseur
@@ -139,6 +123,10 @@ class Fournisseur extends Moral
      * @var integer
      */
     private $priorite = Priorite::NC;
+    /**
+     * @var Collection
+     */
+    private $promotionFournisseurs;
 
     /**
      * Fournisseur constructor.
@@ -154,6 +142,7 @@ class Fournisseur extends Moral
         $this->hebergements = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->fournisseurEnfants = new ArrayCollection();
+        $this->promotionFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -990,4 +979,37 @@ class Fournisseur extends Moral
         return Priorite::getLibelle($this->priorite);
     }
 
+    /**
+     * Add promotionFournisseur
+     *
+     * @param PromotionFournisseur $promotionFournisseur
+     *
+     * @return Fournisseur
+     */
+    public function addPromotionFournisseur(PromotionFournisseur $promotionFournisseur)
+    {
+        $this->promotionFournisseurs[] = $promotionFournisseur->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionFournisseur
+     *
+     * @param PromotionFournisseur $promotionFournisseur
+     */
+    public function removePromotionFournisseur(PromotionFournisseur $promotionFournisseur)
+    {
+        $this->promotionFournisseurs->removeElement($promotionFournisseur);
+    }
+
+    /**
+     * Get promotionFournisseurs
+     *
+     * @return Collection
+     */
+    public function getPromotionFournisseurs()
+    {
+        return $this->promotionFournisseurs;
+    }
 }
