@@ -2,12 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: mathias
- * Date: 30/11/2016
- * Time: 10:10
+ * Date: 08/12/2016
+ * Time: 13:58
  */
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
-
 
 class FournisseurContient
 {
@@ -23,5 +22,4 @@ class FournisseurContient
     {
         return self::$libelles[$permission];
     }
-
 }
