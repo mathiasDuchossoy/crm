@@ -70,15 +70,15 @@
                             </ul>
                         </ul>
                         <div class="panel panel-primary" id="panel_client_{{ codePromo.vars.value.site.id }}"
-                            {% if codePromo.vars.value.clientAffectation != 2 %}
-                                style="display: none"
-                            {% endif %}
+                                {% if codePromo.vars.value.clientAffectation != 2 %}
+                                    style="display: none"
+                                {% endif %}
                         >
                             <!-- Default panel contents -->
                             <div class="panel-heading">Client</div>
                             <div class="panel-body">
                                 <div class="col-sm-12">
-                                    <div class="form-group" >
+                                    <div class="form-group">
                                         <div class="panel panel-default">
                                             <!-- Default panel contents -->
                                             <div class="panel-heading">Liste</div>
@@ -112,26 +112,33 @@
                                                     <div class="col-sm-6">
                                                         <div class="input-group">
                                                             <div class="input-group-btn">
-                                                                <button type="button" class="btn btn-default" aria-label="Left Align"
+                                                                <button type="button" class="btn btn-default"
+                                                                        aria-label="Left Align"
                                                                         onclick="searchClient('{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}');"
                                                                 >
-                                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                                    <span class="glyphicon glyphicon-search"
+                                                                          aria-hidden="true"></span>
                                                                 </button>
                                                             </div>
-                                                            <input id="input_search_client_{{ codePromo.vars.value.site.id }}" type="text"
+                                                            <input id="input_search_client_{{ codePromo.vars.value.site.id }}"
+                                                                   type="text"
                                                                    onkeypress="testEnterSearchClient(event,'{{ codePromo.vars.value.id }}','{{ codePromo.vars.value.site.id }}')"
                                                                    class="form-control" placeholder="Rechercher...">
                                                         </div><!-- /input-group -->
                                                     </div><!-- /.col-lg-6 -->
                                                     <div class="col-sm-6">
-                                                        <div class="progress" style="display: none;margin-bottom: 0px;margin-top: 7px;">
+                                                        <div class="progress"
+                                                             style="display: none;margin-bottom: 0px;margin-top: 7px;">
                                                             {#<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">#}
                                                             {#0%#}
                                                             {#</div>#}
                                                             {#<div class="progress-bar progress-bar-striped " role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">#}
-                                                                {#<span class="sr-only">45% Complete</span>#}
+                                                            {#<span class="sr-only">45% Complete</span>#}
                                                             {#</div>#}
-                                                            <div class="progress-bar progress-bar-striped" role="progressbar"  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%" >
+                                                            <div class="progress-bar progress-bar-striped"
+                                                                 role="progressbar" aria-valuenow="100"
+                                                                 aria-valuemin="0" aria-valuemax="100"
+                                                                 style="width: 100%">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -158,13 +165,13 @@
                                 {% if codePromoApplication.application == 2 %}
                                     {% set applicationPrestationAnnexeSelected = true %}
                                 {% endif %}
-                            {% endfor  %}
-                            <div id="code_code_promo_panel_hebergement_{{ keyCodePromo }}" >
+                            {% endfor %}
+                            <div id="code_code_promo_panel_hebergement_{{ keyCodePromo }}">
                                 {% if applicationLogementSelected == true %}
                                     {% include ('@MondofuteCodePromo/codepromounifie/panel-hebergement.html.twig' ) %}
                                 {% endif %}
                             </div>
-                            <div id="code_code_promo_panel_prestation_annexe_{{ keyCodePromo }}" >
+                            <div id="code_code_promo_panel_prestation_annexe_{{ keyCodePromo }}">
                                 {% if applicationPrestationAnnexeSelected == true %}
                                     {{ include ('@MondofuteCodePromo/codepromounifie/panel-prestation-annexe.html.twig') }}
                                 {% endif %}
@@ -212,13 +219,13 @@
         //        itemNonPersonalisable.push("_code_promo_unifie_codePromos_entry_actif");
 
         var items = [];
-                items.push("_code_promo_unifie_codePromos_entry_libelle");
-                items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
-                items.push("_code_promo_unifie_codePromos_entry_typeRemise");
-                items.push("_code_promo_unifie_codePromos_entry_valeurRemise");
-                items.push("_code_promo_unifie_codePromos_entry_prixMini");
-                items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
-                items.push("_code_promo_unifie_codePromos_entry_actif");
+        items.push("_code_promo_unifie_codePromos_entry_libelle");
+        items.push("_code_promo_unifie_codePromos_entry_clientAffectation");
+        items.push("_code_promo_unifie_codePromos_entry_typeRemise");
+        items.push("_code_promo_unifie_codePromos_entry_valeurRemise");
+        items.push("_code_promo_unifie_codePromos_entry_prixMini");
+        items.push("_code_promo_unifie_codePromos_entry_usageCodePromo");
+        items.push("_code_promo_unifie_codePromos_entry_actif");
 
     </script>
     {{ parent() }}
@@ -439,17 +446,16 @@
                 $progressBar.addClass("active");
                 $progress.show();
                 var path;
-                if(codePromoId != ''){
+                if (codePromoId != '') {
                     path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_', 'codePromoId':'_codePromoId_' }) }}";
                     path = path.replace(/_codePromoId_/g, codePromoId);
-                }else{
+                } else {
                     path = "{{ path('codepromo_get_clients' ,{'clientName': '_clientName_', 'siteId' : '_siteId_' }) }}";
                 }
                 path = path.replace(/_clientName_/g, clienVal);
                 path = path.replace(/_siteId_/g, siteId);
                 $.ajax(path,
-                    {
-                    }
+                        {}
                 ).done(function (data) {
                     $("#result_search_" + siteId).html(data);
                     $progressBar.removeClass("active");
@@ -457,32 +463,32 @@
                 })
                 ;
             }
-            else{
+            else {
                 $input_search_client.popover({
                     content: 'Veuillez renseigner le champs.'
                 }).popover('show');
             }
         }
 
-        function moveInputClient(element, clientId , siteId){
+        function moveInputClient(element, clientId, siteId) {
             $element = $(element);
-            if($element.is(":checked")){
+            if ($element.is(":checked")) {
                 var $listeClient = $("#list_client_" + siteId);
-                $div = $listeClient.find("div#client_"+ clientId +"_"+siteId);
-                if($div.length > 0){
-                    $listeClient.find("#checkbox_client_"+ clientId +"_"+siteId).prop( "checked" , true);
-                    $("#result_search_" + siteId).find("#client_"+ clientId +"_"+siteId).remove();
+                $div = $listeClient.find("div#client_" + clientId + "_" + siteId);
+                if ($div.length > 0) {
+                    $listeClient.find("#checkbox_client_" + clientId + "_" + siteId).prop("checked", true);
+                    $("#result_search_" + siteId).find("#client_" + clientId + "_" + siteId).remove();
                 }
                 else {
-                    $listeClient.append($("#client_"+ clientId +"_"+siteId ));
+                    $listeClient.append($("#client_" + clientId + "_" + siteId));
                 }
             }
         }
 
-        function displayPanelClient(element){
+        function displayPanelClient(element) {
             var $element = $(element);
             var site = $element.data('site');
-            if($element.val() == 2){
+            if ($element.val() == 2) {
                 $('#panel_client_' + site).show();
             }
             else {
@@ -490,12 +496,12 @@
             }
         }
 
-        function testEnterSearchClient(event,codePromoId, siteId){
+        function testEnterSearchClient(event, codePromoId, siteId) {
 //            var chCode = ('charCode' in event) ? event.charCode : event.keyCode;
             var eCode = event.keyCode
 //            alert ("The Unicode character code is: " + chCode);
 //            alert ("The Unicode character code is: " + eCode);
-            if(eCode == 13 ){
+            if (eCode == 13) {
                 searchClient(codePromoId, siteId)
                 event.preventDefault();
             }
@@ -506,33 +512,31 @@
 
     <script type="text/javascript">
 
-        function getFournisseurHebergements(codePromoId , fournisseurId, keyCodePromo, siteId)
-        {
+        function getFournisseurHebergements(codePromoId, fournisseurId, keyCodePromo, siteId) {
 //            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
 //            {
-                var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
-                    'codePromoId' : '_codePromoId_',
-                    'fournisseurId' : '_fournisseurId_',
-                    'siteId' : '_siteId_',
-                }) }}";
+            var path = "{{ path('codepromo_get_fournisseur_hebergements' ,{
+                'codePromoId' : '_codePromoId_',
+                'fournisseurId' : '_fournisseurId_',
+                'siteId' : '_siteId_',
+            }) }}";
 
-                path = path.replace(/_codePromoId_/g, codePromoId);
-                path = path.replace(/_fournisseurId_/g, fournisseurId);
-                path = path.replace(/_siteId_/g, siteId);
-                path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_codePromoId_/g, codePromoId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_siteId_/g, siteId);
 
-                $.ajax( path , {
+            $.ajax(path, {
 //                    async: false
-                }).done(function (data){
-                    data = data.replace(/__keyCodePromo__/g , keyCodePromo);
-                    $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_hebergements').html(data);
-                });
+            }).done(function (data) {
+                data = data.replace(/__keyCodePromo__/g, keyCodePromo);
+                $('#code_promo_' + codePromoId + '_fournisseur_' + fournisseurId + '_hebergements').html(data);
+            });
 //            }
 
         }
 
-        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId, keyCodePromo)
-        {
+        function getFournisseurPrestationAnnexes(codePromoId, fournisseurId, keyCodePromo) {
 //            if($('#collapse_code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
 //            {
             var path = "{{ path('codepromo_get_fournisseur_prestation_annexes' ,{
@@ -543,34 +547,34 @@
             path = path.replace(/_codePromoId_/g, codePromoId);
             path = path.replace(/_fournisseurId_/g, fournisseurId);
 
-            $.ajax( path , {
+            $.ajax(path, {
 //                async: false
-            }).done(function (data){
-                data = data.replace(/__keyCodePromo__/g , keyCodePromo);
-                $('#code_promo_'+codePromoId+'_fournisseur_'+fournisseurId+'_prestation_annexes').html(data);
+            }).done(function (data) {
+                data = data.replace(/__keyCodePromo__/g, keyCodePromo);
+                $('#code_promo_' + codePromoId + '_fournisseur_' + fournisseurId + '_prestation_annexes').html(data);
             });
 //            }
 
         }
 
-        $( document ).ready(function() {
+        $(document).ready(function () {
             {% if panelCodePromo is defined %}
-                {% for keyCodePromo , codePromo in entity.codePromos  %}
-                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                        {% for codePromoApplication in codePromo.codePromoApplications %}
-                            {% if codePromoApplication.application == 1 %}
-                                getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}' );
-                            {% endif %}
-                        {% endfor  %}
-                    {% endfor %}
-                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                        {% for codePromoApplication in codePromo.codePromoApplications %}
-                            {% if codePromoApplication.application == 2 %}
-                                getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}' );
-                            {% endif %}
-                        {% endfor  %}
-                    {% endfor %}
-                {% endfor %}
+            {% for keyCodePromo , codePromo in entity.codePromos %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+            {% for codePromoApplication in codePromo.codePromoApplications %}
+            {% if codePromoApplication.application == 1 %}
+            getFournisseurHebergements('{{ codePromo.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyCodePromo }}', '{{ codePromo.site.id }}');
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+            {% for codePromoApplication in codePromo.codePromoApplications %}
+            {% if codePromoApplication.application == 2 %}
+            getFournisseurPrestationAnnexes('{{ codePromo.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyCodePromo }}');
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endfor %}
             {% endif %}
 
             $('.datetimepicker').datetimepicker({
@@ -597,38 +601,32 @@
         });
 
 
-
-        function checkChildren(element , listGroup){
+        function checkChildren(element, listGroup) {
             var $element = $(element);
             var $listGroup = $('#' + listGroup);
             $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
-        function checkChilFamillePrestationAnnexe(element, classFamille)
-        {
+        function checkChilFamillePrestationAnnexe(element, classFamille) {
             var $element = $(element);
             var listGroup = $('#' + $element.data('list_group'));
-            listGroup.find('input.'+classFamille+'[type=checkbox]').prop('checked', $element.prop("checked"));
+            listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
         }
 
     </script>
 
     <script type="text/javascript">
-        function displayApplicationPanel(element, keyCodePromo, codePromoId, siteId )
-        {
+        function displayApplicationPanel(element, keyCodePromo, codePromoId, siteId) {
             var $element = $(element);
             var val = $element.val();
             var path;
             var $codeCodePromoPanelHebergement = $('#code_code_promo_panel_hebergement_' + keyCodePromo);
             var $codeCodePromoPanelPrestationAnnexe = $('#code_code_promo_panel_prestation_annexe_' + keyCodePromo);
-            if(codePromoId)
-            {
-                if($element.is(':checked'))
-                {
-                    switch (val)
-                    {
+            if (codePromoId) {
+                if ($element.is(':checked')) {
+                    switch (val) {
                         case '1':
-                            if ($('#code_code_promo_panel_hebergement_' + keyCodePromo + ' > *').length == 0){
+                            if ($('#code_code_promo_panel_hebergement_' + keyCodePromo + ' > *').length == 0) {
                                 path = "{{ path('codepromo_get_panel_hebergement', {
                                     'codePromoId' : '_codePromoId_'
                                 } ) }}";
@@ -638,17 +636,17 @@
                                     $codeCodePromoPanelHebergement.html(data);
                                     {% if fournisseursTypeHebergement is defined %}
                                     {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-                                    getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId );
+                                    getFournisseurHebergements(codePromoId, '{{ fournisseurTypeHebergement.id }}', keyCodePromo, siteId);
                                     {% endfor %}
                                     {% endif %}
                                 });
                             }
-                            else{
+                            else {
                                 $codeCodePromoPanelHebergement.show();
                             }
                             break;
                         case '2':
-                            if ($('#code_code_promo_panel_prestation_annexe_' + keyCodePromo + ' > *').length == 0){
+                            if ($('#code_code_promo_panel_prestation_annexe_' + keyCodePromo + ' > *').length == 0) {
                                 path = "{{ path('codepromo_get_panel_prestation_annexe', {
                                     'codePromoId' : '_codePromoId_'
                                 } ) }}";
@@ -658,12 +656,12 @@
                                     $codeCodePromoPanelPrestationAnnexe.html(data);
                                     {% if fournisseursTypeHebergement is defined %}
                                     {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
-                                    getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo );
+                                    getFournisseurPrestationAnnexes(codePromoId, '{{ fournisseurPrestationAnnexe.id }}', keyCodePromo);
                                     {% endfor %}
                                     {% endif %}
                                 });
                             }
-                            else{
+                            else {
                                 $codeCodePromoPanelPrestationAnnexe.show();
                             }
                             break;
@@ -672,8 +670,7 @@
                     }
                 }
                 else {
-                    switch (val)
-                    {
+                    switch (val) {
                         case '1':
                             $codeCodePromoPanelHebergement.hide();
                             break;

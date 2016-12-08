@@ -24,10 +24,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        {% if disabledOptionHebergement == true  %}
-            $( document ).ready(function() {
-                $("#fournisseur_types_9").attr('disabled','disabled');
-            });
+        {% if disabledOptionHebergement == true %}
+        $(document).ready(function () {
+            $("#fournisseur_types_9").attr('disabled', 'disabled');
+        });
         {% endif %}
     </script>
 {% endblock %}

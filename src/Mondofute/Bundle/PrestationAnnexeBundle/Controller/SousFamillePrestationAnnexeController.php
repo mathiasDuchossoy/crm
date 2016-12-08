@@ -2,11 +2,10 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Form\SousFamillePrestationAnnexeFamille;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * SousFamillePrestationAnnexe controller.
@@ -68,6 +67,21 @@ class SousFamillePrestationAnnexeController extends Controller
     }
 
     /**
+     * Creates a form to delete a SousFamillePrestationAnnexe entity.
+     *
+     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe The SousFamillePrestationAnnexe entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('sousfamilleprestationannexe_delete', array('id' => $sousFamillePrestationAnnexe->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
      * Displays a form to edit an existing SousFamillePrestationAnnexe entity.
      *
      */
@@ -108,21 +122,5 @@ class SousFamillePrestationAnnexeController extends Controller
         }
 
         return $this->redirectToRoute('sousfamilleprestationannexe_index');
-    }
-
-    /**
-     * Creates a form to delete a SousFamillePrestationAnnexe entity.
-     *
-     * @param SousFamillePrestationAnnexe $sousFamillePrestationAnnexe The SousFamillePrestationAnnexe entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(SousFamillePrestationAnnexe $sousFamillePrestationAnnexe)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('sousfamilleprestationannexe_delete', array('id' => $sousFamillePrestationAnnexe->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\GeographieBundle\Entity;
-use Mondofute\Bundle\GeographieBundle\Entity\DepartementVideo;
+
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**

@@ -11,7 +11,22 @@ class FournisseurPrestationAnnexeParamTraduction
      * @var int
      */
     private $id;
-
+    /**
+     * @var string
+     */
+    private $libelleParam;
+    /**
+     * @var string
+     */
+    private $libelleFournisseurPrestationAnnexeParam;
+    /**
+     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     */
+    private $param;
+    /**
+     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     */
+    private $langue;
 
     /**
      * Get id
@@ -22,26 +37,16 @@ class FournisseurPrestationAnnexeParamTraduction
     {
         return $this->id;
     }
-    /**
-     * @var string
-     */
-    private $libelleParam;
 
     /**
-     * @var string
+     * Get libelleParam
+     *
+     * @return string
      */
-    private $libelleFournisseurPrestationAnnexeParam;
-
-    /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
-     */
-    private $param;
-
-    /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    private $langue;
-
+    public function getLibelleParam()
+    {
+        return $this->libelleParam;
+    }
 
     /**
      * Set libelleParam
@@ -58,13 +63,13 @@ class FournisseurPrestationAnnexeParamTraduction
     }
 
     /**
-     * Get libelleParam
+     * Get libelleFournisseurPrestationAnnexeParam
      *
      * @return string
      */
-    public function getLibelleParam()
+    public function getLibelleFournisseurPrestationAnnexeParam()
     {
-        return $this->libelleParam;
+        return $this->libelleFournisseurPrestationAnnexeParam;
     }
 
     /**
@@ -82,13 +87,13 @@ class FournisseurPrestationAnnexeParamTraduction
     }
 
     /**
-     * Get libelleFournisseurPrestationAnnexeParam
+     * Get param
      *
-     * @return string
+     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
      */
-    public function getLibelleFournisseurPrestationAnnexeParam()
+    public function getParam()
     {
-        return $this->libelleFournisseurPrestationAnnexeParam;
+        return $this->param;
     }
 
     /**
@@ -106,13 +111,13 @@ class FournisseurPrestationAnnexeParamTraduction
     }
 
     /**
-     * Get param
+     * Get langue
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
      */
-    public function getParam()
+    public function getLangue()
     {
-        return $this->param;
+        return $this->langue;
     }
 
     /**
@@ -127,15 +132,5 @@ class FournisseurPrestationAnnexeParamTraduction
         $this->langue = $langue;
 
         return $this;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
+
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 
@@ -12,20 +13,19 @@ use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
  */
 class PrestationAnnexeStationUnifieRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByCriteria( FournisseurPrestationAnnexe $prestationAnnex, $stationUnifieId)
+    public function findByCriteria(FournisseurPrestationAnnexe $prestationAnnex, $stationUnifieId)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeStationUnifie , prestationAnnexeStations')
             ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie', 'prestationAnnexeStationUnifie')
             ->join('prestationAnnexeStationUnifie.prestationAnnexeStations', 'prestationAnnexeStations')
-            ->join('prestationAnnexeStations.station' , 'station')
-            ->join('station.stationUnifie' , 'stationUnifie')
+            ->join('prestationAnnexeStations.station', 'station')
+            ->join('station.stationUnifie', 'stationUnifie')
             ->where('prestationAnnexeStations.fournisseurPrestationAnnexe = :prestationAnnex')
-            ->setParameter('prestationAnnex' , $prestationAnnex->getId())
+            ->setParameter('prestationAnnex', $prestationAnnex->getId())
             ->andWhere('stationUnifie.id = :stationUnifieId')
-            ->setParameter('stationUnifieId' ,$stationUnifieId )
-        ;
+            ->setParameter('stationUnifieId', $stationUnifieId);
 
         $result = $qb->getQuery()->getOneOrNullResult();
 //        $result = $qb->getQuery()->getFirstResult();
@@ -40,11 +40,10 @@ class PrestationAnnexeStationUnifieRepository extends \Doctrine\ORM\EntityReposi
         $qb->select('prestationAnnexeStationUnifie')
             ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie', 'prestationAnnexeStationUnifie')
             ->join('prestationAnnexeStationUnifie.prestationAnnexeStations', 'prestationAnnexeStations')
-            ->join('prestationAnnexeStations.station' , 'station')
-            ->join('station.stationUnifie' , 'stationUnifie')
+            ->join('prestationAnnexeStations.station', 'station')
+            ->join('station.stationUnifie', 'stationUnifie')
             ->andWhere('stationUnifie.id = :stationUnifieId')
-            ->setParameter('stationUnifieId' ,$stationUnifie->getId() )
-        ;
+            ->setParameter('stationUnifieId', $stationUnifie->getId());
 
         $result = $qb->getQuery()->getResult();
 //        $result = $qb->getQuery()->getFirstResult();

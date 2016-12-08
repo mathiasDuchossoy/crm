@@ -89,8 +89,7 @@ class InterlocuteurType extends AbstractType
             )
             ->add('user', InterlocuteurUserType::class, array(
                 'data_class' => InterlocuteurUser::class
-            ))
-        ;
+            ));
     }
 
     /**

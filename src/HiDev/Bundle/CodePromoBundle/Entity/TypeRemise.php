@@ -15,7 +15,7 @@ class TypeRemise
     const poucentage = 2;
 
     public static $libelles = array(
-        TypeRemise::euro      => '€',
+        TypeRemise::euro => '€',
         TypeRemise::poucentage => '%',
     );
 

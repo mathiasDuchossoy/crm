@@ -26,8 +26,7 @@ class StationUnifieType extends AbstractType
                     'locale' => $options["locale"],
                     'stationUnifieId' => $stationUnifieId
                 )
-            ))
-        ;
+            ));
     }
 
     /**

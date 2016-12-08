@@ -7,7 +7,7 @@
 
             {% set prestationAnnexeExists = false %}
             {#{% if codePromo.codePromoFournisseurPrestationAnnexes is not empty and fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id] is defined %}#}
-                {#{% set prestationAnnexeExists = true %}#}
+            {#{% set prestationAnnexeExists = true %}#}
             {#{% endif %}#}
             {% for codePromoFournisseurPrestationAnnexe in codePromo.codePromoFournisseurPrestationAnnexes %}
                 {% if codePromoFournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseur.id %}
@@ -59,17 +59,17 @@
                      role="tabpanel"
                      aria-labelledby="heading_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
 
-                        <!-- List group prestation_annexes -->
-                        <ul class="list-group"
-                            id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
-                            {#{% if prestationAnnexeExists == true %}#}
-                            {#{% include ('@MondofuteCodePromo/codepromounifie/get-promotion-fournisseur-prestation-annexes.html.twig') with {#}
-                                {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],#}
-                                {#'fournisseurId': fournisseur.id,#}
-                                {#'codePromoId' : codePromo.vars.value.id#}
-                                {#} %}#}
-                            {#{% endif %}#}
-                        </ul>
+                    <!-- List group prestation_annexes -->
+                    <ul class="list-group"
+                        id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_prestation_annexes">
+                        {#{% if prestationAnnexeExists == true %}#}
+                        {#{% include ('@MondofuteCodePromo/codepromounifie/get-promotion-fournisseur-prestation-annexes.html.twig') with {#}
+                        {#'fournisseurPrestationAnnexes' : fournisseurFournisseurPrestationAnnexes[codePromo.vars.value.id][fournisseur.id],#}
+                        {#'fournisseurId': fournisseur.id,#}
+                        {#'codePromoId' : codePromo.vars.value.id#}
+                        {#} %}#}
+                        {#{% endif %}#}
+                    </ul>
 
                 </div>
             </div>

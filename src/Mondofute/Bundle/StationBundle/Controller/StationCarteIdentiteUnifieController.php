@@ -6,12 +6,12 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
@@ -345,30 +345,30 @@ class StationCarteIdentiteUnifieController extends Controller
     /**
      * @param Station $station
      */
-    private function setGps($station){
-        $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+    private function setGps($station)
+    {
+        $curl = new \Geocoder\HttpAdapter\CurlHttpAdapter();
         $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
 
         $adresse = $station->getStationCarteIdentite()->getAdresse();
 
-        try{
+        try {
             $geocodedDatas = $geocoder->getGeocodedData($adresse->getVille());
             $geocodedData = $geocodedDatas[0];
-        }catch (\Geocoder\Exception\NoResultException $exception){
+        } catch (\Geocoder\Exception\NoResultException $exception) {
             $geocodedData = null;
         }
 
-        if(!empty($geocodedData)){
-            if(empty($gps = $station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+        if (!empty($geocodedData)) {
+            if (empty($gps = $station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())) {
                 $gps = new CoordonneesGPS();
                 $adresse->setCoordonneeGps($gps);
             }
             $gps
                 ->setLatitude($geocodedData['latitude'])
-                ->setLongitude($geocodedData['longitude'])
-            ;
-        }else{
-            if(!empty($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+                ->setLongitude($geocodedData['longitude']);
+        } else {
+            if (!empty($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps());
             }
@@ -508,8 +508,8 @@ class StationCarteIdentiteUnifieController extends Controller
     public function editEntity(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
         /** @var StationCarteIdentite $stationCarteIdentite */
-        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite){
-            foreach ($stationCarteIdentite->getStations() as $station){
+        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+            foreach ($stationCarteIdentite->getStations() as $station) {
                 $this->setGps($station);
             }
         }
@@ -611,7 +611,7 @@ class StationCarteIdentiteUnifieController extends Controller
             if (!empty($stationCarteIdentiteUnifieSite)) {
                 foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
 
-                    if ($stationCarteIdentiteSite->getStations()->count() <= 1 ){
+                    if ($stationCarteIdentiteSite->getStations()->count() <= 1) {
                         $emSite->remove($stationCarteIdentiteSite);
                     } else $delete = false;
                 }

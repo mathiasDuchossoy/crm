@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -34,8 +35,8 @@ class FamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->createQueryBuilder('entity')
             ->select('entity')
-            ->join('entity.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('entity.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
             ->setFirstResult(($page - 1) * $maxperpage)
@@ -59,12 +60,11 @@ class FamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('entity , traductions')
             ->from('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe', 'entity')
-            ->join('entity.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('entity.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
-            ->orderBy('traductions.libelle', 'ASC')
-        ;
+            ->orderBy('traductions.libelle', 'ASC');
 
         return $qb;
     }

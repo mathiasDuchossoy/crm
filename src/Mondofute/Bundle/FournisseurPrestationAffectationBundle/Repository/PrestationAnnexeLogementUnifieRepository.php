@@ -1,7 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PrestationAnnexeLogementUnifieRepository
@@ -26,10 +25,9 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
             ->join('prestationAnnexeLogements.logement', 'logement')
             ->join('logement.logementUnifie', 'logementUnifie')
             ->where('prestationAnnexeLogements.param = :paramId')
-            ->setParameter('paramId' , $paramId)
+            ->setParameter('paramId', $paramId)
             ->andWhere('logementUnifie.id = :logementUnifieId')
-            ->setParameter('logementUnifieId' ,$logementUnifieId )
-        ;
+            ->setParameter('logementUnifieId', $logementUnifieId);
 
         $result = $qb->getQuery()->getOneOrNullResult();
 
@@ -50,8 +48,7 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
             ->join('prestationAnnexeLogements.logement', 'logement')
             ->join('logement.logementUnifie', 'logementUnifie')
             ->andWhere('logementUnifie.id = :logementUnifieId')
-            ->setParameter('logementUnifieId' ,$logementUnifieId )
-        ;
+            ->setParameter('logementUnifieId', $logementUnifieId);
 
         $result = $qb->getQuery()->getResult();
 

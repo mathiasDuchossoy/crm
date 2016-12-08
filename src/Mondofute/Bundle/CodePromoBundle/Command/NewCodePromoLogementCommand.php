@@ -27,8 +27,7 @@ class NewCodePromoLogementCommand extends ContainerAwareCommand
         $this
             ->setName('creer:codePromoLogement')
             ->setDescription('Création des codePromoLogement pour le logement')
-            ->addArgument('logementUnifieId', InputArgument::REQUIRED, 'id de logement unifie.')
-        ;
+            ->addArgument('logementUnifieId', InputArgument::REQUIRED, 'id de logement unifie.');
     }
 
     /**
@@ -48,35 +47,30 @@ class NewCodePromoLogementCommand extends ContainerAwareCommand
         $logementUnifie = $em->find(LogementUnifie::class, $logementUnifieId);
 
         $arrayCodePromoLogements = new ArrayCollection();
-        foreach ($logementUnifie->getLogements() as $logement)
-        {
+        foreach ($logementUnifie->getLogements() as $logement) {
             $codePromoHebergements = new ArrayCollection($em->getRepository(CodePromoHebergement::class)->findBy(array(
                 'fournisseur' => $logement->getFournisseurHebergement()->getFournisseur(),
-                'hebergement' => $logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($logement){
+                'hebergement' => $logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($logement) {
                     return $element->getSite() == $logement->getSite();
                 })->first()
             ))
             );
-            foreach ($codePromoHebergements as $codePromoHebergement)
-            {
+            foreach ($codePromoHebergements as $codePromoHebergement) {
                 $codePromoLogement = new CodePromoLogement();
                 $em->persist($codePromoLogement);
                 $codePromoLogement
                     ->setCodePromo($codePromoHebergement->getCodePromo())
-                    ->setLogement($logement)
-                ;
+                    ->setLogement($logement);
                 $arrayCodePromoLogements->add($codePromoLogement);
             }
         }
         $em->flush();
 
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-        foreach ($sites as $site)
-        {
-            $emSite = $this->getContainer()->get('doctrine.orm.'.$site->getLibelle().'_entity_manager');
-            foreach ($arrayCodePromoLogements as $codePromoLogement)
-            {
-                if($codePromoLogement->getCodePromo()->getSite() == $site){
+        foreach ($sites as $site) {
+            $emSite = $this->getContainer()->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+            foreach ($arrayCodePromoLogements as $codePromoLogement) {
+                if ($codePromoLogement->getCodePromo()->getSite() == $site) {
                     $codePromoLogementSite = new CodePromoLogement();
                     $emSite->persist($codePromoLogementSite);
                     $codePromoLogementSite->setId($codePromoLogement->getId());
@@ -85,8 +79,7 @@ class NewCodePromoLogementCommand extends ContainerAwareCommand
 
                     $codePromoLogementSite
                         ->setCodePromo($emSite->getRepository(CodePromo::class)->findOneBy(array('codePromoUnifie' => $codePromoLogement->getCodePromo()->getCodePromoUnifie())))
-                        ->setLogement($emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logementUnifieId)))
-                    ;
+                        ->setLogement($emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logementUnifieId)));
                 }
             }
             $emSite->flush();

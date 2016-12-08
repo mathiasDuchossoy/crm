@@ -36,10 +36,9 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
             ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
             ->where("fournisseur.contient = :contient")
             ->setParameter('contient', FournisseurContient::PRODUIT)
-            ->join('fournisseur.types' , 'types')
+            ->join('fournisseur.types', 'types')
             ->andWhere('types.id = :typeId')
-            ->setParameter('typeId' , 9)
-        ;
+            ->setParameter('typeId', 9);
         if (!empty($enseigne)) {
             $qb->andWhere("fournisseur.enseigne LIKE :enseigne")
 //            ->setParameters(array('contient'=> FournisseurContient::FOURNISSEUR , 'id' => $fournisseurId))
@@ -95,12 +94,10 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('contient', $contient);
         $qb->orderBy('fournisseur.id', 'ASC');
 
-        if(!empty($fournisseurId))
-        {
+        if (!empty($fournisseurId)) {
             $qb
                 ->andWhere('fournisseur.id = :fournisseurId')
-                ->setParameter('fournisseurId' , $fournisseurId)
-            ;
+                ->setParameter('fournisseurId', $fournisseurId);
         }
 
         $result = $qb->getQuery()->getResult();
@@ -113,12 +110,24 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
             ->select('fournisseur')
-            ->from('MondofuteFournisseurBundle:Fournisseur' , 'fournisseur')
-            ->join('fournisseur.prestationAnnexes' , 'prestationAnnexes')
-        ;
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->join('fournisseur.prestationAnnexes', 'prestationAnnexes');
 
         $result = $q->getQuery()->getResult();
 //        dump($result);die;
+        return $result;
+    }
+
+    public function findByFamillePrestationAnnexe($famillePrestationAnnexeId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('fournisseur')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->join('fournisseur.types', 'types')
+            ->where('types.id = :famillePrestationAnnexeId')
+            ->setParameter('famillePrestationAnnexeId', $famillePrestationAnnexeId);
+
+        $result = $q->getQuery()->getResult();
         return $result;
     }
 }

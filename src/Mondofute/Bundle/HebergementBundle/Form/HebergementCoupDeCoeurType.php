@@ -15,7 +15,7 @@ class HebergementCoupDeCoeurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateHeureDebut', DateTimeType::class ,
+            ->add('dateHeureDebut', DateTimeType::class,
                 array(
                     'required' => true,
                     'widget' => 'single_text',
@@ -27,7 +27,7 @@ class HebergementCoupDeCoeurType extends AbstractType
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     ),
                 ))
-            ->add('dateHeureFin', DateTimeType::class ,
+            ->add('dateHeureFin', DateTimeType::class,
                 array(
 //                    'required' => true,
                     'widget' => 'single_text',
@@ -38,10 +38,9 @@ class HebergementCoupDeCoeurType extends AbstractType
                         'data-date-format' => 'dd/MM/yyyy HH:mm',
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     ),
-                ))
-        ;
+                ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

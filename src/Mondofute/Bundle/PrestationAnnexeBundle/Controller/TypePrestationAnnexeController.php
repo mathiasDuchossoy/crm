@@ -2,11 +2,10 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\TypePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * TypePrestationAnnexe controller.
@@ -68,6 +67,21 @@ class TypePrestationAnnexeController extends Controller
     }
 
     /**
+     * Creates a form to delete a TypePrestationAnnexe entity.
+     *
+     * @param TypePrestationAnnexe $typePrestationAnnexe The TypePrestationAnnexe entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(TypePrestationAnnexe $typePrestationAnnexe)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('typeprestationannexe_delete', array('id' => $typePrestationAnnexe->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
      * Displays a form to edit an existing TypePrestationAnnexe entity.
      *
      */
@@ -108,21 +122,5 @@ class TypePrestationAnnexeController extends Controller
         }
 
         return $this->redirectToRoute('typeprestationannexe_index');
-    }
-
-    /**
-     * Creates a form to delete a TypePrestationAnnexe entity.
-     *
-     * @param TypePrestationAnnexe $typePrestationAnnexe The TypePrestationAnnexe entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(TypePrestationAnnexe $typePrestationAnnexe)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('typeprestationannexe_delete', array('id' => $typePrestationAnnexe->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

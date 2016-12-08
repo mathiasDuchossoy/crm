@@ -21,10 +21,9 @@ class SecteurTraductionType extends AbstractType
             ->add('affichageTexte')
             ->add('description', TextareaType::class, array('required' => false))
 //            ->add('secteur')
-            ->add('langue', HiddenType::class, array('mapped' => false));
-        ;
+            ->add('langue', HiddenType::class, array('mapped' => false));;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

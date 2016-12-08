@@ -17,7 +17,7 @@
         <ul class="list-unstyled">
             <li><a href="{{ path('type_service_index') }}">{{ ('retour.liste' | trans) | capitalize }}</a></li>
             {% if(typeService.services | length) == 0 %}
-            <li>{{ form(delete_form) }}</li>
+                <li>{{ form(delete_form) }}</li>
             {% endif %}
         </ul>
     </div>

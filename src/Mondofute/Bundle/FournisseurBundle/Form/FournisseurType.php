@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;

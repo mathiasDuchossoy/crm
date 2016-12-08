@@ -2,11 +2,10 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CodePromoBundle\Form\CodePromoType;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * CodePromo controller.
@@ -68,6 +67,21 @@ class CodePromoController extends Controller
     }
 
     /**
+     * Creates a form to delete a CodePromo entity.
+     *
+     * @param CodePromo $codePromo The CodePromo entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(CodePromo $codePromo)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('codepromo_delete', array('id' => $codePromo->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+
+    /**
      * Displays a form to edit an existing CodePromo entity.
      *
      */
@@ -108,21 +122,5 @@ class CodePromoController extends Controller
         }
 
         return $this->redirectToRoute('codepromo_index');
-    }
-
-    /**
-     * Creates a form to delete a CodePromo entity.
-     *
-     * @param CodePromo $codePromo The CodePromo entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(CodePromo $codePromo)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('codepromo_delete', array('id' => $codePromo->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
     }
 }

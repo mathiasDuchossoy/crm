@@ -16,7 +16,7 @@ class Application
     const fraisDeDossier = 3;
 
     public static $libelles = array(
-        Application::logement      => 'Logement',
+        Application::logement => 'Logement',
         Application::prestationAnnexe => 'Prestations annexe',
         Application::fraisDeDossier => 'Frais de dossier',
     );

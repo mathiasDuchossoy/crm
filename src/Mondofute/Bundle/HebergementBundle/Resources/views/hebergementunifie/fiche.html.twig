@@ -36,7 +36,7 @@
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
                         {#{{ form_row(hebergement.motClefs) }}#}
                         {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefs , 'siteId' : hebergement.vars.value.site.id} %}
-                        {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur }%}
+                        {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur } %}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Emplacements</label>
                             <div class="row">
@@ -736,8 +736,8 @@
             $('#tabFournisseursAssocies').append(ligne);
         }
         function afficherModaleAjoutRemiseClef(idFournisseur) {
-            if (!$("#remise_clef_fournisseur option[value='"+idFournisseur+"']").length > 0){
-                $("#remise_clef_fournisseur").append('<option value="'+idFournisseur+'">'+idFournisseur+'</option>');
+            if (!$("#remise_clef_fournisseur option[value='" + idFournisseur + "']").length > 0) {
+                $("#remise_clef_fournisseur").append('<option value="' + idFournisseur + '">' + idFournisseur + '</option>');
             }
             $('#remise_clef_fournisseur option').each(function () {
                 if (parseInt($(this).attr('value')) == parseInt(idFournisseur)) {
@@ -1068,7 +1068,9 @@
                 },
                 cache: true
             },
-            escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+            escapeMarkup: function (markup) {
+                return markup;
+            }, // let our custom formatter work
             minimumInputLength: 1,
 //            data: data,
             tags: true,
@@ -1076,7 +1078,7 @@
                 return {
                     id: params.term,
                     text: params.term,
-                    isNew : true
+                    isNew: true
                 }
             },
             insertTag: function (data, tag) {
@@ -1089,11 +1091,11 @@
         $eventSelect.on("select2:select", function (e) {
 
             var langue = $(this).data('langue');
-            var id  = e.params.data.id;
-            if(e.params.data.isNew){
+            var id = e.params.data.id;
+            if (e.params.data.isNew) {
                 // append the new option element prenamently:
                 // store the new tag:
-                $.ajax("{{ path('mondofute_mot_clef_new') }}",{
+                $.ajax("{{ path('mondofute_mot_clef_new') }}", {
                     data: {
                         value: e.params.data.text,
                         langue: langue
@@ -1103,7 +1105,7 @@
                     id = data;
                 });
             }
-            $(this).find('[value="'+e.params.data.id+'"]').replaceWith('<option selected value="'+id+'">'+e.params.data.text+'</option>');
+            $(this).find('[value="' + e.params.data.id + '"]').replaceWith('<option selected value="' + id + '">' + e.params.data.text + '</option>');
         });
         // *** fin gestion select2 ***
 

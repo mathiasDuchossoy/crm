@@ -381,15 +381,20 @@
             var $element = $(element);
             var $listGroup = $('#' + listGroup);
             $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
-            $listGroup.find('input:checkbox[id^="checkbox_all_logement_"]').each(function (index, val) {
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
                 $(val).triggerHandler('click');
             })
         }
 
         function checkChilFamillePrestationAnnexe(element, classFamille) {
             var $element = $(element);
-            var listGroup = $('#' + $element.data('list_group'));
-            listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
+            var $listGroup = $('#' + $element.data('list_group'));
+            $listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
+                console.log(val);
+                $(val).triggerHandler('click');
+            })
         }
 
         function checkListStationHebergement(checkbox, className) {
@@ -398,6 +403,7 @@
                 $(element).find('input:checkbox[id^="checkbox_all_logement_"]').triggerHandler('click');
             })
         }
+
 
         $(document).ready(function () {
             {% if panelPromotion is defined %}

@@ -19,16 +19,6 @@ class PrestationAnnexeUnifie
     private $prestationAnnexes;
 
     /**
-     * @param $id
-     * @return $this
-     */
-    public function setId($id){
-        $this->id   = $id;
-
-        return $this;
-    }
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -47,15 +37,12 @@ class PrestationAnnexeUnifie
     }
 
     /**
-     * Add prestationAnnexe
-     *
-     * @param PrestationAnnexe $prestationAnnexe
-     *
-     * @return PrestationAnnexeUnifie
+     * @param $id
+     * @return $this
      */
-    public function addPrestationAnnexe(PrestationAnnexe $prestationAnnexe)
+    public function setId($id)
     {
-        $this->prestationAnnexes[] = $prestationAnnexe->setPrestationAnnexeUnifie($this);
+        $this->id = $id;
 
         return $this;
     }
@@ -91,6 +78,20 @@ class PrestationAnnexeUnifie
         foreach ($prestationAnnexes as $prestationAnnexe) {
             $this->addPrestationAnnexe($prestationAnnexe);
         }
+        return $this;
+    }
+
+    /**
+     * Add prestationAnnexe
+     *
+     * @param PrestationAnnexe $prestationAnnexe
+     *
+     * @return PrestationAnnexeUnifie
+     */
+    public function addPrestationAnnexe(PrestationAnnexe $prestationAnnexe)
+    {
+        $this->prestationAnnexes[] = $prestationAnnexe->setPrestationAnnexeUnifie($this);
+
         return $this;
     }
 }

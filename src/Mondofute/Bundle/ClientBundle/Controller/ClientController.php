@@ -404,7 +404,7 @@ class ClientController extends Controller
             foreach ($sites as $site) {
                 $emSite = $this->getDoctrine()->getManager($site->getLibelle());
                 $clientUserSite = $emSite->find(ClientUser::class, $clientUser->getId());
-                
+
                 if (!empty($clientUserSite)) {
                     $clientSite = $clientUserSite->getClient();
                     foreach ($clientSite->getMoyenComs() as $moyenComSite) {
@@ -413,7 +413,7 @@ class ClientController extends Controller
                     }
 
                     $codePromoClients = $emSite->getRepository(CodePromoClient::class)->findBy(array('client' => $clientSite));
-                    foreach ($codePromoClients as $codePromoClient){
+                    foreach ($codePromoClients as $codePromoClient) {
                         $emSite->remove($codePromoClient);
                     }
 
@@ -431,7 +431,7 @@ class ClientController extends Controller
             }
 
             $codePromoClients = $em->getRepository(CodePromoClient::class)->findBy(array('client' => $client));
-            foreach ($codePromoClients as $codePromoClient){
+            foreach ($codePromoClients as $codePromoClient) {
                 $em->remove($codePromoClient);
             }
 
@@ -441,7 +441,7 @@ class ClientController extends Controller
             $em->remove($clientUser);
             $em->flush();
 
-            $this->addFlash('success','Le client a bien été suppimé
+            $this->addFlash('success', 'Le client a bien été suppimé
             .');
         }
 

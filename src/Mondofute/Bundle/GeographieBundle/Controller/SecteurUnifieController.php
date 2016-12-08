@@ -86,8 +86,8 @@ class SecteurUnifieController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Secteur $entity */
-            foreach ($secteurUnifie->getSecteurs() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($secteurUnifie->getSecteurs() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
                 }
             }
@@ -325,8 +325,7 @@ class SecteurUnifieController extends Controller
                 $secteurSite
                     ->setSite($site)
                     ->setSecteurUnifie($entitySite)
-                    ->setActif($secteur->getActif())
-                ;
+                    ->setActif($secteur->getActif());
 
 //            Gestion des traductions
                 foreach ($secteur->getTraductions() as $secteurTraduc) {
@@ -742,7 +741,7 @@ class SecteurUnifieController extends Controller
 //            récupère les sites ayant la région d'enregistrée
             /** @var Secteur $entity */
             foreach ($secteurUnifie->getSecteurs() as $entity) {
-                if ($entity->getActif()){
+                if ($entity->getActif()) {
                     array_push($sitesAEnregistrer, $entity->getSite()->getId());
                 }
             }
@@ -787,10 +786,10 @@ class SecteurUnifieController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            foreach ($secteurUnifie->getSecteurs() as $entity){
-                if(false === in_array($entity->getSite()->getId(),$sitesAEnregistrer)){
+            foreach ($secteurUnifie->getSecteurs() as $entity) {
+                if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
-                }else{
+                } else {
                     $entity->setActif(true);
                 }
             }
@@ -1241,7 +1240,6 @@ class SecteurUnifieController extends Controller
         }
         return $this->redirectToRoute('geographie_secteur_index');
     }
-
 
 
 }

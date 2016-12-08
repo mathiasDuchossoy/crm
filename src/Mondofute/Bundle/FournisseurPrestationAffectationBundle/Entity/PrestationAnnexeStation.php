@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
 
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 

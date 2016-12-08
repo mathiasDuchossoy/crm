@@ -24,10 +24,9 @@ class PrestationAnnexeTarifType extends AbstractType
                 'by_reference' => false,
                 'translation_domain' => 'messages',
                 'prototype_name' => '__periode_validite_name__',
-            ))
-        ;
+            ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

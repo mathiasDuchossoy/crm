@@ -6,10 +6,10 @@
 
         {% for fournisseur in fournisseursTypeHebergement %}
 
-        {% set hebergementExists = false %}
-        {#{% if codePromo.codePromoHebergements is not empty and fournisseurHebergements[codePromo.vars.value.id][fournisseur.id] is defined %}#}
+            {% set hebergementExists = false %}
+            {#{% if codePromo.codePromoHebergements is not empty and fournisseurHebergements[codePromo.vars.value.id][fournisseur.id] is defined %}#}
             {#{% set hebergementExists = true %}#}
-        {#{% endif %}#}
+            {#{% endif %}#}
             {% if codePromo.codePromoHebergements is defined %}
                 {% for codePromoHebergement in codePromo.codePromoHebergements %}
                     {% if codePromoHebergement.vars.value.fournisseur.id == fournisseur.id %}
@@ -25,17 +25,19 @@
                         <div class="checkbox">
                             <label><input type="checkbox" value="{{ fournisseur.id }}"
                                           onclick="checkChildren(this , 'code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements')"
-                                          {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
+                                        {#name="codePromoFournisseurs[{{ codePromo.vars.value.id }}][]"#}
                                           name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}1][fournisseur]"
                                         {% if codePromo.codePromoHebergements is defined %}
                                             {% for codePromoFournisseur in codePromo.codePromoFournisseurs %}
-                                                {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id  and codePromoFournisseur.type.vars.value == 1%}
+                                                {% if codePromoFournisseur.fournisseur.vars.value == fournisseur.id  and codePromoFournisseur.type.vars.value == 1 %}
                                                     checked="checked"
                                                 {% endif %}
                                             {% endfor %}
                                         {% endif %}
                                 >
-                                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}1][type]" value="1"/>
+                                <input type="hidden"
+                                       name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFournisseurs][{{ fournisseur.id }}1][type]"
+                                       value="1"/>
                                 <a
                                         data-toggle="collapse"
                                         href="#collapse_code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements"
@@ -61,10 +63,10 @@
                         id="code_promo_{{ codePromo.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
                         {#{% if hebergementExists == true %}#}
                         {#{% include ('@MondofuteCodePromo/codepromounifie/get-promotion-fournisseur-hebergements.html.twig') with {#}
-                            {#'hebergements' : fournisseurHebergements[codePromo.vars.value.id][fournisseur.id],#}
-                            {#'fournisseurId': fournisseur.id,#}
-                            {#'codePromoId' : codePromo.vars.value.id#}
-                            {#} %}#}
+                        {#'hebergements' : fournisseurHebergements[codePromo.vars.value.id][fournisseur.id],#}
+                        {#'fournisseurId': fournisseur.id,#}
+                        {#'codePromoId' : codePromo.vars.value.id#}
+                        {#} %}#}
                         {#{% endif %}#}
                     </ul>
                 </div>

@@ -1102,7 +1102,6 @@ class ZoneTouristiqueUnifieController extends Controller
                 // *** fin gestion des videos ***
 
 
-
                 // ***** Gestion des Medias *****
                 // CAS D'UN NOUVEAU 'ZoneTouristique IMAGE' OU DE MODIFICATION D'UN "ZoneTouristique IMAGE"
                 /** @var ZoneTouristiqueImage $zoneTouristiqueImage */

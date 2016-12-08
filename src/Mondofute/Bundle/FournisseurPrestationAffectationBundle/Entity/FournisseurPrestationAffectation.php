@@ -2,8 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity;
 
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**

@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\CodePromoBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 
 /**
  * CodePromoUnifie

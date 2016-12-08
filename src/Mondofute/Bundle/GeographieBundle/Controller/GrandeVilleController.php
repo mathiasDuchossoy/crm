@@ -2,25 +2,21 @@
 
 namespace Mondofute\Bundle\GeographieBundle\Controller;
 
-use Aamant\Distance\Distance;
-use Aamant\Distance\Providers\GoogleMapProvider;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Geocoder\HttpAdapter\CurlHttpAdapter;
 use Geocoder\Provider\GoogleMaps;
-use Illuminate\Support\Facades\Lang;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVilleTraduction;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * Grandeville controller.
@@ -77,27 +73,26 @@ class GrandeVilleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+            $curl = new \Geocoder\HttpAdapter\CurlHttpAdapter();
             $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
 
-            $traduction_fr = $grandeVille->getTraductions()->filter(function(GrandeVilleTraduction $element){
+            $traduction_fr = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element) {
                 return $element->getLangue()->getCode() == 'fr_FR';
             })->first();
 
-            try{
+            try {
                 $geocodedDatas = $geocoder->getGeocodedData($traduction_fr->getLibelle());
                 $geocodedData = $geocodedDatas[0];
-            }catch (\Geocoder\Exception\NoResultException $exception){
+            } catch (\Geocoder\Exception\NoResultException $exception) {
                 $geocodedData = null;
             }
 
-            if(!empty($geocodedData)){
+            if (!empty($geocodedData)) {
                 $gps = new CoordonneesGPS();
                 $grandeVille->setCoordonneesGps($gps);
                 $gps
                     ->setLatitude($geocodedData['latitude'])
-                    ->setLongitude($geocodedData['longitude'])
-                ;
+                    ->setLongitude($geocodedData['longitude']);
             }
 
             $em->persist($grandeVille);
@@ -178,17 +173,16 @@ class GrandeVilleController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
             }
             // *** gps ***
-            if(!empty($grandeVille->getCoordonneesGps())){
-                if(empty($gps = $grandeVilleSite->getCoordonneesGps())){
+            if (!empty($grandeVille->getCoordonneesGps())) {
+                if (empty($gps = $grandeVilleSite->getCoordonneesGps())) {
                     $gps = new CoordonneesGPS();
                     $grandeVilleSite->setCoordonneesGps($gps);
                 }
                 $gps
                     ->setLongitude($grandeVille->getCoordonneesGps()->getLongitude())
-                    ->setLatitude($grandeVille->getCoordonneesGps()->getLatitude())
-                ;
-            }else{
-                if(!empty($grandeVilleSite->getCoordonneesGps())){
+                    ->setLatitude($grandeVille->getCoordonneesGps()->getLatitude());
+            } else {
+                if (!empty($grandeVilleSite->getCoordonneesGps())) {
                     $emSite->remove($grandeVilleSite->getCoordonneesGps());
                 }
             }
@@ -256,31 +250,30 @@ class GrandeVilleController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+            $curl = new \Geocoder\HttpAdapter\CurlHttpAdapter();
             $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
 
-            $traduction_fr = $grandeVille->getTraductions()->filter(function(GrandeVilleTraduction $element){
+            $traduction_fr = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element) {
                 return $element->getLangue()->getCode() == 'fr_FR';
             })->first();
 
-            try{
+            try {
                 $geocodedDatas = $geocoder->getGeocodedData($traduction_fr->getLibelle());
                 $geocodedData = $geocodedDatas[0];
-            }catch (\Geocoder\Exception\NoResultException $exception){
+            } catch (\Geocoder\Exception\NoResultException $exception) {
                 $geocodedData = null;
             }
 
-            if(!empty($geocodedData)){
-                if(empty($gps = $grandeVille->getCoordonneesGps())){
+            if (!empty($geocodedData)) {
+                if (empty($gps = $grandeVille->getCoordonneesGps())) {
                     $gps = new CoordonneesGPS();
                     $grandeVille->setCoordonneesGps($gps);
                 }
                 $gps
                     ->setLatitude($geocodedData['latitude'])
-                    ->setLongitude($geocodedData['longitude'])
-                ;
-            }else{
-                if(!empty($grandeVille->getCoordonneesGps())){
+                    ->setLongitude($geocodedData['longitude']);
+            } else {
+                if (!empty($grandeVille->getCoordonneesGps())) {
                     $em->remove($grandeVille->getCoordonneesGps());
                     $grandeVille->setCoordonneesGps(null);
                 }
@@ -314,15 +307,14 @@ class GrandeVilleController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try{
+            try {
 
                 $em = $this->getDoctrine()->getManager();
 
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                foreach ($sites as $site)
-                {
+                foreach ($sites as $site) {
                     $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-                    $grandeVilleSite = $emSite->find(GrandeVille::class , $grandeVille->getId());
+                    $grandeVilleSite = $emSite->find(GrandeVille::class, $grandeVille->getId());
                     $emSite->remove($grandeVilleSite);
                     $emSite->flush();
                 }
@@ -331,9 +323,7 @@ class GrandeVilleController extends Controller
                 $em->flush();
 
                 $this->addFlash('success', 'Grande ville supprimé avec succès.');
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $this->addFlash('error', 'La grande ville est utilisé par une autre entité.');
             }
         }

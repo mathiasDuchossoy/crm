@@ -49,7 +49,8 @@
                         {% if coupDeCoeur == true %}
                             <li>
                                 {{ form_start(formsDeletes[hebergementUnifie.id]) }}
-                                <button type="submit" id="form_delete" name="form[delete]" class="btn-default btn">Supprimer coup de coeur
+                                <button type="submit" id="form_delete" name="form[delete]" class="btn-default btn">
+                                    Supprimer coup de coeur
                                 </button>
                                 {#{{ form_widget(formsDeletes[hebergementUnifie.id].delete) }}#}
                                 {{ form_widget(formsDeletes[hebergementUnifie.id]._token) }}

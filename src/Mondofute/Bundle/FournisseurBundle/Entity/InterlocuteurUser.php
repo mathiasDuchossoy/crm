@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
 use Mondofute\Bundle\CoreBundle\Entity\User;
 
 /**

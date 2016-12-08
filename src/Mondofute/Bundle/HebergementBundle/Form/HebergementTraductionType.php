@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,8 +26,7 @@ class HebergementTraductionType extends AbstractType
             ->add('accroche', null, array('required' => false))
             ->add('generalite', null, array('required' => false))
             ->add('avisHebergement', null, array('required' => false))
-            ->add('avisLogement', null, array('required' => false))
-        ;
+            ->add('avisLogement', null, array('required' => false));
     }
 
     /**

@@ -13,14 +13,6 @@ class FamillePrestationAnnexe
      * @var int
      */
     private $id;
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -51,6 +43,14 @@ class FamillePrestationAnnexe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**

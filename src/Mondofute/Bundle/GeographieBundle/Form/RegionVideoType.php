@@ -91,7 +91,7 @@ class RegionVideoType extends AbstractType
                 'required' => true,
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

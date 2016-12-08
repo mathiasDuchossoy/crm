@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\StationBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -36,7 +37,7 @@ class StationLabelRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->createQueryBuilder('entity')
             ->select('entity')
-            ->join('entity.traductions' , 'traductions')
+            ->join('entity.traductions', 'traductions')
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
@@ -60,12 +61,11 @@ class StationLabelRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('entity , traductions')
             ->from('MondofuteStationBundle:StationLabel', 'entity')
-            ->join('entity.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('entity.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
-            ->orderBy('traductions.libelle', 'ASC')
-        ;
+            ->orderBy('traductions.libelle', 'ASC');
 
         return $qb;
     }

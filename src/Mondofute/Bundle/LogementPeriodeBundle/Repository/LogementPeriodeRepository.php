@@ -55,8 +55,7 @@ class LogementPeriodeRepository extends \Doctrine\ORM\EntityRepository
                                 ->setStock($result['stock'])
                                 ->setPrixPublic($result['prixPublic'])
                                 ->setPrixFournisseur($result['prixFournisseur'])
-                                ->setPrixAchat($result['prixAchat'])
-                            ;
+                                ->setPrixAchat($result['prixAchat']);
                             $logementPeriode->setLocatif($locatif);
                         }
                     }

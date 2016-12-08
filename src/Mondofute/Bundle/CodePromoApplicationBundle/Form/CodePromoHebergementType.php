@@ -17,15 +17,14 @@ class CodePromoHebergementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hebergement' , EntityType::class , array(
+            ->add('hebergement', EntityType::class, array(
                 'class' => Hebergement::class,
                 'property' => 'id'
             ))
-            ->add('fournisseur')
-//            ->add('codePromo')
+            ->add('fournisseur')//            ->add('codePromo')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

@@ -55,5 +55,5 @@ class DomaineCarteIdentiteUnifieType extends AbstractType
             }
         }
     }
-    
+
 }

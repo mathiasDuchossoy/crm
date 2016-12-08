@@ -8,8 +8,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -17,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 
 class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
 {
@@ -29,8 +26,7 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
         $this
             ->setName('edit:prestationAnnexeLogement')
             ->setDescription('Mise à jours des prestation annexe pour les logements')
-            ->addArgument('logementUnifieId', InputArgument::REQUIRED, 'id de logement unifie.')
-        ;
+            ->addArgument('logementUnifieId', InputArgument::REQUIRED, 'id de logement unifie.');
     }
 
     /**
@@ -50,30 +46,25 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
         /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
         /** @var PrestationAnnexeLogementUnifie $prestationAnnexeLogementUnifie */
 
-        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId , $fournisseurId);
+        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId, $fournisseurId);
         $prestationAnnexeLogementUnifies = new ArrayCollection();
-        foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie)
-        {
+        foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
             $paramId = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->first()->getParam()->getId();
-            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($paramId  , $logementUnifieId);
+            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($paramId, $logementUnifieId);
             $prestationAnnexeLogementUnifies->add($prestationAnnexeLogementUnifie);
             $em->persist($prestationAnnexeLogementUnifie);
-            foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement)
-            {
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement)
-                {
+            foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
                     return $element->getSite() == $prestationAnnexeHebergement->getSite();
                 })->first();
 
                 $capacite = $prestationAnnexeHebergement->getParam()->getCapacite();
                 $actif = false;
-                if(empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax())  )
-                {
+                if (empty($capacite) or (!empty($capacite) and $capacite->getMin() <= $prestationAnnexeLogement->getLogement()->getCapacite() and $prestationAnnexeLogement->getLogement()->getCapacite() <= $capacite->getMax())) {
                     $actif = $prestationAnnexeHebergement->getActif();
                 }
                 $prestationAnnexeLogement
-                    ->setActif($actif)
-                ;
+                    ->setActif($actif);
             }
         }
 
@@ -81,23 +72,20 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
 
         /** @var PrestationAnnexeLogementUnifie $prestationAnnexeLogementUnifie */
         /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-        foreach ($sites as $site)
-        {
+        foreach ($sites as $site) {
             /** @var EntityManager $emSite */
-            $emSite = $this->getContainer()->get('doctrine.orm.'.$site->getLibelle().'_entity_manager');
-            foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie)
-            {
+            $emSite = $this->getContainer()->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
+            foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie) {
                 $prestationAnnexeLogementUnifieSite = $emSite->find(PrestationAnnexeLogementUnifie::class, $prestationAnnexeLogementUnifie);
                 $emSite->persist($prestationAnnexeLogementUnifieSite);
 
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($site){
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($site) {
                     return $element->getSite() == $site;
                 })->first();
 
                 $prestationAnnexeLogementSite = $prestationAnnexeLogementUnifieSite->getPrestationAnnexeLogements()->first();
                 $prestationAnnexeLogementSite
-                    ->setActif($prestationAnnexeLogement->getActif())
-                ;
+                    ->setActif($prestationAnnexeLogement->getActif());
             }
             $emSite->flush();
         }

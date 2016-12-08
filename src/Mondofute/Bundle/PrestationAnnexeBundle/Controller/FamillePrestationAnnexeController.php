@@ -5,15 +5,14 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexeTraduction;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 
 /**
  * FamillePrestationAnnexe controller.
@@ -45,8 +44,7 @@ class FamillePrestationAnnexeController extends Controller
         );
 
         $entities = $this->getDoctrine()->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')
-            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray)
-        ;
+            ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/index.html.twig', array(
             'famillePrestationAnnexes' => $entities,
@@ -95,8 +93,7 @@ class FamillePrestationAnnexeController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\FamillePrestationAnnexeType', $famillePrestationAnnexe);
         $editForm
-            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'))
-        ;
+            ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -105,7 +102,7 @@ class FamillePrestationAnnexeController extends Controller
             foreach ($originalSousFamillePrestationAnnexes as $sousFamillePrestationAnnexe) {
                 if (false === $famillePrestationAnnexe->getSousFamillePrestationAnnexes()->contains($sousFamillePrestationAnnexe)) {
                     // if you wanted to delete the Tag entirely, you can also do that
-                    if(!$sousFamillePrestationAnnexe->getFamillePrestationAnnexe()->getPrestationAnnexes()->isEmpty()){
+                    if (!$sousFamillePrestationAnnexe->getFamillePrestationAnnexe()->getPrestationAnnexes()->isEmpty()) {
                         $this->addFlash('error', 'Impossible de supprimer cette sous-famille car elle est lié à une prestation annexe.');
                         $referer = $request->headers->get('referer');
                         return $this->redirect($referer);
@@ -124,15 +121,15 @@ class FamillePrestationAnnexeController extends Controller
             $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
             $this->udpateSites($famillePrestationAnnexe, $sites);
 
-            $this->addFlash('success' , 'Le famille de prestation externe a bien été modifié.');
+            $this->addFlash('success', 'Le famille de prestation externe a bien été modifié.');
 
             return $this->redirectToRoute('familleprestationannexe_edit', array('id' => $famillePrestationAnnexe->getId()));
         }
 
         return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/edit.html.twig', array(
-            'famillePrestationAnnexe'  => $famillePrestationAnnexe,
-            'form'                  => $editForm->createView(),
-            'langues'                => $langues
+            'famillePrestationAnnexe' => $famillePrestationAnnexe,
+            'form' => $editForm->createView(),
+            'langues' => $langues
         ));
     }
 
@@ -146,9 +143,9 @@ class FamillePrestationAnnexeController extends Controller
         /** @var FamillePrestationAnnexeTraduction $traduction */
         /** @var Site $site */
         /** @var EntityManager $emSite */
-        foreach ($sites as $site){
-            $emSite  = $this->getDoctrine()->getManager($site->getLibelle());
-            $famillePrestationAnnexeSite = $emSite->find(FamillePrestationAnnexe::class,$famillePrestationAnnexe);
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $famillePrestationAnnexeSite = $emSite->find(FamillePrestationAnnexe::class, $famillePrestationAnnexe);
 
             // modification des traductions du famillePrestationAnnexe
             foreach ($famillePrestationAnnexe->getTraductions() as $traduction) {

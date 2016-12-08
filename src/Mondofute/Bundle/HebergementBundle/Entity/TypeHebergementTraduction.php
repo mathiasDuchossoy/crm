@@ -80,7 +80,8 @@ class TypeHebergementTraduction
      */
     public function setTypeHebergement(
         TypeHebergement $typeHebergement = null
-    ) {
+    )
+    {
         $this->typeHebergement = $typeHebergement;
 
         return $this;

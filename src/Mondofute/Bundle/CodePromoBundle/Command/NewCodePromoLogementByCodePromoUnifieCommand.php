@@ -2,16 +2,13 @@
 
 namespace Mondofute\Bundle\CodePromoBundle\Command;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromoUnifie;
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,8 +25,7 @@ class NewCodePromoLogementByCodePromoUnifieCommand extends ContainerAwareCommand
         $this
             ->setName('creer:codePromoLogementByCodePromoUnifie')
             ->setDescription('Création des codePromoLogement pour le logement')
-            ->addArgument('codePromoUnifieId', InputArgument::REQUIRED, 'id de logement unifie.')
-        ;
+            ->addArgument('codePromoUnifieId', InputArgument::REQUIRED, 'id de logement unifie.');
     }
 
     /**
@@ -72,13 +68,13 @@ class NewCodePromoLogementByCodePromoUnifieCommand extends ContainerAwareCommand
         $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
 
         // *** gestion code promo logement ***
-        foreach ($sites as $site){
-            $emSite = $this->getContainer()->get('doctrine.orm.'.$site->getLibelle().'_entity_manager');
+        foreach ($sites as $site) {
+            $emSite = $this->getContainer()->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
 
-            $entity = $codePromoUnifie->getCodePromos()->filter(function (CodePromo $element) use ($site){
+            $entity = $codePromoUnifie->getCodePromos()->filter(function (CodePromo $element) use ($site) {
                 return $element->getSite() == $site;
             })->first();
-            $entitySite = $emSite->getRepository(CodePromo::class)->findOneBy(array('codePromoUnifie' =>$codePromoUnifieId ));
+            $entitySite = $emSite->getRepository(CodePromo::class)->findOneBy(array('codePromoUnifie' => $codePromoUnifieId));
             if (!empty($entity->getCodePromoLogements()) && !$entity->getCodePromoLogements()->isEmpty()) {
                 /** @var CodePromoLogement $codePromoLogement */
                 foreach ($entity->getCodePromoLogements() as $codePromoLogement) {

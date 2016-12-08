@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
+
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 

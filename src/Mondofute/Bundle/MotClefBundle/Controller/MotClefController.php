@@ -31,21 +31,18 @@ class MotClefController extends Controller
         $motClef = new MotClef();
         $motClef
             ->setLibelle($motClefText)
-            ->setLangue($em->find(Langue::class, $langue))
-        ;
+            ->setLangue($em->find(Langue::class, $langue));
         $em->persist($motClef);
         $em->flush();
 
         $sites = $em->getRepository(Site::class)->findBy(['crm' => 0]);
-        foreach ($sites as $site)
-        {
+        foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $motClefSite = new MotClef();
             $motClefSite
                 ->setId($motClef->getId())
                 ->setLibelle($motClefText)
-                ->setLangue($emSite->find(Langue::class, $langue))
-            ;
+                ->setLangue($emSite->find(Langue::class, $langue));
 
             $metadata = $emSite->getClassMetadata(get_class($motClefSite));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);

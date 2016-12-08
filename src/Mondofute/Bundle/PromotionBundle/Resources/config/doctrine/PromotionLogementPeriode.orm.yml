@@ -9,7 +9,7 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode:
             associationKey: true
         logement:
             associationKey: true
-    oneToOne:
+    manyToOne:
         promotion:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
         periode:

@@ -5,13 +5,13 @@ namespace Mondofute\Bundle\StationBundle\Controller;
 use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationDescriptionUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -518,8 +518,8 @@ class StationDescriptionUnifieController extends Controller
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $stationDescriptionUnifieSite = $emSite->find(StationDescriptionUnifie::class, $stationDescriptionUnifie->getId());
             if (!empty($stationDescriptionUnifieSite)) {
-                foreach ($stationDescriptionUnifieSite->getStationDescriptions() as $stationDescriptionSite){
-                    if ($stationDescriptionSite->getStations()->count() <= 1 ){
+                foreach ($stationDescriptionUnifieSite->getStationDescriptions() as $stationDescriptionSite) {
+                    if ($stationDescriptionSite->getStations()->count() <= 1) {
                         $emSite->remove($stationDescriptionSite);
                     } else $delete = false;
                 }

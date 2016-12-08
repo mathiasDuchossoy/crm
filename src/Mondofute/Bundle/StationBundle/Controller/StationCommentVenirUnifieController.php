@@ -6,14 +6,14 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\GeographieBundle\Entity\GrandeVille;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirGrandeVille;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCommentVenirUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -588,7 +588,7 @@ class StationCommentVenirUnifieController extends Controller
     public function deleteEntity(StationCommentVenirUnifie $stationCommentVenirUnifie)
     {
         /** @var Site $siteDistant */
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getEntityManager();
         $delete = true;
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
         // Parcourir les sites non CRM
@@ -598,8 +598,8 @@ class StationCommentVenirUnifieController extends Controller
             // Récupérer l'entité sur le site distant puis la suprrimer.
             $stationCommentVenirUnifieSite = $emSite->find(StationCommentVenirUnifie::class, $stationCommentVenirUnifie->getId());
             if (!empty($stationCommentVenirUnifieSite)) {
-                foreach ($stationCommentVenirUnifieSite->getStationCommentVenirs() as $stationCommentVenirSite){
-                    if ($stationCommentVenirSite->getStations()->count() <= 1 ){
+                foreach ($stationCommentVenirUnifieSite->getStationCommentVenirs() as $stationCommentVenirSite) {
+                    if ($stationCommentVenirSite->getStations()->count() <= 1) {
                         $emSite->remove($stationCommentVenirSite);
                     } else $delete = false;
                 }
@@ -609,8 +609,8 @@ class StationCommentVenirUnifieController extends Controller
                 }
             }
         }
-        foreach ($stationCommentVenirUnifie->getStationCommentVenirs() as $stationCommentVenir){
-            if ($stationCommentVenir->getStations()->count() <= 1 ){
+        foreach ($stationCommentVenirUnifie->getStationCommentVenirs() as $stationCommentVenir) {
+            if ($stationCommentVenir->getStations()->count() <= 1) {
                 $em->remove($stationCommentVenir);
             } else $delete = false;
         }
