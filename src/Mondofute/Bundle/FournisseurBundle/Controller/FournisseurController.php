@@ -1099,8 +1099,7 @@ class FournisseurController extends Controller
         }
     }
 
-    private
-    function deleteInterlocuteurSites(FournisseurInterlocuteur $interlocuteur)
+    private function deleteInterlocuteurSites(FournisseurInterlocuteur $interlocuteur)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1128,8 +1127,7 @@ class FournisseurController extends Controller
      * @param $entity
      * @param EntityManager $em
      */
-    private
-    function deleteMoyenComs($entity, EntityManager $em)
+    private function deleteMoyenComs($entity, EntityManager $em)
     {
         $moyenComs = $entity->getMoyenComs();
         if (!empty($moyenComs)) {
@@ -1143,8 +1141,7 @@ class FournisseurController extends Controller
     /**
      * @param ListeService $listeService
      */
-    private
-    function deleteListeServiceSites(ListeService $listeService)
+    private function deleteListeServiceSites(ListeService $listeService)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1173,8 +1170,7 @@ class FournisseurController extends Controller
     /**
      * @param Service $service
      */
-    private
-    function deleteServiceSites(Service $service)
+    private function deleteServiceSites(Service $service)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1194,8 +1190,7 @@ class FournisseurController extends Controller
     /**
      * @param TarifService $tarifService
      */
-    private
-    function deleteTarifServiceSites(TarifService $tarifService)
+    private function deleteTarifServiceSites(TarifService $tarifService)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1212,8 +1207,7 @@ class FournisseurController extends Controller
         }
     }
 
-    private
-    function deleteRemiseClefSites(RemiseClef $remiseClef)
+    private function deleteRemiseClefSites(RemiseClef $remiseClef)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1230,8 +1224,7 @@ class FournisseurController extends Controller
         }
     }
 
-    private
-    function deleteReceptionSites(Reception $reception)
+    private function deleteReceptionSites(Reception $reception)
     {
         /** @var Site $site */
         $em = $this->getDoctrine()->getManager();
@@ -1301,8 +1294,7 @@ class FournisseurController extends Controller
         }
     }
 
-    private
-    function mAJSites(Fournisseur $fournisseur)
+    private function mAJSites(Fournisseur $fournisseur)
     {
         /** @var EntityManager $emSite */
         /** @var FournisseurInterlocuteur $interlocuteurSite */
@@ -2309,8 +2301,7 @@ class FournisseurController extends Controller
      * Deletes a Fournisseur entity.
      *
      */
-    public
-    function deleteAction(Request $request, Fournisseur $fournisseur)
+    public function deleteAction(Request $request, Fournisseur $fournisseur)
     {
         /** @var PrestationAnnexeFournisseur $prestationAnnexeFournisseur */
         /** @var FournisseurPrestationAnnexe $prestationAnnex */
@@ -2462,8 +2453,7 @@ class FournisseurController extends Controller
         return $this->redirectToRoute('fournisseur_index');
     }
 
-    public
-    function getPrestationAnnexesAction($famillePrestationAnnexeId, $fournisseurId = null)
+    public function getPrestationAnnexesAction($famillePrestationAnnexeId, $fournisseurId = null)
     {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
@@ -2491,8 +2481,7 @@ class FournisseurController extends Controller
         ));
     }
 
-    public
-    function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId, $fournisseurHebergementType)
+    public function getFournisseurPrestationAnnexeFormAction($fournisseurId, $prestationAnnexeId, $fournisseurHebergementType)
     {
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
@@ -2567,8 +2556,7 @@ class FournisseurController extends Controller
         ));
     }
 
-    public
-    function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex, $fournisseurHebergementType)
+    public function getFournisseurPrestationAnnexeAffectationAction($affectation, $prestationAnnexeId, $fournisseurId, $paramIndex, $fournisseurHebergementType)
     {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
@@ -2661,8 +2649,7 @@ class FournisseurController extends Controller
         return false;
     }
 
-    public
-    function getFournisseurPrestationAnnexeAffectationHebergementAction($prestationAnnexeId, $siteId, $fournisseurId, $stationId, $fournisseurCurrentId, $paramIndex)
+    public function getFournisseurPrestationAnnexeAffectationHebergementAction($prestationAnnexeId, $siteId, $fournisseurId, $stationId, $fournisseurCurrentId, $paramIndex)
     {
         $em = $this->getDoctrine()->getManager();
 

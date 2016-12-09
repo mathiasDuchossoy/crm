@@ -249,23 +249,24 @@ class PromotionUnifieController extends Controller
                 $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) {
                     return $element->getType() == TypeAffectation::prestationAnnexe;
                 });
+//                $promotionFournisseurs = $em->getRepository(PromotionFournisseur::class)->findBy(['promotion' => $promotion, 'type' => TypeAffectation::prestationAnnexe]);
                 foreach ($promotionFournisseurs as $promotionFournisseur) {
-                    $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
+                    $promotion->removePromotionFournisseur($promotionFournisseur);
                 }
             }
             if (false === $promotion->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) {
                     return $element->getTypeAffectation() == TypeAffectation::type;
                 })->first()
             ) {
+                foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
+                    $promotion->removeTypeFournisseur($typeFournisseur);
+                }
                 $promotionFournisseurs = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) {
                     return $element->getType() == TypeAffectation::type;
                 });
                 foreach ($promotionFournisseurs as $promotionFournisseur) {
                     $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
                 }
-            }
-            foreach ($promotion->getPromotionTypeAffectations() as $typeAffectation) {
-                $typeAffectation->setPromotion($promotion);
             }
         }
         $promotionTypeAffectationCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
@@ -276,6 +277,9 @@ class PromotionUnifieController extends Controller
             $typeAffectations->add($promotionTypeAffectationCrm->getTypeAffectation());
         }
         foreach ($promotionUnifie->getPromotions() as $promotion) {
+            foreach ($promotion->getPromotionTypeAffectations() as $affectation) {
+                $affectation->setPromotion($promotion);
+            }
             if ($promotion->getSite()->getCrm() == 0) {
                 $typeAffectationSites = new ArrayCollection();
                 foreach ($promotion->getPromotionTypeAffectations() as $promotionTypeAffectationSite) {
@@ -875,9 +879,6 @@ class PromotionUnifieController extends Controller
             $this->gestionPromotionFournisseur($promotionUnifie);
 
             foreach ($promotionUnifie->getPromotions() as $promotion) {
-//                if($promotion->getPromotionTypeAffectations()->contains(TypeAffectation::prestationAnnexe)){
-//                    $em->refresh($promotion->getPromotionFournisseurs());
-//                }
                 $originalPromotionFournisseurSites = $originalPromotionFournisseurs->get($promotion->getSite()->getId());
                 foreach ($promotion->getPromotionFournisseurs() as $promotionFournisseur) {
                     /** @var ArrayCollection $originalPromotionFournisseurSites */
@@ -888,33 +889,26 @@ class PromotionUnifieController extends Controller
                             and $element->getPromotion() == $promotionFournisseur->getPromotion());
                     })->first();
                     if (!empty($originalPromotionFournisseur)) {
-//                        $delete = true;
-                        // todo: voir suppression de sofurnisseur
-                        // à bloquer si type existant
-//                        foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
-//                            $type = $promotionFournisseur->getFournisseur()->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
-//                                return $element->getId() == $typeFournisseur->getId();
-//                            })->first();
-//                            if (false === $type) {
-//                                $delete = false;
-//                            }
-//                        }
-//                        if ($delete) {
                         $promotion->getPromotionFournisseurs()->removeElement($promotionFournisseur);
                         $promotion->addPromotionFournisseur($originalPromotionFournisseur);
-//                        }
                     }
                 }
                 foreach ($originalPromotionFournisseurSites as $originalPromotionFournisseur) {
                     /** @var PromotionFournisseur $originalPromotionFournisseur */
                     if (false === $promotion->getPromotionFournisseurs()->contains($originalPromotionFournisseur)) {
                         $delete = true;
-                        foreach ($promotion->getTypeFournisseurs() as $typeFournisseur) {
-                            $type = $originalPromotionFournisseur->getFournisseur()->getTypes()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
-                                return $element->getId() == $typeFournisseur->getId();
-                            })->first();
-                            if (false === $type) {
-                                $delete = false;
+                        $typeAffectation = $promotion->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) {
+                            return $element->getTypeAffectation() == TypeAffectation::type;
+                        })->first();
+                        if (false !== $typeAffectation and $originalPromotionFournisseur->getType() == TypeAffectation::type) {
+                            $delete = false;
+                            foreach ($originalPromotionFournisseur->getFournisseur()->getTypes() as $typeFournisseur) {
+                                $type = $promotion->getTypeFournisseurs()->filter(function (FamillePrestationAnnexe $element) use ($typeFournisseur) {
+                                    return $element->getId() == $typeFournisseur->getId();
+                                })->first();
+                                if (false === $type) {
+                                    $delete = true;
+                                }
                             }
                         }
                         if ($delete) {
@@ -922,17 +916,7 @@ class PromotionUnifieController extends Controller
                         }
                     }
                 }
-
-//                foreach ($promotion->getPromotionFournisseurs() as $promotionFournisseur){
-//                    dump($promotionFournisseur);
-//                    if(!empty($em->getRepository(PromotionFournisseur::class)->findOneBy(['type' => $promotionFournisseur->getType(), 'promotion' => $promotionFournisseur->getPromotion(), 'fournisseur' => $promotionFournisseur->getFournisseur()] ))){
-//                        dump('ici');
-//                        $em->detach($promotionFournisseur);
-//                    }
-//                }
-//                dump($promotion->getPromotionFournisseurs());
             }
-//            die;
 
             // *** fin gestion promotion fournisseur ***
 

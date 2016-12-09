@@ -55,10 +55,15 @@
                                 {% set promotionTypeAffectationDisplay = false %}
                                 {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
                                     {% if promotionTypeAffectation.typeAffectation != 3 and promotionTypeAffectationDisplay == false %}
-                                        style="display: none;"
                                         {% set promotionTypeAffectationDisplay = true %}
                                     {% endif %}
                                 {% endfor %}
+                                {% if promotion.promotionTypeAffectations.vars.value is empty %}
+                                    {% set promotionTypeAffectationDisplay = true %}
+                                {% endif %}
+                                {% if  promotionTypeAffectationDisplay == true %}
+                                    style="display: none;"
+                                {% endif %}
                         >
                             {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
                         </div>
@@ -97,7 +102,7 @@
                 {#<div id="values_fournisseur_prestation_annexe_periode_validite">#}
             </div>
 
-            <div id="values_promotion_logement">
+            <div id="values_promotion_logement" style="display: none">
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}

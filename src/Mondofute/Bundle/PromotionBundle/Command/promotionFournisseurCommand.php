@@ -66,6 +66,7 @@ class promotionFournisseurCommand extends ContainerAwareCommand
                     $delete = false;
                 }
             }
+            // si il y a aucune promotion pour aucun type du fournisseur alors on supprime le promotionFournisseur
             if ($delete) {
                 $sql = 'DELETE FROM promotion_fournisseur where type = ' . $typeType . ' and fournisseur_id = ' . $fournisseur->getId();
                 $connection->executeQuery($sql);
