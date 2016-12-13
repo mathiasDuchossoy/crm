@@ -26,7 +26,7 @@ class promotionFournisseurPrestationAnnexeCommand extends ContainerAwareCommand
             ->setName('mondofute_promotion:promotion_fournisseur_prestation_annexe_command')
             ->setDescription('Créer les promotionFournisseurPrestationAnnexe à l\'édition du fournisseur')
             ->addArgument('fournisseurId', InputArgument::REQUIRED, 'L\'id du fournisseur.')
-            ->addArgument('famillePrestationAnnexeId', InputArgument::REQUIRED, 'L\'id de la famille prestation annexe.');
+            ->addArgument('fournisseurPrestationAnnexeId', InputArgument::REQUIRED, 'L\'id du fournisseur prestation annexe.');
     }
 
     /**
@@ -41,19 +41,19 @@ class promotionFournisseurPrestationAnnexeCommand extends ContainerAwareCommand
         /** @var FamillePrestationAnnexe $type */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $fournisseurId = $input->getArgument('fournisseurId');
-        $famillePrestationAnnexeId = $input->getArgument('famillePrestationAnnexeId');
+        $fournisseurPrestationAnnexeId = $input->getArgument('fournisseurPrestationAnnexeId');
         $typeAffectationPrestationAnnexe = TypeAffectation::prestationAnnexe;
 
         $sites = $em->getRepository(Site::class)->findAll();
         foreach ($sites as $site) {
             $emSite = $this->getContainer()->get('doctrine')->getEntityManager($site->getLibelle());
 //            $connection = $emSite->getConnection();
-            $famillePrestationannexe = $emSite->find(FamillePrestationAnnexe::class, $famillePrestationAnnexeId);
+            $fournisseurPrestationAnnexe = $emSite->find(FournisseurPrestationAnnexe::class, $fournisseurPrestationAnnexeId);
             $fournisseur = $emSite->find(Fournisseur::class, $fournisseurId);
             /** @var FournisseurPrestationAnnexe $prestationAnnex */
 //            foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
-            $typeId = $famillePrestationannexe->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId();
-            $fournisseurPrestationAnnexeId = $famillePrestationannexe->getId();
+            $typeId = $fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId();
+            $fournisseurPrestationAnnexeId = $fournisseurPrestationAnnexe->getId();
             $promotions = $emSite->getRepository('MondofutePromotionBundle:Promotion')->findByFournisseurAndAffectationAndFamille($fournisseurId, $typeAffectationPrestationAnnexe, $typeId);
             foreach ($promotions as $promotion) {
                 $promotionId = $promotion->getId();

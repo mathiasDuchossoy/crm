@@ -3642,7 +3642,7 @@ class FournisseurController extends Controller
         $input = new ArrayInput(array(
             'command' => 'mondofute_promotion:promotion_fournisseur_prestation_annexe_command',
             'fournisseurId' => $fournisseur->getId(),
-            'famillePrestationAnnexeId' => $fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId(),
+            'fournisseurPrestationAnnexeId' => $fournisseurPrestationAnnexe->getId(),
         ));
         $output = new NullOutput();
         $application->run($input, $output);
