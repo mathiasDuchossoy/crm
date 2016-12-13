@@ -226,6 +226,9 @@ class PromotionUnifieController extends Controller
         /** @var PromotionTypeAffectation $promotionTypeAffectationCrm */
         /** @var Promotion $promotion */
         foreach ($promotionUnifie->getPromotions() as $promotion) {
+            foreach ($promotion->getPromotionTypeAffectations() as $affectation) {
+                $affectation->setPromotion($promotion);
+            }
             if (false === $promotion->getPromotionTypeAffectations()->filter(function (PromotionTypeAffectation $element) {
                     return $element->getTypeAffectation() == TypeAffectation::logement;
                 })->first()
