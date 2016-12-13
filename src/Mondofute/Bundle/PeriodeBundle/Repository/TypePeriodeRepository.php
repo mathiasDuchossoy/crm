@@ -69,7 +69,7 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
                 $retour = false;
             } else {
                 while ($tpResult = $tpStmt->fetch()) {
-                    $typePeriode=new \stdClass();
+                    $typePeriode = new \stdClass();
                     $typePeriode->id = $tpResult['id'];
                     unset($tpResult);
 //                                            recupération des traductions
@@ -86,16 +86,16 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
                                 return false;
                             } else {
                                 while ($pResult = $pStmt->fetch()) {
-                                    $periode=new \stdClass();
-                                    $periode->id=$pResult['id'];
-                                    $periode->debut= new \DateTime($pResult['debut']);
-                                    $periode->fin= new \DateTime($pResult['fin']);
+                                    $periode = new \stdClass();
+                                    $periode->id = $pResult['id'];
+                                    $periode->debut = new \DateTime($pResult['debut']);
+                                    $periode->fin = new \DateTime($pResult['fin']);
                                     $typePeriode->periodes[] = $periode;
                                 }
                             }
                         }
                     }
-                    $typePeriodes[] =$typePeriode;
+                    $typePeriodes[] = $typePeriode;
                 }
             }
         }

@@ -28,7 +28,8 @@
     {% for site in sites %}
         <span style="{% if site.crm == 1 %}display:none; {% endif %}">
             <label>
-                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}" data-site-id="{{ site.id }}"
+                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}"
+                       data-site-id="{{ site.id }}"
                        type="checkbox" name="sites_{{ prestationAnnexeId }}_{{ keyParam }}[]"
                        value="{{ site.id }}"
                         {% if site.crm == 1  or site.id in sitesActifs or sitesActifs is empty %} checked="checked" {% endif %}
@@ -68,8 +69,7 @@
                             {% if prestationAnnexeFournisseur.vars.value.actif == true and prestationAnnexeFournisseur.vars.value.fournisseur.id
                             == fournisseurProduit.id
                             and prestationAnnexeFournisseur.vars.value.site.id == site.id
-                            and prestationAnnexeFournisseur.vars.value.station is null
-                            %}
+                            and prestationAnnexeFournisseur.vars.value.station is null %}
                                 {% set FournisseurExists = true %}
                             {% endif %}
                         {% endif %}

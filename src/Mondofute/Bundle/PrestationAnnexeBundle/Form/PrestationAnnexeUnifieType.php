@@ -18,8 +18,10 @@ class PrestationAnnexeUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('prestationAnnexes', CollectionType::class, array('entry_type' => PrestationAnnexeType::class, 'entry_options' => array('locale' => $options["locale"])))
-        ;
+            ->add('prestationAnnexes', CollectionType::class, array(
+                'entry_type' => PrestationAnnexeType::class,
+                'entry_options' => array('locale' => $options["locale"])
+            ));
     }
 
     /**

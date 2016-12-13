@@ -16,7 +16,10 @@ class StationDescriptionUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stationDescriptions', CollectionType::class, array('entry_type' => StationDescriptionType::class, 'entry_options' => array('locale' => $options["locale"])));
+            ->add('stationDescriptions', CollectionType::class, array(
+                'entry_type' => StationDescriptionType::class,
+                'entry_options' => array('locale' => $options["locale"])
+            ));
     }
 
     /**

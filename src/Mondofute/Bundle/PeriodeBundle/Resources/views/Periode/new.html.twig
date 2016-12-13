@@ -22,7 +22,7 @@
                 {{ form_widget(form.fin, {'attr' : {
                     'data-date_debut' : form.debut.vars.id,
                     'data-date_fin' : form.fin.vars.id
-                    }}) }}
+                }}) }}
                 {#{{ form_widget(form.fin) }}#}
             </div>
         </div>
@@ -44,20 +44,18 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $( document ).ready(function() {
-            $('#mondofute_periode_bundle_periode_debut').on( 'change' , function ()
-            {
+        $(document).ready(function () {
+            $('#mondofute_periode_bundle_periode_debut').on('change', function () {
                 var $element = $(this);
                 var dateDebut = $element.data('date_debut');
                 var dateFin = $element.data('date_fin');
-                compareDates( dateDebut, dateFin, 'dateDebut' );
+                compareDates(dateDebut, dateFin, 'dateDebut');
             });
-            $('#mondofute_periode_bundle_periode_fin').on( 'change' , function ()
-            {
+            $('#mondofute_periode_bundle_periode_fin').on('change', function () {
                 var $element = $(this);
                 var dateDebut = $element.data('date_debut');
                 var dateFin = $element.data('date_fin');
-                compareDates(dateDebut, dateFin, 'dateFin' );
+                compareDates(dateDebut, dateFin, 'dateFin');
             });
         });
     </script>

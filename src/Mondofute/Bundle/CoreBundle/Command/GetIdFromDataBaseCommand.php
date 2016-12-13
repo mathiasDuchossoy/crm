@@ -59,14 +59,14 @@ class GetIdFromDataBaseCommand extends ContainerAwareCommand
             // les valeurs présentes dans chaque ligne seront séparées par $delimiteur
 
 
-            $resultColumns = $em->getConnection()->query("SHOW COLUMNS FROM ".$row['Tables_in_crm_128_crm']." Like 'id'");
+            $resultColumns = $em->getConnection()->query("SHOW COLUMNS FROM " . $row['Tables_in_crm_128_crm'] . " Like 'id'");
 //
             while ($rowColumn = $resultColumns->fetch()) {
 //                fputcsv($fichier_csv, $rowColumn, $delimiteur);
 //var_dump($rowColumn);
-                if($rowColumn['Type'] == 'int(11)'){
+                if ($rowColumn['Type'] == 'int(11)') {
                     fputcsv($fichier_csv, $row, $delimiteur);
-                    fputcsv($fichier_csv, array_merge(array( ''), $rowColumn), $delimiteur);
+                    fputcsv($fichier_csv, array_merge(array(''), $rowColumn), $delimiteur);
                 }
             }
 

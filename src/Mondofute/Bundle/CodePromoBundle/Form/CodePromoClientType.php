@@ -17,11 +17,10 @@ class CodePromoClientType extends AbstractType
         $builder
 //            ->add('utilise')
 //            ->add('codePromo')
-            ->add('client')
-//            ->add('codePromoPeriodeValidite')
+            ->add('client')//            ->add('codePromoPeriodeValidite')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

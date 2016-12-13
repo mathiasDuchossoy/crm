@@ -12,7 +12,7 @@ class Type
     const fournisseurPrestationAnnexe = 2;
 
     public static $libelles = array(
-        Type::hebergement      => 'Hebergement',
+        Type::hebergement => 'Hebergement',
         Type::fournisseurPrestationAnnexe => 'Prestations annexe',
     );
 

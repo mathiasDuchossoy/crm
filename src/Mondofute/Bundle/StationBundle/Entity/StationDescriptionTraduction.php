@@ -108,8 +108,9 @@ class StationDescriptionTraduction
      *
      * @return StationDescriptionTraduction
      */
-    public function setStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription = null)
-    {
+    public function setStationDescription(
+        \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription = null
+    ) {
         $this->stationDescription = $stationDescription;
 
         return $this;

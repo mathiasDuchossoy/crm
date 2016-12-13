@@ -20,12 +20,11 @@ class SousFamillePrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('entity , traductions')
             ->from('MondofutePrestationAnnexeBundle:SousFamillePrestationAnnexe', 'entity')
-            ->join('entity.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('entity.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
-            ->orderBy('traductions.libelle', 'ASC')
-        ;
+            ->orderBy('traductions.libelle', 'ASC');
 
         return $qb;
     }

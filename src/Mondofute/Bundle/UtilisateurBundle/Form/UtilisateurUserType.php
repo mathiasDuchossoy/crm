@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\UtilisateurBundle\Form;
 
-use FOS\UserBundle\Util\LegacyFormHelper;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

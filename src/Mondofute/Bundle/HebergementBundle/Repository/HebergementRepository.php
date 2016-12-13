@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\HebergementBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,50 +12,43 @@ use Doctrine\ORM\EntityRepository;
  */
 class HebergementRepository extends EntityRepository
 {
-    public function findStationsWithHebergement($locale, $stationId = null , $siteId = null , $fournisseurId = null)
+    public function findStationsWithHebergement($locale, $stationId = null, $siteId = null, $fournisseurId = null)
     {
 //        , station.id stationId, traductions.libelle, hebergementUnifie.id hebergementUnifieId, fournisseurHebergements.id fournisseurHebergementsId, fournisseur
         $qb = $this->getEntityManager()->createQueryBuilder();
 //        $qb->select('station.id stationId, fournisseur.id, fournisseur.enseigne, traductions.libelle libelle, site.id siteId ')
         $qb->select('stationUnifie.id stationUnifieId, fournisseur.id fournisseurId, fournisseur.enseigne fournisseurEnseigne, traductions.libelle stationLibelle , site.id siteId, station.id idStation')
             ->from('MondofuteHebergementBundle:Hebergement', 'hebergement')
-            ->join('hebergement.station' , 'station')
-            ->join('station.stationUnifie' , 'stationUnifie')
-            ->join('station.site' , 'site')
-            ->join('station.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
-            ->join('hebergement.hebergementUnifie' , 'hebergementUnifie')
-            ->join('hebergementUnifie.fournisseurs' , 'fournisseurHebergements')
-            ->join('fournisseurHebergements.fournisseur' , 'fournisseur')
+            ->join('hebergement.station', 'station')
+            ->join('station.stationUnifie', 'stationUnifie')
+            ->join('station.site', 'site')
+            ->join('station.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->join('hebergement.hebergementUnifie', 'hebergementUnifie')
+            ->join('hebergementUnifie.fournisseurs', 'fournisseurHebergements')
+            ->join('fournisseurHebergements.fournisseur', 'fournisseur')
             ->where('langue.code = :locale')
-            ->setParameter('locale' , $locale )
+            ->setParameter('locale', $locale)
             ->orderBy('site.id', 'ASC')
             ->addOrderBy('stationUnifie.id', 'ASC')
             ->addOrderBy('traductions.libelle', 'ASC')
             ->addOrderBy('fournisseur.enseigne', 'ASC')
-            ->groupBy('stationUnifieId, fournisseurId, siteId, idStation')
-        ;
+            ->groupBy('stationUnifieId, fournisseurId, siteId, idStation');
 
-        if (!empty($siteId))
-        {
+        if (!empty($siteId)) {
             $qb
                 ->andWhere('site.id = :siteId')
-                ->setParameter('siteId' , $siteId)
-            ;
+                ->setParameter('siteId', $siteId);
         }
-        if (!empty($stationId))
-        {
+        if (!empty($stationId)) {
             $qb
                 ->andWhere('hebergement.station = :stationId')
-                ->setParameter('stationId' , $stationId)
-            ;
+                ->setParameter('stationId', $stationId);
         }
-        if (!empty($fournisseurId))
-        {
+        if (!empty($fournisseurId)) {
             $qb
                 ->andWhere('fournisseur.id = :fournisseurId')
-                ->setParameter('fournisseurId' , $fournisseurId)
-            ;
+                ->setParameter('fournisseurId', $fournisseurId);
         }
 
         $result = $qb->getQuery()->getResult();

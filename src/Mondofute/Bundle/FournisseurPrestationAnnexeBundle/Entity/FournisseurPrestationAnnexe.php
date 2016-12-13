@@ -5,12 +5,6 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 
 /**
@@ -160,8 +154,9 @@ class FournisseurPrestationAnnexe
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function addFournisseurPrestationAnnexeStock(FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock)
-    {
+    public function addFournisseurPrestationAnnexeStock(
+        FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
+    ) {
         $this->fournisseurPrestationAnnexeStocks[] = $fournisseurPrestationAnnexeStock->setFournisseurPrestationAnnexe($this);
 
         return $this;
@@ -172,8 +167,9 @@ class FournisseurPrestationAnnexe
      *
      * @param FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
      */
-    public function removeFournisseurPrestationAnnexeStock(FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock)
-    {
+    public function removeFournisseurPrestationAnnexeStock(
+        FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
+    ) {
         $this->fournisseurPrestationAnnexeStocks->removeElement($fournisseurPrestationAnnexeStock);
     }
 

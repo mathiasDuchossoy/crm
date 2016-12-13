@@ -37,8 +37,7 @@ class CodePromoPeriodeSejourType extends AbstractType
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
                 )
-            ))
-        ;
+            ));
     }
 
     /**

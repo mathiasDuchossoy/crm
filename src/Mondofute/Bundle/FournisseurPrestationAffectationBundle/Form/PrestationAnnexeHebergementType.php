@@ -19,14 +19,13 @@ class PrestationAnnexeHebergementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hebergement' , EntityType::class, array(
-                'class'     => Hebergement::class,
+            ->add('hebergement', EntityType::class, array(
+                'class' => Hebergement::class,
                 'property' => 'id'
             ))
-            ->add('site', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('site', HiddenType::class, array('mapped' => false));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

@@ -13,9 +13,7 @@ use DateTime;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -109,7 +107,8 @@ class CreateFournisseurCommand extends ContainerAwareCommand
 
             $fournisseur->setEnseigne($rEnseigne);
             if (!empty($rFournisseurParent)) {
-                $fournisseur->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $rFournisseurParent));
+                $fournisseur->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                    $rFournisseurParent));
             }
             $fournisseur->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $rTypeFournisseur));
             $fournisseur->setActif($rActif);

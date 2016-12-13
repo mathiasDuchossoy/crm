@@ -16,7 +16,7 @@ class PeriodeValiditeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateDebut', DateTimeType::class ,
+            ->add('dateDebut', DateTimeType::class,
                 array(
                     'required' => true,
                     'widget' => 'single_text',
@@ -40,10 +40,9 @@ class PeriodeValiditeType extends AbstractType
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     ),
                 )
-            )
-        ;
+            );
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

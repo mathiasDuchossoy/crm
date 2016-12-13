@@ -6,8 +6,7 @@
 {% if prestationAnnexeFournisseurs is defined %}
     {% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}
         {% if prestationAnnexeFournisseur.vars.value.actif == true and (prestationAnnexeFournisseur.vars.value.site.id not in sitesActifs)
-        and prestationAnnexeFournisseur.vars.value.station is not null
-        %}
+        and prestationAnnexeFournisseur.vars.value.station is not null %}
             {% set sitesActifs = sitesActifs|merge([prestationAnnexeFournisseur.vars.value.site.id]) %}
         {% endif %}
     {% endfor %}
@@ -32,7 +31,8 @@
     {% for site in sites %}
         <span style="{% if site.crm == 1 %}display:none; {% endif %}">
             <label>
-                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}" data-site-id="{{ site.id }}"
+                <input id="siteAEnregistrer_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}"
+                       data-site-id="{{ site.id }}"
                        type="checkbox" name="sites_{{ prestationAnnexeId }}_{{ keyParam }}[]"
                        value="{{ site.id }}"
                         {% if site.crm == 1  or site.id in sitesActifs or sitesActifs is empty %} checked="checked" {% endif %}
@@ -67,17 +67,17 @@
                     {% if stationIdTemp !=  fournisseurProduit.stationUnifieId %}
                         {% set FournisseurExists = false %}
                         {#{% if prestationAnnexeFournisseurs is defined %}#}
-                            {#{% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}#}
-                                {#{% if#}
-                                {#prestationAnnexeFournisseur.vars.value.actif == true#}
-                                {#and prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.fournisseurId#}
-                                {#and prestationAnnexeFournisseur.vars.value.site.id == site.id#}
-                                {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined#}
-                                {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId#}
-                                {#%}#}
-                                    {#{% set FournisseurExists = true %}#}
-                                {#{% endif %}#}
-                            {#{% endfor %}#}
+                        {#{% for prestationAnnexeFournisseur in prestationAnnexeFournisseurs %}#}
+                        {#{% if#}
+                        {#prestationAnnexeFournisseur.vars.value.actif == true#}
+                        {#and prestationAnnexeFournisseur.vars.value.fournisseur.id == fournisseurProduit.fournisseurId#}
+                        {#and prestationAnnexeFournisseur.vars.value.site.id == site.id#}
+                        {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined#}
+                        {#and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId#}
+                        {#%}#}
+                        {#{% set FournisseurExists = true %}#}
+                        {#{% endif %}#}
+                        {#{% endfor %}#}
                         {#{% endif %}#}
                         {#{{ dump(FournisseurExists) }}#}
 
@@ -88,8 +88,7 @@
                                 prestationAnnexeFournisseur.vars.value.actif == true
                                 and prestationAnnexeFournisseur.vars.value.station.stationUnifie is defined
                                 and prestationAnnexeFournisseur.vars.value.station.stationUnifie.id == fournisseurProduit.stationUnifieId
-                                and prestationAnnexeFournisseur.vars.value.site.id == site.id
-                                %}
+                                and prestationAnnexeFournisseur.vars.value.site.id == site.id %}
                                     {% set openStation = true %}
                                 {% endif %}
                             {% endfor %}
@@ -102,8 +101,7 @@
                                 {% if fournisseurProduit.stationUnifieId == item.stationUnifieId %}
                                     {% if hebergements[prestationAnnexeId ~ '_' ~ keyParam ~ '_' ~ site.id ~ '_' ~ prestationAnnexeHebergement.vars.value.fournisseur.id ] is defined
                                     and prestationAnnexeHebergement.vars.value.hebergement.station.stationUnifie.id == item.stationUnifieId
-                                    and prestationAnnexeHebergement.vars.value.fournisseur.id == item.fournisseurId
-                                    %}
+                                    and prestationAnnexeHebergement.vars.value.fournisseur.id == item.fournisseurId %}
                                         {% set hebergementExists = true %}
                                     {% endif %}
                                 {% endif %}
@@ -124,19 +122,19 @@
                         {% endif %}
 
                         <fieldset>
-                            <legend>
-                                <div class="checkbox">
-                                    <label><input type="checkbox"
-                                                {% if stationExists == true %}
-                                                    checked="checked"
-                                                {% endif %}
-                                                  name="prestation_annexe_affectation_station[{{ prestationAnnexeId }}][{{ keyParam }}][{{ fournisseurProduit.stationUnifieId }}][{{ site.id }}]"
-                                        >
-                                        <a class="collapsed" role="button" data-toggle="collapse"
-                                           href="#collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
-                                           aria-controls="collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
-                                                onclick="chargerAffectationStationFournisseurs('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.stationUnifieId }}' , '{{ keyParam }}');return true;"
-                                           aria-expanded="
+                        <legend>
+                            <div class="checkbox">
+                                <label><input type="checkbox"
+                                            {% if stationExists == true %}
+                                                checked="checked"
+                                            {% endif %}
+                                              name="prestation_annexe_affectation_station[{{ prestationAnnexeId }}][{{ keyParam }}][{{ fournisseurProduit.stationUnifieId }}][{{ site.id }}]"
+                                    >
+                                    <a class="collapsed" role="button" data-toggle="collapse"
+                                       href="#collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
+                                       aria-controls="collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
+                                       onclick="chargerAffectationStationFournisseurs('{{ prestationAnnexeId }}' , '{{ site.id }}' , '{{ fournisseurProduit.stationUnifieId }}' , '{{ keyParam }}');return true;"
+                                       aria-expanded="
                                                 {#{% if hebergementExists == true or FournisseurExists == true %}#}
                                                 {% if FournisseurExists == true or openStation == true or hebergementExists == true %}
                                                 true
@@ -144,20 +142,20 @@
                                                 false
                                                 {% endif %}
                                                 "
-                                        >
-                                            {{ fournisseurProduit.stationLibelle }}
-                                        </a>
-                                    </label>
-                                </div>
-                            </legend>
-                            <div  id="collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
-                            class="panel-collapse collapse
+                                    >
+                                        {{ fournisseurProduit.stationLibelle }}
+                                    </a>
+                                </label>
+                            </div>
+                        </legend>
+                        <div  id="collapse_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}"
+                        class="panel-collapse collapse
                                     {#{% if hebergementExists == true or FournisseurExists == true %}#}
                                     {% if FournisseurExists == true or openStation == true or hebergementExists == true %}
                                     in
                                     {% endif %}
                                 " role="tabpanel"
-                            aria-labelledby="heading_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}">
+                        aria-labelledby="heading_station_{{ prestationAnnexeId }}_{{ keyParam }}_{{ site.id }}_{{ fournisseurProduit.stationUnifieId }}">
                     {% endif %}
 
 

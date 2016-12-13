@@ -385,8 +385,9 @@ class CodePromo extends BaseCodePromo
      *
      * @return CodePromo
      */
-    public function addCodePromoFournisseurPrestationAnnex(CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex)
-    {
+    public function addCodePromoFournisseurPrestationAnnex(
+        CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex
+    ) {
         $this->codePromoFournisseurPrestationAnnexes[] = $codePromoFournisseurPrestationAnnex->setCodePromo($this);
 
         return $this;
@@ -397,8 +398,9 @@ class CodePromo extends BaseCodePromo
      *
      * @param CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex
      */
-    public function removeCodePromoFournisseurPrestationAnnex(CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex)
-    {
+    public function removeCodePromoFournisseurPrestationAnnex(
+        CodePromoFournisseurPrestationAnnexe $codePromoFournisseurPrestationAnnex
+    ) {
         $this->codePromoFournisseurPrestationAnnexes->removeElement($codePromoFournisseurPrestationAnnex);
     }
 
@@ -419,8 +421,8 @@ class CodePromo extends BaseCodePromo
      *
      * @return CodePromo
      */
-    public function addCodePromoFamillePrestationAnnex(CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex)
-    {
+    public function addCodePromoFamillePrestationAnnex(CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex
+    ) {
         $this->codePromoFamillePrestationAnnexes[] = $codePromoFamillePrestationAnnex->setCodePromo($this);
 
         return $this;
@@ -431,8 +433,9 @@ class CodePromo extends BaseCodePromo
      *
      * @param CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex
      */
-    public function removeCodePromoFamillePrestationAnnex(CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex)
-    {
+    public function removeCodePromoFamillePrestationAnnex(
+        CodePromoFamillePrestationAnnexe $codePromoFamillePrestationAnnex
+    ) {
         $this->codePromoFamillePrestationAnnexes->removeElement($codePromoFamillePrestationAnnex);
     }
 

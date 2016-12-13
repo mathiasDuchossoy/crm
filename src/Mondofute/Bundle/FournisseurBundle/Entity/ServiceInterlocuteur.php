@@ -54,8 +54,9 @@ class ServiceInterlocuteur
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteurTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteurTraduction $traduction)
-    {
+    public function removeTraduction(
+        \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteurTraduction $traduction
+    ) {
         $this->traductions->removeElement($traduction);
     }
 

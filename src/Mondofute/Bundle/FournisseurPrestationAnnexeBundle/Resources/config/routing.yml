@@ -1,0 +1,3 @@
+mondofute_fournisseur_prestation_annexe:
+    resource: "@MondofuteFournisseurPrestationAnnexeBundle/Resources/config/routing/fournisseur-prestation-annexe-stock-hebergement.yml"
+    prefix:   /fournisseur-prestation-annexe/stock-hebergement/
