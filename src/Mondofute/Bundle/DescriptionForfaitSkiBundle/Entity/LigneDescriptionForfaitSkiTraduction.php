@@ -111,7 +111,8 @@ class LigneDescriptionForfaitSkiTraduction
      */
     public function setLigneDescriptionForfaitSki(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSki $ligneDescriptionForfaitSki = null
-    ) {
+    )
+    {
         $this->ligneDescriptionForfaitSki = $ligneDescriptionForfaitSki;
 
         return $this;
