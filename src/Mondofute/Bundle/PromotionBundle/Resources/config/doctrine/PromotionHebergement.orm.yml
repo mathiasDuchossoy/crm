@@ -3,13 +3,12 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement:
     table: null
     repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionHebergementRepository
     id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
+        hebergement:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        promotion:
+            associationKey: true
     manyToOne:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement

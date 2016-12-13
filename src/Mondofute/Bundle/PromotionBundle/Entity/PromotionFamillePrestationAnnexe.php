@@ -11,10 +11,6 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 class PromotionFamillePrestationAnnexe
 {
     /**
-     * @var int
-     */
-    private $id;
-    /**
      * @var FamillePrestationAnnexe
      */
     private $famillePrestationAnnexe;
@@ -26,28 +22,6 @@ class PromotionFamillePrestationAnnexe
      * @var Promotion
      */
     private $promotion;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return PromotionFamillePrestationAnnexe
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * Get famillePrestationAnnexe

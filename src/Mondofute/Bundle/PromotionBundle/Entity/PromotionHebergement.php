@@ -11,10 +11,6 @@ use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 class PromotionHebergement
 {
     /**
-     * @var int
-     */
-    private $id;
-    /**
      * @var Hebergement
      */
     private $hebergement;
@@ -26,28 +22,6 @@ class PromotionHebergement
      * @var Promotion
      */
     private $promotion;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return PromotionHebergement
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * Get hebergement

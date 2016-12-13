@@ -78,5 +78,27 @@ CREATE UNIQUE INDEX UNIQ_C11D7DD16D59B0AF ON promotion (promotion_periode_validi
 ALTER TABLE promotion_fournisseur ADD CONSTRAINT FK_E76003E8139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
 ALTER TABLE promotion_fournisseur ADD CONSTRAINT FK_E76003E8670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);*/
 
-ALTER TABLE promotion_fournisseur DROP PRIMARY KEY;
-ALTER TABLE promotion_fournisseur ADD PRIMARY KEY (type, promotion_id, fournisseur_id);
+/*ALTER TABLE promotion_fournisseur DROP PRIMARY KEY;
+ALTER TABLE promotion_fournisseur ADD PRIMARY KEY (type, promotion_id, fournisseur_id);*/
+
+
+/*CREATE TABLE promotion_hebergement (hebergement_id INT UNSIGNED NOT NULL, fournisseur_id INT UNSIGNED NOT NULL, promotion_id INT UNSIGNED NOT NULL, INDEX IDX_99AC144623BB0F66 (hebergement_id), INDEX IDX_99AC1446670C757F (fournisseur_id), INDEX IDX_99AC1446139DF194 (promotion_id), PRIMARY KEY(hebergement_id, fournisseur_id, promotion_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_hebergement ADD CONSTRAINT FK_99AC144623BB0F66 FOREIGN KEY (hebergement_id) REFERENCES hebergement (id);
+ALTER TABLE promotion_hebergement ADD CONSTRAINT FK_99AC1446670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+ALTER TABLE promotion_hebergement ADD CONSTRAINT FK_99AC1446139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);*/
+
+/*CREATE TABLE promotion_famille_prestation_annexe (famille_prestation_annexe_id INT UNSIGNED NOT NULL, fournisseur_id INT UNSIGNED NOT NULL, promotion_id INT UNSIGNED NOT NULL, INDEX IDX_F80DD74E5D1D40E4 (famille_prestation_annexe_id), INDEX IDX_F80DD74E670C757F (fournisseur_id), INDEX IDX_F80DD74E139DF194 (promotion_id), PRIMARY KEY(famille_prestation_annexe_id, fournisseur_id, promotion_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_famille_prestation_annexe ADD CONSTRAINT FK_F80DD74E5D1D40E4 FOREIGN KEY (famille_prestation_annexe_id) REFERENCES famille_prestation_annexe (id);
+ALTER TABLE promotion_famille_prestation_annexe ADD CONSTRAINT FK_F80DD74E670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+ALTER TABLE promotion_famille_prestation_annexe ADD CONSTRAINT FK_F80DD74E139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);*/
+
+/*CREATE TABLE promotion_station (station_id INT UNSIGNED NOT NULL, fournisseur_id INT UNSIGNED NOT NULL, promotion_id INT UNSIGNED NOT NULL, INDEX IDX_C7440E8B21BDB235 (station_id), INDEX IDX_C7440E8B670C757F (fournisseur_id), INDEX IDX_C7440E8B139DF194 (promotion_id), PRIMARY KEY(station_id, fournisseur_id, promotion_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B21BDB235 FOREIGN KEY (station_id) REFERENCES station (id);
+ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+ALTER TABLE promotion_station ADD CONSTRAINT FK_C7440E8B139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);*/
+
+
+CREATE TABLE promotion_fournisseur_prestation_annexe (fournisseur_prestation_annexe_id INT UNSIGNED NOT NULL, fournisseur_id INT UNSIGNED NOT NULL, promotion_id INT UNSIGNED NOT NULL, INDEX IDX_EEF93923DF2F2EF6 (fournisseur_prestation_annexe_id), INDEX IDX_EEF93923670C757F (fournisseur_id), INDEX IDX_EEF93923139DF194 (promotion_id), PRIMARY KEY(fournisseur_prestation_annexe_id, fournisseur_id, promotion_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE promotion_fournisseur_prestation_annexe ADD CONSTRAINT FK_EEF93923DF2F2EF6 FOREIGN KEY (fournisseur_prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
+ALTER TABLE promotion_fournisseur_prestation_annexe ADD CONSTRAINT FK_EEF93923670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
+ALTER TABLE promotion_fournisseur_prestation_annexe ADD CONSTRAINT FK_EEF93923139DF194 FOREIGN KEY (promotion_id) REFERENCES promotion (id);
