@@ -77,8 +77,8 @@ class DomaineCarteIdentiteImage
      *
      * @return DomaineCarteIdentiteImage
      */
-    public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction $traduction
-    ) {
+    public function addTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction $traduction)
+    {
         $this->traductions[] = $traduction->setImage($this);
 
         return $this;
@@ -89,9 +89,8 @@ class DomaineCarteIdentiteImage
      *
      * @param \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction $traduction
      */
-    public function removeTraduction(
-        \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction $traduction
-    ) {
+    public function removeTraduction(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentiteImageTraduction $traduction)
+    {
         $this->traductions->removeElement($traduction);
     }
 
@@ -122,9 +121,8 @@ class DomaineCarteIdentiteImage
      *
      * @return DomaineCarteIdentiteImage
      */
-    public function setDomaineCarteIdentite(
-        \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null
-    ) {
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    {
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;
