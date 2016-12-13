@@ -25,7 +25,6 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
-use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeJour;
@@ -435,16 +434,13 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionHebergement $promotionHebergement */
                     foreach ($entity->getPromotionHebergements() as $promotionHebergement) {
                         $promotionHebergementSite = $entitySite->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergement) {
-                            return $element->getId() == $promotionHebergement->getId();
+                            return ($element->getFournisseur()->getId() == $promotionHebergement->getFournisseur()->getId() and
+                                $element->getHebergement()->getHebergementUnifie()->getId() == $promotionHebergement->getHebergement()->getHebergementUnifie()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $element->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionHebergementSite) {
                             $promotionHebergementSite = new PromotionHebergement();
                             $entitySite->addPromotionHebergement($promotionHebergementSite);
-                            $promotionHebergementSite
-                                ->setId($promotionHebergement->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionHebergementSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
 
                         $promotionHebergementSite
@@ -457,7 +453,9 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionHebergement $promotionHebergement */
                     foreach ($entitySite->getPromotionHebergements() as $promotionHebergementSite) {
                         $promotionHebergement = $entity->getPromotionHebergements()->filter(function (PromotionHebergement $element) use ($promotionHebergementSite) {
-                            return $element->getId() == $promotionHebergementSite->getId();
+                            return ($element->getFournisseur()->getId() == $promotionHebergementSite->getFournisseur()->getId() and
+                                $element->getHebergement()->getHebergementUnifie()->getId() == $promotionHebergementSite->getHebergement()->getHebergementUnifie()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $promotionHebergementSite->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionHebergement) {
 //                            $entitySite->removePromotionHebergement($promotionHebergementSite);
@@ -472,16 +470,13 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionStation $promotionStation */
                     foreach ($entity->getPromotionStations() as $promotionStation) {
                         $promotionStationSite = $entitySite->getPromotionStations()->filter(function (PromotionStation $element) use ($promotionStation) {
-                            return $element->getId() == $promotionStation->getId();
+                            return ($element->getPromotion()->getPromotionUnifie()->getId() == $promotionStation->getPromotion()->getPromotionUnifie()->getId() and
+                                $element->getFournisseur()->getId() == $promotionStation->getFournisseur()->getId() and
+                                $element->getStation()->getStationUnifie()->getId() == $promotionStation->getStation()->getStationUnifie()->getId());
                         })->first();
                         if (false === $promotionStationSite) {
                             $promotionStationSite = new PromotionStation();
                             $entitySite->addPromotionStation($promotionStationSite);
-                            $promotionStationSite
-                                ->setId($promotionStation->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionStationSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
 
                         $promotionStationSite
@@ -494,7 +489,9 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionStation $promotionStation */
                     foreach ($entitySite->getPromotionStations() as $promotionStationSite) {
                         $promotionStation = $entity->getPromotionStations()->filter(function (PromotionStation $element) use ($promotionStationSite) {
-                            return $element->getId() == $promotionStationSite->getId();
+                            return ($element->getPromotion()->getPromotionUnifie()->getId() == $promotionStationSite->getPromotion()->getPromotionUnifie()->getId() and
+                                $element->getFournisseur()->getId() == $promotionStationSite->getFournisseur()->getId() and
+                                $element->getStation()->getStationUnifie()->getId() == $promotionStationSite->getStation()->getStationUnifie()->getId());
                         })->first();
                         if (false === $promotionStation) {
 //                            $entitySite->removePromotionStation($promotionStationSite);
@@ -547,16 +544,13 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
                     foreach ($entity->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexe) {
                         $promotionFournisseurPrestationAnnexeSite = $entitySite->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexe) {
-                            return $element->getId() == $promotionFournisseurPrestationAnnexe->getId();
+                            return ($element->getFournisseurPrestationAnnexe()->getId() == $promotionFournisseurPrestationAnnexe->getFournisseurPrestationAnnexe()->getId() and
+                                $element->getFournisseur()->getId() == $promotionFournisseurPrestationAnnexe->getFournisseur()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFournisseurPrestationAnnexe->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionFournisseurPrestationAnnexeSite) {
                             $promotionFournisseurPrestationAnnexeSite = new PromotionFournisseurPrestationAnnexe();
                             $entitySite->addPromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnexeSite);
-                            $promotionFournisseurPrestationAnnexeSite
-                                ->setId($promotionFournisseurPrestationAnnexe->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFournisseurPrestationAnnexeSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
 
                         $promotionFournisseurPrestationAnnexeSite
@@ -569,7 +563,9 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnexe */
                     foreach ($entitySite->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexeSite) {
                         $promotionFournisseurPrestationAnnexe = $entity->getPromotionFournisseurPrestationAnnexes()->filter(function (PromotionFournisseurPrestationAnnexe $element) use ($promotionFournisseurPrestationAnnexeSite) {
-                            return $element->getId() == $promotionFournisseurPrestationAnnexeSite->getId();
+                            return ($element->getFournisseurPrestationAnnexe()->getId() == $promotionFournisseurPrestationAnnexeSite->getFournisseurPrestationAnnexe()->getId() and
+                                $element->getFournisseur()->getId() == $promotionFournisseurPrestationAnnexeSite->getFournisseur()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFournisseurPrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionFournisseurPrestationAnnexe) {
 //                            $entitySite->removePromotionFournisseurPrestationAnnexe($promotionFournisseurPrestationAnnexeSite);
@@ -584,16 +580,13 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
                     foreach ($entity->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexe) {
                         $promotionFamillePrestationAnnexeSite = $entitySite->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexe) {
-                            return $element->getId() == $promotionFamillePrestationAnnexe->getId();
+                            return ($element->getFournisseur()->getId() == $promotionFamillePrestationAnnexe->getFournisseur()->getId() and
+                                $element->getFamillePrestationAnnexe()->getId() == $promotionFamillePrestationAnnexe->getFamillePrestationAnnexe()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFamillePrestationAnnexe->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionFamillePrestationAnnexeSite) {
                             $promotionFamillePrestationAnnexeSite = new PromotionFamillePrestationAnnexe();
                             $entitySite->addPromotionFamillePrestationAnnex($promotionFamillePrestationAnnexeSite);
-                            $promotionFamillePrestationAnnexeSite
-                                ->setId($promotionFamillePrestationAnnexe->getId());
-
-                            $metadata = $emSite->getClassMetadata(get_class($promotionFamillePrestationAnnexeSite));
-                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                         }
 
                         $promotionFamillePrestationAnnexeSite
@@ -606,7 +599,9 @@ class PromotionUnifieController extends Controller
                     /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnexe */
                     foreach ($entitySite->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
                         $promotionFamillePrestationAnnexe = $entity->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexeSite) {
-                            return $element->getId() == $promotionFamillePrestationAnnexeSite->getId();
+                            return $element->getFournisseur()->getId() == $promotionFamillePrestationAnnexeSite->getFournisseur()->getId() and
+                            $element->getFamillePrestationAnnexe()->getId() == $promotionFamillePrestationAnnexeSite->getFamillePrestationAnnexe()->getId() and
+                            $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFamillePrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId();
                         })->first();
                         if (false === $promotionFamillePrestationAnnexe) {
 //                            $entitySite->removePromotionFamillePrestationAnnexe($promotionFamillePrestationAnnexeSite);

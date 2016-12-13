@@ -11,10 +11,6 @@ use Mondofute\Bundle\StationBundle\Entity\Station;
 class PromotionStation
 {
     /**
-     * @var int
-     */
-    private $id;
-    /**
      * @var Station
      */
     private $station;
@@ -26,30 +22,6 @@ class PromotionStation
      * @var Promotion
      */
     private $promotion;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id
-     *
-     * @param int $id
-     *
-     * @return PromotionStation
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * Get station

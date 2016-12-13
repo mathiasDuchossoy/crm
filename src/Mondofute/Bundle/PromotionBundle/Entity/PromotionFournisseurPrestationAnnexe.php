@@ -11,10 +11,6 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 class PromotionFournisseurPrestationAnnexe
 {
     /**
-     * @var int
-     */
-    private $id;
-    /**
      * @var FournisseurPrestationAnnexe
      */
     private $fournisseurPrestationAnnexe;
@@ -26,28 +22,6 @@ class PromotionFournisseurPrestationAnnexe
      * @var Promotion
      */
     private $promotion;
-
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return PromotionFournisseurPrestationAnnexe
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
      * Get fournisseurPrestationAnnexe
