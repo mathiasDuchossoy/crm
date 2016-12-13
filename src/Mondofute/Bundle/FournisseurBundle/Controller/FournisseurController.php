@@ -3364,7 +3364,6 @@ class FournisseurController extends Controller
 
         if ($new) {
             $this->gestionPromotionFournisseurPrestationAnnexe($fournisseur, $fournisseurPrestationAnnexe);
-            $this->gestionPromotionPeriodeValidite($fournisseur);
         }
 
         if (empty($data)) {
