@@ -47,6 +47,7 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\ServiceBundle\Entity\CategorieService;
@@ -650,6 +651,7 @@ class FournisseurController extends Controller
         ));
         $output = new NullOutput();
         $application->run($input, $output);
+
     }
 
     /**
@@ -788,6 +790,11 @@ class FournisseurController extends Controller
         $originalListeServices = new ArrayCollection();
         $originalServices = new ArrayCollection();
         $originalTarifsService = new ArrayCollection();
+        $originalFamillePrestationAnnexes = new ArrayCollection();
+
+        foreach ($fournisseur->getTypes() as $type) {
+            $originalFamillePrestationAnnexes->add($type);
+        }
 
         // Create an ArrayCollection of the current Tag objects in the database
         foreach ($fournisseur->getInterlocuteurs() as $interlocuteur) {
@@ -865,6 +872,9 @@ class FournisseurController extends Controller
             }
         }
 
+        // **********************************************
+        // ********** VALIDATION DU FORMULAIRE **********
+        // **********************************************
         if ($editForm->isSubmitted() && $editForm->isValid() && !$errorType && !$errorInterlocuteur && !$errorRemiseClef) {
             // *** gestion suppression prestations annexe et ses collections ***
             /** @var FournisseurPrestationAnnexe $originalPrestationAnnex */
@@ -1032,8 +1042,10 @@ class FournisseurController extends Controller
 
             $this->mAJSites($fournisseur);
 
+            // *** GESTION PROMOTIONS ***
             $this->gestionPromotionFournisseur($fournisseur);
-//            $this->gestionPromotionFamillePrestationAnnexe($fournisseur);
+            $this->gestionPromotionFamillePrestationAnnexe($fournisseur, $originalFamillePrestationAnnexes);
+            // *** FIN GESTION PROMOTIONS ***
 
             if (empty($fournisseur->getLogo()) && !empty($originalLogo) || !empty($originalLogo) && $originalLogo != $fournisseur->getLogo()) {
                 $em->remove($originalLogo);
@@ -1045,6 +1057,7 @@ class FournisseurController extends Controller
                 'success',
                 'Le fournisseur a bien été modifié.'
             );
+
             return $this->redirectToRoute('fournisseur_edit', array('id' => $fournisseur->getId()));
         }
 
@@ -1066,7 +1079,6 @@ class FournisseurController extends Controller
 
     private function deletePrestationsAnnexeUnifies(FournisseurPrestationAnnexe $originalPrestationAnnex, EntityManager $em)
     {
-
         $prestationAnnexeUnifies = new ArrayCollection();
         foreach ($originalPrestationAnnex->getParams() as $param) {
             /** @var PrestationAnnexeStation $item */
@@ -2289,6 +2301,32 @@ class FournisseurController extends Controller
         }
     }
 
+    private function gestionPromotionFamillePrestationAnnexe(Fournisseur $fournisseur, $originalFamillePrestationAnnexes)
+    {
+        $em = $this->getDoctrine()->getManager();
+        foreach ($originalFamillePrestationAnnexes as $originalFamillePrestationAnnex) {
+            if (!$fournisseur->getTypes()->contains($originalFamillePrestationAnnex)) {
+                $promotions = $em->getRepository(PromotionFamillePrestationAnnexe::class)->findBy(['fournisseur' => $fournisseur, 'famillePrestationAnnexe' => $originalFamillePrestationAnnex]);
+                foreach ($promotions as $promotion) {
+                    $em->remove($promotion);
+                }
+            }
+        }
+        $em->flush();
+
+        $kernel = $this->get('kernel');
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_promotion:promotion_famille_prestation_command',
+            'fournisseurId' => $fournisseur->getId(),
+        ));
+        $output = new NullOutput();
+        $application->run($input, $output);
+    }
+
     public function getConditionAnnulationStandardAction()
     {
         $em = $this->getDoctrine()->getManager();
@@ -2775,7 +2813,9 @@ class FournisseurController extends Controller
             return $element->getPrestationAnnexe()->getId() == $prestationAnnexeId;
         })->first();
 
+        $new = false;
         if (false === $fournisseurPrestationAnnexe) {
+            $new = true;
             $fournisseurPrestationAnnexe = new FournisseurPrestationAnnexe();
             $fournisseur->addPrestationAnnex($fournisseurPrestationAnnexe);
             $fournisseurPrestationAnnexe->setPrestationAnnexe($em->find(PrestationAnnexe::class, $prestationAnnexeId));
@@ -3319,9 +3359,14 @@ class FournisseurController extends Controller
 
         $em->persist($fournisseurPrestationAnnexe);
         $em->flush();
-//        die;
 
         $this->mAJSites($fournisseur);
+
+        if ($new) {
+            $this->gestionPromotionFournisseurPrestationAnnexe($fournisseur, $fournisseurPrestationAnnexe);
+            $this->gestionPromotionPeriodeValidite($fournisseur);
+        }
+
         if (empty($data)) {
             return new Response(0);
         }
@@ -3390,16 +3435,16 @@ class FournisseurController extends Controller
         }
     }
 
-    private function gestionPromotionFamillePrestationAnnexe(Fournisseur $fournisseur)
+    private function gestionPromotionFournisseurPrestationAnnexe(Fournisseur $fournisseur, FournisseurPrestationAnnexe $fournisseurPrestationAnnexe)
     {
         $kernel = $this->get('kernel');
-
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput(array(
-            'command' => 'mondofute_promotion:promotion_fournisseur_command',
+            'command' => 'mondofute_promotion:promotion_fournisseur_prestation_annexe_command',
             'fournisseurId' => $fournisseur->getId(),
+            'famillePrestationAnnexeId' => $fournisseurPrestationAnnexe->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId(),
         ));
         $output = new NullOutput();
         $application->run($input, $output);

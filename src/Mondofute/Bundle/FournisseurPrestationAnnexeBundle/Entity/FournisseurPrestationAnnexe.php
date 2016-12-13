@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 
 /**
  * FournisseurPrestationAnnexe
@@ -36,6 +37,10 @@ class FournisseurPrestationAnnexe
      * @var Collection
      */
     private $params;
+    /**
+     * @var Collection
+     */
+    private $promotionFournisseurPrestationAnnexes;
 
     /**
      * Constructor
@@ -45,6 +50,7 @@ class FournisseurPrestationAnnexe
         $this->traductions = new ArrayCollection();
         $this->fournisseurPrestationAnnexeStocks = new ArrayCollection();
         $this->params = new ArrayCollection();
+        $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -213,5 +219,39 @@ class FournisseurPrestationAnnexe
     public function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Add promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes[] = $promotionFournisseurPrestationAnnex->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     */
+    public function removePromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes->removeElement($promotionFournisseurPrestationAnnex);
+    }
+
+    /**
+     * Get promotionFournisseurPrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getPromotionFournisseurPrestationAnnexes()
+    {
+        return $this->promotionFournisseurPrestationAnnexes;
     }
 }

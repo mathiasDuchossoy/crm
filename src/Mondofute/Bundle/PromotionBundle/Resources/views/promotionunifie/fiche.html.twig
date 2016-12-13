@@ -87,7 +87,11 @@
                             </div>
                             <div id="promotion_panel_prestation_annexe_{{ keyPromotion }}">
                                 {% if typeAffectationPrestationAnnexeSelected == true %}
-                                    {{ include ('@MondofutePromotion/promotionunifie/panel-prestation-annexe.html.twig') }}
+                                    {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                        {% if promotionTypeAffectation.typeAffectation == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::prestationAnnexe') %}
+                                            {{ include ('@MondofutePromotion/promotionunifie/panel-prestation-annexe.html.twig') }}
+                                        {% endif %}
+                                    {% endfor %}
                                 {% endif %}
                             </div>
                         {% endif %}
@@ -440,24 +444,20 @@
         $(document).ready(function () {
             {% if panelPromotion is defined %}
             {% for keyPromotion , promotion in entity.promotions %}
+            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
+            {% if promotionTypeAffectation.typeAffectation == 1 %}
             {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
-            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
-            {% if promotionTypeAffectation.typeAffectation == 1 %}
             getFournisseurHebergements('{{ promotion.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyPromotion }}', '{{ promotion.site.id }}');
-            {% endif %}
             {% endfor %}
-            {% endfor %}
-            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
-            {% if promotionTypeAffectation.typeAffectation == 1 %}
             getPromotionPeriodes('{{ promotion.id }}', '{{ keyPromotion }}');
             {% endif %}
             {% endfor %}
-            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
             {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
             {% if promotionTypeAffectation.typeAffectation == 2 %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
             getFournisseurPrestationAnnexes('{{ promotion.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyPromotion }}');
-            {% endif %}
             {% endfor %}
+            {% endif %}
             {% endfor %}
             {% endfor %}
             {% endif %}

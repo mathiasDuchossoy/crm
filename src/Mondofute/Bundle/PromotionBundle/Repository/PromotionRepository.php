@@ -44,4 +44,58 @@ class PromotionRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
         return $result;
     }
+
+    public function findByFournisseurAndAffectation($fournisseurId, $type)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('promotion')
+            ->from('MondofutePromotionBundle:Promotion', 'promotion')
+            ->join('promotion.promotionFournisseurs', 'promotionFournisseurs')
+            ->join('promotionFournisseurs.fournisseur', 'fournisseur')
+            ->join('promotion.promotionTypeAffectations', 'promotionTypeAffectations')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournisseurId)
+            ->andWhere('promotionTypeAffectations.typeAffectation = :type')
+            ->setParameter('type', $type);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
+
+    public function findByFournisseurAndAffectationAndFamille($fournisseurId, $typeAffectation, $typeId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('promotion')
+            ->from('MondofutePromotionBundle:Promotion', 'promotion')
+            ->join('promotion.promotionFamillePrestationAnnexes', 'promotionFamillePrestationAnnexes')
+            ->join('promotionFamillePrestationAnnexes.fournisseur', 'fournisseur')
+            ->join('promotionFamillePrestationAnnexes.famillePrestationAnnexe', 'famillePrestationAnnexe')
+            ->join('promotion.promotionTypeAffectations', 'promotionTypeAffectations')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournisseurId)
+            ->andWhere('famillePrestationAnnexe.id = :typeId')
+            ->setParameter('typeId', $typeId)
+            ->andWhere('promotionTypeAffectations.typeAffectation = :type')
+            ->setParameter('type', $typeAffectation);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
+
+    public function findByPromotionStations($stationId, $fournsseurId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('promotion')
+            ->from('MondofutePromotionBundle:Promotion', 'promotion')
+            ->join('promotion.promotionStations', 'promotionStations')
+            ->join('promotionStations.fournisseur', 'fournisseur')
+            ->join('promotionStations.station', 'station')
+            ->where('fournisseur.id = :fournisseurId')
+            ->setParameter('fournisseurId', $fournsseurId)
+            ->andWhere('station.id = :stationId')
+            ->setParameter('stationId', $stationId);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
 }
