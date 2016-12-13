@@ -96,7 +96,8 @@ class LigneDescriptionForfaitSkiCategorie
      */
     public function addTraduction(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorieTraduction $traduction
-    ) {
+    )
+    {
         $this->traductions[] = $traduction;
 
         return $this;
@@ -109,7 +110,8 @@ class LigneDescriptionForfaitSkiCategorie
      */
     public function removeTraduction(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorieTraduction $traduction
-    ) {
+    )
+    {
         $this->traductions->removeElement($traduction);
     }
 }

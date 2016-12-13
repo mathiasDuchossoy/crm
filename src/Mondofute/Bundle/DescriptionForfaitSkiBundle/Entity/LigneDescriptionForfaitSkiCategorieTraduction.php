@@ -76,7 +76,8 @@ class LigneDescriptionForfaitSkiCategorieTraduction
      */
     public function addLigneDescriptionForfaitSkiCategorie(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie $ligneDescriptionForfaitSkiCategorie
-    ) {
+    )
+    {
         $this->ligneDescriptionForfaitSkiCategorie[] = $ligneDescriptionForfaitSkiCategorie;
 
         return $this;
@@ -89,7 +90,8 @@ class LigneDescriptionForfaitSkiCategorieTraduction
      */
     public function removeLigneDescriptionForfaitSkiCategorie(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie $ligneDescriptionForfaitSkiCategorie
-    ) {
+    )
+    {
         $this->ligneDescriptionForfaitSkiCategorie->removeElement($ligneDescriptionForfaitSkiCategorie);
     }
 
@@ -112,7 +114,8 @@ class LigneDescriptionForfaitSkiCategorieTraduction
      */
     public function setLigneDescriptionForfaitSkiCategorie(
         \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\LigneDescriptionForfaitSkiCategorie $ligneDescriptionForfaitSkiCategorie = null
-    ) {
+    )
+    {
         $this->ligneDescriptionForfaitSkiCategorie = $ligneDescriptionForfaitSkiCategorie;
 
         return $this;
