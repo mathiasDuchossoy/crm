@@ -81,7 +81,10 @@ class ProfilUnifieController extends Controller
         $this->profilsSortByAffichage($profilUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ProfilUnifieType', $profilUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -105,7 +108,9 @@ class ProfilUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Profil $profilSite */
-                                    $profilSite = $profilUnifie->getProfils()->filter(function (Profil $element) use ($site) {
+                                    $profilSite = $profilUnifie->getProfils()->filter(function (Profil $element) use (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($profilSite)) {
@@ -146,7 +151,9 @@ class ProfilUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Profil $profilSite */
-                                    $profilSite = $profilUnifie->getProfils()->filter(function (Profil $element) use ($site) {
+                                    $profilSite = $profilUnifie->getProfils()->filter(function (Profil $element) use (
+                                        $site
+                                    ) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($profilSite)) {
@@ -192,7 +199,8 @@ class ProfilUnifieController extends Controller
                     $profilSite->addVideo($profilVideoSite);
                     $actif = false;
                     if (!empty($request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
-                        if (in_array($profilSite->getSite()->getId(), $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                        if (in_array($profilSite->getSite()->getId(),
+                            $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -391,7 +399,9 @@ class ProfilUnifieController extends Controller
                             // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
                             // récupérer l'profilImage original correspondant sur le crm
                             /** @var ArrayCollection $originalProfilImages */
-                            $originalProfilImage = $originalProfilImages->filter(function (ProfilImage $element) use ($profilImage) {
+                            $originalProfilImage = $originalProfilImages->filter(function (ProfilImage $element) use (
+                                $profilImage
+                            ) {
                                 return $element->getImage() == $profilImage->getImage();
                             })->first();
                             unset($profilImageSite);
@@ -437,7 +447,9 @@ class ProfilUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (ProfilImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ProfilImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -448,7 +460,8 @@ class ProfilUnifieController extends Controller
                                     else {
                                         $traductionSite = new ProfilImageTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $profilImageSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -497,7 +510,9 @@ class ProfilUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'profilPhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalProfilPhotos */
-                            $originalProfilPhoto = $originalProfilPhotos->filter(function (ProfilPhoto $element) use ($profilPhoto) {
+                            $originalProfilPhoto = $originalProfilPhotos->filter(function (ProfilPhoto $element) use (
+                                $profilPhoto
+                            ) {
                                 return $element->getPhoto() == $profilPhoto->getPhoto();
                             })->first();
                             unset($profilPhotoSite);
@@ -543,7 +558,9 @@ class ProfilUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (ProfilPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ProfilPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -554,7 +571,8 @@ class ProfilUnifieController extends Controller
                                     else {
                                         $traductionSite = new ProfilPhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $profilPhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -590,7 +608,9 @@ class ProfilUnifieController extends Controller
                 if (!empty($profil->getVideos()) && !$profil->getVideos()->isEmpty()) {
                     /** @var ProfilVideo $profilVideo */
                     foreach ($profil->getVideos() as $profilVideo) {
-                        $profilVideoSite = $profilSite->getVideos()->filter(function (ProfilVideo $element) use ($profilVideo) {
+                        $profilVideoSite = $profilSite->getVideos()->filter(function (ProfilVideo $element) use (
+                            $profilVideo
+                        ) {
                             return $element->getId() == $profilVideo->getId();
                         })->first();
                         if (false === $profilVideoSite) {
@@ -619,13 +639,16 @@ class ProfilUnifieController extends Controller
                             ->setActif($profilVideo->getActif());
                         // *** traductions ***
                         foreach ($profilVideo->getTraductions() as $traduction) {
-                            $traductionSite = $profilVideoSite->getTraductions()->filter(function (ProfilVideoTraduction $element) use ($traduction) {
+                            $traductionSite = $profilVideoSite->getTraductions()->filter(function (
+                                ProfilVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
                             if (false === $traductionSite) {
                                 $traductionSite = new ProfilVideoTraduction();
                                 $profilVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class,
+                                    $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -638,7 +661,9 @@ class ProfilUnifieController extends Controller
                     /** @var ProfilVideo $profilVideo */
                     /** @var ProfilVideo $profilVideoSite */
                     foreach ($profilSite->getVideos() as $profilVideoSite) {
-                        $profilVideo = $profil->getVideos()->filter(function (ProfilVideo $element) use ($profilVideoSite) {
+                        $profilVideo = $profil->getVideos()->filter(function (ProfilVideo $element) use (
+                            $profilVideoSite
+                        ) {
                             return $element->getId() == $profilVideoSite->getId();
                         })->first();
                         if (false === $profilVideo) {
@@ -878,7 +903,10 @@ class ProfilUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($profilUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ProfilUnifieType', $profilUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 
@@ -1042,7 +1070,10 @@ class ProfilUnifieController extends Controller
                     if (empty($profilVideo->getId())) {
                         $profilVideoSite = clone $profilVideo;
                     } else {
-                        $profilVideoSite = $em->getRepository(ProfilVideo::class)->findOneBy(array('video' => $originalVideos->get($profilVideo->getId()), 'profil' => $profilSite));
+                        $profilVideoSite = $em->getRepository(ProfilVideo::class)->findOneBy(array(
+                            'video' => $originalVideos->get($profilVideo->getId()),
+                            'profil' => $profilSite
+                        ));
                         if ($originalVideos->get($profilVideo->getId()) != $profilVideo->getVideo()) {
                             $em->remove($profilVideoSite->getVideo());
                             $this->deleteFile($profilVideoSite->getVideo());
@@ -1052,7 +1083,8 @@ class ProfilUnifieController extends Controller
                     $profilSite->addVideo($profilVideoSite);
                     $actif = false;
                     if (!empty($request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
-                        if (in_array($profilSite->getSite()->getId(), $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
+                        if (in_array($profilSite->getSite()->getId(),
+                            $request->get('profil_unifie')['profils'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -1060,7 +1092,9 @@ class ProfilUnifieController extends Controller
 
                     // *** traductions ***
                     foreach ($profilVideo->getTraductions() as $traduction) {
-                        $traductionSite = $profilVideoSite->getTraductions()->filter(function (ProfilVideoTraduction $element) use ($traduction) {
+                        $traductionSite = $profilVideoSite->getTraductions()->filter(function (
+                            ProfilVideoTraduction $element
+                        ) use ($traduction) {
                             return $element->getLangue() == $traduction->getLangue();
                         })->first();
                         if (false === $traductionSite) {
@@ -1103,7 +1137,10 @@ class ProfilUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau profilImage
                             if (!empty($profilImage->getId())) {
                                 // on récupère l'profilImage pour le modifier
-                                $profilImageSite = $em->getRepository(ProfilImage::class)->findOneBy(array('profil' => $profilSite, 'image' => $originalImages->get($key)));
+                                $profilImageSite = $em->getRepository(ProfilImage::class)->findOneBy(array(
+                                    'profil' => $profilSite,
+                                    'image' => $originalImages->get($key)
+                                ));
                             }
                             // si l'profilImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($profilImage->getId()) || empty($profilImageSite)) {
@@ -1134,7 +1171,9 @@ class ProfilUnifieController extends Controller
                                     $traductionSites = $profilImageSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (ProfilImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ProfilImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1147,7 +1186,8 @@ class ProfilUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementImage doit être actif sur le site ou non
                                 if (!empty($request->get('profil_unifie')['profils'][$keyCrm]['images'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('profil_unifie')['profils'][$keyCrm]['images'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('profil_unifie')['profils'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $profilImageSite->setActif(true);
                                 } else {
@@ -1193,7 +1233,10 @@ class ProfilUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau profilPhoto
                             if (!empty($profilPhoto->getId())) {
                                 // on récupère l'profilPhoto pour le modifier
-                                $profilPhotoSite = $em->getRepository(ProfilPhoto::class)->findOneBy(array('profil' => $profilSite, 'photo' => $originalPhotos->get($key)));
+                                $profilPhotoSite = $em->getRepository(ProfilPhoto::class)->findOneBy(array(
+                                    'profil' => $profilSite,
+                                    'photo' => $originalPhotos->get($key)
+                                ));
                             }
                             // si l'profilPhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($profilPhoto->getId()) || empty($profilPhotoSite)) {
@@ -1224,7 +1267,9 @@ class ProfilUnifieController extends Controller
                                     $traductionSites = $profilPhotoSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (ProfilPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ProfilPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1237,7 +1282,8 @@ class ProfilUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                 if (!empty($request->get('profil_unifie')['profils'][$keyCrm]['photos'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('profil_unifie')['profils'][$keyCrm]['photos'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('profil_unifie')['profils'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $profilPhotoSite->setActif(true);
                                 } else {

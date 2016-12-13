@@ -42,8 +42,8 @@ class InterlocuteurFonction
      *
      * @return InterlocuteurFonction
      */
-    public function addTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $traduction)
-    {
+    public function addTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $traduction
+    ) {
         $this->traductions[] = $traduction->setFonction($this);
 
         return $this;
@@ -54,8 +54,9 @@ class InterlocuteurFonction
      *
      * @param \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $traduction)
-    {
+    public function removeTraduction(
+        \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $traduction
+    ) {
         $this->traductions->removeElement($traduction);
     }
 

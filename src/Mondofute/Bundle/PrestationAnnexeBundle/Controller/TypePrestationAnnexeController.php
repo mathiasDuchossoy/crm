@@ -35,7 +35,8 @@ class TypePrestationAnnexeController extends Controller
     public function newAction(Request $request)
     {
         $typePrestationAnnexe = new TypePrestationAnnexe();
-        $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType', $typePrestationAnnexe);
+        $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType',
+            $typePrestationAnnexe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,7 +77,8 @@ class TypePrestationAnnexeController extends Controller
     private function createDeleteForm(TypePrestationAnnexe $typePrestationAnnexe)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('typeprestationannexe_delete', array('id' => $typePrestationAnnexe->getId())))
+            ->setAction($this->generateUrl('typeprestationannexe_delete',
+                array('id' => $typePrestationAnnexe->getId())))
             ->setMethod('DELETE')
             ->getForm();
     }
@@ -88,7 +90,8 @@ class TypePrestationAnnexeController extends Controller
     public function editAction(Request $request, TypePrestationAnnexe $typePrestationAnnexe)
     {
         $deleteForm = $this->createDeleteForm($typePrestationAnnexe);
-        $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType', $typePrestationAnnexe);
+        $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\TypePrestationAnnexeType',
+            $typePrestationAnnexe);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

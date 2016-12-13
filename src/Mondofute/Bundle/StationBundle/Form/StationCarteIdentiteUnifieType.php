@@ -16,7 +16,8 @@ class StationCarteIdentiteUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('stationCarteIdentites', CollectionType::class, array('entry_type' => StationCarteIdentiteType::class));
+            ->add('stationCarteIdentites', CollectionType::class,
+                array('entry_type' => StationCarteIdentiteType::class));
     }
 
     /**

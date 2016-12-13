@@ -47,3 +47,5 @@ page:
     precedente: 'précédente'
 afficher: 'afficher'
 resultats: 'résultats'
+prestation_annexe:
+    stocks_hebergement: 'prestation annexes pour l''hébergement'

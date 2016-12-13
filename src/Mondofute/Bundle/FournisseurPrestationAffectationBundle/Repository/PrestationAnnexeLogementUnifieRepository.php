@@ -20,7 +20,8 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeLogementUnifie , prestationAnnexeLogements')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie', 'prestationAnnexeLogementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie',
+                'prestationAnnexeLogementUnifie')
             ->join('prestationAnnexeLogementUnifie.prestationAnnexeLogements', 'prestationAnnexeLogements')
             ->join('prestationAnnexeLogements.logement', 'logement')
             ->join('logement.logementUnifie', 'logementUnifie')
@@ -43,7 +44,8 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeLogementUnifie ')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie', 'prestationAnnexeLogementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeLogementUnifie',
+                'prestationAnnexeLogementUnifie')
             ->join('prestationAnnexeLogementUnifie.prestationAnnexeLogements', 'prestationAnnexeLogements')
             ->join('prestationAnnexeLogements.logement', 'logement')
             ->join('logement.logementUnifie', 'logementUnifie')

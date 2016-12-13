@@ -92,7 +92,9 @@ class StationLabelController extends Controller
     private function ajoutTraductions($stationLabel, $langues)
     {
         foreach ($langues as $langue) {
-            $traduction = $stationLabel->getTraductions()->filter(function (StationLabelTraduction $element) use ($langue) {
+            $traduction = $stationLabel->getTraductions()->filter(function (StationLabelTraduction $element) use (
+                $langue
+            ) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $traduction) {
@@ -147,7 +149,8 @@ class StationLabelController extends Controller
             }
             // *** traductions ***
             foreach ($stationLabel->getTraductions() as $traduction) {
-                $traductionSite = $stationLabelSite->getTraductions()->filter(function (StationLabelTraduction $element) use ($traduction) {
+                $traductionSite = $stationLabelSite->getTraductions()->filter(function (StationLabelTraduction $element
+                ) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {

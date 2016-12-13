@@ -964,7 +964,7 @@
                 var $remiseClef = $('#remiseClefs');
                 var $remiseClefModal = $('#remiseClefModal');
                 var contenuRemiseClef =
-                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-2"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button> <button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
+                    '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-2"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button> <button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
                 $remiseClef.append($(contenuRemiseClef));
                 $('#formRemiseClef_' + index).append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
                 $remiseClef.attr('data-nb-remise-clef', (parseInt(index) + 1));
@@ -1361,15 +1361,15 @@
             $.fn.serializeObject = function () {
 
                 var self = this,
-                        json = {},
-                        push_counters = {},
-                        patterns = {
-                            "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
-                            "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
-                            "push": /^$/,
-                            "fixed": /^\d+$/,
-                            "named": /^[a-zA-Z0-9_]+$/
-                        };
+                    json = {},
+                    push_counters = {},
+                    patterns = {
+                        "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+                        "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
+                        "push": /^$/,
+                        "fixed": /^\d+$/,
+                        "named": /^[a-zA-Z0-9_]+$/
+                    };
 
 
                 this.build = function (base, key, value) {
@@ -1392,9 +1392,9 @@
                     }
 
                     var k,
-                            keys = this.name.match(patterns.key),
-                            merge = this.value,
-                            reverse_key = this.name;
+                        keys = this.name.match(patterns.key),
+                        merge = this.value,
+                        reverse_key = this.name;
 
                     while ((k = keys.pop()) !== undefined) {
 
@@ -1459,10 +1459,10 @@
                     path = path.replace(/_fournisseurId_/g, fournisseurId);
                     if ($famillePrestationAnnexe.css('display') == 'none') {
                         $.ajax(path,
-                                {
-                                    method: 'GET',
-                                    async: false
-                                }
+                            {
+                                method: 'GET',
+                                async: false
+                            }
                         ).done(function (data) {
                             $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html(data);
                             $famillePrestationAnnexe.show();
@@ -1471,10 +1471,10 @@
                                     var prestationAnnexeId = $(element).val();
                                     var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
                                     $.ajax(path2,
-                                            {
-                                                async: false,
-                                                method: 'GET'
-                                            }
+                                        {
+                                            async: false,
+                                            method: 'GET'
+                                        }
                                     ).done(function (data) {
                                         $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                                         $('#values_prestation_annexe').append(data);
@@ -1525,10 +1525,10 @@
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
 
                     $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
                     ).done(function (data) {
                         $form_prestation_annexe.html(data);
                         $prestationAnnexeModal.modal();
@@ -1577,10 +1577,10 @@
                 $form_prestation_annexe.html($fournisseurPrestationAnnexe);
             } else {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $form_prestation_annexe.html(data);
                 });
@@ -1595,10 +1595,10 @@
                 if ($fournisseurPrestationAnnexe.data('id')) {
                     // on doit recharger les données et les mettre dans le form
                     $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
                     ).done(function (data) {
                         $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                         $('#values_prestation_annexe').append(data);
@@ -1648,10 +1648,10 @@
 
                         var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
                         $.ajax(path2,
-                                {
-                                    async: false,
-                                    method: 'GET'
-                                }
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
                         ).done(function (data) {
                             $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                             $('#values_prestation_annexe').append(data);
@@ -1826,10 +1826,10 @@
             }
 
             $.ajax(path,
-                    {
-                        async: false,
-                        method: 'GET'
-                    }
+                {
+                    async: false,
+                    method: 'GET'
+                }
             ).done(function (data) {
                 $('#div_affectation_' + paramIndex + '_' + elementId).html(data);
             });
@@ -1859,10 +1859,10 @@
 
             if ($('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).is(':hidden')) {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).html(data);
                 });
@@ -1907,10 +1907,10 @@
             path = path.replace(/_paramIndex_/g, paramIndex);
             if ($('#collapse_fournisseur_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).is(':hidden')) {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $('#list_hebergements_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).html(data);
                 });

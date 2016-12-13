@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\PrestationAnnexeBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
@@ -78,7 +79,9 @@ class PrestationAnnexeController extends Controller
         $prestationAnnexe = new PrestationAnnexe();
 
         foreach ($langues as $langue) {
-            $prestationAnnexeTraduction = $prestationAnnexe->getTraductions()->filter(function (PrestationAnnexeTraduction $element) use ($langue) {
+            $prestationAnnexeTraduction = $prestationAnnexe->getTraductions()->filter(function (
+                PrestationAnnexeTraduction $element
+            ) use ($langue) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $prestationAnnexeTraduction) {
@@ -88,7 +91,8 @@ class PrestationAnnexeController extends Controller
             }
         }
 
-        $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType', $prestationAnnexe, array('locale' => $request->getLocale()));
+        $form = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType',
+            $prestationAnnexe, array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array(
             'label' => $this->get('translator')->trans('Enregistrer')
         ));
@@ -148,7 +152,8 @@ class PrestationAnnexeController extends Controller
 
             // *** gestion sous-famille prestation annexe ***
             if (!empty($entity->getSousFamillePrestationAnnexe())) {
-                $sousFamille = $emSite->find(SousFamillePrestationAnnexe::class, $entity->getSousFamillePrestationAnnexe());
+                $sousFamille = $emSite->find(SousFamillePrestationAnnexe::class,
+                    $entity->getSousFamillePrestationAnnexe());
             } else {
                 $sousFamille = null;
             }
@@ -185,6 +190,18 @@ class PrestationAnnexeController extends Controller
             $emSite->flush();
 
         }
+    }
+
+    public function stocksHebergementAction(Request $request, $idFournisseurHebergement)
+    {
+        $em = $this->getDoctrine();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        $fournisseurHebergement = $em->getRepository(FournisseurHebergement::class)->find($idFournisseurHebergement);
+        return $this->render('@MondofutePrestationAnnexe/prestationannexe/popup-prestation-annexe-stocks-hebergement.html.twig',
+            array(
+                'maxInputVars' => ini_get('max_input_vars'),
+                'fournisseurHebergement' => $fournisseurHebergement
+            ));
     }
 
     /**
@@ -230,7 +247,10 @@ class PrestationAnnexeController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\PrestationAnnexeType',
             $prestationAnnexe, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 

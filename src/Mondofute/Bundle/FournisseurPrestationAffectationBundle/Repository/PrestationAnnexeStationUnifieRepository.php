@@ -18,7 +18,8 @@ class PrestationAnnexeStationUnifieRepository extends \Doctrine\ORM\EntityReposi
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeStationUnifie , prestationAnnexeStations')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie', 'prestationAnnexeStationUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie',
+                'prestationAnnexeStationUnifie')
             ->join('prestationAnnexeStationUnifie.prestationAnnexeStations', 'prestationAnnexeStations')
             ->join('prestationAnnexeStations.station', 'station')
             ->join('station.stationUnifie', 'stationUnifie')
@@ -38,7 +39,8 @@ class PrestationAnnexeStationUnifieRepository extends \Doctrine\ORM\EntityReposi
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeStationUnifie')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie', 'prestationAnnexeStationUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeStationUnifie',
+                'prestationAnnexeStationUnifie')
             ->join('prestationAnnexeStationUnifie.prestationAnnexeStations', 'prestationAnnexeStations')
             ->join('prestationAnnexeStations.station', 'station')
             ->join('station.stationUnifie', 'stationUnifie')

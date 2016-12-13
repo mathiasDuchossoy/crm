@@ -17,7 +17,8 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeHebergementUnifie , prestationAnnexeHebergements')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie',
+                'prestationAnnexeHebergementUnifie')
             ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements', 'prestationAnnexeHebergements')
             ->join('prestationAnnexeHebergements.hebergement', 'hebergement')
             ->join('hebergement.hebergementUnifie', 'hebergementUnifie')
@@ -39,7 +40,8 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeHebergementUnifie')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie',
+                'prestationAnnexeHebergementUnifie')
             ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements', 'prestationAnnexeHebergements')
             ->join('prestationAnnexeHebergements.hebergement', 'hebergement')
             ->where('hebergement.id = :hebergementId')
@@ -54,7 +56,8 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeHebergementUnifie')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie',
+                'prestationAnnexeHebergementUnifie')
             ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements', 'prestationAnnexeHebergements')
             ->join('prestationAnnexeHebergements.hebergement', 'hebergement')
             ->join('hebergement.hebergementUnifie', 'hebergementUnifie')
@@ -75,7 +78,8 @@ class PrestationAnnexeHebergementUnifieRepository extends \Doctrine\ORM\EntityRe
 //            ->select('fournisseurPrestationAnnexe.id ')
             ->select('prestationAnnexeHebergementUnifie')
 //            ->select('fournisseurs.id')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie', 'prestationAnnexeHebergementUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeHebergementUnifie',
+                'prestationAnnexeHebergementUnifie')
             ->join('prestationAnnexeHebergementUnifie.prestationAnnexeHebergements', 'prestationAnnexeHebergements')
             ->join('prestationAnnexeHebergements.fournisseur', 'fournisseur')
             ->join('prestationAnnexeHebergements.param', 'param')

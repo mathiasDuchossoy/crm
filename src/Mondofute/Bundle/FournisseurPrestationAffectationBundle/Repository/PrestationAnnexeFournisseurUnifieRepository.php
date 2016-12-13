@@ -18,7 +18,8 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeFournisseurUnifie , prestationAnnexeFournisseurs')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeFournisseurUnifie', 'prestationAnnexeFournisseurUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeFournisseurUnifie',
+                'prestationAnnexeFournisseurUnifie')
             ->join('prestationAnnexeFournisseurUnifie.prestationAnnexeFournisseurs', 'prestationAnnexeFournisseurs')
             ->where('prestationAnnexeFournisseurs.fournisseurPrestationAnnexe = :prestationAnnex')
             ->setParameter('prestationAnnex', $prestationAnnex->getId())
@@ -46,7 +47,8 @@ class PrestationAnnexeFournisseurUnifieRepository extends \Doctrine\ORM\EntityRe
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         $qb->select('prestationAnnexeFournisseurUnifie, prestationAnnexeFournisseurs')
-            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeFournisseurUnifie', 'prestationAnnexeFournisseurUnifie')
+            ->from('MondofuteFournisseurPrestationAffectationBundle:PrestationAnnexeFournisseurUnifie',
+                'prestationAnnexeFournisseurUnifie')
             ->join('prestationAnnexeFournisseurUnifie.prestationAnnexeFournisseurs', 'prestationAnnexeFournisseurs')
             ->where('prestationAnnexeFournisseurs.fournisseur = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseur->getId());

@@ -118,7 +118,8 @@ class GrandeVilleController extends Controller
     private function ajoutTraductions($grandeVille, $langues)
     {
         foreach ($langues as $langue) {
-            $traduction = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element) use ($langue) {
+            $traduction = $grandeVille->getTraductions()->filter(function (GrandeVilleTraduction $element) use ($langue
+            ) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $traduction) {
@@ -189,7 +190,8 @@ class GrandeVilleController extends Controller
             // *** fin gps ***
             // *** traductions ***
             foreach ($grandeVille->getTraductions() as $traduction) {
-                $traductionSite = $grandeVilleSite->getTraductions()->filter(function (GrandeVilleTraduction $element) use ($traduction) {
+                $traductionSite = $grandeVilleSite->getTraductions()->filter(function (GrandeVilleTraduction $element
+                ) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {

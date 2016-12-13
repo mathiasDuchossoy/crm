@@ -99,12 +99,13 @@ class FournisseurType extends AbstractType
             ->add('moyenComs',
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
 //                'Infinite\FormBundle\Form\Type\PolyCollectionType' ,
-                array('types' => array(
+                array(
+                    'types' => array(
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
-                    'nucleus_moyencombundle_adresse',
+                        'nucleus_moyencombundle_adresse',
 //                    'nucleus_moyencombundle_email',
 
-                ),
+                    ),
                     'allow_add' => true,
 //                    'allow_delete' => true,
                     'by_reference' => false,

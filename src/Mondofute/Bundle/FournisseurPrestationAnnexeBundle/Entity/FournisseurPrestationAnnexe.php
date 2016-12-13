@@ -160,8 +160,9 @@ class FournisseurPrestationAnnexe
      *
      * @return FournisseurPrestationAnnexe
      */
-    public function addFournisseurPrestationAnnexeStock(FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock)
-    {
+    public function addFournisseurPrestationAnnexeStock(
+        FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
+    ) {
         $this->fournisseurPrestationAnnexeStocks[] = $fournisseurPrestationAnnexeStock->setFournisseurPrestationAnnexe($this);
 
         return $this;
@@ -172,8 +173,9 @@ class FournisseurPrestationAnnexe
      *
      * @param FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
      */
-    public function removeFournisseurPrestationAnnexeStock(FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock)
-    {
+    public function removeFournisseurPrestationAnnexeStock(
+        FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
+    ) {
         $this->fournisseurPrestationAnnexeStocks->removeElement($fournisseurPrestationAnnexeStock);
     }
 

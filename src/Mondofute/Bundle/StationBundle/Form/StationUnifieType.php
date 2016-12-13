@@ -54,24 +54,42 @@ class StationUnifieType extends AbstractType
         foreach ($entitiesSelect as $entitySelect) {
             foreach ($view->children[$entities]->children as $viewChild) {
                 $siteId = $viewChild->vars['value']->getSite()->getId();
-                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
-                if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
-                if ($entitySelect == 'profil') $entitySelect = 'profils';
+                if ($entitySelect == 'secteur') {
+                    $entitySelect = 'secteurs';
+                }
+                if ($entitySelect == 'zoneTouristique') {
+                    $entitySelect = 'zoneTouristiques';
+                }
+                if ($entitySelect == 'profil') {
+                    $entitySelect = 'profils';
+                }
                 $choices = $viewChild->children[$entitySelect]->vars['choices'];
                 $newChoices = array();
                 foreach ($choices as $key => $choice) {
-                    if ($entitySelect == 'secteurs') $entitySelect = 'secteur';
-                    if ($entitySelect == 'zoneTouristiques') $entitySelect = 'zoneTouristique';
-                    if ($entitySelect == 'profils') $entitySelect = 'profil';
+                    if ($entitySelect == 'secteurs') {
+                        $entitySelect = 'secteur';
+                    }
+                    if ($entitySelect == 'zoneTouristiques') {
+                        $entitySelect = 'zoneTouristique';
+                    }
+                    if ($entitySelect == 'profils') {
+                        $entitySelect = 'profil';
+                    }
                     $choice->attr = array('data-unifie_id' => $choice->data->{'get' . ucfirst($entitySelect . 'Unifie')}()->getId());
                     if ($choice->data->getSite()->getId() == $siteId) {
                         $newChoices[$key] = $choice;
                     }
                 }
 
-                if ($entitySelect == 'secteur') $entitySelect = 'secteurs';
-                if ($entitySelect == 'zoneTouristique') $entitySelect = 'zoneTouristiques';
-                if ($entitySelect == 'profil') $entitySelect = 'profils';
+                if ($entitySelect == 'secteur') {
+                    $entitySelect = 'secteurs';
+                }
+                if ($entitySelect == 'zoneTouristique') {
+                    $entitySelect = 'zoneTouristiques';
+                }
+                if ($entitySelect == 'profil') {
+                    $entitySelect = 'profils';
+                }
                 $viewChild->children[$entitySelect]->vars['choices'] = $newChoices;
 
             }

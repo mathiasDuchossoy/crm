@@ -75,7 +75,8 @@ class UpdateInterlocuteurCommand extends ContainerAwareCommand
         $qMoyenComm = new Question($textQMoyenComm, null);
         $rMoyenComm = $helper->ask($input, $output, $qMoyenComm);
 
-        $moyenCommunication = $interlocuteur->getMoyenCommunications()->filter(function (MoyenCommunication $element) use ($rMoyenComm) {
+        $moyenCommunication = $interlocuteur->getMoyenCommunications()->filter(function (MoyenCommunication $element
+        ) use ($rMoyenComm) {
             return $element->getId() == $rMoyenComm;
         })->first();
 

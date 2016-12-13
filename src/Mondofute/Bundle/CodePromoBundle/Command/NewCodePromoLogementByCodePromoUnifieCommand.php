@@ -49,9 +49,13 @@ class NewCodePromoLogementByCodePromoUnifieCommand extends ContainerAwareCommand
             /** @var CodePromoHebergement $codePromoHebergement */
             foreach ($codePromo->getCodePromoHebergements() as $codePromoHebergement) {
                 $hebergementUnifieId = $codePromoHebergement->getHebergement()->getHebergementUnifie()->getId();
-                $logements = $em->getRepository(Logement::class)->findByFournisseurHebergement($codePromoHebergement->getFournisseur()->getId(), $hebergementUnifieId, $codePromo->getSite()->getId());
+                $logements = $em->getRepository(Logement::class)->findByFournisseurHebergement($codePromoHebergement->getFournisseur()->getId(),
+                    $hebergementUnifieId, $codePromo->getSite()->getId());
                 foreach ($logements as $logement) {
-                    if (false === $codePromo->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($logement) {
+                    if (false === $codePromo->getCodePromoLogements()->filter(function (CodePromoLogement $element) use
+                        (
+                            $logement
+                        ) {
                             return $element->getLogement() == $logement;
                         })->first()
                     ) {
@@ -78,7 +82,9 @@ class NewCodePromoLogementByCodePromoUnifieCommand extends ContainerAwareCommand
             if (!empty($entity->getCodePromoLogements()) && !$entity->getCodePromoLogements()->isEmpty()) {
                 /** @var CodePromoLogement $codePromoLogement */
                 foreach ($entity->getCodePromoLogements() as $codePromoLogement) {
-                    $codePromoLogementSite = $entitySite->getCodePromoLogements()->filter(function (CodePromoLogement $element) use ($codePromoLogement) {
+                    $codePromoLogementSite = $entitySite->getCodePromoLogements()->filter(function (
+                        CodePromoLogement $element
+                    ) use ($codePromoLogement) {
                         return $element->getId() == $codePromoLogement->getId();
                     })->first();
                     if (false === $codePromoLogementSite) {

@@ -59,8 +59,14 @@ class LogementUnifieRepository extends \Doctrine\ORM\EntityRepository
      * @param int $site
      * @return Paginator
      */
-    public function getListToFournisseur($page = 1, $maxperpage, $locale, $sortbyArray = array(), $fournisseurHebergement, $site = 1)
-    {
+    public function getListToFournisseur(
+        $page = 1,
+        $maxperpage,
+        $locale,
+        $sortbyArray = array(),
+        $fournisseurHebergement,
+        $site = 1
+    ) {
         $q = $this->createQueryBuilder('unifie')
             ->select('unifie')
             ->join('unifie.logements', 'entities')

@@ -49,7 +49,8 @@ class StationType extends AbstractType
                 },
 //                'by_reference'  => true
             ))
-            ->add('zoneTouristiques', EntityType::class, array('class' => ZoneTouristique::class,
+            ->add('zoneTouristiques', EntityType::class, array(
+                'class' => ZoneTouristique::class,
                 'required' => false,
                 "choice_label" => "traductions[0].libelle",
                 "placeholder" => " --- choisir une zone touristique ---",

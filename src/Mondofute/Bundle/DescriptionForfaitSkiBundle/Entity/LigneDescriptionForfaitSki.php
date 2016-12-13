@@ -102,8 +102,7 @@ class LigneDescriptionForfaitSki
      */
     public function addTraduction(
         LigneDescriptionForfaitSkiTraduction $traduction
-    )
-    {
+    ) {
         $this->traductions[] = $traduction->setLigneDescriptionForfaitSki($this);
 
         return $this;
@@ -116,8 +115,7 @@ class LigneDescriptionForfaitSki
      */
     public function removeTraduction(
         LigneDescriptionForfaitSkiTraduction $traduction
-    )
-    {
+    ) {
         $this->traductions->removeElement($traduction);
     }
 
@@ -150,8 +148,7 @@ class LigneDescriptionForfaitSki
      */
     public function setCategorie(
         LigneDescriptionForfaitSkiCategorie $categorie = null
-    )
-    {
+    ) {
         $this->categorie = $categorie;
 
         return $this;

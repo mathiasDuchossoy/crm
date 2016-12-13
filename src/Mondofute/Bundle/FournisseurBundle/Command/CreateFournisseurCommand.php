@@ -107,7 +107,8 @@ class CreateFournisseurCommand extends ContainerAwareCommand
 
             $fournisseur->setEnseigne($rEnseigne);
             if (!empty($rFournisseurParent)) {
-                $fournisseur->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur', $rFournisseurParent));
+                $fournisseur->setFournisseurParent($emSite->find('MondofuteFournisseurBundle:Fournisseur',
+                    $rFournisseurParent));
             }
             $fournisseur->setType($emSite->find('MondofuteFournisseurBundle:TypeFournisseur', $rTypeFournisseur));
             $fournisseur->setActif($rActif);

@@ -89,8 +89,9 @@ class ZoneTouristiquePhoto
      *
      * @param \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhotoTraduction $traduction
      */
-    public function removeTraduction(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhotoTraduction $traduction)
-    {
+    public function removeTraduction(
+        \Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristiquePhotoTraduction $traduction
+    ) {
         $this->traductions->removeElement($traduction);
     }
 
@@ -121,8 +122,8 @@ class ZoneTouristiquePhoto
      *
      * @return ZoneTouristiquePhoto
      */
-    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
-    {
+    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null
+    ) {
         $this->zoneTouristique = $zoneTouristique;
 
         return $this;

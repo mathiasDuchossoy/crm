@@ -85,7 +85,10 @@ class ZoneTouristiqueUnifieController extends Controller
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
             $zoneTouristiqueUnifie);
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -109,7 +112,9 @@ class ZoneTouristiqueUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var ZoneTouristique $zoneTouristiqueSite */
-                                    $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) use ($site) {
+                                    $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                                        ZoneTouristique $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($zoneTouristiqueSite)) {
@@ -150,7 +155,9 @@ class ZoneTouristiqueUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var ZoneTouristique $zoneTouristiqueSite */
-                                    $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) use ($site) {
+                                    $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                                        ZoneTouristique $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($zoneTouristiqueSite)) {
@@ -184,10 +191,14 @@ class ZoneTouristiqueUnifieController extends Controller
 
             // *** gestion des videos ***
             /** @var ZoneTouristique $zoneTouristiqueCrm */
-            $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+            $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                ZoneTouristique $element
+            ) {
                 return $element->getSite()->getCrm() == 1;
             })->first();
-            $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+            $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                ZoneTouristique $element
+            ) {
                 return $element->getSite()->getCrm() == 0;
             });
             /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
@@ -197,7 +208,8 @@ class ZoneTouristiqueUnifieController extends Controller
                     $zoneTouristiqueSite->addVideo($zoneTouristiqueVideoSite);
                     $actif = false;
                     if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
-                        if (in_array($zoneTouristiqueSite->getSite()->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                        if (in_array($zoneTouristiqueSite->getSite()->getId(),
+                            $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -245,7 +257,8 @@ class ZoneTouristiqueUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($zoneTouristique->getTraductions()->filter(function (ZoneTouristiqueTraduction $element) use (
+                        if ($zoneTouristique->getTraductions()->filter(function (ZoneTouristiqueTraduction $element) use
+                        (
                             $langue
                         ) {
                             return $element->getLangue() == $langue;
@@ -327,8 +340,11 @@ class ZoneTouristiqueUnifieController extends Controller
      * Copie dans la base de données site l'entité station
      * @param ZoneTouristiqueUnifie $entity
      */
-    public function copieVersSites(ZoneTouristiqueUnifie $entity, $originalZoneTouristiqueImages = null, $originalZoneTouristiquePhotos = null)
-    {
+    public function copieVersSites(
+        ZoneTouristiqueUnifie $entity,
+        $originalZoneTouristiqueImages = null,
+        $originalZoneTouristiquePhotos = null
+    ) {
         /** @var EntityManager $emSite */
         /** @var ZoneTouristiqueTraduction $zoneTouristiqueTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
@@ -406,7 +422,9 @@ class ZoneTouristiqueUnifieController extends Controller
                             // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
                             // récupérer l'zoneTouristiqueImage original correspondant sur le crm
                             /** @var ArrayCollection $originalZoneTouristiqueImages */
-                            $originalZoneTouristiqueImage = $originalZoneTouristiqueImages->filter(function (ZoneTouristiqueImage $element) use ($zoneTouristiqueImage) {
+                            $originalZoneTouristiqueImage = $originalZoneTouristiqueImages->filter(function (
+                                ZoneTouristiqueImage $element
+                            ) use ($zoneTouristiqueImage) {
                                 return $element->getImage() == $zoneTouristiqueImage->getImage();
                             })->first();
                             unset($zoneTouristiqueImageSite);
@@ -430,7 +448,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                 // (que le crm_ref_id est différent de de l'id du image de l'zoneTouristiqueImage du crm)
                                 if ($zoneTouristiqueImageSite->getImage()->getMetadataValue('crm_ref_id') != $zoneTouristiqueImage->getImage()->getId()) {
                                     $cloneImage = clone $zoneTouristiqueImage->getImage();
-                                    $cloneImage->setMetadataValue('crm_ref_id', $zoneTouristiqueImage->getImage()->getId());
+                                    $cloneImage->setMetadataValue('crm_ref_id',
+                                        $zoneTouristiqueImage->getImage()->getId());
                                     $cloneImage->setContext('zone_touristique_image_' . $zoneTouristique->getSite()->getLibelle());
 
                                     // on supprime l'ancien image
@@ -452,7 +471,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (ZoneTouristiqueImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ZoneTouristiqueImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -463,7 +484,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                     else {
                                         $traductionSite = new ZoneTouristiqueImageTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $zoneTouristiqueImageSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -512,7 +534,9 @@ class ZoneTouristiqueUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'zoneTouristiquePhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalZoneTouristiquePhotos */
-                            $originalZoneTouristiquePhoto = $originalZoneTouristiquePhotos->filter(function (ZoneTouristiquePhoto $element) use ($zoneTouristiquePhoto) {
+                            $originalZoneTouristiquePhoto = $originalZoneTouristiquePhotos->filter(function (
+                                ZoneTouristiquePhoto $element
+                            ) use ($zoneTouristiquePhoto) {
                                 return $element->getPhoto() == $zoneTouristiquePhoto->getPhoto();
                             })->first();
                             unset($zoneTouristiquePhotoSite);
@@ -536,7 +560,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                 // (que le crm_ref_id est différent de de l'id du photo de l'zoneTouristiquePhoto du crm)
                                 if ($zoneTouristiquePhotoSite->getPhoto()->getMetadataValue('crm_ref_id') != $zoneTouristiquePhoto->getPhoto()->getId()) {
                                     $clonePhoto = clone $zoneTouristiquePhoto->getPhoto();
-                                    $clonePhoto->setMetadataValue('crm_ref_id', $zoneTouristiquePhoto->getPhoto()->getId());
+                                    $clonePhoto->setMetadataValue('crm_ref_id',
+                                        $zoneTouristiquePhoto->getPhoto()->getId());
                                     $clonePhoto->setContext('zone_touristique_photo_' . $zoneTouristique->getSite()->getLibelle());
 
                                     // on supprime l'ancien photo
@@ -558,7 +583,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (ZoneTouristiquePhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            ZoneTouristiquePhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -569,7 +596,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                     else {
                                         $traductionSite = new ZoneTouristiquePhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $zoneTouristiquePhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -606,7 +634,9 @@ class ZoneTouristiqueUnifieController extends Controller
                 if (!empty($zoneTouristique->getVideos()) && !$zoneTouristique->getVideos()->isEmpty()) {
                     /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
                     foreach ($zoneTouristique->getVideos() as $zoneTouristiqueVideo) {
-                        $zoneTouristiqueVideoSite = $zoneTouristiqueSite->getVideos()->filter(function (ZoneTouristiqueVideo $element) use ($zoneTouristiqueVideo) {
+                        $zoneTouristiqueVideoSite = $zoneTouristiqueSite->getVideos()->filter(function (
+                            ZoneTouristiqueVideo $element
+                        ) use ($zoneTouristiqueVideo) {
                             return $element->getId() == $zoneTouristiqueVideo->getId();
                         })->first();
                         if (false === $zoneTouristiqueVideoSite) {
@@ -635,13 +665,16 @@ class ZoneTouristiqueUnifieController extends Controller
                             ->setActif($zoneTouristiqueVideo->getActif());
                         // *** traductions ***
                         foreach ($zoneTouristiqueVideo->getTraductions() as $traduction) {
-                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (ZoneTouristiqueVideoTraduction $element) use ($traduction) {
+                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (
+                                ZoneTouristiqueVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
                             if (false === $traductionSite) {
                                 $traductionSite = new ZoneTouristiqueVideoTraduction();
                                 $zoneTouristiqueVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class,
+                                    $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -654,7 +687,9 @@ class ZoneTouristiqueUnifieController extends Controller
                     /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
                     /** @var ZoneTouristiqueVideo $zoneTouristiqueVideoSite */
                     foreach ($zoneTouristiqueSite->getVideos() as $zoneTouristiqueVideoSite) {
-                        $zoneTouristiqueVideo = $zoneTouristique->getVideos()->filter(function (ZoneTouristiqueVideo $element) use ($zoneTouristiqueVideoSite) {
+                        $zoneTouristiqueVideo = $zoneTouristique->getVideos()->filter(function (
+                            ZoneTouristiqueVideo $element
+                        ) use ($zoneTouristiqueVideoSite) {
                             return $element->getId() == $zoneTouristiqueVideoSite->getId();
                         })->first();
                         if (false === $zoneTouristiqueVideo) {
@@ -679,8 +714,11 @@ class ZoneTouristiqueUnifieController extends Controller
      * @param ZoneTouristique $zoneTouristiqueSite
      * @param EntityManager $emSite
      */
-    private function createZoneTouristiqueImage(ZoneTouristiqueImage $zoneTouristiqueImage, ZoneTouristique $zoneTouristiqueSite, EntityManager $emSite)
-    {
+    private function createZoneTouristiqueImage(
+        ZoneTouristiqueImage $zoneTouristiqueImage,
+        ZoneTouristique $zoneTouristiqueSite,
+        EntityManager $emSite
+    ) {
         /** @var ZoneTouristiqueImage $zoneTouristiqueImageSite */
         // on récupère la classe correspondant au image (photo ou video)
         $typeImage = (new ReflectionClass($zoneTouristiqueImage))->getName();
@@ -727,8 +765,11 @@ class ZoneTouristiqueUnifieController extends Controller
      * @param ZoneTouristique $zoneTouristiqueSite
      * @param EntityManager $emSite
      */
-    private function createZoneTouristiquePhoto(ZoneTouristiquePhoto $zoneTouristiquePhoto, ZoneTouristique $zoneTouristiqueSite, EntityManager $emSite)
-    {
+    private function createZoneTouristiquePhoto(
+        ZoneTouristiquePhoto $zoneTouristiquePhoto,
+        ZoneTouristique $zoneTouristiqueSite,
+        EntityManager $emSite
+    ) {
         /** @var ZoneTouristiquePhoto $zoneTouristiquePhotoSite */
         // on récupère la classe correspondant au photo (photo ou video)
         $typePhoto = (new ReflectionClass($zoneTouristiquePhoto))->getName();
@@ -902,7 +943,10 @@ class ZoneTouristiqueUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\ZoneTouristiqueUnifieType',
             $zoneTouristiqueUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 //        dump($editForm);die();
@@ -921,10 +965,14 @@ class ZoneTouristiqueUnifieController extends Controller
                 // on récupère les ZoneTouristiqueImage de l'hébergementCrm pour les mettre dans une collection
                 // afin de les comparer au originaux.
                 /** @var ZoneTouristique $zoneTouristiqueCrm */
-                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 1;
                 })->first();
-                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 0;
                 });
                 $newZoneTouristiqueImages = new ArrayCollection();
@@ -958,7 +1006,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                         'zoneTouristique' => $zoneTouristiqueSite
                                     ))
                                 );
-                                $zoneTouristiqueImageSiteSite = $zoneTouristiqueImageSiteSites->filter(function (ZoneTouristiqueImage $element)
+                                $zoneTouristiqueImageSiteSite = $zoneTouristiqueImageSiteSites->filter(function (
+                                    ZoneTouristiqueImage $element
+                                )
                                 use ($zoneTouristiqueImageSite) {
 //                            return $element->getImage()->getProviderReference() == $zoneTouristiqueImageSite->getImage()->getProviderReference();
                                     return $element->getImage()->getMetadataValue('crm_ref_id') == $zoneTouristiqueImageSite->getImage()->getId();
@@ -984,10 +1034,14 @@ class ZoneTouristiqueUnifieController extends Controller
                 // on récupère les ZoneTouristiquePhoto de l'hébergementCrm pour les mettre dans une collection
                 // afin de les comparer au originaux.
                 /** @var ZoneTouristique $zoneTouristiqueCrm */
-                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 1;
                 })->first();
-                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 0;
                 });
                 $newZoneTouristiquePhotos = new ArrayCollection();
@@ -1021,7 +1075,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                         'zoneTouristique' => $zoneTouristiqueSite
                                     ))
                                 );
-                                $zoneTouristiquePhotoSiteSite = $zoneTouristiquePhotoSiteSites->filter(function (ZoneTouristiquePhoto $element)
+                                $zoneTouristiquePhotoSiteSite = $zoneTouristiquePhotoSiteSites->filter(function (
+                                    ZoneTouristiquePhoto $element
+                                )
                                 use ($zoneTouristiquePhotoSite) {
 //                            return $element->getPhoto()->getProviderReference() == $zoneTouristiquePhotoSite->getPhoto()->getProviderReference();
                                     return $element->getPhoto()->getMetadataValue('crm_ref_id') == $zoneTouristiquePhotoSite->getPhoto()->getId();
@@ -1056,10 +1112,14 @@ class ZoneTouristiqueUnifieController extends Controller
                 // ** fin suppression videos **
                 // *** gestion des videos ***
                 /** @var ZoneTouristique $zoneTouristiqueCrm */
-                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueCrm = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 1;
                 })->first();
-                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) {
+                $zoneTouristiqueSites = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                    ZoneTouristique $element
+                ) {
                     return $element->getSite()->getCrm() == 0;
                 });
                 /** @var ZoneTouristiqueVideo $zoneTouristiqueVideo */
@@ -1068,7 +1128,10 @@ class ZoneTouristiqueUnifieController extends Controller
                         if (empty($zoneTouristiqueVideo->getId())) {
                             $zoneTouristiqueVideoSite = clone $zoneTouristiqueVideo;
                         } else {
-                            $zoneTouristiqueVideoSite = $em->getRepository(ZoneTouristiqueVideo::class)->findOneBy(array('video' => $originalVideos->get($zoneTouristiqueVideo->getId()), 'zoneTouristique' => $zoneTouristiqueSite));
+                            $zoneTouristiqueVideoSite = $em->getRepository(ZoneTouristiqueVideo::class)->findOneBy(array(
+                                'video' => $originalVideos->get($zoneTouristiqueVideo->getId()),
+                                'zoneTouristique' => $zoneTouristiqueSite
+                            ));
                             if ($originalVideos->get($zoneTouristiqueVideo->getId()) != $zoneTouristiqueVideo->getVideo()) {
                                 $em->remove($zoneTouristiqueVideoSite->getVideo());
                                 $this->deleteFile($zoneTouristiqueVideoSite->getVideo());
@@ -1078,7 +1141,8 @@ class ZoneTouristiqueUnifieController extends Controller
                         $zoneTouristiqueSite->addVideo($zoneTouristiqueVideoSite);
                         $actif = false;
                         if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
-                            if (in_array($zoneTouristiqueSite->getSite()->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
+                            if (in_array($zoneTouristiqueSite->getSite()->getId(),
+                                $request->get('zone_touristique_unifie')['zoneTouristiques'][0]['videos'][$key]['sites'])) {
                                 $actif = true;
                             }
                         }
@@ -1086,7 +1150,9 @@ class ZoneTouristiqueUnifieController extends Controller
 
                         // *** traductions ***
                         foreach ($zoneTouristiqueVideo->getTraductions() as $traduction) {
-                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (ZoneTouristiqueVideoTraduction $element) use ($traduction) {
+                            $traductionSite = $zoneTouristiqueVideoSite->getTraductions()->filter(function (
+                                ZoneTouristiqueVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue() == $traduction->getLangue();
                             })->first();
                             if (false === $traductionSite) {
@@ -1120,7 +1186,9 @@ class ZoneTouristiqueUnifieController extends Controller
                         if ($site->getCrm() == 0) {
                             // on récupère l'hébegergement du site
                             /** @var ZoneTouristique $zoneTouristiqueSite */
-                            $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) use ($site) {
+                            $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                                ZoneTouristique $element
+                            ) use ($site) {
                                 return $element->getSite() == $site;
                             })->first();
                             // si hébergement existe
@@ -1130,7 +1198,10 @@ class ZoneTouristiqueUnifieController extends Controller
                                 // s'il ne s'agit pas d'un nouveau zoneTouristiqueImage
                                 if (!empty($zoneTouristiqueImage->getId())) {
                                     // on récupère l'zoneTouristiqueImage pour le modifier
-                                    $zoneTouristiqueImageSite = $em->getRepository(ZoneTouristiqueImage::class)->findOneBy(array('zoneTouristique' => $zoneTouristiqueSite, 'image' => $originalImages->get($key)));
+                                    $zoneTouristiqueImageSite = $em->getRepository(ZoneTouristiqueImage::class)->findOneBy(array(
+                                        'zoneTouristique' => $zoneTouristiqueSite,
+                                        'image' => $originalImages->get($key)
+                                    ));
                                 }
                                 // si l'zoneTouristiqueImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                                 if (empty($zoneTouristiqueImage->getId()) || empty($zoneTouristiqueImageSite)) {
@@ -1161,7 +1232,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                         $traductionSites = $zoneTouristiqueImageSite->getTraductions();
                                         $traductionSite = null;
                                         if (!$traductionSites->isEmpty()) {
-                                            $traductionSite = $traductionSites->filter(function (ZoneTouristiqueImageTraduction $element) use ($traduction) {
+                                            $traductionSite = $traductionSites->filter(function (
+                                                ZoneTouristiqueImageTraduction $element
+                                            ) use ($traduction) {
                                                 return $element->getLangue() == $traduction->getLangue();
                                             })->first();
                                         }
@@ -1174,7 +1247,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                     }
                                     // on vérifie si l'hébergementImage doit être actif sur le site ou non
                                     if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['images'][$key]['sites']) &&
-                                        in_array($site->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['images'][$key]['sites'])
+                                        in_array($site->getId(),
+                                            $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['images'][$key]['sites'])
                                     ) {
                                         $zoneTouristiqueImageSite->setActif(true);
                                     } else {
@@ -1210,7 +1284,9 @@ class ZoneTouristiqueUnifieController extends Controller
                         if ($site->getCrm() == 0) {
                             // on récupère l'hébegergement du site
                             /** @var ZoneTouristique $zoneTouristiqueSite */
-                            $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (ZoneTouristique $element) use ($site) {
+                            $zoneTouristiqueSite = $zoneTouristiqueUnifie->getZoneTouristiques()->filter(function (
+                                ZoneTouristique $element
+                            ) use ($site) {
                                 return $element->getSite() == $site;
                             })->first();
                             // si hébergement existe
@@ -1220,7 +1296,10 @@ class ZoneTouristiqueUnifieController extends Controller
                                 // s'il ne s'agit pas d'un nouveau zoneTouristiquePhoto
                                 if (!empty($zoneTouristiquePhoto->getId())) {
                                     // on récupère l'zoneTouristiquePhoto pour le modifier
-                                    $zoneTouristiquePhotoSite = $em->getRepository(ZoneTouristiquePhoto::class)->findOneBy(array('zoneTouristique' => $zoneTouristiqueSite, 'photo' => $originalPhotos->get($key)));
+                                    $zoneTouristiquePhotoSite = $em->getRepository(ZoneTouristiquePhoto::class)->findOneBy(array(
+                                        'zoneTouristique' => $zoneTouristiqueSite,
+                                        'photo' => $originalPhotos->get($key)
+                                    ));
                                 }
                                 // si l'zoneTouristiquePhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                                 if (empty($zoneTouristiquePhoto->getId()) || empty($zoneTouristiquePhotoSite)) {
@@ -1251,7 +1330,9 @@ class ZoneTouristiqueUnifieController extends Controller
                                         $traductionSites = $zoneTouristiquePhotoSite->getTraductions();
                                         $traductionSite = null;
                                         if (!$traductionSites->isEmpty()) {
-                                            $traductionSite = $traductionSites->filter(function (ZoneTouristiquePhotoTraduction $element) use ($traduction) {
+                                            $traductionSite = $traductionSites->filter(function (
+                                                ZoneTouristiquePhotoTraduction $element
+                                            ) use ($traduction) {
                                                 return $element->getLangue() == $traduction->getLangue();
                                             })->first();
                                         }
@@ -1264,7 +1345,8 @@ class ZoneTouristiqueUnifieController extends Controller
                                     }
                                     // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                     if (!empty($request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['photos'][$key]['sites']) &&
-                                        in_array($site->getId(), $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['photos'][$key]['sites'])
+                                        in_array($site->getId(),
+                                            $request->get('zone_touristique_unifie')['zoneTouristiques'][$keyCrm]['photos'][$key]['sites'])
                                     ) {
                                         $zoneTouristiquePhotoSite->setActif(true);
                                     } else {
@@ -1287,7 +1369,8 @@ class ZoneTouristiqueUnifieController extends Controller
                 $em->flush();
 
 
-                $this->copieVersSites($zoneTouristiqueUnifie, $originalZoneTouristiqueImages, $originalZoneTouristiquePhotos);
+                $this->copieVersSites($zoneTouristiqueUnifie, $originalZoneTouristiqueImages,
+                    $originalZoneTouristiquePhotos);
             } catch (ForeignKeyConstraintViolationException $except) {
                 switch ($except->getCode()) {
                     case 0:
