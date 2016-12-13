@@ -16,6 +16,7 @@
                                 {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][{{ loop.index - 1 }}][typeAffectation]"#}
                                 name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][0][typeAffectation]"
                                 onchange="displayAffectationPanel(this , '{{ keyPromotion }}' , '{{ promotion.vars.value.id }}' , '{{ promotion.vars.value.site.id }}');"
+                                required
                                 value="{{ key }}" type="radio">
                         {{ affectation }}</label>
                 </div>
