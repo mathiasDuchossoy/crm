@@ -4,8 +4,6 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-
 /**
  * NombreDeChambreTraduction
  */
