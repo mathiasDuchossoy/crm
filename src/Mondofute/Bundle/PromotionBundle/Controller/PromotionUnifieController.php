@@ -269,31 +269,35 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-        $promotionTypeAffectationCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first()->getPromotionTypeAffectations();
-        $typeAffectations = new ArrayCollection();
-        foreach ($promotionTypeAffectationCrms as $promotionTypeAffectationCrm) {
-            $typeAffectations->add($promotionTypeAffectationCrm->getTypeAffectation());
-        }
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            foreach ($promotion->getPromotionTypeAffectations() as $affectation) {
-                $affectation->setPromotion($promotion);
-            }
-            if ($promotion->getSite()->getCrm() == 0) {
-                $typeAffectationSites = new ArrayCollection();
-                foreach ($promotion->getPromotionTypeAffectations() as $promotionTypeAffectationSite) {
-                    $typeAffectationSites->add($promotionTypeAffectationSite->getTypeAffectation());
-                }
-                foreach ($typeAffectations as $typeAffectation) {
-                    if (false === $typeAffectationSites->contains($typeAffectation)) {
-                        $newTypeAffectation = new PromotionTypeAffectation();
-                        $promotion->addPromotionTypeAffectation($newTypeAffectation);
-                        $newTypeAffectation->setTypeAffectation($typeAffectation);
-                    }
-                }
-            }
-        }
+
+        /* *** cas où l'on peut choisir plusieurs type affectations ***
+       $promotionTypeAffectationCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
+           return $element->getSite()->getCrm() == 1;
+       })->first()->getPromotionTypeAffectations();
+       $typeAffectations = new ArrayCollection();
+       foreach ($promotionTypeAffectationCrms as $promotionTypeAffectationCrm) {
+           $typeAffectations->add($promotionTypeAffectationCrm->getTypeAffectation());
+       }
+       foreach ($promotionUnifie->getPromotions() as $promotion) {
+           foreach ($promotion->getPromotionTypeAffectations() as $affectation) {
+               $affectation->setPromotion($promotion);
+           }
+           if ($promotion->getSite()->getCrm() == 0) {
+               $typeAffectationSites = new ArrayCollection();
+               foreach ($promotion->getPromotionTypeAffectations() as $promotionTypeAffectationSite) {
+                   $typeAffectationSites->add($promotionTypeAffectationSite->getTypeAffectation());
+               }
+               foreach ($typeAffectations as $typeAffectation) {
+                   if (false === $typeAffectationSites->contains($typeAffectation)) {
+                       $newTypeAffectation = new PromotionTypeAffectation();
+                       $promotion->addPromotionTypeAffectation($newTypeAffectation);
+                       $newTypeAffectation->setTypeAffectation($typeAffectation);
+                   }
+               }
+           }
+       }
+        */
+
     }
 
     /**
@@ -853,6 +857,9 @@ class PromotionUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        // **********************************************
+        // ********** VALIDATION DU FORMULAIRE **********
+        // **********************************************
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($promotionUnifie->getPromotions() as $promotion) {
                 if (false === in_array($promotion->getSite()->getId(), $sitesAEnregistrer)) {
@@ -1131,34 +1138,34 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-        $promotionFournisseurCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first()->getPromotionFournisseurs();
-        $fournisseurs = new ArrayCollection();
-        foreach ($promotionFournisseurCrms as $promotionFournisseurCrm) {
-            $fournisseurs->add($promotionFournisseurCrm);
-        }
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            if ($promotion->getSite()->getCrm() == 0) {
-                foreach ($promotionFournisseurCrms as $key => $fournisseur) {
-                    $fournisseurSite = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($fournisseur) {
-                        return ($element->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId()
-                            and $element->getType() == $fournisseur->getType()
-                            and $element->getPromotion()->getId() == $fournisseur->getPromotion()->getId()
-                        );
-                    })->first();
-                    if (false === $fournisseurSite) {
-                        if (empty($em->getRepository(PromotionFournisseur::class)->findOneBy(['type' => $fournisseur->getType(), 'promotion' => $promotion, 'fournisseur' => $fournisseur->getFournisseur()]))) {
-                            $newFournisseur = new PromotionFournisseur();
-                            $promotion->addPromotionFournisseur($newFournisseur);
-                            $newFournisseur
-                                ->setFournisseur($fournisseur->getFournisseur())
-                                ->setType($fournisseur->getType());
-                        }
-                    }
-                }
-            }
-        }
+//        $promotionFournisseurCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
+//            return $element->getSite()->getCrm() == 1;
+//        })->first()->getPromotionFournisseurs();
+//        $fournisseurs = new ArrayCollection();
+//        foreach ($promotionFournisseurCrms as $promotionFournisseurCrm) {
+//            $fournisseurs->add($promotionFournisseurCrm);
+//        }
+//        foreach ($promotionUnifie->getPromotions() as $promotion) {
+//            if ($promotion->getSite()->getCrm() == 0) {
+//                foreach ($promotionFournisseurCrms as $key => $fournisseur) {
+//                    $fournisseurSite = $promotion->getPromotionFournisseurs()->filter(function (PromotionFournisseur $element) use ($fournisseur) {
+//                        return ($element->getFournisseur()->getId() == $fournisseur->getFournisseur()->getId()
+//                            and $element->getType() == $fournisseur->getType()
+//                            and $element->getPromotion()->getId() == $fournisseur->getPromotion()->getId()
+//                        );
+//                    })->first();
+//                    if (false === $fournisseurSite) {
+//                        if (empty($em->getRepository(PromotionFournisseur::class)->findOneBy(['type' => $fournisseur->getType(), 'promotion' => $promotion, 'fournisseur' => $fournisseur->getFournisseur()]))) {
+//                            $newFournisseur = new PromotionFournisseur();
+//                            $promotion->addPromotionFournisseur($newFournisseur);
+//                            $newFournisseur
+//                                ->setFournisseur($fournisseur->getFournisseur())
+//                                ->setType($fournisseur->getType());
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -1229,36 +1236,36 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-        $promotionStationCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first()->getPromotionStations();
-        $stations = new ArrayCollection();
-        $fournisseurs = new ArrayCollection();
-        foreach ($promotionStationCrms as $promotionStationCrm) {
-            $stations->add($promotionStationCrm->getStation());
-            $fournisseurs->add($promotionStationCrm->getFournisseur());
-        }
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            if ($promotion->getSite()->getCrm() == 0) {
-                $stationSites = new ArrayCollection();
-                foreach ($promotion->getPromotionStations() as $promotionStationSite) {
-                    $stationSites->add($promotionStationSite->getStation());
-                }
-
-                foreach ($stations as $key => $station) {
-                    $stationSite = $station->getStationUnifie()->getStations()->filter(function (Station $element) use ($promotion) {
-                        return $element->getSite() == $promotion->getSite();
-                    })->first();
-                    if (false === $stationSites->contains($stationSite)) {
-                        $newStation = new PromotionStation();
-                        $promotion->addPromotionStation($newStation);
-                        $newStation
-                            ->setStation($stationSite)
-                            ->setFournisseur($fournisseurs->get($key));
-                    }
-                }
-            }
-        }
+//        $promotionStationCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
+//            return $element->getSite()->getCrm() == 1;
+//        })->first()->getPromotionStations();
+//        $stations = new ArrayCollection();
+//        $fournisseurs = new ArrayCollection();
+//        foreach ($promotionStationCrms as $promotionStationCrm) {
+//            $stations->add($promotionStationCrm->getStation());
+//            $fournisseurs->add($promotionStationCrm->getFournisseur());
+//        }
+//        foreach ($promotionUnifie->getPromotions() as $promotion) {
+//            if ($promotion->getSite()->getCrm() == 0) {
+//                $stationSites = new ArrayCollection();
+//                foreach ($promotion->getPromotionStations() as $promotionStationSite) {
+//                    $stationSites->add($promotionStationSite->getStation());
+//                }
+//
+//                foreach ($stations as $key => $station) {
+//                    $stationSite = $station->getStationUnifie()->getStations()->filter(function (Station $element) use ($promotion) {
+//                        return $element->getSite() == $promotion->getSite();
+//                    })->first();
+//                    if (false === $stationSites->contains($stationSite)) {
+//                        $newStation = new PromotionStation();
+//                        $promotion->addPromotionStation($newStation);
+//                        $newStation
+//                            ->setStation($stationSite)
+//                            ->setFournisseur($fournisseurs->get($key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -1278,32 +1285,32 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-        $promotionFournisseurPrestationAnnexeCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first()->getPromotionFournisseurPrestationAnnexes();
-        $fournisseurPrestationAnnexes = new ArrayCollection();
-        $fournisseurs = new ArrayCollection();
-        foreach ($promotionFournisseurPrestationAnnexeCrms as $promotionFournisseurPrestationAnnexeCrm) {
-            $fournisseurPrestationAnnexes->add($promotionFournisseurPrestationAnnexeCrm->getFournisseurPrestationAnnexe());
-            $fournisseurs->add($promotionFournisseurPrestationAnnexeCrm->getFournisseur());
-        }
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            if ($promotion->getSite()->getCrm() == 0) {
-                $fournisseurPrestationAnnexeSites = new ArrayCollection();
-                foreach ($promotion->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexeSite) {
-                    $fournisseurPrestationAnnexeSites->add($promotionFournisseurPrestationAnnexeSite->getFournisseurPrestationAnnexe());
-                }
-                foreach ($fournisseurPrestationAnnexes as $key => $fournisseurPrestationAnnexe) {
-                    if (false === $fournisseurPrestationAnnexeSites->contains($fournisseurPrestationAnnexe)) {
-                        $newFournisseurPrestationAnnexe = new PromotionFournisseurPrestationAnnexe();
-                        $promotion->addPromotionFournisseurPrestationAnnex($newFournisseurPrestationAnnexe);
-                        $newFournisseurPrestationAnnexe
-                            ->setFournisseurPrestationAnnexe($fournisseurPrestationAnnexe)
-                            ->setFournisseur($fournisseurs->get($key));
-                    }
-                }
-            }
-        }
+//        $promotionFournisseurPrestationAnnexeCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
+//            return $element->getSite()->getCrm() == 1;
+//        })->first()->getPromotionFournisseurPrestationAnnexes();
+//        $fournisseurPrestationAnnexes = new ArrayCollection();
+//        $fournisseurs = new ArrayCollection();
+//        foreach ($promotionFournisseurPrestationAnnexeCrms as $promotionFournisseurPrestationAnnexeCrm) {
+//            $fournisseurPrestationAnnexes->add($promotionFournisseurPrestationAnnexeCrm->getFournisseurPrestationAnnexe());
+//            $fournisseurs->add($promotionFournisseurPrestationAnnexeCrm->getFournisseur());
+//        }
+//        foreach ($promotionUnifie->getPromotions() as $promotion) {
+//            if ($promotion->getSite()->getCrm() == 0) {
+//                $fournisseurPrestationAnnexeSites = new ArrayCollection();
+//                foreach ($promotion->getPromotionFournisseurPrestationAnnexes() as $promotionFournisseurPrestationAnnexeSite) {
+//                    $fournisseurPrestationAnnexeSites->add($promotionFournisseurPrestationAnnexeSite->getFournisseurPrestationAnnexe());
+//                }
+//                foreach ($fournisseurPrestationAnnexes as $key => $fournisseurPrestationAnnexe) {
+//                    if (false === $fournisseurPrestationAnnexeSites->contains($fournisseurPrestationAnnexe)) {
+//                        $newFournisseurPrestationAnnexe = new PromotionFournisseurPrestationAnnexe();
+//                        $promotion->addPromotionFournisseurPrestationAnnex($newFournisseurPrestationAnnexe);
+//                        $newFournisseurPrestationAnnexe
+//                            ->setFournisseurPrestationAnnexe($fournisseurPrestationAnnexe)
+//                            ->setFournisseur($fournisseurs->get($key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -1323,32 +1330,32 @@ class PromotionUnifieController extends Controller
                 }
             }
         }
-        $promotionFamillePrestationAnnexeCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
-            return $element->getSite()->getCrm() == 1;
-        })->first()->getPromotionFamillePrestationAnnexes();
-        $famillePrestationAnnexes = new ArrayCollection();
-        $fournisseurs = new ArrayCollection();
-        foreach ($promotionFamillePrestationAnnexeCrms as $promotionFamillePrestationAnnexeCrm) {
-            $famillePrestationAnnexes->add($promotionFamillePrestationAnnexeCrm->getFamillePrestationAnnexe());
-            $fournisseurs->add($promotionFamillePrestationAnnexeCrm->getFournisseur());
-        }
-        foreach ($promotionUnifie->getPromotions() as $promotion) {
-            if ($promotion->getSite()->getCrm() == 0) {
-                $famillePrestationAnnexeSites = new ArrayCollection();
-                foreach ($promotion->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
-                    $famillePrestationAnnexeSites->add($promotionFamillePrestationAnnexeSite->getFamillePrestationAnnexe());
-                }
-                foreach ($famillePrestationAnnexes as $key => $famillePrestationAnnexe) {
-                    if (false === $famillePrestationAnnexeSites->contains($famillePrestationAnnexe)) {
-                        $newFamillePrestationAnnexe = new PromotionFamillePrestationAnnexe();
-                        $promotion->addPromotionFamillePrestationAnnex($newFamillePrestationAnnexe);
-                        $newFamillePrestationAnnexe
-                            ->setFamillePrestationAnnexe($famillePrestationAnnexe)
-                            ->setFournisseur($fournisseurs->get($key));
-                    }
-                }
-            }
-        }
+//        $promotionFamillePrestationAnnexeCrms = $promotionUnifie->getPromotions()->filter(function (Promotion $element) {
+//            return $element->getSite()->getCrm() == 1;
+//        })->first()->getPromotionFamillePrestationAnnexes();
+//        $famillePrestationAnnexes = new ArrayCollection();
+//        $fournisseurs = new ArrayCollection();
+//        foreach ($promotionFamillePrestationAnnexeCrms as $promotionFamillePrestationAnnexeCrm) {
+//            $famillePrestationAnnexes->add($promotionFamillePrestationAnnexeCrm->getFamillePrestationAnnexe());
+//            $fournisseurs->add($promotionFamillePrestationAnnexeCrm->getFournisseur());
+//        }
+//        foreach ($promotionUnifie->getPromotions() as $promotion) {
+//            if ($promotion->getSite()->getCrm() == 0) {
+//                $famillePrestationAnnexeSites = new ArrayCollection();
+//                foreach ($promotion->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
+//                    $famillePrestationAnnexeSites->add($promotionFamillePrestationAnnexeSite->getFamillePrestationAnnexe());
+//                }
+//                foreach ($famillePrestationAnnexes as $key => $famillePrestationAnnexe) {
+//                    if (false === $famillePrestationAnnexeSites->contains($famillePrestationAnnexe)) {
+//                        $newFamillePrestationAnnexe = new PromotionFamillePrestationAnnexe();
+//                        $promotion->addPromotionFamillePrestationAnnex($newFamillePrestationAnnexe);
+//                        $newFamillePrestationAnnexe
+//                            ->setFamillePrestationAnnexe($famillePrestationAnnexe)
+//                            ->setFournisseur($fournisseurs->get($key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     public function getFournisseurHebergementsAction($promotionId, $fournisseurId, $siteId)

@@ -13,6 +13,7 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement:
     manyToOne:
         hebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: promotionHebergements
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         promotion:

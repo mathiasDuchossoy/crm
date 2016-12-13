@@ -7,7 +7,6 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
-use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -40,7 +39,7 @@ class promotionFamillePrestationAnnexeCommand extends ContainerAwareCommand
         /** @var FamillePrestationAnnexe $type */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         $fournisseurId = $input->getArgument('fournisseurId');
-//        $typeAffectationPrestationAnnexe = TypeAffectation::prestationAnnexe;
+        $typeAffectationPrestationAnnexe = TypeAffectation::prestationAnnexe;
 
         $sites = $em->getRepository(Site::class)->findAll();
         foreach ($sites as $site) {
@@ -50,8 +49,7 @@ class promotionFamillePrestationAnnexeCommand extends ContainerAwareCommand
             $fournisseur = $emSite->find(Fournisseur::class, $fournisseurId);
             foreach ($fournisseur->getTypes() as $type) {
                 $typeId = $type->getId();
-                $promotions = $emSite->getRepository('MondofutePromotionBundle:Promotion')->findByFournisseur($fournisseurId);
-
+                $promotions = $emSite->getRepository('MondofutePromotionBundle:Promotion')->findByFournisseurAndAffectation($fournisseurId, $typeAffectationPrestationAnnexe);
                 foreach ($promotions as $promotion) {
                     $promotionId = $promotion->getId();
                     $promotionFamillePrestationAnnexe = $promotion->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($typeId, $fournisseurId, $promotionId) {
@@ -68,7 +66,7 @@ class promotionFamillePrestationAnnexeCommand extends ContainerAwareCommand
             }
 //            foreach ($famillePrestationannexes as $famillePrestationannex) {
 //                if (!$fournisseur->getTypes()->contains($famillePrestationannex)) {
-//                    $sql = 'DELETE FROM promotion_fournisseur where type = ' . $typeAffectationPrestationAnnexe . ' and fournisseur_id = ' . $fournisseur->getId();
+//                    $sql = 'DELETE FROM promotion_famille_prestation_annexe where type = ' . $typeAffectationPrestationAnnexe . ' and fournisseur_id = ' . $fournisseur->getId();
 //                    $connection->executeQuery($sql);
 //                }
 //            }

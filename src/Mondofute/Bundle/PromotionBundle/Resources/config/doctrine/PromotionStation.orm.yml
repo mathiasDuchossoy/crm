@@ -13,6 +13,7 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionStation:
     manyToOne:
         station:
             targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: promotionStations
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
         promotion:

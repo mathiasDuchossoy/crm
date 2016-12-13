@@ -11,6 +11,7 @@ use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
@@ -127,6 +128,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $promotionFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $promotionFournisseurPrestationAnnexes;
 
     /**
      * Fournisseur constructor.
@@ -143,6 +148,7 @@ class Fournisseur extends Moral
         $this->types = new ArrayCollection();
         $this->fournisseurEnfants = new ArrayCollection();
         $this->promotionFournisseurs = new ArrayCollection();
+        $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -1011,5 +1017,39 @@ class Fournisseur extends Moral
     public function getPromotionFournisseurs()
     {
         return $this->promotionFournisseurs;
+    }
+
+    /**
+     * Add promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     *
+     * @return Fournisseur
+     */
+    public function addPromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes[] = $promotionFournisseurPrestationAnnex->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     */
+    public function removePromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes->removeElement($promotionFournisseurPrestationAnnex);
+    }
+
+    /**
+     * Get promotionFournisseurPrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getPromotionFournisseurPrestationAnnexes()
+    {
+        return $this->promotionFournisseurPrestationAnnexes;
     }
 }

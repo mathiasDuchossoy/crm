@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -42,7 +43,7 @@ class FournisseurHebergement
      */
     private $adresse;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
@@ -50,11 +51,11 @@ class FournisseurHebergement
      */
     private $remiseClef;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $receptions;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $logements;
 
@@ -64,7 +65,7 @@ class FournisseurHebergement
     public function __construct()
     {
         $this->adresse = new Adresse();
-        $this->adresse->setCoordonneeGPS(new CoordonneesGPS());
+        $this->adresse->setCoordonneeGps(new CoordonneesGPS());
         $this->adresse->setDateCreation();
         $this->telFixe = new TelFixe();
         $this->telFixe->setDateCreation();
@@ -237,7 +238,7 @@ class FournisseurHebergement
     /**
      * Get traductions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTraductions()
     {
@@ -295,7 +296,7 @@ class FournisseurHebergement
     /**
      * Get receptions
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getReceptions()
     {
@@ -329,7 +330,7 @@ class FournisseurHebergement
     /**
      * Get logements
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getLogements()
     {
