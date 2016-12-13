@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\ClientBundle\Repository;
+
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 
 /**
@@ -15,48 +16,44 @@ class ClientRepository extends \Doctrine\ORM\EntityRepository
      * @param $clientName
      * @return array
      */
-    public function getClients($clientName){
+    public function getClients($clientName)
+    {
         $q = $this->createQueryBuilder('client')
             ->select('client')
             ->where('client.prenom LIKE :val')
-            ->setParameter('val', '%'.$clientName.'%')
+            ->setParameter('val', '%' . $clientName . '%')
             ->orWhere('client.nom LIKE :val2')
-            ->setParameter('val2', '%'.$clientName.'%')
-        ;
+            ->setParameter('val2', '%' . $clientName . '%');
 
         return $q->getQuery()->getResult();
     }
 
-    public function getClientsById($clients){
+    public function getClientsById($clients)
+    {
         /** @var Client $client */
-        if (count($clients) > 0){
+        if (count($clients) > 0) {
             $qb = $this->getEntityManager()->createQueryBuilder();
             $qb
                 ->select('client')
-                ->from('MondofuteClientBundle:Client', 'client')
-            ;
+                ->from('MondofuteClientBundle:Client', 'client');
 
-            for ($i = 0; $i < count($clients); $i++ ){
+            for ($i = 0; $i < count($clients); $i++) {
 //                dump($clients[$i]);die;
                 $client = $clients[$i];
-                if (!$i){
+                if (!$i) {
                     $qb
-                        ->where("client.id = :id".$i)
-                        ->setParameter('id'.$i , $client->getId())
-                    ;
-                }
-                else{
+                        ->where("client.id = :id" . $i)
+                        ->setParameter('id' . $i, $client->getId());
+                } else {
 
                     $qb
-                        ->orWhere("client.id = :id".$i)
-                        ->setParameter('id'.$i , $client->getId())
-                    ;
+                        ->orWhere("client.id = :id" . $i)
+                        ->setParameter('id' . $i, $client->getId());
                 }
             }
             $qb
-                ->orderBy('client.nom' , 'ASC')
-                ->orderBy('client.prenom' , 'ASC')
-            ;
+                ->orderBy('client.nom', 'ASC')
+                ->orderBy('client.prenom', 'ASC');
 
             return $qb;
         }

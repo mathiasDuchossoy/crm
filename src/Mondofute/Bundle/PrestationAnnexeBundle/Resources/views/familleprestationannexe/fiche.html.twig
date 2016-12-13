@@ -16,19 +16,19 @@
             {{ form_start(form) }}
             {% set iTraduc = 0 %}
             <ul class="nav nav-tabs">
-            {% for traduction in form.traductions %}
-                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                    <a data-toggle="tab"
-                       href="#traduction_{{ traduction.vars.value.langue.id }}">
-                         {#affiche la langue en fonction de la locale#}
-                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                {{ traductionLangue.libelle }}
-                            {% endif %}
-                        {% endfor %}
-                    </a>
-                </li>
-            {% endfor %}
+                {% for traduction in form.traductions %}
+                    <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                        <a data-toggle="tab"
+                           href="#traduction_{{ traduction.vars.value.langue.id }}">
+                            {#affiche la langue en fonction de la locale#}
+                            {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                    {{ traductionLangue.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
             <div class="tab-content">
                 {% set iTraduc = 0 %}

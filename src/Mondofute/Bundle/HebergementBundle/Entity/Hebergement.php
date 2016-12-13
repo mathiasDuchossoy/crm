@@ -106,8 +106,7 @@ class Hebergement
      */
     public function setHebergementUnifie(
         HebergementUnifie $hebergementUnifie = null
-    )
-    {
+    ) {
         $this->hebergementUnifie = $hebergementUnifie;
 
         return $this;
@@ -309,8 +308,7 @@ class Hebergement
      */
     public function setTypeHebergement(
         TypeHebergement $typeHebergement = null
-    )
-    {
+    ) {
         $this->typeHebergement = $typeHebergement;
 
         return $this;
@@ -495,7 +493,6 @@ class Hebergement
     {
         return $this->motClefs;
     }
-
     /**
      * Add prestationAnnexeHebergement
      *
@@ -503,8 +500,9 @@ class Hebergement
      *
      * @return Hebergement
      */
-    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
-    {
+    public function addPrestationAnnexeHebergement(
+        \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+    ) {
         $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
 
         return $this;
@@ -515,8 +513,9 @@ class Hebergement
      *
      * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
      */
-    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
-    {
+    public function removePrestationAnnexeHebergement(
+        \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+    ) {
         $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
     }
 

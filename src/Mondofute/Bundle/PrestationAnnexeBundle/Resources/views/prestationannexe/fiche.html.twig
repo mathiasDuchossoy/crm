@@ -14,35 +14,35 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-                        <ul class="nav nav-tabs">
-                            {{ form_row( form.famillePrestationAnnexe) }}
-                            {{ form_row( form.sousFamillePrestationAnnexe) }}
-                            {% set iTraduc = 0 %}
-                            {% for traduction in form.traductions %}
-                                <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                                    <a data-toggle="tab"
-                                       href="#traduction_prestationannexe_{{ traduction.vars.value.langue.id }}">
-                                        {# affiche la langue en fonction de la locale#}
-                                        {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                                            {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                                {{ traductionLangue.libelle }}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </a>
-                                </li>
+            <ul class="nav nav-tabs">
+                {{ form_row( form.famillePrestationAnnexe) }}
+                {{ form_row( form.sousFamillePrestationAnnexe) }}
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                        <a data-toggle="tab"
+                           href="#traduction_prestationannexe_{{ traduction.vars.value.langue.id }}">
+                            {# affiche la langue en fonction de la locale#}
+                            {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                    {{ traductionLangue.libelle }}
+                                {% endif %}
                             {% endfor %}
-                        </ul>
-                        <div class="tab-content">
-                            {% set iTraduc = 0 %}
-                            {% for traduction in form.traductions %}
-                                <div id="traduction_prestationannexe_{{ traduction.vars.value.langue.id }}"
-                                     class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                                    {% for element in traduction.children %}
-                                        {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
-                                    {% endfor %}
-                                </div>
-                            {% endfor %}
-                        </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <div id="traduction_prestationannexe_{{ traduction.vars.value.langue.id }}"
+                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {% for element in traduction.children %}
+                            {{ form_row(element , { 'attr' : { 'data-unique_block_prefix' : element.vars['unique_block_prefix'] ~ '_' ~ element.parent.vars['value'].langue.code }}) }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
 
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}

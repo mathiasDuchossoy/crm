@@ -19,10 +19,8 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -40,10 +38,8 @@ use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
-use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -57,7 +53,6 @@ use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
-use Nelmio\ApiDocBundle\Parser\JsonSerializableParser;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
@@ -1160,8 +1155,7 @@ class HebergementUnifieController extends Controller
         $fournisseur,
         $fournisseurSite,
         $emSite
-    )
-    {
+    ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1294,8 +1288,7 @@ class HebergementUnifieController extends Controller
         HebergementVisuel $entityVisuel,
         Hebergement $entitySite,
         EntityManager $emSite
-    )
-    {
+    ) {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
@@ -1445,7 +1438,8 @@ class HebergementUnifieController extends Controller
             }
             return $this->redirect($request->headers->get('referer'));
         }
-        $this->addFlash('success', 'Le coup de coeur pour l\'hébergement ' . $entityUnifie->getId() . ' a bien été supprimé');
+        $this->addFlash('success',
+            'Le coup de coeur pour l\'hébergement ' . $entityUnifie->getId() . ' a bien été supprimé');
         return $this->redirectToRoute('hebergement_hebergement_index');
     }
 

@@ -36,7 +36,7 @@ class SecteurType extends AbstractType
 //                'required' => true,
             ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

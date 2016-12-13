@@ -59,8 +59,10 @@ class LogementPeriodeController extends Controller
     {
         $managerLogementPeriode = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
         $managerLogementPeriodeLocatif = $this->container->get('nucleus_manager_bdd.entity.manager_bdd');
-        $managerLogementPeriode->initInsertMassif('logement_periode', array('logement_id', 'periode_id', 'actif'), true, array($site->getLibelle()));
-        $managerLogementPeriodeLocatif->initInsertMassif('logement_periode_locatif', array('logement_id', 'periode_id', 'prix_public', 'stock'), true, array($site->getLibelle()));
+        $managerLogementPeriode->initInsertMassif('logement_periode', array('logement_id', 'periode_id', 'actif'), true,
+            array($site->getLibelle()));
+        $managerLogementPeriodeLocatif->initInsertMassif('logement_periode_locatif',
+            array('logement_id', 'periode_id', 'prix_public', 'stock'), true, array($site->getLibelle()));
         foreach ($periodes as $periode) {
             $managerLogementPeriode->addInsertLigne(array($idLogement, $periode['id'], true));
             $managerLogementPeriodeLocatif->addInsertLigne(array($idLogement, $periode['id'], 0, 0));

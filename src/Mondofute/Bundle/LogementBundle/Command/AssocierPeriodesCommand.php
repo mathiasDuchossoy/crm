@@ -30,16 +30,16 @@ class AssocierPeriodesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($this->valideArguments($input->getArguments())) {
-            try{
-                $idLogement = intval($input->getArgument('id-logement'),10);
-                $idSite = intval($input->getArgument('id-site'),10);
+            try {
+                $idLogement = intval($input->getArgument('id-logement'), 10);
+                $idSite = intval($input->getArgument('id-site'), 10);
                 $em = $this->getContainer()->get('doctrine.orm.entity_manager');
                 $site = $em->getRepository(Site::class)->find($idSite);
                 $logementPeriodeController = new LogementPeriodeController();
                 $logementPeriodeController->setContainer($this->getContainer());
-                $logementPeriodeController->associerPeriodes($idLogement,$site);
+                $logementPeriodeController->associerPeriodes($idLogement, $site);
 
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 echo $exception->getMessage();
                 echo $exception->getLine();
             }
@@ -48,10 +48,10 @@ class AssocierPeriodesCommand extends ContainerAwareCommand
 
     private function valideArguments($arguments)
     {
-        if(!is_numeric($arguments['id-logement'])){
+        if (!is_numeric($arguments['id-logement'])) {
             return false;
         }
-        if(!is_numeric($arguments['id-site'])){
+        if (!is_numeric($arguments['id-site'])) {
             return false;
         }
         return true;

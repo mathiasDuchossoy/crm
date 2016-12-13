@@ -17,10 +17,9 @@ class PrestationAnnexeTraductionType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('langue', HiddenType::class, array('mapped' => false))
-        ;
+            ->add('langue', HiddenType::class, array('mapped' => false));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

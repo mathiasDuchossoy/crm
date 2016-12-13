@@ -64,8 +64,7 @@ class ServiceHebergement
      */
     public function setHebergementUnifie(
         HebergementUnifie $hebergementUnifie = null
-    )
-    {
+    ) {
         $this->hebergementUnifie = $hebergementUnifie;
 
         return $this;

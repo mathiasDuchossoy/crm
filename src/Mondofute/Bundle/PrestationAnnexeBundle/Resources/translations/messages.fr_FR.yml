@@ -4,3 +4,5 @@ familleprestationannexe:
     edition: 'édition d''une famille de prestation annexe'
     creation: 'création d''une famille de prestation annexe'
 fiche: fiche
+dupliquePrestationAnnexeAebergementStocks:
+    texte: 'copie le stock de la première période de cette prestation annexe sur toutes les périodes de cette prestation annexe du même type de période'

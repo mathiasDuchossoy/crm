@@ -17,7 +17,8 @@
         <tbody>
         {% for secteurUnifie in secteurUnifies %}
             <tr>
-                <td><a href="{{ path('geographie_secteur_show', { 'id': secteurUnifie.id }) }}">{{ secteurUnifie.id }}</a>
+                <td>
+                    <a href="{{ path('geographie_secteur_show', { 'id': secteurUnifie.id }) }}">{{ secteurUnifie.id }}</a>
                 </td>
                 <td>
                     {% for secteur in secteurUnifie.secteurs %}

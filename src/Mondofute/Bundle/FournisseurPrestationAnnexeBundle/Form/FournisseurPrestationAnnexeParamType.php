@@ -7,7 +7,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnex
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeHebergementType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeStationType;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -46,7 +45,7 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'translation_domain' => 'messages',
-                'prototype_name'    => '__name_tarif__'
+                'prototype_name' => '__name_tarif__'
             ))
             ->add('modeAffectation', ChoiceType::class, array(
                 'choices' => array(
@@ -56,9 +55,9 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 'choices_as_values' => true,
                 'expanded' => true,
                 'required' => true,
-                'attr'      => array(
-                    'onchange'   => 'chargerAffectations(this)',
-                    'class'     => 'form-inline'
+                'attr' => array(
+                    'onchange' => 'chargerAffectations(this)',
+                    'class' => 'form-inline'
                 ),
             ))
             ->add('prestationAnnexeFournisseurs', CollectionType::class, array(
@@ -81,8 +80,7 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'translation_domain' => 'messages',
-            ))
-        ;
+            ));
     }
 
     /**

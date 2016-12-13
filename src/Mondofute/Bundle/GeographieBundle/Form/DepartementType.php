@@ -9,7 +9,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DepartementType extends AbstractType
@@ -57,8 +56,7 @@ class DepartementType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
 //                'required' => false,
-            ))
-        ;
+            ));
     }
 
     /**

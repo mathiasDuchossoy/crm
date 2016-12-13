@@ -10,30 +10,29 @@
                                name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][famillePrestationAnnexe]"
                                value="{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
                                data-list_group="code_promo_{{ codePromoId }}_fournisseur_{{ fournisseurId }}_prestation_annexes"
-                                onclick="checkChilFamillePrestationAnnexe(this,'code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}')"
+                               onclick="checkChilFamillePrestationAnnexe(this,'code_promo_famille_prestation_annexes_{{ keyCodePromo }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}')"
                                 {% if codePromo.codePromoFamillePrestationAnnexes is defined %}
                                     {% for codePromoFamillePrestationAnnexe in codePromo.codePromoFamillePrestationAnnexes %}
                                         {% if
                                         codePromoFamillePrestationAnnexe.vars.value.fournisseur.id == fournisseurId
-                                        and codePromoFamillePrestationAnnexe.vars.value.famillePrestationAnnexe.id == fournisseurPrestationAnnexe.famillePrestationAnnexeId
-                                        %}
+                                        and codePromoFamillePrestationAnnexe.vars.value.famillePrestationAnnexe.id == fournisseurPrestationAnnexe.famillePrestationAnnexeId %}
                                             checked="checked"
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
                         />
                         {#<a#}
-                                {#data-toggle="collapse"#}
-                                {#href=""#}
-                                {#aria-expanded="true"#}
-                                {#aria-controls=""#}
+                        {#data-toggle="collapse"#}
+                        {#href=""#}
+                        {#aria-expanded="true"#}
+                        {#aria-controls=""#}
                         {#>#}
-                            {{ fournisseurPrestationAnnexe.familleLibelle }}
+                        {{ fournisseurPrestationAnnexe.familleLibelle }}
                         {#</a>#}
                         <input
                                 type="hidden"
-                               name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
-                               value="{{ fournisseurId }}"/>
+                                name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
+                                value="{{ fournisseurId }}"/>
                     </label>
                 </div>
             </div>
@@ -54,8 +53,7 @@
                                     {#{{ dump(codePromofournisseurPrestationAnnexe.vars.value) }}#}
                                     {% if
                                     codePromofournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseurId
-                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId
-                                    %}
+                                    and codePromofournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId %}
                                         {#and codePromofournisseurPrestationAnnexe.vars.value.codePromo.id == codePromoId #}
                                         checked="checked"
                                     {% endif %}

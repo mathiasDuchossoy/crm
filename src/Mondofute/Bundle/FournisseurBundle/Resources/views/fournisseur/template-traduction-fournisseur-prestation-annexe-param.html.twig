@@ -32,10 +32,10 @@
              id="onglet-param-{{ index }}-{{ keyParam }}-{{ langue.id }}"
         >
             {% for keyTraduction, traduction in traductions %}
-                    {% if traduction.vars.value.langue.id == langue.id %}
-                        {{ form_widget(traduction) }}
-                        {% set tradExists = true %}
-                    {% endif %}
+                {% if traduction.vars.value.langue.id == langue.id %}
+                    {{ form_widget(traduction) }}
+                    {% set tradExists = true %}
+                {% endif %}
             {% endfor %}
             {% if tradExists == false %}
                 {% set libelleParam = '' %}

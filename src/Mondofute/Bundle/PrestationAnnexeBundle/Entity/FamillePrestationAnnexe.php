@@ -13,14 +13,6 @@ class FamillePrestationAnnexe
      * @var int
      */
     private $id;
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -51,6 +43,14 @@ class FamillePrestationAnnexe
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -128,8 +128,8 @@ class FamillePrestationAnnexe
      *
      * @return FamillePrestationAnnexe
      */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
+    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+    ) {
         $this->prestationAnnexes[] = $prestationAnnex;
 
         return $this;
@@ -140,8 +140,9 @@ class FamillePrestationAnnexe
      *
      * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
+    public function removePrestationAnnex(
+        \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+    ) {
         $this->prestationAnnexes->removeElement($prestationAnnex);
     }
 

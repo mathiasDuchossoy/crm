@@ -51,9 +51,9 @@
                             <div class="col-md-1">
                                 <div class="btn-group" role="group" aria-label="..."
                                      id="edit_prestation_annexe_{{ prestationAnnexe.id }}"
-                                     {% if display == false %}
-                                        style="display: none;"
-                                     {% endif %}
+                                        {% if display == false %}
+                                            style="display: none;"
+                                        {% endif %}
                                 >
                                     <button type="button" class="btn btn-default"
                                             onclick="getFournisseurPrestationAnnexeForm('{{ form.vars.value.id }}','{{ prestationAnnexe.id }}');"

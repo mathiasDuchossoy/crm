@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Entity;
+
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;

@@ -31,6 +31,7 @@ class FournisseurHebergementRepository extends \Doctrine\ORM\EntityRepository
         parent::__construct($em, $class);
         $this->connexion = $this->getEntityManager()->getConnection();
     }
+
     public function chargerPourStocks($idHebergementUnifie)
     {
         $em = $this->getEntityManager();

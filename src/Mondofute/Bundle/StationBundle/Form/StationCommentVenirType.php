@@ -35,10 +35,9 @@ class StationCommentVenirType extends AbstractType
                 'query_builder' => function (GrandeVilleRepository $r) use ($locale) {
                     return $r->getTraductionsByLocale($locale);
                 },
-                'multiple'  => true,
-                'expanded'  => true
-            ))
-        ;
+                'multiple' => true,
+                'expanded' => true
+            ));
     }
 
     /**
