@@ -20,7 +20,7 @@ class NombreDeChambreTraductionType extends AbstractType
             ->add('langue', HiddenType::class, array('mapped' => false));
 
     }
-    
+
     /**
      * {@inheritdoc}
      */

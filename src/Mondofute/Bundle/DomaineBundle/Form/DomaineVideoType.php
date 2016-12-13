@@ -91,7 +91,7 @@ class DomaineVideoType extends AbstractType
                 'required' => true,
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

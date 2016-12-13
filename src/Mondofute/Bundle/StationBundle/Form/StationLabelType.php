@@ -18,8 +18,7 @@ class StationLabelType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => StationLabelTraductionType::class,
-            ))
-        ;
+            ));
     }
 
     /**

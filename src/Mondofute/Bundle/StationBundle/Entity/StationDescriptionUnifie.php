@@ -40,8 +40,9 @@ class StationDescriptionUnifie
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
      */
-    public function removeStationDescription(\Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription)
-    {
+    public function removeStationDescription(
+        \Mondofute\Bundle\StationBundle\Entity\StationDescription $stationDescription
+    ) {
         $this->stationDescriptions->removeElement($stationDescription);
     }
 

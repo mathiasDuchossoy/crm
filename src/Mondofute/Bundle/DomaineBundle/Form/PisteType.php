@@ -2,9 +2,6 @@
 
 namespace Mondofute\Bundle\DomaineBundle\Form;
 
-use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
-use Mondofute\Bundle\DomaineBundle\Repository\TypePisteRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,7 +30,7 @@ class PisteType extends AbstractType
 //            ->add('domaineCarteIdentite')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

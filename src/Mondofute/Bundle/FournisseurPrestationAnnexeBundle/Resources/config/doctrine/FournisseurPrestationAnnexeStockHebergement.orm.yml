@@ -1,0 +1,16 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeStockHebergementRepository
+    id:
+        fournisseurPrestationAnnexe:
+            associationKey: true
+        periode:
+            associationKey: true
+        fournisseurHebergement:
+            associationKey: true
+
+    manyToOne:
+        fournisseurHebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+    lifecycleCallbacks: {  }

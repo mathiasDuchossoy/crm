@@ -109,8 +109,9 @@ class PeriodeValidite
      *
      * @return PeriodeValidite
      */
-    public function setTarif(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif = null)
-    {
+    public function setTarif(
+        \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif = null
+    ) {
         $this->tarif = $tarif;
 
         return $this;

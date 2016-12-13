@@ -42,9 +42,9 @@
             path = path.replace(/_maxPerPage_/g, maxPerPage);
 
             $.ajax(path,
-                    {
-                        method: 'GET'
-                    }
+                {
+                    method: 'GET'
+                }
             ).done(function (data) {
                 $("#type_periode_" + typePeriodeId).html(data);
             })

@@ -52,6 +52,10 @@ abstract class CodePromo
      * @var Collection
      */
     private $codePromoPeriodeValidites;
+    /**
+     * @var integer
+     */
+    private $usageCodePromo;
 
     /**
      * Constructor
@@ -272,11 +276,16 @@ abstract class CodePromo
     {
         return $this->codePromoPeriodeValidites;
     }
-    /**
-     * @var integer
-     */
-    private $usageCodePromo;
 
+    /**
+     * Get usageCodePromo
+     *
+     * @return integer
+     */
+    public function getUsageCodePromo()
+    {
+        return $this->usageCodePromo;
+    }
 
     /**
      * Set usageCodePromo
@@ -290,15 +299,5 @@ abstract class CodePromo
         $this->usageCodePromo = $usageCodePromo;
 
         return $this;
-    }
-
-    /**
-     * Get usageCodePromo
-     *
-     * @return integer
-     */
-    public function getUsageCodePromo()
-    {
-        return $this->usageCodePromo;
     }
 }

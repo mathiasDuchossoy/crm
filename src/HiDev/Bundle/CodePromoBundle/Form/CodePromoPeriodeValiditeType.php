@@ -16,10 +16,10 @@ class CodePromoPeriodeValiditeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $dateStart = new \DateTime('now');
-        $dateEnd   = clone $dateStart;
+        $dateEnd = clone $dateStart;
 
         $builder
-            ->add('dateDebut', DateTimeType::class ,
+            ->add('dateDebut', DateTimeType::class,
                 array(
                     'required' => true,
                     'widget' => 'single_text',
@@ -32,7 +32,7 @@ class CodePromoPeriodeValiditeType extends AbstractType
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     ),
                 ))
-            ->add('dateFin', DateTimeType::class ,
+            ->add('dateFin', DateTimeType::class,
                 array(
                     'required' => true,
                     'widget' => 'single_text',
@@ -45,8 +45,7 @@ class CodePromoPeriodeValiditeType extends AbstractType
 //                        'placeholder' => 'format_date',
                         'placeholder' => 'jj/mm/aaaa - hh:mm',
                     )
-                ))
-        ;
+                ));
     }
 
     /**

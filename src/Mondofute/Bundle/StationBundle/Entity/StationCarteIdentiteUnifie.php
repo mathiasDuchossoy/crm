@@ -40,8 +40,9 @@ class StationCarteIdentiteUnifie
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite
      */
-    public function removeStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite)
-    {
+    public function removeStationCarteIdentite(
+        \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite
+    ) {
         $this->stationCarteIdentites->removeElement($stationCarteIdentite);
     }
 
@@ -76,8 +77,9 @@ class StationCarteIdentiteUnifie
      *
      * @return StationCarteIdentiteUnifie
      */
-    public function addStationCarteIdentite(\Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite)
-    {
+    public function addStationCarteIdentite(
+        \Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite $stationCarteIdentite
+    ) {
         $this->stationCarteIdentites[] = $stationCarteIdentite->setStationCarteIdentiteUnifie($this);
 
         return $this;

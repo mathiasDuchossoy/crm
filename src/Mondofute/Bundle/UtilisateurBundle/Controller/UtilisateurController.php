@@ -78,7 +78,7 @@ class UtilisateurController extends Controller
             $utilisateurUser->setRoles(array(UserInterface::ROLE_SUPER_ADMIN));
 
             $em = $this->getDoctrine()->getManager();
-            
+
             foreach ($utilisateur->getMoyenComs() as $moyenCom) {
 //                $moyenCom->setDateCreation();
                 $typeComm = (new ReflectionClass($moyenCom))->getShortName();

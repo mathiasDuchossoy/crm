@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,10 +27,9 @@ class FournisseurPrestationAnnexeTraductionType extends AbstractType
                 'attr' => [
                     'style' => 'display:none',
                 ],
-            ))
-        ;
+            ));
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

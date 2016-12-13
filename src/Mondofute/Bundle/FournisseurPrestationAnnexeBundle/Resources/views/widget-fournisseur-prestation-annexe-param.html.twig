@@ -1,9 +1,9 @@
 <ul class="nav nav-pills nav-justified">
     <li class="active" id="nav_pill_parametrage_{{ keyParam }}_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
-                                                                                   href="#pill_parametrage_{{ keyParam }}_{{ prestationAnnexe.vars.id }}">Paramétrage</a>
+                                                                                                  href="#pill_parametrage_{{ keyParam }}_{{ prestationAnnexe.vars.id }}">Paramétrage</a>
     </li>
     <li id="nav_pill_affectation_{{ keyParam }}_{{ prestationAnnexe.vars.id }}"><a data-toggle="pill"
-                                                                    href="#pill_affectation_{{ keyParam }}_{{ prestationAnnexe.vars.id }}">Affectation</a>
+                                                                                   href="#pill_affectation_{{ keyParam }}_{{ prestationAnnexe.vars.id }}">Affectation</a>
     </li>
 </ul>
 <div class="tab-content">
@@ -59,10 +59,10 @@
         </div>
         <div>
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe-param.html.twig') with {
-                'traductions': param.traductions, 
-                'langues': langues, 
-                'name': prestationAnnexe.vars.id, 
-                'entity': 'fournisseur_prestation_annexe'
+            'traductions': param.traductions,
+            'langues': langues,
+            'name': prestationAnnexe.vars.id,
+            'entity': 'fournisseur_prestation_annexe'
             } %}
         </div>
         <h3>Tarifs</h3>
@@ -81,15 +81,15 @@
     <div id="pill_affectation_{{ keyParam }}_{{ prestationAnnexe.vars.id }}" class="tab-pane fade">
         <h3>Affectations</h3>
         {#{% if param.modeAffectation.vars.value == "" %}#}
-            {#{% set param.modeAffectation.vars.value = "1" %}#}
-            {#{% set testValue = 1 %}#}
-            {#{{ form_widget(param.modeAffectation , { 'value' : testValue|number_format  , 'attr' : {#}
-                {#'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id,#}
-                {#'data-param-index' : keyParam#}
-            {#}}) }}#}
-            {#{{ dump(param.modeAffectation.vars.value) }}#}
+        {#{% set param.modeAffectation.vars.value = "1" %}#}
+        {#{% set testValue = 1 %}#}
+        {#{{ form_widget(param.modeAffectation , { 'value' : testValue|number_format  , 'attr' : {#}
+        {#'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id,#}
+        {#'data-param-index' : keyParam#}
+        {#}}) }}#}
+        {#{{ dump(param.modeAffectation.vars.value) }}#}
         {#{% else %}#}
-            {{ form_widget(param.modeAffectation , {'attr' : { 'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id, 'data-param-index' : keyParam }}) }}
+        {{ form_widget(param.modeAffectation , {'attr' : { 'data-prestation-annexe-id' : prestationAnnexe.vars.value.prestationAnnexe.id, 'data-param-index' : keyParam }}) }}
         {#{% endif %}#}
         <div id="div_affectation_{{ keyParam }}_{{ param.modeAffectation.vars.id }}">
             {#{% if param.vars.value.modeAffectation == 1 %}#}
@@ -101,7 +101,7 @@
                 'prestationAnnexeHebergements' : param.prestationAnnexeHebergements,
                 'prestationAnnexeStations' : param.prestationAnnexeStations
                 } %}
-            {#{% elseif prestationAnnexe.vars.value.modeAffectation == 2 %}#}
+                {#{% elseif prestationAnnexe.vars.value.modeAffectation == 2 %}#}
             {% elseif param.modeAffectation.vars.value == '2' %}
                 {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-prestation-annexe-affectation-fournisseur.html.twig'  with {
                 'prestationAnnexeId' : prestationAnnexe.vars.value.prestationAnnexe.id,

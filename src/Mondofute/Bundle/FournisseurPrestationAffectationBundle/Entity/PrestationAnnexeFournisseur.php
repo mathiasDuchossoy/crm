@@ -46,8 +46,9 @@ class PrestationAnnexeFournisseur extends FournisseurPrestationAffectation
      *
      * @return PrestationAnnexeFournisseur
      */
-    public function setPrestationAnnexeFournisseurUnifie(PrestationAnnexeFournisseurUnifie $prestationAnnexeFournisseurUnifie = null)
-    {
+    public function setPrestationAnnexeFournisseurUnifie(
+        PrestationAnnexeFournisseurUnifie $prestationAnnexeFournisseurUnifie = null
+    ) {
         $this->prestationAnnexeFournisseurUnifie = $prestationAnnexeFournisseurUnifie;
 
         return $this;

@@ -40,8 +40,9 @@ class StationCommentVenirUnifie
      *
      * @param \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
      */
-    public function removeStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir)
-    {
+    public function removeStationCommentVenir(
+        \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
+    ) {
         $this->stationCommentVenirs->removeElement($stationCommentVenir);
     }
 
@@ -76,8 +77,9 @@ class StationCommentVenirUnifie
      *
      * @return StationCommentVenirUnifie
      */
-    public function addStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir)
-    {
+    public function addStationCommentVenir(
+        \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir
+    ) {
         $this->stationCommentVenirs[] = $stationCommentVenir->setStationCommentVenirUnifie($this);
 
         return $this;

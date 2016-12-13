@@ -12,9 +12,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Command;
 use DateTime;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -46,7 +44,9 @@ class CreateInterlocuteurCommand extends ContainerAwareCommand
 
         $textQFonction = "<question>";
         foreach ($fonctions as $key => $fonction) {
-            $fonctionTraduction = $fonction->getTraductions()->filter(function (\Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $element) use ($locale) {
+            $fonctionTraduction = $fonction->getTraductions()->filter(function (
+                \Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonctionTraduction $element
+            ) use ($locale) {
                 return $element->getLangue()->getCode() == $locale;
             })->first();
             $textQFonction .= $fonction->getId() . " => " . $fonctionTraduction->getLibelle() . ", ";
@@ -62,7 +62,9 @@ class CreateInterlocuteurCommand extends ContainerAwareCommand
 
         $textQService = "<question>";
         foreach ($services as $key => $service) {
-            $serviceTraduction = $service->getTraductions()->filter(function (\Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteurTraduction $element) use ($locale) {
+            $serviceTraduction = $service->getTraductions()->filter(function (
+                \Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteurTraduction $element
+            ) use ($locale) {
                 return $element->getLangue()->getCode() == $locale;
             })->first();
             $textQService .= $service->getId() . " => " . $serviceTraduction->getLibelle() . ", ";

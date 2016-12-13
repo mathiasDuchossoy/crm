@@ -13,7 +13,7 @@
                                 {% endfor %}
                                 id="code_promo_unifie_codePromos_{{ keyCodePromo }}_codePromoApplications_{{ loop.index - 1 }}"
                                 name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoApplications][{{ loop.index - 1 }}][application]"
-                                onchange="displayApplicationPanel(this , '{{ keyCodePromo }}' , '{{ codePromo.vars.value.id  }}' , '{{ codePromo.vars.value.site.id  }}');"
+                                onchange="displayApplicationPanel(this , '{{ keyCodePromo }}' , '{{ codePromo.vars.value.id }}' , '{{ codePromo.vars.value.site.id }}');"
                                 value="{{ key }}" type="checkbox">
                         {{ application }}</label>
                 </div>

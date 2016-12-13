@@ -13,7 +13,10 @@ class ModeleDescriptionForfaitSkiType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('descriptionForfaitSkis', CollectionType::class,
-            array('entry_type' => DescriptionForfaitSkiType::class, 'entry_options' => array('locale' => $options["locale"])));
+            array(
+                'entry_type' => DescriptionForfaitSkiType::class,
+                'entry_options' => array('locale' => $options["locale"])
+            ));
     }
 
     /**

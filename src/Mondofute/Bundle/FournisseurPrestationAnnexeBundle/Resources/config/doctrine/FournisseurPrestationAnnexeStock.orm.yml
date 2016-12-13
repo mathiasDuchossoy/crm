@@ -1,15 +1,24 @@
 Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock:
-    type: entity
+    type: mappedSuperclass
     table: null
+#    discriminatorColumn:
+#        name: discr
+#        type: string
+#    discriminatorMap:
+#        hebergement: FournisseurPrestationAnnexeStockHebergement
     repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeStockRepository
     id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
-            options:
-                unsigned: true
+        fournisseurPrestationAnnexe:
+            associationKey: true
+        periode:
+            associationKey: true
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+#            options:
+#                unsigned: true
     fields:
         stock:
             type: integer
@@ -23,6 +32,4 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
 #            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
         periode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
-        logement:
-            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
     lifecycleCallbacks: {  }

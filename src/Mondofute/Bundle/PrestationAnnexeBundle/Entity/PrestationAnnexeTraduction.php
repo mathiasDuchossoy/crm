@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Entity;
+
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**

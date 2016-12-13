@@ -34,19 +34,19 @@
         <div class="panel-body">
 
             {% if  famillePrestationAnnexe.sousFamillePrestationAnnexes is not empty %}
-            <ul class="sous_famille_prestation_annexe"
-                    {#style="list-style-type: none;"#}
-            >
-                {% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}
-                    {% for traduction in sousFamillePrestationAnnexe.traductions %}
-                        {% if traduction.langue.code == app.request.locale %}
-                            <li class="element">
-                                {{ traduction.libelle }}
-                            </li>
-                        {% endif %}
+                <ul class="sous_famille_prestation_annexe"
+                        {#style="list-style-type: none;"#}
+                >
+                    {% for sousFamillePrestationAnnexe in famillePrestationAnnexe.sousFamillePrestationAnnexes %}
+                        {% for traduction in sousFamillePrestationAnnexe.traductions %}
+                            {% if traduction.langue.code == app.request.locale %}
+                                <li class="element">
+                                    {{ traduction.libelle }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </ul>
+                </ul>
             {% else %}
                 <div class="alert alert-info" role="alert">Pas de sous-familles.</div>
             {% endif %}

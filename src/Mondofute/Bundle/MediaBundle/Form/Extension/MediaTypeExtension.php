@@ -2,9 +2,9 @@
 
 namespace Mondofute\Bundle\MediaBundle\Form\Extension;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class MediaTypeExtension extends AbstractTypeExtension
 {

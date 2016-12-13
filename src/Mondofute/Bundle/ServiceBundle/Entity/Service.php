@@ -160,8 +160,7 @@ class Service
      * @return Service
      */
     public function setCategorieService(\Mondofute\Bundle\ServiceBundle\Entity\CategorieService $categorieService = null
-    )
-    {
+    ) {
         $this->categorieService = $categorieService;
 
         return $this;
@@ -186,8 +185,7 @@ class Service
      */
     public function setSousCategorieService(
         \Mondofute\Bundle\ServiceBundle\Entity\SousCategorieService $sousCategorieService = null
-    )
-    {
+    ) {
         $this->sousCategorieService = $sousCategorieService;
 
         return $this;
@@ -243,8 +241,9 @@ class Service
      *
      * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
      */
-    public function removeServiceHebergement(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement)
-    {
+    public function removeServiceHebergement(
+        \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $serviceHebergement
+    ) {
         $this->serviceHebergements->removeElement($serviceHebergement);
     }
 

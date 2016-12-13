@@ -19,7 +19,8 @@ class StationCommentVenirUnifieType extends AbstractType
             ->add('stationCommentVenirs', CollectionType::class, array(
 //                'auto_initialize' => false,
                 'entry_type' => StationCommentVenirType::class,
-                'entry_options' => array('locale' => $options["locale"],
+                'entry_options' => array(
+                    'locale' => $options["locale"],
 
                 )
             ));

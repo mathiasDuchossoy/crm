@@ -74,13 +74,14 @@ class InterlocuteurType extends AbstractType
             ->add('moyenComs',
 //                'infinite_form_polycollection',
                 'Infinite\FormBundle\Form\Type\PolyCollectionType',
-                array('types' => array(
+                array(
+                    'types' => array(
 //                    'Nucleus\MoyenComBundle\Form\AdresseType'
-                    'nucleus_moyencombundle_email',
-                    'nucleus_moyencombundle_telfixe',
-                    'nucleus_moyencombundle_telmobile',
-                    'nucleus_moyencombundle_adresse',
-                ),
+                        'nucleus_moyencombundle_email',
+                        'nucleus_moyencombundle_telfixe',
+                        'nucleus_moyencombundle_telmobile',
+                        'nucleus_moyencombundle_adresse',
+                    ),
                     'prototype_name' => '__mycom_name__',
                     'allow_add' => true,
                     'by_reference' => false,
@@ -89,8 +90,7 @@ class InterlocuteurType extends AbstractType
             )
             ->add('user', InterlocuteurUserType::class, array(
                 'data_class' => InterlocuteurUser::class
-            ))
-        ;
+            ));
     }
 
     /**

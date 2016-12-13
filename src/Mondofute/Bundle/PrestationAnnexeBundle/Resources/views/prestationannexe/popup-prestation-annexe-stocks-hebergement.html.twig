@@ -1,0 +1,146 @@
+{% extends '::base_popup.html.twig' %}
+{% block body %}
+    <form name="form-prestation-annexe-stocks-hebergement">
+        <div id="prestation-annexes-stocks-hebergements">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    Chargement en cours ...
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+        //        "use strict";
+        //        initialisation des données globales
+        if (!globals) {
+            var globals = {};
+        }
+        //        récupération du maxInputVars
+        {% if maxInputVars is not defined %}
+        globals.maxInputVars = 1000;
+        {% else %}
+        globals.maxInputVars = parseInt({{ maxInputVars }});
+        {% endif %}
+
+        //        récupération des données liées à la langue
+        var langue = {
+            'enregistrer': {
+                'stock': "{{ 'enregistrer.stock' | trans }}",
+                'stock_ok': "{{ 'enregistrement_stock.ok'|trans }}",
+                'stock_pas_ok': "{{ 'enregistrement_stock.pas_ok'|trans }}",
+                'stock_aucun': "{{ 'enregistrement_stock.aucun'|trans }}",
+            },
+            dupliquePrestationAnnexeAebergementStocks: {
+                texte: "{{ 'dupliquePrestationAnnexeAebergementStocks.texte' | trans }}",
+            }
+        };
+        //        initialisation des données liées à la langue pour les datatables
+        var datatableLangue = {
+            language: {
+                processing: "{{ 'processing'|trans }}",
+                search: "{{ 'rechercher'|trans }} :",
+                loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                zeroRecords: "{{ 'zeroResultats'|trans }}",
+                emptyTable: "{{ 'tableVide'|trans }}",
+                "paginate": {
+                    "first": "{{ 'page.premiere'|trans }}",
+                    "last": "{{ 'page.derniere'|trans }}",
+                    "next": "{{ 'page.suivante'|trans }}",
+                    "previous": "{{ 'page.precedente'|trans }}"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        };
+        if (!urls) {
+            var urls = {};
+        }
+        {#urls.logementChargerLocatif = "{{ path('logement_charger_locatif') }}";#}
+        urls.periodeTypePeriodeListe = "{{ path('periode_type_periode_liste') }}";
+        {#urls.hebergementChargerHebergementFournisseur = "{{ path('hebergement_charger_hebergement_fournisseur', {'idHebergementUnifie': '_idHebergement_'}) }}";#}
+        {#urls.catalogueEnregistrerStockLocatif = "{{ path('mondofute_catalogue_enregistrer_stock_locatif') }}";#}
+        urls.periodeTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        urls.urlTypePeriodeOnglets = "{{ path('periode_type_periode_onglets') }}";
+        urls.mondofute_fournisseur_prestation_annexe_stock_hebergement_charger = "{{ path('mondofute_fournisseur_prestation_annexe_stock_hebergement_charger',{idPrestationAnnexe: '__idPrestationAnnexe__',idFournisseurHebergement: '__idFournisseurHebergement__',idTypePeriode: '__idTypePeriode__'}) }}";
+        urls.mondofute_fournisseur_prestation_annexe_stock_hebergement_enregistrer = "{{ path('mondofute_fournisseur_prestation_annexe_stock_hebergement_enregistrer') }}";
+
+        globals.prestationAnnexes = [];
+        //        initialisation de l'identifiant fournisseurHebergement
+        globals.fournisseurHebergementId = parseInt('{{ fournisseurHebergement.id }}');
+        {% for hebergement in fournisseurHebergement.hebergement.hebergements %}
+        {% if hebergement.site.crm == true %}
+        globals.hebergementId = parseInt('{{ hebergement.id }}');
+        {% for prestationAnnexe in hebergement.prestationAnnexeHebergements %}
+        {% if prestationAnnexe.fournisseur.id == fournisseurHebergement.fournisseur.id %}
+        if (!prestationAnnexe) {
+            var prestationAnnexe = {};
+        }
+        prestationAnnexe = {id: {{ prestationAnnexe.param.fournisseurPrestationAnnexe.id }}};
+        {#{{ dump(prestationAnnexe.param.fournisseurPrestationAnnexe.traductions) }}#}
+        {% for tradFamille in prestationAnnexe.param.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe.traductions %}
+        {#{{ dump(tradFamille) }}#}
+        {#{% for tradFamille in prestationAnnexe.param.fournisseurPrestationAnnexe.traductions %}#}
+        {% if tradFamille.langue.code == app.request.locale %}
+        {#{{ dump(tradFamille) }}#}
+        prestationAnnexe.famille = {
+            id: {{ tradFamille.famillePrestationAnnexe.id }},
+            libelle: '{{ tradFamille.libelle }}'
+        };
+        //        console.log(prestationAnnexe.famille);
+        {% endif %}
+        {% endfor %}
+        {% if prestationAnnexe.param.fournisseurPrestationAnnexe.prestationAnnexe.sousFamillePrestationAnnexe is not null %}
+        {% for tradSousFamille in prestationAnnexe.param.fournisseurPrestationAnnexe.prestationAnnexe.sousFamillePrestationAnnexe.traductions %}
+        {% if tradSousFamille.langue.code == app.request.locale %}
+        prestationAnnexe.sousFamille = {
+            id: {{ tradSousFamille.sousFamillePrestationAnnexe.id }},
+            libelle: '{{ tradSousFamille.libelle }}'
+        };
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        prestationAnnexe.sousFamille = null;
+        {% endif %}
+        {% for trad in prestationAnnexe.param.fournisseurPrestationAnnexe.traductions %}
+        {% if trad.langue.code == app.request.locale %}
+        prestationAnnexe.libelle = "{{ trad.libelle }}";
+        {% endif %}
+        {% endfor %}
+        {#{{ dump(prestationAnnexe.param.id) }}#}
+        globals.prestationAnnexes.push(prestationAnnexe);
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+        prestationAnnexe = null;
+    </script>
+    {% javascripts
+    'js/type-periodes-onglets.min.js'
+    'js/form.min.js'
+    'js/datatables.min.js'
+    'js/prestation-annexe-stocks-hebergement.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

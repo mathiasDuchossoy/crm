@@ -92,6 +92,7 @@ class ProfilVideoType extends AbstractType
                 'required' => true,
             ));
     }
+
     /**
      * {@inheritdoc}
      */

@@ -109,8 +109,8 @@ class ZoneTouristiqueTraduction
      *
      * @return ZoneTouristiqueTraduction
      */
-    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null)
-    {
+    public function setZoneTouristique(\Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique $zoneTouristique = null
+    ) {
         $this->zoneTouristique = $zoneTouristique;
 
         return $this;

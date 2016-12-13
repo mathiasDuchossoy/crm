@@ -235,76 +235,84 @@
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
-                            {% if fournisseur.vars.value.fournisseur is not null %}
-                                <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
-                                     class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">
-                                            Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
+                        {% if fournisseur.vars.value.fournisseur is not null %}
+
+                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
+                                 class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12">
+                                            <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
+                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
+                                                    class="btn btn-default"
+                                                    type="button"><span
+                                                        class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
+                                            </button>
+                                            <button title="{{ 'prestation_annexe.stocks_hebergement' | trans }}"
+                                                    name="prestation-annexe-stocks-hebergement"
+                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
+                                                    class="btn btn-default"
+                                                    type="button"><span
+                                                        class="glyphicon glyphicon-list"></span> {{ 'stocks' | trans }}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12">
-                                                <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
-                                                        data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
-                                                        class="btn btn-default"
-                                                        type="button"><span
-                                                            class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
-                                                </button>
+                                    {{ form_row(fournisseur.fournisseur) }}
+                                    {{ form_row(fournisseur.telFixe) }}
+                                    {{ form_row(fournisseur.telMobile) }}
+                                    {{ form_row(fournisseur.adresse) }}
+                                    {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label required">Receptions</label>
+                                        <div class="col-sm-10">
+                                            <div id="hebergement_unifie_fournisseurs_0_receptions"
+                                                 data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
+                                                {% for reception in fournisseur.receptions.vars.choices %}
+                                                    {#Gestion du libelle à afficher#}
+                                                    {#traduction du jour#}
+                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
+                                                    {#traduction de la tranche1#}
+                                                    {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
+                                                    {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
+                                                    {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
+                                                    {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
+                                                        {#traduction de la tranche2#}
+                                                        {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
+                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
+                                                    {% endif %}
+                                                    {#affichage de la donnée#}
+                                                    {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
+                                                {% endfor %}
                                             </div>
                                         </div>
-                                        {{ form_row(fournisseur.fournisseur) }}
-                                        {{ form_row(fournisseur.telFixe) }}
-                                        {{ form_row(fournisseur.telMobile) }}
-                                        {{ form_row(fournisseur.adresse) }}
-                                        {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label required">Receptions</label>
-                                            <div class="col-sm-10">
-                                                <div id="hebergement_unifie_fournisseurs_0_receptions"
-                                                     data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
-                                                    {% for reception in fournisseur.receptions.vars.choices %}
-                                                        {#Gestion du libelle à afficher#}
-                                                        {#traduction du jour#}
-                                                        {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
-                                                        {#traduction de la tranche1#}
-                                                        {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
-                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
-                                                        {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
-                                                        {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
-                                                            {#traduction de la tranche2#}
-                                                            {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
-                                                            {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
+                                    </div>
+                                    {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
+                                    <ul class="nav nav-tabs">
+                                        {#gestion du premier onglet#}
+                                        {% set first = true %}
+                                        {% set idLangue = 0 %}
+                                        {% for langue in langues %}
+                                            <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
+                                                <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
+                                                   data-toggle="tab" aria-expanded="true">
+                                                    {% for traduction in langue.traductions %}
+                                                        {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
+                                                            {{ traduction.libelle }}
                                                         {% endif %}
-                                                        {#affichage de la donnée#}
-                                                        {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
                                                     {% endfor %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                        <ul class="nav nav-tabs">
-                                            {#gestion du premier onglet#}
-                                            {% set first = true %}
-                                            {% set idLangue = 0 %}
-                                            {% for langue in langues %}
-                                                <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
-                                                    <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
-                                                       data-toggle="tab" aria-expanded="true">
-                                                        {% for traduction in langue.traductions %}
-                                                            {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
-                                                                {{ traduction.libelle }}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </a>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                        <div class="tab-content">
-                                            {% for traduction in fournisseur.traductions %}
-                                                {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
-                                                <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
-                                                     class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <div class="tab-content">
+                                        {% for traduction in fournisseur.traductions %}
+                                            {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
+                                            <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
+                                                 class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
 
                                                     {{ form_widget(traduction) }}
                                                 </div>
@@ -347,6 +355,7 @@
     {% include ('@MondofuteHebergement/hebergementunifie/modal-remise-clef.html.twig') %}
     {% include ('@MondofuteHebergement/hebergementunifie/modal-ajout-reception.html.twig') %}
     {% include ('@MondofuteHebergement/hebergementunifie/modal-liste-logements.html.twig') %}
+    {% include ('@MondofuteHebergement/hebergementunifie/modal-prestation-annexe-stocks-hebergement.html.twig') %}
     {% include ('@MondofuteHebergement/hebergementunifie/modal-tarif-service.html.twig') %}
 
 {% endblock %}
@@ -434,13 +443,13 @@
             $form.attr('data-index', parseInt($form.attr('data-index')) + 1);
         }
         function supprimerTarifService(indexService, indexTarifService) {
-            $modal = $('#modalTarifsService');
+            var $modal = $('#modalTarifsService');
             $modal.find('#tarif-' + indexService + '-' + indexTarifService).remove();
         }
         function validerTarifsService(indexService) {
-            $modalTarifsService = $('#modalTarifsService');
-            $services = $('#services');
-            $form = $modalTarifsService.find('#form-tarifs-service-' + indexService);
+            var $modalTarifsService = $('#modalTarifsService');
+            var $services = $('#services');
+            var $form = $modalTarifsService.find('#form-tarifs-service-' + indexService);
             $services.find('#ctn-tarifs-service-' + indexService).html('');
             $services.find('#ctn-tarifs-service-' + indexService).append($form);
             $modalTarifsService.modal('hide');
@@ -457,19 +466,19 @@
         function cloneFormulaire($form) {
             var prefixe = '_deepcloned';
 //            copy jquery de l'element
-            $dest = $form.clone();
+            var $dest = $form.clone();
 //            duplique les select
-            $selects = $form.find('select');
+            var $selects = $form.find('select');
             $selects.each(function () {
                 $dest.find('#' + $(this).attr('id')).val($(this).val());
             });
 //            duplique les textareas
-            $textareas = $form.find('textarea');
+            var $textareas = $form.find('textarea');
             $textareas.each(function () {
                 $dest.find('#' + $(this).attr('id')).val($(this).val());
             });
 //            gestion des onglets pour ne pas avoir de rédondance d'id et assurer le bon fonctionnement des onglets
-            $tabs = $dest.find('.tab-pane');
+            var $tabs = $dest.find('.tab-pane');
             $tabs.each(function () {
                 $dest.find('li [href="#' + $(this).attr('id') + '"]').attr('href', '#' + $(this).attr('id') + prefixe);
                 $(this).attr('id', $(this).attr('id') + prefixe);
@@ -484,19 +493,42 @@
             modal.modal().show();
         }
         function afficherModalListeLogements(idFournisseurHebergement) {
+            var $iFrame = $('#iframeListeLogements');
             var url = '{{ path('popup_logement_logement_index',{'idFournisseurHebergement': '__idFournisseurHebergement__'}) }}';
             url = url.replace(/__idFournisseurHebergement__/g, idFournisseurHebergement);
-            $('#iframeListeLogements').attr('src', url);
-            $('#iframeListeLogements').css('display', 'none');
-            $('#iframeListeLogements').on('load', function () {
-                $('#iframeListeLogements').css('display', '');
+            $iFrame.attr('src', url);
+            $iFrame.css('display', 'none');
+            $iFrame.on('load', function () {
+                $iFrame.css('display', '');
             });
             $('#modalListeLogements').modal('show');
         }
+        /*
+         @CRM-146
+         */
+        "use strict";
+        if (!urls) {
+            var urls = {};
+        }
+        urls.prestationAnnexeStocksHebergement = '{{ path('popup_prestation_annexe_stocks_hebergement',{'idFournisseurHebergement': '__idFournisseurHebergement__'}) }}';
+        function afficherModalPrestationAnnexeStocksHebergement(idFournisseurHebergement) {
+            var $iFrame = $('#iframePrestationAnnexeStockHebergement');
+            $iFrame.css('display', 'none');
+            var url = urls.prestationAnnexeStocksHebergement.replace(/__idFournisseurHebergement__/g, idFournisseurHebergement);
+            $iFrame.on('load', function () {
+                $iFrame.css('display', '');
+            });
+            $iFrame.attr('src', url);
+//            $iFrame.css('display')
+            $('#modalPrestationAnnexeStocksHebergement').modal('show');
+        }
+        /*
+         @CRM-146 FIN
+         */
         function gestionEmplacementRequired(indexHebergement, indexEmplacement) {
-            $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
-            $valeur = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_valeur');
-            $unite = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_unite');
+            var $checkbox = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_checkbox');
+            var $valeur = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_valeur');
+            var $unite = $('#hebergement_unifie_hebergements_' + indexHebergement + '_emplacements_' + indexEmplacement + '_distance1_unite');
 //            alert($checkbox.is(':checked'));
             if ($checkbox.is(':checked')) {
                 $valeur.attr('required', 'required');
@@ -667,8 +699,8 @@
                 }
 //                ajoute l'onglet de la langue
                 menuOnglets += '<li class="' + ongletActif + '">' +
-                        '<a href="#fournisseur_hebergement_' + idFournisseur + '_langue_' + langues[i].id + '" data-toggle="tab" aria-expanded="true">' + traduireLangue(langues, langues[i].id, _locale) + '</a>' +
-                        '</li>';
+                    '<a href="#fournisseur_hebergement_' + idFournisseur + '_langue_' + langues[i].id + '" data-toggle="tab" aria-expanded="true">' + traduireLangue(langues, langues[i].id, _locale) + '</a>' +
+                    '</li>';
 //                récupère la zone de la langue
                 formTraductions += ajouterFormulaireFournisseurHebergementLangue(langues[i], idFournisseur, ongletActif);
             }
@@ -686,8 +718,8 @@
             var $formTraduction = $(formTraductionPrototype.replace(/__name__/g, idFournisseur).replace(/__tradname__/g, langue.id));
             $formTraduction.find('#hebergement_unifie_fournisseurs_' + idFournisseur + '_traductions_' + langue.id + '_langue option[value="' + langue.id + '"]').attr('selected', 'selected');
             var formTraduction = '<div id="fournisseur_hebergement_' + idFournisseur + '_langue_' + langue.id + '" class="tab-pane ' + ongletActif + ' fade in">'
-                    + $formTraduction.html()
-                    + '</div>';
+                + $formTraduction.html()
+                + '</div>';
             return formTraduction;
         }
         /**
@@ -747,13 +779,13 @@
                 }
             });
 //            $('#remise_clef_fournisseur').val(idFournisseur);
-            $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
+            var $modalAjoutRemiseClef = $('#modalAjoutRemiseClef');
             $modalAjoutRemiseClef.find('.nav-tabs li:first a').tab('show');
             $modalAjoutRemiseClef.modal().show();
         }
         function afficherModaleAjoutReception(idFournisseur) {
             $('#reception_fournisseur').val(idFournisseur);
-            $modalAjoutReception = $('#modalAjoutReception');
+            var $modalAjoutReception = $('#modalAjoutReception');
             $modalAjoutReception.find('.nav-tabs li:first a').tab('show');
             $modalAjoutReception.modal().show();
         }
@@ -781,7 +813,6 @@
                 success: function (data) {
                     $('#modalAjoutReception').modal('hide');
                     for (var i = 0; i < data.receptions.length; i++) {
-                        console.log(data.receptions[i]);
                         ajouterCheckboxReception(data.receptions[i]);
                     }
                 }
@@ -801,10 +832,10 @@
             indice = indice.substring(32);
             indice = indice.substring(0, (indice.length - 11));
             var data = '<div class="checkbox">' +
-                    '<label class="">' +
-                    '<input type="checkbox" name="hebergement_unifie[fournisseurs][' + indice + '][receptions][]" checked="checked" value="' + reception.id + '" data-fournisseur="' + reception.idFournisseur + '" id="hebergement_unifie_fournisseurs_' + indice + '_receptions_' + reception.id + '">' + reception.libelle +
-                    '</label>' +
-                    '</div>';
+                '<label class="">' +
+                '<input type="checkbox" name="hebergement_unifie[fournisseurs][' + indice + '][receptions][]" checked="checked" value="' + reception.id + '" data-fournisseur="' + reception.idFournisseur + '" id="hebergement_unifie_fournisseurs_' + indice + '_receptions_' + reception.id + '">' + reception.libelle +
+                '</label>' +
+                '</div>';
 //            console.log($("#hebergement_unifie_fournisseurs_"+reception.idFournisseur));
             $('#fournisseur' + reception.idFournisseur + ' [id$="_receptions"]').append($(data));
         }
@@ -948,6 +979,10 @@
             });
             $(document).on('click', 'button[name="liste_logements"]', function () {
                 afficherModalListeLogements(parseInt($(this).attr('data-fournisseur-hebergement')));
+            });
+            $(document).on('click', 'button[name="prestation-annexe-stocks-hebergement"]', function () {
+                afficherModalPrestationAnnexeStocksHebergement(parseInt($(this).attr('data-fournisseur-hebergement')));
+//                alert('ok');
             });
         });
     </script>

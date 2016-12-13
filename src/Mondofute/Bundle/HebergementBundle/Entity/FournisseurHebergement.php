@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
@@ -302,11 +303,11 @@ class FournisseurHebergement
     /**
      * Add logement
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     * @param Logement $logement
      *
      * @return FournisseurHebergement
      */
-    public function addLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    public function addLogement(Logement $logement)
     {
         $this->logements[] = $logement;
 
@@ -316,9 +317,9 @@ class FournisseurHebergement
     /**
      * Remove logement
      *
-     * @param \Mondofute\Bundle\LogementBundle\Entity\Logement $logement
+     * @param Logement $logement
      */
-    public function removeLogement(\Mondofute\Bundle\LogementBundle\Entity\Logement $logement)
+    public function removeLogement(Logement $logement)
     {
         $this->logements->removeElement($logement);
     }

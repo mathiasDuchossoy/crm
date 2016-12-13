@@ -26,10 +26,9 @@ class DomaineRepository extends \Doctrine\ORM\EntityRepository
             ->join('dt.langue', 'l')
             ->where("l.code = '$locale'");
 //        ->setParameter('code' , $locale)
-        if (!empty($domaineUnifieId))
-        {
+        if (!empty($domaineUnifieId)) {
             $qb->andWhere('du.id != :domaineUnifieId')
-                ->setParameter('domaineUnifieId' , $domaineUnifieId);
+                ->setParameter('domaineUnifieId', $domaineUnifieId);
         }
         $qb->andWhere('d.domaineParent IS NULL');
         $qb->orderBy('d.id', 'ASC');

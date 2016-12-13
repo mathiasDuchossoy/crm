@@ -103,8 +103,9 @@ class Piste
      *
      * @return Piste
      */
-    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
-    {
+    public function setDomaineCarteIdentite(
+        \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null
+    ) {
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;

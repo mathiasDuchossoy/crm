@@ -16,11 +16,10 @@ class FournisseurPrestationAnnexeCapaciteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('min' , IntegerType::class)
-            ->add('max' , IntegerType::class)
-        ;
+            ->add('min', IntegerType::class)
+            ->add('max', IntegerType::class);
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

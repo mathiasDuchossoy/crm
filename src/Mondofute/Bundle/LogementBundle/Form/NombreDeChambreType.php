@@ -18,8 +18,7 @@ class NombreDeChambreType extends AbstractType
         $builder
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => NombreDeChambreTraductionType::class,
-            ))
-        ;
+            ));
     }
 
     /**
