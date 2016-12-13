@@ -18,8 +18,7 @@ class DomaineCarteIdentiteUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('domaineCarteIdentites', CollectionType::class,
-                array('entry_type' => DomaineCarteIdentiteType::class));
+            ->add('domaineCarteIdentites', CollectionType::class, array('entry_type' => DomaineCarteIdentiteType::class));
     }
 
     /**
