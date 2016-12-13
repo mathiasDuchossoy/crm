@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
-use Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSkiTraduction;
 use Mondofute\Bundle\UniteBundle\Entity\Age;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 

@@ -16,9 +16,8 @@ class GrandeVilleTraductionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('langue',HiddenType::class,['mapped'=>false])
-            ->add('libelle')
-        ;
+            ->add('langue', HiddenType::class, ['mapped' => false])
+            ->add('libelle');
     }
 
     /**

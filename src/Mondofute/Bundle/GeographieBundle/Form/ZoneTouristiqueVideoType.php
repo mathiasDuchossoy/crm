@@ -91,7 +91,7 @@ class ZoneTouristiqueVideoType extends AbstractType
                 'required' => true,
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -12,6 +12,9 @@
  * @param $progressBar
  */
 function construireOngletsTypePeriodes($conteneur, $progressBar, callback) {
+    if(urlTypePeriodeOnglets == null){
+        var urlTypePeriodeOnglets = urls.urlTypePeriodeOnglets;
+    }
     $.post(urlTypePeriodeOnglets,
         {'idConteneur': $conteneur.attr('id')},
         function (html) {

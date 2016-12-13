@@ -2,8 +2,6 @@
 
 namespace Mondofute\Bundle\PrestationAnnexeBundle\Form;
 
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\SousFamillePrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,8 +24,7 @@ class FamillePrestationAnnexeType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-            ))
-        ;
+            ));
     }
 
     /**

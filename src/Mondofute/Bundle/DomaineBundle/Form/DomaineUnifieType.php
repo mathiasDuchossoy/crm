@@ -19,18 +19,18 @@ class DomaineUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var Domaine $firstDomaineParent */
-        $domaineUnifieId  =$builder->getData()->getId();
+        $domaineUnifieId = $builder->getData()->getId();
         $firstDomaineParent = $builder->getData()->getDomaines()->First()->getDomaineParent();
         $siteDomaineParent = (!empty($firstDomaineParent)) ? $firstDomaineParent->getSite() : null;
         $builder
             ->add('domaines', CollectionType::class, array(
-                'entry_type' => DomaineType::class ,
-                'entry_options' => array(
-                    'locale' => $options['locale'] ,
-                    'siteDomaineParent' => $siteDomaineParent,
-                    'domaineUnifieId' => $domaineUnifieId
+                    'entry_type' => DomaineType::class,
+                    'entry_options' => array(
+                        'locale' => $options['locale'],
+                        'siteDomaineParent' => $siteDomaineParent,
+                        'domaineUnifieId' => $domaineUnifieId
+                    )
                 )
-            )
             );
     }
 
@@ -96,7 +96,7 @@ class DomaineUnifieType extends AbstractType
             }
 
         }
-        
+
     }
 
 

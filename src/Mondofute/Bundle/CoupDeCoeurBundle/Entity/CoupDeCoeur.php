@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\CoupDeCoeurBundle\Entity;
+
 use DateTime;
 
 
@@ -54,8 +55,7 @@ abstract class CoupDeCoeur
      */
     public function setDateHeureDebut($dateHeureDebut)
     {
-        if(empty($dateHeureDebut) && !empty($this->getDateHeureFin()))
-        {
+        if (empty($dateHeureDebut) && !empty($this->getDateHeureFin())) {
             $dateHeureDebut = new DateTime();
         }
         $this->dateHeureDebut = $dateHeureDebut;

@@ -17,9 +17,7 @@ use DateTime;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -77,7 +75,8 @@ class UpdateInterlocuteurCommand extends ContainerAwareCommand
         $qMoyenComm = new Question($textQMoyenComm, null);
         $rMoyenComm = $helper->ask($input, $output, $qMoyenComm);
 
-        $moyenCommunication = $interlocuteur->getMoyenCommunications()->filter(function (MoyenCommunication $element) use ($rMoyenComm) {
+        $moyenCommunication = $interlocuteur->getMoyenCommunications()->filter(function (MoyenCommunication $element
+        ) use ($rMoyenComm) {
             return $element->getId() == $rMoyenComm;
         })->first();
 

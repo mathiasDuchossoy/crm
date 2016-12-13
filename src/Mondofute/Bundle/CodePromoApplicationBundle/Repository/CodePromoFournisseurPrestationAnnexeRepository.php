@@ -10,20 +10,20 @@ namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
  */
 class CodePromoFournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findBySite($fournisseurId , $siteId = 1)
+    public function findBySite($fournisseurId, $siteId = 1)
     {
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
-            ->from('MondofuteCodePromoApplicationBundle:CodePromoFournisseurPrestationAnnexe' , 'codePromoFournisseurPrestationAnnexe')
+            ->from('MondofuteCodePromoApplicationBundle:CodePromoFournisseurPrestationAnnexe',
+                'codePromoFournisseurPrestationAnnexe')
             ->select('codePromoFournisseurPrestationAnnexe')
-            ->join('codePromoFournisseurPrestationAnnexe.codePromo' , 'codePromo')
-            ->join('codePromo.site' , 'site')
-            ->join('codePromoFournisseurPrestationAnnexe.fournisseur' , 'fournisseur')
+            ->join('codePromoFournisseurPrestationAnnexe.codePromo', 'codePromo')
+            ->join('codePromo.site', 'site')
+            ->join('codePromoFournisseurPrestationAnnexe.fournisseur', 'fournisseur')
             ->where('site.id = :siteId')
-            ->setParameter('siteId' ,$siteId )
+            ->setParameter('siteId', $siteId)
             ->andWhere('fournisseur.id = :fournisseurId')
-            ->setParameter('fournisseurId' , $fournisseurId )
-        ;
+            ->setParameter('fournisseurId', $fournisseurId);
 
         $result = $q->getQuery()->getResult();
 

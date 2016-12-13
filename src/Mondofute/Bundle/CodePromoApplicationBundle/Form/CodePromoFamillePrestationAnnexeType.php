@@ -17,15 +17,14 @@ class CodePromoFamillePrestationAnnexeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('famillePrestationAnnexe' , EntityType::class , array(
+            ->add('famillePrestationAnnexe', EntityType::class, array(
                 'class' => FamillePrestationAnnexe::class,
                 'property' => 'id'
             ))
-            ->add('fournisseur')
-//            ->add('codePromo')
+            ->add('fournisseur')//            ->add('codePromo')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

@@ -15,10 +15,9 @@ class MotClefRepository extends \Doctrine\ORM\EntityRepository
         $q = $this->createQueryBuilder('motClefRepository')
             ->select('motClefRepository.id, motClefRepository.libelle text')
             ->where('motClefRepository.libelle LIKE :val')
-            ->setParameter('val', '%'.$like.'%')
+            ->setParameter('val', '%' . $like . '%')
             ->andWhere('motClefRepository.langue = :langue')
-            ->setParameter('langue' , $langue)
-        ;
+            ->setParameter('langue', $langue);
 
         return $q->getQuery()->getResult();
     }

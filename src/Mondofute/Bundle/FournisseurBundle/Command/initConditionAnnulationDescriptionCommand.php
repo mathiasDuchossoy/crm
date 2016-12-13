@@ -28,9 +28,8 @@ class initConditionAnnulationDescriptionCommand extends ContainerAwareCommand
 
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        $sites      = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
-        foreach ($sites as $site)
-        {
+        $sites = $em->getRepository('MondofuteSiteBundle:Site')->findAll();
+        foreach ($sites as $site) {
             $emSite = $this->getContainer()->get('doctrine')->getManager($site->getLibelle());
             $conditionAnnulationDescription = new ConditionAnnulationDescription();
             $conditionAnnulationDescription->setId(1);
@@ -39,7 +38,7 @@ class initConditionAnnulationDescriptionCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($conditionAnnulationDescription));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            $description = 'Possibilité de relouer une annulation'.PHP_EOL .'J-21 à J-15 = 25% du prix net'.PHP_EOL .'J-14 à J-  8 = 50% du prix net'.PHP_EOL .'J-  7 à J-  1 = 75% du prix net'.PHP_EOL .'non présentation = 100% du prix net';
+            $description = 'Possibilité de relouer une annulation' . PHP_EOL . 'J-21 à J-15 = 25% du prix net' . PHP_EOL . 'J-14 à J-  8 = 50% du prix net' . PHP_EOL . 'J-  7 à J-  1 = 75% du prix net' . PHP_EOL . 'non présentation = 100% du prix net';
             $conditionAnnulationDescription->setDescription($description);
 
             $emSite->persist($conditionAnnulationDescription);

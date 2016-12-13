@@ -34,7 +34,7 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
 
         $sites = $em->getRepository(Site::class)->findAll();
         /** @var Site $site */
-        foreach ($sites as $site){
+        foreach ($sites as $site) {
             $emSite = $this->getContainer()->get('doctrine')->getManager($site->getLibelle());
             $langues = $emSite->getRepository(Langue::class)->findAll();
 
@@ -44,13 +44,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('1 séjour-chambre (Studio)')
-                ;
+                    ->setLibelle('1 séjour-chambre (Studio)');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -61,13 +60,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('1 chambre-cabine')
-                ;
+                    ->setLibelle('1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -78,13 +76,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('1 chambre')
-                ;
+                    ->setLibelle('1 chambre');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -95,13 +92,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('1 chambre + 1 chambre-cabine')
-                ;
+                    ->setLibelle('1 chambre + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -112,13 +108,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('2 chambres')
-                ;
+                    ->setLibelle('2 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -129,13 +124,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('2 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('2 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -146,13 +140,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('3 chambres')
-                ;
+                    ->setLibelle('3 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -163,13 +156,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('3 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('3 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -180,13 +172,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('4 chambres')
-                ;
+                    ->setLibelle('4 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -197,13 +188,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('4 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('4 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -214,13 +204,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('5 chambres')
-                ;
+                    ->setLibelle('5 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -231,13 +220,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('5 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('5 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -248,13 +236,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('6 chambres')
-                ;
+                    ->setLibelle('6 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -265,13 +252,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('6 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('6 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -282,13 +268,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('7 chambres')
-                ;
+                    ->setLibelle('7 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -299,13 +284,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('7 chambres + 1 chambre-cabine')
-                ;
+                    ->setLibelle('7 chambres + 1 chambre-cabine');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -316,13 +300,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('8 chambres')
-                ;
+                    ->setLibelle('8 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -333,13 +316,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('9 chambres')
-                ;
+                    ->setLibelle('9 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -350,13 +332,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('10 chambres')
-                ;
+                    ->setLibelle('10 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -367,13 +348,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('11 chambres')
-                ;
+                    ->setLibelle('11 chambres');
             }
 
             $emSite->persist($nombreDeChambre);
@@ -384,13 +364,12 @@ class initNombreDeChambreCommand extends ContainerAwareCommand
             $metadata = $emSite->getClassMetadata(get_class($nombreDeChambre));
             $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-            foreach ($langues as $langue){
+            foreach ($langues as $langue) {
                 $traduction = new NombreDeChambreTraduction();
                 $nombreDeChambre->addTraduction($traduction);
                 $traduction
                     ->setLangue($langue)
-                    ->setLibelle('12 chambres')
-                ;
+                    ->setLibelle('12 chambres');
             }
 
             $emSite->persist($nombreDeChambre);

@@ -166,8 +166,9 @@ class StationCommentVenirTraduction
      *
      * @return StationCommentVenirTraduction
      */
-    public function setStationCommentVenir(\Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir = null)
-    {
+    public function setStationCommentVenir(
+        \Mondofute\Bundle\StationBundle\Entity\StationCommentVenir $stationCommentVenir = null
+    ) {
         $this->stationCommentVenir = $stationCommentVenir;
 
         return $this;

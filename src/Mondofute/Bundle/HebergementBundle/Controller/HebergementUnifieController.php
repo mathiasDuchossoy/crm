@@ -19,10 +19,8 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
-use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogementUnifie;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStationUnifie;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\HebergementBundle\Entity\Emplacement;
 use Mondofute\Bundle\HebergementBundle\Entity\EmplacementHebergement;
@@ -40,10 +38,8 @@ use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
-use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -57,7 +53,6 @@ use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\Tarif;
 use Mondofute\Bundle\UniteBundle\Entity\Unite;
 use Mondofute\Bundle\UniteBundle\Entity\UniteTarif;
-use Nelmio\ApiDocBundle\Parser\JsonSerializableParser;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\Pays;
@@ -101,9 +96,8 @@ class HebergementUnifieController extends Controller
             ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
 
         $formsDeletes = new  ArrayCollection();
-        foreach ($unifies->getQuery()->getResult() as $unifie)
-        {
-            $formsDeletes->set($unifie->getId() ,$this->createCoupdeCoeurDeleteForm($unifie)->createView() );
+        foreach ($unifies->getQuery()->getResult() as $unifie) {
+            $formsDeletes->set($unifie->getId(), $this->createCoupdeCoeurDeleteForm($unifie)->createView());
         }
 
 
@@ -112,6 +106,22 @@ class HebergementUnifieController extends Controller
             'pagination' => $pagination,
             'formsDeletes' => $formsDeletes
         ));
+    }
+
+    /**
+     *
+     * @param HebergementUnifie $entityUnifie The HebergementUnifie entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCoupdeCoeurDeleteForm(HebergementUnifie $entityUnifie)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('hebergement_coup_de_coeur_delete',
+                array('id' => $entityUnifie->getId())))
+//            ->add('delete', SubmitType::class, array('label' => 'Supprimer coup de coeur'))
+            ->setMethod('DELETE')
+            ->getForm();
     }
 
     /**
@@ -274,25 +284,6 @@ class HebergementUnifieController extends Controller
             'entity' => $entityUnifie,
             'form' => $formView,
         ));
-    }
-
-    /**
-     * @param HebergementUnifie $entityUnifie
-     * @return ArrayCollection
-     */
-    private function gestionCoupDeCoeur($entityUnifie  )
-    {
-        $coupDeCoeurRemove = new ArrayCollection();
-        /** @var Hebergement $hebergement */
-        foreach ($entityUnifie->getHebergements() as $hebergement)
-        {
-            $coupDeCoeur = $hebergement->getCoupDeCoeur();
-            if (!empty($coupDeCoeur) && $coupDeCoeur->getDateHeureDebut() == '' && $coupDeCoeur->getDateHeureFin() == '' ) {
-                $hebergement->setCoupDeCoeur(null);
-                $coupDeCoeurRemove->add($coupDeCoeur);
-            }
-        }
-        return $coupDeCoeurRemove;
     }
 
     /**
@@ -638,6 +629,24 @@ class HebergementUnifieController extends Controller
     }
 
     /**
+     * @param HebergementUnifie $entityUnifie
+     * @return ArrayCollection
+     */
+    private function gestionCoupDeCoeur($entityUnifie)
+    {
+        $coupDeCoeurRemove = new ArrayCollection();
+        /** @var Hebergement $hebergement */
+        foreach ($entityUnifie->getHebergements() as $hebergement) {
+            $coupDeCoeur = $hebergement->getCoupDeCoeur();
+            if (!empty($coupDeCoeur) && $coupDeCoeur->getDateHeureDebut() == '' && $coupDeCoeur->getDateHeureFin() == '') {
+                $hebergement->setCoupDeCoeur(null);
+                $coupDeCoeurRemove->add($coupDeCoeur);
+            }
+        }
+        return $coupDeCoeurRemove;
+    }
+
+    /**
      * Copie dans la base de données site l'entité hébergement
      * @param HebergementUnifie $entityUnifie
      */
@@ -861,8 +870,7 @@ class HebergementUnifieController extends Controller
                         $entityTraducSite = new HebergementTraduction();
                         $entitySite->addTraduction($entityTraducSite);
                         $entityTraducSite
-                            ->setLangue($langue)
-                        ;
+                            ->setLangue($langue);
                     }
 
 //                copie des données traductions
@@ -876,8 +884,7 @@ class HebergementUnifieController extends Controller
                         ->setAccroche($entityTraduc->getAccroche())
                         ->setGeneralite($entityTraduc->getGeneralite())
                         ->setAvisHebergement($entityTraduc->getAvisHebergement())
-                        ->setAvisLogement($entityTraduc->getAvisLogement())
-                    ;
+                        ->setAvisLogement($entityTraduc->getAvisLogement());
 
 //                ajout a la collection de traduction de l'hébergement
                 }
@@ -1095,23 +1102,19 @@ class HebergementUnifieController extends Controller
 
 
                 // *** gestion coupDeCoeur ***
-                if(empty($entity->getCoupDeCoeur()))
-                {
-                    if(!empty($entitySite->getCoupDeCoeur()))
-                    {
+                if (empty($entity->getCoupDeCoeur())) {
+                    if (!empty($entitySite->getCoupDeCoeur())) {
                         $emSite->remove($entitySite->getCoupDeCoeur());
                         $entitySite->setCoupDeCoeur(null);
                     }
-                }
-                else {
-                    if (empty($coupDeCoeur = $entitySite->getCoupDeCoeur())){
+                } else {
+                    if (empty($coupDeCoeur = $entitySite->getCoupDeCoeur())) {
                         $coupDeCoeur = new HebergementCoupDeCoeur();
                         $entitySite->setCoupDeCoeur($coupDeCoeur);
                     }
                     $coupDeCoeur
                         ->setDateHeureDebut($entity->getCoupDeCoeur()->getDateHeureDebut())
-                        ->setDateHeureFin($entity->getCoupDeCoeur()->getDateHeureFin())
-                    ;
+                        ->setDateHeureFin($entity->getCoupDeCoeur()->getDateHeureFin());
                 }
                 // *** fin gestion coupDeCoeur ***
 
@@ -1122,80 +1125,25 @@ class HebergementUnifieController extends Controller
         $this->ajouterHebergementUnifieSiteDistant($entityUnifie->getId(), $entityUnifie);
     }
 
-    public function coupdecoeurDeleteAction(Request $request, HebergementUnifie $entityUnifie)
-    {
-        /** @var HebergementUnifie $entityUnifieSite */
-        $em = $this->getDoctrine()->getManager();
-        try {
-            $form = $this->createDeleteForm($entityUnifie);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                // Parcourir les sites non CRM
-                foreach ($sitesDistants as $siteDistant) {
-                    // Récupérer le manager du site.
-                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
-                    // Récupérer l'entité sur le site distant puis la suprrimer.
-                    $entityUnifieSite = $emSite->find(HebergementUnifie::class, $entityUnifie->getId());
-                    if (!empty($entityUnifieSite)) {
-                        if (!empty($entityUnifieSite->getHebergements())) {
-                            /** @var Hebergement $entitySite */
-                            foreach ($entityUnifieSite->getHebergements() as $entitySite) {
-                                if(!empty($entitySite->getCoupDeCoeur()))
-                                {
-                                    $emSite->remove($entitySite->getCoupDeCoeur());
-                                }
-                            }
-                            $emSite->flush();
-                        }
-                    }
-                }
-                if (!empty($entityUnifie)) {
-                    if (!empty($entityUnifie->getHebergements())) {
-                        /** @var Hebergement $entity */
-                        foreach ($entityUnifie->getHebergements() as $entity) {
-                            if(!empty($entity->getCoupDeCoeur()))
-                            {
-                                $em->remove($entity->getCoupDeCoeur());
-                            }
-                        }
-                        $em->flush();
-                    }
-                }
-            }
-        } catch (ForeignKeyConstraintViolationException $except) {
-            /** @var ForeignKeyConstraintViolationException $except */
-            switch ($except->getCode()) {
-                case 0:
-                    $this->addFlash('error',
-                        'Impossible de supprimer le coup de coeur.');
-                    break;
-                default:
-                    $this->addFlash('error', 'une erreur inconnue');
-                    break;
-            }
-            return $this->redirect($request->headers->get('referer'));
-        }
-        $this->addFlash('success', 'Le coup de coeur pour l\'hébergement '.$entityUnifie->getId().' a bien été supprimé');
-        return $this->redirectToRoute('hebergement_hebergement_index');
-    }
-
-
     /**
-     *
-     * @param HebergementUnifie $entityUnifie The HebergementUnifie entity
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @param FournisseurHebergement $fournisseurHebergement
+     * @param EntityManager $em
      */
-    private function createCoupdeCoeurDeleteForm(HebergementUnifie $entityUnifie)
+    private function deletePrestationAnnexeLogements($fournisseurHebergement, $em)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('hebergement_coup_de_coeur_delete',
-                array('id' => $entityUnifie->getId())))
-//            ->add('delete', SubmitType::class, array('label' => 'Supprimer coup de coeur'))
-            ->setMethod('DELETE')
-            ->getForm();
+        /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
+        /** @var Logement $logement */
+        $prestationAnnexeLogementUnifies = new ArrayCollection();
+        foreach ($fournisseurHebergement->getLogements() as $logement) {
+            foreach ($logement->getPrestationAnnexeLogements() as $prestationAnnexeLogement) {
+                if (!$prestationAnnexeLogementUnifies->contains($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie())) {
+                    $prestationAnnexeLogementUnifies->add($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie());
+                }
+            }
+        }
+        foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie) {
+            $em->remove($prestationAnnexeLogementUnifie);
+        }
     }
 
     /**
@@ -1207,8 +1155,7 @@ class HebergementUnifieController extends Controller
         $fournisseur,
         $fournisseurSite,
         $emSite
-    )
-    {
+    ) {
 //        récupération des données fournisseur
         $adresseFournisseur = $fournisseur->getAdresse();
         $telFixeFournisseur = $fournisseur->getTelFixe();
@@ -1341,8 +1288,7 @@ class HebergementUnifieController extends Controller
         HebergementVisuel $entityVisuel,
         Hebergement $entitySite,
         EntityManager $emSite
-    )
-    {
+    ) {
         /** @var HebergementVisuel $entityVisuelSite */
         // on récupère la classe correspondant au visuel (photo ou video)
         $typeVisuel = (new ReflectionClass($entityVisuel))->getName();
@@ -1439,17 +1385,62 @@ class HebergementUnifieController extends Controller
         }
     }
 
-    /**
-     * Finds and displays a HebergementUnifie entity.
-     *
-     */
-    public function showAction(HebergementUnifie $entityUnifie)
+    public function coupdecoeurDeleteAction(Request $request, HebergementUnifie $entityUnifie)
     {
-        $deleteForm = $this->createDeleteForm($entityUnifie);
-        return $this->render('@MondofuteHebergement/hebergementunifie/show.html.twig', array(
-            'hebergementUnifie' => $entityUnifie,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        /** @var HebergementUnifie $entityUnifieSite */
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $form = $this->createDeleteForm($entityUnifie);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                // Parcourir les sites non CRM
+                foreach ($sitesDistants as $siteDistant) {
+                    // Récupérer le manager du site.
+                    $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                    // Récupérer l'entité sur le site distant puis la suprrimer.
+                    $entityUnifieSite = $emSite->find(HebergementUnifie::class, $entityUnifie->getId());
+                    if (!empty($entityUnifieSite)) {
+                        if (!empty($entityUnifieSite->getHebergements())) {
+                            /** @var Hebergement $entitySite */
+                            foreach ($entityUnifieSite->getHebergements() as $entitySite) {
+                                if (!empty($entitySite->getCoupDeCoeur())) {
+                                    $emSite->remove($entitySite->getCoupDeCoeur());
+                                }
+                            }
+                            $emSite->flush();
+                        }
+                    }
+                }
+                if (!empty($entityUnifie)) {
+                    if (!empty($entityUnifie->getHebergements())) {
+                        /** @var Hebergement $entity */
+                        foreach ($entityUnifie->getHebergements() as $entity) {
+                            if (!empty($entity->getCoupDeCoeur())) {
+                                $em->remove($entity->getCoupDeCoeur());
+                            }
+                        }
+                        $em->flush();
+                    }
+                }
+            }
+        } catch (ForeignKeyConstraintViolationException $except) {
+            /** @var ForeignKeyConstraintViolationException $except */
+            switch ($except->getCode()) {
+                case 0:
+                    $this->addFlash('error',
+                        'Impossible de supprimer le coup de coeur.');
+                    break;
+                default:
+                    $this->addFlash('error', 'une erreur inconnue');
+                    break;
+            }
+            return $this->redirect($request->headers->get('referer'));
+        }
+        $this->addFlash('success',
+            'Le coup de coeur pour l\'hébergement ' . $entityUnifie->getId() . ' a bien été supprimé');
+        return $this->redirectToRoute('hebergement_hebergement_index');
     }
 
     /**
@@ -1467,6 +1458,19 @@ class HebergementUnifieController extends Controller
             ->add('delete', SubmitType::class, array('label' => 'Supprimer'))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * Finds and displays a HebergementUnifie entity.
+     *
+     */
+    public function showAction(HebergementUnifie $entityUnifie)
+    {
+        $deleteForm = $this->createDeleteForm($entityUnifie);
+        return $this->render('@MondofuteHebergement/hebergementunifie/show.html.twig', array(
+            'hebergementUnifie' => $entityUnifie,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
     public function chargerListeServicesFournisseurAction(Request $request, $idFournisseur)
@@ -1946,10 +1950,8 @@ class HebergementUnifieController extends Controller
                     $em->flush();
                 }
                 // suppression coupDeCoeurs
-                if(!$coupDeCoeurRemove->isEmpty())
-                {
-                    foreach ($coupDeCoeurRemove as $item)
-                    {
+                if (!$coupDeCoeurRemove->isEmpty()) {
+                    foreach ($coupDeCoeurRemove as $item) {
                         $em->remove($item);
                     }
                     $em->flush();
@@ -2079,11 +2081,7 @@ class HebergementUnifieController extends Controller
         $reponse->nbLogements = $nbLogements;
         return new JsonResponse($reponse);
     }
-//    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
-////        dump($request);
-////        die;
-//        return new JsonResponse('');
-//    }
+
     public function creerTableauxStocksHebergementPeriodeAction(Request $request, $idTypePeriode, $idHebergementUnifie)
     {
         ini_set('memory_limit', '256M');
@@ -2120,46 +2118,6 @@ class HebergementUnifieController extends Controller
             array_push($data, $fournisseur);
         }
         return new JsonResponse($data);
-    }
-
-    /**
-     * @param FournisseurHebergement $fournisseurHebergement
-     * @param EntityManager $em
-     */
-    private function deletePrestationAnnexeLogements($fournisseurHebergement, $em){
-        /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
-        /** @var Logement $logement */
-        $prestationAnnexeLogementUnifies = new ArrayCollection();
-        foreach ($fournisseurHebergement->getLogements() as $logement){
-            foreach ($logement->getPrestationAnnexeLogements() as $prestationAnnexeLogement){
-                if(!$prestationAnnexeLogementUnifies->contains($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie())){
-                    $prestationAnnexeLogementUnifies->add($prestationAnnexeLogement->getPrestationAnnexeLogementUnifie());
-                }
-            }
-        }
-        foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie){
-            $em->remove($prestationAnnexeLogementUnifie);
-        }
-    }
-
-    /**
-     * @param HebergementUnifie $entityUnifie
-     * @param EntityManager $em
-     */
-    private function deletePrestationAnnexeHebergements($entityUnifie, $em){
-        /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
-        /** @var Hebergement $hebergement */
-        $prestationAnnexeHebergementUnifies = new ArrayCollection();
-        foreach ($entityUnifie->getHebergements() as $hebergement){
-            foreach ($hebergement->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement){
-                if(!$prestationAnnexeHebergementUnifies->contains($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie())){
-                    $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie());
-                }
-            }
-        }
-        foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie){
-            $em->remove($prestationAnnexeHebergementUnifie);
-        }
     }
 
     /**
@@ -2357,5 +2315,26 @@ class HebergementUnifieController extends Controller
         }
         $this->addFlash('success', 'L\'hébergement a bien été supprimé');
         return $this->redirectToRoute('hebergement_hebergement_index');
+    }
+
+    /**
+     * @param HebergementUnifie $entityUnifie
+     * @param EntityManager $em
+     */
+    private function deletePrestationAnnexeHebergements($entityUnifie, $em)
+    {
+        /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
+        /** @var Hebergement $hebergement */
+        $prestationAnnexeHebergementUnifies = new ArrayCollection();
+        foreach ($entityUnifie->getHebergements() as $hebergement) {
+            foreach ($hebergement->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
+                if (!$prestationAnnexeHebergementUnifies->contains($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie())) {
+                    $prestationAnnexeHebergementUnifies->add($prestationAnnexeHebergement->getPrestationAnnexeHebergementUnifie());
+                }
+            }
+        }
+        foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
+            $em->remove($prestationAnnexeHebergementUnifie);
+        }
     }
 }

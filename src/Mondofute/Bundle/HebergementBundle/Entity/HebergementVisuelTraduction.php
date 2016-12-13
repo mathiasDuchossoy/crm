@@ -75,8 +75,9 @@ class HebergementVisuelTraduction
      *
      * @return HebergementVisuelTraduction
      */
-    public function setHebergementVisuel(\Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $hebergementVisuel = null)
-    {
+    public function setHebergementVisuel(
+        \Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel $hebergementVisuel = null
+    ) {
         $this->hebergementVisuel = $hebergementVisuel;
 
         return $this;

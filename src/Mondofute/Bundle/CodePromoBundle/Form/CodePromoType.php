@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\CodePromoBundle\Form;
 
 use HiDev\Bundle\CodePromoBundle\Entity\ClientAffectation;
-use HiDev\Bundle\CodePromoBundle\Entity\CodePromoPeriodeValidite;
 use HiDev\Bundle\CodePromoBundle\Entity\TypeRemise;
 use HiDev\Bundle\CodePromoBundle\Entity\Usage;
 use HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType;
@@ -27,39 +26,39 @@ class CodePromoType extends AbstractType
         $builder
             ->add('libelle')
             ->add('clientAffectation', ChoiceType::class, array(
-                'choices'       => array(
-                    ClientAffectation::tous      => ClientAffectation::getLibelle(ClientAffectation::tous),
+                'choices' => array(
+                    ClientAffectation::tous => ClientAffectation::getLibelle(ClientAffectation::tous),
                     ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
                 ),
-                'placeholder'   => " --- Choisir l'affection --- ",
-                'label'         => 'Affectation',
-                'attr'          => array(
-                    'onchange'  => 'displayPanelClient(this);',
+                'placeholder' => " --- Choisir l'affection --- ",
+                'label' => 'Affectation',
+                'attr' => array(
+                    'onchange' => 'displayPanelClient(this);',
                 )
             ))
             ->add('typeRemise', ChoiceType::class, array(
-                'choices'       => array(
-                    TypeRemise::euro       => TypeRemise::getLibelle(TypeRemise::euro),
+                'choices' => array(
+                    TypeRemise::euro => TypeRemise::getLibelle(TypeRemise::euro),
                     TypeRemise::poucentage => TypeRemise::getLibelle(TypeRemise::poucentage),
                 ),
-                'placeholder'   => ' --- Choisir le type de remise --- ',
-                'label'         => 'Type de remise'
+                'placeholder' => ' --- Choisir le type de remise --- ',
+                'label' => 'Type de remise'
             ))
-            ->add('valeurRemise' , TextType::class)
+            ->add('valeurRemise', TextType::class)
             ->add('prixMini', TextType::class)
             ->add('usageCodePromo', ChoiceType::class, array(
-                'choices'       => array(
-                    Usage::unique           => Usage::getLibelle(Usage::unique),
+                'choices' => array(
+                    Usage::unique => Usage::getLibelle(Usage::unique),
                     Usage::uniqueParPeriode => Usage::getLibelle(Usage::uniqueParPeriode),
-                    Usage::multiple         => Usage::getLibelle(Usage::multiple),
+                    Usage::multiple => Usage::getLibelle(Usage::multiple),
                 ),
-                'placeholder'   => " --- Choisir l'usage --- ",
-                'label'         => 'Usage'
+                'placeholder' => " --- Choisir l'usage --- ",
+                'label' => 'Usage'
             ))
             ->add('actif')
             ->add('codePromoPeriodeValidites', CollectionType::class, array(
 //                    'entry_type' => 'HiDev\Bundle\CodePromoBundle\Form\CodePromoPeriodeValiditeType',
-                    'entry_type' => CodePromoPeriodeValiditeType::class ,
+                    'entry_type' => CodePromoPeriodeValiditeType::class,
                     'allow_add' => true,
                     'allow_delete' => true,
                     'label' => 'Périodes de validité',
@@ -83,7 +82,7 @@ class CodePromoType extends AbstractType
                     'allow_delete' => true,
                     'label' => " --- choisir un client ---",
                     'by_reference' => false,
-                    'mapped'    => false
+                    'mapped' => false
                 )
             )
             ->add('site', HiddenType::class, array('mapped' => false))
@@ -122,18 +121,17 @@ class CodePromoType extends AbstractType
                     'allow_delete' => true,
                     'label' => 'Code promo famille prestation annexes',
                 )
-            )
-        ;
+            );
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class'    => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromo',
-            'clients'       => array()
+            'data_class' => 'Mondofute\Bundle\CodePromoBundle\Entity\CodePromo',
+            'clients' => array()
         ));
     }
 }

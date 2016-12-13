@@ -92,7 +92,9 @@ class StationLabelController extends Controller
     private function ajoutTraductions($stationLabel, $langues)
     {
         foreach ($langues as $langue) {
-            $traduction = $stationLabel->getTraductions()->filter(function (StationLabelTraduction $element) use ($langue) {
+            $traduction = $stationLabel->getTraductions()->filter(function (StationLabelTraduction $element) use (
+                $langue
+            ) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $traduction) {
@@ -147,7 +149,8 @@ class StationLabelController extends Controller
             }
             // *** traductions ***
             foreach ($stationLabel->getTraductions() as $traduction) {
-                $traductionSite = $stationLabelSite->getTraductions()->filter(function (StationLabelTraduction $element) use ($traduction) {
+                $traductionSite = $stationLabelSite->getTraductions()->filter(function (StationLabelTraduction $element
+                ) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {
@@ -232,15 +235,14 @@ class StationLabelController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try{
+            try {
 
                 $em = $this->getDoctrine()->getManager();
 
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                foreach ($sites as $site)
-                {
+                foreach ($sites as $site) {
                     $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-                    $stationLabelSite = $emSite->find(StationLabel::class , $stationLabel->getId());
+                    $stationLabelSite = $emSite->find(StationLabel::class, $stationLabel->getId());
                     $emSite->remove($stationLabelSite);
                     $emSite->flush();
                 }
@@ -249,9 +251,7 @@ class StationLabelController extends Controller
                 $em->flush();
 
                 $this->addFlash('success', 'Label supprimé avec succès.');
-            }
-            catch (Exception $e)
-            {
+            } catch (Exception $e) {
                 $this->addFlash('error', 'Le label est utilisé par une autre entité.');
             }
         }

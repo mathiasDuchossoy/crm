@@ -18,8 +18,7 @@ class SecteurUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('secteurs', CollectionType::class, array('entry_type' => SecteurType::class))
-        ;
+            ->add('secteurs', CollectionType::class, array('entry_type' => SecteurType::class));
     }
 
     /**

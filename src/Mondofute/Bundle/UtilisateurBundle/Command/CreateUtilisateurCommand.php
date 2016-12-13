@@ -40,29 +40,26 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
         $qNom = new Question("<question>Nom: [Admin]</question>\n", 'Admin');
         $rNom = $helper->ask($input, $output, $qNom);
 
-        do
-        {
+        do {
             $qMail = new Question("<question>Mail / Login: [admin@mondofute.com]</question>\n", 'admin@mondofute.com');
             $rMail = $helper->ask($input, $output, $qMail);
-        }
-        while(!empty($em->getRepository(UtilisateurUser::class)->findOneBy(array('email' => $rMail))));
+        } while (!empty($em->getRepository(UtilisateurUser::class)->findOneBy(array('email' => $rMail))));
 
         $qPwd = new Question("<question>Mot de passe: [pass]</question>\n", 'pass');
         $rPwd = $helper->ask($input, $output, $qPwd);
 
         // ***** ENREGISTREMENT CRM*****
         /** @var Utilisateur $utilisateur */
-        $utilisateur        = new Utilisateur();
-        $utilisateurUser    = new UtilisateurUser();
-        $mail               = new Email();
+        $utilisateur = new Utilisateur();
+        $utilisateurUser = new UtilisateurUser();
+        $mail = new Email();
 
         $mail->setAdresse($rMail);
 
         $utilisateur
             ->setPrenom($rPrenom)
             ->setNom($rNom)
-            ->addMoyenCom($mail)
-        ;
+            ->addMoyenCom($mail);
 
         $utilisateurUser
             ->setUsername($rMail)
@@ -70,8 +67,7 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
             ->setPlainPassword($rPwd)
             ->setUtilisateur($utilisateur)
             ->setEnabled(true)
-            ->addRole($utilisateurUser::ROLE_SUPER_ADMIN)
-        ;
+            ->addRole($utilisateurUser::ROLE_SUPER_ADMIN);
 
         $em->persist($utilisateur);
         $em->persist($utilisateurUser);
@@ -84,9 +80,9 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
             $emSite = $this->getContainer()->get('doctrine')->getEntityManager($site->getLibelle());
 
             /** @var Utilisateur $utilisateur */
-            $utilisateurSite        = new Utilisateur();
-            $utilisateurUserSite    = new UtilisateurUser();
-            $mail               = new Email();
+            $utilisateurSite = new Utilisateur();
+            $utilisateurUserSite = new UtilisateurUser();
+            $mail = new Email();
 
             $utilisateurSite->setId($utilisateur->getId());
             $metadata = $emSite->getClassMetadata(get_class($utilisateurSite));
@@ -102,8 +98,7 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
             $utilisateurSite
                 ->setPrenom($rPrenom)
                 ->setNom($rNom)
-                ->addMoyenCom($mail)
-            ;
+                ->addMoyenCom($mail);
 
             $utilisateurUserSite
                 ->setUsername($rMail)
@@ -111,8 +106,7 @@ class CreateUtilisateurCommand extends ContainerAwareCommand
                 ->setPlainPassword($rPwd)
                 ->setUtilisateur($utilisateurSite)
                 ->setEnabled(true)
-                ->addRole($utilisateurUserSite::ROLE_SUPER_ADMIN)
-            ;
+                ->addRole($utilisateurUserSite::ROLE_SUPER_ADMIN);
 
             $emSite->persist($utilisateurSite);
             $emSite->persist($utilisateurUserSite);

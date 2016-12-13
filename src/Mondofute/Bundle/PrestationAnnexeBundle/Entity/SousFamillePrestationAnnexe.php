@@ -110,8 +110,8 @@ class SousFamillePrestationAnnexe
      *
      * @return SousFamillePrestationAnnexe
      */
-    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
+    public function addPrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+    ) {
         $this->prestationAnnexes[] = $prestationAnnex;
 
         return $this;
@@ -122,8 +122,9 @@ class SousFamillePrestationAnnexe
      *
      * @param \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
      */
-    public function removePrestationAnnex(\Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex)
-    {
+    public function removePrestationAnnex(
+        \Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe $prestationAnnex
+    ) {
         $this->prestationAnnexes->removeElement($prestationAnnex);
     }
 

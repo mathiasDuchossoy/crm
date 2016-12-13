@@ -5,42 +5,42 @@
 
     <table>
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ codePromo.id }}</td>
-            </tr>
-            <tr>
-                <th>Libelle</th>
-                <td>{{ codePromo.libelle }}</td>
-            </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ codePromo.code }}</td>
-            </tr>
-            <tr>
-                <th>Clientaffectation</th>
-                <td>{{ codePromo.clientAffectation }}</td>
-            </tr>
-            <tr>
-                <th>Typeremise</th>
-                <td>{{ codePromo.typeRemise }}</td>
-            </tr>
-            <tr>
-                <th>Valeurremise</th>
-                <td>{{ codePromo.valeurRemise }}</td>
-            </tr>
-            <tr>
-                <th>Prixmini</th>
-                <td>{{ codePromo.prixMini }}</td>
-            </tr>
-            <tr>
-                <th>Usage</th>
-                <td>{{ codePromo.usage }}</td>
-            </tr>
-            <tr>
-                <th>Actif</th>
-                <td>{% if codePromo.actif %}Yes{% else %}No{% endif %}</td>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ codePromo.id }}</td>
+        </tr>
+        <tr>
+            <th>Libelle</th>
+            <td>{{ codePromo.libelle }}</td>
+        </tr>
+        <tr>
+            <th>Code</th>
+            <td>{{ codePromo.code }}</td>
+        </tr>
+        <tr>
+            <th>Clientaffectation</th>
+            <td>{{ codePromo.clientAffectation }}</td>
+        </tr>
+        <tr>
+            <th>Typeremise</th>
+            <td>{{ codePromo.typeRemise }}</td>
+        </tr>
+        <tr>
+            <th>Valeurremise</th>
+            <td>{{ codePromo.valeurRemise }}</td>
+        </tr>
+        <tr>
+            <th>Prixmini</th>
+            <td>{{ codePromo.prixMini }}</td>
+        </tr>
+        <tr>
+            <th>Usage</th>
+            <td>{{ codePromo.usage }}</td>
+        </tr>
+        <tr>
+            <th>Actif</th>
+            <td>{% if codePromo.actif %}Yes{% else %}No{% endif %}</td>
+        </tr>
         </tbody>
     </table>
 
@@ -53,7 +53,7 @@
         </li>
         <li>
             {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
+            <input type="submit" value="Delete">
             {{ form_end(delete_form) }}
         </li>
     </ul>

@@ -27,6 +27,10 @@ class CodePromoFournisseur
      * @var CodePromo
      */
     private $codePromo;
+    /**
+     * @var integer
+     */
+    private $type;
 
     /**
      * Get id
@@ -93,11 +97,16 @@ class CodePromoFournisseur
 
         return $this;
     }
-    /**
-     * @var integer
-     */
-    private $type;
 
+    /**
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
     /**
      * Set type
@@ -111,15 +120,5 @@ class CodePromoFournisseur
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

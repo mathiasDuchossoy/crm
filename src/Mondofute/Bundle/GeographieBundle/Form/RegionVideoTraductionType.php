@@ -31,7 +31,7 @@ class RegionVideoTraductionType extends AbstractType
                 ],
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

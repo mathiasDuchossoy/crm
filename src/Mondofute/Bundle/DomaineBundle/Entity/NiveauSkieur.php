@@ -82,8 +82,9 @@ class NiveauSkieur
      *
      * @return NiveauSkieur
      */
-    public function addDomaineCarteIDentite(\Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite $domaineCarteIDentite)
-    {
+    public function addDomaineCarteIDentite(
+        \Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite $domaineCarteIDentite
+    ) {
         $this->domaineCarteIDentite[] = $domaineCarteIDentite;
 
         return $this;
@@ -94,8 +95,9 @@ class NiveauSkieur
      *
      * @param \Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite $domaineCarteIDentite
      */
-    public function removeDomaineCarteIDentite(\Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite $domaineCarteIDentite)
-    {
+    public function removeDomaineCarteIDentite(
+        \Mondofute\Bundle\DomaineBUndle\Entity\DomaineCarteIdentite $domaineCarteIDentite
+    ) {
         $this->domaineCarteIDentite->removeElement($domaineCarteIDentite);
     }
 

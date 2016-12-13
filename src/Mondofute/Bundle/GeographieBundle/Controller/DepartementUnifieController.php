@@ -83,7 +83,10 @@ class DepartementUnifieController extends Controller
 
         $form = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType', $departementUnifie,
             array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
         $form->handleRequest($request);
 
 
@@ -108,7 +111,9 @@ class DepartementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Departement $departementSite */
-                                    $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element) use ($site) {
+                                    $departementSite = $departementUnifie->getDepartements()->filter(function (
+                                        Departement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($departementSite)) {
@@ -149,7 +154,9 @@ class DepartementUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Departement $departementSite */
-                                    $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element) use ($site) {
+                                    $departementSite = $departementUnifie->getDepartements()->filter(function (
+                                        Departement $element
+                                    ) use ($site) {
                                         return $element->getSite() == $site;
                                     })->first();
                                     if (!empty($departementSite)) {
@@ -195,7 +202,8 @@ class DepartementUnifieController extends Controller
                     $departementSite->addVideo($departementVideoSite);
                     $actif = false;
                     if (!empty($request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
-                        if (in_array($departementSite->getSite()->getId(), $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
+                        if (in_array($departementSite->getSite()->getId(),
+                            $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -254,7 +262,9 @@ class DepartementUnifieController extends Controller
                     foreach ($langues as $langue) {
 
 //                        vérifie si $langue est présent dans les traductions sinon créé une nouvelle traduction pour l'ajouter à la région
-                        if ($departement->getTraductions()->filter(function (DepartementTraduction $element) use ($langue) {
+                        if ($departement->getTraductions()->filter(function (DepartementTraduction $element) use (
+                            $langue
+                        ) {
                             return $element->getLangue() == $langue;
                         })->isEmpty()
                         ) {
@@ -335,8 +345,11 @@ class DepartementUnifieController extends Controller
      * Copie dans la base de données site l'entité station
      * @param DepartementUnifie $entity
      */
-    private function copieVersSites(DepartementUnifie $entity, $originalDepartementImages = null, $originalDepartementPhotos = null)
-    {
+    private function copieVersSites(
+        DepartementUnifie $entity,
+        $originalDepartementImages = null,
+        $originalDepartementPhotos = null
+    ) {
         /** @var DepartementTraduction $departementTraduc */
 //        Boucle sur les stations afin de savoir sur quel site nous devons l'enregistrer
         foreach ($entity->getDepartements() as $departement) {
@@ -416,7 +429,9 @@ class DepartementUnifieController extends Controller
                             // *** récupération de l'hébergementImage correspondant sur la bdd distante ***
                             // récupérer l'departementImage original correspondant sur le crm
                             /** @var ArrayCollection $originalDepartementImages */
-                            $originalDepartementImage = $originalDepartementImages->filter(function (DepartementImage $element) use ($departementImage) {
+                            $originalDepartementImage = $originalDepartementImages->filter(function (
+                                DepartementImage $element
+                            ) use ($departementImage) {
                                 return $element->getImage() == $departementImage->getImage();
                             })->first();
                             unset($departementImageSite);
@@ -462,7 +477,9 @@ class DepartementUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (DepartementImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DepartementImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -473,7 +490,8 @@ class DepartementUnifieController extends Controller
                                     else {
                                         $traductionSite = new DepartementImageTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $departementImageSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -522,7 +540,9 @@ class DepartementUnifieController extends Controller
                             // *** récupération de l'hébergementPhoto correspondant sur la bdd distante ***
                             // récupérer l'departementPhoto original correspondant sur le crm
                             /** @var ArrayCollection $originalDepartementPhotos */
-                            $originalDepartementPhoto = $originalDepartementPhotos->filter(function (DepartementPhoto $element) use ($departementPhoto) {
+                            $originalDepartementPhoto = $originalDepartementPhotos->filter(function (
+                                DepartementPhoto $element
+                            ) use ($departementPhoto) {
                                 return $element->getPhoto() == $departementPhoto->getPhoto();
                             })->first();
                             unset($departementPhotoSite);
@@ -568,7 +588,9 @@ class DepartementUnifieController extends Controller
                                     unset($traductionSite);
                                     if (!$traductionSites->isEmpty()) {
                                         // on récupère la traduction correspondante en fonction de la langue
-                                        $traductionSite = $traductionSites->filter(function (DepartementPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DepartementPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                                         })->first();
                                     }
@@ -579,7 +601,8 @@ class DepartementUnifieController extends Controller
                                     else {
                                         $traductionSite = new DepartementPhotoTraduction();
                                         $traductionSite->setLibelle($traduction->getLibelle())
-                                            ->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                            ->setLangue($emSite->find(Langue::class,
+                                                $traduction->getLangue()->getId()));
                                         $departementPhotoSite->addTraduction($traductionSite);
                                     }
                                 }
@@ -615,7 +638,9 @@ class DepartementUnifieController extends Controller
                 if (!empty($departement->getVideos()) && !$departement->getVideos()->isEmpty()) {
                     /** @var DepartementVideo $departementVideo */
                     foreach ($departement->getVideos() as $departementVideo) {
-                        $departementVideoSite = $departementSite->getVideos()->filter(function (DepartementVideo $element) use ($departementVideo) {
+                        $departementVideoSite = $departementSite->getVideos()->filter(function (
+                            DepartementVideo $element
+                        ) use ($departementVideo) {
                             return $element->getId() == $departementVideo->getId();
                         })->first();
                         if (false === $departementVideoSite) {
@@ -644,13 +669,16 @@ class DepartementUnifieController extends Controller
                             ->setActif($departementVideo->getActif());
                         // *** traductions ***
                         foreach ($departementVideo->getTraductions() as $traduction) {
-                            $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction) {
+                            $traductionSite = $departementVideoSite->getTraductions()->filter(function (
+                                DepartementVideoTraduction $element
+                            ) use ($traduction) {
                                 return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                             })->first();
                             if (false === $traductionSite) {
                                 $traductionSite = new DepartementVideoTraduction();
                                 $departementVideoSite->addTraduction($traductionSite);
-                                $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()->getId()));
+                                $traductionSite->setLangue($emSite->find(Langue::class,
+                                    $traduction->getLangue()->getId()));
                             }
                             $traductionSite->setLibelle($traduction->getLibelle());
                         }
@@ -663,7 +691,9 @@ class DepartementUnifieController extends Controller
                     /** @var DepartementVideo $departementVideo */
                     /** @var DepartementVideo $departementVideoSite */
                     foreach ($departementSite->getVideos() as $departementVideoSite) {
-                        $departementVideo = $departement->getVideos()->filter(function (DepartementVideo $element) use ($departementVideoSite) {
+                        $departementVideo = $departement->getVideos()->filter(function (DepartementVideo $element) use (
+                            $departementVideoSite
+                        ) {
                             return $element->getId() == $departementVideoSite->getId();
                         })->first();
                         if (false === $departementVideo) {
@@ -688,8 +718,11 @@ class DepartementUnifieController extends Controller
      * @param Departement $departementSite
      * @param EntityManager $emSite
      */
-    private function createDepartementImage(DepartementImage $departementImage, Departement $departementSite, EntityManager $emSite)
-    {
+    private function createDepartementImage(
+        DepartementImage $departementImage,
+        Departement $departementSite,
+        EntityManager $emSite
+    ) {
         /** @var DepartementImage $departementImageSite */
         // on récupère la classe correspondant au image (photo ou video)
         $typeImage = (new ReflectionClass($departementImage))->getName();
@@ -736,8 +769,11 @@ class DepartementUnifieController extends Controller
      * @param Departement $departementSite
      * @param EntityManager $emSite
      */
-    private function createDepartementPhoto(DepartementPhoto $departementPhoto, Departement $departementSite, EntityManager $emSite)
-    {
+    private function createDepartementPhoto(
+        DepartementPhoto $departementPhoto,
+        Departement $departementSite,
+        EntityManager $emSite
+    ) {
         /** @var DepartementPhoto $departementPhotoSite */
         // on récupère la classe correspondant au photo (photo ou video)
         $typePhoto = (new ReflectionClass($departementPhoto))->getName();
@@ -908,7 +944,10 @@ class DepartementUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\GeographieBundle\Form\DepartementUnifieType',
             $departementUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Update', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Update',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
         $editForm->handleRequest($request);
 
@@ -963,7 +1002,9 @@ class DepartementUnifieController extends Controller
                                     'departement' => $departementSite
                                 ))
                             );
-                            $departementImageSiteSite = $departementImageSiteSites->filter(function (DepartementImage $element)
+                            $departementImageSiteSite = $departementImageSiteSites->filter(function (
+                                DepartementImage $element
+                            )
                             use ($departementImageSite) {
 //                            return $element->getImage()->getProviderReference() == $departementImageSite->getImage()->getProviderReference();
                                 return $element->getImage()->getMetadataValue('crm_ref_id') == $departementImageSite->getImage()->getId();
@@ -1025,7 +1066,9 @@ class DepartementUnifieController extends Controller
                                     'departement' => $departementSite
                                 ))
                             );
-                            $departementPhotoSiteSite = $departementPhotoSiteSites->filter(function (DepartementPhoto $element)
+                            $departementPhotoSiteSite = $departementPhotoSiteSites->filter(function (
+                                DepartementPhoto $element
+                            )
                             use ($departementPhotoSite) {
 //                            return $element->getPhoto()->getProviderReference() == $departementPhotoSite->getPhoto()->getProviderReference();
                                 return $element->getPhoto()->getMetadataValue('crm_ref_id') == $departementPhotoSite->getPhoto()->getId();
@@ -1071,7 +1114,10 @@ class DepartementUnifieController extends Controller
                     if (empty($departementVideo->getId())) {
                         $departementVideoSite = clone $departementVideo;
                     } else {
-                        $departementVideoSite = $em->getRepository(DepartementVideo::class)->findOneBy(array('video' => $originalVideos->get($departementVideo->getId()), 'departement' => $departementSite));
+                        $departementVideoSite = $em->getRepository(DepartementVideo::class)->findOneBy(array(
+                            'video' => $originalVideos->get($departementVideo->getId()),
+                            'departement' => $departementSite
+                        ));
                         if ($originalVideos->get($departementVideo->getId()) != $departementVideo->getVideo()) {
                             $em->remove($departementVideoSite->getVideo());
                             $this->deleteFile($departementVideoSite->getVideo());
@@ -1081,7 +1127,8 @@ class DepartementUnifieController extends Controller
                     $departementSite->addVideo($departementVideoSite);
                     $actif = false;
                     if (!empty($request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
-                        if (in_array($departementSite->getSite()->getId(), $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
+                        if (in_array($departementSite->getSite()->getId(),
+                            $request->get('departement_unifie')['departements'][0]['videos'][$key]['sites'])) {
                             $actif = true;
                         }
                     }
@@ -1089,7 +1136,9 @@ class DepartementUnifieController extends Controller
 
                     // *** traductions ***
                     foreach ($departementVideo->getTraductions() as $traduction) {
-                        $traductionSite = $departementVideoSite->getTraductions()->filter(function (DepartementVideoTraduction $element) use ($traduction) {
+                        $traductionSite = $departementVideoSite->getTraductions()->filter(function (
+                            DepartementVideoTraduction $element
+                        ) use ($traduction) {
                             return $element->getLangue() == $traduction->getLangue();
                         })->first();
                         if (false === $traductionSite) {
@@ -1123,7 +1172,8 @@ class DepartementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Departement $departementSite */
-                        $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element) use ($site) {
+                        $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element
+                        ) use ($site) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1133,7 +1183,10 @@ class DepartementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau departementImage
                             if (!empty($departementImage->getId())) {
                                 // on récupère l'departementImage pour le modifier
-                                $departementImageSite = $em->getRepository(DepartementImage::class)->findOneBy(array('departement' => $departementSite, 'image' => $originalImages->get($key)));
+                                $departementImageSite = $em->getRepository(DepartementImage::class)->findOneBy(array(
+                                    'departement' => $departementSite,
+                                    'image' => $originalImages->get($key)
+                                ));
                             }
                             // si l'departementImage est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($departementImage->getId()) || empty($departementImageSite)) {
@@ -1164,7 +1217,9 @@ class DepartementUnifieController extends Controller
                                     $traductionSites = $departementImageSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (DepartementImageTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DepartementImageTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1177,7 +1232,8 @@ class DepartementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementImage doit être actif sur le site ou non
                                 if (!empty($request->get('departement_unifie')['departements'][$keyCrm]['images'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('departement_unifie')['departements'][$keyCrm]['images'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('departement_unifie')['departements'][$keyCrm]['images'][$key]['sites'])
                                 ) {
                                     $departementImageSite->setActif(true);
                                 } else {
@@ -1213,7 +1269,8 @@ class DepartementUnifieController extends Controller
                     if ($site->getCrm() == 0) {
                         // on récupère l'hébegergement du site
                         /** @var Departement $departementSite */
-                        $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element) use ($site) {
+                        $departementSite = $departementUnifie->getDepartements()->filter(function (Departement $element
+                        ) use ($site) {
                             return $element->getSite() == $site;
                         })->first();
                         // si hébergement existe
@@ -1223,7 +1280,10 @@ class DepartementUnifieController extends Controller
                             // s'il ne s'agit pas d'un nouveau departementPhoto
                             if (!empty($departementPhoto->getId())) {
                                 // on récupère l'departementPhoto pour le modifier
-                                $departementPhotoSite = $em->getRepository(DepartementPhoto::class)->findOneBy(array('departement' => $departementSite, 'photo' => $originalPhotos->get($key)));
+                                $departementPhotoSite = $em->getRepository(DepartementPhoto::class)->findOneBy(array(
+                                    'departement' => $departementSite,
+                                    'photo' => $originalPhotos->get($key)
+                                ));
                             }
                             // si l'departementPhoto est un nouveau ou qu'il n'éxiste pas sur le base crm pour le site correspondant
                             if (empty($departementPhoto->getId()) || empty($departementPhotoSite)) {
@@ -1254,7 +1314,9 @@ class DepartementUnifieController extends Controller
                                     $traductionSites = $departementPhotoSite->getTraductions();
                                     $traductionSite = null;
                                     if (!$traductionSites->isEmpty()) {
-                                        $traductionSite = $traductionSites->filter(function (DepartementPhotoTraduction $element) use ($traduction) {
+                                        $traductionSite = $traductionSites->filter(function (
+                                            DepartementPhotoTraduction $element
+                                        ) use ($traduction) {
                                             return $element->getLangue() == $traduction->getLangue();
                                         })->first();
                                     }
@@ -1267,7 +1329,8 @@ class DepartementUnifieController extends Controller
                                 }
                                 // on vérifie si l'hébergementPhoto doit être actif sur le site ou non
                                 if (!empty($request->get('departement_unifie')['departements'][$keyCrm]['photos'][$key]['sites']) &&
-                                    in_array($site->getId(), $request->get('departement_unifie')['departements'][$keyCrm]['photos'][$key]['sites'])
+                                    in_array($site->getId(),
+                                        $request->get('departement_unifie')['departements'][$keyCrm]['photos'][$key]['sites'])
                                 ) {
                                     $departementPhotoSite->setActif(true);
                                 } else {

@@ -6,12 +6,12 @@ use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentiteUnifie;
 use Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
-use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
 use Mondofute\Bundle\UniteBundle\Entity\UniteDistance;
 use Nucleus\MoyenComBundle\Entity\Adresse;
@@ -66,8 +66,12 @@ class StationCarteIdentiteUnifieController extends Controller
 //            $stationCarteIdentite->addMoyenCom(new Adresse());
 //        }
 
-        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType', $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()));
-        $form->add('submit', SubmitType::class, array('label' => 'Enregistrer', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+        $form = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType',
+            $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()));
+        $form->add('submit', SubmitType::class, array(
+            'label' => 'Enregistrer',
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+        ));
 
         $form->handleRequest($request);
 
@@ -94,7 +98,8 @@ class StationCarteIdentiteUnifieController extends Controller
                 'La stationCarteIdentite a bien été créé.'
             );
 
-            return $this->redirectToRoute('stationcarteidentite_edit', array('id' => $stationCarteIdentiteUnifie->getId()));
+            return $this->redirectToRoute('stationcarteidentite_edit',
+                array('id' => $stationCarteIdentiteUnifie->getId()));
         }
 
         return $this->render('@MondofuteStation/stationcarteidentiteunifie/new.html.twig', array(
@@ -262,11 +267,13 @@ class StationCarteIdentiteUnifieController extends Controller
                 if (empty($stationCarteIdentiteSite->getAltitudeVillage())) {
                     $altitudeVillage = new Distance();
                     $altitudeVillage->setValeur($stationCarteIdentite->getAltitudeVillage()->getValeur());
-                    $altitudeVillage->setUnite($emSite->find(UniteDistance::class, $stationCarteIdentite->getAltitudeVillage()->getUnite()));
+                    $altitudeVillage->setUnite($emSite->find(UniteDistance::class,
+                        $stationCarteIdentite->getAltitudeVillage()->getUnite()));
                     $stationCarteIdentiteSite->setAltitudeVillage($altitudeVillage);
                 } else {
                     $stationCarteIdentiteSite->getAltitudeVillage()->setValeur($stationCarteIdentite->getAltitudeVillage()->getValeur());
-                    $stationCarteIdentiteSite->getAltitudeVillage()->setUnite($emSite->find(UniteDistance::class, $stationCarteIdentite->getAltitudeVillage()->getUnite()));
+                    $stationCarteIdentiteSite->getAltitudeVillage()->setUnite($emSite->find(UniteDistance::class,
+                        $stationCarteIdentite->getAltitudeVillage()->getUnite()));
                 }
 
 //            Gestion des traductions
@@ -345,30 +352,30 @@ class StationCarteIdentiteUnifieController extends Controller
     /**
      * @param Station $station
      */
-    private function setGps($station){
-        $curl     = new \Geocoder\HttpAdapter\CurlHttpAdapter();
+    private function setGps($station)
+    {
+        $curl = new \Geocoder\HttpAdapter\CurlHttpAdapter();
         $geocoder = new \Geocoder\Provider\GoogleMapsProvider($curl);
 
         $adresse = $station->getStationCarteIdentite()->getAdresse();
 
-        try{
+        try {
             $geocodedDatas = $geocoder->getGeocodedData($adresse->getVille());
             $geocodedData = $geocodedDatas[0];
-        }catch (\Geocoder\Exception\NoResultException $exception){
+        } catch (\Geocoder\Exception\NoResultException $exception) {
             $geocodedData = null;
         }
 
-        if(!empty($geocodedData)){
-            if(empty($gps = $station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+        if (!empty($geocodedData)) {
+            if (empty($gps = $station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())) {
                 $gps = new CoordonneesGPS();
                 $adresse->setCoordonneeGps($gps);
             }
             $gps
                 ->setLatitude($geocodedData['latitude'])
-                ->setLongitude($geocodedData['longitude'])
-            ;
-        }else{
-            if(!empty($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())){
+                ->setLongitude($geocodedData['longitude']);
+        } else {
+            if (!empty($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps())) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($station->getStationCarteIdentite()->getAdresse()->getCoordonneeGps());
             }
@@ -399,7 +406,8 @@ class StationCarteIdentiteUnifieController extends Controller
     private function createDeleteForm(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('stationcarteidentite_delete', array('id' => $stationCarteIdentiteUnifie->getId())))
+            ->setAction($this->generateUrl('stationcarteidentite_delete',
+                array('id' => $stationCarteIdentiteUnifie->getId())))
             ->add('delete', SubmitType::class)
             ->setMethod('DELETE')
             ->getForm();
@@ -443,7 +451,10 @@ class StationCarteIdentiteUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\StationBundle\Form\StationCarteIdentiteUnifieType',
             $stationCarteIdentiteUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array(
+                'label' => 'Mettre à jour',
+                'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
+            ));
 
 //        dump($editForm);die;
 
@@ -458,7 +469,8 @@ class StationCarteIdentiteUnifieController extends Controller
                 if (!$stationCarteIdentiteUnifie->getStationCarteIdentites()->contains($stationCarteIdentite)) {
                     //  suppression de la stationCarteIdentite sur le site
                     $emSite = $this->getDoctrine()->getEntityManager($stationCarteIdentite->getSite()->getLibelle());
-                    $entitySite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
+                    $entitySite = $emSite->find(StationCarteIdentiteUnifie::class,
+                        $stationCarteIdentiteUnifie->getId());
                     /** @var StationCarteIdentite $stationCarteIdentiteSite */
                     $stationCarteIdentiteSite = $entitySite->getStationCarteIdentites()->first();
 //                    foreach ($stationCarteIdentiteSite->getMoyenComs() as $moyenCom) {
@@ -492,7 +504,8 @@ class StationCarteIdentiteUnifieController extends Controller
                 'La stationCarteIdentite a bien été modifié.'
             );
 
-            return $this->redirectToRoute('stationcarteidentite_edit', array('id' => $stationCarteIdentiteUnifie->getId()));
+            return $this->redirectToRoute('stationcarteidentite_edit',
+                array('id' => $stationCarteIdentiteUnifie->getId()));
         }
 
         return $this->render('@MondofuteStation/stationcarteidentiteunifie/edit.html.twig', array(
@@ -508,8 +521,8 @@ class StationCarteIdentiteUnifieController extends Controller
     public function editEntity(StationCarteIdentiteUnifie $stationCarteIdentiteUnifie)
     {
         /** @var StationCarteIdentite $stationCarteIdentite */
-        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite){
-            foreach ($stationCarteIdentite->getStations() as $station){
+        foreach ($stationCarteIdentiteUnifie->getStationCarteIdentites() as $stationCarteIdentite) {
+            foreach ($stationCarteIdentite->getStations() as $station) {
                 $this->setGps($station);
             }
         }
@@ -539,7 +552,8 @@ class StationCarteIdentiteUnifieController extends Controller
                     // Récupérer le manager du site.
                     $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
                     // Récupérer l'entité sur le site distant puis la suprrimer.
-                    $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
+                    $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class,
+                        $stationCarteIdentiteUnifie->getId());
                     if (!empty($stationCarteIdentiteUnifieSite)) {
                         /** @var StationCarteIdentite $stationCarteIdentiteSite */
 //                        foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
@@ -607,13 +621,16 @@ class StationCarteIdentiteUnifieController extends Controller
             // Récupérer le manager du site.
             $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
             // Récupérer l'entité sur le site distant puis la suprrimer.
-            $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class, $stationCarteIdentiteUnifie->getId());
+            $stationCarteIdentiteUnifieSite = $emSite->find(StationCarteIdentiteUnifie::class,
+                $stationCarteIdentiteUnifie->getId());
             if (!empty($stationCarteIdentiteUnifieSite)) {
                 foreach ($stationCarteIdentiteUnifieSite->getStationCarteIdentites() as $stationCarteIdentiteSite) {
 
-                    if ($stationCarteIdentiteSite->getStations()->count() <= 1 ){
+                    if ($stationCarteIdentiteSite->getStations()->count() <= 1) {
                         $emSite->remove($stationCarteIdentiteSite);
-                    } else $delete = false;
+                    } else {
+                        $delete = false;
+                    }
                 }
                 if ($delete) {
                     $emSite->remove($stationCarteIdentiteUnifieSite);

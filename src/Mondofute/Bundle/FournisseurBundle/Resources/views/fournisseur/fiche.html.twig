@@ -321,7 +321,7 @@
             </div>
 
             <div id="values_prestation_annexe" style="display: none">
-            {#<div id="values_prestation_annexe" >#}
+                {#<div id="values_prestation_annexe" >#}
                 {% include ('@MondofuteFournisseur/fournisseur/fournisseur-prestation-annexe.html.twig') %}
             </div>
             {{ form_widget(form._token) }}
@@ -494,11 +494,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function () {
             var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
-            if($("#fournisseur_types_9").is(':checked')){
+            if ($("#fournisseur_types_9").is(':checked')) {
                 $fournisseurRemiseClefsPanel.show();
-            }else{
+            } else {
                 $fournisseurRemiseClefsPanel.hide();
             }
         });
@@ -963,7 +963,7 @@
                 var $remiseClef = $('#remiseClefs');
                 var $remiseClefModal = $('#remiseClefModal');
                 var contenuRemiseClef =
-                        '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-2"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button> <button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
+                    '<div class="row" id="contenuRemiseClef_' + index + '"><div class="col-sm-12"><div class="col-sm-10" id="remiseClef_' + index + '_libelle" >' + $('#fournisseur_remiseClefs_' + index + '_libelle').val() + '</div><div class="col-sm-2"><button class="btn btn-default" type="button" onclick="afficherModaleModifierRemiseClef(' + index + ');"><span class="glyphicon glyphicon-edit"></span></button> <button class="btn btn-default" type="button" onclick="supprimerRemiseClef(' + index + ');"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formRemiseClef_' + index + '" style="display:none;"></div></div></div>';
                 $remiseClef.append($(contenuRemiseClef));
                 $('#formRemiseClef_' + index).append($remiseClefModal.find('#contenuAjoutRemiseClef div:first'));
                 $remiseClef.attr('data-nb-remise-clef', (parseInt(index) + 1));
@@ -1349,8 +1349,8 @@
     </script>
     <script type="text/javascript">
         {% if fournisseur.id is not null %}
-        $("#fournisseur_types_9").on('click', function (){
-            $("#fournisseur_types").find('input:checkbox').each(function(){
+        $("#fournisseur_types_9").on('click', function () {
+            $("#fournisseur_types").find('input:checkbox').each(function () {
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
                 $famillePrestationAnnexe.hide();
@@ -1363,15 +1363,15 @@
             $.fn.serializeObject = function () {
 
                 var self = this,
-                        json = {},
-                        push_counters = {},
-                        patterns = {
-                            "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
-                            "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
-                            "push": /^$/,
-                            "fixed": /^\d+$/,
-                            "named": /^[a-zA-Z0-9_]+$/
-                        };
+                    json = {},
+                    push_counters = {},
+                    patterns = {
+                        "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+                        "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
+                        "push": /^$/,
+                        "fixed": /^\d+$/,
+                        "named": /^[a-zA-Z0-9_]+$/
+                    };
 
 
                 this.build = function (base, key, value) {
@@ -1394,9 +1394,9 @@
                     }
 
                     var k,
-                            keys = this.name.match(patterns.key),
-                            merge = this.value,
-                            reverse_key = this.name;
+                        keys = this.name.match(patterns.key),
+                        merge = this.value,
+                        reverse_key = this.name;
 
                     while ((k = keys.pop()) !== undefined) {
 
@@ -1426,22 +1426,22 @@
             };
         })(jQuery);
 
-//        $.fn.serializeObject = function()
-//        {
-//            var o = {};
-//            var a = this.serializeArray();
-//            $.each(a, function() {
-//                if (o[this.name] !== undefined) {
-//                    if (!o[this.name].push) {
-//                        o[this.name] = [o[this.name]];
-//                    }
-//                    o[this.name].push(this.value || '');
-//                } else {
-//                    o[this.name] = this.value || '';
-//                }
-//            });
-//            return o;
-//        };
+        //        $.fn.serializeObject = function()
+        //        {
+        //            var o = {};
+        //            var a = this.serializeArray();
+        //            $.each(a, function() {
+        //                if (o[this.name] !== undefined) {
+        //                    if (!o[this.name].push) {
+        //                        o[this.name] = [o[this.name]];
+        //                    }
+        //                    o[this.name].push(this.value || '');
+        //                } else {
+        //                    o[this.name] = this.value || '';
+        //                }
+        //            });
+        //            return o;
+        //        };
 
         function updatePrestationAnnexe(fournisseurId, element) {
             var $element = $(element);
@@ -1450,7 +1450,7 @@
                 var famillePrestationAnnexeId = $(this).val();
                 var $famillePrestationAnnexe = $('#famillePrestationAnnexe_' + famillePrestationAnnexeId);
                 if ($(this).is(':checked')) {
-                    if(famillePrestationAnnexeId == 9){
+                    if (famillePrestationAnnexeId == 9) {
                         $fournisseurRemiseClefsPanel.show();
                     }
                     var path = "{{ path('fournisseur_get_prestation_annexes' ,{
@@ -1473,20 +1473,20 @@
                                     var prestationAnnexeId = $(element).val();
                                     var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
                                     $.ajax(path2,
-                                    {
-                                        async: false,
-                                        method: 'GET'
-                                    }
+                                        {
+                                            async: false,
+                                            method: 'GET'
+                                        }
                                     ).done(function (data) {
                                         $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                                         $('#values_prestation_annexe').append(data);
                                     });
-                                    if($("#fournisseur_types_9").is(":checked")){
+                                    if ($("#fournisseur_types_9").is(":checked")) {
                                         var path3 = '{{ path("fournisseur_enregistrer_fournisseur_prestation" ,{ "id": "_fournisseurId_","prestationAnnexeId": "_prestationAnnexeId_"}) }}';
                                         path3 = path3.replace(/_fournisseurId_/g, fournisseurId);
                                         path3 = path3.replace(/_prestationAnnexeId_/g, prestationAnnexeId);
-                                        $('#form_prestation_annexe').html($('#fournisseur_prestationAnnexes_'+prestationAnnexeId));
-                                        var $data =  $('#form_prestation_annexe').serializeObject();
+                                        $('#form_prestation_annexe').html($('#fournisseur_prestationAnnexes_' + prestationAnnexeId));
+                                        var $data = $('#form_prestation_annexe').serializeObject();
                                         $('#values_prestation_annexe').append($('#form_prestation_annexe').html());
                                         $.post(path3, {
                                             data: JSON.stringify($data)
@@ -1499,7 +1499,7 @@
                     }
                 }
                 else {
-                    if(famillePrestationAnnexeId == 9){
+                    if (famillePrestationAnnexeId == 9) {
                         $fournisseurRemiseClefsPanel.hide();
                     }
                     $("#famillePrestationAnnexeBody_" + famillePrestationAnnexeId).html('');
@@ -1527,10 +1527,10 @@
                     var path = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
 
                     $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
                     ).done(function (data) {
                         $form_prestation_annexe.html(data);
                         $prestationAnnexeModal.modal();
@@ -1579,10 +1579,10 @@
                 $form_prestation_annexe.html($fournisseurPrestationAnnexe);
             } else {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $form_prestation_annexe.html(data);
                 });
@@ -1597,10 +1597,10 @@
                 if ($fournisseurPrestationAnnexe.data('id')) {
                     // on doit recharger les données et les mettre dans le form
                     $.ajax(path,
-                            {
-                                async: false,
-                                method: 'GET'
-                            }
+                        {
+                            async: false,
+                            method: 'GET'
+                        }
                     ).done(function (data) {
                         $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                         $('#values_prestation_annexe').append(data);
@@ -1619,7 +1619,6 @@
                 enregisterPrestationAnnexe(prestationAnnexeId)
             });
         }
-
 
 
         function enregisterPrestationAnnexe(prestationAnnexeId) {
@@ -1651,10 +1650,10 @@
 
                         var path2 = getPathFournisseurPrestationAnnexeForm(fournisseurId, prestationAnnexeId);
                         $.ajax(path2,
-                                {
-                                    async: false,
-                                    method: 'GET'
-                                }
+                            {
+                                async: false,
+                                method: 'GET'
+                            }
                         ).done(function (data) {
                             $('#fournisseur_prestationAnnexes_' + prestationAnnexeId).remove();
                             $('#values_prestation_annexe').append(data);
@@ -1829,10 +1828,10 @@
             }
 
             $.ajax(path,
-                    {
-                        async: false,
-                        method: 'GET'
-                    }
+                {
+                    async: false,
+                    method: 'GET'
+                }
             ).done(function (data) {
                 $('#div_affectation_' + paramIndex + '_' + elementId).html(data);
             });
@@ -1862,10 +1861,10 @@
 
             if ($('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).is(':hidden')) {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $('#collapse_station_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + stationId).html(data);
                 });
@@ -1910,10 +1909,10 @@
             path = path.replace(/_paramIndex_/g, paramIndex);
             if ($('#collapse_fournisseur_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).is(':hidden')) {
                 $.ajax(path,
-                        {
-                            async: false,
-                            method: 'GET'
-                        }
+                    {
+                        async: false,
+                        method: 'GET'
+                    }
                 ).done(function (data) {
                     $('#list_hebergements_' + prestationAnnexeId + "_" + paramIndex + "_" + siteId + "_" + templateStationId + '' + fournisseurId).html(data);
                 });
@@ -1963,39 +1962,35 @@
 
     {# information RM #}
     <script type="text/javascript">
-    function displayInformationRM()
-    {
-        // fournisseur_types_1
-        var $element = $('#fournisseur_types_1');
-        var $panel_information_rm = $('#panel_information_rm');
-        if($element.is(':checked'))
-        {
-            $panel_information_rm.show();
+        function displayInformationRM() {
+            // fournisseur_types_1
+            var $element = $('#fournisseur_types_1');
+            var $panel_information_rm = $('#panel_information_rm');
+            if ($element.is(':checked')) {
+                $panel_information_rm.show();
+            }
+            else {
+                $panel_information_rm.hide();
+            }
         }
-        else
-        {
-            $panel_information_rm.hide();
-        }
-    }
-    displayInformationRM();
-    {# fin information RM #}
+        displayInformationRM();
+        {# fin information RM #}
 
 
-    {# condtion annulation #}
-    function changeConditionAnnulation(element)
-    {
-        var $element = $(element);
-        switch($element.val()){
-            case '1':
-                $.ajax('{{ path("fournisseur_get_condition_annulation_standard") }}').done(function(data){
-                   $('#fournisseur_conditionAnnulationDescription_description').html(data);
-                });
-                break;
-            default:
-                break;
+        {# condtion annulation #}
+        function changeConditionAnnulation(element) {
+            var $element = $(element);
+            switch ($element.val()) {
+                case '1':
+                    $.ajax('{{ path("fournisseur_get_condition_annulation_standard") }}').done(function (data) {
+                        $('#fournisseur_conditionAnnulationDescription_description').html(data);
+                    });
+                    break;
+                default:
+                    break;
+            }
         }
-    }
-    {# fin condtion annulation #}
+        {# fin condtion annulation #}
 
     </script>
 

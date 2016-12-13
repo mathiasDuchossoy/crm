@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\ClientBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Nucleus\ContactBundle\Entity\Physique;
 
 /**
@@ -81,11 +80,6 @@ class Client extends Physique
         return $this->getNom() . ', ' . $this->getPrenom();
     }
 
-    public function __toString()
-    {
-        return $this->getNom() . ', ' . $this->getPrenom();
-    }
-
     /**
      * Get nom
      *
@@ -130,6 +124,11 @@ class Client extends Physique
         $this->prenom = $prenom;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getNom() . ', ' . $this->getPrenom();
     }
 
 

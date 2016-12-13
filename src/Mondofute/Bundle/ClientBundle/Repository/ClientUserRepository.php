@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\ClientBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**

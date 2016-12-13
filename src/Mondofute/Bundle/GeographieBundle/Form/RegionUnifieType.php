@@ -18,8 +18,7 @@ class RegionUnifieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('regions', CollectionType::class, array('entry_type' => RegionType::class))
-        ;
+            ->add('regions', CollectionType::class, array('entry_type' => RegionType::class));
     }
 
     /**

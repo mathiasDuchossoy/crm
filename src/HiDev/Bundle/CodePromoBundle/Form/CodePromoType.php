@@ -23,31 +23,31 @@ class CodePromoType extends AbstractType
             ->add('libelle')
             ->add('code')
             ->add('clientAffectation', ChoiceType::class, array(
-                'choices'       => array(
+                'choices' => array(
                     ClientAffectation::tous => ClientAffectation::getLibelle(ClientAffectation::tous),
                     ClientAffectation::existants => ClientAffectation::getLibelle(ClientAffectation::existants),
                 ),
-                'placeholder'   => " --- Choisir l'affection --- ",
-                'label'         => 'Affection'
+                'placeholder' => " --- Choisir l'affection --- ",
+                'label' => 'Affection'
             ))
             ->add('typeRemise', ChoiceType::class, array(
-                'choices'       => array(
+                'choices' => array(
                     TypeRemise::euro => TypeRemise::getLibelle(TypeRemise::euro),
                     TypeRemise::poucentage => TypeRemise::getLibelle(TypeRemise::poucentage),
                 ),
-                'placeholder'   => ' --- Choisir le type de remise --- ',
-                'label'         => 'Type de remise'
+                'placeholder' => ' --- Choisir le type de remise --- ',
+                'label' => 'Type de remise'
             ))
             ->add('valeurRemise')
             ->add('prixMini')
             ->add('usage', ChoiceType::class, array(
-                'choices'       => array(
-                    Usage::unique           => Usage::getLibelle(Usage::unique),
+                'choices' => array(
+                    Usage::unique => Usage::getLibelle(Usage::unique),
                     Usage::uniqueParPeriode => Usage::getLibelle(Usage::uniqueParPeriode),
-                    Usage::multiple         => Usage::getLibelle(Usage::multiple),
+                    Usage::multiple => Usage::getLibelle(Usage::multiple),
                 ),
-                'placeholder'   => " --- Choisir l'usage --- ",
-                'label'         => 'Usage'
+                'placeholder' => " --- Choisir l'usage --- ",
+                'label' => 'Usage'
             ))
             ->add('actif')
             ->add('codePromoPeriodeValidites', CollectionType::class, array(
@@ -57,10 +57,9 @@ class CodePromoType extends AbstractType
                     'label' => 'Périodes de validité',
                     'by_reference' => false,
                 )
-            )
-        ;
+            );
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

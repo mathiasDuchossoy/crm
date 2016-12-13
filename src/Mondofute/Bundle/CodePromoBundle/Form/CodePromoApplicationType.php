@@ -15,11 +15,10 @@ class CodePromoApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('application')
-//            ->add('codePromo')
+            ->add('application')//            ->add('codePromo')
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

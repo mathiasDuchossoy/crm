@@ -302,8 +302,7 @@ class RemiseClef
      */
     public function addFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement
-    )
-    {
+    ) {
         $this->fournisseurHebergements[] = $fournisseurHebergement;
 
         return $this;
@@ -316,8 +315,7 @@ class RemiseClef
      */
     public function removeFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement
-    )
-    {
+    ) {
         $this->fournisseurHebergements->removeElement($fournisseurHebergement);
     }
 

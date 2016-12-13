@@ -31,7 +31,7 @@ class DomaineVideoTraductionType extends AbstractType
                 ],
             ));
     }
-    
+
     /**
      * {@inheritdoc}
      */

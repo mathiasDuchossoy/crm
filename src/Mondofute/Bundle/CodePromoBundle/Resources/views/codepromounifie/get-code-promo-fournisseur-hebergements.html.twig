@@ -4,13 +4,12 @@
             <div class="col-sm-1"></div>
             <div class="col-sm-11">
                 <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
-                              {#name="codePromoHebergements[{{ codePromoId }}][{{ fournisseurId }}][]"#}
+                            {#name="codePromoHebergements[{{ codePromoId }}][{{ fournisseurId }}][]"#}
                             {% if codePromo.codePromoHebergements is defined %}
                                 {% for codePromoHebergement in codePromo.codePromoHebergements %}
                                     {% if
                                     codePromoHebergement.vars.value.fournisseur.id == fournisseurId
-                                    and codePromoHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId
-                                    %}
+                                    and codePromoHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId %}
                                         {#and codePromoHebergement.vars.value.codePromo.id == codePromoId#}
                                         checked="checked"
                                     {% endif %}
@@ -18,7 +17,9 @@
                             {% endif %}
                               name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
                     >{{ hebergement.nom }}</label>
-                <input type="hidden" name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoHebergements][{{ fournisseurId }}{{ key }}][fournisseur]" value="{{ fournisseurId }}"/>
+                <input type="hidden"
+                       name="code_promo_unifie[codePromos][{{ keyCodePromo }}][codePromoHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
+                       value="{{ fournisseurId }}"/>
             </div>
         </div>
     </li>

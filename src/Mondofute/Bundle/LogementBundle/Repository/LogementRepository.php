@@ -1,7 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\LogementBundle\Repository;
-use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\DBAL\Types\Type;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
@@ -22,36 +21,36 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
  */
 class LogementRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByFournisseurHebergement($fournisseurId, $hebergementUnifieId, $siteId )
-    {
-        $q = $this->getEntityManager()->createQueryBuilder();
-        $q
-            ->from('MondofuteLogementBundle:Logement' , 'logement')
-            ->select('logement')
-            ->join('logement.fournisseurHebergement' , 'fournisseurHebergement')
-            ->join('logement.site' , 'site')
-            ->where('site.id = :siteId')
-            ->andWhere('fournisseurHebergement.fournisseur = :fournisseurId')
-            ->andWhere('fournisseurHebergement.hebergement = :hebergementUnifieId')
-            ->setParameters(
-                array(
-                    'fournisseurId'         => $fournisseurId,
-                    'hebergementUnifieId'   => $hebergementUnifieId,
-                    'siteId'   => $siteId
-                )
-            )
-        ;
-
-        $result = $q->getQuery()->getResult();
-
-        return $result;
-    }
     private $connexion;
 
     public function __construct($em, $class)
     {
         parent::__construct($em, $class);
         $this->connexion = $this->getEntityManager()->getConnection();
+    }
+
+    public function findByFournisseurHebergement($fournisseurId, $hebergementUnifieId, $siteId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->from('MondofuteLogementBundle:Logement', 'logement')
+            ->select('logement')
+            ->join('logement.fournisseurHebergement', 'fournisseurHebergement')
+            ->join('logement.site', 'site')
+            ->where('site.id = :siteId')
+            ->andWhere('fournisseurHebergement.fournisseur = :fournisseurId')
+            ->andWhere('fournisseurHebergement.hebergement = :hebergementUnifieId')
+            ->setParameters(
+                array(
+                    'fournisseurId' => $fournisseurId,
+                    'hebergementUnifieId' => $hebergementUnifieId,
+                    'siteId' => $siteId
+                )
+            );
+
+        $result = $q->getQuery()->getResult();
+
+        return $result;
     }
 
     public function chargerLocatif($idLogement)
@@ -67,7 +66,7 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         if (!$lStmt) {
 
         } else {
-            $retour = $lStmt->bindValue(1, intval($idLogement,10), Type::BIGINT);
+            $retour = $lStmt->bindValue(1, intval($idLogement, 10), Type::BIGINT);
             if ($retour) {
                 $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
                 if ($retour) {
@@ -192,6 +191,7 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         }
         return $logement;
     }
+
     public function chargerPourStocks($idLogement)
     {
         $em = $this->getEntityManager();
@@ -206,7 +206,7 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         if (!$lStmt) {
 
         } else {
-            $retour = $lStmt->bindValue(1, intval($idLogement,10), Type::BIGINT);
+            $retour = $lStmt->bindValue(1, intval($idLogement, 10), Type::BIGINT);
             if ($retour) {
                 $retour = $lStmt->bindValue(2, 1, Type::BIGINT);
                 if ($retour) {

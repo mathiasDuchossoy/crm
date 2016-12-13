@@ -15,7 +15,7 @@ class ClientAffectation
     const existants = 2;
 
     public static $libelles = array(
-        ClientAffectation::tous      => 'Tout le monde',
+        ClientAffectation::tous => 'Tout le monde',
         ClientAffectation::existants => 'Clients existants',
     );
 
