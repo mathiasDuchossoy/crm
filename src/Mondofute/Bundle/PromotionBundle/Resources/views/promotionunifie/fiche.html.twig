@@ -428,7 +428,6 @@
             $listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
             $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
             $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
-                console.log(val);
                 $(val).triggerHandler('click');
             })
         }
@@ -558,6 +557,11 @@
             $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
         }
 
+        function checkBoxAll(element, checkbox) {
+            var $a = $('#' + checkbox);
+            $a.prop('checked', $(element).prop('checked'));
+            $a.triggerHandler('click');
+        }
 
     </script>
 

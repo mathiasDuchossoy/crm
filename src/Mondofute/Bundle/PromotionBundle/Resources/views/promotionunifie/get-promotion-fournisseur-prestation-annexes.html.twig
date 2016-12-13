@@ -53,6 +53,7 @@
                                     {% endif %}
                                       class="promotion_famille_prestation_annexes_{{ keyPromotion }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
                                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseurPrestationAnnexe]"
+                                      onclick="checkBoxAll(this, 'checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"
                             >{{ fournisseurPrestationAnnexe.libelle }}
                         </label>
                         <input type="hidden"

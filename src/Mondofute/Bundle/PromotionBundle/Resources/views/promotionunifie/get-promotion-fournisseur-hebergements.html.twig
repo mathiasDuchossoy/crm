@@ -45,6 +45,7 @@
                                     {% endif %}
                                       class="promotion_hebergement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
                                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
+                                      onclick="checkBoxAll(this, 'checkbox_all_logement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}');"
                             >{{ hebergement.nom }}</label>
                         <input type="hidden"
                                name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
