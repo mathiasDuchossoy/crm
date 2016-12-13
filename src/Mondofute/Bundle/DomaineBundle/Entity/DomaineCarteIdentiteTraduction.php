@@ -81,9 +81,8 @@ class DomaineCarteIdentiteTraduction
      *
      * @return DomaineCarteIdentiteTraduction
      */
-    public function setDomaineCarteIdentite(
-        \Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null
-    ) {
+    public function setDomaineCarteIdentite(\Mondofute\Bundle\DomaineBundle\Entity\DomaineCarteIdentite $domaineCarteIdentite = null)
+    {
         $this->domaineCarteIdentite = $domaineCarteIdentite;
 
         return $this;

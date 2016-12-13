@@ -86,9 +86,8 @@ class DescriptionForfaitSkiTraduction
      *
      * @return DescriptionForfaitSkiTraduction
      */
-    public function setDescriptionForfaitSki(
-        \Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki = null
-    ) {
+    public function setDescriptionForfaitSki(\Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\DescriptionForfaitSki $descriptionForfaitSki = null)
+    {
         $this->descriptionForfaitSki = $descriptionForfaitSki;
 
         return $this;
