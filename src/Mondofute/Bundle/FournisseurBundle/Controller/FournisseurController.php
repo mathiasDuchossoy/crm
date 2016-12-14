@@ -679,7 +679,7 @@ class FournisseurController extends Controller
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('fournisseur_delete', array('id' => $fournisseur->getId())))
-            ->add('Supprimer', SubmitType::class, array('label' => 'supprimer', 'translation_domain' => 'messages'))
+            ->add('Supprimer', SubmitType::class, array('label' => 'Supprimer', 'translation_domain' => 'messages'))
             ->setMethod('DELETE')
             ->getForm();
     }
