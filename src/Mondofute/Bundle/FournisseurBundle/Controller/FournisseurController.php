@@ -2805,9 +2805,6 @@ class FournisseurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->get('data'));
-//        dump($request);
-//        dump($data);
-//die;
 
         $fournisseurPrestationAnnexe = $fournisseur->getPrestationAnnexes()->filter(function (FournisseurPrestationAnnexe $element) use ($prestationAnnexeId) {
             return $element->getPrestationAnnexe()->getId() == $prestationAnnexeId;
@@ -3369,7 +3366,7 @@ class FournisseurController extends Controller
         if (empty($data)) {
             return new Response(0);
         }
-        return new Response($fournisseur->getId());
+        return new Response($fournisseurPrestationAnnexe->getId());
     }
 
     private function gestionPrestationAnnexeLogement(PrestationAnnexeHebergement $prestationAnnexeHebergement,
