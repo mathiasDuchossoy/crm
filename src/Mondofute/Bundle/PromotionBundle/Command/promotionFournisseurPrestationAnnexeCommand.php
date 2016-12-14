@@ -64,7 +64,7 @@ class promotionFournisseurPrestationAnnexeCommand extends ContainerAwareCommand
                     $promotionFournisseurPrestationAnnexe = new PromotionFournisseurPrestationAnnexe();
                     $promotion->addPromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnexe);
                     $promotionFournisseurPrestationAnnexe
-                        ->setFournisseurPrestationAnnexe($prestationAnnex)
+                        ->setFournisseurPrestationAnnexe($fournisseurPrestationAnnexe)
                         ->setFournisseur($fournisseur);
                 }
                 $emSite->persist($promotionFournisseurPrestationAnnexe);
