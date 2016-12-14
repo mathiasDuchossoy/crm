@@ -13,10 +13,6 @@
             <th class="col-sm-1">Id</th>
             <td>{{ promotionUnifie.id }}</td>
         </tr>
-        <tr class="row">
-            <th class="col-sm-1">Code</th>
-            <td>{{ promotionUnifie.code }}</td>
-        </tr>
         {% for promotion in promotionUnifie.promotions %}
             {% if promotion.site.crm == 1 %}
                 <tr class="row">
