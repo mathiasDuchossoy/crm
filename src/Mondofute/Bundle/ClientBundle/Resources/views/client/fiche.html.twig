@@ -67,8 +67,9 @@
                 {% endif %}
             {% endfor %}
 
-            <!-- disables autocomplete --><input type="text" style="display:none">
-
+            <!-- disables autocomplete -->
+            <input type="text" style="display:none"/>
+            <input type="password" style="display:none"/>
             {{ form_row(form.plainPassword) }}
             {{ form_row(form.client.vip) }}
 
