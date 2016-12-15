@@ -24,6 +24,8 @@
             {% endfor %}
             {#{{ form_row(form.email) }}#}
             {#{{ form_row(form.username) }}#}
+
+            <!-- disables autocomplete --><input type="text" style="display:none">
             {{ form_row(form.plainPassword) }}
             {#{{ form_row(form.enabled) }}#}
 

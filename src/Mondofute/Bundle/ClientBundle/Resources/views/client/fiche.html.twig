@@ -61,11 +61,13 @@
                 {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
                 {#{% elseif typeMoyenCom == 'Email' %}#}
                 {% if typeMoyenCom == 'Email' %}
-                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize }) }}
                 {% else %}
                     {#{{ form_row(moyenCom) }}#}
                 {% endif %}
             {% endfor %}
+
+            <!-- disables autocomplete --><input type="text" style="display:none">
 
             {{ form_row(form.plainPassword) }}
             {{ form_row(form.client.vip) }}

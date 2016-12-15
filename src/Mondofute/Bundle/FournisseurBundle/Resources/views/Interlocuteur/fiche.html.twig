@@ -103,5 +103,7 @@
     {#{% if form.passwordChange is defined %}#}
     {#{{ form_row(form.passwordChange) }}#}
     {#{% endif %}#}
+
+    <!-- disables autocomplete --><input type="text" style="display:none">
     {{ form_row(form.user.plainPassword) }}
 </div>
