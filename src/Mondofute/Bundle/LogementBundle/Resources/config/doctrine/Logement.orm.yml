@@ -60,5 +60,5 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
     manyToMany:
         typePeriodes:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
-            cascade: ['persist' , 'remove']
+#            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }

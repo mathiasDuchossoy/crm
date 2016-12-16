@@ -14,22 +14,6 @@ use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
 
-class FournisseurContient
-{
-    const PRODUIT = 1; // 1
-    const FOURNISSEUR = 2; // 10
-
-    public static $libelles = array(
-        FournisseurContient::FOURNISSEUR => 'Fournisseurs',
-        FournisseurContient::PRODUIT => 'Produits'
-    );
-
-    static public function getLibelle($permission)
-    {
-        return self::$libelles[$permission];
-    }
-
-}
 
 /**
  * Fournisseur
@@ -50,7 +34,7 @@ class Fournisseur extends Moral
     /**
      * @var integer
      */
-    private $contient;
+    private $contient = FournisseurContient::PRODUIT;
     /**
      * @var Collection
      */
