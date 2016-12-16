@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
@@ -75,6 +76,10 @@ class Logement
      * @var Collection
      */
     private $typePeriodes;
+    /**
+     * @var Collection
+     */
+    private $logementPeriodeLocatifs;
 
     /**
      * Constructor
@@ -86,6 +91,7 @@ class Logement
         $this->photos = new ArrayCollection();
         $this->prestationAnnexeLogements = new ArrayCollection();
         $this->typePeriodes = new ArrayCollection();
+        $this->logementPeriodeLocatifs = new ArrayCollection();
     }
 
     /**
@@ -321,7 +327,8 @@ class Logement
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    ) {
+    )
+    {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
@@ -509,5 +516,40 @@ class Logement
     public function getTypePeriodes()
     {
         return $this->typePeriodes;
+    }
+
+    /**
+     * Add logementPeriodeLocatif
+     *
+     * @param LogementPeriodeLocatif $logementPeriodeLocatif
+     *
+     * @return Logement
+     */
+    public function addLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
+    {
+        $this->logementPeriodeLocatifs[] = $logementPeriodeLocatif->setLogement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove logementPeriodeLocatif
+     *
+     * @param LogementPeriodeLocatif $logementPeriodeLocatif
+     */
+    public function removeLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
+    {
+//        $logementPeriodeLocatif->setPeriode(null);
+        $this->logementPeriodeLocatifs->removeElement($logementPeriodeLocatif);
+    }
+
+    /**
+     * Get logementPeriodeLocatifs
+     *
+     * @return Collection
+     */
+    public function getLogementPeriodeLocatifs()
+    {
+        return $this->logementPeriodeLocatifs;
     }
 }
