@@ -16,6 +16,7 @@ use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
 
+
 /**
  * Fournisseur
  */
@@ -35,7 +36,7 @@ class Fournisseur extends Moral
     /**
      * @var integer
      */
-    private $contient;
+    private $contient = FournisseurContient::PRODUIT;
     /**
      * @var Collection
      */
