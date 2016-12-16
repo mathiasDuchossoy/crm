@@ -2150,13 +2150,12 @@ class HebergementUnifieController extends Controller
                         if (!empty($entityUnifieSite->getHebergements())) {
                             /** @var Hebergement $entitySite */
                             foreach ($entityUnifieSite->getHebergements() as $entitySite) {
-//                                $entitySite->setClassement(null);
-                                if (!empty($entitySite->getMoyenComs())) {
-                                    foreach ($entitySite->getMoyenComs() as $moyenComSite) {
-                                        $entitySite->removeMoyenCom($moyenComSite);
-                                        $emSite->remove($moyenComSite);
-                                    }
-                                }
+//                                if (!empty($entitySite->getMoyenComs())) {
+//                                    foreach ($entitySite->getMoyenComs() as $moyenComSite) {
+//                                        $entitySite->removeMoyenCom($moyenComSite);
+//                                        $emSite->remove($moyenComSite);
+//                                    }
+//                                }
 
                                 // si il y a des visuels pour l'entité, les supprimer
                                 if (!empty($entitySite->getVisuels())) {
@@ -2223,13 +2222,12 @@ class HebergementUnifieController extends Controller
                 if (!empty($entityUnifie->getHebergements())) {
                     /** @var Hebergement $entity */
                     foreach ($entityUnifie->getHebergements() as $entity) {
-//                            $entity->setClassement(null);
-                        if (!empty($entity->getMoyenComs())) {
-                            foreach ($entity->getMoyenComs() as $moyenCom) {
-                                $entity->removeMoyenCom($moyenCom);
-                                $em->remove($moyenCom);
-                            }
-                        }
+//                        if (!empty($entity->getMoyenComs())) {
+//                            foreach ($entity->getMoyenComs() as $moyenCom) {
+//                                $entity->removeMoyenCom($moyenCom);
+//                                $em->remove($moyenCom);
+//                            }
+//                        }
 
                         // si il y a des visuels pour l'entité, les supprimer
                         if (!empty($entity->getVisuels())) {

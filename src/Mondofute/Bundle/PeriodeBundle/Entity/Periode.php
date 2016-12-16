@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\PeriodeBundle\Entity;
 
+use DateTime;
+
 /**
  * Periode
  */
@@ -12,11 +14,11 @@ class Periode
      */
     private $id;
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $debut;
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $fin;
     /**
@@ -24,7 +26,7 @@ class Periode
      */
     private $nbJour;
     /**
-     * @var \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+     * @var TypePeriode
      */
     private $type;
 
@@ -49,7 +51,7 @@ class Periode
     /**
      * Get debut
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDebut()
     {
@@ -59,7 +61,7 @@ class Periode
     /**
      * Set debut
      *
-     * @param \DateTime $debut
+     * @param DateTime $debut
      *
      * @return Periode
      */
@@ -73,7 +75,7 @@ class Periode
     /**
      * Get fin
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getFin()
     {
@@ -83,7 +85,7 @@ class Periode
     /**
      * Set fin
      *
-     * @param \DateTime $fin
+     * @param DateTime $fin
      *
      * @return Periode
      */
@@ -121,7 +123,7 @@ class Periode
     /**
      * Get type
      *
-     * @return \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
+     * @return TypePeriode
      */
     public function getType()
     {
@@ -131,11 +133,11 @@ class Periode
     /**
      * Set type
      *
-     * @param \Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode $type
+     * @param TypePeriode $type
      *
      * @return Periode
      */
-    public function setType(\Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode $type = null)
+    public function setType(TypePeriode $type = null)
     {
         $this->type = $type;
 
