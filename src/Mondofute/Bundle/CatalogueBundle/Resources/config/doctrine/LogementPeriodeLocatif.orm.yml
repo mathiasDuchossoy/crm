@@ -32,17 +32,17 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
             type: integer
             options:
                 default: 0
-    oneToOne:
+    manyToOne:
         periode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
 #            inverseBy: periode
-            joinColumn:
-                name: periode_id
-                referencedColumnName: id
+#            joinColumn:
+#                name: periode_id
+#                referencedColumnName: id
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
-#            inversedBy: logement
-            joinColumn:
-                name: logement_id
-                referencedColumnName: id
+            inversedBy: logementPeriodeLocatifs
+#            joinColumn:
+#                name: logement_id
+#                referencedColumnName: id
     lifecycleCallbacks: {  }

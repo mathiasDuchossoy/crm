@@ -1,0 +1,22 @@
+
+{#{% for decote in form.decotes %}#}
+    {#{{ dump(decote.periodeValidites) }}#}
+    {#{{ form_row(decote.periodeValidites) }}#}
+{#{% endfor %}#}
+<div class="form-group" id="decote_{{ keyDecote }}_{{ fournisseurPrestationAnnexeId }}_periode_validite_values">
+    {% for periodeValidite in periodeValidites %}
+        {#{{ dump(periodeValidite) }}#}
+        <div class="checkbox">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label>
+                    <input name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][periodeValidites][]"
+                           id="mondofute_bundle_decotebundle_decoteunifie_decotes_{{ keyDecote }}_periodeValidites_{{ periodeValidite.id }}"
+                           value="{{ periodeValidite.id }}" type="checkbox">
+                    {{ periodeValidite }}
+                    {#<input name="mondofute_bundle_decotebundle_decoteunifie[decotes][0][decoteFamillePrestationAnnexes][140][fournisseur]" value="14" type="hidden">#}
+                </label>
+            </div>
+        </div>
+    {% endfor %}
+</div>

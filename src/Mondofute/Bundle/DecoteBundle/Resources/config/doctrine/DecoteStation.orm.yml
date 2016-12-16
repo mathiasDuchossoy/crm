@@ -1,0 +1,21 @@
+Mondofute\Bundle\DecoteBundle\Entity\DecoteStation:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteStationRepository
+    id:
+        station:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        decote:
+            associationKey: true
+    manyToOne:
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
+            inversedBy: decoteStations
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        decote:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
+            inversedBy: decoteStations
+    lifecycleCallbacks: {  }
