@@ -235,6 +235,7 @@
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
                          class="row">
                         {% for fournisseur in form.fournisseurs %}
+                        {% if fournisseur.vars.value.fournisseur is not null %}
 
                             <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
                                  class="panel panel-default">
@@ -313,14 +314,14 @@
                                             <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
                                                  class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
 
-                                                {{ form_widget(traduction) }}
-                                            </div>
-                                        {% endfor %}
+                                                    {{ form_widget(traduction) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        {% set nbFournisseurs = nbFournisseurs + 1 %}
                                     </div>
-                                    {% set nbFournisseurs = nbFournisseurs + 1 %}
                                 </div>
-                            </div>
-
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div id="nb_fournisseurs" data-index="{{ nbFournisseurs }}">
@@ -881,8 +882,10 @@
                 ajouterNouvelleReception($(this));
             });
             {% for fournisseur in form.fournisseurs %}
+            {% if fournisseur.vars.value.fournisseur is not null %}
             _fournisseurs.push({{ fournisseur.vars.value.fournisseur.id }});
             ajouterLigneFournisseursAssocies({{ fournisseur.vars.value.fournisseur.id }}, '{{ fournisseur.vars.value.fournisseur.enseigne }}');
+            {% endif %}
             {% endfor %}
             {% if sitesAEnregistrer is not empty %}
 
@@ -1152,6 +1155,11 @@
             language: 'fr',
             minuteStep: 30
         }).removeClass('datetimepicker');
+
+        $(function () {
+            $('#hebergement_unifie_submit').prop('disabled', false);
+            $('#remise_clef_submit').prop('disabled', false);
+        });
 
     </script>
 

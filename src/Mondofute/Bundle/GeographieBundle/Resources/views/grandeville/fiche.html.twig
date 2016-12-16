@@ -10,40 +10,40 @@
     </section>
     <section>
         {#  BLOCK CONTENANT LE FORMULAIRE #}
-       {% block formulaire %}
-           {% include '::flashbags.html.twig' %}
-           {{ form_errors(form) }}
-           {{ form_start(form) }}
+        {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
 
-           <ul class="nav nav-tabs">
-               {% set iTraduc = 0 %}
-               {% for traduction in form.traductions %}
-                   <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
-                       <a data-toggle="tab"
-                          href="#langue_{{ traduction.vars.value.langue.id }}">
-                           {# affiche la langue en fonction de la locale#}
-                           {% for traductionLangue in  traduction.vars.value.langue.traductions %}
-                               {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
-                                   {{ traductionLangue.libelle }}
-                               {% endif %}
-                           {% endfor %}
-                       </a>
-                   </li>
-               {% endfor %}
-           </ul>
-           <div class="tab-content">
-               {% set iTraduc = 0 %}
-               {% for traduction in form.traductions %}
-                   <div id="langue_{{ traduction.vars.value.langue.id }}"
-                        class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
-                       {% for element in traduction.children %}
-                           {{ form_row(element) }}
-                       {% endfor %}
-                   </div>
-               {% endfor %}
-           </div>
-           {{ form_end(form) }}
-       {% endblock %}
+            <ul class="nav nav-tabs">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <li {% if(iTraduc==0) %}class="active"{% set iTraduc = 1 %}{% endif %}>
+                        <a data-toggle="tab"
+                           href="#langue_{{ traduction.vars.value.langue.id }}">
+                            {# affiche la langue en fonction de la locale#}
+                            {% for traductionLangue in  traduction.vars.value.langue.traductions %}
+                                {% if(traductionLangue.langueTraduction.code == app.request.locale) %}
+                                    {{ traductionLangue.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content">
+                {% set iTraduc = 0 %}
+                {% for traduction in form.traductions %}
+                    <div id="langue_{{ traduction.vars.value.langue.id }}"
+                         class="{% if(iTraduc==0) %}active{% set iTraduc = 1 %}{% endif %} tab-pane fade in">
+                        {% for element in traduction.children %}
+                            {{ form_row(element) }}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_end(form) }}
+        {% endblock %}
     </section>
     <section>
         {% block actions %}
