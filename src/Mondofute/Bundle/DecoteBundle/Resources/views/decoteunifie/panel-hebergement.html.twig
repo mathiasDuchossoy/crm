@@ -1,0 +1,79 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Hébergement</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-5  decote-logement-periode-{{ keyDecote }}"
+                 id="decote_periode_{{ keyDecote }}"
+                    {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
+
+            </div>
+            <div class="col-sm-7">
+                {% for fournisseur in fournisseursTypeHebergement %}
+                    {% set hebergementExists = false %}
+                    {% if decote.decoteHebergements is defined %}
+                        {% for decoteHebergement in decote.decoteHebergements %}
+                            {% if decoteHebergement.vars.value.fournisseur.id == fournisseur.id %}
+                                {% set hebergementExists = true %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading" role="tab"
+                             id="heading_decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
+                            <h4 class="panel-title">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="{{ fournisseur.id }}"
+                                                  onclick="checkChildren(this , 'decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements')"
+                                                {#name="decoteFournisseurs[{{ decote.vars.value.id }}][]"#}
+                                                  name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteFournisseurs][{{ fournisseur.id }}1][fournisseur]"
+                                                {% if decote.decoteHebergements is defined %}
+                                                    {% for decoteFournisseur in decote.decoteFournisseurs %}
+                                                        {% if decoteFournisseur.fournisseur.vars.value == fournisseur.id  and decoteFournisseur.type.vars.value == 1 %}
+                                                            checked="checked"
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                        >
+                                        <input type="hidden"
+                                               name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteFournisseurs][{{ fournisseur.id }}1][type]"
+                                               value="1"/>
+                                        <a
+                                                data-toggle="collapse"
+                                                href="#collapse_decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements"
+                                                {#onclick="getFournisseurHebergements('{{ decote.vars.value.id }}','{{ fournisseur.id }}' , '{{ keyDecote }}', '{{ decote.vars.value.site.id }}');return false;"#}
+                                                {% if hebergementExists == true %}
+                                                    aria-expanded="true"
+                                                {% else %}
+                                                    aria-expanded="false"
+                                                {% endif %}
+                                                aria-controls="collapse_decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
+                                            {{ fournisseur.enseigne }}
+                                        </a>
+                                    </label>
+                                </div>
+                            </h4>
+                        </div>
+                        <div id="collapse_decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements"
+                             class="panel-collapse collapse{% if hebergementExists == true %} in{% endif %}"
+                             role="tabpanel"
+                             aria-labelledby="heading_decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
+                            <!-- List group hebergements -->
+                            <ul class="list-group"
+                                id="decote_{{ decote.vars.value.id }}_fournisseur_{{ fournisseur.id }}_hebergements">
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

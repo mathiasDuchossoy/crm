@@ -133,6 +133,7 @@ doctrine:
                     MondofuteCatalogueBundle: ~
                     MondofuteMotClefBundle: ~
                     MondofuteCoupDeCoeurBundle: ~
+                    MondofuteDecoteBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -184,6 +185,7 @@ doctrine:
                     MondofuteCatalogueBundle: ~
                     MondofuteMotClefBundle: ~
                     MondofuteCoupDeCoeurBundle: ~
+                    MondofuteDecoteBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -232,6 +234,7 @@ doctrine:
                     MondofuteCatalogueBundle: ~
                     MondofuteMotClefBundle: ~
                     MondofuteCoupDeCoeurBundle: ~
+                    MondofuteDecoteBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
