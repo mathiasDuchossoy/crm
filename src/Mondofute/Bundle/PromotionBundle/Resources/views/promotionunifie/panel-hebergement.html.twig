@@ -4,7 +4,12 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-5" id="promotion_periode_{{ keyPromotion }}">
+            <div class="col-sm-5  promotion-logement-periode-{{ keyPromotion }}"
+                 id="promotion_periode_{{ keyPromotion }}"
+                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
 
             </div>
             <div class="col-sm-7">

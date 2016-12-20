@@ -28,6 +28,10 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             scale: '2'
             options:
                 default: 0
+        typePeriodeValidite:
+            type: smallint
+            options:
+                unsigned: true
         typePeriodeSejour:
             type: smallint
             options:
@@ -93,6 +97,10 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             orphanRemoval: true
         promotionPeriodeValiditeJour:
             targetEntity: PromotionPeriodeValiditeJour
+            cascade: ['persist','remove']
+            orphanRemoval: true
+        promotionPeriodeSejourDate:
+            targetEntity: PromotionPeriodeSejourDate
             cascade: ['persist','remove']
             orphanRemoval: true
     lifecycleCallbacks: {  }

@@ -8,12 +8,24 @@
     {% if stationLibelleTemp !=  hebergement.stationLibelle %}
         <div class="checkbox">
             <label><input type="checkbox"
-                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId')">{{ hebergement.stationLibelle }}
+                          value="{{ hebergement.stationId }}"
+                        {% set keyPromotionStation = 0 %}
+                        {% for promotionStation in promotion.promotionStations %}
+                            {% if promotionStation.vars.value.station.id == hebergement.stationId and promotionStation.vars.value.fournisseur.id == fournisseurId %}
+                                checked="checked"
+                            {% endif %}
+                        {% endfor %}
+                          name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionStations][{{ fournisseurId }}0{{ hebergement.stationId }}][station]"
+                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}')">{{ hebergement.stationLibelle }}
             </label>
+            <input type="hidden"
+                   name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionStations][{{ fournisseurId }}0{{ hebergement.stationId }}][fournisseur]"
+                   value="{{ fournisseurId }}"
+            >
         </div>
     {% endif %}
     {% set stationLibelleTemp = hebergement.stationLibelle %}
-    <li class="list-group-item list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}-fournisseurId">
+    <li class="list-group-item list-group-item-{{ keyPromotion }}-{{ fournisseurId }}-{{ hebergement.stationId }}">
         <div class="row">
             <div class="col-sm-6">
                 <div class="checkbox">
@@ -31,6 +43,8 @@
                                             {% endif %}
                                         {% endfor %}
                                     {% endif %}
+                                      class="promotion_hebergement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
+                                      onclick="checkBoxAll(this, 'checkbox_all_logement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}')"
                                       name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
                             >{{ hebergement.nom }}</label>
                         <input type="hidden"
@@ -39,21 +53,29 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 promotion-logement-periode-{{ keyPromotion }}"
+                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
                 <label>
                     <input type="checkbox"
-                            {#id="checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"#}
-                            {#onclick="checkAllPeriodeValiditeForFournisseurPrestationAnnexe(this, '{{ keyPromotion }}', '{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"#}
+                           id="checkbox_all_logement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
+                           onclick="checkAllPromotionLogements(this, '{{ keyPromotion }}', '{{ fournisseurId }}', {{ hebergement.hebergementId }});"
                     />
-                    Toutes les périodes
+                    Tous les logements
                 </label>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 promotion-logement-periode-{{ keyPromotion }}"
+                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
                 <button type="button" class="btn btn-default btn-md" data-toggle="modal"
-                        data-target="#modal_promotion_logement_periode"
-                        onclick="getLogementPeriodes('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"
+                        data-target="#modal_promotion_logement"
+                        onclick="getPromotionLogements('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"
                 >
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Periodes de validité
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Logements
                 </button>
             </div>
         </div>

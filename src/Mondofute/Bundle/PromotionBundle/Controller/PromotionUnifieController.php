@@ -26,6 +26,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeJour;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
@@ -33,6 +34,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
+use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
@@ -42,7 +44,6 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * PromotionUnifie controller.
@@ -128,6 +129,10 @@ class PromotionUnifieController extends Controller
                     $promotion->setActif(false);
                 }
             }
+
+            // *** gestion typePeriodeValidite ***
+            $this->gestionTypePeriodeValidite($promotionUnifie);
+            // *** fin gestion typePeriodeValidite ***
 
             // *** gestion typePeriodeSejour ***
             $this->gestionTypePeriodeSejour($promotionUnifie);
@@ -305,20 +310,44 @@ class PromotionUnifieController extends Controller
     /**
      * @param PromotionUnifie $promotionUnifie
      */
+    private function gestionTypePeriodeValidite($promotionUnifie)
+    {
+        /** @var Promotion $promotion */
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            switch ($promotion->getTypePeriodeValidite()) {
+                case TypePeriodeValidite::permanent:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeValidite::dateADate:
+                    $promotion->setPromotionPeriodeValiditeJour();
+                    break;
+                case TypePeriodeValidite::periode:
+                    $promotion->setPromotionPeriodeValiditeDate();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @param PromotionUnifie $promotionUnifie
+     */
     private function gestionTypePeriodeSejour($promotionUnifie)
     {
         /** @var Promotion $promotion */
         foreach ($promotionUnifie->getPromotions() as $promotion) {
             switch ($promotion->getTypePeriodeSejour()) {
                 case TypePeriodeSejour::permanent:
-                    $promotion->setPromotionPeriodeValiditeDate();
-                    $promotion->setPromotionPeriodeValiditeJour();
+                    $promotion->setPromotionPeriodeSejourDate();
+//                    $promotion->setPromotionPeriodeSejourJour();
                     break;
                 case TypePeriodeSejour::dateADate:
-                    $promotion->setPromotionPeriodeValiditeJour();
+//                    $promotion->setPromotionPeriodeSejourJour();
                     break;
                 case TypePeriodeSejour::periode:
-                    $promotion->setPromotionPeriodeValiditeDate();
+                    $promotion->setPromotionPeriodeSejourDate();
                     break;
                 default:
                     break;
@@ -684,11 +713,26 @@ class PromotionUnifieController extends Controller
                 }
                 // *** fin type periode validite date ***
 
+                // *** gestion periode sejour date ***
+                if (!empty($entity->getPromotionPeriodeSejourDate())) {
+                    if (empty($promotionPeriodeSejourDate = $entitySite->getPromotionPeriodeSejourDate())) {
+                        $promotionPeriodeSejourDate = new PromotionPeriodeSejourDate();
+                        $entitySite->setPromotionPeriodeSejourDate($promotionPeriodeSejourDate);
+                    }
+                    $promotionPeriodeSejourDate
+                        ->setDateDebut($entity->getPromotionPeriodeSejourDate()->getDateDebut())
+                        ->setDateFin($entity->getPromotionPeriodeSejourDate()->getDateFin());
+                } else {
+                    $entitySite->setPromotionPeriodeSejourDate();
+                }
+                // *** fin type periode sejour date ***
+
                 //  copie des données promotion
                 $entitySite
                     ->setActif($entity->getActif())
                     ->setLibelle($entity->getLibelle())
                     ->setValeurRemise($entity->getValeurRemise())
+                    ->setTypePeriodeValidite($entity->getTypePeriodeValidite())
                     ->setTypePeriodeSejour($entity->getTypePeriodeSejour())
                     ->setTypeApplication($entity->getTypeApplication())
                     ->setTypeRemise($entity->getTypeRemise());
@@ -829,6 +873,17 @@ class PromotionUnifieController extends Controller
         }
         // *** fin gestion promotion fournisseurPrestationAnnexe ***
 
+        // *** gestion promotion logement periode ***
+        $originalPromotionLogementPeriodes = new ArrayCollection();
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            $originalPromotionLogementPeriodes->set($promotion->getSite()->getId(), new ArrayCollection());
+            /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnex */
+            foreach ($promotion->getLogementPeriodes() as $logementPeriode) {
+                $originalPromotionLogementPeriodes->get($promotion->getSite()->getId())->add($logementPeriode);
+            }
+        }
+        // *** fin gestion promotion fournisseurPrestationAnnexe ***
+
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
         if (empty($request->get('sites'))) {
@@ -866,6 +921,10 @@ class PromotionUnifieController extends Controller
                     $promotion->setActif(true);
                 }
             }
+
+            // *** gestion TypePeriodeSejour ***
+            $this->gestionPromotionTypePeriodeSejour($promotionUnifie);
+            // *** fin gestion TypePeriodeSejour ***
 
             // *** gestion promotion typeAffectation ***
             $this->gestionPromotionTypeAffectation($promotionUnifie);
@@ -1042,12 +1101,13 @@ class PromotionUnifieController extends Controller
             // *** gestion promotion logement periode ***
             /** @var PromotionLogementPeriode $logementPeriode */
             foreach ($promotionUnifie->getPromotions() as $key => $promotion) {
-                if (!empty($request->get('promotion_logement_periode')[$key]) and !empty($request->get('promotion_logement_periode')[$key]['logements']) and !empty($request->get('promotion_logement_periode')[$key]['periodes'])) {
+                if ($promotion->getTypePeriodeValidite() == TypePeriodeValidite::periode and !empty($request->get('promotion_logement_periode')[$key]) and !empty($request->get('promotion_logement_periode')[$key]['logements']) and !empty($request->get('promotion_logement_periode')[$key]['periodes'])) {
+                    dump($request);
                     $promotion_logement_periode = $request->get('promotion_logement_periode')[$key];
                     foreach ($promotion_logement_periode['logements'] as $logement) {
                         $logementEntity = $em->find(Logement::class, $logement);
                         foreach ($promotion_logement_periode['periodes'] as $periode) {
-                            $promotionLogementPeriode = $promotion->getLogementPeriodes()->filter(function (PromotionLogementPeriode $element) use ($logement, $periode, $promotion) {
+                            $promotionLogementPeriode = $originalPromotionLogementPeriodes->get($promotion->getSite()->getId())->filter(function (PromotionLogementPeriode $element) use ($logement, $periode, $promotion) {
                                 return ($element->getLogement()->getId() == $logement and $element->getPeriode()->getId() == $periode and $element->getPromotion() == $promotion);
                             })->first();
                             if (false === $promotionLogementPeriode) {
@@ -1060,7 +1120,7 @@ class PromotionUnifieController extends Controller
                             }
                         }
                     }
-                    foreach ($promotion->getLogementPeriodes() as $logementPeriode) {
+                    foreach ($originalPromotionLogementPeriodes->get($promotion->getSite()->getId()) as $logementPeriode) {
                         if (!in_array($logementPeriode->getLogement()->getId(), $promotion_logement_periode['logements'])) {
                             $promotion->getLogementPeriodes()->removeElement($logementPeriode);
                             $em->remove($logementPeriode);
@@ -1071,8 +1131,8 @@ class PromotionUnifieController extends Controller
                         }
                     }
                 } else {
-                    foreach ($promotion->getLogementPeriodes() as $logementPeriode) {
-                        $promotion->getLogementPeriodes()->removeElement($logementPeriode);
+                    foreach ($originalPromotionLogementPeriodes->get($promotion->getSite()->getId()) as $logementPeriode) {
+//                        $promotion->getLogementPeriodes()->removeElement($logementPeriode);
                         $em->remove($logementPeriode);
                     }
                 }
@@ -1090,12 +1150,7 @@ class PromotionUnifieController extends Controller
 
             $this->gestionPromotionTypeFournisseur($promotionUnifie->getId());
 
-//            // *** gestion promotion logement ***
-//            $this->gestionPromotionLogement($promotionUnifie);
-//            // *** fin gestion promotion logement ***
-
             // add flash messages
-            /** @var Session $session */
             $this->addFlash('success', 'La promotion a bien été modifié.');
 
             return $this->redirectToRoute('promotion_edit', array('id' => $promotionUnifie->getId()));
@@ -1115,6 +1170,36 @@ class PromotionUnifieController extends Controller
             'fournisseursPrestationAnnexe' => $fournisseursPrestationAnnexe,
 //            'fournisseurFournisseurPrestationAnnexes' => $fournisseurFournisseurPrestationAnnexes,
         ));
+    }
+
+    /**
+     * @param PromotionUnifie $promotionUnifie
+     */
+    private function gestionPromotionTypePeriodeSejour($promotionUnifie)
+    {
+        /** @var Promotion $promotion */
+        foreach ($promotionUnifie->getPromotions() as $key => $promotion) {
+            switch ($promotion->getTypePeriodeValidite()) {
+                case TypePeriodeValidite::permanent:
+                    $this->clearPeriodes($promotion);
+                    $promotion->getPromotionPeriodeSejourDate();
+                    break;
+                case TypePeriodeValidite::dateADate:
+                    $this->clearPeriodes($promotion);
+                    break;
+                case TypePeriodeValidite::periode:
+                    $promotion->getPromotionPeriodeSejourDate();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private function clearPeriodes(Promotion $promotion)
+    {
+        $promotion->getPeriodeValidites()->clear();
+        $promotion->getLogementPeriodes()->clear();
     }
 
     /**
