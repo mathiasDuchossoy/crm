@@ -93,6 +93,14 @@ class Promotion
      * @var PromotionPeriodeValiditeJour
      */
     private $promotionPeriodeValiditeJour;
+    /**
+     * @var integer
+     */
+    private $typePeriodeValidite;
+    /**
+     * @var \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate
+     */
+    private $promotionPeriodeSejourDate;
 
     /**
      * Constructor
@@ -662,6 +670,54 @@ class Promotion
     public function setPromotionPeriodeValiditeJour(PromotionPeriodeValiditeJour $promotionPeriodeValiditeJour = null)
     {
         $this->promotionPeriodeValiditeJour = $promotionPeriodeValiditeJour;
+
+        return $this;
+    }
+
+    /**
+     * Get typePeriodeValidite
+     *
+     * @return integer
+     */
+    public function getTypePeriodeValidite()
+    {
+        return $this->typePeriodeValidite;
+    }
+
+    /**
+     * Set typePeriodeValidite
+     *
+     * @param integer $typePeriodeValidite
+     *
+     * @return Promotion
+     */
+    public function setTypePeriodeValidite($typePeriodeValidite)
+    {
+        $this->typePeriodeValidite = $typePeriodeValidite;
+
+        return $this;
+    }
+
+    /**
+     * Get promotionPeriodeSejourDate
+     *
+     * @return \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate
+     */
+    public function getPromotionPeriodeSejourDate()
+    {
+        return $this->promotionPeriodeSejourDate;
+    }
+
+    /**
+     * Set promotionPeriodeSejourDate
+     *
+     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate $promotionPeriodeSejourDate
+     *
+     * @return Promotion
+     */
+    public function setPromotionPeriodeSejourDate(\Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate $promotionPeriodeSejourDate = null)
+    {
+        $this->promotionPeriodeSejourDate = $promotionPeriodeSejourDate;
 
         return $this;
     }

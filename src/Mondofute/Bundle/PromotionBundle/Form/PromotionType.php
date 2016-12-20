@@ -7,6 +7,7 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
+use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeRemise;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -37,6 +38,17 @@ class PromotionType extends AbstractType
                 'label' => 'Type de remise'
             ))
             ->add('valeurRemise', TextType::class)
+            ->add('typePeriodeValidite', ChoiceType::class, array(
+                'choices' => array(
+                    TypePeriodeValidite::permanent => TypePeriodeValidite::getLibelle(TypePeriodeValidite::permanent),
+                    TypePeriodeValidite::dateADate => TypePeriodeValidite::getLibelle(TypePeriodeValidite::dateADate),
+                    TypePeriodeValidite::periode => TypePeriodeValidite::getLibelle(TypePeriodeValidite::periode),
+                ),
+                'placeholder' => " --- Choisir le typePeriodeValidite --- ",
+                'label' => 'typePeriodeValidite'
+            ))
+            ->add('promotionPeriodeValiditeDate', PromotionPeriodeValiditeDateType::class, ['required' => false])
+            ->add('promotionPeriodeValiditeJour', PromotionPeriodeValiditeJourType::class, ['required' => false])
             ->add('typePeriodeSejour', ChoiceType::class, array(
                 'choices' => array(
                     TypePeriodeSejour::permanent => TypePeriodeSejour::getLibelle(TypePeriodeSejour::permanent),
@@ -46,8 +58,7 @@ class PromotionType extends AbstractType
                 'placeholder' => " --- Choisir le typePeriodeSejour --- ",
                 'label' => 'TypePeriodeSejour'
             ))
-            ->add('promotionPeriodeValiditeDate', PromotionPeriodeValiditeDateType::class, ['required' => false])
-            ->add('promotionPeriodeValiditeJour', PromotionPeriodeValiditeJourType::class, ['required' => false])
+            ->add('promotionPeriodeSejourDate', PromotionPeriodeSejourDateType::class, ['required' => false])
             ->add('site', HiddenType::class, array('mapped' => false))
             ->add('promotionTypeAffectations', CollectionType::class, array(
                     'entry_type' => 'Mondofute\Bundle\PromotionBundle\Form\PromotionTypeAffectationType',
