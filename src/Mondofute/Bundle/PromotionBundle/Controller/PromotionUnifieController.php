@@ -1101,8 +1101,7 @@ class PromotionUnifieController extends Controller
             // *** gestion promotion logement periode ***
             /** @var PromotionLogementPeriode $logementPeriode */
             foreach ($promotionUnifie->getPromotions() as $key => $promotion) {
-                if ($promotion->getTypePeriodeValidite() == TypePeriodeValidite::periode and !empty($request->get('promotion_logement_periode')[$key]) and !empty($request->get('promotion_logement_periode')[$key]['logements']) and !empty($request->get('promotion_logement_periode')[$key]['periodes'])) {
-                    dump($request);
+                if ($promotion->getTypePeriodeSejour() == TypePeriodeSejour::periode and !empty($request->get('promotion_logement_periode')[$key]) and !empty($request->get('promotion_logement_periode')[$key]['logements']) and !empty($request->get('promotion_logement_periode')[$key]['periodes'])) {
                     $promotion_logement_periode = $request->get('promotion_logement_periode')[$key];
                     foreach ($promotion_logement_periode['logements'] as $logement) {
                         $logementEntity = $em->find(Logement::class, $logement);
@@ -1179,15 +1178,15 @@ class PromotionUnifieController extends Controller
     {
         /** @var Promotion $promotion */
         foreach ($promotionUnifie->getPromotions() as $key => $promotion) {
-            switch ($promotion->getTypePeriodeValidite()) {
-                case TypePeriodeValidite::permanent:
+            switch ($promotion->getTypePeriodeSejour()) {
+                case TypePeriodeSejour::permanent:
                     $this->clearPeriodes($promotion);
                     $promotion->getPromotionPeriodeSejourDate();
                     break;
-                case TypePeriodeValidite::dateADate:
+                case TypePeriodeSejour::dateADate:
                     $this->clearPeriodes($promotion);
                     break;
-                case TypePeriodeValidite::periode:
+                case TypePeriodeSejour::periode:
                     $promotion->getPromotionPeriodeSejourDate();
                     break;
                 default:
