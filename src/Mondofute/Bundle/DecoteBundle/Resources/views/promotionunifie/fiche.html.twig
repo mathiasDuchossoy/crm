@@ -1,0 +1,724 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.promotions %}
+            {% include ('::onglets_sites.html.twig') %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for keyPromotion, promotion in form.promotions %}
+                    <div id="data_site_{{ promotion.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ promotion.vars.value.site.crm | number_format }}">
+                        {{ form_row(promotion.site) }}
+                        {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
+                        {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
+                        {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(promotion.typePeriodeValidite, {  'attr' : {
+                            'data-unique_block_prefix' : promotion.typePeriodeValidite.vars['unique_block_prefix'],
+                            'onchange' : 'displayFormTypePeriodeValidite(this,'~keyPromotion~');'
+                        }}) }}
+                        <div id="promotion_periode_validite_date_{{ keyPromotion }}" class="form-group"
+                                {% if promotion.typePeriodeValidite.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeValidite::dateADate') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {% include('@MondofutePromotion/promotionunifie/widget-promotion-periode-validite-date.html.twig') with {'promotionPeriodeValiditeDate': promotion.promotionPeriodeValiditeDate} %}
+                        </div>
+                        <div id="promotion_periode_validite_jour_{{ keyPromotion }}"
+                                {% if promotion.typePeriodeValidite.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeValidite::periode') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
+                        </div>
+                        {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
+                            'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');'
+                        }}) }}
+                        <div id="promotion_periode_sejour_date_{{ keyPromotion }}" class="form-group"
+                                {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {% include('@MondofutePromotion/promotionunifie/widget-promotion-periode-sejour-date.html.twig') with {'promotionPeriodeSejourDate': promotion.promotionPeriodeSejourDate} %}
+                        </div>
+                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
+                        <div id="promotion_type_fournisseur_{{ keyPromotion }}"
+                                {% set promotionTypeAffectationDisplay = false %}
+                                {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                    {% if promotionTypeAffectation.typeAffectation != 3 and promotionTypeAffectationDisplay == false %}
+                                        {% set promotionTypeAffectationDisplay = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if promotion.promotionTypeAffectations.vars.value is empty %}
+                                    {% set promotionTypeAffectationDisplay = true %}
+                                {% endif %}
+                                {% if  promotionTypeAffectationDisplay == true %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {{ form_row(promotion.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : promotion.typeFournisseurs.vars['unique_block_prefix'] }}) }}
+                        </div>
+                        {{ form_row(promotion.typeApplication, {  'attr' : {  'data-unique_block_prefix' : promotion.typeApplication.vars['unique_block_prefix'] }}) }}
+
+                        {% if panelPromotion is defined %}
+                            {% set typeAffectationLogementSelected = false %}
+                            {% set typeAffectationPrestationAnnexeSelected = false %}
+                            {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                {% if promotionTypeAffectation.typeAffectation == 1 %}
+                                    {% set typeAffectationLogementSelected = true %}
+                                {% endif %}
+                                {% if promotionTypeAffectation.typeAffectation == 2 %}
+                                    {% set typeAffectationPrestationAnnexeSelected = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <div id="promotion_panel_hebergement_{{ keyPromotion }}">
+                                {% if typeAffectationLogementSelected == true %}
+                                    {% include ('@MondofutePromotion/promotionunifie/panel-hebergement.html.twig' ) %}
+                                {% endif %}
+                            </div>
+                            <div id="promotion_panel_prestation_annexe_{{ keyPromotion }}">
+                                {% if typeAffectationPrestationAnnexeSelected == true %}
+                                    {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
+                                        {% if promotionTypeAffectation.typeAffectation == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::prestationAnnexe') %}
+                                            {{ include ('@MondofutePromotion/promotionunifie/panel-prestation-annexe.html.twig') }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {#{{ dump(promotion.logementPeriodes) }}#}
+                    {% set index = (index + 1) %}
+                {% endfor %}
+
+            </div>
+            <div id="values_fournisseur_prestation_annexe_periode_validite" style="display: none">
+                {#<div id="values_fournisseur_prestation_annexe_periode_validite">#}
+            </div>
+
+            <div id="values_promotion_logement" style="display: none">
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+    {% include ('@MondofutePromotion/promotionunifie/modal-promotion-fournisseur-prestation-annexe-periode-validite.html.twig') %}
+    {% include ('@MondofutePromotion/promotionunifie/modal-promotion-logement.html.twig') %}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_libelle");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_typeRemise");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_valeurRemise");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_prixMini");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_usagePromotion");
+        //        itemNonPersonalisable.push("_promotion_unifie_promotions_entry_actif");
+
+        var items = [];
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_libelle");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeRemise");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_valeurRemise");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typePeriodeValidite");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typePeriodeSejour");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_valeurRemise");
+        items.push("_promotion_unifie_promotions_entry_promotionAffectations");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeApplication");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
+
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+
+            });
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).removeClass('datetimepicker');
+
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        function displayFormTypePeriodeSejour(element, keyPromotion) {
+            var $promotion_periode_validite_date = $('#promotion_periode_sejour_date_' + keyPromotion);
+            var promotion_periodes = $('.promotion-logement-periode-' + keyPromotion);
+            var promotion_fpa_periode = $('.promotion-fournisseur-prestation-annexe-periode-' + keyPromotion);
+            switch ($(element).val()) {
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::permanent') }}':
+                    $promotion_periode_validite_date.hide();
+                    promotion_periodes.each(function () {
+                        $(this).hide();
+                    });
+                    promotion_fpa_periode.each(function () {
+                        $(this).hide();
+                    });
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') }}':
+                    $promotion_periode_validite_date.show();
+                    promotion_periodes.each(function () {
+                        $(this).hide();
+                    });
+                    promotion_fpa_periode.each(function () {
+                        $(this).hide();
+                    });
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}':
+                    $promotion_periode_validite_date.hide();
+                    promotion_periodes.each(function () {
+                        $(this).show();
+                    });
+                    promotion_fpa_periode.each(function () {
+                        $(this).show();
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function displayFormTypePeriodeValidite(element, keyPromotion) {
+            var $promotion_periode_validite_date = $('#promotion_periode_validite_date_' + keyPromotion);
+            var $promotion_periode_validite_jour = $('#promotion_periode_validite_jour_' + keyPromotion);
+            switch ($(element).val()) {
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeValidite::permanent') }}':
+                    $promotion_periode_validite_date.hide();
+                    $promotion_periode_validite_jour.hide();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeValidite::dateADate') }}':
+                    $promotion_periode_validite_jour.hide();
+                    $promotion_periode_validite_date.show();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeValidite::periode') }}':
+                    $promotion_periode_validite_date.hide();
+                    $promotion_periode_validite_jour.show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function displayAffectationPanel(element, keyPromotion, promotionId, siteId) {
+            var $element = $(element);
+            var val = $element.val();
+            var path;
+            var $promotionPanelHebergement = $('#promotion_panel_hebergement_' + keyPromotion);
+            var $promotionPanelPrestationAnnexe = $('#promotion_panel_prestation_annexe_' + keyPromotion);
+            var $promotionWidgetTypeFournisseur = $('#promotion_type_fournisseur_' + keyPromotion);
+            if (promotionId) {
+                if ($element.is(':checked')) {
+                    switch (val) {
+                        case '1':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionWidgetTypeFournisseur.hide();
+                            if ($('#promotion_panel_hebergement_' + keyPromotion + ' > *').length == 0) {
+                                path = "{{ path('promotion_get_panel_hebergement', {
+                                    'promotionId' : '_promotionId_'
+                                } ) }}";
+                                path = path.replace(/_promotionId_/g, promotionId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyPromotion_/g, keyPromotion);
+                                    $promotionPanelHebergement.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                    getFournisseurHebergements(promotionId, '{{ fournisseurTypeHebergement.id }}', keyPromotion, siteId);
+                                    {% endfor %}
+                                    getPromotionPeriodes(promotionId, keyPromotion);
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                            }
+                            $promotionPanelHebergement.show();
+                            break;
+                        case '2':
+                            $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.hide();
+                            if ($('#promotion_panel_prestation_annexe_' + keyPromotion + ' > *').length == 0) {
+                                path = "{{ path('promotion_get_panel_prestation_annexe', {
+                                    'promotionId' : '_promotionId_'
+                                } ) }}";
+                                path = path.replace(/_promotionId_/g, promotionId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyPromotion_/g, keyPromotion);
+                                    $promotionPanelPrestationAnnexe.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                    getFournisseurPrestationAnnexes(promotionId, '{{ fournisseurPrestationAnnexe.id }}', keyPromotion);
+                                    {% endfor %}
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                            }
+                            $promotionPanelPrestationAnnexe.show();
+                            break;
+                        case '3':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.show();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    switch (val) {
+                        case '1':
+                            $promotionPanelHebergement.hide();
+                            $promotionWidgetTypeFournisseur.hide();
+                            break;
+                        case '2':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionWidgetTypeFournisseur.hide();
+                            break;
+                        case '3':
+                            $promotionPanelPrestationAnnexe.hide();
+                            $promotionPanelHebergement.hide();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function getFournisseurHebergements(promotionId, fournisseurId, keyPromotion, siteId) {
+//            if($('#collapse_promotion_'+promotionId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
+//            {
+            var path = "{{ path('promotion_get_fournisseur_hebergements' ,{
+                'promotionId' : '_promotionId_',
+                'fournisseurId' : '_fournisseurId_',
+                'siteId' : '_siteId_',
+            }) }}";
+
+            path = path.replace(/_promotionId_/g, promotionId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_siteId_/g, siteId);
+
+            $.ajax(path, {
+//                    async: false
+            }).done(function (data) {
+                data = data.replace(/__keyPromotion__/g, keyPromotion);
+                var $promotionFournisseurHebergements = $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_hebergements');
+                $promotionFournisseurHebergements.html(data);
+                $promotionFournisseurHebergements.find('input[class^="promotion_hebergement_"]').each(function (index, element) {
+                    getPromotionLogementValues(fournisseurId, $(element).val(), promotionId, keyPromotion)
+                })
+            });
+//            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(promotionId, fournisseurId, keyPromotion) {
+//            if($('#collapse_promotion_'+promotionId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
+//            {
+            var path = "{{ path('promotion_get_fournisseur_prestation_annexes' ,{
+                'promotionId' : '_promotionId_',
+                'fournisseurId' : '_fournisseurId_'
+            }) }}";
+
+            path = path.replace(/_promotionId_/g, promotionId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+            $.ajax(path, {
+//                async: false
+            }).done(function (data) {
+                data = data.replace(/__keyPromotion__/g, keyPromotion);
+                var $promotionFournisseurPrestationannexes = $('#promotion_' + promotionId + '_fournisseur_' + fournisseurId + '_prestation_annexes');
+                $promotionFournisseurPrestationannexes.html(data);
+                $promotionFournisseurPrestationannexes.find('input[class^="promotion_famille_prestation_annexes_"]').each(function (index, element) {
+                    getFournisseurPrestationAnnexePeriodeValiditeValues($(element).val(), promotionId, keyPromotion);
+                })
+            });
+//            }
+
+        }
+
+        function checkChildren(element, listGroup) {
+            var $element = $(element);
+            var $listGroup = $('#' + listGroup);
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
+                $(val).triggerHandler('click');
+            })
+        }
+
+        function checkChilFamillePrestationAnnexe(element, classFamille) {
+            var $element = $(element);
+            var $listGroup = $('#' + $element.data('list_group'));
+            $listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
+                $(val).triggerHandler('click');
+            })
+        }
+
+        function checkListStationHebergement(checkbox, className) {
+            $('.' + className).each(function (index, element) {
+                $(element).find('input[type=checkbox]').prop('checked', $(checkbox).prop('checked'));
+                $(element).find('input:checkbox[id^="checkbox_all_logement_"]').triggerHandler('click');
+            })
+        }
+
+
+        $(document).ready(function () {
+            {% if panelPromotion is defined %}
+            {% for keyPromotion , promotion in entity.promotions %}
+            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
+            {% if promotionTypeAffectation.typeAffectation == 1 %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+            getFournisseurHebergements('{{ promotion.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyPromotion }}', '{{ promotion.site.id }}');
+            {% endfor %}
+            getPromotionPeriodes('{{ promotion.id }}', '{{ keyPromotion }}');
+            {% endif %}
+            {% endfor %}
+            {% for promotionTypeAffectation in promotion.promotionTypeAffectations %}
+            {% if promotionTypeAffectation.typeAffectation == 2 %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+            getFournisseurPrestationAnnexes('{{ promotion.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyPromotion }}');
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var selectedFournisseurPrestationAnnexePeriodeValidites = [];
+
+        function getFournisseurPrestationAnnexePeriodeValidites(fournisseurPrestationAnnexeId, keyPromotion) {
+            var path = '{{ path('promotion_get_fournisseur_prestation_annexe_periode_validite' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyPromotion' : '_keyPromotion_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id', fournisseurPrestationAnnexeId);
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-promotion', keyPromotion);
+
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($values_checkbox_fournisseur_prestation_annexe_periode_validite.length > 0) {
+                $modal_body_fournisseur_prestation_annexe_periode_validite.html($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            }
+            else {
+                $.ajax(path).done(function (data) {
+                    $modal_body_fournisseur_prestation_annexe_periode_validite.html(data);
+                })
+            }
+            selectedFournisseurPrestationAnnexePeriodeValidites = [];
+            $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values input:checked').each(function () {
+                selectedFournisseurPrestationAnnexePeriodeValidites.push($(this).attr('id'));
+            });
+            $('#modal_fournisseur_prestation_annexe_periode_validite').on('hidden.bs.modal', function (e) {
+                validerFournisseurPrestationAnnexePeriodeValidite(true);
+            })
+        }
+
+        function validerFournisseurPrestationAnnexePeriodeValidite(annuler) {
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            var fournisseurPrestationAnnexeId = $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id');
+            var keyPromotion = $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-promotion');
+            var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            var $modal_fournisseur_prestation_annexe_periode_validite = $('#modal_fournisseur_prestation_annexe_periode_validite');
+            $modal_fournisseur_prestation_annexe_periode_validite.unbind('hidden.bs.modal');
+            $modal_fournisseur_prestation_annexe_periode_validite.modal('hide');
+            if (annuler) {
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.find('input:checkbox').prop('checked', false);
+                for (var i = 0; i < selectedFournisseurPrestationAnnexePeriodeValidites.length; i++) {
+                    $('#' + selectedFournisseurPrestationAnnexePeriodeValidites[i]).prop('checked', true);
+                }
+            }
+            var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+            }
+            else {
+                $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+            }
+        }
+
+        function getFournisseurPrestationAnnexePeriodeValiditeValues(fournisseurPrestationAnnexeId, promotionId, keyPromotion) {
+            var path = '{{ path('promotion_get_fournisseur_prestation_annexe_periode_validite_values' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyPromotion' : '_keyPromotion_','promotionId' : '_promotionId_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_promotionId_', promotionId);
+            $.ajax(path).done(function (data) {
+                var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+                var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('<div id="promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values"></div>');
+                $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.html(data);
+                var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+                if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                    $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                }
+                $periodeValiditeCheckboxes.change(function () {
+                    if ($('.promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                        //do something
+                        $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                    }
+                    else {
+                        $('#checkbox_all_periode_validite_' + keyPromotion + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+                    }
+                });
+            })
+        }
+
+        function checkAllPeriodeValiditeForFournisseurPrestationAnnexe(element, keyPromotion, fournisseurPrestationAnnexeId) {
+            var $element = $(element);
+            var $listGroup = $('#promotion_' + keyPromotion + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkAllPromotionLogements(element, keyPromotion, fournisseurId, hebergementId) {
+            var $element = $(element);
+            var $listGroup = $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkBoxAll(element, checkbox) {
+            var $a = $('#' + checkbox);
+            $a.prop('checked', $(element).prop('checked'));
+            $a.triggerHandler('click');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function getPromotionPeriodes(promotionId, keyPromotion) {
+            var path = '{{ path('promotion_get_periode', {'keyPromotion' : '_keyPromotion_','promotionId' : '_promotionId_'}) }}';
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_promotionId_', promotionId);
+            $.ajax(path).done(function (data) {
+                $('#promotion_periode_' + keyPromotion).html(data);
+            })
+        }
+    </script>
+
+    <script>
+
+        var selectedPromotionLogements = [];
+        function getPromotionLogements(fournisseurId, hebergementId, keyPromotion) {
+
+            var path = '{{ path('promotion_get_logement' , {'hebergementId' : '_hebergementId_','keyPromotion' : '_keyPromotion_','fournisseurId' : '_fournisseurId_'}) }}';
+            path = path.replace('_hebergementId_', hebergementId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_fournisseurId_', fournisseurId);
+
+            var $modal_body_promotion_logement = $('#modal_body_promotion_logement');
+
+            $modal_body_promotion_logement.data('hebergement-id', hebergementId);
+            $modal_body_promotion_logement.data('key-promotion', keyPromotion);
+            $modal_body_promotion_logement.data('fournisseur-id', fournisseurId);
+
+
+            var $values_checkbox_promotion_logement = $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement');
+            if ($values_checkbox_promotion_logement.length == 0) {
+                $values_checkbox_promotion_logement = $('<div id="promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+                $.ajax(path).done(function (data) {
+                    $modal_body_promotion_logement.html($values_checkbox_promotion_logement);
+                    $values_checkbox_promotion_logement.html(data);
+                })
+            } else {
+                $modal_body_promotion_logement.html($values_checkbox_promotion_logement);
+            }
+            selectedPromotionLogements = [];
+            $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values input:checked').each(function () {
+                selectedPromotionLogements.push($(this).attr('id'));
+            });
+            $('#modal_promotion_logement').on('hidden.bs.modal', function (e) {
+                validerPromotionLogement(true);
+            });
+        }
+
+        function validerPromotionLogement(annuler) {
+            var $modal_body_promotion_logement = $('#modal_body_promotion_logement');
+            var hebergementId = $modal_body_promotion_logement.data('hebergement-id');
+            var keyPromotion = $modal_body_promotion_logement.data('key-promotion');
+            var fournisseurId = $modal_body_promotion_logement.data('fournisseur-id');
+            var $values_promotion_logement = $('#values_promotion_logement');
+            var $values_checkbox_promotion_logement = $('#promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement');
+            if ($values_checkbox_promotion_logement.length == 0) {
+                $values_checkbox_promotion_logement = $('<div id="promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+            }
+            $values_promotion_logement.append($values_checkbox_promotion_logement);
+            var $modal_promotion_logement = $('#modal_promotion_logement');
+            $modal_promotion_logement.unbind('hidden.bs.modal');
+            $modal_promotion_logement.modal('hide');
+
+            if (annuler) {
+                $values_checkbox_promotion_logement.find('input:checkbox').prop('checked', false);
+                for (var i = 0; i < selectedPromotionLogements.length; i++) {
+                    $('#' + selectedPromotionLogements[i]).prop('checked', true);
+                }
+            }
+            var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+            if ($('.promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                $('#checkbox_all_logement_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+            }
+            else {
+                $('#checkbox_all_logement_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId).prop('checked', false);
+            }
+        }
+
+
+        function getPromotionLogementValues(fournisseurId, hebergementId, promotionId, keyPromotion) {
+            var path = '{{ path('promotion_get_logement_values' , {'fournisseurId' : '_fournisseurId_','hebergementId' : '_hebergementId_','keyPromotion' : '_keyPromotion_','promotionId' : '_promotionId_'}) }}';
+            path = path.replace('_fournisseurId_', fournisseurId);
+            path = path.replace('_hebergementId_', hebergementId);
+            path = path.replace('_keyPromotion_', keyPromotion);
+            path = path.replace('_promotionId_', promotionId);
+            $.ajax(path).done(function (data) {
+                var $values_promotion_logement = $('#values_promotion_logement');
+                var $values_checkbox_promotion_logement = $('<div id="promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+                $values_promotion_logement.append($values_checkbox_promotion_logement);
+                $values_checkbox_promotion_logement.html(data);
+                var $periodeValiditeCheckboxes = $('.promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+                if ($('.promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                    $('#checkbox_all_logement_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+                }
+                $periodeValiditeCheckboxes.change(function () {
+                    if ($('.promotion_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                        //do something
+                        $('#checkbox_all_logement_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+                    }
+                    else {
+                        $('#checkbox_all_logement_' + keyPromotion + '_' + fournisseurId + '_' + hebergementId).prop('checked', false);
+                    }
+                });
+            });
+        }
+
+
+    </script>
+
+
+{% endblock %}
