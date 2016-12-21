@@ -288,6 +288,15 @@
                                 <div class="panel-body"
                                      id="famillePrestationAnnexeBody_{{ famillePrestationAnnexe.id }}">
                                     {% include ('@MondofuteFournisseur/fournisseur/prestation-annexe.html.twig' ) %}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button data-famille-prestation-annexe="{{ famillePrestationAnnexe.id }}"
+                                                    data-fournisseur="{{ fournisseur.id }}"
+                                                    class="btn btn-default btn-affiche-modal-fournisseur-prestation-annexe-stock-fournisseur"
+                                                    type="button">Stocks
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
@@ -326,6 +335,8 @@
             </div>
             {{ form_widget(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
+            {{ include ('@MondofuteFournisseurPrestationAnnexe/popup-fournisseur-prestation-annexe-stocks-fournisseur.html.twig') }}
+
             <div class="modal fade" id="modalListeService" tabindex="-1" role="dialog"
                  aria-labelledby="modalListeService">
                 <div class="modal-dialog modal-lg">
@@ -1990,6 +2001,61 @@
         }
         {# fin condtion annulation #}
 
+    </script>
+    {#Gestion des variables #}
+    <script type="text/javascript">
+        "use strict";
+        if (!globals) {
+            var globals = {};
+        }
+        if (!globals.urls) {
+            globals.urls = {};
+        }
+        globals.urls.fournisseurPrestationAnnexeStockFournisseurListe = '{{ path('mondofute_fournisseur_prestation_annexe_stock_fournisseur_liste',{'idFournisseur': '__idFournisseur__', 'idFamillePrestationAnnexe':'__idFamillePrestationAnnexe__'}) }}';
+    </script>
+    {# Gestion des évènements js #}
+    <script type="text/javascript">
+        "use strict";
+        //        affiche la modal des stocks pour les prestations annexes pour le fournisseur
+        $(document).on({
+            'click': function () {
+                var datas = $(this).data();
+                afficherModalFournisseurPrestationAnnexeStockFournisseur(datas);
+            }
+        }, '.btn-affiche-modal-fournisseur-prestation-annexe-stock-fournisseur');
+        $('#iframePrestationAnnexeStocksFournisseur').on({
+            'load': function () {
+                $('#modalFournisseurPrestationAnnexeStockFournisseurProgressBar').hide();
+            }
+        });
+        //        gestion de l'affichage de la modal des prestations annexes pour le fournisseur
+        $('#modalFournisseurPrestationAnnexeStockFournisseur').on({
+            'show.bs.modal': function () {
+                $('#modalFournisseurPrestationAnnexeStockFournisseurProgressBar').show();
+            }
+        });
+    </script>
+    {# Fonctions javascript #}
+    <script type="text/javascript">
+        "use strict";
+        function afficherModalFournisseurPrestationAnnexeStockFournisseur(datas) {
+            var $modal = $('#modalFournisseurPrestationAnnexeStockFournisseur');
+            chargerModalFournisseurPrestationAnnexeStockFournisseur(datas);
+//            $('#modalListeLogements').modal('show');
+            $modal.find('[name="btnEnregistrerPrestationAnnexeFournisseurStocksReponse"]').html('');
+            $modal.modal('show');
+        }
+        function chargerModalFournisseurPrestationAnnexeStockFournisseur(datas) {
+
+            var $iFrame = $('#iframePrestationAnnexeStocksFournisseur');
+            var url = globals.urls.fournisseurPrestationAnnexeStockFournisseurListe;
+            url = url.replace(/__idFournisseur__/g, datas.fournisseur).replace(/__idFamillePrestationAnnexe__/g, datas.famillePrestationAnnexe);
+            $iFrame.attr('src', url);
+            $iFrame.css('display', 'none');
+            $iFrame.on('load', function () {
+                $iFrame.css('display', '');
+            });
+        }
     </script>
 
 {% endblock %}
