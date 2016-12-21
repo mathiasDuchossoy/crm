@@ -14,11 +14,13 @@ class TypePeriodeValidite
     const permanent = 1;
     const dateADate = 2;
     const periode = 3;
+    const weekend = 4;
 
     public static $libelles = array(
         TypePeriodeValidite::permanent => 'Permanent',
         TypePeriodeValidite::dateADate => 'Date à date',
         TypePeriodeValidite::periode => 'Période',
+        TypePeriodeValidite::weekend => 'Weekend',
     );
 
     static public function getLibelle($id)
