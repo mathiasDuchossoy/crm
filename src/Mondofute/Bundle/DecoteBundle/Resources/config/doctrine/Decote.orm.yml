@@ -40,6 +40,10 @@ Mondofute\Bundle\DecoteBundle\Entity\Decote:
             type: smallint
             options:
                 unsigned: true
+        type:
+            type: smallint
+            options:
+                unsigned: true
     manyToOne:
         decoteUnifie:
             targetEntity: Mondofute\Bundle\DecoteBundle\Entity\DecoteUnifie
