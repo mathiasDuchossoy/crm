@@ -1,0 +1,3 @@
+CREATE TABLE fournisseur_prestation_annexe_stock_fournisseur (fournisseur_prestation_annexe_id INT UNSIGNED NOT NULL, periode_id INT UNSIGNED NOT NULL, stock INT UNSIGNED NOT NULL, INDEX IDX_DEB76B6FDF2F2EF6 (fournisseur_prestation_annexe_id), INDEX IDX_DEB76B6FF384C1CF (periode_id), PRIMARY KEY(fournisseur_prestation_annexe_id, periode_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE fournisseur_prestation_annexe_stock_fournisseur ADD CONSTRAINT FK_DEB76B6FDF2F2EF6 FOREIGN KEY (fournisseur_prestation_annexe_id) REFERENCES fournisseur_prestation_annexe (id);
+ALTER TABLE fournisseur_prestation_annexe_stock_fournisseur ADD CONSTRAINT FK_DEB76B6FF384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
