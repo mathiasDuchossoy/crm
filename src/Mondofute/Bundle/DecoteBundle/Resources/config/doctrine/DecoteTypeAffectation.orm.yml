@@ -1,0 +1,20 @@
+Mondofute\Bundle\DecoteBundle\Entity\DecoteTypeAffectation:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteTypeAffectationRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        typeAffectation:
+            type: smallint
+    manyToOne:
+        decote:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
+            inversedBy: decoteTypeAffectations
+    lifecycleCallbacks: {  }

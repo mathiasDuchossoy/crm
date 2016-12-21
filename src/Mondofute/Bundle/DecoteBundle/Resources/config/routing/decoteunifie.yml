@@ -1,0 +1,69 @@
+decote_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+decote_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:show" }
+    methods:  GET
+
+decote_new:
+    path:     /new
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:new" }
+    methods:  [GET, POST]
+
+decote_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:edit" }
+    methods:  [GET, POST]
+
+decote_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:delete" }
+    methods:  DELETE
+
+decote_get_fournisseur_hebergements:
+    path:     /getfournisseurhebergements/{decoteId}/{fournisseurId}/{siteId}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getFournisseurHebergements"}
+    methods:  GET
+
+decote_get_fournisseur_prestation_annexes:
+    path:     /getfournisseurprestationannexes/{decoteId}/{fournisseurId}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getFournisseurPrestationAnnexes"}
+    methods:  GET
+
+decote_get_panel_hebergement:
+    path:     /getpanelhebergement/{decoteId}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getPanelHebergement"}
+    methods:  GET
+
+decote_get_panel_prestation_annexe:
+    path:     /getprestationannexe/{decoteId}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getPrestationAnnexe"}
+    methods:  GET
+
+decote_get_fournisseur_prestation_annexe_periode_validite:
+    path:     /getfournisseurprestationannexeperiodevalidite/{fournisseurPrestationAnnexeId}/{keyDecote}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getFournisseurPrestationannexePeriodeValidite"}
+    methods:  GET
+
+decote_get_fournisseur_prestation_annexe_periode_validite_values:
+    path:     /getfournisseurprestationannexeperiodevaliditevalues/{fournisseurPrestationAnnexeId}/{decoteId}/{keyDecote}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getFournisseurPrestationannexePeriodeValiditeValues"}
+    methods:  GET
+
+decote_get_logement:
+    path:     /getlogements/{fournisseurId}/{hebergementId}/{keyDecote}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getLogements"}
+    methods:  GET
+
+decote_get_periode:
+    path:     /getperiodes/{decoteId}/{keyDecote}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getPeriodes"}
+    methods:  GET
+
+decote_get_logement_values:
+    path:     /getlogementvalues/{fournisseurId}/{hebergementId}/{decoteId}/{keyDecote}
+    defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getLogementValues"}
+    methods:  GET
