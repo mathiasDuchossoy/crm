@@ -757,6 +757,7 @@ class DecoteUnifieController extends Controller
                     ->setTypePeriodeValidite($entity->getTypePeriodeValidite())
                     ->setTypePeriodeSejour($entity->getTypePeriodeSejour())
                     ->setTypeApplication($entity->getTypeApplication())
+                    ->setType($entity->getType())
                     ->setTypeRemise($entity->getTypeRemise());
 
                 $emSite->persist($entityUnifieSite);
