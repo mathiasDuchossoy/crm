@@ -333,6 +333,21 @@
                     </ul>
                 </li>
                 {# ***** FIN NOMBRE DE CHAMBRE ***** #}
+                {# ***** CANAL DECOTE ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'canaldecote' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'canal decote' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'canaldecote_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('canaldecote_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'canaldecote_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('canaldecote_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN CANAL DECOTE ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}
