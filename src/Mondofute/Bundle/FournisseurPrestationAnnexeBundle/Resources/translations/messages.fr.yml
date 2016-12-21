@@ -1,0 +1,10 @@
+fermer: __fermer
+prestation-annexe-fournisseur:
+    gestion-stocks: 'gestion des stocks pour les prestations annexes'
+type_periode:
+    1: week-end
+    2: semaine
+    3: '2 semaines'
+    4: '3 semaines'
+dupliquePrestationAnnexeFournisseurStocks:
+    texte: 'duplique le stock sur la ligne'
