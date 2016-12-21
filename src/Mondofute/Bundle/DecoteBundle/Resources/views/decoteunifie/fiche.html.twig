@@ -78,6 +78,7 @@
                             {{ form_row(decote.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : decote.typeFournisseurs.vars['unique_block_prefix'] }}) }}
                         </div>
                         {{ form_row(decote.typeApplication, {  'attr' : {  'data-unique_block_prefix' : decote.typeApplication.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(decote.canalDecotes, {  'attr' : {  'data-unique_block_prefix' : decote.canalDecotes.vars['unique_block_prefix'] }}) }}
 
                         {% if panelDecote is defined %}
                             {% set typeAffectationLogementSelected = false %}

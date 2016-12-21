@@ -9,17 +9,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Exception;
 use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
-use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
-use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
-use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\DecoteBundle\Entity\CanalDecote;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFamillePrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseur;
@@ -36,6 +26,17 @@ use Mondofute\Bundle\DecoteBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -681,6 +682,27 @@ class DecoteUnifieController extends Controller
                     })->first();
                     if (false === $periodeValidite) {
                         $entitySite->removePeriodeValidite($periodeValiditeSite);
+                    }
+                }
+                // *** fin gestion decote periode validite ***
+
+                // *** gestion decote canal decote ***
+                /** @var CanalDecote $canalDecote */
+                /** @var CanalDecote $canalDecoteSite */
+                foreach ($entity->getCanalDecotes() as $canalDecote) {
+                    $canalDecoteSite = $entitySite->getCanalDecotes()->filter(function (CanalDecote $element) use ($canalDecote) {
+                        return $element->getId() == $canalDecote->getId();
+                    })->first();
+                    if (false === $canalDecoteSite) {
+                        $entitySite->addCanalDecote($emSite->find(CanalDecote::class, $canalDecote));
+                    }
+                }
+                foreach ($entitySite->getCanalDecotes() as $canalDecoteSite) {
+                    $canalDecote = $entity->getCanalDecotes()->filter(function (CanalDecote $element) use ($canalDecoteSite) {
+                        return $element->getId() == $canalDecoteSite->getId();
+                    })->first();
+                    if (false === $canalDecote) {
+                        $entitySite->removeCanalDecote($canalDecoteSite);
                     }
                 }
                 // *** fin gestion decote periode validite ***
