@@ -1,0 +1,29 @@
+
+{#{% for decote in form.decotes %}#}
+    {#{{ dump(decote.logementPeriodes) }}#}
+    {#{{ form_row(decote.logementPeriodes) }}#}
+{#{% endfor %}#}
+<div class="form-group" id="decote_{{ keyDecote }}_{{ hebergementId }}_logement_values">
+    {#mondofute_bundle_decotebundle_decoteunifie[decotes][0][logementPeriodes][__name__][logement]#}
+    {% for logement in logements %}
+
+        <div class="checkbox">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-11">
+                <label>
+                    <input type="checkbox"
+                           value="{{ logement.id }}"
+                           class="decote_{{ keyDecote }}_{{ hebergementId }}_logement_values"
+                            {#name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][logementPeriodes][0][logement]"#}
+                           name="decote_logement_periode[{{ keyDecote }}][logements][]"
+                    />
+                    {% for traduction in logement.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                            {{ traduction.nom }}
+                        {% endif %}
+                    {% endfor %}
+                </label>
+            </div>
+        </div>
+    {% endfor %}
+</div>
