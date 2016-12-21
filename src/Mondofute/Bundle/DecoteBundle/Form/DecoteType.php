@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\DecoteBundle\Form;
 
+use Mondofute\Bundle\DecoteBundle\Entity\CanalDecote;
 use Mondofute\Bundle\DecoteBundle\Entity\Type;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeApplication;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour;
@@ -136,11 +137,6 @@ class DecoteType extends AbstractType
             ->add('periodeValidites', EntityType::class, array(
                 'class' => PeriodeValidite::class,
                 'required' => true,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un type ---",
-//                'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
-//                    return $r->getTraductionsByLocale($locale);
-//                },
                 'multiple' => true,
                 'expanded' => true,
             ))
@@ -149,7 +145,13 @@ class DecoteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => 'Decote logement periode',
-            ));
+            ))
+            ->add('canalDecotes', EntityType::class, array(
+                'class' => CanalDecote::class,
+                "choice_label" => "libelle",
+                'required' => true,
+                'multiple' => true,
+                'expanded' => true));
     }
 
     /**

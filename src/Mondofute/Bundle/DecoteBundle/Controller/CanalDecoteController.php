@@ -168,6 +168,7 @@ class CanalDecoteController extends Controller
      */
     public function deleteAction(Request $request, CanalDecote $canalDecote)
     {
+        /** @var Site $site */
         $form = $this->createDeleteForm($canalDecote);
         $form->handleRequest($request);
 

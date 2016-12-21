@@ -94,6 +94,8 @@ Mondofute\Bundle\DecoteBundle\Entity\Decote:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
         periodeValidites:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
+        canalDecotes:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\CanalDecote
     oneToOne:
         decotePeriodeValiditeDate:
             targetEntity: DecotePeriodeValiditeDate

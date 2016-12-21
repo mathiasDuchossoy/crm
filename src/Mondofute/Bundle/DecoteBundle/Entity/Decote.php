@@ -105,6 +105,10 @@ class Decote
      * @var integer
      */
     private $type;
+    /**
+     * @var Collection
+     */
+    private $canalDecotes;
 
     /**
      * Constructor
@@ -120,6 +124,7 @@ class Decote
         $this->periodeValidites = new ArrayCollection();
         $this->logementPeriodes = new ArrayCollection();
         $this->decoteStations = new ArrayCollection();
+        $this->canalDecotes = new ArrayCollection();
     }
 
     /**
@@ -748,5 +753,39 @@ class Decote
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * Add canalDecote
+     *
+     * @param CanalDecote $canalDecote
+     *
+     * @return Decote
+     */
+    public function addCanalDecote(CanalDecote $canalDecote)
+    {
+        $this->canalDecotes[] = $canalDecote;
+
+        return $this;
+    }
+
+    /**
+     * Remove canalDecote
+     *
+     * @param CanalDecote $canalDecote
+     */
+    public function removeCanalDecote(CanalDecote $canalDecote)
+    {
+        $this->canalDecotes->removeElement($canalDecote);
+    }
+
+    /**
+     * Get canalDecotes
+     *
+     * @return Collection
+     */
+    public function getCanalDecotes()
+    {
+        return $this->canalDecotes;
     }
 }
