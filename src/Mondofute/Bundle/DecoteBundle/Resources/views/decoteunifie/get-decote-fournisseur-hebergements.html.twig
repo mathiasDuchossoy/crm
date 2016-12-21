@@ -1,0 +1,88 @@
+{% set stationLibelleTemp = '' %}
+{% for key, hebergement in hebergements %}
+    {#{% for stationTraduction in hebergement.station.traductions %}#}
+    {#{% if stationTraduction.langue.code == app.request.locale %}#}
+    {#{{ stationTraduction.libelle }}#}
+    {#{% endif %}#}
+    {#{% endfor %}#}
+    {% if stationLibelleTemp !=  hebergement.stationLibelle %}
+        <div class="checkbox">
+            <label><input type="checkbox"
+                          value="{{ hebergement.stationId }}"
+                        {% set keyDecoteStation = 0 %}
+                        {% for decoteStation in decote.decoteStations %}
+                            {% if decoteStation.vars.value.station.id == hebergement.stationId and decoteStation.vars.value.fournisseur.id == fournisseurId %}
+                                checked="checked"
+                            {% endif %}
+                        {% endfor %}
+                          name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteStations][{{ fournisseurId }}0{{ hebergement.stationId }}][station]"
+                          onclick="checkListStationHebergement(this, 'list-group-item-{{ keyDecote }}-{{ fournisseurId }}-{{ hebergement.stationId }}')">{{ hebergement.stationLibelle }}
+            </label>
+            <input type="hidden"
+                   name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteStations][{{ fournisseurId }}0{{ hebergement.stationId }}][fournisseur]"
+                   value="{{ fournisseurId }}"
+            >
+        </div>
+    {% endif %}
+    {% set stationLibelleTemp = hebergement.stationLibelle %}
+    <li class="list-group-item list-group-item-{{ keyDecote }}-{{ fournisseurId }}-{{ hebergement.stationId }}">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="checkbox">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-11">
+                        <label><input type="checkbox" value="{{ hebergement.hebergementId }}"
+                                    {#name="decoteHebergements[{{ decoteId }}][{{ fournisseurId }}][]"#}
+                                    {% if decote.decoteHebergements is defined %}
+                                        {% for decoteHebergement in decote.decoteHebergements %}
+                                            {% if
+                                            decoteHebergement.vars.value.fournisseur.id == fournisseurId
+                                            and decoteHebergement.vars.value.hebergement.hebergementUnifie.id == hebergement.hebergementUnifieId %}
+                                                {#and decoteHebergement.vars.value.decote.id == decoteId#}
+                                                checked="checked"
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                      class="decote_hebergement_{{ keyDecote }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
+                                      onclick="checkBoxAll(this, 'checkbox_all_logement_{{ keyDecote }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}')"
+                                      name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteHebergements][{{ fournisseurId }}{{ key }}][hebergement]"
+                            >{{ hebergement.nom }}</label>
+                        <input type="hidden"
+                               name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteHebergements][{{ fournisseurId }}{{ key }}][fournisseur]"
+                               value="{{ fournisseurId }}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 decote-logement-periode-{{ keyDecote }}"
+                    {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
+                <label>
+                    <input type="checkbox"
+                           id="checkbox_all_logement_{{ keyDecote }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
+                           onclick="checkAllDecoteLogements(this, '{{ keyDecote }}', '{{ fournisseurId }}', {{ hebergement.hebergementId }});"
+                    />
+                    Tous les logements
+                </label>
+            </div>
+            <div class="col-sm-2 decote-logement-periode-{{ keyDecote }}"
+                    {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
+                <button type="button" class="btn btn-default btn-md" data-toggle="modal"
+                        data-target="#modal_decote_logement"
+                        onclick="getDecoteLogements('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyDecote }}')"
+                >
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Logements
+                </button>
+            </div>
+        </div>
+    </li>
+{% endfor %}
+{% if hebergements is empty %}
+    <li class="list-group-item">
+        <div class="alert alert-info" role="alert">Il n'y a pas d'hébergements pour ce fournisseur.</div>
+    </li>
+{% endif %}
