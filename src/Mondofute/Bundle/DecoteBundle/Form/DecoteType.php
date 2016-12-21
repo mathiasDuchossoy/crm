@@ -2,13 +2,14 @@
 
 namespace Mondofute\Bundle\DecoteBundle\Form;
 
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
-use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
-use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\DecoteBundle\Entity\Type;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeApplication;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeRemise;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -29,6 +30,14 @@ class DecoteType extends AbstractType
         $locale = $options["locale"];
         $builder
             ->add('libelle')
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    Type::visible => Type::getLibelle(Type::visible),
+                    Type::masquee => Type::getLibelle(Type::masquee),
+                ),
+                'expanded' => true,
+                'label' => 'Type'
+            ))
             ->add('typeRemise', ChoiceType::class, array(
                 'choices' => array(
                     TypeRemise::euro => TypeRemise::getLibelle(TypeRemise::euro),
@@ -43,6 +52,7 @@ class DecoteType extends AbstractType
                     TypePeriodeValidite::permanent => TypePeriodeValidite::getLibelle(TypePeriodeValidite::permanent),
                     TypePeriodeValidite::dateADate => TypePeriodeValidite::getLibelle(TypePeriodeValidite::dateADate),
                     TypePeriodeValidite::periode => TypePeriodeValidite::getLibelle(TypePeriodeValidite::periode),
+                    TypePeriodeValidite::weekend => TypePeriodeValidite::getLibelle(TypePeriodeValidite::weekend),
                 ),
                 'placeholder' => " --- Choisir le typePeriodeValidite --- ",
                 'label' => 'typePeriodeValidite'

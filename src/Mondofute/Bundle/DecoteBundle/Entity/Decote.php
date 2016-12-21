@@ -98,9 +98,13 @@ class Decote
      */
     private $typePeriodeValidite;
     /**
-     * @var \Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate
+     * @var DecotePeriodeSejourDate
      */
     private $decotePeriodeSejourDate;
+    /**
+     * @var integer
+     */
+    private $type;
 
     /**
      * Constructor
@@ -701,7 +705,7 @@ class Decote
     /**
      * Get decotePeriodeSejourDate
      *
-     * @return \Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate
+     * @return DecotePeriodeSejourDate
      */
     public function getDecotePeriodeSejourDate()
     {
@@ -711,13 +715,37 @@ class Decote
     /**
      * Set decotePeriodeSejourDate
      *
-     * @param \Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate $decotePeriodeSejourDate
+     * @param DecotePeriodeSejourDate $decotePeriodeSejourDate
      *
      * @return Decote
      */
-    public function setDecotePeriodeSejourDate(\Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate $decotePeriodeSejourDate = null)
+    public function setDecotePeriodeSejourDate(DecotePeriodeSejourDate $decotePeriodeSejourDate = null)
     {
         $this->decotePeriodeSejourDate = $decotePeriodeSejourDate;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     *
+     * @return Decote
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }
