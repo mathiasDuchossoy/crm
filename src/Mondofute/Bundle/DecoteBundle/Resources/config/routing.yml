@@ -1,0 +1,7 @@
+mondofute_decote_decote:
+    resource: "@MondofuteDecoteBundle/Resources/config/routing/decoteunifie.yml"
+    prefix:   /decote
+
+#mondofute_decote_homepage:
+#    path:     /
+#    defaults: { _controller: MondofuteDecoteBundle:Default:index }

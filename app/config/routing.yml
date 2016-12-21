@@ -96,3 +96,7 @@ fos_user:
 #mondofute_catalogue:
 #    resource: "@MondofuteCatalogueBundle/Resources/config/routing.yml"
 #    prefix:   /catalogue/
+
+mondofute_decote:
+    resource: "@MondofuteDecoteBundle/Resources/config/routing.yml"
+    prefix:   /
