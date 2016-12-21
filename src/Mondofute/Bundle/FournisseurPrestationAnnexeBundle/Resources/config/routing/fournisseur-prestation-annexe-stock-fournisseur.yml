@@ -1,0 +1,14 @@
+mondofute_fournisseur_prestation_annexe_stock_fournisseur_liste:
+    path:     /list/fournisseur-{idFournisseur}/famille-prestation-annexe/{idFamillePrestationAnnexe}
+    defaults: { _controller: "MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeStockFournisseur:listeStocksFournisseur", idFamillePrestationAnnexe: 0, idFournisseur: 0 }
+    methods:  GET
+
+mondofute_fournisseur_prestation_annexe_stock_fournisseur_charger:
+    path:     /{idFournisseurPrestationAnnexe}/{idTypePeriode}/charger/
+    defaults: { _controller: "MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeStockFournisseur:chargerStockFournisseur", idFournisseurPrestationAnnexe: 0, idTypePeriode: 0 }
+    methods:  [GET, POST]
+
+mondofute_fournisseur_prestation_annexe_stock_hebergement_enregistrer:
+    path:     /enregistrer
+    defaults: { _controller: MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeStockFournisseur:enregistrerStockFournisseur }
+    methods:  POST

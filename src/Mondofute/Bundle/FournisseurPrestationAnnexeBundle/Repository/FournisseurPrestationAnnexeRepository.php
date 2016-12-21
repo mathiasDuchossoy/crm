@@ -63,4 +63,25 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
 
         return $result;
     }
+
+    public function findByFamillePrestationAnnexe($idFournisseur, $idFamillePrestationAnnexe, $locale)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('fpa')
+            ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe', 'fpa')
+            ->join('fpa.fournisseur', 'f')
+            ->where('f.id = :fournisseurId')
+            ->setParameter('fournisseurId', $idFournisseur)
+            ->join('fpa.traductions', 'trad')
+            ->join('trad.langue', 'langue')
+            ->andWhere('langue.code = :locale')
+            ->setParameter('locale', $locale)
+            ->join('fpa.prestationAnnexe', 'pa')
+            ->join('pa.famillePrestationAnnexe', 'famillepa')
+            ->andWhere('famillepa.id = :famillePrestationAnnexeId')
+            ->setParameter('famillePrestationAnnexeId', $idFamillePrestationAnnexe)
+            ->orderBy('trad.libelle', 'ASC');
+//        dump($qb->getQuery());
+        return $qb->getQuery()->getResult();
+    }
 }
