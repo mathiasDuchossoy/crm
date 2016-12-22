@@ -82,7 +82,7 @@
             {% endfor %}
 
             {#{{ form_row(form.plainPassword , { 'attr' : { 'id' : 'test_mdp' }}) }}#}
-            {{ form_row(form.plainPassword , { 'id' : 'test_mdp', 'attr' : { 'autocomplete' : 'off' }} ) }}
+            {{ form_row(form.plainPassword , { 'id' : 'test_mdp', 'attr' : { 'autocomplete' : 'new-password' }} ) }}
             {{ form_row(form.client.vip) }}
 
             {{ form_row(form.submit) }}
