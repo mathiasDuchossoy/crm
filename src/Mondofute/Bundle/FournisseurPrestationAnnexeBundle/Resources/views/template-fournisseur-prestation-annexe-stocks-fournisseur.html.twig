@@ -139,7 +139,7 @@
                     for (var indiceTypePeriode = 0; indiceTypePeriode < globals.typePeriodes.length; indiceTypePeriode++) {
                         var typePeriode = globals.typePeriodes[indiceTypePeriode];
                         var $progressBar = null;
-                        if (typePeriode.periodes.length > 0) {
+                        if (typePeriode.periodes != null && typePeriode.periodes.length > 0) {
 //                            gestion du tableau de stock
                             $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriode.id);
                             var colonnes = [{mDataProp: 'fournisseurPrestationAnnexe', title: 'prestation annexe'}];
