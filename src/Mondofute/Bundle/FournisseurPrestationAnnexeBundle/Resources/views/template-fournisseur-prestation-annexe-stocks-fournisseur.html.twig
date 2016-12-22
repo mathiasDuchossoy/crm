@@ -40,23 +40,23 @@
         {#{{ dump(typePeriodes) }}#}
         var fournisseurPrestationAnnexe = {};
         globals.fournisseurPrestationAnnexes = [];
-        //        globals.typePeriodes = [];
+        globals.typePeriodes = [];
         //        hydratation des typePeriodes dans une variable javascript
-        {#{% for typePeriode in typePeriodes %}#}
-        {#globals.typePeriodes.push({#}
-        {#'id': parseInt('{{ typePeriode.id }}'),#}
-        {#'libelle': '{{ typePeriode | trans }}',#}
-        {#'periodes': [#}
-        {#{% for periode in typePeriode.periodes %}#}
-        {#{#}
-        {#'id': parseInt('{{ periode.id }}'),#}
-        {#'debut': '{{ periode.debut | format_date('fr') }}'#}
-        {#},#}
-        {#{% endfor %}#}
-        {#]#}
-        {#});#}
+        {% for typePeriode in typePeriodes %}
+        globals.typePeriodes.push({
+            'id': parseInt('{{ typePeriode.id }}'),
+            'libelle': '{{ typePeriode | trans }}',
+            'periodes': [
+                {% for periode in typePeriode.periodes %}
+                {
+                    'id': parseInt('{{ periode.id }}'),
+                    'debut': '{{ periode.debut | format_date(app.request.locale) }}'
+                },
+                {% endfor %}
+            ]
+        });
 
-        {#{% endfor %}#}
+        {% endfor %}
         //        console.log(globals.typePeriodes);
         //        hydratation des fournisseurPrestationAnnexes dans une variables javascript
         {% for fournisseurPrestationAnnexe in fournisseurPrestationAnnexes %}
