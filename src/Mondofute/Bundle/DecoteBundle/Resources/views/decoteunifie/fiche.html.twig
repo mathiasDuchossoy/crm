@@ -186,7 +186,7 @@
 
             {% endif %}
 
-            {% for site in sites %}
+            {% for keySite, site in sites %}
             var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
@@ -241,8 +241,11 @@
                     });
                     $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
                 }
-
             });
+
+            if ($('#mondofute_bundle_decotebundle_decoteunifie_{{ keySite }}_decoteTypeAffectations_2').prop('checked')) {
+                $('#mondofute_bundle_decotebundle_decoteunifie_decotes_{{ keySite }}_typePeriodeSejour option[value=3]').hide();
+            }
             {% endfor %}
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
@@ -356,6 +359,7 @@
                             else {
                             }
                             $decotePanelHebergement.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').show();
                             break;
                         case '2':
                             $decotePanelHebergement.hide();
@@ -378,11 +382,14 @@
                             else {
                             }
                             $decotePanelPrestationAnnexe.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').show();
                             break;
                         case '3':
                             $decotePanelPrestationAnnexe.hide();
                             $decotePanelHebergement.hide();
                             $decoteWidgetTypeFournisseur.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour').val('');
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').hide();
                             break;
                         default:
                             break;

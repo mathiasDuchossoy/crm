@@ -1498,7 +1498,8 @@ class DecoteUnifieController extends Controller
         $decoteFournisseurPrestationAnnexes = $em->getRepository(DecoteFournisseurPrestationAnnexe::class)->findBy(array('decote' => $decoteId, 'fournisseur' => $fournisseurId));
         $decoteFamillePrestationAnnexes = $em->getRepository(DecoteFamillePrestationAnnexe::class)->findBy(array('decote' => $decoteId, 'fournisseur' => $fournisseurId));
         $decoteUnifie = new DecoteUnifie();
-        $decote = new Decote();
+//        $decote = new Decote();
+        $decote = $em->find(Decote::class, $decoteId);
         $decoteUnifie->addDecote($decote);
         foreach ($decoteFournisseurPrestationAnnexes as $decoteFournisseurPrestationAnnex) {
             $decote->addDecoteFournisseurPrestationAnnex($decoteFournisseurPrestationAnnex);
