@@ -10,6 +10,7 @@
                     <a data-toggle="tab"
                        href="#{{ conteneur }}_data_type_periode_{{ typePeriode.id }}">{{ typePeriode | trans }}</a>
                 </li>
+                {% set indice=indice+1 %}
             {% endif %}
         {% endfor %}
     </ul>
