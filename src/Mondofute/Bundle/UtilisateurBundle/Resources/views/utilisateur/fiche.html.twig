@@ -28,7 +28,7 @@
             <!-- disables autocomplete -->
             <input type="text" style="display:none"/>
             <input type="password" style="display:none"/>
-            {{ form_row(form.plainPassword) }}
+            {{ form_row(form.plainPassword, {'attr' : { 'autocomplete' : 'new-password'}}) }}
             {#{{ form_row(form.enabled) }}#}
 
             {{ form_row(form.submit) }}
