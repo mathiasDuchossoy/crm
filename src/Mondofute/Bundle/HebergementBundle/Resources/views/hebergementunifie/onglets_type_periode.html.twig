@@ -15,12 +15,13 @@
     {#Contient les données par type de période#}
     <div class="tab-content">
         {#Balaye les types de période#}
+        {% set indice = 0 %}
         {% for typePeriode in typePeriodes %}
             {#Création des éléments seulement si le type de période coontient au moins une période#}
             {% if typePeriode.periodes|length > 0 %}
                 {#zone à afficher / masquer par les onglets de type tabs#}
                 <div id="{{ conteneur }}_data_type_periode_{{ typePeriode.id }}"
-                     class="tab-pane fade {% if loop.index==1 %}in active{% endif %}">
+                     class="tab-pane fade {% if indice==0 %}in active{% endif %}">
                     <div class="panel-group">
                         <div class="progress">
                             <div id="{{ conteneur }}_progress-bar_type_periode_{{ typePeriode.id }}"
@@ -31,6 +32,7 @@
                         </div>
                     </div>
                 </div>
+                {% set indice=indice+1 %}
             {% endif %}
         {% endfor %}
     </div>
