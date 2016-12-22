@@ -50,7 +50,7 @@
                 {% for periode in typePeriode.periodes %}
                 {
                     'id': parseInt('{{ periode.id }}'),
-                    'debut': '{{ periode.debut | localizeddate('medium','none',app.request.locale) }}'
+                    'debut': '{{ periode.debut | date('Y-m-d') }}'
                 },
                 {% endfor %}
             ]
