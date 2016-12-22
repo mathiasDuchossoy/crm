@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\ClientBundle\Form;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -37,7 +36,8 @@ class ClientUserType extends AbstractType
                         'label' => 'form.new_password',
                         'required' => false,
                         'attr' => [
-                            'class' => 'password'
+                            'class' => 'password',
+//                            'id' => 'coucou'
                         ]
                     ));
             } else {
@@ -46,7 +46,8 @@ class ClientUserType extends AbstractType
                         'translation_domain' => 'FOSUserBundle',
                         'label' => 'form.password',
                         'attr' => [
-                            'class' => 'password'
+                            'class' => 'password',
+//                            'id' => 'coucou'
                         ]
                     ));
 
