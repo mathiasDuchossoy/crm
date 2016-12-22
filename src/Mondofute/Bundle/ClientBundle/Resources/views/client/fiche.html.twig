@@ -12,7 +12,7 @@
             {% include '::flashbags.html.twig' %}
 
             {#{{ app.request.locale }}#}
-            {{ form_start(form) }}
+            {{ form_start(form, {'attr' : { 'autocomplete' : 'off' }} ) }}
             {{ form_row(form.client.civilite) }}
             {{ form_row(form.client.nom) }}
             {{ form_row(form.client.prenom) }}
@@ -55,6 +55,11 @@
                 <input type="password" style="display:none"/>
             </div>
 
+            {#<div style="display: none;">#}
+            {#<input type="text" id="PreventChromeAutocomplete"#}
+            {#name="PreventChromeAutocomplete" autocomplete="address-level4" />#}
+            {#</div>#}
+
             {% for moyenCom in form.client.moyenComs %}
                 {% set typeMoyenCom = moyenCom.vars.type %}
                 {#{% if typeMoyenCom == 'Adresse' %}#}
@@ -70,14 +75,14 @@
                 {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
                 {#{% elseif typeMoyenCom == 'Email' %}#}
                 {% if typeMoyenCom == 'Email' %}
-                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize, 'id' : 'test_adresse', 'attr' : { 'autocomplete' : 'false' } } ) }}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize, 'id' : 'test_adresse', 'attr' : { 'autocomplete' : 'off' } } ) }}
                 {% else %}
                     {#{{ form_row(moyenCom) }}#}
                 {% endif %}
             {% endfor %}
 
             {#{{ form_row(form.plainPassword , { 'attr' : { 'id' : 'test_mdp' }}) }}#}
-            {{ form_row(form.plainPassword , { 'id' : 'test_mdp', 'attr' : { 'autocomplete' : 'false' }} ) }}
+            {{ form_row(form.plainPassword , { 'id' : 'test_mdp', 'attr' : { 'autocomplete' : 'off' }} ) }}
             {{ form_row(form.client.vip) }}
 
             {{ form_row(form.submit) }}
