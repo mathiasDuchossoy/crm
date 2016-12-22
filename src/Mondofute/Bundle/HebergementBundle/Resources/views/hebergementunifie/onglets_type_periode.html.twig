@@ -1,10 +1,11 @@
 {% if typePeriodes|length > 0 %}
     <ul class="nav nav-tabs">
+        {% set indice = 0 %}
         {#Balaye les types de période#}
         {% for typePeriode in typePeriodes %}
             {#ne créer pas l'onglet si aucune période est associée au type#}
             {% if typePeriode.periodes|length > 0 %}
-                <li class="{% if loop.index==1 %}active{% endif %}"
+                <li class="{% if indice==0 %}active{% endif %}"
                     id="{{ conteneur }}_onglet_type_periode_{{ typePeriode.id }}">
                     <a data-toggle="tab"
                        href="#{{ conteneur }}_data_type_periode_{{ typePeriode.id }}">{{ typePeriode | trans }}</a>
