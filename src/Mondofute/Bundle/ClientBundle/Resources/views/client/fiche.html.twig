@@ -61,7 +61,7 @@
                 {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
                 {#{% elseif typeMoyenCom == 'Email' %}#}
                 {% if typeMoyenCom == 'Email' %}
-                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize }) }}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize, 'attr' : { 'id' : 'test_adresse' }} }) }}
                 {% else %}
                     {#{{ form_row(moyenCom) }}#}
                 {% endif %}
@@ -70,7 +70,7 @@
             <!-- disables autocomplete -->
             <input type="text" style="display:none"/>
             <input type="password" style="display:none"/>
-            {{ form_row(form.plainPassword , { 'attr' : { 'id' : 'test' }}) }}
+            {{ form_row(form.plainPassword , { 'attr' : { 'id' : 'test_mdp' }}) }}
             {{ form_row(form.client.vip) }}
 
             {{ form_row(form.submit) }}
