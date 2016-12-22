@@ -184,7 +184,7 @@
 
             {% endif %}
 
-            {% for site in sites %}
+            {% for keySite, site in sites %}
             var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
             if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
                 $("#onglet_data_site_{{ site.id }}").hide();
@@ -241,6 +241,10 @@
                 }
 
             });
+
+            if ($('#mondofute_bundle_promotionbundle_promotionunifie_{{ keySite }}_promotionTypeAffectations_2').prop('checked')) {
+                $("#mondofute_bundle_promotionbundle_promotionunifie_promotions_{{ keySite }}_typePeriodeSejour option[value=3]").hide();
+            }
             {% endfor %}
 //            selectionne le premier onglet coché
             var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
@@ -354,6 +358,7 @@
                             else {
                             }
                             $promotionPanelHebergement.show();
+                            $("#mondofute_bundle_promotionbundle_promotionunifie_promotions_" + keyPromotion + "_typePeriodeSejour option[value=3]").show();
                             break;
                         case '2':
                             $promotionPanelHebergement.hide();
@@ -376,11 +381,14 @@
                             else {
                             }
                             $promotionPanelPrestationAnnexe.show();
+                            $("#mondofute_bundle_promotionbundle_promotionunifie_promotions_" + keyPromotion + "_typePeriodeSejour option[value=3]").show();
                             break;
                         case '3':
                             $promotionPanelPrestationAnnexe.hide();
                             $promotionPanelHebergement.hide();
                             $promotionWidgetTypeFournisseur.show();
+                            $("#mondofute_bundle_promotionbundle_promotionunifie_promotions_" + keyPromotion + "_typePeriodeSejour").val('');
+                            $("#mondofute_bundle_promotionbundle_promotionunifie_promotions_" + keyPromotion + "_typePeriodeSejour option[value=3]").hide();
                             break;
                         default:
                             break;
@@ -397,6 +405,7 @@
                             $promotionWidgetTypeFournisseur.hide();
                             break;
                         case '3':
+                            console.log('la');
                             $promotionPanelPrestationAnnexe.hide();
                             $promotionPanelHebergement.hide();
                             break;
