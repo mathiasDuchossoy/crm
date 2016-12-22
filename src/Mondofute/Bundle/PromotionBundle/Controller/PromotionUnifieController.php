@@ -1475,7 +1475,8 @@ class PromotionUnifieController extends Controller
         $promotionFournisseurPrestationAnnexes = $em->getRepository(PromotionFournisseurPrestationAnnexe::class)->findBy(array('promotion' => $promotionId, 'fournisseur' => $fournisseurId));
         $promotionFamillePrestationAnnexes = $em->getRepository(PromotionFamillePrestationAnnexe::class)->findBy(array('promotion' => $promotionId, 'fournisseur' => $fournisseurId));
         $promotionUnifie = new PromotionUnifie();
-        $promotion = new Promotion();
+//        $promotion = new Promotion();
+        $promotion = $em->find(Promotion::class, $promotionId);
         $promotionUnifie->addPromotion($promotion);
         foreach ($promotionFournisseurPrestationAnnexes as $promotionFournisseurPrestationAnnex) {
             $promotion->addPromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnex);
