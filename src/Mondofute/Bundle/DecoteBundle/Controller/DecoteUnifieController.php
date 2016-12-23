@@ -112,7 +112,7 @@ class DecoteUnifieController extends Controller
         $form = $this->createForm('Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType', $decoteUnifie);
         $form->add('submit', SubmitType::class, array(
             'label' => $this->get('translator')->trans('Enregistrer'),
-            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirRadioVides();remplirChampsVide();')));
 
         $form->handleRequest($request);
 
