@@ -111,7 +111,7 @@ class PromotionUnifieController extends Controller
         $form = $this->createForm('Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType', $promotionUnifie);
         $form->add('submit', SubmitType::class, array(
             'label' => $this->get('translator')->trans('Enregistrer'),
-            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            'attr' => array('onclick' => 'copieNonPersonnalisable();remplirRadioVides();remplirChampsVide();')));
 
         $form->handleRequest($request);
 
