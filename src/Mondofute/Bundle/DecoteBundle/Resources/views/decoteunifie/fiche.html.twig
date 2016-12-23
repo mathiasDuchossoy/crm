@@ -28,7 +28,7 @@
                          data-crm="{{ decote.vars.value.site.crm | number_format }}">
                         {{ form_row(decote.site) }}
                         {{ form_row(decote.libelle, { 'attr' : { 'data-unique_block_prefix' : decote.libelle.vars['unique_block_prefix']}}) }}
-                        {{ form_row(decote.type) }}
+                        {{ form_row(decote.type, { 'attr' : { 'data-unique_block_prefix' : decote.type.vars['unique_block_prefix']}}) }}
                         {{ form_row(decote.typeRemise, { 'attr' : { 'data-unique_block_prefix' : decote.typeRemise.vars['unique_block_prefix']}}) }}
                         {{ form_row(decote.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : decote.valeurRemise.vars['unique_block_prefix'] }}) }}
                         {{ form_row(decote.typePeriodeValidite, {  'attr' : {
@@ -167,6 +167,8 @@
         items.push("_decote_unifie_decotes_entry_decoteAffectations");
         items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeApplication");
         items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeFournisseurs");
+
+        var radioIds = ['_decote_unifie_decotes_entry_decoteAffectations', '_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_type'];
 
     </script>
     {{ parent() }}
