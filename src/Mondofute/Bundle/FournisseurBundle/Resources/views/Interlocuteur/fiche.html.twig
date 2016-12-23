@@ -78,6 +78,15 @@
         {% endif %}
         {#{% if  formAdresse != '' %}#}
 
+
+        <!-- disables autocomplete -->
+        <div class="form-group" style="display:none">
+            <input type="text" style="display:none"/>
+        </div>
+        <div class="form-group" style="display:none">
+            <input type="password" style="display:none"/>
+        </div>
+
         {% for moyenCom in form.moyenComs %}
             {% set typeMoyenCom = moyenCom.vars.type %}
             {#{% if typeMoyenCom == 'Adresse' %}#}
@@ -104,8 +113,5 @@
     {#{{ form_row(form.passwordChange) }}#}
     {#{% endif %}#}
 
-    <!-- disables autocomplete -->
-    <input type="text" style="display:none"/>
-    <input type="password" style="display:none"/>
     {{ form_row(form.user.plainPassword, {'attr' : { 'autocomplete' : 'new-password'}}) }}
 </div>
