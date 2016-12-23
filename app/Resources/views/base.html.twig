@@ -334,6 +334,21 @@
             }
         }
 
+        function remplirRadioVides() {
+            for (var i = 0; i < radioIds.length; i++) {
+                var valCrm;
+                $('div[data-unique_block_prefix="' + radioIds[i] + '"]').each(function (index, element) {
+                    if (index == 0) {
+                        valCrm = $($(element).find('input:checked')[0]).val();
+                    } else {
+                        if ($(element).find('input:checked').length == 0) {
+                            $($(element).find('input[value="' + valCrm + '"]')[0]).prop('checked', true);
+                        }
+                    }
+                });
+            }
+        }
+
     </script>
 
 
