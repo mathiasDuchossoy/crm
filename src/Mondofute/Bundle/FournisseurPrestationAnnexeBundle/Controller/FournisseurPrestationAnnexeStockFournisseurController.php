@@ -2,34 +2,33 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Controller;
 
-use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockHebergement;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockFournisseur;
+use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class FournisseurPrestationAnnexeStockHebergementController extends Controller
+class FournisseurPrestationAnnexeStockFournisseurController extends Controller
 {
     public function indexAction($name)
     {
         return $this->render('', array('name' => $name));
     }
 
-
-    public function chargerStockHebergementAction($idPrestationAnnexe, $idFournisseurHebergement, $idTypePeriode)
+    public function chargerStockFournisseurAction($idFournisseurPrestationAnnexe, $idTypePeriode)
     {
         $em = $this->getDoctrine();
-        $stocks = $em->getRepository(FournisseurPrestationAnnexeStockHebergement::class)->charger($idFournisseurHebergement,
-            $idPrestationAnnexe, $idTypePeriode);
+        $stocks = $em->getRepository(FournisseurPrestationAnnexeStockFournisseur::class)->charger($idFournisseurPrestationAnnexe,
+            $idTypePeriode);
         return new JsonResponse(['stocks' => $stocks]);
     }
-
 
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    public function enregistrerStockHebergementAction(Request $request)
+    public function enregistrerStockFournisseurAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
             $retour = array('valid' => true);
@@ -39,12 +38,12 @@ class FournisseurPrestationAnnexeStockHebergementController extends Controller
 //                $em->
                 $stocks = $request->get('stocks');
                 $sites = $em->getRepository(Site::class)->findAll();
+                /** @var Site $site */
                 foreach ($sites as $site) {
-                    $table = 'fournisseur_prestation_annexe_stock_hebergement';
+                    $table = 'fournisseur_prestation_annexe_stock_fournisseur';
                     $champs = array(
                         'fournisseur_prestation_annexe_id',
                         'periode_id',
-                        'fournisseur_hebergement_id',
                         'stock'
                     );
                     $duplicate = true;
@@ -57,17 +56,12 @@ class FournisseurPrestationAnnexeStockHebergementController extends Controller
                                 $mbdd->addInsertLigne(array(
                                     $stock['fournisseurPrestationAnnexe'],
                                     $periode['id'],
-                                    $stock['fournisseurHebergement'],
                                     $periode['stock']
                                 ));
                             } else {
                                 $mbdd->addDeleteLigne(array(
-                                    array(
-                                        'fournisseur_prestation_annexe_id',
-                                        $stock['fournisseurPrestationAnnexe']
-                                    ),
+                                    array('fournisseur_prestation_annexe_id', $stock['fournisseurPrestationAnnexe']),
                                     array('periode_id', $periode['id']),
-                                    array('fournisseur_hebergement_id', $stock['fournisseurHebergement'])
                                 ));
                             }
                         }
@@ -82,4 +76,21 @@ class FournisseurPrestationAnnexeStockHebergementController extends Controller
             return new JsonResponse($retour);
         }
     }
+
+    public function listeStocksFournisseurAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $typePeriodes = $em->getRepository(TypePeriode::class)->findAllFutur();
+//        dump($request->get('idFournisseur'));
+        $prestationAnnexes = $em->getRepository('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe')->findByFamillePrestationAnnexe($request->get('idFournisseur'),
+            $request->get('idFamillePrestationAnnexe'), $request->getLocale());
+//        $prestationAnnexes = $em->getRepository(FournisseurPrestationAnnexe::class)->findAll();
+//        $prestationAnnexes = $em->getRepository(FournisseurPrestationAnnexe::class)->findBy(array('fournisseur'=>intval($request->get('idFournisseur',10)),'prestationAnnexe.famillePrestationAnnexe'=>intval($request->get('idFamillePrestationAnnexe'),10)));
+//        dump($prestationAnnexes);
+//        die;
+        return $this->render('@MondofuteFournisseurPrestationAnnexe/template-fournisseur-prestation-annexe-stocks-fournisseur.html.twig',
+            array('fournisseurPrestationAnnexes' => $prestationAnnexes, 'typePeriodes' => $typePeriodes)
+        );
+    }
+
 }
