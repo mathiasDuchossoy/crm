@@ -1,0 +1,30 @@
+<div class="modal fade" id="modalFournisseurPrestationAnnexeStockFournisseur" tabindex="-1" role="dialog"
+     aria-labelledby="modalFournisseurPrestationAnnexeStockFournisseur">
+    <div class="modal-dialog modal-lg" style="width:100%; height:100%;padding:0;margin:0;">
+        <div class="modal-content" style="height: auto;min-height: 100vh;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="{{ 'fermer' | trans | capitalize }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{ 'prestation-annexe-fournisseur.gestion-stocks' | trans }}</h4>
+            </div>
+            <div class="modal-body" style="height: 80vh;">
+                <div class="progress" id="modalFournisseurPrestationAnnexeStockFournisseurProgressBar">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%"
+                         aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">Chargement en cours ...
+                    </div>
+                </div>
+                <iframe src="" frameborder="0" id="iframePrestationAnnexeStocksFournisseur"
+                        style="width: 100%;height:100%"></iframe>
+            </div>
+            <div class="modal-footer">
+                <div class="inline" name="btnEnregistrerPrestationAnnexeFournisseurStocksReponse"></div>
+                <button data-loading-text="<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></span> Enregistrement en cours"
+                        type="button" name="btnEnregistrerPrestationAnnexeFournisseurStocks" class="btn btn-default">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

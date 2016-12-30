@@ -252,6 +252,12 @@ assetic:
            file: "%kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php"
            apply_to: ".less$"
     assets:
+        prestation_annexes_fournisseur_stocks_js:
+            inputs:
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/FournisseurPrestationAnnexeBundle/Resources/public/js/prestation-annexes-fournisseur-stocks-fonctions.js"
+                - "%kernel.root_dir%/../src/Mondofute/Bundle/FournisseurPrestationAnnexeBundle/Resources/public/js/prestation-annexes-fournisseur-stocks-evenements.js"
+            filters:  [?yui_js]
+            output: js/prestation-annexes-fournisseur-stocks.min.js
         hebergement_edit_js:
             inputs:
                 - "%kernel.root_dir%/../src/Mondofute/Bundle/HebergementBundle/Resources/public/js/hebergement-edit-fonctions.js"

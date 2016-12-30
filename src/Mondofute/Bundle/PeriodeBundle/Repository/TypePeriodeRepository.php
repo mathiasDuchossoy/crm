@@ -101,4 +101,17 @@ class TypePeriodeRepository extends \Doctrine\ORM\EntityRepository
         }
         return $typePeriodes;
     }
+
+    public function findAllFutur()
+    {
+        $today = new \DateTime();
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('tp')
+            ->from('MondofutePeriodeBundle:TypePeriode', 'tp')
+            ->join('tp.periodes', 'periodes')
+            ->where('periodes.debut >= :today')
+            ->setParameter('today', $today->format('Y-m-d'));
+        return $qb->getQuery()->getResult();
+    }
 }
