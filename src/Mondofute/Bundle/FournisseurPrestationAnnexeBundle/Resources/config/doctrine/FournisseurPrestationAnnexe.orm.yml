@@ -19,7 +19,7 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             inversedBy: fournisseurs
     oneToMany:
         fournisseurPrestationAnnexeStocks:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStock
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockFournisseur
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['persist','remove']
         traductions:

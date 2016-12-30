@@ -1,0 +1,215 @@
+{% extends '::base_popup.html.twig' %}
+{% block body %}
+    <form name="form-prestation-annexe-stocks-fournisseur">
+        <div id="prestation-annexes-stocks-fournisseur">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                    Chargement en cours ...
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets 'css/datatables.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+    'js/progressbar.min.js'
+    'js/form.min.js'
+    'js/datatables.min.js'
+    'js/prestation-annexes-fournisseur-stocks.min.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript">
+        "use strict";
+        if (!globals) {
+            var globals = {};
+        }
+        //        récupération du maxInputVars
+        {% if maxInputVars is not defined %}
+        globals.maxInputVars = 1000;
+        {% else %}
+        globals.maxInputVars = parseInt({{ maxInputVars }});
+        {% endif %}
+        {#{{ dump(typePeriodes) }}#}
+        var fournisseurPrestationAnnexe = {};
+        globals.fournisseurPrestationAnnexes = [];
+        globals.typePeriodes = [];
+        //        hydratation des typePeriodes dans une variable javascript
+        {#{% for typePeriode in typePeriodes %}#}
+        {#globals.typePeriodes.push({#}
+        {#'id': parseInt('{{ typePeriode.id }}'),#}
+        {#'libelle': '{{ typePeriode | trans }}',#}
+        {#'periodes': [#}
+        {#{% for periode in typePeriode.periodes %}#}
+        {#{#}
+        {#'id': parseInt('{{ periode.id }}'),#}
+        {#'debut': '{{ periode.debut | date('Y-m-d') }}'#}
+        {#},#}
+        {#{% endfor %}#}
+        {#]#}
+        {#});#}
+
+        {#{% endfor %}#}
+        //        console.log(globals.typePeriodes);
+        //        hydratation des fournisseurPrestationAnnexes dans une variables javascript
+        {% for fournisseurPrestationAnnexe in fournisseurPrestationAnnexes %}
+        fournisseurPrestationAnnexe = {
+            'id': parseInt('{{ fournisseurPrestationAnnexe.id }}'),
+            'fournisseur': {
+                'id': parseInt('{{ fournisseurPrestationAnnexe.fournisseur.id }}'),
+            },
+
+            'prestationAnnexe': {
+                'id': parseInt('{{ fournisseurPrestationAnnexe.prestationAnnexe.id }}'),
+            }
+        };
+        {% for traduction in fournisseurPrestationAnnexe.traductions %}
+        {% if(traduction.langue.code == app.request.locale) %}
+        fournisseurPrestationAnnexe.traduction = '{{ traduction.libelle }}';
+        {% endif %}
+        {% endfor %}
+        {% for traduction in fournisseurPrestationAnnexe.prestationAnnexe.traductions %}
+        {% if(traduction.langue.code == app.request.locale) %}
+        fournisseurPrestationAnnexe.prestationAnnexe.traduction = '{{ traduction.libelle }}';
+        {% endif %}
+        {% endfor %}
+        globals.fournisseurPrestationAnnexes.push(fournisseurPrestationAnnexe);
+        {% endfor %}
+        if (!globals.urls) {
+            globals.urls = {};
+        }
+        //        gestion des urls
+        globals.urls.listePeriode = '{{ path('periode_type_periode_liste') }}';
+        globals.urls.ongletsTypePeriodes = '{{ path('periode_type_periode_onglets') }}';
+        globals.urls.chargerFournisseurPrestationAnnexeStockFournisseur = '{{ path('mondofute_fournisseur_prestation_annexe_stock_fournisseur_charger',{'idFournisseurPrestationAnnexe':'__idFournisseurPrestationAnnexe__','idTypePeriode':'__idTypePeriode__'}) }}';
+        globals.urls.enregistrerFournisseurPrestationAnnexeStockFournisseur = '{{ path('mondofute_fournisseur_prestation_annexe_stock_hebergement_enregistrer') }}';
+        //        initialisation des données liées à la langue pour les datatables
+        //        récupération des données liées à la langue
+        globals.langue = {
+            'enregistrer': {
+                'stock': "{{ 'enregistrer.stock' | trans }}",
+                'stock_ok': "{{ 'enregistrement_stock.ok'|trans }}",
+                'stock_pas_ok': "{{ 'enregistrement_stock.pas_ok'|trans }}",
+                'stock_aucun': "{{ 'enregistrement_stock.aucun'|trans }}",
+            },
+            dupliquePrestationAnnexeFournisseurStocks: {
+                texte: "{{ 'dupliquePrestationAnnexeFournisseurStocks.texte' | trans }}",
+            }
+        };
+        globals.datatableLangue = {
+            language: {
+                processing: "{{ 'processing'|trans }}",
+                search: "{{ 'rechercher'|trans }} :",
+                loadingRecords: "{{ 'chargementEnCours'|trans }}...",
+                "lengthMenu": "{{ 'afficher'|trans }} _MENU_ {{ 'resultats'|trans }}",
+                zeroRecords: "{{ 'zeroResultats'|trans }}",
+                emptyTable: "{{ 'tableVide'|trans }}",
+                "paginate": {
+                    "first": "{{ 'page.premiere'|trans }}",
+                    "last": "{{ 'page.derniere'|trans }}",
+                    "next": "{{ 'page.suivante'|trans }}",
+                    "previous": "{{ 'page.precedente'|trans }}"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                }
+            }
+        };
+        //        console.log(globals.fournisseurPrestationAnnexes);
+        {#{{ dump(typePeriodes) }}#}
+        $(document).ready(function () {
+            var $conteneur = $('#prestation-annexes-stocks-fournisseur');
+//            récupération des typePeriodes avec leurs périodes
+            $.ajax(globals.urls.listePeriode, {type: 'post'}).done(function (typePeriodes) {
+                globals.typePeriodes = typePeriodes;
+                $.ajax(globals.urls.ongletsTypePeriodes, {
+                    type: 'post',
+                    data: {idConteneur: $conteneur.attr('id')}
+                }).done(function (ongletsTypePeriodesHtml) {
+//                    console.log(globals.typePeriodes);
+                    $conteneur.html(ongletsTypePeriodesHtml);
+                    for (var indiceTypePeriode = 0; indiceTypePeriode < globals.typePeriodes.length; indiceTypePeriode++) {
+                        var typePeriode = globals.typePeriodes[indiceTypePeriode];
+                        var $progressBar = null;
+                        if (typePeriode.periodes != null && typePeriode.periodes.length > 0) {
+//                            gestion du tableau de stock
+                            $progressBar = $('#' + $conteneur.attr('id') + '_progress-bar_type_periode_' + typePeriode.id);
+                            var colonnes = [{mDataProp: 'fournisseurPrestationAnnexe', title: 'prestation annexe'}];
+                            colonnes = colonnes.concat(chargerColonnesPeriodesDatatable(typePeriode.periodes));
+                            var $div = $conteneur.find('#' + $conteneur.attr('id') + '_data_type_periode_' + typePeriode.id + ' .panel-group');
+                            var $tableau = $('<table class="table-prestation-annexe-fournisseur-stocks table table-striped nowrap display" width="100%" id="type-periode-' + typePeriode.id + '-prestation-annexes"></table>');
+                            $div.append($tableau);
+                            var parametres = {
+                                'donnees': {
+                                    typePeriode: {
+                                        id: typePeriode.id,
+                                        periodes: typePeriode.periodes
+                                    },
+                                    fournisseurPrestationAnnexes: globals.fournisseurPrestationAnnexes,
+                                },
+                                datatable: {
+                                    data: null,
+                                    "aoColumns": colonnes,
+                                    "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                                        $(nRow).find('td').attr('style', 'vertical-align: middle;');
+                                    },
+                                    "bAutoWidth": true,
+                                    aoColumnDefs: [
+                                        {"bSortable": true, aTargets: [0]},
+                                        {"bSortable": false, aTargets: ['_all']},
+                                    ],
+                                    paging: true,
+                                    info: false,
+                                    pageLength: 25,
+                                    scrollX: true,
+                                    scrollY: false,
+                                    scrollCollapse: true,
+                                    fixedColumns: {
+                                        "iLeftColumns": 1,
+                                    },
+                                    scroller: {
+                                        rowHeight: 50
+                                    },
+                                    language: globals.datatableLangue.language,
+                                }
+                            };
+                            var table = genererDataTables($tableau, parametres, $progressBar, function (table, parametres, $progressBar) {
+                                if (parametres.donnees.fournisseurPrestationAnnexes.length > 0) {
+                                    parametres.pasProgressBar = 100 / parametres.donnees.fournisseurPrestationAnnexes.length;
+                                    var data = null;
+                                    for (var indiceFournisseurPrestationAnnexes = 0; indiceFournisseurPrestationAnnexes < parametres.donnees.fournisseurPrestationAnnexes.length; indiceFournisseurPrestationAnnexes++) {
+                                        data = [];
+                                        data['fournisseurPrestationAnnexe'] = '<span data-prestation-annexe-id="' + parametres.donnees.fournisseurPrestationAnnexes[indiceFournisseurPrestationAnnexes].id + '" data-periode-type-id="' + parametres.donnees.typePeriode.id + '" title="' + globals.langue.dupliquePrestationAnnexeFournisseurStocks.texte + '" class="duplique-prestation-annexe-fournisseur-stocks glyphicon glyphicon-play pull-right cliquable"> </span>' + parametres.donnees.fournisseurPrestationAnnexes[indiceFournisseurPrestationAnnexes].prestationAnnexe.traduction;
+                                        parametres.progressBar = $progressBar;
+                                        ajouterLignePrestationAnnexeStockFournisseur(table, parametres, data, indiceFournisseurPrestationAnnexes);
+                                    }
+
+                                } else {
+                                    $progressBar.closest('.progress').remove();
+                                }
+                            });
+                        } else {
+//                            supprime l'onglet et la div associée si aucune période n'existe
+                            $('li#' + $conteneur.attr('id') + '_onglet_type_periode_' + typePeriode.id).remove();
+                            $('div#' + $conteneur.attr('id') + '_data_type_periode_' + typePeriode.id).remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+
+    </script>
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
