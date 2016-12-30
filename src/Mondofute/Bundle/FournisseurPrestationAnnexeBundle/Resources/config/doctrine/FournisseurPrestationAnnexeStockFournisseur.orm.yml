@@ -1,0 +1,10 @@
+Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockFournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository\FournisseurPrestationAnnexeStockFournisseurRepository
+    id:
+        fournisseurPrestationAnnexe:
+            associationKey: true
+        periode:
+            associationKey: true
+    lifecycleCallbacks: {  }
