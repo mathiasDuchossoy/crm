@@ -1,0 +1,21 @@
+Mondofute\Bundle\DecoteBundle\Entity\DecoteHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteHebergementRepository
+    id:
+        hebergement:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        decote:
+            associationKey: true
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: decoteHebergements
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        decote:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
+            inversedBy: decoteHebergements
+    lifecycleCallbacks: {  }

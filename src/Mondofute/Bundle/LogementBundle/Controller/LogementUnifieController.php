@@ -463,7 +463,9 @@ class LogementUnifieController extends Controller
                  * @var TypePeriode $typePeriode
                  */
                 foreach ($logement->getTypePeriodes() as $typePeriode) {
-                    $typePeriodeSite = $logementSite->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriode) {
+                    $typePeriodeSite = $logementSite->getTypePeriodes()->filter(function (TypePeriode $element) use (
+                        $typePeriode
+                    ) {
                         return $element->getId() == $typePeriode->getId();
                     })->first();
                     if (false === $typePeriodeSite) {
@@ -471,7 +473,9 @@ class LogementUnifieController extends Controller
                     }
                 }
                 foreach ($logementSite->getTypePeriodes() as $typePeriodeSite) {
-                    $typePeriode = $logement->getTypePeriodes()->filter(function (TypePeriode $element) use ($typePeriodeSite) {
+                    $typePeriode = $logement->getTypePeriodes()->filter(function (TypePeriode $element) use (
+                        $typePeriodeSite
+                    ) {
                         return $element->getId() == $typePeriodeSite->getId();
                     })->first();
                     if (false === $typePeriode) {
