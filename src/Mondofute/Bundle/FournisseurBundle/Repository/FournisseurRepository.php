@@ -117,4 +117,17 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 //        dump($result);die;
         return $result;
     }
+
+    public function findByFamillePrestationAnnexe($famillePrestationAnnexeId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('fournisseur')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'fournisseur')
+            ->join('fournisseur.types', 'types')
+            ->where('types.id = :famillePrestationAnnexeId')
+            ->setParameter('famillePrestationAnnexeId', $famillePrestationAnnexeId);
+
+        $result = $q->getQuery()->getResult();
+        return $result;
+    }
 }
