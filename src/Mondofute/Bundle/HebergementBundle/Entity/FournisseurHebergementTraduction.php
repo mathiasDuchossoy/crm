@@ -80,7 +80,8 @@ class FournisseurHebergementTraduction
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    ) {
+    )
+    {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;

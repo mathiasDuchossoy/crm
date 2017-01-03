@@ -9,7 +9,6 @@ use Mondofute\Bundle\UniteBundle\Form\TarifType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,8 +41,7 @@ class DescriptionForfaitSkiType extends AbstractType
             )
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DescriptionForfaitSkiTraductionType::class,
-            ))
-//            ->add('ligneDescriptionForfaitSki', HiddenType::class, array('mapped' => false))
+            ))//            ->add('ligneDescriptionForfaitSki', HiddenType::class, array('mapped' => false))
         ;
     }
 

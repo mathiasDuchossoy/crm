@@ -46,8 +46,7 @@ class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
         $logementUnifie = $em->find(LogementUnifie::class, $logementUnifieId);
         $fournisseurId = $em->getRepository(LogementUnifie::class)->getFournisseur($logementUnifieId);
 
-        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId,
-            $fournisseurId);
+        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId, $fournisseurId);
 
         $prestationAnnexeLogementUnifies = new ArrayCollection();
         foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
@@ -55,9 +54,7 @@ class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
             $prestationAnnexeLogementUnifies->add($prestationAnnexeLogementUnifie);
             $em->persist($prestationAnnexeLogementUnifie);
             foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-                $logement = $logementUnifie->getLogements()->filter(function (Logement $element) use (
-                    $prestationAnnexeHebergement
-                ) {
+                $logement = $logementUnifie->getLogements()->filter(function (Logement $element) use ($prestationAnnexeHebergement) {
                     return $element->getSite() == $prestationAnnexeHebergement->getSite();
                 })->first();
 
@@ -91,9 +88,7 @@ class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
                 $metadata = $emSite->getClassMetadata(get_class($prestationAnnexeLogementUnifieSite));
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (
-                    PrestationAnnexeLogement $element
-                ) use ($site) {
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($site) {
                     return $element->getSite() == $site;
                 })->first();
 
@@ -106,8 +101,7 @@ class NewPrestationAnnexeLogementCommand extends ContainerAwareCommand
 
                 $prestationAnnexeLogementSite
                     ->setLogement($logement)
-                    ->setParam($emSite->find(FournisseurPrestationAnnexeParam::class,
-                        $prestationAnnexeLogement->getParam()))
+                    ->setParam($emSite->find(FournisseurPrestationAnnexeParam::class, $prestationAnnexeLogement->getParam()))
                     ->setSite($emSite->find(Site::class, $site))
                     ->setActif($prestationAnnexeLogement->getActif());
             }

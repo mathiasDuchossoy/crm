@@ -1,0 +1,20 @@
+Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionFournisseurRepository
+    id:
+        promotion:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        type:
+            type: smallint
+            options:
+                unsigned: true
+    manyToOne:
+        promotion:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: promotionFournisseurs
+    lifecycleCallbacks: {  }
