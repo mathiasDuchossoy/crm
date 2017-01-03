@@ -1,0 +1,735 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% set personalisable =  true %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {% include '::coches_sites.html.twig' %}
+
+            {% set mesSites = form.decotes %}
+            {% include ('::onglets_sites.html.twig') %}
+
+            <div class="tab-content" style="padding:20px;">
+                {% set iSite = 0 %}
+                {% set index = 0 %}
+                {% for keyDecote, decote in form.decotes %}
+                    <div id="data_site_{{ decote.vars.value.site.id }}"
+                         class="{% if(iSite==0) %}active{% set iSite = 1 %}{% endif %} tab-pane fade in"
+                         data-crm="{{ decote.vars.value.site.crm | number_format }}">
+                        {{ form_row(decote.site) }}
+                        {{ form_row(decote.libelle, { 'attr' : { 'data-unique_block_prefix' : decote.libelle.vars['unique_block_prefix']}}) }}
+                        {{ form_row(decote.type, { 'attr' : { 'data-unique_block_prefix' : decote.type.vars['unique_block_prefix']}}) }}
+                        {{ form_row(decote.typeRemise, { 'attr' : { 'data-unique_block_prefix' : decote.typeRemise.vars['unique_block_prefix']}}) }}
+                        {{ form_row(decote.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : decote.valeurRemise.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(decote.typePeriodeValidite, {  'attr' : {
+                            'data-unique_block_prefix' : decote.typePeriodeValidite.vars['unique_block_prefix'],
+                            'onchange' : 'displayFormTypePeriodeValidite(this,'~keyDecote~');'
+                        }}) }}
+                        <div id="decote_periode_validite_date_{{ keyDecote }}" class="form-group"
+                                {% if decote.typePeriodeValidite.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeValidite::dateADate') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {% include('@MondofuteDecote/decoteunifie/widget-decote-periode-validite-date.html.twig') with {'decotePeriodeValiditeDate': decote.decotePeriodeValiditeDate} %}
+                        </div>
+                        <div id="decote_periode_validite_jour_{{ keyDecote }}"
+                                {% if decote.typePeriodeValidite.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeValidite::periode') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {{ form_row(decote.decotePeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : decote.decotePeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
+                        </div>
+                        {{ form_row(decote.typePeriodeSejour, {  'attr' : {
+                            'data-unique_block_prefix' : decote.typePeriodeSejour.vars['unique_block_prefix'],
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyDecote~');'
+                        }}) }}
+                        <div id="decote_periode_sejour_date_{{ keyDecote }}" class="form-group"
+                                {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::dateADate') %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {% include('@MondofuteDecote/decoteunifie/widget-decote-periode-sejour-date.html.twig') with {'decotePeriodeSejourDate': decote.decotePeriodeSejourDate} %}
+                        </div>
+                        {% include ('@MondofuteDecote/decoteunifie/decote-type-affectation.html.twig') %}
+                        <div id="decote_type_fournisseur_{{ keyDecote }}"
+                                {% set decoteTypeAffectationDisplay = false %}
+                                {% for decoteTypeAffectation in decote.decoteTypeAffectations.vars.value %}
+                                    {% if decoteTypeAffectation.typeAffectation != 3 and decoteTypeAffectationDisplay == false %}
+                                        {% set decoteTypeAffectationDisplay = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if decote.decoteTypeAffectations.vars.value is empty %}
+                                    {% set decoteTypeAffectationDisplay = true %}
+                                {% endif %}
+                                {% if  decoteTypeAffectationDisplay == true %}
+                                    style="display: none;"
+                                {% endif %}
+                        >
+                            {{ form_row(decote.typeFournisseurs, {  'attr' : {  'data-unique_block_prefix' : decote.typeFournisseurs.vars['unique_block_prefix'] }}) }}
+                        </div>
+                        {{ form_row(decote.typeApplication, {  'attr' : {  'data-unique_block_prefix' : decote.typeApplication.vars['unique_block_prefix'] }}) }}
+                        {{ form_row(decote.canalDecotes, {  'attr' : {  'data-unique_block_prefix' : decote.canalDecotes.vars['unique_block_prefix'] }}) }}
+
+                        {% if panelDecote is defined %}
+                            {% set typeAffectationLogementSelected = false %}
+                            {% set typeAffectationPrestationAnnexeSelected = false %}
+                            {% for decoteTypeAffectation in decote.decoteTypeAffectations.vars.value %}
+                                {% if decoteTypeAffectation.typeAffectation == 1 %}
+                                    {% set typeAffectationLogementSelected = true %}
+                                {% endif %}
+                                {% if decoteTypeAffectation.typeAffectation == 2 %}
+                                    {% set typeAffectationPrestationAnnexeSelected = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <div id="decote_panel_hebergement_{{ keyDecote }}">
+                                {% if typeAffectationLogementSelected == true %}
+                                    {% include ('@MondofuteDecote/decoteunifie/panel-hebergement.html.twig' ) %}
+                                {% endif %}
+                            </div>
+                            <div id="decote_panel_prestation_annexe_{{ keyDecote }}">
+                                {% if typeAffectationPrestationAnnexeSelected == true %}
+                                    {% for decoteTypeAffectation in decote.decoteTypeAffectations.vars.value %}
+                                        {% if decoteTypeAffectation.typeAffectation == constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypeAffectation::prestationAnnexe') %}
+                                            {{ include ('@MondofuteDecote/decoteunifie/panel-prestation-annexe.html.twig') }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {#{{ dump(decote.logementPeriodes) }}#}
+                    {% set index = (index + 1) %}
+                {% endfor %}
+
+            </div>
+            <div id="values_fournisseur_prestation_annexe_periode_validite" style="display: none">
+                {#<div id="values_fournisseur_prestation_annexe_periode_validite">#}
+            </div>
+
+            <div id="values_decote_logement" style="display: none">
+            </div>
+            {{ form_row(form.submit) }}
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+    <div id="modal_small" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="mySmallModalLabel">Message</h4></div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+    {% include ('@MondofuteDecote/decoteunifie/modal-decote-fournisseur-prestation-annexe-periode-validite.html.twig') %}
+    {% include ('@MondofuteDecote/decoteunifie/modal-decote-logement.html.twig') %}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var itemNonPersonalisable = [];
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_libelle");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_clientAffectation");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_typeRemise");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_valeurRemise");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_prixMini");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_usageDecote");
+        //        itemNonPersonalisable.push("_decote_unifie_decotes_entry_actif");
+
+        var items = [];
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_libelle");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeRemise");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_valeurRemise");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typePeriodeValidite");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typePeriodeSejour");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_valeurRemise");
+        items.push("_decote_unifie_decotes_entry_decoteAffectations");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeApplication");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeFournisseurs");
+
+        var radioIds = ['_decote_unifie_decotes_entry_decoteAffectations', '_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_type'];
+
+    </script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% if sitesAEnregistrer is not empty %}
+
+            {% for siteAEnregistrer in sitesAEnregistrer %}
+            $("#siteAEnregistrer_{{ siteAEnregistrer }}").prop("checked", true);
+            {% endfor %}
+
+            {% else %}
+
+            $("[id^='siteAEnregistrer']").each(function () {
+                $(this).prop('checked', true);
+            });
+
+            {% endif %}
+
+            {% for keySite, site in sites %}
+            var contenuOngletSite = $("[id='data_site_" + {{ site.id }} +"']");
+            if (!$("#siteAEnregistrer_{{ site.id }}").is(':checked')) {
+                $("#onglet_data_site_{{ site.id }}").hide();
+                contenuOngletSite.find(':required').each(function () {
+                    $(this).attr('required', false);
+                    $(this).attr("data-required", "true");
+                });
+            }
+
+            $("#siteAEnregistrer_{{ site.id }}").change(function () {
+                var checked = false;
+                $("[id^='siteAEnregistrer_']").each(function () {
+
+                    if ($(this).is(':checked') && $(this).is(':visible')) {
+                        checked = true;
+                    }
+                });
+
+                if (!checked) {
+                    var modal = $("#modal_small");
+                    modal.find('.modal-title').text("Attention !!!");
+                    modal.find('.modal-body').text("attention vous devez selectionner au moins 1 site");
+                    modal.modal().show();
+                    $(this).prop('checked', true);
+                    return false;
+                }
+
+                contenuOngletSite = $("[id='data_site_" + $(this).attr('data-site-id') + "']");
+                if (!$(this).is(':checked')) {
+//                    supprime le required des champs libelle des traductions
+                    contenuOngletSite.find(':required').each(function () {
+                        $(this).attr('required', false);
+                        $(this).attr("data-required", "true");
+                    });
+                    if ($("#onglet_data_site_{{ site.id }}").hasClass('active')) {
+
+                        $("[id^='data_site_']").each(function (value, element) {
+
+                            if (!$(element).hasClass('active')) {
+                                $("#onglet_" + element.id + " a").tab('show');
+                                return false;
+                            }
+
+                        });
+                    }
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).hide();
+
+                } else {
+//                    rend les champs libelle des traductions required
+                    contenuOngletSite.find('[data-required=\'true\']').each(function () {
+                        $(this).attr('required', true);
+                    });
+                    $("#onglet_data_site_" + $(this).attr('data-site-id')).show();
+                }
+            });
+
+            if ($('#mondofute_bundle_decotebundle_decoteunifie_{{ keySite }}_decoteTypeAffectations_2').prop('checked')) {
+                $('#mondofute_bundle_decotebundle_decoteunifie_decotes_{{ keySite }}_typePeriodeSejour option[value=3]').hide();
+            }
+            {% endfor %}
+//            selectionne le premier onglet coché
+            var siteIdFirst = $('[id^="siteAEnregistrer_"]:checked').first().attr('data-site-id');
+            $("#onglet_data_site_" + siteIdFirst + " a").tab('show');
+
+            $('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).removeClass('datetimepicker');
+
+        });
+
+
+    </script>
+
+    <script type="text/javascript">
+        function displayFormTypePeriodeSejour(element, keyDecote) {
+            var $decote_periode_validite_date = $('#decote_periode_sejour_date_' + keyDecote);
+            var decote_periodes = $('.decote-logement-periode-' + keyDecote);
+            var decote_fpa_periode = $('.decote-fournisseur-prestation-annexe-periode-' + keyDecote);
+            switch ($(element).val()) {
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::permanent') }}':
+                    $decote_periode_validite_date.hide();
+                    decote_periodes.each(function () {
+                        $(this).hide();
+                    });
+                    decote_fpa_periode.each(function () {
+                        $(this).hide();
+                    });
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::dateADate') }}':
+                    $decote_periode_validite_date.show();
+                    decote_periodes.each(function () {
+                        $(this).hide();
+                    });
+                    decote_fpa_periode.each(function () {
+                        $(this).hide();
+                    });
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') }}':
+                    $decote_periode_validite_date.hide();
+                    decote_periodes.each(function () {
+                        $(this).show();
+                    });
+                    decote_fpa_periode.each(function () {
+                        $(this).show();
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function displayFormTypePeriodeValidite(element, keyDecote) {
+            var $decote_periode_validite_date = $('#decote_periode_validite_date_' + keyDecote);
+            var $decote_periode_validite_jour = $('#decote_periode_validite_jour_' + keyDecote);
+            switch ($(element).val()) {
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeValidite::permanent') }}':
+                    $decote_periode_validite_date.hide();
+                    $decote_periode_validite_jour.hide();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeValidite::dateADate') }}':
+                    $decote_periode_validite_jour.hide();
+                    $decote_periode_validite_date.show();
+                    break;
+                case '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeValidite::periode') }}':
+                    $decote_periode_validite_date.hide();
+                    $decote_periode_validite_jour.show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function displayAffectationPanel(element, keyDecote, decoteId, siteId) {
+            var $element = $(element);
+            var val = $element.val();
+            var path;
+            var $decotePanelHebergement = $('#decote_panel_hebergement_' + keyDecote);
+            var $decotePanelPrestationAnnexe = $('#decote_panel_prestation_annexe_' + keyDecote);
+            var $decoteWidgetTypeFournisseur = $('#decote_type_fournisseur_' + keyDecote);
+            if (decoteId) {
+                if ($element.is(':checked')) {
+                    switch (val) {
+                        case '1':
+                            $decotePanelPrestationAnnexe.hide();
+                            $decoteWidgetTypeFournisseur.hide();
+                            if ($('#decote_panel_hebergement_' + keyDecote + ' > *').length == 0) {
+                                path = "{{ path('decote_get_panel_hebergement', {
+                                    'decoteId' : '_decoteId_'
+                                } ) }}";
+                                path = path.replace(/_decoteId_/g, decoteId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyDecote_/g, keyDecote);
+                                    $decotePanelHebergement.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+                                    getFournisseurHebergements(decoteId, '{{ fournisseurTypeHebergement.id }}', keyDecote, siteId);
+                                    {% endfor %}
+                                    getDecotePeriodes(decoteId, keyDecote);
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                            }
+                            $decotePanelHebergement.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').show();
+                            break;
+                        case '2':
+                            $decotePanelHebergement.hide();
+                            $decoteWidgetTypeFournisseur.hide();
+                            if ($('#decote_panel_prestation_annexe_' + keyDecote + ' > *').length == 0) {
+                                path = "{{ path('decote_get_panel_prestation_annexe', {
+                                    'decoteId' : '_decoteId_'
+                                } ) }}";
+                                path = path.replace(/_decoteId_/g, decoteId);
+                                $.ajax(path).done(function (data) {
+                                    data = data.replace(/_keyDecote_/g, keyDecote);
+                                    $decotePanelPrestationAnnexe.html(data);
+                                    {% if fournisseursTypeHebergement is defined %}
+                                    {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+                                    getFournisseurPrestationAnnexes(decoteId, '{{ fournisseurPrestationAnnexe.id }}', keyDecote);
+                                    {% endfor %}
+                                    {% endif %}
+                                });
+                            }
+                            else {
+                            }
+                            $decotePanelPrestationAnnexe.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').show();
+                            break;
+                        case '3':
+                            $decotePanelPrestationAnnexe.hide();
+                            $decotePanelHebergement.hide();
+                            $decoteWidgetTypeFournisseur.show();
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour').val('');
+                            $('#mondofute_bundle_decotebundle_decoteunifie_decotes_' + keyDecote + '_typePeriodeSejour option[value=3]').hide();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {
+                    switch (val) {
+                        case '1':
+                            $decotePanelHebergement.hide();
+                            $decoteWidgetTypeFournisseur.hide();
+                            break;
+                        case '2':
+                            $decotePanelPrestationAnnexe.hide();
+                            $decoteWidgetTypeFournisseur.hide();
+                            break;
+                        case '3':
+                            $decotePanelPrestationAnnexe.hide();
+                            $decotePanelHebergement.hide();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function getFournisseurHebergements(decoteId, fournisseurId, keyDecote, siteId) {
+//            if($('#collapse_decote_'+decoteId+'_fournisseur_'+fournisseurId+'_hebergements').is(':hidden'))
+//            {
+            var path = "{{ path('decote_get_fournisseur_hebergements' ,{
+                'decoteId' : '_decoteId_',
+                'fournisseurId' : '_fournisseurId_',
+                'siteId' : '_siteId_',
+            }) }}";
+
+            path = path.replace(/_decoteId_/g, decoteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+            path = path.replace(/_siteId_/g, siteId);
+            path = path.replace(/_siteId_/g, siteId);
+
+            $.ajax(path, {
+//                    async: false
+            }).done(function (data) {
+                data = data.replace(/__keyDecote__/g, keyDecote);
+                var $decoteFournisseurHebergements = $('#decote_' + decoteId + '_fournisseur_' + fournisseurId + '_hebergements');
+                $decoteFournisseurHebergements.html(data);
+                $decoteFournisseurHebergements.find('input[class^="decote_hebergement_"]').each(function (index, element) {
+                    getDecoteLogementValues(fournisseurId, $(element).val(), decoteId, keyDecote)
+                })
+            });
+//            }
+
+        }
+
+        function getFournisseurPrestationAnnexes(decoteId, fournisseurId, keyDecote) {
+//            if($('#collapse_decote_'+decoteId+'_fournisseur_'+fournisseurId+'_prestation_annexes').is(':hidden'))
+//            {
+            var path = "{{ path('decote_get_fournisseur_prestation_annexes' ,{
+                'decoteId' : '_decoteId_',
+                'fournisseurId' : '_fournisseurId_'
+            }) }}";
+
+            path = path.replace(/_decoteId_/g, decoteId);
+            path = path.replace(/_fournisseurId_/g, fournisseurId);
+
+            $.ajax(path, {
+//                async: false
+            }).done(function (data) {
+                data = data.replace(/__keyDecote__/g, keyDecote);
+                var $decoteFournisseurPrestationannexes = $('#decote_' + decoteId + '_fournisseur_' + fournisseurId + '_prestation_annexes');
+                $decoteFournisseurPrestationannexes.html(data);
+                $decoteFournisseurPrestationannexes.find('input[class^="decote_famille_prestation_annexes_"]').each(function (index, element) {
+                    getFournisseurPrestationAnnexePeriodeValiditeValues($(element).val(), decoteId, keyDecote);
+                })
+            });
+//            }
+
+        }
+
+        function checkChildren(element, listGroup) {
+            var $element = $(element);
+            var $listGroup = $('#' + listGroup);
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
+                $(val).triggerHandler('click');
+            })
+        }
+
+        function checkChilFamillePrestationAnnexe(element, classFamille) {
+            var $element = $(element);
+            var $listGroup = $('#' + $element.data('list_group'));
+            $listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+            $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
+                $(val).triggerHandler('click');
+            })
+        }
+
+        function checkListStationHebergement(checkbox, className) {
+            $('.' + className).each(function (index, element) {
+                $(element).find('input[type=checkbox]').prop('checked', $(checkbox).prop('checked'));
+                $(element).find('input:checkbox[id^="checkbox_all_logement_"]').triggerHandler('click');
+            })
+        }
+
+
+        $(document).ready(function () {
+            {% if panelDecote is defined %}
+            {% for keyDecote , decote in entity.decotes %}
+            {% for decoteTypeAffectation in decote.decoteTypeAffectations %}
+            {% if decoteTypeAffectation.typeAffectation == 1 %}
+            {% for fournisseurTypeHebergement in fournisseursTypeHebergement %}
+            getFournisseurHebergements('{{ decote.id }}', '{{ fournisseurTypeHebergement.id }}', '{{ keyDecote }}', '{{ decote.site.id }}');
+            {% endfor %}
+            getDecotePeriodes('{{ decote.id }}', '{{ keyDecote }}');
+            {% endif %}
+            {% endfor %}
+            {% for decoteTypeAffectation in decote.decoteTypeAffectations %}
+            {% if decoteTypeAffectation.typeAffectation == 2 %}
+            {% for fournisseurPrestationAnnexe in fournisseursPrestationAnnexe %}
+            getFournisseurPrestationAnnexes('{{ decote.id }}', '{{ fournisseurPrestationAnnexe.id }}', '{{ keyDecote }}');
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            {% endfor %}
+            {% endif %}
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        var selectedFournisseurPrestationAnnexePeriodeValidites = [];
+
+        function getFournisseurPrestationAnnexePeriodeValidites(fournisseurPrestationAnnexeId, keyDecote) {
+            var path = '{{ path('decote_get_fournisseur_prestation_annexe_periode_validite' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyDecote' : '_keyDecote_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyDecote_', keyDecote);
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id', fournisseurPrestationAnnexeId);
+            $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-decote', keyDecote);
+
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($values_checkbox_fournisseur_prestation_annexe_periode_validite.length > 0) {
+                $modal_body_fournisseur_prestation_annexe_periode_validite.html($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            }
+            else {
+                $.ajax(path).done(function (data) {
+                    $modal_body_fournisseur_prestation_annexe_periode_validite.html(data);
+                })
+            }
+            selectedFournisseurPrestationAnnexePeriodeValidites = [];
+            $('#decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values input:checked').each(function () {
+                selectedFournisseurPrestationAnnexePeriodeValidites.push($(this).attr('id'));
+            });
+            $('#modal_fournisseur_prestation_annexe_periode_validite').on('hidden.bs.modal', function (e) {
+                validerFournisseurPrestationAnnexePeriodeValidite(true);
+            })
+        }
+
+        function validerFournisseurPrestationAnnexePeriodeValidite(annuler) {
+            var $modal_body_fournisseur_prestation_annexe_periode_validite = $('#modal_body_fournisseur_prestation_annexe_periode_validite');
+            var fournisseurPrestationAnnexeId = $modal_body_fournisseur_prestation_annexe_periode_validite.data('fournisseur-prestation-annexe-id');
+            var keyDecote = $modal_body_fournisseur_prestation_annexe_periode_validite.data('key-decote');
+            var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+            var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('#decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+            var $modal_fournisseur_prestation_annexe_periode_validite = $('#modal_fournisseur_prestation_annexe_periode_validite');
+            $modal_fournisseur_prestation_annexe_periode_validite.unbind('hidden.bs.modal');
+            $modal_fournisseur_prestation_annexe_periode_validite.modal('hide');
+            if (annuler) {
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.find('input:checkbox').prop('checked', false);
+                for (var i = 0; i < selectedFournisseurPrestationAnnexePeriodeValidites.length; i++) {
+                    $('#' + selectedFournisseurPrestationAnnexePeriodeValidites[i]).prop('checked', true);
+                }
+            }
+            var $periodeValiditeCheckboxes = $('.decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+            if ($('.decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                $('#checkbox_all_periode_validite_' + keyDecote + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+            }
+            else {
+                $('#checkbox_all_periode_validite_' + keyDecote + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+            }
+        }
+
+        function getFournisseurPrestationAnnexePeriodeValiditeValues(fournisseurPrestationAnnexeId, decoteId, keyDecote) {
+            var path = '{{ path('decote_get_fournisseur_prestation_annexe_periode_validite_values' , {'fournisseurPrestationAnnexeId' : '_fournisseurPrestationAnnexeId_','keyDecote' : '_keyDecote_','decoteId' : '_decoteId_'}) }}';
+            path = path.replace('_fournisseurPrestationAnnexeId_', fournisseurPrestationAnnexeId);
+            path = path.replace('_keyDecote_', keyDecote);
+            path = path.replace('_decoteId_', decoteId);
+            $.ajax(path).done(function (data) {
+                var $values_fournisseur_prestation_annexe_periode_validite = $('#values_fournisseur_prestation_annexe_periode_validite');
+                var $values_checkbox_fournisseur_prestation_annexe_periode_validite = $('<div id="decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values"></div>');
+                $values_fournisseur_prestation_annexe_periode_validite.append($values_checkbox_fournisseur_prestation_annexe_periode_validite);
+                $values_checkbox_fournisseur_prestation_annexe_periode_validite.html(data);
+                var $periodeValiditeCheckboxes = $('.decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+                if ($('.decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                    $('#checkbox_all_periode_validite_' + keyDecote + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                }
+                $periodeValiditeCheckboxes.change(function () {
+                    if ($('.decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                        //do something
+                        $('#checkbox_all_periode_validite_' + keyDecote + '_' + fournisseurPrestationAnnexeId).prop('checked', true);
+                    }
+                    else {
+                        $('#checkbox_all_periode_validite_' + keyDecote + '_' + fournisseurPrestationAnnexeId).prop('checked', false);
+                    }
+                });
+            })
+        }
+
+        function checkAllPeriodeValiditeForFournisseurPrestationAnnexe(element, keyDecote, fournisseurPrestationAnnexeId) {
+            var $element = $(element);
+            var $listGroup = $('#decote_' + keyDecote + '_' + fournisseurPrestationAnnexeId + '_periode_validite_values');
+
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkAllDecoteLogements(element, keyDecote, fournisseurId, hebergementId) {
+            var $element = $(element);
+            var $listGroup = $('#decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+        }
+
+        function checkBoxAll(element, checkbox) {
+            var $a = $('#' + checkbox);
+            $a.prop('checked', $(element).prop('checked'));
+            $a.triggerHandler('click');
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function getDecotePeriodes(decoteId, keyDecote) {
+            var path = '{{ path('decote_get_periode', {'keyDecote' : '_keyDecote_','decoteId' : '_decoteId_'}) }}';
+            path = path.replace('_keyDecote_', keyDecote);
+            path = path.replace('_decoteId_', decoteId);
+            $.ajax(path).done(function (data) {
+                $('#decote_periode_' + keyDecote).html(data);
+            })
+        }
+    </script>
+
+    <script>
+
+        var selectedDecoteLogements = [];
+        function getDecoteLogements(fournisseurId, hebergementId, keyDecote) {
+
+            var path = '{{ path('decote_get_logement' , {'hebergementId' : '_hebergementId_','keyDecote' : '_keyDecote_','fournisseurId' : '_fournisseurId_'}) }}';
+            path = path.replace('_hebergementId_', hebergementId);
+            path = path.replace('_keyDecote_', keyDecote);
+            path = path.replace('_fournisseurId_', fournisseurId);
+
+            var $modal_body_decote_logement = $('#modal_body_decote_logement');
+
+            $modal_body_decote_logement.data('hebergement-id', hebergementId);
+            $modal_body_decote_logement.data('key-decote', keyDecote);
+            $modal_body_decote_logement.data('fournisseur-id', fournisseurId);
+
+
+            var $values_checkbox_decote_logement = $('#decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement');
+            if ($values_checkbox_decote_logement.length == 0) {
+                $values_checkbox_decote_logement = $('<div id="decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+                $.ajax(path).done(function (data) {
+                    $modal_body_decote_logement.html($values_checkbox_decote_logement);
+                    $values_checkbox_decote_logement.html(data);
+                })
+            } else {
+                $modal_body_decote_logement.html($values_checkbox_decote_logement);
+            }
+            selectedDecoteLogements = [];
+            $('#decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values input:checked').each(function () {
+                selectedDecoteLogements.push($(this).attr('id'));
+            });
+            $('#modal_decote_logement').on('hidden.bs.modal', function (e) {
+                validerDecoteLogement(true);
+            });
+        }
+
+        function validerDecoteLogement(annuler) {
+            var $modal_body_decote_logement = $('#modal_body_decote_logement');
+            var hebergementId = $modal_body_decote_logement.data('hebergement-id');
+            var keyDecote = $modal_body_decote_logement.data('key-decote');
+            var fournisseurId = $modal_body_decote_logement.data('fournisseur-id');
+            var $values_decote_logement = $('#values_decote_logement');
+            var $values_checkbox_decote_logement = $('#decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement');
+            if ($values_checkbox_decote_logement.length == 0) {
+                $values_checkbox_decote_logement = $('<div id="decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+            }
+            $values_decote_logement.append($values_checkbox_decote_logement);
+            var $modal_decote_logement = $('#modal_decote_logement');
+            $modal_decote_logement.unbind('hidden.bs.modal');
+            $modal_decote_logement.modal('hide');
+
+            if (annuler) {
+                $values_checkbox_decote_logement.find('input:checkbox').prop('checked', false);
+                for (var i = 0; i < selectedDecoteLogements.length; i++) {
+                    $('#' + selectedDecoteLogements[i]).prop('checked', true);
+                }
+            }
+            var $periodeValiditeCheckboxes = $('.decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+            if ($('.decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                $('#checkbox_all_logement_' + keyDecote + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+            }
+            else {
+                $('#checkbox_all_logement_' + keyDecote + '_' + fournisseurId + '_' + hebergementId).prop('checked', false);
+            }
+        }
+
+
+        function getDecoteLogementValues(fournisseurId, hebergementId, decoteId, keyDecote) {
+            var path = '{{ path('decote_get_logement_values' , {'fournisseurId' : '_fournisseurId_','hebergementId' : '_hebergementId_','keyDecote' : '_keyDecote_','decoteId' : '_decoteId_'}) }}';
+            path = path.replace('_fournisseurId_', fournisseurId);
+            path = path.replace('_hebergementId_', hebergementId);
+            path = path.replace('_keyDecote_', keyDecote);
+            path = path.replace('_decoteId_', decoteId);
+            $.ajax(path).done(function (data) {
+                var $values_decote_logement = $('#values_decote_logement');
+                var $values_checkbox_decote_logement = $('<div id="decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement"></div>');
+                $values_decote_logement.append($values_checkbox_decote_logement);
+                $values_checkbox_decote_logement.html(data);
+                var $periodeValiditeCheckboxes = $('.decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values');
+                if ($('.decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                    $('#checkbox_all_logement_' + keyDecote + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+                }
+                $periodeValiditeCheckboxes.change(function () {
+                    if ($('.decote_' + keyDecote + '_' + fournisseurId + '_' + hebergementId + '_logement_values:checked').length == $periodeValiditeCheckboxes.length && $periodeValiditeCheckboxes.length > 0) {
+                        //do something
+                        $('#checkbox_all_logement_' + keyDecote + '_' + fournisseurId + '_' + hebergementId).prop('checked', true);
+                    }
+                    else {
+                        $('#checkbox_all_logement_' + keyDecote + '_' + fournisseurId + '_' + hebergementId).prop('checked', false);
+                    }
+                });
+            });
+        }
+
+
+    </script>
+
+
+{% endblock %}
