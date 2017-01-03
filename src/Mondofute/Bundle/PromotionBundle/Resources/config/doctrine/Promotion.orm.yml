@@ -1,0 +1,106 @@
+Mondofute\Bundle\PromotionBundle\Entity\Promotion:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        actif:
+            type: boolean
+            options:
+                default: true
+        libelle:
+            type: string
+            nullable: false
+        typeRemise:
+            type: smallint
+            options:
+                unsigned: true
+        valeurRemise:
+            type: decimal
+            precision: 10
+            scale: '2'
+            options:
+                default: 0
+        typePeriodeValidite:
+            type: smallint
+            options:
+                unsigned: true
+        typePeriodeSejour:
+            type: smallint
+            options:
+                unsigned: true
+        typeApplication:
+            type: smallint
+            options:
+                unsigned: true
+    manyToOne:
+        promotionUnifie:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie
+            inversedBy: promotions
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+    oneToMany:
+        promotionTypeAffectations:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        promotionFournisseurPrestationAnnexes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        promotionFamillePrestationAnnexes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        promotionFournisseurs:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        promotionHebergements:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        logementPeriodes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        promotionStations:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionStation
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        logementPeriodes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        logementPeriodes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
+            mappedBy: promotion
+            cascade: ['persist','remove']
+    manyToMany:
+        typeFournisseurs:
+            joinTable:
+                name: 'promotion_type_fournisseur'
+            targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe
+        periodeValidites:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite
+    oneToOne:
+        promotionPeriodeValiditeDate:
+            targetEntity: PromotionPeriodeValiditeDate
+            cascade: ['persist','remove']
+            orphanRemoval: true
+        promotionPeriodeValiditeJour:
+            targetEntity: PromotionPeriodeValiditeJour
+            cascade: ['persist','remove']
+            orphanRemoval: true
+        promotionPeriodeSejourDate:
+            targetEntity: PromotionPeriodeSejourDate
+            cascade: ['persist','remove']
+            orphanRemoval: true
+    lifecycleCallbacks: {  }
