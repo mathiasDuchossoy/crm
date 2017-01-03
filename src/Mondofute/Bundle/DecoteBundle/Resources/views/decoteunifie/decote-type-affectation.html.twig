@@ -1,0 +1,26 @@
+<div class="form-group">
+    {#{{ dump(decote.decoteTypeAffectations.vars.value) }}#}
+    {#<label class="col-sm-2 control-label required">Affectations</label>#}
+    {{ form_label(decote.decoteTypeAffectations) }}
+    <div class="col-sm-10">
+        <div id="decote_unifie_decotes_{{ keyDecote }}_decoteAffectations" onclick=""
+             data-unique_block_prefix="_decote_unifie_decotes_entry_decoteAffectations">
+            {% for key, affectation in affectations %}
+                <div class="radio"><label class=""><input
+                                {% for value in decote.decoteTypeAffectations.vars.value %}
+                                    {% if value.typeAffectation == key %}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                                id="mondofute_bundle_decotebundle_decoteunifie_{{ keyDecote }}_decoteTypeAffectations_{{ loop.index - 1 }}"
+                                {#name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteTypeAffectations][{{ loop.index - 1 }}][typeAffectation]"#}
+                                name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteTypeAffectations][0][typeAffectation]"
+                                onchange="displayAffectationPanel(this , '{{ keyDecote }}' , '{{ decote.vars.value.id }}' , '{{ decote.vars.value.site.id }}');"
+                                required
+                                value="{{ key }}" type="radio">
+                        {{ affectation }}</label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
