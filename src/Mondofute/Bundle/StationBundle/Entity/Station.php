@@ -11,6 +11,7 @@ use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
 use Mondofute\Bundle\GeographieBundle\Entity\ZoneTouristique;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -115,6 +116,10 @@ class Station
      * @var integer
      */
     private $typeTaxeSejour = TypeTaxeSejour::NC;
+    /**
+     * @var Collection
+     */
+    private $promotionStations;
 
     /**
      * Constructor
@@ -129,6 +134,7 @@ class Station
         $this->hebergements = new ArrayCollection();
         $this->visuels = new ArrayCollection();
         $this->stationLabels = new ArrayCollection();
+        $this->promotionStations = new ArrayCollection();
     }
 
     /**
@@ -853,5 +859,39 @@ class Station
         $this->typeTaxeSejour = $typeTaxeSejour;
 
         return $this;
+    }
+
+    /**
+     * Add promotionStation
+     *
+     * @param PromotionStation $promotionStation
+     *
+     * @return Station
+     */
+    public function addPromotionStation(PromotionStation $promotionStation)
+    {
+        $this->promotionStations[] = $promotionStation->setStation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionStation
+     *
+     * @param PromotionStation $promotionStation
+     */
+    public function removePromotionStation(PromotionStation $promotionStation)
+    {
+        $this->promotionStations->removeElement($promotionStation);
+    }
+
+    /**
+     * Get promotionStations
+     *
+     * @return Collection
+     */
+    public function getPromotionStations()
+    {
+        return $this->promotionStations;
     }
 }

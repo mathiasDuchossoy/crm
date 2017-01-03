@@ -30,4 +30,8 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['persist' , 'remove']
+        promotionFournisseurPrestationAnnexes:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
