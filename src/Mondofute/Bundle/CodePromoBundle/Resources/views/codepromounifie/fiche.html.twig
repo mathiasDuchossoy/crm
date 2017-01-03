@@ -455,7 +455,7 @@
                 path = path.replace(/_clientName_/g, clienVal);
                 path = path.replace(/_siteId_/g, siteId);
                 $.ajax(path,
-                    {}
+                        {}
                 ).done(function (data) {
                     $("#result_search_" + siteId).html(data);
                     $progressBar.removeClass("active");
@@ -584,7 +584,6 @@
                 startDate: 'today',
                 pickerPosition: "top-right",
                 language: 'fr',
-//                wheelViewModeNavigationInverseDirection: true,
                 minuteStep: 30
             }).removeClass('datetimepicker');
 

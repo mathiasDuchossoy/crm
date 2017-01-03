@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-sm-12">
+
+        <ul class="nav nav-tabs nav-justified">
+            {% for keyTypePeriode, typePeriode in typePeriodes %}
+                <li
+                        {% if keyTypePeriode == 0 %} class="active"
+                        {% endif %}
+                ><a data-toggle="tab"
+                    href="#promotion_{{ keyPromotion }}_{{ typePeriode.id }}">{{ ('type_periode.'~typePeriode.id)|trans }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for keyCollectionPeriode, collectionPeriode in collectionPeriodes %}
+                <div id="promotion_{{ keyPromotion }}_{{ keyCollectionPeriode }}" class="tab-pane fade
+                    {% if loop.index == 1 %}
+                     in active
+                    {% endif %}
+                ">
+                    {% for periode in collectionPeriode %}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       value="{{ periode.periodeId }}"
+                                        {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][logementPeriodes][0][logement]"#}
+
+                                        {% set ok = false %}
+                                        {% for promotionLogementPeriode in promotionLogementPeriodes %}
+                                            {% if promotionLogementPeriode.periode.id == periode.periodeId and ok == false %}
+                                                checked="checked"
+                                                {% set ok = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                       name="promotion_logement_periode[{{ keyPromotion }}][periodes][]"
+                                />{{ periode.debut | date('d/m/Y') }} - {{ periode.fin | date('d/m/Y') }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

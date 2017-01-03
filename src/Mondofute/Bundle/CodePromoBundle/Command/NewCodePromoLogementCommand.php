@@ -50,9 +50,7 @@ class NewCodePromoLogementCommand extends ContainerAwareCommand
         foreach ($logementUnifie->getLogements() as $logement) {
             $codePromoHebergements = new ArrayCollection($em->getRepository(CodePromoHebergement::class)->findBy(array(
                 'fournisseur' => $logement->getFournisseurHebergement()->getFournisseur(),
-                'hebergement' => $logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (
-                    Hebergement $element
-                ) use ($logement) {
+                'hebergement' => $logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($logement) {
                     return $element->getSite() == $logement->getSite();
                 })->first()
             ))

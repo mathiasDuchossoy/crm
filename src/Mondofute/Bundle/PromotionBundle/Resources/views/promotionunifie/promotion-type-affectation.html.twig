@@ -1,0 +1,26 @@
+<div class="form-group">
+    {#{{ dump(promotion.promotionTypeAffectations.vars.value) }}#}
+    {#<label class="col-sm-2 control-label required">Affectations</label>#}
+    {{ form_label(promotion.promotionTypeAffectations) }}
+    <div class="col-sm-10">
+        <div id="promotion_unifie_promotions_{{ keyPromotion }}_promotionAffectations" onclick=""
+             data-unique_block_prefix="_promotion_unifie_promotions_entry_promotionAffectations">
+            {% for key, affectation in affectations %}
+                <div class="radio"><label class=""><input
+                                {% for value in promotion.promotionTypeAffectations.vars.value %}
+                                    {% if value.typeAffectation == key %}
+                                        checked="checked"
+                                    {% endif %}
+                                {% endfor %}
+                                id="mondofute_bundle_promotionbundle_promotionunifie_{{ keyPromotion }}_promotionTypeAffectations_{{ loop.index - 1 }}"
+                                {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][{{ loop.index - 1 }}][typeAffectation]"#}
+                                name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][0][typeAffectation]"
+                                onchange="displayAffectationPanel(this , '{{ keyPromotion }}' , '{{ promotion.vars.value.id }}' , '{{ promotion.vars.value.site.id }}');"
+                                required
+                                value="{{ key }}" type="radio">
+                        {{ affectation }}</label>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 <?php
 
 namespace Mondofute\Bundle\LogementBundle\Repository;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -36,7 +37,7 @@ class NombreDeChambreRepository extends \Doctrine\ORM\EntityRepository
     {
         $q = $this->createQueryBuilder('entity')
             ->select('entity')
-            ->join('entity.traductions' , 'traductions')
+            ->join('entity.traductions', 'traductions')
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
@@ -60,8 +61,8 @@ class NombreDeChambreRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('entity , traductions')
             ->from('MondofuteLogementBundle:NombreDeChambre', 'entity')
-            ->join('entity.traductions' , 'traductions')
-            ->join('traductions.langue' , 'langue')
+            ->join('entity.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
             ->where('langue.code = :locale')
             ->setParameter('locale', $locale)
             ->orderBy('entity.classement', 'ASC')//            ->orderBy('left(traductions.libelle, 2)', 'ASC')
