@@ -1,7 +1,6 @@
 <?php
 
 namespace Mondofute\Bundle\CodePromoApplicationBundle\Repository;
-use Doctrine\ORM\EntityManager;
 
 /**
  * CodePromoLogementRepository
