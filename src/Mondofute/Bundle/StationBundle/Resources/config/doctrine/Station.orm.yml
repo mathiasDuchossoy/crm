@@ -73,6 +73,10 @@ Mondofute\Bundle\StationBundle\Entity\Station:
         hebergements:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
             mappedBy: station
+        promotionStations:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionStation
+            mappedBy: station
+            cascade: ['remove']
     manyToMany:
         secteurs:
             targetEntity: Mondofute\Bundle\GeographieBundle\Entity\Secteur

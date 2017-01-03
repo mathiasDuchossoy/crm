@@ -1,0 +1,21 @@
+Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionHebergementRepository
+    id:
+        hebergement:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        promotion:
+            associationKey: true
+    manyToOne:
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: promotionHebergements
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        promotion:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
+            inversedBy: promotionHebergements
+    lifecycleCallbacks: {  }
