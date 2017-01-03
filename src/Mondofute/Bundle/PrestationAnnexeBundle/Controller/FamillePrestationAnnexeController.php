@@ -74,9 +74,7 @@ class FamillePrestationAnnexeController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         foreach ($langues as $langue) {
-            $famillePrestationAnnexeTraduction = $famillePrestationAnnexe->getTraductions()->filter(function (
-                FamillePrestationAnnexeTraduction $element
-            ) use ($langue) {
+            $famillePrestationAnnexeTraduction = $famillePrestationAnnexe->getTraductions()->filter(function (FamillePrestationAnnexeTraduction $element) use ($langue) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $famillePrestationAnnexeTraduction) {
@@ -93,8 +91,7 @@ class FamillePrestationAnnexeController extends Controller
             $originalSousFamillePrestationAnnexes->add($sousFamillePrestationAnnexe);
         }
 
-        $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\FamillePrestationAnnexeType',
-            $famillePrestationAnnexe);
+        $editForm = $this->createForm('Mondofute\Bundle\PrestationAnnexeBundle\Form\FamillePrestationAnnexeType', $famillePrestationAnnexe);
         $editForm
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
         $editForm->handleRequest($request);
@@ -106,8 +103,7 @@ class FamillePrestationAnnexeController extends Controller
                 if (false === $famillePrestationAnnexe->getSousFamillePrestationAnnexes()->contains($sousFamillePrestationAnnexe)) {
                     // if you wanted to delete the Tag entirely, you can also do that
                     if (!$sousFamillePrestationAnnexe->getFamillePrestationAnnexe()->getPrestationAnnexes()->isEmpty()) {
-                        $this->addFlash('error',
-                            'Impossible de supprimer cette sous-famille car elle est lié à une prestation annexe.');
+                        $this->addFlash('error', 'Impossible de supprimer cette sous-famille car elle est lié à une prestation annexe.');
                         $referer = $request->headers->get('referer');
                         return $this->redirect($referer);
                     }
@@ -127,8 +123,7 @@ class FamillePrestationAnnexeController extends Controller
 
             $this->addFlash('success', 'Le famille de prestation externe a bien été modifié.');
 
-            return $this->redirectToRoute('familleprestationannexe_edit',
-                array('id' => $famillePrestationAnnexe->getId()));
+            return $this->redirectToRoute('familleprestationannexe_edit', array('id' => $famillePrestationAnnexe->getId()));
         }
 
         return $this->render('@MondofutePrestationAnnexe/familleprestationannexe/edit.html.twig', array(
@@ -154,9 +149,7 @@ class FamillePrestationAnnexeController extends Controller
 
             // modification des traductions du famillePrestationAnnexe
             foreach ($famillePrestationAnnexe->getTraductions() as $traduction) {
-                $traductionSite = $famillePrestationAnnexeSite->getTraductions()->filter(function (
-                    FamillePrestationAnnexeTraduction $element
-                ) use ($traduction) {
+                $traductionSite = $famillePrestationAnnexeSite->getTraductions()->filter(function (FamillePrestationAnnexeTraduction $element) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {
@@ -171,9 +164,7 @@ class FamillePrestationAnnexeController extends Controller
 
             // remove the relationship between the sousFamillePrestationAnnexeSite and the famillePrestationAnnexeSite
             foreach ($famillePrestationAnnexeSite->getSousFamillePrestationAnnexes() as $sousFamillePrestationAnnexeSite) {
-                $sousFamillePrestationAnnexe = $famillePrestationAnnexe->getSousFamillePrestationAnnexes()->filter(function (
-                    SousFamillePrestationAnnexe $element
-                ) use ($sousFamillePrestationAnnexeSite) {
+                $sousFamillePrestationAnnexe = $famillePrestationAnnexe->getSousFamillePrestationAnnexes()->filter(function (SousFamillePrestationAnnexe $element) use ($sousFamillePrestationAnnexeSite) {
                     return $element->getId() == $sousFamillePrestationAnnexeSite->getId();
                 })->first();
                 if (false === $sousFamillePrestationAnnexe) {
@@ -185,9 +176,7 @@ class FamillePrestationAnnexeController extends Controller
             }
 
             foreach ($famillePrestationAnnexe->getSousFamillePrestationAnnexes() as $sousFamillePrestationAnnexe) {
-                $sousFamillePrestationAnnexeSite = $famillePrestationAnnexeSite->getSousFamillePrestationAnnexes()->filter(function (
-                    SousFamillePrestationAnnexe $element
-                ) use ($sousFamillePrestationAnnexe) {
+                $sousFamillePrestationAnnexeSite = $famillePrestationAnnexeSite->getSousFamillePrestationAnnexes()->filter(function (SousFamillePrestationAnnexe $element) use ($sousFamillePrestationAnnexe) {
                     return $element->getId() == $sousFamillePrestationAnnexe->getId();
                 })->first();
                 if (false === $sousFamillePrestationAnnexeSite) {
@@ -195,9 +184,7 @@ class FamillePrestationAnnexeController extends Controller
                     $famillePrestationAnnexeSite->addSousFamillePrestationAnnex($sousFamillePrestationAnnexeSite);
                 }
                 foreach ($sousFamillePrestationAnnexe->getTraductions() as $traduction) {
-                    $traductionSite = $sousFamillePrestationAnnexeSite->getTraductions()->filter(function (
-                        SousFamillePrestationAnnexeTraduction $element
-                    ) use ($traduction) {
+                    $traductionSite = $sousFamillePrestationAnnexeSite->getTraductions()->filter(function (SousFamillePrestationAnnexeTraduction $element) use ($traduction) {
                         return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                     })->first();
                     if (false === $traductionSite) {

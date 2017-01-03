@@ -43,8 +43,7 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
             ->select('fournisseurPrestationAnnexe.id fournisseurPrestationAnnexeId, traductions.libelle, famillePrestationAnnexe.id famillePrestationAnnexeId, traductionFamilles.libelle familleLibelle')
-            ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe',
-                'fournisseurPrestationAnnexe')
+            ->from('MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexe', 'fournisseurPrestationAnnexe')
             ->join('fournisseurPrestationAnnexe.fournisseur', 'fournisseur')
             ->where('fournisseur.id = :fournisseurId')
             ->setParameter('fournisseurId', $fournisseurId)

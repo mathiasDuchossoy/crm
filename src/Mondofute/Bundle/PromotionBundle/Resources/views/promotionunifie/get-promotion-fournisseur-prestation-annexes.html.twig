@@ -1,0 +1,103 @@
+{% set familleLibelle = "" %}
+{% set keyFournisseurPrestationAnnexe = 0 %}
+{% for key, fournisseurPrestationAnnexe in fournisseurPrestationAnnexes %}
+    {% if familleLibelle != fournisseurPrestationAnnexe.familleLibelle %}
+        <li class="list-group-item">
+            <div class="checkbox">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-11"><label>
+                        <input type="checkbox"
+                               name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][famillePrestationAnnexe]"
+                               value="{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
+                               data-list_group="promotion_{{ promotionId }}_fournisseur_{{ fournisseurId }}_prestation_annexes"
+                               onclick="checkChilFamillePrestationAnnexe(this,'promotion_famille_prestation_annexes_{{ keyPromotion }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}')"
+                                {% if promotion.promotionFamillePrestationAnnexes is defined %}
+                                    {% for promotionFamillePrestationAnnexe in promotion.promotionFamillePrestationAnnexes %}
+                                        {% if
+                                        promotionFamillePrestationAnnexe.vars.value.fournisseur.id == fournisseurId
+                                        and promotionFamillePrestationAnnexe.vars.value.famillePrestationAnnexe.id == fournisseurPrestationAnnexe.famillePrestationAnnexeId %}
+                                            checked="checked"
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                        />
+                        {{ fournisseurPrestationAnnexe.familleLibelle }}
+                        <input
+                                type="hidden"
+                                name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFamillePrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
+                                value="{{ fournisseurId }}"/>
+                    </label>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item">
+        <ul class="list-group">
+    {% endif %}
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="checkbox">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <label><input type="checkbox"
+                                      value="{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"
+                                    {% if promotion.promotionFournisseurPrestationAnnexes is defined %}
+                                        {% for promotionfournisseurPrestationAnnexe in promotion.promotionFournisseurPrestationAnnexes %}
+                                            {% if
+                                            promotionfournisseurPrestationAnnexe.vars.value.fournisseur.id == fournisseurId
+                                            and promotionfournisseurPrestationAnnexe.vars.value.fournisseurPrestationAnnexe.id == fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId %}
+                                                checked="checked"
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                      onclick="checkBoxAll(this, 'checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}')"
+                                      class="promotion_famille_prestation_annexes_{{ keyPromotion }}_{{ fournisseurId }}_{{ fournisseurPrestationAnnexe.famillePrestationAnnexeId }}"
+                                      name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseurPrestationAnnexe]"
+                            >{{ fournisseurPrestationAnnexe.libelle }}
+                        </label>
+                        <input type="hidden"
+                               name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionFournisseurPrestationAnnexes][{{ fournisseurId }}{{ key }}][fournisseur]"
+                               value="{{ fournisseurId }}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 promotion-fournisseur-prestation-annexe-periode-{{ keyPromotion }}"
+                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
+                <label>
+                    <input type="checkbox"
+                           id="checkbox_all_periode_validite_{{ keyPromotion }}_{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}"
+                           onclick="checkAllPeriodeValiditeForFournisseurPrestationAnnexe(this, '{{ keyPromotion }}', '{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}');"/>
+                    Toutes les périodes
+                </label>
+            </div>
+            <div class="col-sm-2 promotion-fournisseur-prestation-annexe-periode-{{ keyPromotion }}"
+                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
+                        style="display: none"
+                    {% endif %}
+            >
+                <button type="button" class="btn btn-default btn-md" data-toggle="modal"
+                        data-target="#modal_fournisseur_prestation_annexe_periode_validite"
+                        onclick="getFournisseurPrestationAnnexePeriodeValidites('{{ fournisseurPrestationAnnexe.fournisseurPrestationAnnexeId }}' , '{{ keyPromotion }}')">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Periodes de validité
+                </button>
+            </div>
+        </div>
+    </li>
+
+    {% set familleLibelle = fournisseurPrestationAnnexe.familleLibelle %}
+    {% if fournisseurPrestationAnnexes[key + 1] is not defined or fournisseurPrestationAnnexes[key + 1].familleLibelle != familleLibelle %}
+        </ul>
+        </li>
+    {% endif %}
+
+    {% set keyFournisseurPrestationAnnexe = keyFournisseurPrestationAnnexe + 1 %}
+{% endfor %}
+{% if fournisseurPrestationAnnexes is empty %}
+    <li class="list-group-item">
+        <div class="alert alert-info" role="alert">Il n'y a pas de prestation annexes pour ce fournisseur.</div>
+    </li>
+{% endif %}

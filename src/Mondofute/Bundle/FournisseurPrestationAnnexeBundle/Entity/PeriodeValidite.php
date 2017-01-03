@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 
+use DateTime;
+
 /**
  * PeriodeValidite
  */
@@ -13,16 +15,16 @@ class PeriodeValidite
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateDebut;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateFin;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
+     * @var PrestationAnnexeTarif
      */
     private $tarif;
 
@@ -45,9 +47,39 @@ class PeriodeValidite
     }
 
     /**
+     * Get tarif
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function getTarif()
+    {
+        return $this->tarif;
+    }
+
+    /**
+     * Set tarif
+     *
+     * @param PrestationAnnexeTarif $tarif
+     *
+     * @return PeriodeValidite
+     */
+    public function setTarif(PrestationAnnexeTarif $tarif = null)
+    {
+        $this->tarif = $tarif;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getDateDebut()->format('d/m/Y H:i') . PHP_EOL . '-' . PHP_EOL . $this->getDateFin()->format('d/m/Y H:i');
+
+    }
+
+    /**
      * Get dateDebut
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateDebut()
     {
@@ -57,7 +89,7 @@ class PeriodeValidite
     /**
      * Set dateDebut
      *
-     * @param \DateTime $dateDebut
+     * @param DateTime $dateDebut
      *
      * @return PeriodeValidite
      */
@@ -71,7 +103,7 @@ class PeriodeValidite
     /**
      * Get dateFin
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateFin()
     {
@@ -81,7 +113,7 @@ class PeriodeValidite
     /**
      * Set dateFin
      *
-     * @param \DateTime $dateFin
+     * @param DateTime $dateFin
      *
      * @return PeriodeValidite
      */
@@ -92,28 +124,5 @@ class PeriodeValidite
         return $this;
     }
 
-    /**
-     * Get tarif
-     *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif
-     */
-    public function getTarif()
-    {
-        return $this->tarif;
-    }
 
-    /**
-     * Set tarif
-     *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif
-     *
-     * @return PeriodeValidite
-     */
-    public function setTarif(
-        \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif $tarif = null
-    ) {
-        $this->tarif = $tarif;
-
-        return $this;
-    }
 }
