@@ -166,7 +166,8 @@ class TypeHebergement
      */
     public function setTypeHebergementUnifie(
         TypeHebergementUnifie $typeHebergementUnifie = null
-    ) {
+    )
+    {
         $this->typeHebergementUnifie = $typeHebergementUnifie;
 
         return $this;

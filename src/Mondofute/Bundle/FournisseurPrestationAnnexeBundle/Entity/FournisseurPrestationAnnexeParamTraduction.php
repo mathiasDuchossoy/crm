@@ -103,9 +103,8 @@ class FournisseurPrestationAnnexeParamTraduction
      *
      * @return FournisseurPrestationAnnexeParamTraduction
      */
-    public function setParam(
-        \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $param = null
-    ) {
+    public function setParam(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $param = null)
+    {
         $this->param = $param;
 
         return $this;
