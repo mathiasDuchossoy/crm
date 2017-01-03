@@ -1,3 +1,7 @@
+mondofute_promotion:
+    resource: "@MondofutePromotionBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_mot_clef:
     resource: "@MondofuteMotClefBundle/Resources/config/routing.yml"
     prefix:   /

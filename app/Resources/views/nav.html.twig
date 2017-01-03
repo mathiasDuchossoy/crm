@@ -382,6 +382,29 @@
             </ul>
         </li>
         {# ***** FIN CODE PROMO ***** #}
+        {# ***** PROMOTION ***** #}
+        <li role="presentation"
+            class="dropdown {% if 'promotion' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Promotion<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'promotion' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">Promotion</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'promotion_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('promotion_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'promotion_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('promotion_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN PROMOTION ***** #}
     </ul>
     {# ***** LOGIN ***** #}
     <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">

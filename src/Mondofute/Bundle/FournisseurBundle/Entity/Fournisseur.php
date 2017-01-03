@@ -10,6 +10,8 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
@@ -123,6 +125,14 @@ class Fournisseur extends Moral
      * @var integer
      */
     private $priorite = Priorite::NC;
+    /**
+     * @var Collection
+     */
+    private $promotionFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $promotionFournisseurPrestationAnnexes;
 
     /**
      * Fournisseur constructor.
@@ -138,6 +148,8 @@ class Fournisseur extends Moral
         $this->hebergements = new ArrayCollection();
         $this->types = new ArrayCollection();
         $this->fournisseurEnfants = new ArrayCollection();
+        $this->promotionFournisseurs = new ArrayCollection();
+        $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
     }
 
     /**
@@ -429,7 +441,8 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    ) {
+    )
+    {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -932,9 +945,8 @@ class Fournisseur extends Moral
      *
      * @return Fournisseur
      */
-    public function setConditionAnnulationDescription(
-        ConditionAnnulationDescription $conditionAnnulationDescription = null
-    ) {
+    public function setConditionAnnulationDescription(ConditionAnnulationDescription $conditionAnnulationDescription = null)
+    {
         $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;
@@ -974,4 +986,71 @@ class Fournisseur extends Moral
         return Priorite::getLibelle($this->priorite);
     }
 
+    /**
+     * Add promotionFournisseur
+     *
+     * @param PromotionFournisseur $promotionFournisseur
+     *
+     * @return Fournisseur
+     */
+    public function addPromotionFournisseur(PromotionFournisseur $promotionFournisseur)
+    {
+        $this->promotionFournisseurs[] = $promotionFournisseur->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionFournisseur
+     *
+     * @param PromotionFournisseur $promotionFournisseur
+     */
+    public function removePromotionFournisseur(PromotionFournisseur $promotionFournisseur)
+    {
+        $this->promotionFournisseurs->removeElement($promotionFournisseur);
+    }
+
+    /**
+     * Get promotionFournisseurs
+     *
+     * @return Collection
+     */
+    public function getPromotionFournisseurs()
+    {
+        return $this->promotionFournisseurs;
+    }
+
+    /**
+     * Add promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     *
+     * @return Fournisseur
+     */
+    public function addPromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes[] = $promotionFournisseurPrestationAnnex->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionFournisseurPrestationAnnex
+     *
+     * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+     */
+    public function removePromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
+    {
+        $this->promotionFournisseurPrestationAnnexes->removeElement($promotionFournisseurPrestationAnnex);
+    }
+
+    /**
+     * Get promotionFournisseurPrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getPromotionFournisseurPrestationAnnexes()
+    {
+        return $this->promotionFournisseurPrestationAnnexes;
+    }
 }

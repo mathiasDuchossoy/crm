@@ -14,8 +14,7 @@ class CodePromoFournisseurPrestationAnnexeRepository extends \Doctrine\ORM\Entit
     {
         $q = $this->getEntityManager()->createQueryBuilder();
         $q
-            ->from('MondofuteCodePromoApplicationBundle:CodePromoFournisseurPrestationAnnexe',
-                'codePromoFournisseurPrestationAnnexe')
+            ->from('MondofuteCodePromoApplicationBundle:CodePromoFournisseurPrestationAnnexe', 'codePromoFournisseurPrestationAnnexe')
             ->select('codePromoFournisseurPrestationAnnexe')
             ->join('codePromoFournisseurPrestationAnnexe.codePromo', 'codePromo')
             ->join('codePromo.site', 'site')

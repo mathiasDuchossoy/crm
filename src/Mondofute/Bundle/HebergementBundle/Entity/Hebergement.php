@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
@@ -73,6 +74,10 @@ class Hebergement
      * @var Collection
      */
     private $prestationAnnexeHebergements;
+    /**
+     * @var Collection
+     */
+    private $promotionHebergements;
 
     /**
      * Constructor
@@ -85,6 +90,7 @@ class Hebergement
         $this->visuels = new ArrayCollection();
         $this->motClefs = new ArrayCollection();
         $this->prestationAnnexeHebergements = new ArrayCollection();
+        $this->promotionHebergements = new ArrayCollection();
     }
 
     /**
@@ -106,7 +112,8 @@ class Hebergement
      */
     public function setHebergementUnifie(
         HebergementUnifie $hebergementUnifie = null
-    ) {
+    )
+    {
         $this->hebergementUnifie = $hebergementUnifie;
 
         return $this;
@@ -308,7 +315,8 @@ class Hebergement
      */
     public function setTypeHebergement(
         TypeHebergement $typeHebergement = null
-    ) {
+    )
+    {
         $this->typeHebergement = $typeHebergement;
 
         return $this;
@@ -493,6 +501,7 @@ class Hebergement
     {
         return $this->motClefs;
     }
+
     /**
      * Add prestationAnnexeHebergement
      *
@@ -500,9 +509,8 @@ class Hebergement
      *
      * @return Hebergement
      */
-    public function addPrestationAnnexeHebergement(
-        \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
-    ) {
+    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
         $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
 
         return $this;
@@ -513,9 +521,8 @@ class Hebergement
      *
      * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
      */
-    public function removePrestationAnnexeHebergement(
-        \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
-    ) {
+    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    {
         $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
     }
 
@@ -527,5 +534,39 @@ class Hebergement
     public function getPrestationAnnexeHebergements()
     {
         return $this->prestationAnnexeHebergements;
+    }
+
+    /**
+     * Add promotionHebergement
+     *
+     * @param PromotionHebergement $promotionHebergement
+     *
+     * @return Hebergement
+     */
+    public function addPromotionHebergement(PromotionHebergement $promotionHebergement)
+    {
+        $this->promotionHebergements[] = $promotionHebergement->setHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionHebergement
+     *
+     * @param PromotionHebergement $promotionHebergement
+     */
+    public function removePromotionHebergement(PromotionHebergement $promotionHebergement)
+    {
+        $this->promotionHebergements->removeElement($promotionHebergement);
+    }
+
+    /**
+     * Get promotionHebergements
+     *
+     * @return Collection
+     */
+    public function getPromotionHebergements()
+    {
+        return $this->promotionHebergements;
     }
 }
