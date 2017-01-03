@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation du canal' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation du canal' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ canalDecote.id }}</td>
+        </tr>
+        <tr class="row">
+            <th class="col-sm-1">{{ 'libelle' | capitalize }}</th>
+            <td>
+                {{ canalDecote.libelle }}
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('canaldecote_index') }}">Retour à la liste</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('canaldecote_edit', { 'id': canalDecote.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}
