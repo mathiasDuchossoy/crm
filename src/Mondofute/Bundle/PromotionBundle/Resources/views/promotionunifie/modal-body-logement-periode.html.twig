@@ -1,0 +1,52 @@
+
+{#{% for promotion in form.promotions %}#}
+    {#{{ dump(promotion.logementPeriodes) }}#}
+    {#{{ form_row(promotion.logementPeriodes) }}#}
+{#{% endfor %}#}
+<div class="form-group" id="promotion_{{ keyPromotion }}_{{ hebergementId }}_logement_periode_values">
+    <div class="row">
+        <div class="col-sm-5">
+            {% for logementPeriode in logementPeriodes %}
+                {#{{ dump(logementPeriode) }}#}
+                <div class="checkbox">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-11">
+                        <label>
+                            {#mondofute_bundle_promotionbundle_promotionunifie[promotions][0][logementPeriodes][__name__][periode]#}
+                            <input
+                                    {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][logementPeriodes][0][periode]"#}
+                                    name="promotion_logement_periode[{{ keyPromotion }}][{{ fournisseurId }}][{{ hebergementId }}][periodes][]"
+                                    {#id="mondofute_bundle_promotionbundle_promotionunifie_promotions_{{ keyPromotion }}_logementPeriodes_{{ logementPeriode.id }}"#}
+                                    class="promotion_{{ keyPromotion }}_{{ hebergementId }}_logement_periode_values"
+                                    value="{{ logementPeriode.periodeId }}" type="checkbox">
+                            {{ logementPeriode.debut|date("m/d/Y") }} - {{ logementPeriode.fin|date("m/d/Y") }}
+                        </label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-sm-5">
+            {#mondofute_bundle_promotionbundle_promotionunifie[promotions][0][logementPeriodes][__name__][logement]#}
+            {% for logement in logements %}
+
+                <div class="checkbox">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-11">
+                        <label>
+                            <input type="checkbox"
+                                   value="{{ logement.id }}"
+                                    {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][logementPeriodes][0][logement]"#}
+                                   name="promotion_logement_periode[{{ keyPromotion }}][{{ fournisseurId }}][StationId[{{ hebergementId }}][logements][]"
+                            />
+                            {% for traduction in logement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}
+                        </label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -46,19 +46,15 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
         /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
         /** @var PrestationAnnexeLogementUnifie $prestationAnnexeLogementUnifie */
 
-        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId,
-            $fournisseurId);
+        $prestationAnnexeHebergementUnifies = $em->getRepository(PrestationAnnexeHebergementUnifie::class)->findByLogementUnifieId($logementUnifieId, $fournisseurId);
         $prestationAnnexeLogementUnifies = new ArrayCollection();
         foreach ($prestationAnnexeHebergementUnifies as $prestationAnnexeHebergementUnifie) {
             $paramId = $prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements()->first()->getParam()->getId();
-            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($paramId,
-                $logementUnifieId);
+            $prestationAnnexeLogementUnifie = $em->getRepository(PrestationAnnexeLogementUnifie::class)->findByCriteria($paramId, $logementUnifieId);
             $prestationAnnexeLogementUnifies->add($prestationAnnexeLogementUnifie);
             $em->persist($prestationAnnexeLogementUnifie);
             foreach ($prestationAnnexeHebergementUnifie->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (
-                    PrestationAnnexeLogement $element
-                ) use ($prestationAnnexeHebergement) {
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($prestationAnnexeHebergement) {
                     return $element->getSite() == $prestationAnnexeHebergement->getSite();
                 })->first();
 
@@ -80,13 +76,10 @@ class EditPrestationAnnexeLogementCommand extends ContainerAwareCommand
             /** @var EntityManager $emSite */
             $emSite = $this->getContainer()->get('doctrine.orm.' . $site->getLibelle() . '_entity_manager');
             foreach ($prestationAnnexeLogementUnifies as $prestationAnnexeLogementUnifie) {
-                $prestationAnnexeLogementUnifieSite = $emSite->find(PrestationAnnexeLogementUnifie::class,
-                    $prestationAnnexeLogementUnifie);
+                $prestationAnnexeLogementUnifieSite = $emSite->find(PrestationAnnexeLogementUnifie::class, $prestationAnnexeLogementUnifie);
                 $emSite->persist($prestationAnnexeLogementUnifieSite);
 
-                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (
-                    PrestationAnnexeLogement $element
-                ) use ($site) {
+                $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (PrestationAnnexeLogement $element) use ($site) {
                     return $element->getSite() == $site;
                 })->first();
 
