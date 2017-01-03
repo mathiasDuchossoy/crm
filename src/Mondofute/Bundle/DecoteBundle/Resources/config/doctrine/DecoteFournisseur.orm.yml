@@ -1,0 +1,20 @@
+Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteFournisseurRepository
+    id:
+        decote:
+            associationKey: true
+        fournisseur:
+            associationKey: true
+        type:
+            type: smallint
+            options:
+                unsigned: true
+    manyToOne:
+        decote:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: decoteFournisseurs
+    lifecycleCallbacks: {  }
