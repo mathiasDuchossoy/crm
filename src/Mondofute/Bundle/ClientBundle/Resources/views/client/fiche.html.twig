@@ -12,7 +12,7 @@
             {% include '::flashbags.html.twig' %}
 
             {#{{ app.request.locale }}#}
-            {{ form_start(form) }}
+            {{ form_start(form ) }}
             {{ form_row(form.client.civilite) }}
             {{ form_row(form.client.nom) }}
             {{ form_row(form.client.prenom) }}
@@ -46,6 +46,20 @@
 
             {{ form_row(formTelMobile.numero , { 'label' : 'mobile' | title  }) }}
 
+
+            <!-- disables autocomplete -->
+            <div class="form-group" style="display:none">
+                <input type="text" style="display:none"/>
+            </div>
+            <div class="form-group" style="display:none">
+                <input type="password" style="display:none"/>
+            </div>
+
+            {#<div style="display: none;">#}
+            {#<input type="text" id="PreventChromeAutocomplete"#}
+            {#name="PreventChromeAutocomplete" autocomplete="address-level4" />#}
+            {#</div>#}
+
             {% for moyenCom in form.client.moyenComs %}
                 {% set typeMoyenCom = moyenCom.vars.type %}
                 {#{% if typeMoyenCom == 'Adresse' %}#}
@@ -61,13 +75,14 @@
                 {#{{ form_row(moyenCom.numero , { 'label' : 'mobile' | title  }) }}#}
                 {#{% elseif typeMoyenCom == 'Email' %}#}
                 {% if typeMoyenCom == 'Email' %}
-                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize  }) }}
+                    {{ form_row(moyenCom.adresse , { 'label' : moyenCom.vars.label | humanize, 'attr' : { 'autocomplete' : 'off' } } ) }}
                 {% else %}
                     {#{{ form_row(moyenCom) }}#}
                 {% endif %}
             {% endfor %}
 
-            {{ form_row(form.plainPassword) }}
+            {#{{ form_row(form.plainPassword , { 'attr' : { 'id' : 'test_mdp' }}) }}#}
+            {{ form_row(form.plainPassword , { 'attr' : { 'autocomplete' : 'new-password' }} ) }}
             {{ form_row(form.client.vip) }}
 
             {{ form_row(form.submit) }}
