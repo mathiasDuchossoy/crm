@@ -2151,11 +2151,6 @@ class HebergementUnifieController extends Controller
             }
         }
     }
-//    public function chargerLogementLocatifAction(Request $request,$idHebergement,$idLogement){
-////        dump($request);
-////        die;
-//        return new JsonResponse('');
-//    }
 
     public function chargerFournisseurHebergementAction(Request $request, $idHebergementUnifie)
     {

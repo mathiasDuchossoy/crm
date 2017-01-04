@@ -100,7 +100,9 @@ class NombreDeChambreController extends Controller
     private function ajoutTraductions($nombreDeChambre, $langues)
     {
         foreach ($langues as $langue) {
-            $traduction = $nombreDeChambre->getTraductions()->filter(function (NombreDeChambreTraduction $element) use ($langue) {
+            $traduction = $nombreDeChambre->getTraductions()->filter(function (NombreDeChambreTraduction $element) use (
+                $langue
+            ) {
                 return $element->getLangue() == $langue;
             })->first();
             if (false === $traduction) {
@@ -158,7 +160,9 @@ class NombreDeChambreController extends Controller
             }
             // *** traductions ***
             foreach ($nombreDeChambre->getTraductions() as $traduction) {
-                $traductionSite = $nombreDeChambreSite->getTraductions()->filter(function (NombreDeChambreTraduction $element) use ($traduction) {
+                $traductionSite = $nombreDeChambreSite->getTraductions()->filter(function (
+                    NombreDeChambreTraduction $element
+                ) use ($traduction) {
                     return $element->getLangue()->getId() == $traduction->getLangue()->getId();
                 })->first();
                 if (false === $traductionSite) {

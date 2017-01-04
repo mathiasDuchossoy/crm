@@ -14,6 +14,15 @@
             {{ form_start(form) }}
             {{ form_row(form.utilisateur.prenom) }}
             {{ form_row(form.utilisateur.nom) }}
+
+            <!-- disables autocomplete -->
+            <div class="form-group" style="display:none">
+                <input type="text" style="display:none"/>
+            </div>
+            <div class="form-group" style="display:none">
+                <input type="password" style="display:none"/>
+            </div>
+
             {% for moyenCom in form.utilisateur.moyenComs %}
                 {% set typeMoyenCom = moyenCom.vars.type %}
                 {% if typeMoyenCom == 'Email' %}
@@ -24,7 +33,8 @@
             {% endfor %}
             {#{{ form_row(form.email) }}#}
             {#{{ form_row(form.username) }}#}
-            {{ form_row(form.plainPassword) }}
+
+            {{ form_row(form.plainPassword, {'attr' : { 'autocomplete' : 'new-password'}}) }}
             {#{{ form_row(form.enabled) }}#}
 
             {{ form_row(form.submit) }}
