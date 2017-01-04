@@ -78,7 +78,6 @@ class ClientType extends AbstractType
             if (empty($login) && $typeComm == "Email") {
                 $login = true;
                 $viewMoyenComs->children['adresse']->vars['required'] = true;
-//                dump($viewMoyenComs);
             }
             $viewMoyenComs->vars['type'] = $typeComm;
             $viewMoyenComs->vars['label'] = $typeComm;

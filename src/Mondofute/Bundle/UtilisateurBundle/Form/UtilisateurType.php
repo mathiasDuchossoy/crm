@@ -42,7 +42,11 @@ class UtilisateurType extends AbstractType
         $cViewComm = [];
         foreach ($view->children['moyenComs']->children as $viewMoyenComs) {
             $typeComm = (new ReflectionClass($viewMoyenComs->vars['value']))->getShortName();
-//            dump($viewMoyenComs);
+
+            if (empty($login) && $typeComm == "Email") {
+                $login = true;
+                $viewMoyenComs->children['adresse']->vars['required'] = true;
+            }
             $viewMoyenComs->vars['type'] = $typeComm;
             $viewMoyenComs->vars['label'] = $typeComm;
             if (empty($cViewComm[$typeComm])) {
