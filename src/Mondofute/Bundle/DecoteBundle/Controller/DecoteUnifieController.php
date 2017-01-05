@@ -20,6 +20,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate;
 use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeValiditeDate;
 use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeValiditeJour;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteStation;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteTraduction;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteTypeAffectation;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteUnifie;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeAffectation;
@@ -33,6 +34,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -100,6 +102,7 @@ class DecoteUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
         $affectations = TypeAffectation::$libelles;
 
         $sitesAEnregistrer = $request->get('sites');
@@ -108,6 +111,10 @@ class DecoteUnifieController extends Controller
 
         $this->ajouterDecotesDansForm($decoteUnifie);
         $this->decotesSortByAffichage($decoteUnifie);
+
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($decoteUnifie, 'decote');
 
         $form = $this->createForm('Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType', $decoteUnifie);
         $form->add('submit', SubmitType::class, array(
@@ -174,6 +181,7 @@ class DecoteUnifieController extends Controller
             'affectations' => $affectations,
             'fournisseursTypeHebergement' => new ArrayCollection(),
             'fournisseursPrestationAnnexe' => new ArrayCollection(),
+            'langues' => $langues
         ));
     }
 
@@ -372,24 +380,39 @@ class DecoteUnifieController extends Controller
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
-                $site = $emSite->find(Site::class, $entity->getSite());
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (empty($entityUnifieSite = $emSite->find(DecoteUnifie::class, $entityUnifie))) {
                     $entityUnifieSite = new DecoteUnifie();
                     $entityUnifieSite->setId($entityUnifie->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
                 //  Récupération de la decote sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty($entitySite = $emSite->getRepository(Decote::class)->findOneBy(array('decoteUnifie' => $entityUnifieSite)))) {
                     $entitySite = new Decote();
-                    $entitySite
-                        ->setSite($site)
-                        ->setDecoteUnifie($entityUnifieSite);
-
                     $entityUnifieSite->addDecote($entitySite);
+                    $entitySite->setSite($emSite->find(Site::class, $entity->getSite()));
                 }
+
+                // ***** gestion traductions *****
+                /** @var DecoteTraduction $traduction */
+                foreach ($entity->getTraductions() as $traduction) {
+                    $traductionSite = $entitySite->getTraductions()->filter(function (DecoteTraduction $element) use ($traduction) {
+                        return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                    })->first();
+                    if (false === $traductionSite) {
+                        $traductionSite = new DecoteTraduction();
+                        $entitySite->addTraduction($traductionSite);
+                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+                    }
+                    $traductionSite
+                        ->setTitre($traduction->getTitre())
+                        ->setDescription($traduction->getDescription());
+                }
+                // ***** fin gestion traductions *****
 
                 // *** gestion decote typeAffectation ***
                 if (!empty($entity->getDecoteTypeAffectations()) && !$entity->getDecoteTypeAffectations()->isEmpty()) {
@@ -824,6 +847,7 @@ class DecoteUnifieController extends Controller
         /** @var Decote $decote */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
 
         // *** gestion decote typeAffectation ***
         $affectations = TypeAffectation::$libelles;
@@ -925,6 +949,11 @@ class DecoteUnifieController extends Controller
         $this->ajouterDecotesDansForm($decoteUnifie);
 
         $this->decotesSortByAffichage($decoteUnifie);
+
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($decoteUnifie, 'decote');
+
         $deleteForm = $this->createDeleteForm($decoteUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType',
@@ -1191,6 +1220,7 @@ class DecoteUnifieController extends Controller
 //            'fournisseurHebergements' => $fournisseurHebergements,
             'fournisseursPrestationAnnexe' => $fournisseursPrestationAnnexe,
 //            'fournisseurFournisseurPrestationAnnexes' => $fournisseurFournisseurPrestationAnnexes,
+            'langues' => $langues
         ));
     }
 
