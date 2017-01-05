@@ -13,6 +13,12 @@
                                     {% set ok = true %}
                                 {% endif %}
                             {% endfor %}
+                            {% for promotionLogement in promotionLogements %}
+                                {% if promotionLogement.logement.id == logement.id and ok == false %}
+                                    checked="checked"
+                                    {% set ok = true %}
+                                {% endif %}
+                            {% endfor %}
 
                            class="promotion_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergementId }}_logement_values"
                            id="checkbox_promotion_logement_{{ keyPromotion }}_{{ logement.id }}"
@@ -27,4 +33,11 @@
             </div>
         </div>
     {% endfor %}
+    {% if logements is empty %}
+        <lu>
+            <li class="list-group-item">
+                <div class="alert alert-info" role="alert">Il n'y a pas de logements.</div>
+            </li>
+        </lu>
+    {% endif %}
 </div>
