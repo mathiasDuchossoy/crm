@@ -105,6 +105,10 @@ class Promotion
      * @var Collection
      */
     private $traductions;
+    /**
+     * @var Collection
+     */
+    private $promotionLogements;
 
     /**
      * Constructor
@@ -121,6 +125,7 @@ class Promotion
         $this->logementPeriodes = new ArrayCollection();
         $this->promotionStations = new ArrayCollection();
         $this->traductions = new ArrayCollection();
+        $this->promotionLogements = new ArrayCollection();
     }
 
     /**
@@ -759,5 +764,39 @@ class Promotion
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Add promotionLogement
+     *
+     * @param PromotionLogement $promotionLogement
+     *
+     * @return Promotion
+     */
+    public function addPromotionLogement(PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements[] = $promotionLogement->setPromotion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionLogement
+     *
+     * @param PromotionLogement $promotionLogement
+     */
+    public function removePromotionLogement(PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements->removeElement($promotionLogement);
+    }
+
+    /**
+     * Get promotionLogements
+     *
+     * @return Collection
+     */
+    public function getPromotionLogements()
+    {
+        return $this->promotionLogements;
     }
 }

@@ -26,6 +26,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeDate;
@@ -379,7 +380,6 @@ class PromotionUnifieController extends Controller
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
-                $site = $emSite->find(Site::class, $entity->getSite());
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
@@ -392,11 +392,10 @@ class PromotionUnifieController extends Controller
 
                 //  Récupération de la promotion sur le site distant si elle existe sinon créer une nouvelle entité
                 $entitySite = $entityUnifieSite->getPromotions()->first();
-//                if (empty($entitySite = $emSite->getRepository(Promotion::class)->findOneBy(array('promotionUnifie' => $entityUnifieSite)))) {
                 if (false === $entitySite) {
                     $entitySite = new Promotion();
                     $entityUnifieSite->addPromotion($entitySite);
-                    $entitySite->setSite($site);
+                    $entitySite->setSite($emSite->find(Site::class, $entity->getSite()));
                 }
 
                 // ***** gestion traductions *****
@@ -444,7 +443,7 @@ class PromotionUnifieController extends Controller
                             return $element->getId() == $promotionTypeAffectationSite->getId();
                         })->first();
                         if (false === $promotionTypeAffectation) {
-//                            $entitySite->removePromotionTypeAffectation($promotionTypeAffectationSite);
+                            $entitySite->removePromotionTypeAffectation($promotionTypeAffectationSite);
                             $emSite->remove($promotionTypeAffectationSite);
                         }
                     }
@@ -480,7 +479,7 @@ class PromotionUnifieController extends Controller
                                 and $element->getType() == $promotionFournisseurSite->getType());
                         })->first();
                         if (false === $promotionFournisseur) {
-//                            $entitySite->removePromotionFournisseur($promotionFournisseurSite);
+                            $entitySite->removePromotionFournisseur($promotionFournisseurSite);
                             $emSite->remove($promotionFournisseurSite);
                         }
                     }
@@ -516,7 +515,7 @@ class PromotionUnifieController extends Controller
                                 $element->getPromotion()->getPromotionUnifie()->getId() == $promotionHebergementSite->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionHebergement) {
-//                            $entitySite->removePromotionHebergement($promotionHebergementSite);
+                            $entitySite->removePromotionHebergement($promotionHebergementSite);
                             $emSite->remove($promotionHebergementSite);
                         }
                     }
@@ -552,7 +551,7 @@ class PromotionUnifieController extends Controller
                                 $element->getStation()->getStationUnifie()->getId() == $promotionStationSite->getStation()->getStationUnifie()->getId());
                         })->first();
                         if (false === $promotionStation) {
-//                            $entitySite->removePromotionStation($promotionStationSite);
+                            $entitySite->removePromotionStation($promotionStationSite);
                             $emSite->remove($promotionStationSite);
                         }
                     }
@@ -591,11 +590,42 @@ class PromotionUnifieController extends Controller
                             );
                         })->first();
                         if (false === $logementPeriode) {
+                            $entitySite->removeLogementPeriode($logementPeriodeSite);
                             $emSite->remove($logementPeriodeSite);
                         }
                     }
                 }
                 // *** fin gestion promotion logement periode ***
+
+                // *** gestion promotion logement ***
+                /** @var PromotionLogement $logement */
+                /** @var PromotionLogement $logementSite */
+                foreach ($entity->getPromotionLogements() as $logement) {
+                    $logementSite = $entitySite->getPromotionLogements()->filter(function (PromotionLogement $element) use ($logement) {
+                        return ($element->getLogement()->getLogementUnifie()->getId() == $logement->getLogement()->getLogementUnifie()->getId()
+                            and $element->getPromotion()->getPromotionUnifie()->getId() == $logement->getPromotion()->getPromotionUnifie()->getId()
+                        );
+                    })->first();
+                    if (false === $logementSite) {
+                        $logementSite = new PromotionLogement();
+                        $entitySite->addPromotionLogement($logementSite);
+                        $logementSite
+                            ->setLogement($emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logement->getLogement()->getLogementUnifie())));
+                    }
+                }
+
+                foreach ($entitySite->getPromotionLogements() as $logementSite) {
+                    $logement = $entity->getPromotionLogements()->filter(function (PromotionLogement $element) use ($logementSite) {
+                        return ($element->getLogement()->getLogementUnifie()->getId() == $logementSite->getLogement()->getLogementUnifie()->getId()
+                            and $element->getPromotion()->getPromotionUnifie()->getId() == $logementSite->getPromotion()->getPromotionUnifie()->getId()
+                        );
+                    })->first();
+                    if (false === $logement) {
+                        $entitySite->removePromotionLogement($logementSite);
+                        $emSite->remove($logementSite);
+                    }
+                }
+                // *** fin gestion promotion logement  ***
 
                 // *** gestion promotion fournisseurPrestationAnnexe ***
                 if (!empty($entity->getPromotionFournisseurPrestationAnnexes()) && !$entity->getPromotionFournisseurPrestationAnnexes()->isEmpty()) {
@@ -626,7 +656,7 @@ class PromotionUnifieController extends Controller
                                 $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFournisseurPrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId());
                         })->first();
                         if (false === $promotionFournisseurPrestationAnnexe) {
-//                            $entitySite->removePromotionFournisseurPrestationAnnexe($promotionFournisseurPrestationAnnexeSite);
+                            $entitySite->removePromotionFournisseurPrestationAnnex($promotionFournisseurPrestationAnnexeSite);
                             $emSite->remove($promotionFournisseurPrestationAnnexeSite);
                         }
                     }
@@ -662,7 +692,7 @@ class PromotionUnifieController extends Controller
                                 $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFamillePrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId();
                         })->first();
                         if (false === $promotionFamillePrestationAnnexe) {
-//                            $entitySite->removePromotionFamillePrestationAnnexe($promotionFamillePrestationAnnexeSite);
+                            $entitySite->removePromotionFamillePrestationAnnex($promotionFamillePrestationAnnexeSite);
                             $emSite->remove($promotionFamillePrestationAnnexeSite);
                         }
                     }
@@ -909,7 +939,18 @@ class PromotionUnifieController extends Controller
                 $originalPromotionLogementPeriodes->get($promotion->getSite()->getId())->add($logementPeriode);
             }
         }
-        // *** fin gestion promotion fournisseurPrestationAnnexe ***
+        // *** fin gestion promotion logement periode ***
+
+        // *** gestion promotion logement ***
+        $originalPromotionLogements = new ArrayCollection();
+        foreach ($promotionUnifie->getPromotions() as $promotion) {
+            $originalPromotionLogements->set($promotion->getSite()->getId(), new ArrayCollection());
+            /** @var PromotionFamillePrestationAnnexe $promotionFamillePrestationAnnex */
+            foreach ($promotion->getPromotionLogements() as $logement) {
+                $originalPromotionLogements->get($promotion->getSite()->getId())->add($logement);
+            }
+        }
+        // *** fin gestion promotion logement ***
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -1167,6 +1208,36 @@ class PromotionUnifieController extends Controller
                         $em->remove($logementPeriode);
                     }
                 }
+
+                // *** gestion promotionLogement ***
+                if ($promotion->getTypePeriodeSejour() != TypePeriodeSejour::periode and !empty($request->get('promotion_logement_periode')[$key]) and !empty($request->get('promotion_logement_periode')[$key]['logements'])) {
+                    $promotion_logement_periode = $request->get('promotion_logement_periode')[$key];
+                    foreach ($promotion_logement_periode['logements'] as $logement) {
+                        $logementEntity = $em->find(Logement::class, $logement);
+                        $promotionLogement = $originalPromotionLogements->get($promotion->getSite()->getId())->filter(function (PromotionLogement $element) use ($logement, $promotion) {
+                            return ($element->getLogement()->getId() == $logement and $element->getPromotion() == $promotion);
+                        })->first();
+                        if (false === $promotionLogement) {
+                            $promotionLogement = new PromotionLogement();
+                            $promotion->addPromotionLogement($promotionLogement);
+                            $promotionLogement
+                                ->setPromotion($promotion)
+                                ->setLogement($logementEntity);
+                        }
+                    }
+                    /** @var PromotionLogement $promotionlogement */
+                    foreach ($originalPromotionLogements->get($promotion->getSite()->getId()) as $promotionlogement) {
+                        if (!in_array($promotionlogement->getLogement()->getId(), $promotion_logement_periode['logements'])) {
+                            $promotion->getPromotionLogements()->removeElement($promotionlogement);
+                            $em->remove($promotionlogement);
+                        }
+                    }
+                } else {
+                    foreach ($originalPromotionLogements->get($promotion->getSite()->getId()) as $logement) {
+                        $em->remove($logement);
+                    }
+                }
+                // *** fin gestion promotionLogement ***
             }
             // *** fin gestion promotion logement periode ***
 
@@ -1221,6 +1292,7 @@ class PromotionUnifieController extends Controller
                     break;
                 case TypePeriodeSejour::periode:
                     $promotion->getPromotionPeriodeSejourDate();
+                    $promotion->getPromotionLogements()->clear();
                     break;
                 default:
                     break;
@@ -1595,20 +1667,18 @@ class PromotionUnifieController extends Controller
 
         $logements = $em->getRepository(Logement::class)->findByFournisseurHebergement($fournisseurId, $hebergement->getHebergementUnifie()->getId(), $hebergement->getSite()->getId());
 
-
         $promotion = $em->find(Promotion::class, $promotionId);
         $promotionLogementPeriodes = $promotion->getLogementPeriodes();
-
+        $promotionLogements = $promotion->getPromotionLogements();
 
         return $this->render('@MondofutePromotion/promotionunifie/get-promotion-logement.html.twig', array(
             'keyPromotion' => $keyPromotion,
             'hebergementId' => $hebergementId,
             'logements' => $logements,
             'fournisseurId' => $fournisseurId,
-            'promotionLogementPeriodes' => $promotionLogementPeriodes
+            'promotionLogementPeriodes' => $promotionLogementPeriodes,
+            'promotionLogements' => $promotionLogements
         ));
-
-
     }
 
     public function getLogementsAction($fournisseurId, $hebergementId, $keyPromotion)

@@ -75,6 +75,10 @@ class Logement
      * @var Collection
      */
     private $typePeriodes;
+    /**
+     * @var Collection
+     */
+    private $promotionLogements;
 
     /**
      * Constructor
@@ -86,6 +90,7 @@ class Logement
         $this->photos = new ArrayCollection();
         $this->prestationAnnexeLogements = new ArrayCollection();
         $this->typePeriodes = new ArrayCollection();
+        $this->promotionLogements = new ArrayCollection();
     }
 
     /**
@@ -321,7 +326,8 @@ class Logement
      */
     public function setFournisseurHebergement(
         FournisseurHebergement $fournisseurHebergement = null
-    ) {
+    )
+    {
         $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
@@ -509,5 +515,39 @@ class Logement
     public function getTypePeriodes()
     {
         return $this->typePeriodes;
+    }
+
+    /**
+     * Add promotionLogement
+     *
+     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement
+     *
+     * @return Logement
+     */
+    public function addPromotionLogement(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements[] = $promotionLogement;
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionLogement
+     *
+     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement
+     */
+    public function removePromotionLogement(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements->removeElement($promotionLogement);
+    }
+
+    /**
+     * Get promotionLogements
+     *
+     * @return Collection
+     */
+    public function getPromotionLogements()
+    {
+        return $this->promotionLogements;
     }
 }
