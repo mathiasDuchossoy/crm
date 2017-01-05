@@ -53,11 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2 promotion-logement-periode-{{ keyPromotion }}"
-                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <label>
                     <input type="checkbox"
                            id="checkbox_all_logement_{{ keyPromotion }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
@@ -66,11 +62,7 @@
                     Tous les logements
                 </label>
             </div>
-            <div class="col-sm-2 promotion-logement-periode-{{ keyPromotion }}"
-                    {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <button type="button" class="btn btn-default btn-md" data-toggle="modal"
                         data-target="#modal_promotion_logement"
                         onclick="getPromotionLogements('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyPromotion }}')"

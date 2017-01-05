@@ -1,0 +1,16 @@
+Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PromotionBundle\Repository\PromotionLogementRepository
+    id:
+        promotion:
+            associationKey: true
+        logement:
+            associationKey: true
+    manyToOne:
+        promotion:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\Promotion
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: promotionLogements
+    lifecycleCallbacks: {  }
