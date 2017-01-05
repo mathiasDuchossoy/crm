@@ -28,6 +28,7 @@
                          data-crm="{{ decote.vars.value.site.crm | number_format }}">
                         {{ form_row(decote.site) }}
                         {{ form_row(decote.libelle, { 'attr' : { 'data-unique_block_prefix' : decote.libelle.vars['unique_block_prefix']}}) }}
+                        {% include ('@MondofuteCore/widget-traduction.html.twig') with {'entity' : decote} %}
                         {{ form_row(decote.type, { 'attr' : { 'data-unique_block_prefix' : decote.type.vars['unique_block_prefix']}}) }}
                         {{ form_row(decote.typeRemise, { 'attr' : { 'data-unique_block_prefix' : decote.typeRemise.vars['unique_block_prefix']}}) }}
                         {{ form_row(decote.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : decote.valeurRemise.vars['unique_block_prefix'] }}) }}
@@ -167,6 +168,10 @@
         items.push("_decote_unifie_decotes_entry_decoteAffectations");
         items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeApplication");
         items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_typeFournisseurs");
+        {% for langue in langues %}
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_traductions_entry_titre_{{ langue.code }}");
+        items.push("_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_traductions_entry_langue_{{ langue.code }}");
+        {% endfor %}
 
         var radioIds = ['_decote_unifie_decotes_entry_decoteAffectations', '_mondofute_bundle_decotebundle_decoteunifie_decotes_entry_type'];
 
