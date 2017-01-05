@@ -83,6 +83,10 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
             mappedBy: promotion
             cascade: ['persist','remove']
+        traductions:
+            targetEntity: PromotionTraduction
+            mappedBy: promotion
+            cascade: ['persist','remove']
     manyToMany:
         typeFournisseurs:
             joinTable:

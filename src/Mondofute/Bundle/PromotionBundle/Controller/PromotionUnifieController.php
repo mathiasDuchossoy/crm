@@ -16,6 +16,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -30,6 +31,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeDate;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeJour;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionStation;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionTraduction;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionTypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
@@ -99,6 +101,7 @@ class PromotionUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
         $affectations = TypeAffectation::$libelles;
 
         $sitesAEnregistrer = $request->get('sites');
@@ -107,6 +110,10 @@ class PromotionUnifieController extends Controller
 
         $this->ajouterPromotionsDansForm($promotionUnifie);
         $this->promotionsSortByAffichage($promotionUnifie);
+
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($promotionUnifie, 'promotion');
 
         $form = $this->createForm('Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType', $promotionUnifie);
         $form->add('submit', SubmitType::class, array(
@@ -173,6 +180,7 @@ class PromotionUnifieController extends Controller
             'affectations' => $affectations,
             'fournisseursTypeHebergement' => new ArrayCollection(),
             'fournisseursPrestationAnnexe' => new ArrayCollection(),
+            'langues' => $langues
         ));
     }
 
@@ -378,17 +386,35 @@ class PromotionUnifieController extends Controller
                 if (empty($entityUnifieSite = $emSite->find(PromotionUnifie::class, $entityUnifie))) {
                     $entityUnifieSite = new PromotionUnifie();
                     $entityUnifieSite->setId($entityUnifie->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
                 //  Récupération de la promotion sur le site distant si elle existe sinon créer une nouvelle entité
-                if (empty($entitySite = $emSite->getRepository(Promotion::class)->findOneBy(array('promotionUnifie' => $entityUnifieSite)))) {
+                $entitySite = $entityUnifieSite->getPromotions()->first();
+//                if (empty($entitySite = $emSite->getRepository(Promotion::class)->findOneBy(array('promotionUnifie' => $entityUnifieSite)))) {
+                if (false === $entitySite) {
                     $entitySite = new Promotion();
-                    $entitySite
-                        ->setSite($site)
-                        ->setPromotionUnifie($entityUnifieSite);
-
                     $entityUnifieSite->addPromotion($entitySite);
+                    $entitySite->setSite($site);
                 }
+
+                // ***** gestion traductions *****
+                /** @var PromotionTraduction $traduction */
+                foreach ($entity->getTraductions() as $traduction) {
+                    $traductionSite = $entitySite->getTraductions()->filter(function (PromotionTraduction $element) use ($traduction) {
+                        return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                    })->first();
+                    if (false === $traductionSite) {
+                        $traductionSite = new PromotionTraduction();
+                        $entitySite->addTraduction($traductionSite);
+                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+                    }
+                    $traductionSite
+                        ->setTitre($traduction->getTitre())
+                        ->setDescription($traduction->getDescription());
+                }
+                // ***** fin gestion traductions *****
 
                 // *** gestion promotion typeAffectation ***
                 if (!empty($entity->getPromotionTypeAffectations()) && !$entity->getPromotionTypeAffectations()->isEmpty()) {
@@ -632,8 +658,8 @@ class PromotionUnifieController extends Controller
                     foreach ($entitySite->getPromotionFamillePrestationAnnexes() as $promotionFamillePrestationAnnexeSite) {
                         $promotionFamillePrestationAnnexe = $entity->getPromotionFamillePrestationAnnexes()->filter(function (PromotionFamillePrestationAnnexe $element) use ($promotionFamillePrestationAnnexeSite) {
                             return $element->getFournisseur()->getId() == $promotionFamillePrestationAnnexeSite->getFournisseur()->getId() and
-                            $element->getFamillePrestationAnnexe()->getId() == $promotionFamillePrestationAnnexeSite->getFamillePrestationAnnexe()->getId() and
-                            $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFamillePrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId();
+                                $element->getFamillePrestationAnnexe()->getId() == $promotionFamillePrestationAnnexeSite->getFamillePrestationAnnexe()->getId() and
+                                $element->getPromotion()->getPromotionUnifie()->getId() == $promotionFamillePrestationAnnexeSite->getPromotion()->getPromotionUnifie()->getId();
                         })->first();
                         if (false === $promotionFamillePrestationAnnexe) {
 //                            $entitySite->removePromotionFamillePrestationAnnexe($promotionFamillePrestationAnnexeSite);
@@ -801,6 +827,7 @@ class PromotionUnifieController extends Controller
         /** @var Promotion $promotion */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
 
         // *** gestion promotion typeAffectation ***
         $affectations = TypeAffectation::$libelles;
@@ -902,6 +929,11 @@ class PromotionUnifieController extends Controller
         $this->ajouterPromotionsDansForm($promotionUnifie);
 
         $this->promotionsSortByAffichage($promotionUnifie);
+
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($promotionUnifie, 'promotion');
+
         $deleteForm = $this->createDeleteForm($promotionUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType',
@@ -1168,6 +1200,7 @@ class PromotionUnifieController extends Controller
 //            'fournisseurHebergements' => $fournisseurHebergements,
             'fournisseursPrestationAnnexe' => $fournisseursPrestationAnnexe,
 //            'fournisseurFournisseurPrestationAnnexes' => $fournisseurFournisseurPrestationAnnexes,
+            'langues' => $langues
         ));
     }
 

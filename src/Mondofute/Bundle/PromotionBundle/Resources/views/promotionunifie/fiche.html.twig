@@ -28,6 +28,7 @@
                          data-crm="{{ promotion.vars.value.site.crm | number_format }}">
                         {{ form_row(promotion.site) }}
                         {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
+                        {% include ('@MondofuteCore/widget-traduction.html.twig') with {'entity' : promotion} %}
                         {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
                         {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
                         {{ form_row(promotion.typePeriodeValidite, {  'attr' : {
@@ -165,6 +166,10 @@
         items.push("_promotion_unifie_promotions_entry_promotionAffectations");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeApplication");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
+        {% for langue in langues %}
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_titre_{{ langue.code }}");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_langue_{{ langue.code }}");
+        {% endfor %}
 
         var radioIds = ['_promotion_unifie_promotions_entry_promotionAffectations'];
 
