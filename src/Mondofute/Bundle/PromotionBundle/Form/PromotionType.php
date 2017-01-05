@@ -139,6 +139,9 @@ class PromotionType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => 'Promotion logement periode',
+            ))
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => PromotionTraductionType::class,
             ));
     }
 
