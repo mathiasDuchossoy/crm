@@ -79,6 +79,10 @@ class Logement
      * @var Collection
      */
     private $promotionLogements;
+    /**
+     * @var Collection
+     */
+    private $decoteLogements;
 
     /**
      * Constructor
@@ -91,6 +95,7 @@ class Logement
         $this->prestationAnnexeLogements = new ArrayCollection();
         $this->typePeriodes = new ArrayCollection();
         $this->promotionLogements = new ArrayCollection();
+        $this->decoteLogements = new ArrayCollection();
     }
 
     /**
@@ -549,5 +554,39 @@ class Logement
     public function getPromotionLogements()
     {
         return $this->promotionLogements;
+    }
+
+    /**
+     * Add decoteLogement
+     *
+     * @param \Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement $decoteLogement
+     *
+     * @return Logement
+     */
+    public function addDecoteLogement(\Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements[] = $decoteLogement;
+
+        return $this;
+    }
+
+    /**
+     * Remove decoteLogement
+     *
+     * @param \Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement $decoteLogement
+     */
+    public function removeDecoteLogement(\Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements->removeElement($decoteLogement);
+    }
+
+    /**
+     * Get decoteLogements
+     *
+     * @return Collection
+     */
+    public function getDecoteLogements()
+    {
+        return $this->decoteLogements;
     }
 }
