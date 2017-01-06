@@ -16,11 +16,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
-use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
@@ -1547,6 +1544,8 @@ class FournisseurController extends Controller
                     }
                     $fournisseurPrestationAnnexeSite->setPrestationAnnexe($emSite->find(PrestationAnnexe::class, $fournisseurPrestationAnnexe->getPrestationAnnexe()));
 
+                    $fournisseurPrestationAnnexeSite->setFreeSale($fournisseurPrestationAnnexe->getFreeSale());
+
                     // *** traductions ***
                     /** @var FournisseurPrestationAnnexeTraduction $traduction */
                     foreach ($fournisseurPrestationAnnexe->getTraductions() as $traduction) {
@@ -2837,6 +2836,9 @@ class FournisseurController extends Controller
             })->first();
             $traduction->setLibelle($traductionPost->libelle);
         }
+
+        // gestion free sale
+        $fournisseurPrestationAnnexe->setFreeSale($fournisseurPrestationAnnexePost->freeSale);
 
         // gestion des params
         if (!empty($fournisseurPrestationAnnexePost->params)) {

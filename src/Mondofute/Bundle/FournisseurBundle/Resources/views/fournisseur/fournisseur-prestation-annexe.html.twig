@@ -5,6 +5,7 @@
     <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <div>
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+            {{ form_row(prestationAnnexe.freeSale) }}
         </div>
         <div>
             <ul class="params{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
