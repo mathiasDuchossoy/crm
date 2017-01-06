@@ -26,7 +26,8 @@ class FournisseurPrestationAnnexeType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype_name' => '__name_param__'
-            ));
+            ))
+            ->add('freeSale');
     }
 
     /**
