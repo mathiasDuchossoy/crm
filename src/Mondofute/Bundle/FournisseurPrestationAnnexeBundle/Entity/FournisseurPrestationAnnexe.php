@@ -41,6 +41,10 @@ class FournisseurPrestationAnnexe
      * @var Collection
      */
     private $promotionFournisseurPrestationAnnexes;
+    /**
+     * @var boolean
+     */
+    private $freeSale = false;
 
     /**
      * Constructor
@@ -162,7 +166,8 @@ class FournisseurPrestationAnnexe
      */
     public function addFournisseurPrestationAnnexeStock(
         FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
-    ) {
+    )
+    {
         $this->fournisseurPrestationAnnexeStocks[] = $fournisseurPrestationAnnexeStock->setFournisseurPrestationAnnexe($this);
 
         return $this;
@@ -175,7 +180,8 @@ class FournisseurPrestationAnnexe
      */
     public function removeFournisseurPrestationAnnexeStock(
         FournisseurPrestationAnnexeStock $fournisseurPrestationAnnexeStock
-    ) {
+    )
+    {
         $this->fournisseurPrestationAnnexeStocks->removeElement($fournisseurPrestationAnnexeStock);
     }
 
@@ -255,5 +261,29 @@ class FournisseurPrestationAnnexe
     public function getPromotionFournisseurPrestationAnnexes()
     {
         return $this->promotionFournisseurPrestationAnnexes;
+    }
+
+    /**
+     * Get freeSale
+     *
+     * @return boolean
+     */
+    public function getFreeSale()
+    {
+        return $this->freeSale;
+    }
+
+    /**
+     * Set freeSale
+     *
+     * @param boolean $freeSale
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function setFreeSale($freeSale)
+    {
+        $this->freeSale = $freeSale;
+
+        return $this;
     }
 }
