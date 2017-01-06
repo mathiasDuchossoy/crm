@@ -113,6 +113,10 @@ class Decote
      * @var Collection
      */
     private $traductions;
+    /**
+     * @var Collection
+     */
+    private $decoteLogements;
 
     /**
      * Constructor
@@ -130,6 +134,7 @@ class Decote
         $this->decoteStations = new ArrayCollection();
         $this->canalDecotes = new ArrayCollection();
         $this->traductions = new ArrayCollection();
+        $this->decoteLogements = new ArrayCollection();
     }
 
     /**
@@ -826,5 +831,39 @@ class Decote
     public function getTraductions()
     {
         return $this->traductions;
+    }
+
+    /**
+     * Add decoteLogement
+     *
+     * @param DecoteLogement $decoteLogement
+     *
+     * @return Decote
+     */
+    public function addDecoteLogement(DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements[] = $decoteLogement->setDecote($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove decoteLogement
+     *
+     * @param DecoteLogement $decoteLogement
+     */
+    public function removeDecoteLogement(DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements->removeElement($decoteLogement);
+    }
+
+    /**
+     * Get decoteLogements
+     *
+     * @return Collection
+     */
+    public function getDecoteLogements()
+    {
+        return $this->decoteLogements;
     }
 }

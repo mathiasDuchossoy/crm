@@ -61,6 +61,10 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement
             mappedBy: logement
             cascade: ['remove']
+        decoteLogements:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement
+            mappedBy: logement
+            cascade: ['remove']
         logementPeriodeLocatifs:
             targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
             mappedBy: logement
