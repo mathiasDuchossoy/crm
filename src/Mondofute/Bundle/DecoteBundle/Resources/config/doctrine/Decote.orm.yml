@@ -91,6 +91,10 @@ Mondofute\Bundle\DecoteBundle\Entity\Decote:
             targetEntity: DecoteTraduction
             mappedBy: decote
             cascade: ['persist','remove']
+        decoteLogements:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement
+            mappedBy: decote
+            cascade: ['persist','remove']
     manyToMany:
         typeFournisseurs:
             joinTable:
