@@ -16,4 +16,5 @@ Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: decoteLogementPeriode
     lifecycleCallbacks: {  }

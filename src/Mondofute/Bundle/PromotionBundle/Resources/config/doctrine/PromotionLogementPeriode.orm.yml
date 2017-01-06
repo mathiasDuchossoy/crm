@@ -16,4 +16,5 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+            inversedBy: promotionLogementPeriodes
     lifecycleCallbacks: {  }
