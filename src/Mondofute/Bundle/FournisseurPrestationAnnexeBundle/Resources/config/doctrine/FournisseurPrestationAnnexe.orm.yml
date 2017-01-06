@@ -10,6 +10,11 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
                 strategy: AUTO
             options:
                 unsigned: true
+    fields:
+        freeSale:
+            type: boolean
+            options:
+                default: false
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
