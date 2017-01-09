@@ -27,7 +27,14 @@ class FournisseurPrestationAnnexeType extends AbstractType
                 'by_reference' => false,
                 'prototype_name' => '__name_param__'
             ))
-            ->add('freeSale');
+            ->add('freeSale')
+            ->add('periodeIndisponibles', CollectionType::class, array(
+                    'entry_type' => FournisseurPrestationAnnexePeriodeIndisponibleType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                )
+            );
     }
 
     /**

@@ -39,4 +39,8 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['persist' , 'remove']
+        periodeIndisponibles:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexePeriodeIndisponible
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['persist', 'remove']
     lifecycleCallbacks: {  }
