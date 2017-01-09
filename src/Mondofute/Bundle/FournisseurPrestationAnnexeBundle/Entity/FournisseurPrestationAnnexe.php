@@ -45,6 +45,10 @@ class FournisseurPrestationAnnexe
      * @var boolean
      */
     private $freeSale = false;
+    /**
+     * @var Collection
+     */
+    private $periodeIndisponibles;
 
     /**
      * Constructor
@@ -55,6 +59,7 @@ class FournisseurPrestationAnnexe
         $this->fournisseurPrestationAnnexeStocks = new ArrayCollection();
         $this->params = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
+        $this->periodeIndisponibles = new ArrayCollection();
     }
 
     /**
@@ -285,5 +290,39 @@ class FournisseurPrestationAnnexe
         $this->freeSale = $freeSale;
 
         return $this;
+    }
+
+    /**
+     * Add periodeIndisponible
+     *
+     * @param FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponible
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addPeriodeIndisponible(FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponible)
+    {
+        $this->periodeIndisponibles[] = $periodeIndisponible->setFournisseurPrestationAnnexe($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove periodeIndisponible
+     *
+     * @param FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponible
+     */
+    public function removePeriodeIndisponible(FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponible)
+    {
+        $this->periodeIndisponibles->removeElement($periodeIndisponible);
+    }
+
+    /**
+     * Get periodeIndisponibles
+     *
+     * @return Collection
+     */
+    public function getPeriodeIndisponibles()
+    {
+        return $this->periodeIndisponibles;
     }
 }
