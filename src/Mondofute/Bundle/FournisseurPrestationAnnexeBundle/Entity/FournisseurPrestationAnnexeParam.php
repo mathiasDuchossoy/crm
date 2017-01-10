@@ -62,6 +62,10 @@ class FournisseurPrestationAnnexeParam
      * @var FournisseurPrestationAnnexe
      */
     private $fournisseurPrestationAnnexe;
+    /**
+     * @var integer
+     */
+    private $forfaitQuantiteType;
 
     /**
      * Constructor
@@ -418,6 +422,30 @@ class FournisseurPrestationAnnexeParam
     public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
     {
         $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
+
+        return $this;
+    }
+
+    /**
+     * Get forfaitQuantiteType
+     *
+     * @return integer
+     */
+    public function getForfaitQuantiteType()
+    {
+        return $this->forfaitQuantiteType;
+    }
+
+    /**
+     * Set forfaitQuantiteType
+     *
+     * @param integer $forfaitQuantiteType
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function setForfaitQuantiteType($forfaitQuantiteType = null)
+    {
+        $this->forfaitQuantiteType = $forfaitQuantiteType;
 
         return $this;
     }
