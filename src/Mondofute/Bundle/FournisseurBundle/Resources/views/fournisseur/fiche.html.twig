@@ -2103,6 +2103,21 @@
                 $liste.hide()
             }
         }
+        function displayParamForfaitQuanttieType(element, divParamForfaitQuanttieTypeId) {
+            var $element = $(element);
+            var $divParamForfaitQuanttieType = $('#' + divParamForfaitQuanttieTypeId);
+            if ($element.val() == {{ constant('Mondofute\\Bundle\\FournisseurPrestationAnnexeBundle\\Entity\\Type::Forfait') }}) {
+                $divParamForfaitQuanttieType.show();
+                $divParamForfaitQuanttieType.find('input').each(function (index, element) {
+                    $(element).prop('required', 'required');
+                })
+            } else {
+                $divParamForfaitQuanttieType.hide();
+                $divParamForfaitQuanttieType.find('input').each(function (index, element) {
+                    $(element).prop('required', '');
+                })
+            }
+        }
     </script>
 
 {% endblock %}
