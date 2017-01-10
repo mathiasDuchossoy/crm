@@ -35,6 +35,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -2851,6 +2852,14 @@ class FournisseurController extends Controller
 
                     // gestion type
                     $param->setType($paramPost->type);
+
+                    // /* gestion forfait quantite type
+                    if ($param->getType() != Type::Forfait) {
+                        $param->setForfaitQuantiteType();
+                    } else {
+                        $param->setForfaitQuantiteType($paramPost->forfaitQuantiteType);
+                    }
+                    // fin gestion forfait quantite type */
 
                     // gestion capacités
                     if (empty($paramPost->capacite->min) && empty($paramPost->capacite->max)) {
