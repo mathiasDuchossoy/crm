@@ -1741,6 +1741,23 @@
             addTagForm($collectionHolderperiodeParam_{{ index }}, $newLinkLiperiodeParam_{{ index }} , '__name_param__');
         });
 
+        //        /* fournisseur prestation annexe periodeIndisponible
+        var $collectionHolderFPAPeriodeIndisponible_{{ index }};
+        var $addTagLinkFPAPeriodeIndisponible_{{ index }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+        var $newLinkLiFPAPeriodeIndisponible_{{ index }} = $('<li></li>').append($addTagLinkFPAPeriodeIndisponible_{{ index }});
+        $collectionHolderFPAPeriodeIndisponible_{{ index }} = $('ul.fournisseur_prestation_annexe_{{ index }}_periode_indisponibles');
+        $collectionHolderFPAPeriodeIndisponible_{{ index }}.find('.element').each(function () {
+            addTagFormDeleteLink($(this));
+        });
+        $collectionHolderFPAPeriodeIndisponible_{{ index }}.append($newLinkLiFPAPeriodeIndisponible_{{ index }});
+        $collectionHolderFPAPeriodeIndisponible_{{ index }}.data('index', $collectionHolderFPAPeriodeIndisponible_{{ index }}.find('.element').length);
+        $addTagLinkFPAPeriodeIndisponible_{{ index }}.on('click', function (e) {
+            e.preventDefault();
+            addTagForm($collectionHolderFPAPeriodeIndisponible_{{ index }}, $newLinkLiFPAPeriodeIndisponible_{{ index }} , '__name__');
+            fournisseurPrestationAnnexePeriodeIndisponible();
+        });
+        //         fin fournisseur prestation annexe periodeIndisponible */
+
         {% for keyParam, param in prestationAnnexe.params %}
 
 
@@ -1793,6 +1810,23 @@
             }).removeClass('datetimepicker');
         }
         periodevaliditeDatetimePicker();
+
+        function fournisseurPrestationAnnexePeriodeIndisponible() {
+            $('.input-daterange').datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            }).on('hide', function (e) {
+                return false;
+            });
+        }
+        fournisseurPrestationAnnexePeriodeIndisponible();
 
     </script>
     <script type="text/javascript">
@@ -2057,6 +2091,32 @@
             $iFrame.on('load', function () {
                 $iFrame.css('display', '');
             });
+        }
+    </script>
+    <script type="text/javascript">
+        function displayFournisseurPrestationAnnexePeriodeIndisponible(element, prestationAnnexeId) {
+            var $element = $(element);
+            var $liste = $('#block_fournisseur_prestation_annexe_' + prestationAnnexeId + '_periode_indisponibles');
+            if ($element.prop('checked')) {
+                $liste.show();
+            } else {
+                $liste.hide()
+            }
+        }
+        function displayParamForfaitQuanttieType(element, divParamForfaitQuanttieTypeId) {
+            var $element = $(element);
+            var $divParamForfaitQuanttieType = $('#' + divParamForfaitQuanttieTypeId);
+            if ($element.val() == {{ constant('Mondofute\\Bundle\\FournisseurPrestationAnnexeBundle\\Entity\\Type::Forfait') }}) {
+                $divParamForfaitQuanttieType.show();
+                $divParamForfaitQuanttieType.find('input').each(function (index, element) {
+                    $(element).prop('required', 'required');
+                })
+            } else {
+                $divParamForfaitQuanttieType.hide();
+                $divParamForfaitQuanttieType.find('input').each(function (index, element) {
+                    $(element).prop('required', '');
+                })
+            }
         }
     </script>
 

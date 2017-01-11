@@ -16,11 +16,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
-use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
@@ -38,6 +35,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -1547,6 +1545,8 @@ class FournisseurController extends Controller
                     }
                     $fournisseurPrestationAnnexeSite->setPrestationAnnexe($emSite->find(PrestationAnnexe::class, $fournisseurPrestationAnnexe->getPrestationAnnexe()));
 
+                    $fournisseurPrestationAnnexeSite->setFreeSale($fournisseurPrestationAnnexe->getFreeSale());
+
                     // *** traductions ***
                     /** @var FournisseurPrestationAnnexeTraduction $traduction */
                     foreach ($fournisseurPrestationAnnexe->getTraductions() as $traduction) {
@@ -2838,6 +2838,9 @@ class FournisseurController extends Controller
             $traduction->setLibelle($traductionPost->libelle);
         }
 
+        // gestion free sale
+        $fournisseurPrestationAnnexe->setFreeSale($fournisseurPrestationAnnexePost->freeSale);
+
         // gestion des params
         if (!empty($fournisseurPrestationAnnexePost->params)) {
             foreach ($fournisseurPrestationAnnexePost->params as $keyParamPost => $paramPost) {
@@ -2849,6 +2852,14 @@ class FournisseurController extends Controller
 
                     // gestion type
                     $param->setType($paramPost->type);
+
+                    // /* gestion forfait quantite type
+                    if ($param->getType() != Type::Forfait) {
+                        $param->setForfaitQuantiteType();
+                    } else {
+                        $param->setForfaitQuantiteType($paramPost->forfaitQuantiteType);
+                    }
+                    // fin gestion forfait quantite type */
 
                     // gestion capacités
                     if (empty($paramPost->capacite->min) && empty($paramPost->capacite->max)) {
