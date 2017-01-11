@@ -72,7 +72,7 @@
                                 {% if decote.decoteTypeAffectations.vars.value is empty %}
                                     {% set decoteTypeAffectationDisplay = true %}
                                 {% endif %}
-                                {% if  decoteTypeAffectationDisplay == true %}
+                                {% if  decoteTypeAffectationDisplay == true or form.vars.value.id is null %}
                                     style="display: none;"
                                 {% endif %}
                         >
