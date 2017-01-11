@@ -953,12 +953,16 @@ class StationUnifieController extends Controller
                 // ***** fin gestion station label *****
 
                 // *** gestion date visibilite ***
-                if (empty($dateVisibilite = $stationSite->getDateVisibilite())) {
-                    $dateVisibilite = new StationDateVisibilite();
-                    $stationSite->setDateVisibilite($dateVisibilite);
+                if (!empty($station->getDateVisibilite())) {
+                    if (empty($dateVisibilite = $stationSite->getDateVisibilite())) {
+                        $dateVisibilite = new StationDateVisibilite();
+                        $stationSite->setDateVisibilite($dateVisibilite);
+                    }
+                    $dateVisibilite->setDateDebut($station->getDateVisibilite()->getDateDebut())
+                        ->setDateFin($station->getDateVisibilite()->getDateFin());
+                } else {
+                    $stationSite->setDateVisibilite();
                 }
-                $dateVisibilite->setDateDebut($station->getDateVisibilite()->getDateDebut())
-                    ->setDateFin($station->getDateVisibilite()->getDateFin());
                 // *** fin gestion date visibilite ***
 
                 $emSite->persist($entitySite);
