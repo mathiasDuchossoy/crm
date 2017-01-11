@@ -22,6 +22,7 @@ class StationDateVisibiliteType extends AbstractType
                 'attr' => array(
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
+                    'class' => 'date_debut'
                 )
             ))
             ->add('dateFin', DateType::class, array(
@@ -31,6 +32,7 @@ class StationDateVisibiliteType extends AbstractType
                 'attr' => array(
                     'data-date-format' => 'dd/mm/yyyy',
                     'placeholder' => 'format_date',
+                    'class' => 'date_fin'
                 )
             ));
     }
