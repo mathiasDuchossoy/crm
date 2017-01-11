@@ -6,6 +6,7 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectati
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeFournisseurType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeHebergementType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Form\PrestationAnnexeStationType;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\ForfaitQuantiteType;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -80,6 +81,18 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'translation_domain' => 'messages',
+            ))
+            ->add('forfaitQuantiteType', ChoiceType::class, array(
+                'choices' => array(
+                    ForfaitQuantiteType::getLibelle(ForfaitQuantiteType::Fixe) => ForfaitQuantiteType::Fixe,
+                    ForfaitQuantiteType::getLibelle(ForfaitQuantiteType::Choix) => ForfaitQuantiteType::Choix
+                ),
+                'choices_as_values' => true,
+                'expanded' => true,
+                'required' => true,
+                'attr' => array(
+                    'class' => 'form-inline'
+                ),
             ));
     }
 

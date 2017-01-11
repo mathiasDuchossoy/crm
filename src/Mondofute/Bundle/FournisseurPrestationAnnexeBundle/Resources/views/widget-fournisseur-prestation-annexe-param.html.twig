@@ -9,8 +9,18 @@
 <div class="tab-content">
     <div id="pill_parametrage_{{ keyParam }}_{{ prestationAnnexe.vars.id }}" class="tab-pane fade in active">
         <h3>Paramétrages</h3>
-        {{ form_row(param.type , { 'attr' : {'class' : 'fournisseur_prestation_annexe'} }) }}
-
+        {{ form_row(param.type , {
+            'attr' : {
+                'class' : 'fournisseur_prestation_annexe',
+                'onchange' : 'displayParamForfaitQuanttieType(this, "prestation_annexe_param_forfait_quantite_type_'~ keyParam ~'_' ~ prestationAnnexe.vars.id ~ '");'
+            }} ) }}
+        <div id="prestation_annexe_param_forfait_quantite_type_{{ keyParam }}_{{ prestationAnnexe.vars.id }}"
+                {% if param.type.vars.value != constant('Mondofute\\Bundle\\FournisseurPrestationAnnexeBundle\\Entity\\Type::Forfait') %}
+                    style="display: none"
+                {% endif %}
+        >
+            {{ form_row(param.forfaitQuantiteType) }}
+        </div>
         <div>
             {{ form_label(param.capacite) }}
             <button type="button" class="btn btn-default"
@@ -126,7 +136,7 @@
             e.preventDefault();
             addTagForm($collectionHolder_{{ keyParam }}_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLi_{{ keyParam }}_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name_tarif__');
         });
-    }
+    };
     if (window.jQuery) {
 
         var $collectionHolder_{{ keyParam }}_{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
