@@ -162,7 +162,7 @@ class StationType extends AbstractType
             )
             ->add('taxeSejourPrix')
             ->add('taxeSejourAge')
-            ->add('dateVisibilite', StationDateVisibiliteType::class);
+            ->add('dateVisibilite', StationDateVisibiliteType::class, ['required' => false]);
     }
 
     /**
