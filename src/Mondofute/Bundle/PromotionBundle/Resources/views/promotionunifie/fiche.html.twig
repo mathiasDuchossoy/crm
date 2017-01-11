@@ -49,6 +49,7 @@
                         >
                             {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
+                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
                             'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');'
@@ -60,7 +61,6 @@
                         >
                             {% include('@MondofutePromotion/promotionunifie/widget-promotion-periode-sejour-date.html.twig') with {'promotionPeriodeSejourDate': promotion.promotionPeriodeSejourDate} %}
                         </div>
-                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         <div id="promotion_type_fournisseur_{{ keyPromotion }}"
                                 {% set promotionTypeAffectationDisplay = false %}
                                 {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
@@ -731,6 +731,10 @@
                     }
                 });
             });
+        }
+
+        function testPromotionCompatibiliteType() {
+
         }
 
     </script>

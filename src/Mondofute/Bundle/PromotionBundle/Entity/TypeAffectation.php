@@ -14,7 +14,7 @@ class TypeAffectation
     public static $libelles = array(
         TypeAffectation::logement => 'Logement',
         TypeAffectation::prestationAnnexe => 'Prestations annexe',
-        TypeAffectation::type => 'Type',
+        TypeAffectation::type => 'Type de fournisseur',
     );
 
     static public function getLibelle($id)
