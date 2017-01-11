@@ -79,8 +79,10 @@ class FournisseurPrestationAnnexeRepository extends \Doctrine\ORM\EntityReposito
             ->join('pa.famillePrestationAnnexe', 'famillepa')
             ->andWhere('famillepa.id = :famillePrestationAnnexeId')
             ->setParameter('famillePrestationAnnexeId', $idFamillePrestationAnnexe)
+            ->andWhere('fpa.freeSale = :freeSaleValue')
+            ->setParameter('freeSaleValue', false)
             ->orderBy('trad.libelle', 'ASC');
-//        dump($qb->getQuery());
+
         return $qb->getQuery()->getResult();
     }
 }
