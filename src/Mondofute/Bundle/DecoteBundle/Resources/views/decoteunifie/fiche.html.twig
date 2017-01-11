@@ -50,6 +50,7 @@
                         >
                             {{ form_row(decote.decotePeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : decote.decotePeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
+                        {% include ('@MondofuteDecote/decoteunifie/decote-type-affectation.html.twig') %}
                         {{ form_row(decote.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : decote.typePeriodeSejour.vars['unique_block_prefix'],
                             'onchange' : 'displayFormTypePeriodeSejour(this,'~keyDecote~');'
@@ -61,7 +62,6 @@
                         >
                             {% include('@MondofuteDecote/decoteunifie/widget-decote-periode-sejour-date.html.twig') with {'decotePeriodeSejourDate': decote.decotePeriodeSejourDate} %}
                         </div>
-                        {% include ('@MondofuteDecote/decoteunifie/decote-type-affectation.html.twig') %}
                         <div id="decote_type_fournisseur_{{ keyDecote }}"
                                 {% set decoteTypeAffectationDisplay = false %}
                                 {% for decoteTypeAffectation in decote.decoteTypeAffectations.vars.value %}
