@@ -19,7 +19,11 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             type: integer
             options:
                 unsigned: true
-
+        forfaitQuantiteType:
+            type: integer
+            options:
+                unsigned: true
+            nullable: true
     oneToOne:
         capacite:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeCapacite
