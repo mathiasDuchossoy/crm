@@ -1003,10 +1003,12 @@ class PromotionUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        $errorCompatibiliteType = $this->testCompatibiliteType($promotionUnifie);
+
         // **********************************************
         // ********** VALIDATION DU FORMULAIRE **********
         // **********************************************
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorCompatibiliteType) {
             foreach ($promotionUnifie->getPromotions() as $promotion) {
                 if (false === in_array($promotion->getSite()->getId(), $sitesAEnregistrer)) {
                     $promotion->setActif(false);
