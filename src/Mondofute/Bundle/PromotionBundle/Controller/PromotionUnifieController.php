@@ -123,7 +123,9 @@ class PromotionUnifieController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $errorCompatibiliteType = $this->testCompatibiliteType($promotionUnifie);
+
+        if ($form->isSubmitted() && $form->isValid() && !$errorCompatibiliteType) {
 
             /** @var Promotion $entity */
 
@@ -230,6 +232,22 @@ class PromotionUnifieController extends Controller
 
         // remplacé les promotions par ce nouveau tableau (une fonction 'set' a été créé dans Promotion unifié)
         $entity->setPromotions($promotions);
+    }
+
+    /**
+     * @param PromotionUnifie $entityUnifie
+     * @return bool
+     */
+    private function testCompatibiliteType($entityUnifie)
+    {
+        /** @var Promotion $entity */
+        foreach ($entityUnifie->getPromotions() as $entity) {
+            if ($entity->getPromotionTypeAffectations()->first()->getTypeAffectation() == TypeAffectation::type && $entity->getTypePeriodeSejour() == TypePeriodeSejour::periode) {
+                $this->addFlash('error', 'Sur la fiche ' . $entity->getSite()->getLibelle() . ', une promotion ne peut pas avoir l\'affectation "Type de fournisseur" et le type de periode de sejour à "Période"');
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
