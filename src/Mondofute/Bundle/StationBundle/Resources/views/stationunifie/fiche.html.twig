@@ -33,11 +33,13 @@
                                     <div class="col-sm-10">
                                         <div class="input-daterange form-inline input-group">
                                             {{ form_widget(station.dateVisibilite.dateDebut, { 'attr' : {
-                                                'style' : 'text-align: left;'
+                                                'style' : 'text-align: left;',
+                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateFin.vars.id ~ '");'
                                             }}) }}
                                             <span class="input-group-addon">au</span>
                                             {{ form_widget(station.dateVisibilite.dateFin, { 'attr' : {
-                                                'style' : 'text-align: left;'
+                                                'style' : 'text-align: left;',
+                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateDebut.vars.id ~ '");'
                                             }}) }}
                                         </div>
                                     </div>
@@ -723,6 +725,19 @@
             language: "fr",
             todayHighlight: true
         });
+
+        function testRequired(element, inputId) {
+            if ($(element).val() != '') {
+                $('#' + inputId).prop('required', 'required');
+            } else {
+                $('#' + inputId).prop('required', '');
+            }
+            if ($('#' + inputId).val() != '') {
+                $(element).prop('required', 'required');
+            } else {
+                $(element).prop('required', '');
+            }
+        }
     </script>
 
 {% endblock %}
