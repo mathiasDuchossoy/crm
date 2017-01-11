@@ -16,11 +16,8 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurInterlocuteur;
 use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurFonction;
 use Mondofute\Bundle\FournisseurBundle\Entity\InterlocuteurUser;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
-use Mondofute\Bundle\FournisseurBundle\Entity\ServiceInterlocuteur;
-use Mondofute\Bundle\FournisseurBundle\Form\FournisseurType;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\ModeAffectation;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
@@ -35,9 +32,11 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestat
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeDureeSejour;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParamTraduction;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexePeriodeIndisponible;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeTraduction;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\Type;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -1547,6 +1546,35 @@ class FournisseurController extends Controller
                     }
                     $fournisseurPrestationAnnexeSite->setPrestationAnnexe($emSite->find(PrestationAnnexe::class, $fournisseurPrestationAnnexe->getPrestationAnnexe()));
 
+                    $fournisseurPrestationAnnexeSite->setFreeSale($fournisseurPrestationAnnexe->getFreeSale());
+
+                    // /* gestion fournisseur prestation annexe periodeIndisponible
+                    /** @var FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponible */
+                    /** @var FournisseurPrestationAnnexePeriodeIndisponible $periodeIndisponibleSite */
+                    foreach ($fournisseurPrestationAnnexe->getPeriodeIndisponibles() as $periodeIndisponible) {
+                        $periodeIndisponibleSite = $fournisseurPrestationAnnexeSite->getPeriodeIndisponibles()->filter(function (FournisseurPrestationAnnexePeriodeIndisponible $element) use ($periodeIndisponible) {
+                            return $element->getId() == $periodeIndisponible->getId();
+                        })->first();
+                        if (false == $periodeIndisponibleSite) {
+                            $periodeIndisponibleSite = new FournisseurPrestationAnnexePeriodeIndisponible();
+                            $fournisseurPrestationAnnexeSite->addPeriodeIndisponible($periodeIndisponibleSite);
+                            $periodeIndisponibleSite->setId($periodeIndisponible->getId());
+                            $metadata = $emSite->getClassMetadata(get_class($fournisseurPrestationAnnexeSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        }
+                        $periodeIndisponibleSite->setDateDebut($periodeIndisponible->getDateDebut())->setDateFin($periodeIndisponible->getDateFin());
+                    }
+                    foreach ($fournisseurPrestationAnnexeSite->getPeriodeIndisponibles() as $periodeIndisponibleSite) {
+                        $periodeIndisponible = $fournisseurPrestationAnnexe->getPeriodeIndisponibles()->filter(function (FournisseurPrestationAnnexePeriodeIndisponible $element) use ($periodeIndisponibleSite) {
+                            return $element->getId() == $periodeIndisponibleSite->getId();
+                        })->first();
+                        if (false === $periodeIndisponible) {
+                            $fournisseurPrestationAnnexeSite->removePeriodeIndisponible($periodeIndisponibleSite);
+                            $emSite->remove($periodeIndisponibleSite);
+                        }
+                    }
+                    // fin gestion fournisseur prestation annexe periodeIndisponible */
+
                     // *** traductions ***
                     /** @var FournisseurPrestationAnnexeTraduction $traduction */
                     foreach ($fournisseurPrestationAnnexe->getTraductions() as $traduction) {
@@ -2838,6 +2866,42 @@ class FournisseurController extends Controller
             $traduction->setLibelle($traductionPost->libelle);
         }
 
+        // gestion free sale
+        if (!empty($fournisseurPrestationAnnexePost->freeSale)) {
+            $fournisseurPrestationAnnexe->setFreeSale($fournisseurPrestationAnnexePost->freeSale);
+        } else {
+            $fournisseurPrestationAnnexe->setFreeSale(false);
+            unset($fournisseurPrestationAnnexePost->periodes);
+        }
+
+        // /* gestion fournisseur prestation annexe periode
+        if (!empty($fournisseurPrestationAnnexePost->periodeIndisponibles)) {
+            foreach ($fournisseurPrestationAnnexePost->periodeIndisponibles as $keyPeriodeIndisponiblePost => $periodeIndisponiblePost) {
+                if (!empty($periodeIndisponiblePost)) {
+                    if (empty($periodeIndisponible = $fournisseurPrestationAnnexe->getPeriodeIndisponibles()->get($keyPeriodeIndisponiblePost))) {
+                        $periodeIndisponible = new FournisseurPrestationAnnexePeriodeIndisponible();
+                        $fournisseurPrestationAnnexe->addPeriodeIndisponible($periodeIndisponible);
+                    }
+                    $periodeIndisponiblePost->dateDebut = str_replace('/', '-', $periodeIndisponiblePost->dateDebut);
+                    $periodeIndisponiblePost->dateFin = str_replace('/', '-', $periodeIndisponiblePost->dateFin);
+                    $periodeIndisponible->setDateDebut(new \DateTime($periodeIndisponiblePost->dateDebut))->setDateFin(new \DateTime($periodeIndisponiblePost->dateFin));
+                }
+            }
+        }
+        foreach ($fournisseurPrestationAnnexe->getPeriodeIndisponibles() as $keyPeriodeIndisponible => $periodeIndisponible) {
+            if (!empty($fournisseurPrestationAnnexePost->periodeIndisponibles)) {
+                $periodeIndisponiblePosts = new ArrayCollection($fournisseurPrestationAnnexePost->periodeIndisponibles);
+                if (empty($periodeIndisponiblePosts->get($keyPeriodeIndisponible))) {
+                    $fournisseurPrestationAnnexe->removePeriodeIndisponible($periodeIndisponible);
+                    $em->remove($periodeIndisponible);
+                }
+            } else {
+                $fournisseurPrestationAnnexe->removePeriodeIndisponible($periodeIndisponible);
+                $em->remove($periodeIndisponible);
+            }
+        }
+        // fin gestion fournisseur prestation annexe periodeIndisponible */
+
         // gestion des params
         if (!empty($fournisseurPrestationAnnexePost->params)) {
             foreach ($fournisseurPrestationAnnexePost->params as $keyParamPost => $paramPost) {
@@ -2849,6 +2913,14 @@ class FournisseurController extends Controller
 
                     // gestion type
                     $param->setType($paramPost->type);
+
+                    // /* gestion forfait quantite type
+                    if ($param->getType() != Type::Forfait) {
+                        $param->setForfaitQuantiteType();
+                    } else {
+                        $param->setForfaitQuantiteType($paramPost->forfaitQuantiteType);
+                    }
+                    // fin gestion forfait quantite type */
 
                     // gestion capacités
                     if (empty($paramPost->capacite->min) && empty($paramPost->capacite->max)) {
