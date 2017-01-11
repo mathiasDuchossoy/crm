@@ -71,7 +71,7 @@
                                 {% if promotion.promotionTypeAffectations.vars.value is empty %}
                                     {% set promotionTypeAffectationDisplay = true %}
                                 {% endif %}
-                                {% if  promotionTypeAffectationDisplay == true %}
+                                {% if  promotionTypeAffectationDisplay == true  or form.vars.value.id is null %}
                                     style="display: none;"
                                 {% endif %}
                         >
