@@ -5,8 +5,32 @@
     <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <div>
             {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+            {{ form_row(prestationAnnexe.freeSale , {'attr' : {'onclick' : 'displayFournisseurPrestationAnnexePeriodeIndisponible(this, "'~prestationAnnexe.vars.value.prestationAnnexe.id~'");'}}) }}
+
+            <div id="block_fournisseur_prestation_annexe_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}_periode_indisponibles"
+                    {% if prestationAnnexe.vars.value.freeSale == false %}
+                        style="display: none"
+                    {% endif %}
+            >
+                <h4>Periodes indisponible</h4>
+                <ul class="fournisseur_prestation_annexe_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}_periode_indisponibles"
+                    data-prototype="
+                    {% filter escape %}
+                    {% include('@MondofuteFournisseurPrestationAnnexe/widget_periode_indisponible.html.twig') with {'periodeIndisponible': prestationAnnexe.periodeIndisponibles.vars.prototype} %}
+                    {% endfilter %}
+                                ">
+                    {# iterate over each existing tag and render its only field: name #}
+                    {% for periodeIndisponible in prestationAnnexe.periodeIndisponibles %}
+                        {#<li class="element">#}
+                        <li class="element">
+                            {% include ('@MondofuteFournisseurPrestationAnnexe/widget_periode_indisponible.html.twig')  with {'periodeIndisponible' : periodeIndisponible  } %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         <div>
+            <h4>Params</h4>
             <ul class="params{{ prestationAnnexe.vars.value.prestationAnnexe.id }}" data-prototype="
                     {% filter escape %}
                         {% include ('@MondofuteFournisseurPrestationAnnexe/widget-fournisseur-prestation-annexe-param.html.twig') with { 'param' : prestationAnnexe.params.vars.prototype |e('html_attr') , 'index' : prestationAnnexe.vars.value.prestationAnnexe.id , 'keyParam' : '__name_param__'} %}
@@ -41,5 +65,34 @@
             collectionParam();
         }
     </script>
+
+    <script>
+
+        var collectionPeriodeIndisponible = function () {
+//        /* fournisseur prestation annexe periodeIndisponible
+            var $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
+            var $addTagLinkFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+            var $newLinkLiFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<li></li>').append($addTagLinkFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
+            $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('ul.fournisseur_prestation_annexe_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}_periode_indisponibles');
+            $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.element').each(function () {
+                addTagFormDeleteLink($(this));
+            });
+            $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.append($newLinkLiFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
+            $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.data('index', $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.find('.element').length);
+            $addTagLinkFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}.on('click', function (e) {
+                e.preventDefault();
+                addTagForm($collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}, $newLinkLiFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} , '__name__');
+                fournisseurPrestationAnnexePeriodeIndisponible();
+            });
+//         fin fournisseur prestation annexe periodeIndisponible */
+        };
+        if (window.jQuery) {
+            var $collectionHolderFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }};
+            var $addTagLinkFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<a href="#" class="add_param_link">Ajouter</a>');
+            var $newLinkLiFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }} = $('<li></li>').append($addTagLinkFPAPeriodeIndisponible_{{ prestationAnnexe.vars.value.prestationAnnexe.id }});
+            collectionPeriodeIndisponible();
+        }
+    </script>
+
 {% endfor %}
 
