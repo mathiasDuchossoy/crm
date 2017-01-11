@@ -34,12 +34,12 @@
                                         <div class="input-daterange form-inline input-group">
                                             {{ form_widget(station.dateVisibilite.dateDebut, { 'attr' : {
                                                 'style' : 'text-align: left;',
-                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateFin.vars.id ~ '");'
+                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateFin.vars.id ~ '");',
                                             }}) }}
                                             <span class="input-group-addon">au</span>
                                             {{ form_widget(station.dateVisibilite.dateFin, { 'attr' : {
                                                 'style' : 'text-align: left;',
-                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateDebut.vars.id ~ '");'
+                                                'onblur' : 'testRequired(this,"' ~ station.dateVisibilite.dateDebut.vars.id ~ '");',
                                             }}) }}
                                         </div>
                                     </div>
@@ -724,6 +724,13 @@
             daysOfWeekHighlighted: [0, 6],
             language: "fr",
             todayHighlight: true
+        }).on('hide', function (e) {
+            var $dateDebut = $($(this).find('input.date_debut')[0]);
+            var $dateFin = $($(this).find('input.date_fin')[0]);
+            if ($dateFin.val() == $dateDebut.val()) {
+                $dateFin.val('');
+            }
+            return false;
         });
 
         function testRequired(element, inputId) {
