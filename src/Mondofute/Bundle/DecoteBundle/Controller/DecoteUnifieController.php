@@ -117,7 +117,9 @@ class DecoteUnifieController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $errorCompatibiliteType = $this->testCompatibiliteType($decoteUnifie);
+
+        if ($form->isSubmitted() && $form->isValid() && !$errorCompatibiliteType) {
 
             /** @var Decote $entity */
 
@@ -223,6 +225,24 @@ class DecoteUnifieController extends Controller
 
         // remplacé les decotes par ce nouveau tableau (une fonction 'set' a été créé dans Decote unifié)
         $entity->setDecotes($decotes);
+    }
+
+    /**
+     * @param DecoteUnifie $entityUnifie
+     * @return bool
+     */
+    private function testCompatibiliteType($entityUnifie)
+    {
+        /** @var Decote $entity */
+        foreach ($entityUnifie->getDecotes() as $entity) {
+            if (!$entity->getDecoteTypeAffectations()->isEmpty()) {
+                if ($entity->getDecoteTypeAffectations()->first()->getTypeAffectation() == TypeAffectation::type && $entity->getTypePeriodeSejour() == TypePeriodeSejour::periode) {
+                    $this->addFlash('error', 'Sur la fiche ' . $entity->getSite()->getLibelle() . ', une decote ne peut pas avoir l\'affectation "Type de fournisseur" et le type de periode de sejour à "Période"');
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -975,10 +995,12 @@ class DecoteUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        $errorCompatibiliteType = $this->testCompatibiliteType($decoteUnifie);
+
         // **********************************************
         // ********** VALIDATION DU FORMULAIRE **********
         // **********************************************
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorCompatibiliteType) {
             foreach ($decoteUnifie->getDecotes() as $decote) {
                 if (false === in_array($decote->getSite()->getId(), $sitesAEnregistrer)) {
                     $decote->setActif(false);
