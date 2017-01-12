@@ -242,9 +242,11 @@ class PromotionUnifieController extends Controller
     {
         /** @var Promotion $entity */
         foreach ($entityUnifie->getPromotions() as $entity) {
-            if ($entity->getPromotionTypeAffectations()->first()->getTypeAffectation() == TypeAffectation::type && $entity->getTypePeriodeSejour() == TypePeriodeSejour::periode) {
-                $this->addFlash('error', 'Sur la fiche ' . $entity->getSite()->getLibelle() . ', une promotion ne peut pas avoir l\'affectation "Type de fournisseur" et le type de periode de sejour à "Période"');
-                return true;
+            if (!$entity->getPromotionTypeAffectations()->isEmpty()) {
+                if ($entity->getPromotionTypeAffectations()->first()->getTypeAffectation() == TypeAffectation::type && $entity->getTypePeriodeSejour() == TypePeriodeSejour::periode) {
+                    $this->addFlash('error', 'Sur la fiche ' . $entity->getSite()->getLibelle() . ', une promotion ne peut pas avoir l\'affectation "Type de fournisseur" et le type de periode de sejour à "Période"');
+                    return true;
+                }
             }
         }
         return false;
@@ -1001,10 +1003,12 @@ class PromotionUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        $errorCompatibiliteType = $this->testCompatibiliteType($promotionUnifie);
+
         // **********************************************
         // ********** VALIDATION DU FORMULAIRE **********
         // **********************************************
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorCompatibiliteType) {
             foreach ($promotionUnifie->getPromotions() as $promotion) {
                 if (false === in_array($promotion->getSite()->getId(), $sitesAEnregistrer)) {
                     $promotion->setActif(false);

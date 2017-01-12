@@ -15,7 +15,11 @@
                                 id="mondofute_bundle_promotionbundle_promotionunifie_{{ keyPromotion }}_promotionTypeAffectations_{{ loop.index - 1 }}"
                                 {#name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][{{ loop.index - 1 }}][typeAffectation]"#}
                                 name="mondofute_bundle_promotionbundle_promotionunifie[promotions][{{ keyPromotion }}][promotionTypeAffectations][0][typeAffectation]"
-                                onchange="displayAffectationPanel(this , '{{ keyPromotion }}' , '{{ promotion.vars.value.id }}' , '{{ promotion.vars.value.site.id }}');"
+                                onchange="displayAffectationPanel(this , '{{ keyPromotion }}' , '{{ promotion.vars.value.id }}' , '{{ promotion.vars.value.site.id }}');
+                                {#{% if key == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::type') %}#}
+                                        displayTypePeriodeSejourPeriode(this, '{{ promotion.typePeriodeSejour.vars.id }}');
+                                {#{% endif %}#}
+                                        "
                                 required
                                 value="{{ key }}" type="radio">
                         {{ affectation }}</label>
