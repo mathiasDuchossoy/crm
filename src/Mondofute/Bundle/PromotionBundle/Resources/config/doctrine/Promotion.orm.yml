@@ -75,12 +75,20 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionStation
             mappedBy: promotion
             cascade: ['persist','remove']
+        promotionLogements:
+            targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement
+            mappedBy: promotion
+            cascade: ['persist','remove']
         logementPeriodes:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
             mappedBy: promotion
             cascade: ['persist','remove']
         logementPeriodes:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
+            mappedBy: promotion
+            cascade: ['persist','remove']
+        traductions:
+            targetEntity: PromotionTraduction
             mappedBy: promotion
             cascade: ['persist','remove']
     manyToMany:

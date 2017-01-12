@@ -15,11 +15,13 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecoteFamillePrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseur;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseurPrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteHebergement;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
 use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeSejourDate;
 use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeValiditeDate;
 use Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeValiditeJour;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteStation;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteTraduction;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteTypeAffectation;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteUnifie;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeAffectation;
@@ -33,6 +35,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementUnifie;
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -100,6 +103,7 @@ class DecoteUnifieController extends Controller
         $em = $this->getDoctrine()->getManager();
 //        Liste les sites dans l'ordre d'affichage
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
         $affectations = TypeAffectation::$libelles;
 
         $sitesAEnregistrer = $request->get('sites');
@@ -109,6 +113,10 @@ class DecoteUnifieController extends Controller
         $this->ajouterDecotesDansForm($decoteUnifie);
         $this->decotesSortByAffichage($decoteUnifie);
 
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($decoteUnifie, 'decote');
+
         $form = $this->createForm('Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType', $decoteUnifie);
         $form->add('submit', SubmitType::class, array(
             'label' => $this->get('translator')->trans('Enregistrer'),
@@ -116,7 +124,9 @@ class DecoteUnifieController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $errorCompatibiliteType = $this->testCompatibiliteType($decoteUnifie);
+
+        if ($form->isSubmitted() && $form->isValid() && !$errorCompatibiliteType) {
 
             /** @var Decote $entity */
 
@@ -174,6 +184,7 @@ class DecoteUnifieController extends Controller
             'affectations' => $affectations,
             'fournisseursTypeHebergement' => new ArrayCollection(),
             'fournisseursPrestationAnnexe' => new ArrayCollection(),
+            'langues' => $langues
         ));
     }
 
@@ -222,6 +233,24 @@ class DecoteUnifieController extends Controller
 
         // remplacé les decotes par ce nouveau tableau (une fonction 'set' a été créé dans Decote unifié)
         $entity->setDecotes($decotes);
+    }
+
+    /**
+     * @param DecoteUnifie $entityUnifie
+     * @return bool
+     */
+    private function testCompatibiliteType($entityUnifie)
+    {
+        /** @var Decote $entity */
+        foreach ($entityUnifie->getDecotes() as $entity) {
+            if (!$entity->getDecoteTypeAffectations()->isEmpty()) {
+                if ($entity->getDecoteTypeAffectations()->first()->getTypeAffectation() == TypeAffectation::type && $entity->getTypePeriodeSejour() == TypePeriodeSejour::periode) {
+                    $this->addFlash('error', 'Sur la fiche ' . $entity->getSite()->getLibelle() . ', une decote ne peut pas avoir l\'affectation "Type de fournisseur" et le type de periode de sejour à "Période"');
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -372,24 +401,39 @@ class DecoteUnifieController extends Controller
 
 //            Récupération de l'entity manager du site vers lequel nous souhaitons enregistrer
                 $emSite = $this->getDoctrine()->getManager($entity->getSite()->getLibelle());
-                $site = $emSite->find(Site::class, $entity->getSite());
 
 //            GESTION EntiteUnifie
 //            récupère la l'entité unifie du site ou creer une nouvelle entité unifie
                 if (empty($entityUnifieSite = $emSite->find(DecoteUnifie::class, $entityUnifie))) {
                     $entityUnifieSite = new DecoteUnifie();
                     $entityUnifieSite->setId($entityUnifie->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($entityUnifieSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 }
 
                 //  Récupération de la decote sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty($entitySite = $emSite->getRepository(Decote::class)->findOneBy(array('decoteUnifie' => $entityUnifieSite)))) {
                     $entitySite = new Decote();
-                    $entitySite
-                        ->setSite($site)
-                        ->setDecoteUnifie($entityUnifieSite);
-
                     $entityUnifieSite->addDecote($entitySite);
+                    $entitySite->setSite($emSite->find(Site::class, $entity->getSite()));
                 }
+
+                // ***** gestion traductions *****
+                /** @var DecoteTraduction $traduction */
+                foreach ($entity->getTraductions() as $traduction) {
+                    $traductionSite = $entitySite->getTraductions()->filter(function (DecoteTraduction $element) use ($traduction) {
+                        return $element->getLangue()->getId() == $traduction->getLangue()->getId();
+                    })->first();
+                    if (false === $traductionSite) {
+                        $traductionSite = new DecoteTraduction();
+                        $entitySite->addTraduction($traductionSite);
+                        $traductionSite->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
+                    }
+                    $traductionSite
+                        ->setTitre($traduction->getTitre())
+                        ->setDescription($traduction->getDescription());
+                }
+                // ***** fin gestion traductions *****
 
                 // *** gestion decote typeAffectation ***
                 if (!empty($entity->getDecoteTypeAffectations()) && !$entity->getDecoteTypeAffectations()->isEmpty()) {
@@ -455,7 +499,7 @@ class DecoteUnifieController extends Controller
                                 and $element->getType() == $decoteFournisseurSite->getType());
                         })->first();
                         if (false === $decoteFournisseur) {
-//                            $entitySite->removeDecoteFournisseur($decoteFournisseurSite);
+                            $entitySite->removeDecoteFournisseur($decoteFournisseurSite);
                             $emSite->remove($decoteFournisseurSite);
                         }
                     }
@@ -491,7 +535,7 @@ class DecoteUnifieController extends Controller
                                 $element->getDecote()->getDecoteUnifie()->getId() == $decoteHebergementSite->getDecote()->getDecoteUnifie()->getId());
                         })->first();
                         if (false === $decoteHebergement) {
-//                            $entitySite->removeDecoteHebergement($decoteHebergementSite);
+                            $entitySite->removeDecoteHebergement($decoteHebergementSite);
                             $emSite->remove($decoteHebergementSite);
                         }
                     }
@@ -527,7 +571,7 @@ class DecoteUnifieController extends Controller
                                 $element->getStation()->getStationUnifie()->getId() == $decoteStationSite->getStation()->getStationUnifie()->getId());
                         })->first();
                         if (false === $decoteStation) {
-//                            $entitySite->removeDecoteStation($decoteStationSite);
+                            $entitySite->removeDecoteStation($decoteStationSite);
                             $emSite->remove($decoteStationSite);
                         }
                     }
@@ -572,6 +616,36 @@ class DecoteUnifieController extends Controller
                 }
                 // *** fin gestion decote logement periode ***
 
+                // *** gestion decote logement ***
+                /** @var DecoteLogement $logement */
+                /** @var DecoteLogement $logementSite */
+                foreach ($entity->getDecoteLogements() as $logement) {
+                    $logementSite = $entitySite->getDecoteLogements()->filter(function (DecoteLogement $element) use ($logement) {
+                        return ($element->getLogement()->getLogementUnifie()->getId() == $logement->getLogement()->getLogementUnifie()->getId()
+                            and $element->getDecote()->getDecoteUnifie()->getId() == $logement->getDecote()->getDecoteUnifie()->getId()
+                        );
+                    })->first();
+                    if (false === $logementSite) {
+                        $logementSite = new DecoteLogement();
+                        $entitySite->addDecoteLogement($logementSite);
+                        $logementSite
+                            ->setLogement($emSite->getRepository(Logement::class)->findOneBy(array('logementUnifie' => $logement->getLogement()->getLogementUnifie())));
+                    }
+                }
+
+                foreach ($entitySite->getDecoteLogements() as $logementSite) {
+                    $logement = $entity->getDecoteLogements()->filter(function (DecoteLogement $element) use ($logementSite) {
+                        return ($element->getLogement()->getLogementUnifie()->getId() == $logementSite->getLogement()->getLogementUnifie()->getId()
+                            and $element->getDecote()->getDecoteUnifie()->getId() == $logementSite->getDecote()->getDecoteUnifie()->getId()
+                        );
+                    })->first();
+                    if (false === $logement) {
+                        $entitySite->removeDecoteLogement($logementSite);
+                        $emSite->remove($logementSite);
+                    }
+                }
+                // *** fin gestion decote logement  ***
+
                 // *** gestion decote fournisseurPrestationAnnexe ***
                 if (!empty($entity->getDecoteFournisseurPrestationAnnexes()) && !$entity->getDecoteFournisseurPrestationAnnexes()->isEmpty()) {
                     /** @var DecoteFournisseurPrestationAnnexe $decoteFournisseurPrestationAnnexe */
@@ -601,7 +675,7 @@ class DecoteUnifieController extends Controller
                                 $element->getDecote()->getDecoteUnifie()->getId() == $decoteFournisseurPrestationAnnexeSite->getDecote()->getDecoteUnifie()->getId());
                         })->first();
                         if (false === $decoteFournisseurPrestationAnnexe) {
-//                            $entitySite->removeDecoteFournisseurPrestationAnnexe($decoteFournisseurPrestationAnnexeSite);
+                            $entitySite->removeDecoteFournisseurPrestationAnnex($decoteFournisseurPrestationAnnexeSite);
                             $emSite->remove($decoteFournisseurPrestationAnnexeSite);
                         }
                     }
@@ -633,11 +707,11 @@ class DecoteUnifieController extends Controller
                     foreach ($entitySite->getDecoteFamillePrestationAnnexes() as $decoteFamillePrestationAnnexeSite) {
                         $decoteFamillePrestationAnnexe = $entity->getDecoteFamillePrestationAnnexes()->filter(function (DecoteFamillePrestationAnnexe $element) use ($decoteFamillePrestationAnnexeSite) {
                             return $element->getFournisseur()->getId() == $decoteFamillePrestationAnnexeSite->getFournisseur()->getId() and
-                            $element->getFamillePrestationAnnexe()->getId() == $decoteFamillePrestationAnnexeSite->getFamillePrestationAnnexe()->getId() and
-                            $element->getDecote()->getDecoteUnifie()->getId() == $decoteFamillePrestationAnnexeSite->getDecote()->getDecoteUnifie()->getId();
+                                $element->getFamillePrestationAnnexe()->getId() == $decoteFamillePrestationAnnexeSite->getFamillePrestationAnnexe()->getId() and
+                                $element->getDecote()->getDecoteUnifie()->getId() == $decoteFamillePrestationAnnexeSite->getDecote()->getDecoteUnifie()->getId();
                         })->first();
                         if (false === $decoteFamillePrestationAnnexe) {
-//                            $entitySite->removeDecoteFamillePrestationAnnexe($decoteFamillePrestationAnnexeSite);
+                            $entitySite->removeDecoteFamillePrestationAnnex($decoteFamillePrestationAnnexeSite);
                             $emSite->remove($decoteFamillePrestationAnnexeSite);
                         }
                     }
@@ -824,6 +898,7 @@ class DecoteUnifieController extends Controller
         /** @var Decote $decote */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
+        $langues = $em->getRepository(Langue::class)->findAll();
 
         // *** gestion decote typeAffectation ***
         $affectations = TypeAffectation::$libelles;
@@ -905,7 +980,18 @@ class DecoteUnifieController extends Controller
                 $originalDecoteLogementPeriodes->get($decote->getSite()->getId())->add($logementPeriode);
             }
         }
-        // *** fin gestion decote fournisseurPrestationAnnexe ***
+        // *** fin gestion decote logement periode ***
+
+        // *** gestion decote logement ***
+        $originalDecoteLogements = new ArrayCollection();
+        foreach ($decoteUnifie->getDecotes() as $decote) {
+            $originalDecoteLogements->set($decote->getSite()->getId(), new ArrayCollection());
+            /** @var DecoteFamillePrestationAnnexe $decoteFamillePrestationAnnex */
+            foreach ($decote->getDecoteLogements() as $logement) {
+                $originalDecoteLogements->get($decote->getSite()->getId())->add($logement);
+            }
+        }
+        // *** fin gestion decote logement ***
 
 //        si request(site) est null nous sommes dans l'affichage de l'edition sinon nous sommes dans l'enregistrement
         $sitesAEnregistrer = array();
@@ -925,6 +1011,11 @@ class DecoteUnifieController extends Controller
         $this->ajouterDecotesDansForm($decoteUnifie);
 
         $this->decotesSortByAffichage($decoteUnifie);
+
+        $coreController = $this->get('mondofute_core_bundle_controller');
+        $coreController->setContainer($this->container);
+        $coreController->addTraductions($decoteUnifie, 'decote');
+
         $deleteForm = $this->createDeleteForm($decoteUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType',
@@ -933,10 +1024,12 @@ class DecoteUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        $errorCompatibiliteType = $this->testCompatibiliteType($decoteUnifie);
+
         // **********************************************
         // ********** VALIDATION DU FORMULAIRE **********
         // **********************************************
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($editForm->isSubmitted() && $editForm->isValid() && !$errorCompatibiliteType) {
             foreach ($decoteUnifie->getDecotes() as $decote) {
                 if (false === in_array($decote->getSite()->getId(), $sitesAEnregistrer)) {
                     $decote->setActif(false);
@@ -1158,6 +1251,35 @@ class DecoteUnifieController extends Controller
                         $em->remove($logementPeriode);
                     }
                 }
+                // *** gestion decoteLogement ***
+                if ($decote->getTypePeriodeSejour() != TypePeriodeSejour::periode and !empty($request->get('decote_logement_periode')[$key]) and !empty($request->get('decote_logement_periode')[$key]['logements'])) {
+                    $decote_logement_periode = $request->get('decote_logement_periode')[$key];
+                    foreach ($decote_logement_periode['logements'] as $logement) {
+                        $logementEntity = $em->find(Logement::class, $logement);
+                        $decoteLogement = $originalDecoteLogements->get($decote->getSite()->getId())->filter(function (DecoteLogement $element) use ($logement, $decote) {
+                            return ($element->getLogement()->getId() == $logement and $element->getDecote() == $decote);
+                        })->first();
+                        if (false === $decoteLogement) {
+                            $decoteLogement = new DecoteLogement();
+                            $decote->addDecoteLogement($decoteLogement);
+                            $decoteLogement
+                                ->setDecote($decote)
+                                ->setLogement($logementEntity);
+                        }
+                    }
+                    /** @var DecoteLogement $decotelogement */
+                    foreach ($originalDecoteLogements->get($decote->getSite()->getId()) as $decotelogement) {
+                        if (!in_array($decotelogement->getLogement()->getId(), $decote_logement_periode['logements'])) {
+                            $decote->getDecoteLogements()->removeElement($decotelogement);
+                            $em->remove($decotelogement);
+                        }
+                    }
+                } else {
+                    foreach ($originalDecoteLogements->get($decote->getSite()->getId()) as $logement) {
+                        $em->remove($logement);
+                    }
+                }
+                // *** fin gestion decoteLogement ***
             }
             // *** fin gestion decote logement periode ***
 
@@ -1191,6 +1313,7 @@ class DecoteUnifieController extends Controller
 //            'fournisseurHebergements' => $fournisseurHebergements,
             'fournisseursPrestationAnnexe' => $fournisseursPrestationAnnexe,
 //            'fournisseurFournisseurPrestationAnnexes' => $fournisseurFournisseurPrestationAnnexes,
+            'langues' => $langues
         ));
     }
 
@@ -1211,6 +1334,7 @@ class DecoteUnifieController extends Controller
                     break;
                 case TypePeriodeSejour::periode:
                     $decote->getDecotePeriodeSejourDate();
+                    $decote->getDecoteLogements()->clear();
                     break;
                 default:
                     break;
@@ -1588,14 +1712,15 @@ class DecoteUnifieController extends Controller
 
         $decote = $em->find(Decote::class, $decoteId);
         $decoteLogementPeriodes = $decote->getLogementPeriodes();
-
+        $decoteLogements = $decote->getDecoteLogements();
 
         return $this->render('@MondofuteDecote/decoteunifie/get-decote-logement.html.twig', array(
             'keyDecote' => $keyDecote,
             'hebergementId' => $hebergementId,
             'logements' => $logements,
             'fournisseurId' => $fournisseurId,
-            'decoteLogementPeriodes' => $decoteLogementPeriodes
+            'decoteLogementPeriodes' => $decoteLogementPeriodes,
+            'decoteLogements' => $decoteLogements
         ));
 
 
