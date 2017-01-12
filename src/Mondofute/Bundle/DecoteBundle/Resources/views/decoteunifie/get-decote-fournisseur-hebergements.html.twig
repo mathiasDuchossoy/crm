@@ -53,11 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-2 decote-logement-periode-{{ keyDecote }}"
-                    {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <label>
                     <input type="checkbox"
                            id="checkbox_all_logement_{{ keyDecote }}_{{ fournisseurId }}_{{ hebergement.hebergementId }}"
@@ -66,11 +62,7 @@
                     Tous les logements
                 </label>
             </div>
-            <div class="col-sm-2 decote-logement-periode-{{ keyDecote }}"
-                    {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') %}
-                        style="display: none"
-                    {% endif %}
-            >
+            <div class="col-sm-2">
                 <button type="button" class="btn btn-default btn-md" data-toggle="modal"
                         data-target="#modal_decote_logement"
                         onclick="getDecoteLogements('{{ fournisseurId }}' , '{{ hebergement.hebergementId }}' , '{{ keyDecote }}')"

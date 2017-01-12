@@ -37,6 +37,13 @@
                             </label>
                         </div>
                     {% endfor %}
+                    {% if collectionPeriode is empty %}
+                        <lu>
+                            <li class="list-group-item">
+                                <div class="alert alert-info" role="alert">Il n'y a pas de périodes.</div>
+                            </li>
+                        </lu>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
