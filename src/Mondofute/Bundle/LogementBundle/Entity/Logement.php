@@ -4,10 +4,14 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 /**
@@ -79,6 +83,18 @@ class Logement
      * @var Collection
      */
     private $promotionLogements;
+    /**
+     * @var Collection
+     */
+    private $decoteLogements;
+    /**
+     * @var Collection
+     */
+    private $promotionLogementPeriodes;
+    /**
+     * @var Collection
+     */
+    private $decoteLogementPeriode;
 
     /**
      * Constructor
@@ -91,6 +107,9 @@ class Logement
         $this->prestationAnnexeLogements = new ArrayCollection();
         $this->typePeriodes = new ArrayCollection();
         $this->promotionLogements = new ArrayCollection();
+        $this->decoteLogements = new ArrayCollection();
+        $this->promotionLogementPeriodes = new ArrayCollection();
+        $this->decoteLogementPeriode = new ArrayCollection();
     }
 
     /**
@@ -520,11 +539,11 @@ class Logement
     /**
      * Add promotionLogement
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement
+     * @param PromotionLogement $promotionLogement
      *
      * @return Logement
      */
-    public function addPromotionLogement(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement)
+    public function addPromotionLogement(PromotionLogement $promotionLogement)
     {
         $this->promotionLogements[] = $promotionLogement;
 
@@ -534,9 +553,9 @@ class Logement
     /**
      * Remove promotionLogement
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement
+     * @param PromotionLogement $promotionLogement
      */
-    public function removePromotionLogement(\Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement $promotionLogement)
+    public function removePromotionLogement(PromotionLogement $promotionLogement)
     {
         $this->promotionLogements->removeElement($promotionLogement);
     }
@@ -549,5 +568,107 @@ class Logement
     public function getPromotionLogements()
     {
         return $this->promotionLogements;
+    }
+
+    /**
+     * Add decoteLogement
+     *
+     * @param DecoteLogement $decoteLogement
+     *
+     * @return Logement
+     */
+    public function addDecoteLogement(DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements[] = $decoteLogement;
+
+        return $this;
+    }
+
+    /**
+     * Remove decoteLogement
+     *
+     * @param DecoteLogement $decoteLogement
+     */
+    public function removeDecoteLogement(DecoteLogement $decoteLogement)
+    {
+        $this->decoteLogements->removeElement($decoteLogement);
+    }
+
+    /**
+     * Get decoteLogements
+     *
+     * @return Collection
+     */
+    public function getDecoteLogements()
+    {
+        return $this->decoteLogements;
+    }
+
+    /**
+     * Add promotionLogementPeriode
+     *
+     * @param PromotionLogementPeriode $promotionLogementPeriode
+     *
+     * @return Logement
+     */
+    public function addPromotionLogementPeriode(PromotionLogementPeriode $promotionLogementPeriode)
+    {
+        $this->promotionLogementPeriodes[] = $promotionLogementPeriode;
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionLogementPeriode
+     *
+     * @param PromotionLogementPeriode $promotionLogementPeriode
+     */
+    public function removePromotionLogementPeriode(PromotionLogementPeriode $promotionLogementPeriode)
+    {
+        $this->promotionLogementPeriodes->removeElement($promotionLogementPeriode);
+    }
+
+    /**
+     * Get promotionLogementPeriodes
+     *
+     * @return Collection
+     */
+    public function getPromotionLogementPeriodes()
+    {
+        return $this->promotionLogementPeriodes;
+    }
+
+    /**
+     * Add decoteLogementPeriode
+     *
+     * @param DecoteLogementPeriode $decoteLogementPeriode
+     *
+     * @return Logement
+     */
+    public function addDecoteLogementPeriode(DecoteLogementPeriode $decoteLogementPeriode)
+    {
+        $this->decoteLogementPeriode[] = $decoteLogementPeriode;
+
+        return $this;
+    }
+
+    /**
+     * Remove decoteLogementPeriode
+     *
+     * @param DecoteLogementPeriode $decoteLogementPeriode
+     */
+    public function removeDecoteLogementPeriode(DecoteLogementPeriode $decoteLogementPeriode)
+    {
+        $this->decoteLogementPeriode->removeElement($decoteLogementPeriode);
+    }
+
+    /**
+     * Get decoteLogementPeriode
+     *
+     * @return Collection
+     */
+    public function getDecoteLogementPeriode()
+    {
+        return $this->decoteLogementPeriode;
     }
 }
