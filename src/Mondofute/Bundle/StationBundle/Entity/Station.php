@@ -120,6 +120,10 @@ class Station
      * @var Collection
      */
     private $promotionStations;
+    /**
+     * @var StationDateVisibilite
+     */
+    private $dateVisibilite;
 
     /**
      * Constructor
@@ -893,5 +897,29 @@ class Station
     public function getPromotionStations()
     {
         return $this->promotionStations;
+    }
+
+    /**
+     * Get dateVisibilite
+     *
+     * @return StationDateVisibilite
+     */
+    public function getDateVisibilite()
+    {
+        return $this->dateVisibilite;
+    }
+
+    /**
+     * Set dateVisibilite
+     *
+     * @param StationDateVisibilite $dateVisibilite
+     *
+     * @return Station
+     */
+    public function setDateVisibilite(StationDateVisibilite $dateVisibilite = null)
+    {
+        $this->dateVisibilite = $dateVisibilite;
+
+        return $this;
     }
 }

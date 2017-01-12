@@ -1,0 +1,4 @@
+CREATE TABLE station_date_visibilite (id INT UNSIGNED AUTO_INCREMENT NOT NULL, date_fin DATETIME NOT NULL, date_debut DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE station ADD date_visibilite_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE station ADD CONSTRAINT FK_9F39F8B1D6E4EEEE FOREIGN KEY (date_visibilite_id) REFERENCES station_date_visibilite (id);
+CREATE UNIQUE INDEX UNIQ_9F39F8B1D6E4EEEE ON station (date_visibilite_id);

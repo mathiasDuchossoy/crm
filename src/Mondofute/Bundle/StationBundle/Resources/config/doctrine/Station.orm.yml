@@ -89,4 +89,9 @@ Mondofute\Bundle\StationBundle\Entity\Station:
             inversedBy: stations
         stationLabels:
             targetEntity: StationLabel
+    oneToOne:
+        dateVisibilite:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\StationDateVisibilite
+            cascade: ['persist','remove']
+            orphanRemoval: true
     lifecycleCallbacks: {  }
