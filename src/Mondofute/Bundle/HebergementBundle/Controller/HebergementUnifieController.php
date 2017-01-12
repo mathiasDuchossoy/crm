@@ -34,7 +34,6 @@ use Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuel;
 use Mondofute\Bundle\HebergementBundle\Entity\HebergementVisuelTraduction;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
-use Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
@@ -287,6 +286,17 @@ class HebergementUnifieController extends Controller
                 // *** gestion promotionHebergement ***
                 $this->gestionPromotionHebergement($entityUnifie);
                 // *** fin gestion promotionHebergement ***
+
+                // *** gestion decoteStation ***
+                /** @var FournisseurHebergement $fournisseurHebergement */
+                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                    $this->gestionDecoteStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());
+                }
+                // *** fin gestion decoteStation ***
+
+                // *** gestion decoteHebergement ***
+                $this->gestionDecoteHebergement($entityUnifie);
+                // *** fin gestion decoteHebergement ***
 
                 $this->addFlash('success', 'l\'hébergement a bien été créé');
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
@@ -1437,6 +1447,40 @@ class HebergementUnifieController extends Controller
         $application->run($input, $output);
     }
 
+    /**
+     * @param HebergementUnifie $entityUnifie
+     */
+    public function gestionDecoteStation($entityUnifie, $fournisseurId)
+    {
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_decote:decote_station_command',
+            'hebergementUnifieId' => $entityUnifie->getId(),
+            'fournisseurId' => $fournisseurId
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new NullOutput();
+        $application->run($input, $output);
+    }
+
+    private function gestionDecoteHebergement(HebergementUnifie $hebergementUnifie)
+    {
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'mondofute_decote:promotion_hebergement_command',
+            'hebergementUnifieId' => $hebergementUnifie->getId(),
+        ));
+        // You can use NullOutput() if you don't need the output
+        $output = new NullOutput();
+        $application->run($input, $output);
+    }
+
     public function coupdecoeurDeleteAction(Request $request, HebergementUnifie $entityUnifie)
     {
         /** @var HebergementUnifie $entityUnifieSite */
@@ -1868,7 +1912,7 @@ class HebergementUnifieController extends Controller
                     // *** fin suppression des FournisseurPrestationAnnexeLogement ***
                     // *** suppression des promotionHebergements correspondants ***
                     foreach ($entityUnifie->getHebergements() as $hebergement) {
-                        $promotionHebergements = $em->getRepository(PromotionHebergement::class)->findBy(array(
+                        $decoteHebergements = $em->getRepository(PromotionHebergement::class)->findBy(array(
                             'hebergement' => $hebergement->getId(),
                             'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()
                         ));
@@ -1877,6 +1921,20 @@ class HebergementUnifieController extends Controller
                         }
                     }
                     // *** fin suppression des promotionHebergements correspondants ***
+                    // *** suppression des FournisseurPrestationAnnexeLogement ***
+                    $this->deletePrestationAnnexeLogements($originalFournisseurHebergement, $em);
+                    // *** fin suppression des FournisseurPrestationAnnexeLogement ***
+                    // *** suppression des decoteHebergements correspondants ***
+                    foreach ($entityUnifie->getHebergements() as $hebergement) {
+                        $decoteHebergements = $em->getRepository(DecoteHebergement::class)->findBy(array(
+                            'hebergement' => $hebergement->getId(),
+                            'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()
+                        ));
+                        foreach ($decoteHebergements as $decoteHebergement) {
+                            $em->remove($decoteHebergement);
+                        }
+                    }
+                    // *** fin suppression des decoteHebergements correspondants ***
                     $em->remove($originalFournisseurHebergement);
                 }
             }
@@ -2045,6 +2103,47 @@ class HebergementUnifieController extends Controller
                     }
                 }
                 // *** fin gestion promotion hebergement ***
+
+                // *** gestion decoteStation ***
+                /** @var FournisseurHebergement $fournisseurHebergement */
+                // on vérifie si l'on change de station pour un des hebergements
+                /** @var Hebergement $hebergement */
+                /** @var Logement $logement */
+                foreach ($entityUnifie->getHebergements() as $hebergement) {
+                    if ($hebergement->getStation()->getId() != $originalStations->get($hebergement->getId())->getId()) {
+                        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                            $logement = $fournisseurHebergement->getLogements()->filter(function (Logement $element) use ($hebergement) {
+                                return $element->getSite() == $hebergement->getSite();
+                            })->first();
+                            if (false !== $logement) {
+                                $this->gestionDecoteStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());
+                            }
+                        }
+                    } else {
+                        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                            $originalFournisseurHebergement = $originalFournisseurHebergements->filter(function (FournisseurHebergement $element) use ($fournisseurHebergement) {
+                                return $element->getFournisseur()->getId() == $fournisseurHebergement->getFournisseur()->getId();
+                            })->first();
+                            // si fournisseurHebergement est un nouveau on envoi la fonction
+                            if (false === $originalFournisseurHebergement) {
+                                $this->gestionDecoteStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());
+                            }
+                        }
+                    }
+                }
+                // *** fin gestion decoteStation ***
+
+                // *** gestion decote hebergement ***
+                foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+                    $originalFournisseurHebergement = $originalFournisseurHebergements->filter(function (FournisseurHebergement $element) use ($fournisseurHebergement) {
+                        return $element->getFournisseur()->getId() == $fournisseurHebergement->getFournisseur()->getId();
+                    })->first();
+                    // si fournisseurHebergement est un nouveau on envoi la fonction
+                    if (false === $originalFournisseurHebergement) {
+                        $this->gestionDecoteHebergement($entityUnifie);
+                    }
+                }
+                // *** fin gestion decote hebergement ***
 
                 // on parcourt les médias à supprimer
                 if (!empty($visuelToRemoveCollection)) {
