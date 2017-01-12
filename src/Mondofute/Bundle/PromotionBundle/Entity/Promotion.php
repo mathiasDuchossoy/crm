@@ -98,9 +98,17 @@ class Promotion
      */
     private $typePeriodeValidite;
     /**
-     * @var \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate
+     * @var PromotionPeriodeSejourDate
      */
     private $promotionPeriodeSejourDate;
+    /**
+     * @var Collection
+     */
+    private $traductions;
+    /**
+     * @var Collection
+     */
+    private $promotionLogements;
 
     /**
      * Constructor
@@ -116,6 +124,8 @@ class Promotion
         $this->periodeValidites = new ArrayCollection();
         $this->logementPeriodes = new ArrayCollection();
         $this->promotionStations = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
+        $this->promotionLogements = new ArrayCollection();
     }
 
     /**
@@ -701,7 +711,7 @@ class Promotion
     /**
      * Get promotionPeriodeSejourDate
      *
-     * @return \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate
+     * @return PromotionPeriodeSejourDate
      */
     public function getPromotionPeriodeSejourDate()
     {
@@ -711,14 +721,82 @@ class Promotion
     /**
      * Set promotionPeriodeSejourDate
      *
-     * @param \Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate $promotionPeriodeSejourDate
+     * @param PromotionPeriodeSejourDate $promotionPeriodeSejourDate
      *
      * @return Promotion
      */
-    public function setPromotionPeriodeSejourDate(\Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeSejourDate $promotionPeriodeSejourDate = null)
+    public function setPromotionPeriodeSejourDate(PromotionPeriodeSejourDate $promotionPeriodeSejourDate = null)
     {
         $this->promotionPeriodeSejourDate = $promotionPeriodeSejourDate;
 
         return $this;
+    }
+
+    /**
+     * Add traduction
+     *
+     * @param PromotionTraduction $traduction
+     *
+     * @return Promotion
+     */
+    public function addTraduction(PromotionTraduction $traduction)
+    {
+        $this->traductions[] = $traduction->setPromotion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param PromotionTraduction $traduction
+     */
+    public function removeTraduction(PromotionTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
+    }
+
+    /**
+     * Add promotionLogement
+     *
+     * @param PromotionLogement $promotionLogement
+     *
+     * @return Promotion
+     */
+    public function addPromotionLogement(PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements[] = $promotionLogement->setPromotion($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove promotionLogement
+     *
+     * @param PromotionLogement $promotionLogement
+     */
+    public function removePromotionLogement(PromotionLogement $promotionLogement)
+    {
+        $this->promotionLogements->removeElement($promotionLogement);
+    }
+
+    /**
+     * Get promotionLogements
+     *
+     * @return Collection
+     */
+    public function getPromotionLogements()
+    {
+        return $this->promotionLogements;
     }
 }
