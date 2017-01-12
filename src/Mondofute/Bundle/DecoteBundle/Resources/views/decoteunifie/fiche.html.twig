@@ -49,9 +49,10 @@
                         >
                             {{ form_row(decote.decotePeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : decote.decotePeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
+                        {% include ('@MondofuteDecote/decoteunifie/decote-type-affectation.html.twig') %}
                         {{ form_row(decote.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : decote.typePeriodeSejour.vars['unique_block_prefix'],
-                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyDecote~');'
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyDecote~');displaydecoteAffectationType(this,"decote_unifie_decotes_'~keyDecote~'_decoteAffectations")'
                         }}) }}
                         <div id="decote_periode_sejour_date_{{ keyDecote }}" class="form-group"
                                 {% if decote.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::dateADate') %}
@@ -60,7 +61,6 @@
                         >
                             {% include('@MondofuteDecote/decoteunifie/widget-decote-periode-sejour-date.html.twig') with {'decotePeriodeSejourDate': decote.decotePeriodeSejourDate} %}
                         </div>
-                        {% include ('@MondofuteDecote/decoteunifie/decote-type-affectation.html.twig') %}
                         <div id="decote_type_fournisseur_{{ keyDecote }}"
                                 {% set decoteTypeAffectationDisplay = false %}
                                 {% for decoteTypeAffectation in decote.decoteTypeAffectations.vars.value %}
@@ -71,7 +71,7 @@
                                 {% if decote.decoteTypeAffectations.vars.value is empty %}
                                     {% set decoteTypeAffectationDisplay = true %}
                                 {% endif %}
-                                {% if  decoteTypeAffectationDisplay == true %}
+                                {% if  decoteTypeAffectationDisplay == true or form.vars.value.id is null %}
                                     style="display: none;"
                                 {% endif %}
                         >
@@ -726,6 +726,34 @@
                     }
                 });
             });
+        }
+
+        function displayTypePeriodeSejourPeriode(element, selectTypePeriodeSejour) {
+            var $element = $(element);
+            var $selectTypePeriodeSejour = $('#' + selectTypePeriodeSejour);
+            var typePeriodeSejourPeriode = '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') }}';
+            if ($element.val() == '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypeAffectation::type') }}') {
+                if ($selectTypePeriodeSejour.val() == typePeriodeSejourPeriode) {
+                    $selectTypePeriodeSejour.val('');
+                }
+                $selectTypePeriodeSejour.find('option[value="' + typePeriodeSejourPeriode + '"]').hide();
+            } else {
+                $selectTypePeriodeSejour.find('option[value="' + typePeriodeSejourPeriode + '"]').show();
+            }
+        }
+
+        function displaydecoteAffectationType(element, divDecoteTypeAffectation) {
+            var $element = $(element);
+            var $divDecoteTypeAffectation = $('#' + divDecoteTypeAffectation);
+            var radioValue = $($divDecoteTypeAffectation.find('input:checked')[0]).val();
+            var $radioTypeFournisseur = $($divDecoteTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypeAffectation::type') }}"]')[0]);
+            var selectValue = $(element).val();;;;;;;
+            if (selectValue == '{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\TypePeriodeSejour::periode') }}') {
+                $radioTypeFournisseur.prop('checked', false);
+                $radioTypeFournisseur.parent().hide();
+            } else {
+                $radioTypeFournisseur.parent().show();
+            }
         }
 
 

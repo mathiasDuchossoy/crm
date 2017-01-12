@@ -15,7 +15,9 @@
                                 id="mondofute_bundle_decotebundle_decoteunifie_{{ keyDecote }}_decoteTypeAffectations_{{ loop.index - 1 }}"
                                 {#name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteTypeAffectations][{{ loop.index - 1 }}][typeAffectation]"#}
                                 name="mondofute_bundle_decotebundle_decoteunifie[decotes][{{ keyDecote }}][decoteTypeAffectations][0][typeAffectation]"
-                                onchange="displayAffectationPanel(this , '{{ keyDecote }}' , '{{ decote.vars.value.id }}' , '{{ decote.vars.value.site.id }}');"
+                                onchange="displayAffectationPanel(this , '{{ keyDecote }}' , '{{ decote.vars.value.id }}' , '{{ decote.vars.value.site.id }}');
+                                        displayTypePeriodeSejourPeriode(this, '{{ decote.typePeriodeSejour.vars.id }}');
+                                        "
                                 required
                                 value="{{ key }}" type="radio">
                         {{ affectation }}</label>
