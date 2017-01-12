@@ -6,6 +6,7 @@ use Aamant\Distance\Distance;
 use Aamant\Distance\Providers\GoogleMapProvider;
 use Application\Sonata\MediaBundle\Entity\Media;
 use ArrayIterator;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
@@ -26,6 +27,7 @@ use Mondofute\Bundle\StationBundle\Entity\StationCarteIdentite;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenir;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationCommentVenirUnifie;
+use Mondofute\Bundle\StationBundle\Entity\StationDateVisibilite;
 use Mondofute\Bundle\StationBundle\Entity\StationDescription;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionTraduction;
 use Mondofute\Bundle\StationBundle\Entity\StationDescriptionUnifie;
@@ -35,7 +37,6 @@ use Mondofute\Bundle\StationBundle\Entity\StationUnifie;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuel;
 use Mondofute\Bundle\StationBundle\Entity\StationVisuelTraduction;
 use Mondofute\Bundle\StationBundle\Entity\TypeTaxeSejour;
-use Mondofute\Bundle\StationBundle\Form\StationUnifieType;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use ReflectionClass;
@@ -132,7 +133,13 @@ class StationUnifieController extends Controller
 
         $form->handleRequest($request);
 
+        // *******************************
+        // **** VALIDATION FORMULAIRE ****
+        // *******************************
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->deleteDateVisibiliteCrm($stationUnifie);
+            $this->gestionDateVisibilite($stationUnifie);
+
             /** @var Station $entity */
             foreach ($stationUnifie->getStations() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
@@ -172,9 +179,6 @@ class StationUnifieController extends Controller
             $this->descriptionNew($request, $stationUnifie);
             // ***** Fin description *****
 
-            $em = $this->getDoctrine()->getManager();
-
-
             // ***** Gestion des Medias *****
             foreach ($request->get('station_unifie')['stations'] as $key => $station) {
                 if (!empty($stationUnifie->getStations()->get($key)) && $stationUnifie->getStations()->get($key)->getSite()->getCrm() == 1) {
@@ -188,8 +192,7 @@ class StationUnifieController extends Controller
                             foreach ($sites as $site) {
                                 if ($site->getCrm() == 0) {
                                     /** @var Station $stationSite */
-                                    $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use
-                                    (
+                                    $stationSite = $stationUnifie->getStations()->filter(function (Station $element) use (
                                         $site
                                     ) {
                                         return $element->getSite() == $site;
@@ -461,6 +464,49 @@ class StationUnifieController extends Controller
             // passer le tableau trié dans une nouvelle collection
             $traductions = new ArrayCollection(iterator_to_array($iterator));
             $station->setTraductions($traductions);
+        }
+    }
+
+    /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function deleteDateVisibiliteCrm($stationUnifie)
+    {
+        /** @var Station $stationCrm */
+        $stationCrm = $stationUnifie->getStations()->filter(function (Station $element) {
+            return $element->getSite()->getCrm() == 1;
+        })->first();
+        $stationCrm->setDateVisibilite();
+    }
+
+    /**
+     * @param StationUnifie $stationUnifie
+     */
+    private function gestionDateVisibilite($stationUnifie)
+    {
+        $now = new DateTime();
+        /** @var Station $station */
+        foreach ($stationUnifie->getStations() as $station) {
+            if ($station->getSite()->getCrm() === false) {
+                $stationDateVisibilite = $station->getDateVisibilite();
+                if (!empty($stationDateVisibilite)) {
+                    if (empty($stationDateVisibilite->getDateDebut()) && empty($stationDateVisibilite->getDateFin())) {
+                        $station->setDateVisibilite();
+                    } else if (empty($stationDateVisibilite->getDateDebut())) {
+                        if ($stationDateVisibilite->getDateFin() < $now) {
+                            $stationDateVisibilite->setDateDebut($stationDateVisibilite->getDateFin());
+                        } else {
+                            $stationDateVisibilite->setDateDebut($now);
+                        }
+                    } else {
+                        if ($stationDateVisibilite->getDateDebut() > $now) {
+                            $stationDateVisibilite->setDateFin($stationDateVisibilite->getDateDebut());
+                        } else {
+                            $stationDateVisibilite->setDateFin($now);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -906,6 +952,19 @@ class StationUnifieController extends Controller
                 }
                 // ***** fin gestion station label *****
 
+                // *** gestion date visibilite ***
+                if (!empty($station->getDateVisibilite())) {
+                    if (empty($dateVisibilite = $stationSite->getDateVisibilite())) {
+                        $dateVisibilite = new StationDateVisibilite();
+                        $stationSite->setDateVisibilite($dateVisibilite);
+                    }
+                    $dateVisibilite->setDateDebut($station->getDateVisibilite()->getDateDebut())
+                        ->setDateFin($station->getDateVisibilite()->getDateFin());
+                } else {
+                    $stationSite->setDateVisibilite();
+                }
+                // *** fin gestion date visibilite ***
+
                 $emSite->persist($entitySite);
                 $emSite->flush();
             }
@@ -1103,7 +1162,12 @@ class StationUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
+        // *******************************
+        // **** VALIDATION FORMULAIRE ****
+        // *******************************
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->deleteDateVisibiliteCrm($stationUnifie);
+            $this->gestionDateVisibilite($stationUnifie);
             foreach ($stationUnifie->getStations() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
                     $entity->setActif(false);
