@@ -1,20 +1,16 @@
-Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode:
+Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement:
     type: entity
     table: null
-    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteLogementPeriodeRepository
+    repositoryClass: Mondofute\Bundle\DecoteBundle\Repository\DecoteLogementRepository
     id:
         decote:
-            associationKey: true
-        periode:
             associationKey: true
         logement:
             associationKey: true
     manyToOne:
         decote:
             targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
-        periode:
-            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
-            inversedBy: decoteLogementPeriode
+            inversedBy: decoteLogements
     lifecycleCallbacks: {  }

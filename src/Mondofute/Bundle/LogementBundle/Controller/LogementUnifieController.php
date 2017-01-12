@@ -19,7 +19,6 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementPhotoTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
-use Mondofute\Bundle\LogementBundle\Form\LogementUnifieType;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -1390,7 +1389,7 @@ class LogementUnifieController extends Controller
                 /* Si le logement est lié a des ventes alors on va l'archiver sinon on va le supprimer */
 //                if(!$logement->getVentes()->isEmpty && !$vente){
                 if (!$vente) {
-                    $vente = true;
+//                    $vente = true;
                 }
             }
             if ($vente) {
