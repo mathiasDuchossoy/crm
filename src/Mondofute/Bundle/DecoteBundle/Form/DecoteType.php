@@ -151,7 +151,10 @@ class DecoteType extends AbstractType
                 "choice_label" => "libelle",
                 'required' => true,
                 'multiple' => true,
-                'expanded' => true));
+                'expanded' => true))
+            ->add('traductions', CollectionType::class, array(
+                'entry_type' => DecoteTraductionType::class,
+            ));
     }
 
     /**
