@@ -61,3 +61,5 @@ services:
             form_type:
                 name: form.type
                 alias: polycollection
+    mondofute_core_bundle_controller:
+        class: Mondofute\Bundle\CoreBundle\Controller\CoreController

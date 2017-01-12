@@ -13,6 +13,12 @@
                                     {% set ok = true %}
                                 {% endif %}
                             {% endfor %}
+                            {% for decoteLogement in decoteLogements %}
+                                {% if decoteLogement.logement.id == logement.id and ok == false %}
+                                    checked="checked"
+                                    {% set ok = true %}
+                                {% endif %}
+                            {% endfor %}
 
                            class="decote_{{ keyDecote }}_{{ fournisseurId }}_{{ hebergementId }}_logement_values"
                            id="checkbox_decote_logement_{{ keyDecote }}_{{ logement.id }}"
@@ -27,4 +33,11 @@
             </div>
         </div>
     {% endfor %}
+    {% if logements is empty %}
+        <lu>
+            <li class="list-group-item">
+                <div class="alert alert-info" role="alert">Il n'y a pas de logements.</div>
+            </li>
+        </lu>
+    {% endif %}
 </div>

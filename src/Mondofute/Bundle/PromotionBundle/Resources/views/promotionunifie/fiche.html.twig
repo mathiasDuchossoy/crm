@@ -28,6 +28,7 @@
                          data-crm="{{ promotion.vars.value.site.crm | number_format }}">
                         {{ form_row(promotion.site) }}
                         {{ form_row(promotion.libelle, { 'attr' : { 'data-unique_block_prefix' : promotion.libelle.vars['unique_block_prefix']}}) }}
+                        {% include ('@MondofuteCore/widget-traduction.html.twig') with {'entity' : promotion} %}
                         {{ form_row(promotion.typeRemise, { 'attr' : { 'data-unique_block_prefix' : promotion.typeRemise.vars['unique_block_prefix']}}) }}
                         {{ form_row(promotion.valeurRemise, { 'type' : 'number' , 'attr' : { 'step' : 'any' , 'data-unique_block_prefix' : promotion.valeurRemise.vars['unique_block_prefix'] }}) }}
                         {{ form_row(promotion.typePeriodeValidite, {  'attr' : {
@@ -48,9 +49,10 @@
                         >
                             {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
+                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
-                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');'
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');displaypromotionAffectationType(this,"promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations")'
                         }}) }}
                         <div id="promotion_periode_sejour_date_{{ keyPromotion }}" class="form-group"
                                 {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') %}
@@ -59,7 +61,6 @@
                         >
                             {% include('@MondofutePromotion/promotionunifie/widget-promotion-periode-sejour-date.html.twig') with {'promotionPeriodeSejourDate': promotion.promotionPeriodeSejourDate} %}
                         </div>
-                        {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         <div id="promotion_type_fournisseur_{{ keyPromotion }}"
                                 {% set promotionTypeAffectationDisplay = false %}
                                 {% for promotionTypeAffectation in promotion.promotionTypeAffectations.vars.value %}
@@ -70,7 +71,7 @@
                                 {% if promotion.promotionTypeAffectations.vars.value is empty %}
                                     {% set promotionTypeAffectationDisplay = true %}
                                 {% endif %}
-                                {% if  promotionTypeAffectationDisplay == true %}
+                                {% if  promotionTypeAffectationDisplay == true  or form.vars.value.id is null %}
                                     style="display: none;"
                                 {% endif %}
                         >
@@ -165,6 +166,10 @@
         items.push("_promotion_unifie_promotions_entry_promotionAffectations");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeApplication");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
+        {% for langue in langues %}
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_titre_{{ langue.code }}");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_langue_{{ langue.code }}");
+        {% endfor %}
 
         var radioIds = ['_promotion_unifie_promotions_entry_promotionAffectations'];
 
@@ -726,6 +731,34 @@
                     }
                 });
             });
+        }
+
+        function displayTypePeriodeSejourPeriode(element, selectTypePeriodeSejour) {
+            var $element = $(element);
+            var $selectTypePeriodeSejour = $('#' + selectTypePeriodeSejour);
+            var typePeriodeSejourPeriode = '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}';
+            if ($element.val() == '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::type') }}') {
+                if ($selectTypePeriodeSejour.val() == typePeriodeSejourPeriode) {
+                    $selectTypePeriodeSejour.val('');
+                }
+                $selectTypePeriodeSejour.find('option[value="' + typePeriodeSejourPeriode + '"]').hide();
+            } else {
+                $selectTypePeriodeSejour.find('option[value="' + typePeriodeSejourPeriode + '"]').show();
+            }
+        }
+
+        function displaypromotionAffectationType(element, divPromotionTypeAffectation) {
+            var $element = $(element);
+            var $divPromotionTypeAffectation = $('#' + divPromotionTypeAffectation);
+            var radioValue = $($divPromotionTypeAffectation.find('input:checked')[0]).val();
+            var $radioTypeFournisseur = $($divPromotionTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::type') }}"]')[0]);
+            var selectValue = $(element).val();;;;;;;;;;
+            if (selectValue == '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}') {
+                $radioTypeFournisseur.prop('checked', false);
+                $radioTypeFournisseur.parent().hide();
+            } else {
+                $radioTypeFournisseur.parent().show();
+            }
         }
 
     </script>
