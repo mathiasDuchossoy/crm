@@ -109,6 +109,26 @@ class Promotion
      * @var Collection
      */
     private $promotionLogements;
+    /**
+     * @var integer
+     */
+    private $variante;
+    /**
+     * @var integer
+     */
+    private $choixVariante1;
+    /**
+     * @var integer
+     */
+    private $applicationRemise;
+    /**
+     * @var boolean
+     */
+    private $compteARebours = false;
+    /**
+     * @var integer
+     */
+    private $stock;
 
     /**
      * Constructor
@@ -798,5 +818,125 @@ class Promotion
     public function getPromotionLogements()
     {
         return $this->promotionLogements;
+    }
+
+    /**
+     * Get variante
+     *
+     * @return integer
+     */
+    public function getVariante()
+    {
+        return $this->variante;
+    }
+
+    /**
+     * Set variante
+     *
+     * @param integer $variante
+     *
+     * @return Promotion
+     */
+    public function setVariante($variante)
+    {
+        $this->variante = $variante;
+
+        return $this;
+    }
+
+    /**
+     * Get choixVariante1
+     *
+     * @return integer
+     */
+    public function getChoixVariante1()
+    {
+        return $this->choixVariante1;
+    }
+
+    /**
+     * Set choixVariante1
+     *
+     * @param integer $choixVariante1
+     *
+     * @return Promotion
+     */
+    public function setChoixVariante1($choixVariante1 = null)
+    {
+        $this->choixVariante1 = $choixVariante1;
+
+        return $this;
+    }
+
+    /**
+     * Get applicationRemise
+     *
+     * @return integer
+     */
+    public function getApplicationRemise()
+    {
+        return $this->applicationRemise;
+    }
+
+    /**
+     * Set applicationRemise
+     *
+     * @param integer $applicationRemise
+     *
+     * @return Promotion
+     */
+    public function setApplicationRemise($applicationRemise = null)
+    {
+        $this->applicationRemise = $applicationRemise;
+
+        return $this;
+    }
+
+    /**
+     * Get compteARebours
+     *
+     * @return boolean
+     */
+    public function getCompteARebours()
+    {
+        return $this->compteARebours;
+    }
+
+    /**
+     * Set compteARebours
+     *
+     * @param boolean $compteARebours
+     *
+     * @return Promotion
+     */
+    public function setCompteARebours($compteARebours = false)
+    {
+        $this->compteARebours = $compteARebours;
+
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     *
+     * @return Promotion
+     */
+    public function setStock($stock = null)
+    {
+        $this->stock = $stock;
+
+        return $this;
     }
 }

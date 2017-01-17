@@ -5,10 +5,12 @@ namespace Mondofute\Bundle\PromotionBundle\Form;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\PromotionBundle\Entity\ChoixVariante1;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeRemise;
+use Mondofute\Bundle\PromotionBundle\Entity\Variante;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -126,11 +128,6 @@ class PromotionType extends AbstractType
             ->add('periodeValidites', EntityType::class, array(
                 'class' => PeriodeValidite::class,
                 'required' => true,
-//                "choice_label" => "traductions[0].libelle",
-//                "placeholder" => " --- choisir un type ---",
-//                'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
-//                    return $r->getTraductionsByLocale($locale);
-//                },
                 'multiple' => true,
                 'expanded' => true,
             ))
@@ -142,7 +139,28 @@ class PromotionType extends AbstractType
             ))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => PromotionTraductionType::class,
-            ));
+            ))
+            ->add('variante', ChoiceType::class, array(
+                'choices' => array(
+                    Variante::sejour1Semainex2 => Variante::getLibelle(Variante::sejour1Semainex2),
+                    Variante::aLaPersonne => Variante::getLibelle(Variante::aLaPersonne),
+                    Variante::produitEnPack => Variante::getLibelle(Variante::produitEnPack),
+                    Variante::venteFlash => Variante::getLibelle(Variante::venteFlash),
+                    Variante::stockSpecifique => Variante::getLibelle(Variante::stockSpecifique),
+                ),
+                'placeholder' => " --- Choisir une variante --- ",
+            ))
+            ->add('choixVariante1', ChoiceType::class, array(
+                'choices' => array(
+                    ChoixVariante1::semaineMoinsChereOfferte => ChoixVariante1::getLibelle(ChoixVariante1::semaineMoinsChereOfferte),
+                    ChoixVariante1::appliquerRemise => ChoixVariante1::getLibelle(ChoixVariante1::appliquerRemise),
+                ),
+                'placeholder' => " --- Choisir une variante --- ",
+                'expanded' => true
+            ))
+            ->add('applicationRemise')
+            ->add('compteARebours')
+            ->add('stock');
     }
 
     /**

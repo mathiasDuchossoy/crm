@@ -21,6 +21,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PromotionBundle\Entity\ChoixVariante1;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
@@ -38,6 +39,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite;
+use Mondofute\Bundle\PromotionBundle\Entity\Variante;
 use Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
@@ -146,9 +148,11 @@ class PromotionUnifieController extends Controller
 
             // *** gestion typePeriodeSejour ***
             $this->gestionTypePeriodeSejour($promotionUnifie);
-            // *** fin gestion typePeriodeSejour ***
+            // *** fin gestion typePeriodeSejour ***.
 
-            $em = $this->getDoctrine()->getManager();
+            // *** gestion variantes ***
+            $this->gestionVariantes($promotionUnifie);
+            // *** fin gestion variantes ***
 
             $em->persist($promotionUnifie);
 
@@ -380,6 +384,27 @@ class PromotionUnifieController extends Controller
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    /**
+     * @param PromotionUnifie $entityUnifie
+     */
+    private function gestionVariantes($entityUnifie)
+    {
+        /** @var Promotion $entity */
+        foreach ($entityUnifie->getPromotions() as $entity) {
+            if ($entity->getVariante() != Variante::sejour1Semainex2) {
+                $entity->setChoixVariante1();
+                if ($entity->getVariante() != Variante::venteFlash) {
+                    $entity->setCompteARebours();
+                    if ($entity->getVariante() == Variante::stockSpecifique) {
+                        $entity->setStock();
+                    }
+                }
+            } else if ($entity->getChoixVariante1() != ChoixVariante1::appliquerRemise) {
+                $entity->setApplicationRemise();
             }
         }
     }
@@ -811,7 +836,12 @@ class PromotionUnifieController extends Controller
                     ->setTypePeriodeValidite($entity->getTypePeriodeValidite())
                     ->setTypePeriodeSejour($entity->getTypePeriodeSejour())
                     ->setTypeApplication($entity->getTypeApplication())
-                    ->setTypeRemise($entity->getTypeRemise());
+                    ->setTypeRemise($entity->getTypeRemise())
+                    ->setVariante($entity->getVariante())
+                    ->setChoixVariante1($entity->getChoixVariante1())
+                    ->setApplicationRemise($entity->getApplicationRemise())
+                    ->setCompteARebours($entity->getCompteARebours())
+                    ->setStock($entity->getStock());
 
                 $emSite->persist($entityUnifieSite);
 
@@ -1266,6 +1296,10 @@ class PromotionUnifieController extends Controller
             // *** gestion typePeriodeSejour ***
             $this->gestionTypePeriodeSejour($promotionUnifie);
             // *** fin gestion typePeriodeSejour ***
+
+            // *** gestion variantes ***
+            $this->gestionVariantes($promotionUnifie);
+            // *** fin gestion variantes ***
 
             $em->persist($promotionUnifie);
             $em->flush();

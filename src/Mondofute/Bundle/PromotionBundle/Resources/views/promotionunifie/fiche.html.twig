@@ -49,6 +49,7 @@
                         >
                             {{ form_row(promotion.promotionPeriodeValiditeJour, {  'attr' : {  'data-unique_block_prefix' : promotion.promotionPeriodeValiditeJour.vars['unique_block_prefix'] }}) }}
                         </div>
+                        {% include ('@MondofutePromotion/promotionunifie/variante.html.twig') with {'entity' : promotion, 'name' : 'promotion'} %}
                         {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
@@ -166,6 +167,11 @@
         items.push("_promotion_unifie_promotions_entry_promotionAffectations");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeApplication");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_variante");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_applicationRemise");
+
         {% for langue in langues %}
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_titre_{{ langue.code }}");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_langue_{{ langue.code }}");
@@ -752,7 +758,7 @@
             var $divPromotionTypeAffectation = $('#' + divPromotionTypeAffectation);
             var radioValue = $($divPromotionTypeAffectation.find('input:checked')[0]).val();
             var $radioTypeFournisseur = $($divPromotionTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::type') }}"]')[0]);
-            var selectValue = $(element).val();;;;;;;;;;
+            var selectValue = $(element).val();
             if (selectValue == '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}') {
                 $radioTypeFournisseur.prop('checked', false);
                 $radioTypeFournisseur.parent().hide();
@@ -760,6 +766,52 @@
                 $radioTypeFournisseur.parent().show();
             }
         }
+
+    </script>
+
+    {#gestion variante#}
+    <script type="text/javascript">
+        function gestionVariantes(element, div) {
+            var elementValue = $(element).val();
+            var $divSejour1Semainex2 = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }});
+            var $divVenteFlash = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }});
+            var $divStockSpecifique = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') }});
+            if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}) {
+                $divSejour1Semainex2.show();
+                $divSejour1Semainex2.find('input').prop('required', 'required');
+            } else {
+                $divSejour1Semainex2.hide();
+                $divSejour1Semainex2.find('input').prop('required', '');
+            }
+            if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }}) {
+                $divVenteFlash.show();
+            } else {
+                $divVenteFlash.hide();
+            }
+            if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') }}) {
+                $divStockSpecifique.show();
+                $divStockSpecifique.find('input').prop('required', 'required');
+            } else {
+                $divStockSpecifique.hide();
+                $divStockSpecifique.find('input').prop('required', '');
+            }
+        }
+
+        function displayApplicationRemise(element, div) {
+            var elementValue = $(element).val();
+            var $div = $('#' + div);
+            if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\ChoixVariante1::appliquerRemise') }}) {
+                $div.show();
+            } else {
+                $div.hide();
+            }
+            if ($div.is(':visible')) {
+                $div.find('input').prop('required', 'required');
+            } else {
+                $div.find('input').prop('required', '');
+            }
+        }
+
 
     </script>
 
