@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;

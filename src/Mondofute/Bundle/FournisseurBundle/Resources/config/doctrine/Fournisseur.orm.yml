@@ -131,9 +131,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         conditionAnnulationDescription:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulationDescription
             cascade: ['persist']
-        station:
-            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
-            inversedBy: fournisseurs
     oneToOne:
         logo:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
