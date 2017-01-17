@@ -1,0 +1,3 @@
+hi_dev_auteur_homepage:
+    path:     /
+    defaults: { _controller: HiDevAuteurBundle:Default:index }

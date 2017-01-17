@@ -1,0 +1,8 @@
+Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\FournisseurBundle\Repository\FournisseurCommentaireRepository
+    manyToOne:
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+    lifecycleCallbacks: {  }

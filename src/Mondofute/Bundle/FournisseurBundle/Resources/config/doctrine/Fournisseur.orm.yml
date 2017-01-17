@@ -113,6 +113,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
             mappedBy: fournisseur
             cascade: ['remove']
+        commentaires:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
+            mappedBy: fournisseur
         saisonFournisseurs:
             targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur
             mappedBy: fournisseur
