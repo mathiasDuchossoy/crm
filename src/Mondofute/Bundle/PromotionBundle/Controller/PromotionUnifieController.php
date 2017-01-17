@@ -1029,7 +1029,7 @@ class PromotionUnifieController extends Controller
 
         $editForm = $this->createForm('Mondofute\Bundle\PromotionBundle\Form\PromotionUnifieType',
             $promotionUnifie)
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirRadioVides();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
 

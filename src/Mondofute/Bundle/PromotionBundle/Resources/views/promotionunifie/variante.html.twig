@@ -11,7 +11,8 @@
     <div class="form-group">
         {{ form_label(entity.choixVariante1) }}
         <div class="col-sm-10">
-            <div id="{{ entity.choixVariante1.vars.id }}">
+            <div id="{{ entity.choixVariante1.vars.id }}"
+                 data-unique_block_prefix="_promotion_unifie_promotions_entry_choixVariante1">
                 {% for element in entity.choixVariante1 %}
                     {% if entity.variante.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') and element.vars.value != '' %}
                         {{ form_widget(element, {'attr': {'onchange' : 'displayApplicationRemise(this,"div_'~entity.applicationRemise.vars.id~'");', 'required' : 'required'}}) }}
