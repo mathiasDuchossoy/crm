@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
@@ -76,3 +77,19 @@ class FournisseurCommentaire extends Commentaire
         return $this->reponses;
     }
 }
+||||||| merged common ancestors
+=======
+<?php
+
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use Mondofute\Bundle\CommentaireBundle\Entity\Commentaire;
+
+/**
+ * FournisseurCommentaire
+ */
+class FournisseurCommentaire extends Commentaire
+{
+}
+
+>>>>>>> commentaires
