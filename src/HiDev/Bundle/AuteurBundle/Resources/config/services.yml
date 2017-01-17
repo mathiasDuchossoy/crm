@@ -1,0 +1,4 @@
+services:
+#    hi_dev_auteur.example:
+#        class: HiDev\Bundle\AuteurBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

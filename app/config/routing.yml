@@ -1,3 +1,15 @@
+#mondofute_commentaire:
+#    resource: "@MondofuteCommentaireBundle/Resources/config/routing.yml"
+#    prefix:   /
+#
+#hi_dev_auteur:
+#    resource: "@HiDevAuteurBundle/Resources/config/routing.yml"
+#    prefix:   /
+#
+#hi_dev_commentaire:
+#    resource: "@HiDevCommentaireBundle/Resources/config/routing.yml"
+#    prefix:   /
+
 mondofute_promotion:
     resource: "@MondofutePromotionBundle/Resources/config/routing.yml"
     prefix:   /
