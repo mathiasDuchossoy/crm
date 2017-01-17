@@ -1,0 +1,4 @@
+services:
+#    mondofute_commentaire.example:
+#        class: Mondofute\Bundle\CommentaireBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
