@@ -1,6 +1,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+>>>>>>> commentaires
 ||||||| merged common ancestors
 =======
 <<<<<<< HEAD
@@ -83,6 +88,7 @@ class FournisseurCommentaire extends Commentaire
         return $this->reponses;
     }
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 ||||||| merged common ancestors
 =======
@@ -352,3 +358,22 @@ class FournisseurCommentaire extends Commentaire
     }
 }
 >>>>>>> gestion des commentaires dans la fiche fournisseur
+||||||| merged common ancestors
+=======
+||||||| merged common ancestors
+=======
+<?php
+
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use Mondofute\Bundle\CommentaireBundle\Entity\Commentaire;
+
+/**
+ * FournisseurCommentaire
+ */
+class FournisseurCommentaire extends Commentaire
+{
+}
+
+>>>>>>> commentaires
+>>>>>>> commentaires
