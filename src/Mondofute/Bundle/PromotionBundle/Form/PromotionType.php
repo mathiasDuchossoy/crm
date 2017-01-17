@@ -155,8 +155,8 @@ class PromotionType extends AbstractType
                     ChoixVariante1::semaineMoinsChereOfferte => ChoixVariante1::getLibelle(ChoixVariante1::semaineMoinsChereOfferte),
                     ChoixVariante1::appliquerRemise => ChoixVariante1::getLibelle(ChoixVariante1::appliquerRemise),
                 ),
-                'placeholder' => " --- Choisir une variante --- ",
-                'expanded' => true
+                'expanded' => true,
+                'required' => false
             ))
             ->add('applicationRemise')
             ->add('compteARebours')
