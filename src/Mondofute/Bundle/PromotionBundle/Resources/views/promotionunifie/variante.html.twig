@@ -13,7 +13,7 @@
         <div class="col-sm-10">
             <div id="{{ entity.choixVariante1.vars.id }}">
                 {% for element in entity.choixVariante1 %}
-                    {% if entity.variante.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') %}
+                    {% if entity.variante.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') and element.vars.value != '' %}
                         {{ form_widget(element, {'attr': {'onchange' : 'displayApplicationRemise(this,"div_'~entity.applicationRemise.vars.id~'");', 'required' : 'required'}}) }}
                     {% elseif (element.vars.value != '') %}
                         {{ form_widget(element, {'attr': {'onchange' : 'displayApplicationRemise(this,"div_'~entity.applicationRemise.vars.id~'");'}}) }}
