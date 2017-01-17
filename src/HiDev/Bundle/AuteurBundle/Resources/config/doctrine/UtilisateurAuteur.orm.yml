@@ -1,0 +1,8 @@
+HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur:
+    type: entity
+    table: null
+    repositoryClass: HiDev\Bundle\AuteurBundle\Repository\UtilisateurAuteurRepository
+    oneToOne:
+        utilisateur:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+    lifecycleCallbacks: {  }

@@ -1,0 +1,4 @@
+services:
+#    hi_dev_commentaire.example:
+#        class: HiDev\Bundle\CommentaireBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

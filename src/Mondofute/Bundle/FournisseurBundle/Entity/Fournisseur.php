@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
@@ -134,6 +135,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $promotionFournisseurPrestationAnnexes;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $commentaires;
     /**
      * @var Collection
      */
@@ -447,8 +452,7 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    )
-    {
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -951,8 +955,9 @@ class Fournisseur extends Moral
      *
      * @return Fournisseur
      */
-    public function setConditionAnnulationDescription(ConditionAnnulationDescription $conditionAnnulationDescription = null)
-    {
+    public function setConditionAnnulationDescription(
+        ConditionAnnulationDescription $conditionAnnulationDescription = null
+    ) {
         $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;
@@ -1033,8 +1038,9 @@ class Fournisseur extends Moral
      *
      * @return Fournisseur
      */
-    public function addPromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
-    {
+    public function addPromotionFournisseurPrestationAnnex(
+        PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+    ) {
         $this->promotionFournisseurPrestationAnnexes[] = $promotionFournisseurPrestationAnnex->setFournisseur($this);
 
         return $this;
@@ -1045,8 +1051,9 @@ class Fournisseur extends Moral
      *
      * @param PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
      */
-    public function removePromotionFournisseurPrestationAnnex(PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex)
-    {
+    public function removePromotionFournisseurPrestationAnnex(
+        PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
+    ) {
         $this->promotionFournisseurPrestationAnnexes->removeElement($promotionFournisseurPrestationAnnex);
     }
 
@@ -1058,6 +1065,40 @@ class Fournisseur extends Moral
     public function getPromotionFournisseurPrestationAnnexes()
     {
         return $this->promotionFournisseurPrestationAnnexes;
+    }
+
+    /**
+     * Add commentaire
+     *
+     * @param FournisseurCommentaire $commentaire
+     *
+     * @return Fournisseur
+     */
+    public function addCommentaire(FournisseurCommentaire $commentaire)
+    {
+        $this->commentaires[] = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentaire
+     *
+     * @param FournisseurCommentaire $commentaire
+     */
+    public function removeCommentaire(FournisseurCommentaire $commentaire)
+    {
+        $this->commentaires->removeElement($commentaire);
+    }
+
+    /**
+     * Get commentaires
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommentaires()
+    {
+        return $this->commentaires;
     }
 
     /**
