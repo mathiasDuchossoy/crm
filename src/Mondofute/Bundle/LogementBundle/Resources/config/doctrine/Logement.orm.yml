@@ -57,6 +57,10 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
         prestationAnnexeLogements:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement
             mappedBy: logement
+        logementPeriodeLocatifs:
+            targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
+            mappedBy: logement
+            cascade: ['remove']
         promotionLogementPeriodes:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode
             mappedBy: logement
@@ -76,5 +80,4 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
     manyToMany:
         typePeriodes:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
-#            cascade: ['persist' , 'remove']
     lifecycleCallbacks: {  }
