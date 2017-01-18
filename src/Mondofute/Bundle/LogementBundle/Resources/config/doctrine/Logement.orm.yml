@@ -77,10 +77,6 @@ Mondofute\Bundle\LogementBundle\Entity\Logement:
             targetEntity: Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode
             mappedBy: logement
             cascade: ['remove']
-        logementPeriodeLocatifs:
-            targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
-            mappedBy: logement
-            cascade: ['remove']
     manyToMany:
         typePeriodes:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
