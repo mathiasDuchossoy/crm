@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
-use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
@@ -101,10 +100,6 @@ class Logement
      * @var Collection
      */
     private $decoteLogementPeriode;
-    /**
-     * @var Collection
-     */
-    private $logementPeriodeLocatifs;
 
     /**
      * Constructor
@@ -121,7 +116,6 @@ class Logement
         $this->decoteLogements = new ArrayCollection();
         $this->promotionLogementPeriodes = new ArrayCollection();
         $this->decoteLogementPeriode = new ArrayCollection();
-        $this->logementPeriodeLocatifs = new ArrayCollection();
     }
 
     /**
@@ -719,38 +713,4 @@ class Logement
         return $this->decoteLogementPeriode;
     }
 
-    /**
-     * Add logementPeriodeLocatif
-     *
-     * @param LogementPeriodeLocatif $logementPeriodeLocatif
-     *
-     * @return Logement
-     */
-    public function addLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
-    {
-        $this->logementPeriodeLocatifs[] = $logementPeriodeLocatif->setLogement($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove logementPeriodeLocatif
-     *
-     * @param LogementPeriodeLocatif $logementPeriodeLocatif
-     */
-    public function removeLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
-    {
-//        $logementPeriodeLocatif->setPeriode(null);
-        $this->logementPeriodeLocatifs->removeElement($logementPeriodeLocatif);
-    }
-
-    /**
-     * Get logementPeriodeLocatifs
-     *
-     * @return Collection
-     */
-    public function getLogementPeriodeLocatifs()
-    {
-        return $this->logementPeriodeLocatifs;
-    }
 }
