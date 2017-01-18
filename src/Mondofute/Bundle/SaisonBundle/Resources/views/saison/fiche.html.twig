@@ -1,0 +1,59 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {{ form_row(form.libelle) }}
+            {{ form_row(form.enCours) }}
+            <div class="form-group">
+                <label class="col-sm-2 control-label required" for="mondofute_bundle_saisonbundle_saison_dateDebut">Dates</label>
+                <div class="col-sm-10">
+                    <div class="input-daterange form-inline input-group">
+                        {{ form_widget(form.dateDebut, { 'attr' : {
+                            'style' : 'text-align: left;'
+                        }}) }}
+                        <span class="input-group-addon">au</span>
+                        {{ form_widget(form.dateFin, { 'attr' : {
+                            'style' : 'text-align: left;'
+                        }}) }}
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+
+        $('.input-daterange').datepicker({
+            todayBtn: "linked",
+            format: "dd/mm/yyyy",
+            autoclose: "true",
+            pickerPosition: "bottom-left",
+            startView: "day",
+            minView: "month",
+            daysOfWeekHighlighted: [0, 6],
+            language: "fr",
+            todayHighlight: true
+        });
+    </script>
+
+{% endblock %}

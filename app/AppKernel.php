@@ -62,6 +62,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\CoupDeCoeurBundle\MondofuteCoupDeCoeurBundle(),
             new Mondofute\Bundle\DecoteBundle\MondofuteDecoteBundle(),
             new Mondofute\Bundle\PromotionBundle\MondofutePromotionBundle(),
+            new Mondofute\Bundle\SaisonBundle\MondofuteSaisonBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

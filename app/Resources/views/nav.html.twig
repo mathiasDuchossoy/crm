@@ -348,6 +348,21 @@
                     </ul>
                 </li>
                 {# ***** FIN CANAL DECOTE ***** #}
+                {# ***** SAISON ***** #}
+                <li role="presentation"
+                    class="dropdown-submenu {% if 'saison' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false" href="">{{ 'saison' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'saison_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('saison_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'saison_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('saison_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN SAISON ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}

@@ -1,0 +1,24 @@
+saison_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+saison_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:show" }
+    methods:  GET
+
+saison_new:
+    path:     /new
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:new" }
+    methods:  [GET, POST]
+
+saison_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:edit" }
+    methods:  [GET, POST]
+
+saison_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:delete" }
+    methods:  DELETE

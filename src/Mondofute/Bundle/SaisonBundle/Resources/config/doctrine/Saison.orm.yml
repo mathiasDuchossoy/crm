@@ -1,0 +1,23 @@
+Mondofute\Bundle\SaisonBundle\Entity\Saison:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\SaisonBundle\Repository\SaisonRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        libelle:
+            type: string
+            length: 255
+        enCours:
+            type: boolean
+        dateDebut:
+            type: date
+        dateFin:
+            type: date
+    lifecycleCallbacks: {  }
