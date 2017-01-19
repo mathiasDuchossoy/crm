@@ -1,0 +1,71 @@
+Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\SaisonBundle\Repository\SaisonFournisseurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        contrat:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        stock:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        flux:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        valideOptions:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        earlybooking:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+        conditionEarlybooking:
+            type: text
+            nullable: true
+        ficheTechniques:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: 0
+        tarifTechniques:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: 0
+        photosTechniques:
+            type: smallint
+            options:
+                unsigned: true
+                default: 0
+    manyToOne:
+        agentSaisie:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+        agentProd:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+        agentMaJProd:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+        fournisseur:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+            inversedBy: saisonFournisseurs
+        saison:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\Saison
+    lifecycleCallbacks: {  }

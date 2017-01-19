@@ -20,6 +20,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
+                <li><a data-toggle="tab" href="#saison">{{ 'saison' | trans | capitalize }}</a></li>
                 {% if edit is defined %}
                 <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a>
                     {% endif %}
@@ -262,6 +263,7 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
+                {% include ('@MondofuteSaison/saisonfournisseur/fiche.html.twig') %}
                 {% if edit is defined %}
                     <div id="prestationannexe" class="tab-pane fade in">
                         {% for famillePrestationAnnexe in famillePrestationAnnexes %}

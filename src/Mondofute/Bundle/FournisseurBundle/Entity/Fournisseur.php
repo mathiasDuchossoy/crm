@@ -13,6 +13,7 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
 
@@ -133,6 +134,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $promotionFournisseurPrestationAnnexes;
+    /**
+     * @var Collection
+     */
+    private $saisonFournisseurs;
 
     /**
      * Fournisseur constructor.
@@ -150,6 +155,7 @@ class Fournisseur extends Moral
         $this->fournisseurEnfants = new ArrayCollection();
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
+        $this->saisonFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -1052,5 +1058,39 @@ class Fournisseur extends Moral
     public function getPromotionFournisseurPrestationAnnexes()
     {
         return $this->promotionFournisseurPrestationAnnexes;
+    }
+
+    /**
+     * Add saisonFournisseur
+     *
+     * @param SaisonFournisseur $saisonFournisseur
+     *
+     * @return Fournisseur
+     */
+    public function addSaisonFournisseur(SaisonFournisseur $saisonFournisseur)
+    {
+        $this->saisonFournisseurs[] = $saisonFournisseur->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove saisonFournisseur
+     *
+     * @param SaisonFournisseur $saisonFournisseur
+     */
+    public function removeSaisonFournisseur(SaisonFournisseur $saisonFournisseur)
+    {
+        $this->saisonFournisseurs->removeElement($saisonFournisseur);
+    }
+
+    /**
+     * Get saisonFournisseurs
+     *
+     * @return Collection
+     */
+    public function getSaisonFournisseurs()
+    {
+        return $this->saisonFournisseurs;
     }
 }

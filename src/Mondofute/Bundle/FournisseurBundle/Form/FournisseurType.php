@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
 use Mondofute\Bundle\FournisseurBundle\Entity\RelocationAnnulation;
@@ -12,6 +11,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form\FournisseurPrestatio
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
+use Mondofute\Bundle\SaisonBundle\Form\SaisonFournisseurType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -206,7 +206,10 @@ class FournisseurType extends AbstractType
                     ),
                     'choices_as_values' => true,
                 )
-            );
+            )
+            ->add('saisonFournisseurs', CollectionType::class, array(
+                'entry_type' => SaisonFournisseurType::class
+            ));
     }
 
     /**

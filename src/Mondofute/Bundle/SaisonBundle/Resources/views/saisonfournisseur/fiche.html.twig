@@ -1,0 +1,23 @@
+<div id="saison" class="tab-pane fade">
+    {% for saisonFournisseur in form.saisonFournisseurs %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ saisonFournisseur.vars.value.saison.libelle }}</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_row(saisonFournisseur.contrat) }}
+                {{ form_row(saisonFournisseur.stock) }}
+                {{ form_row(saisonFournisseur.flux) }}
+                {{ form_row(saisonFournisseur.valideOptions) }}
+                {{ form_row(saisonFournisseur.earlybooking) }}
+                {{ form_row(saisonFournisseur.conditionEarlybooking) }}
+                {{ form_row(saisonFournisseur.ficheTechniques) }}
+                {{ form_row(saisonFournisseur.tarifTechniques) }}
+                {{ form_row(saisonFournisseur.photosTechniques) }}
+                {{ form_row(saisonFournisseur.agentSaisie) }}
+                {{ form_row(saisonFournisseur.agentProd) }}
+                {{ form_row(saisonFournisseur.agentMaJProd) }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
