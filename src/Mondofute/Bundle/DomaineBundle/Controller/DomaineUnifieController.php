@@ -1828,7 +1828,7 @@ class DomaineUnifieController extends Controller
         } else {
             $domaineUnifie = $em->find(DomaineUnifie::class, $id);
         }
-        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie);
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, ['modeleDescriptionForfaitSki' => true]);
 
         return $this->render('@MondofuteDomaine/domaineunifie/tab-modele-description-forfait-ski.html.twig', array(
             'entity' => $domaineUnifie,
