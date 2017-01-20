@@ -1597,8 +1597,6 @@ class DomaineUnifieController extends Controller
         }
 
 
-        echo '1600';
-        die;
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
