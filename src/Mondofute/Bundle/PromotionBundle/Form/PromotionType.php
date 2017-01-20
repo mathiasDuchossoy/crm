@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\PromotionBundle\Form;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\PromotionBundle\Entity\ApplicationRemise;
 use Mondofute\Bundle\PromotionBundle\Entity\ChoixVariante1;
 use Mondofute\Bundle\PromotionBundle\Entity\TypeApplication;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour;
@@ -156,9 +157,18 @@ class PromotionType extends AbstractType
                     ChoixVariante1::appliquerRemise => ChoixVariante1::getLibelle(ChoixVariante1::appliquerRemise),
                 ),
                 'expanded' => true,
-                'required' => false
+                'required' => false,
+                'empty_value' => false
             ))
-            ->add('applicationRemise')
+            ->add('applicationRemise', ChoiceType::class, array(
+                'choices' => array(
+                    ApplicationRemise::deuxiemeSemaine => ApplicationRemise::getLibelle(ApplicationRemise::deuxiemeSemaine),
+                    ApplicationRemise::semaineMoinsChere => ApplicationRemise::getLibelle(ApplicationRemise::semaineMoinsChere),
+                ),
+                'expanded' => true,
+                'required' => false,
+                'empty_value' => false
+            ))
             ->add('compteARebours')
             ->add('stock');
     }

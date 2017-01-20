@@ -170,14 +170,15 @@
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_variante");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
-        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_applicationRemise");
 
         {% for langue in langues %}
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_titre_{{ langue.code }}");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_langue_{{ langue.code }}");
         {% endfor %}
 
-        var radioIds = ['_promotion_unifie_promotions_entry_promotionAffectations', '_promotion_unifie_promotions_entry_choixVariante1'];
+        var radioIds = ['_promotion_unifie_promotions_entry_promotionAffectations',
+            '_promotion_unifie_promotions_entry_choixVariante1',
+            '_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_applicationRemise'];
 
     </script>
     {{ parent() }}
@@ -771,15 +772,20 @@
 
     {#gestion variante#}
     <script type="text/javascript">
-        function gestionVariantes(element, div) {
+        function gestionVariantes(element, div, divPromotionTypeAffectation) {
             var elementValue = $(element).val();
             var $divSejour1Semainex2 = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }});
             var $divVenteFlash = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }});
             var $divStockSpecifique = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') }});
+            var $divPromotionTypeAffectation = $('#' + divPromotionTypeAffectation);
+            var $radioTypeLogement = $($divPromotionTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') }}"]')[0]);
             if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}) {
+                $radioTypeLogement.prop('checked', false);
+                $radioTypeLogement.parent().hide();
                 $divSejour1Semainex2.show();
                 $divSejour1Semainex2.find('input').prop('required', 'required');
             } else {
+                $radioTypeLogement.parent().show();
                 $divSejour1Semainex2.hide();
                 $divSejour1Semainex2.find('input').prop('required', '');
             }

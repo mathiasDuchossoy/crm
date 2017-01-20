@@ -6,7 +6,12 @@
         <div id="promotion_unifie_promotions_{{ keyPromotion }}_promotionAffectations" onclick=""
              data-unique_block_prefix="_promotion_unifie_promotions_entry_promotionAffectations">
             {% for key, affectation in affectations %}
-                <div class="radio"><label class=""><input
+                <div class="radio"><label class=""
+                            {% if promotion.vars.value.variante == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2')
+                            and key == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') %}
+                                style="display: none"
+                            {% endif %}
+                    ><input
                                 {% for value in promotion.promotionTypeAffectations.vars.value %}
                                     {% if value.typeAffectation == key %}
                                         checked="checked"

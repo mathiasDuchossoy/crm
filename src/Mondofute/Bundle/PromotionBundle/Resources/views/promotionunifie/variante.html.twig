@@ -1,5 +1,5 @@
 {{ form_row(entity.variante , {'attr' : {
-    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'");',
+    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'","promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations");',
     'data-unique_block_prefix' : entity.variante.vars['unique_block_prefix']
 }}) }}
 <div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}"
@@ -28,7 +28,21 @@
                 style="display: none"
             {% endif %}
     >
-        {{ form_row(entity.applicationRemise, {'attr' : {'data-unique_block_prefix' : entity.applicationRemise.vars['unique_block_prefix']}}) }}
+        <div class="form-group">
+            {{ form_label(entity.applicationRemise) }}
+            <div class="col-sm-10">
+                <div id="{{ entity.applicationRemise.vars.id }}"
+                     data-unique_block_prefix="{{ entity.applicationRemise.vars['unique_block_prefix'] }}">
+                    {% for element in entity.applicationRemise %}
+                        {% if entity.choixVariante1.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\ChoixVariante1::appliquerRemise') %}
+                            {{ form_widget(element, {'attr': { 'required' : 'required'}}) }}
+                        {% elseif (element.vars.value != '') %}
+                            {{ form_widget(element) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }}"
