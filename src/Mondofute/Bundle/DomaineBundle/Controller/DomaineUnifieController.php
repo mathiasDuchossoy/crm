@@ -1600,8 +1600,8 @@ class DomaineUnifieController extends Controller
         }
 
 
-        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
-            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+//        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
+//            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
