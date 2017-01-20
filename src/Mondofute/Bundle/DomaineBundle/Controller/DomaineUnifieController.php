@@ -1088,8 +1088,6 @@ class DomaineUnifieController extends Controller
      */
     public function editAction(Request $request, DomaineUnifie $domaineUnifie)
     {
-        echo 'coucou';
-        die;
         /** @var Domaine $domaine */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
@@ -1152,6 +1150,8 @@ class DomaineUnifieController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
+        echo 'coucou';
+        die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $domaineCarteIdentiteUnifieController = new DomaineCarteIdentiteUnifieController();
