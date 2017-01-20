@@ -65,6 +65,6 @@ Mondofute\Bundle\DomaineBundle\Entity\Domaine:
     oneToOne:
         modeleDescriptionForfaitSki:
             targetEntity: Mondofute\Bundle\DescriptionForfaitSkiBundle\Entity\ModeleDescriptionForfaitSki
-            cascade: ['persist' , 'remove']
+#            cascade: ['persist' , 'remove']
 #            cascade: ['remove']
     lifecycleCallbacks: {  }
