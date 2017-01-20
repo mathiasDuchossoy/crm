@@ -66,8 +66,8 @@ class DomaineType extends AbstractType
             ->add('photosParent')
             ->add('videosParent');
 
-        if ($options['modeleDescriptionForfaitSki']) {
-//        if (true) {
+//        if ($options['modeleDescriptionForfaitSki']) {
+        if (true) {
             $builder
                 ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class, array(
                     'data_class' => ModeleDescriptionForfaitSki::class
