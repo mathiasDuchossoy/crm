@@ -1,5 +1,5 @@
 {{ form_row(entity.variante , {'attr' : {
-    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'","promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations","promotion_panel_hebergement_'~keyPromotion~'");',
+    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'","promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations","'~keyPromotion~'");',
     'data-unique_block_prefix' : entity.variante.vars['unique_block_prefix']
 }}) }}
 <div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}"

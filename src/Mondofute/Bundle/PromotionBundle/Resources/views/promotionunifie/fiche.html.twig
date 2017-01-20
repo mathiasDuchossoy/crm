@@ -772,21 +772,26 @@
 
     {#gestion variante#}
     <script type="text/javascript">
-        function gestionVariantes(element, div, divPromotionTypeAffectation, panel_hebergement) {
+        function gestionVariantes(element, div, divPromotionTypeAffectation, keyPromotion) {
             var elementValue = $(element).val();
             var $divSejour1Semainex2 = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }});
             var $divVenteFlash = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }});
             var $divStockSpecifique = $('#' + div + '_' +{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') }});
             var $divPromotionTypeAffectation = $('#' + divPromotionTypeAffectation);
-            var $radioTypeLogement = $($divPromotionTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') }}"]')[0]);
+            var radioTypes = $divPromotionTypeAffectation.find('input[value!="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') }}"]');
             if (elementValue == {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}) {
-                $radioTypeLogement.prop('checked', false);
-                $radioTypeLogement.parent().hide();
-                $('#' + panel_hebergement).hide();
+                for (var i = 0; i < radioTypes.length; i++) {
+                    $(radioTypes[i]).prop('checked', false);
+                    $(radioTypes[i]).parent().hide();
+                }
+                $('#promotion_type_fournisseur_' + keyPromotion).hide();
+                $('#promotion_panel_prestation_annexe_' + keyPromotion).hide();
                 $divSejour1Semainex2.show();
                 $divSejour1Semainex2.find('input').prop('required', 'required');
             } else {
-                $radioTypeLogement.parent().show();
+                for (var i = 0; i < radioTypes.length; i++) {
+                    $(radioTypes[i]).parent().show();
+                }
                 $divSejour1Semainex2.hide();
                 $divSejour1Semainex2.find('input').prop('required', '');
             }

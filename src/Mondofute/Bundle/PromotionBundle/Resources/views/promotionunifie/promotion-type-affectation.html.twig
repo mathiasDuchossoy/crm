@@ -8,7 +8,7 @@
             {% for key, affectation in affectations %}
                 <div class="radio"><label class=""
                             {% if promotion.vars.value.variante == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2')
-                            and key == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') %}
+                            and key != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::logement') %}
                                 style="display: none"
                             {% endif %}
                     ><input
