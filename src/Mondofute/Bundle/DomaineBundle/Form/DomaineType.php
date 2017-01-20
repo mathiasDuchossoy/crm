@@ -64,10 +64,14 @@ class DomaineType extends AbstractType
             ))
             ->add('imagesParent')
             ->add('photosParent')
-            ->add('videosParent')
-            ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class, array(
-                'data_class' => ModeleDescriptionForfaitSki::class
-            ));
+            ->add('videosParent');
+
+        if ($options['modeleDescriptionForfaitSki']) {
+            $builder
+                ->add('modeleDescriptionForfaitSki', ModeleDescriptionForfaitSkiType::class, array(
+                    'data_class' => ModeleDescriptionForfaitSki::class
+                ));
+        }
     }
 
     /**
@@ -79,7 +83,8 @@ class DomaineType extends AbstractType
             'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\Domaine',
             'locale' => 'fr_FR',
             'siteDomaineParent' => '',
-            'domaineUnifieId' => null
+            'domaineUnifieId' => null,
+            'modeleDescriptionForfaitSki' => false
         ));
     }
 }
