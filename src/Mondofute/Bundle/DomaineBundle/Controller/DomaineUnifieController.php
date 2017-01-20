@@ -1150,8 +1150,6 @@ class DomaineUnifieController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
 
         $editForm->handleRequest($request);
-        echo 'coucou';
-        die;
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $domaineCarteIdentiteUnifieController = new DomaineCarteIdentiteUnifieController();
@@ -1598,6 +1596,9 @@ class DomaineUnifieController extends Controller
             return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
+
+        echo '1600';
+        die;
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
