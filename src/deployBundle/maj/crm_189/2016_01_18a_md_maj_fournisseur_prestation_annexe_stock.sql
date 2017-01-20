@@ -1,0 +1,4 @@
+ALTER TABLE fournisseur_prestation_annexe_stock_fournisseur DROP PRIMARY KEY;
+ALTER TABLE fournisseur_prestation_annexe_stock_fournisseur ADD PRIMARY KEY (periode_id, fournisseur_prestation_annexe_id);
+ALTER TABLE fournisseur_prestation_annexe_stock_hebergement DROP PRIMARY KEY;
+ALTER TABLE fournisseur_prestation_annexe_stock_hebergement ADD PRIMARY KEY (periode_id, fournisseur_hebergement_id, fournisseur_prestation_annexe_id);

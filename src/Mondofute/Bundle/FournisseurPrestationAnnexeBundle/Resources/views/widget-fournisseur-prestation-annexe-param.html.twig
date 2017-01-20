@@ -19,7 +19,14 @@
                     style="display: none"
                 {% endif %}
         >
-            {{ form_row(param.forfaitQuantiteType) }}
+            {% if param.type.vars.value == constant('Mondofute\\Bundle\\FournisseurPrestationAnnexeBundle\\Entity\\Type::Forfait') %}
+                {{ form_row(param.forfaitQuantiteType , {
+                    'attr' : {
+                        'required' : 'required'
+                    }} ) }}
+            {% else %}
+                {{ form_row(param.forfaitQuantiteType ) }}
+            {% endif %}
         </div>
         <div>
             {{ form_label(param.capacite) }}
