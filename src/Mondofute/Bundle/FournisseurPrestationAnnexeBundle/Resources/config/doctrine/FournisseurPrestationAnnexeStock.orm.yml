@@ -25,9 +25,9 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             options:
                 unsigned: true
     manyToOne:
-        fournisseurPrestationAnnexe:
-            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
-            inversedBy: fournisseurPrestationAnnexeStocks
+#        fournisseurPrestationAnnexe:
+#            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+#            inversedBy: fournisseurPrestationAnnexeStocks
 #        logementPeriode:
 #            targetEntity: Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode
         periode:
