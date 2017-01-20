@@ -1820,6 +1820,22 @@ class DomaineUnifieController extends Controller
 
     }
 
+    public function getModeleDescriptionForfaitSkiAction($id = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if (empty($id)) {
+            $domaineUnifie = new DomaineUnifie();
+        } else {
+            $domaineUnifie = $em->find(DomaineUnifie::class, $id);
+        }
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie);
+
+        return $this->render('@MondofuteDomaine/domaineunifie/tab-modele-description-forfait-ski.html.twig', array(
+            'entity' => $domaineUnifie,
+            'form' => $form->createView(),
+        ));
+    }
+
     /**
      * Deletes a DomaineUnifie entity.
      *

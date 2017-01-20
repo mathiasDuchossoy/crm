@@ -244,6 +244,10 @@
                     </div>
                     {# tab-modele-description-forfait-ski #}
                     {% if domaine.vars.value.site.crm == 1 %}
+
+                        <div id="data_modele_description_forfait_ski" class="tab-pane fade">
+
+                        </div>
                         {#{% include ('@MondofuteDomaine/domaineunifie/tab-modele-description-forfait-ski.html.twig') %}#}
                     {% endif %}
                     {# fin tab-modele-description-forfait-ski #}
@@ -452,6 +456,12 @@
                     // add a new image form (see next code block)
                     addForm(window['$' + element + 'CollectionHolder'], link[element], element);
                 });
+            });
+
+
+            $.ajax('{{ path('domaine_domaine_modele_description_forfait_ski' , {'id' : entity.id}) }}'
+            ).done(function (data) {
+                $('#data_modele_description_forfait_ski').html(data);
             });
         });
 
