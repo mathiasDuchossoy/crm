@@ -1596,10 +1596,6 @@ class DomaineUnifieController extends Controller
             return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
-        if ($this->container->has('profiler')) {
-            $this->container->get('profiler')->disable();
-        }
-
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
