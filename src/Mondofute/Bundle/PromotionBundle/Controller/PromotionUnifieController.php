@@ -399,7 +399,7 @@ class PromotionUnifieController extends Controller
                 $entity->setChoixVariante1();
                 if ($entity->getVariante() != Variante::venteFlash) {
                     $entity->setCompteARebours();
-                    if ($entity->getVariante() == Variante::stockSpecifique) {
+                    if ($entity->getVariante() != Variante::stockSpecifique) {
                         $entity->setStock();
                     }
                 }
