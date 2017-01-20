@@ -42,6 +42,8 @@ use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Entity\Saison;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Mondofute\Bundle\ServiceBundle\Entity\Service;
 use Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement;
@@ -144,6 +146,7 @@ class HebergementUnifieController extends Controller
 
         $this->ajouterHebergementsDansForm($entityUnifie);
         $this->hebergementsSortByAffichage($entityUnifie);
+        $this->gestionSaisons($entityUnifie);
 
         $form = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType', $entityUnifie,
             array('locale' => $request->getLocale()));
@@ -151,6 +154,8 @@ class HebergementUnifieController extends Controller
             'label' => 'Enregistrer',
             'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
         ));
+
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -265,6 +270,8 @@ class HebergementUnifieController extends Controller
             $this->gestionCoupDeCoeur($entityUnifie);
             // *** fin gestion coup de coeur ***
 
+            $this->gestionSaisons($entityUnifie);
+
             $em->persist($entityUnifie);
             try {
                 $error = false;
@@ -310,6 +317,80 @@ class HebergementUnifieController extends Controller
             'entity' => $entityUnifie,
             'form' => $formView,
         ));
+    }
+
+
+
+    private function gestionSaisons(HebergementUnifie $hebergementUnifie)
+    {
+        /** @var SaisonHebergement $saisonHebergementCrm */
+        /** @var Hebergement $hebergement */
+        /** @var Hebergement $hebergementCrm */
+        $em = $this->getDoctrine()->getManager();
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $hebergementCrm = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) {
+            return $element->getSite()->getCrm();
+        })->first();
+        $hebergements = $hebergementUnifie->getHebergements()->filter(function (Hebergement $element) {
+           return !$element->getSite()->getCrm();
+        });
+        foreach ($saisons as $saison) {
+            $saisonHebergement = $hebergementCrm->getSaisonHebergements()->filter(function (SaisonHebergement $element) use ($saison) {
+                return $element->getSaison() == $saison;
+            })->first();
+            if (false === $saisonHebergement) {
+                $saisonHebergement = new SaisonHebergement();
+                $hebergementCrm->addSaisonHebergement($saisonHebergement);
+                $saisonHebergement->setSaison($saison);
+            }
+        }
+        foreach ($hebergements as $hebergement) {
+            foreach ($hebergementCrm->getSaisonHebergements() as $saisonHebergementCrm) {
+                $saisonHebergement = $hebergement->getSaisonHebergements()->filter(function (SaisonHebergement $element) use ($saisonHebergementCrm) {
+                    return $element->getSaison() == $saisonHebergementCrm->getSaison();
+                })->first();
+                if(false === $saisonHebergement) {
+                    $saisonHebergement = new SaisonHebergement();
+                    $hebergement->addSaisonHebergement($saisonHebergement);
+                    $saisonHebergement->setSaison($saisonHebergementCrm->getSaison());
+                }
+                $saisonHebergement
+                    ->setValideFiche($saisonHebergementCrm->getValideFiche())
+                    ->setValideTarif($saisonHebergementCrm->getValideTarif())
+                    ->setValidePhoto($saisonHebergementCrm->getValidePhoto())
+                    ->setActif($saisonHebergementCrm->getActif());
+            }
+        }
+    }
+
+
+
+    /**
+     * @param Hebergement $hebergement
+     * @param Hebergement $hebergementSite
+     * @param EntityManager $emSite
+     */
+    private function gestionSaisonsSite($hebergement, $hebergementSite, $emSite)
+    {
+        /** @var SaisonHebergement $saisonHebergement */
+        foreach ($hebergement->getSaisonHebergements() as $saisonHebergement) {
+            $saisonHebergementSite = $hebergementSite->getSaisonHebergements()->filter(function (SaisonHebergement $element) use ($saisonHebergement) {
+                return $element->getId() == $saisonHebergement->getId();
+            })->first();
+            if (false === $saisonHebergementSite) {
+                $saisonHebergementSite = new SaisonHebergement();
+                $hebergementSite->addSaisonHebergement($saisonHebergementSite);
+                $saisonHebergementSite->setId($saisonHebergement->getId());
+                $metadata = $emSite->getClassMetadata(get_class($saisonHebergementSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $saisonHebergementSite->setSaison($emSite->find(Saison::class, $saisonHebergement->getSaison()));
+            }
+            $saisonHebergementSite
+                ->setValideFiche($saisonHebergement->getValideFiche())
+                ->setValideTarif($saisonHebergement->getValideTarif())
+                ->setValidePhoto($saisonHebergement->getValidePhoto())
+                ->setActif($saisonHebergement->getActif());
+        }
     }
 
     /**
@@ -1144,6 +1225,8 @@ class HebergementUnifieController extends Controller
                 }
                 // *** fin gestion coupDeCoeur ***
 
+                $this->gestionSaisonsSite($entity, $entitySite, $emSite);
+
                 $emSite->persist($entityUnifieSite);
                 $emSite->flush();
             }
@@ -1722,6 +1805,7 @@ class HebergementUnifieController extends Controller
 //        $this->dispacherDonneesCommune($departementUnifie);
         $this->hebergementsSortByAffichage($entityUnifie);
         $deleteForm = $this->createDeleteForm($entityUnifie);
+        $this->gestionSaisons($entityUnifie);
 
         $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
             $entityUnifie, array('locale' => $request->getLocale()))
@@ -1912,7 +1996,7 @@ class HebergementUnifieController extends Controller
                     // *** fin suppression des FournisseurPrestationAnnexeLogement ***
                     // *** suppression des promotionHebergements correspondants ***
                     foreach ($entityUnifie->getHebergements() as $hebergement) {
-                        $decoteHebergements = $em->getRepository(PromotionHebergement::class)->findBy(array(
+                        $promotionHebergements = $em->getRepository(PromotionHebergement::class)->findBy(array(
                             'hebergement' => $hebergement->getId(),
                             'fournisseur' => $originalFournisseurHebergement->getFournisseur()->getId()
                         ));
@@ -2050,6 +2134,8 @@ class HebergementUnifieController extends Controller
             // *** gestion coup de coeur ***
             $coupDeCoeurRemove = $this->gestionCoupDeCoeur($entityUnifie);
             // *** fin gestion coup de coeur ***
+
+            $this->gestionSaisons($entityUnifie);
 
             $em->persist($entityUnifie);
 

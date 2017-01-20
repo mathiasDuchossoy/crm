@@ -47,6 +47,10 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement
             mappedBy: hebergement
             cascade: ['persist','remove']
+        saisonHebergements:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement
+            mappedBy: hebergement
+            cascade: ['persist','remove']
     oneToOne:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement

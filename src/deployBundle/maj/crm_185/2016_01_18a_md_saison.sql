@@ -7,3 +7,7 @@ ALTER TABLE saison_fournisseur ADD CONSTRAINT FK_7E077A34670C757F FOREIGN KEY (f
 ALTER TABLE saison_fournisseur ADD CONSTRAINT FK_7E077A34F965414C FOREIGN KEY (saison_id) REFERENCES saison (id);*/
 /*
 ALTER TABLE saison_fournisseur CHANGE condition_earlybooking condition_earlybooking LONGTEXT DEFAULT NULL;*/
+
+CREATE TABLE saison_hebergement (id INT UNSIGNED AUTO_INCREMENT NOT NULL, saison_id INT UNSIGNED DEFAULT NULL, hebergement_id INT UNSIGNED DEFAULT NULL, valide_fiche TINYINT(1) NOT NULL, valide_tarif TINYINT(1) NOT NULL, valide_photo TINYINT(1) NOT NULL, actif TINYINT(1) NOT NULL, INDEX IDX_CB6D9AF965414C (saison_id), INDEX IDX_CB6D9A23BB0F66 (hebergement_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE saison_hebergement ADD CONSTRAINT FK_CB6D9AF965414C FOREIGN KEY (saison_id) REFERENCES saison (id);
+ALTER TABLE saison_hebergement ADD CONSTRAINT FK_CB6D9A23BB0F66 FOREIGN KEY (hebergement_id) REFERENCES hebergement (id);
