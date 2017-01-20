@@ -31,7 +31,6 @@ use Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique;
 use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
-use Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
@@ -1089,6 +1088,8 @@ class DomaineUnifieController extends Controller
      */
     public function editAction(Request $request, DomaineUnifie $domaineUnifie)
     {
+        echo 'coucou';
+        die;
         /** @var Domaine $domaine */
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository('MondofuteSiteBundle:Site')->findBy(array(), array('classementAffichage' => 'asc'));
