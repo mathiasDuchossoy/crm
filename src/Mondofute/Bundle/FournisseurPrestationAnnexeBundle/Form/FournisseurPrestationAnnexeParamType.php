@@ -31,8 +31,7 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 "placeholder" => " --- choisir un type ---",
                 'choices_as_values' => true,
                 'label' => 'type',
-                'translation_domain' => 'messages',
-                'required' => true,
+                'translation_domain' => 'messages'
             ))
             ->add('capacite', FournisseurPrestationAnnexeCapaciteType::class, array('required' => false,))
             ->add('dureeSejour', FournisseurPrestationAnnexeDureeSejourType::class, array('required' => false,))
@@ -89,10 +88,11 @@ class FournisseurPrestationAnnexeParamType extends AbstractType
                 ),
                 'choices_as_values' => true,
                 'expanded' => true,
-                'required' => true,
+                'required' => false,
                 'attr' => array(
                     'class' => 'form-inline'
                 ),
+                'empty_value' => false
             ));
     }
 
