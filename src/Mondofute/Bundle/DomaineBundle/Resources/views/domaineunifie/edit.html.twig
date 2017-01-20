@@ -1,4 +1,4 @@
-{#{% extends '@MondofuteDomaine/domaineunifie/fiche.html.twig' %}#}
+{% extends '@MondofuteDomaine/domaineunifie/fiche.html.twig' %}
 
 {% block title %}
     {{ 'modification d\'un domaine ' | capitalize }}
@@ -23,6 +23,6 @@
 
 {#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
 {% block javascripts %}
-    {#{{ parent() }}#}
+    {{ parent() }}
 
 {% endblock %}
