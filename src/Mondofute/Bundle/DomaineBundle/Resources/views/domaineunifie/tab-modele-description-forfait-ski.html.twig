@@ -1,5 +1,6 @@
-{% if domaine.vars.value.site.crm == 1 %}
-    <div id="data_modele_description_forfait_ski" class="tab-pane fade in">
+{#{% for domaine in form.domaines %}#}
+    {% if domaine.vars.value.site.crm == 1 %}
+        {#<div id="data_modele_description_forfait_ski" class="tab-pane fade in">#}
         {% set categorieLigneDescriptionForfaitSkiTmp = '' %}
         {% for key , descriptionForfaitSki in domaine.modeleDescriptionForfaitSki.descriptionForfaitSkis %}
             {% if categorieLigneDescriptionForfaitSkiTmp != descriptionForfaitSki.vars.value.ligneDescriptionForfaitSki.categorie.id %}
@@ -90,5 +91,6 @@
                 </div>
             {% endif %}
         {% endfor %}
-    </div>
-{% endif %}
+        {#</div>#}
+    {% endif %}
+{#{% endfor %}#}

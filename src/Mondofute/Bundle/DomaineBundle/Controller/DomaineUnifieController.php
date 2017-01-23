@@ -31,7 +31,6 @@ use Mondofute\Bundle\DomaineBundle\Entity\RemonteeMecanique;
 use Mondofute\Bundle\DomaineBundle\Entity\Snowpark;
 use Mondofute\Bundle\DomaineBundle\Entity\SnowparkTraduction;
 use Mondofute\Bundle\DomaineBundle\Entity\TypePiste;
-use Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UniteBundle\Entity\Distance;
@@ -1147,9 +1146,12 @@ class DomaineUnifieController extends Controller
         $this->domainesSortByAffichage($domaineUnifie);
         $deleteForm = $this->createDeleteForm($domaineUnifie);
 
+//        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale(), 'modeleDescriptionForfaitSki' => true))
+//            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+
         $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
-
+        ini_set('memory_limit', '1000M');
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -1597,6 +1599,10 @@ class DomaineUnifieController extends Controller
             return $this->redirectToRoute('domaine_domaine_edit', array('id' => $domaineUnifie->getId()));
         }
 
+
+//        $editForm = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, array('locale' => $request->getLocale()))
+//            ->add('submit', SubmitType::class, array('label' => 'Mettre à jour', 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')));
+
         return $this->render('@MondofuteDomaine/domaineunifie/edit.html.twig', array(
             'entity' => $domaineUnifie,
             'sites' => $sites,
@@ -1819,6 +1825,22 @@ class DomaineUnifieController extends Controller
 //                $em->flush();
         }
 
+    }
+
+    public function getModeleDescriptionForfaitSkiAction($id = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if (empty($id)) {
+            $domaineUnifie = new DomaineUnifie();
+        } else {
+            $domaineUnifie = $em->find(DomaineUnifie::class, $id);
+        }
+        $form = $this->createForm('Mondofute\Bundle\DomaineBundle\Form\DomaineUnifieType', $domaineUnifie, ['modeleDescriptionForfaitSki' => true]);
+
+        return $this->render('@MondofuteDomaine/domaineunifie/tab-modele-description-forfait-ski.html.twig', array(
+            'entity' => $domaineUnifie,
+            'form' => $form->createView(),
+        ));
     }
 
     /**
