@@ -43,4 +43,12 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexePeriodeIndisponible
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['persist', 'remove']
+        fournisseurPrestationAnnexeStockHebergements:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockHebergement
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['remove']
+        fournisseurPrestationAnnexeStockFournisseurs:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockFournisseur
+            mappedBy: fournisseurPrestationAnnexe
+            cascade: ['remove']
     lifecycleCallbacks: {  }
