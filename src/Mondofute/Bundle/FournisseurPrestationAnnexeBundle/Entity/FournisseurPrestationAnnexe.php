@@ -49,6 +49,14 @@ class FournisseurPrestationAnnexe
      * @var Collection
      */
     private $periodeIndisponibles;
+    /**
+     * @var Collection
+     */
+    private $fournisseurPrestationAnnexeStockHebergements;
+    /**
+     * @var Collection
+     */
+    private $fournisseurPrestationAnnexeStockFournisseurs;
 
     /**
      * Constructor
@@ -60,6 +68,8 @@ class FournisseurPrestationAnnexe
         $this->params = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
         $this->periodeIndisponibles = new ArrayCollection();
+        $this->fournisseurPrestationAnnexeStockHebergements = new ArrayCollection();
+        $this->fournisseurPrestationAnnexeStockFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -324,5 +334,73 @@ class FournisseurPrestationAnnexe
     public function getPeriodeIndisponibles()
     {
         return $this->periodeIndisponibles;
+    }
+
+    /**
+     * Add fournisseurPrestationAnnexeStockHebergement
+     *
+     * @param FournisseurPrestationAnnexeStockHebergement $fournisseurPrestationAnnexeStockHebergement
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addFournisseurPrestationAnnexeStockHebergement(FournisseurPrestationAnnexeStockHebergement $fournisseurPrestationAnnexeStockHebergement)
+    {
+        $this->fournisseurPrestationAnnexeStockHebergements[] = $fournisseurPrestationAnnexeStockHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseurPrestationAnnexeStockHebergement
+     *
+     * @param FournisseurPrestationAnnexeStockHebergement $fournisseurPrestationAnnexeStockHebergement
+     */
+    public function removeFournisseurPrestationAnnexeStockHebergement(FournisseurPrestationAnnexeStockHebergement $fournisseurPrestationAnnexeStockHebergement)
+    {
+        $this->fournisseurPrestationAnnexeStockHebergements->removeElement($fournisseurPrestationAnnexeStockHebergement);
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexeStockHebergements
+     *
+     * @return Collection
+     */
+    public function getFournisseurPrestationAnnexeStockHebergements()
+    {
+        return $this->fournisseurPrestationAnnexeStockHebergements;
+    }
+
+    /**
+     * Add fournisseurPrestationAnnexeStockFournisseur
+     *
+     * @param FournisseurPrestationAnnexeStockFournisseur $fournisseurPrestationAnnexeStockFournisseur
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addFournisseurPrestationAnnexeStockFournisseur(FournisseurPrestationAnnexeStockFournisseur $fournisseurPrestationAnnexeStockFournisseur)
+    {
+        $this->fournisseurPrestationAnnexeStockFournisseurs[] = $fournisseurPrestationAnnexeStockFournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseurPrestationAnnexeStockFournisseur
+     *
+     * @param FournisseurPrestationAnnexeStockFournisseur $fournisseurPrestationAnnexeStockFournisseur
+     */
+    public function removeFournisseurPrestationAnnexeStockFournisseur(FournisseurPrestationAnnexeStockFournisseur $fournisseurPrestationAnnexeStockFournisseur)
+    {
+        $this->fournisseurPrestationAnnexeStockFournisseurs->removeElement($fournisseurPrestationAnnexeStockFournisseur);
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexeStockFournisseurs
+     *
+     * @return Collection
+     */
+    public function getFournisseurPrestationAnnexeStockFournisseurs()
+    {
+        return $this->fournisseurPrestationAnnexeStockFournisseurs;
     }
 }

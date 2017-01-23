@@ -7,4 +7,8 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             associationKey: true
         periode:
             associationKey: true
+    manyToOne:
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            inversedBy: fournisseurPrestationAnnexeStockFournisseurs
     lifecycleCallbacks: {  }

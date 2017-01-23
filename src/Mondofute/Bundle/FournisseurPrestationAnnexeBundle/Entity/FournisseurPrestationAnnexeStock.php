@@ -14,10 +14,10 @@ abstract class FournisseurPrestationAnnexeStock
      * @var integer
      */
     private $stock;
-    /**
-     * @var FournisseurPrestationAnnexe
-     */
-    private $fournisseurPrestationAnnexe;
+//    /**
+//     * @var FournisseurPrestationAnnexe
+//     */
+//    private $fournisseurPrestationAnnexe;
     /**
      * @var Periode
      */
@@ -47,30 +47,30 @@ abstract class FournisseurPrestationAnnexeStock
 
         return $this;
     }
-
-    /**
-     * Get fournisseurPrestationAnnexe
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function getFournisseurPrestationAnnexe()
-    {
-        return $this->fournisseurPrestationAnnexe;
-    }
-
-    /**
-     * Set fournisseurPrestationAnnexe
-     *
-     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
-     *
-     * @return FournisseurPrestationAnnexeStock
-     */
-    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
-    {
-        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
-
-        return $this;
-    }
+//
+//    /**
+//     * Get fournisseurPrestationAnnexe
+//     *
+//     * @return FournisseurPrestationAnnexe
+//     */
+//    public function getFournisseurPrestationAnnexe()
+//    {
+//        return $this->fournisseurPrestationAnnexe;
+//    }
+//
+//    /**
+//     * Set fournisseurPrestationAnnexe
+//     *
+//     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
+//     *
+//     * @return FournisseurPrestationAnnexeStock
+//     */
+//    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
+//    {
+//        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
+//
+//        return $this;
+//    }
 
     /**
      * Get periode
