@@ -24,6 +24,10 @@ class FournisseurPrestationAnnexeStockHebergement extends FournisseurPrestationA
      * @var FournisseurHebergement
      */
     private $fournisseurHebergement;
+    /**
+     * @var FournisseurPrestationAnnexe
+     */
+    private $fournisseurPrestationAnnexe;
 
     /**
      * Get fournisseurHebergement
@@ -45,6 +49,30 @@ class FournisseurPrestationAnnexeStockHebergement extends FournisseurPrestationA
     public function setFournisseurHebergement(FournisseurHebergement $fournisseurHebergement = null)
     {
         $this->fournisseurHebergement = $fournisseurHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function getFournisseurPrestationAnnexe()
+    {
+        return $this->fournisseurPrestationAnnexe;
+    }
+
+    /**
+     * Set fournisseurPrestationAnnexe
+     *
+     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexeStockHebergement
+     */
+    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe)
+    {
+        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
 
         return $this;
     }
