@@ -712,5 +712,4 @@ class Logement
     {
         return $this->decoteLogementPeriode;
     }
-
 }

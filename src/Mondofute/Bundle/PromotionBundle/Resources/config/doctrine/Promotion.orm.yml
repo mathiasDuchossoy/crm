@@ -40,6 +40,33 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
             type: smallint
             options:
                 unsigned: true
+        variante:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        choixVariante1:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        applicationRemise:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        compteARebours:
+            type: boolean
+            options:
+                default: false
+        stock:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
     manyToOne:
         promotionUnifie:
             targetEntity: Mondofute\Bundle\PromotionBundle\Entity\PromotionUnifie
