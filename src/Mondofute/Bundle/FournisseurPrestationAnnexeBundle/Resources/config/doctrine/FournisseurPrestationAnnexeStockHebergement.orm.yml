@@ -13,4 +13,7 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
     manyToOne:
         fournisseurHebergement:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement
+        fournisseurPrestationAnnexe:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe
+            inversedBy: fournisseurPrestationAnnexeStockHebergements
     lifecycleCallbacks: {  }
