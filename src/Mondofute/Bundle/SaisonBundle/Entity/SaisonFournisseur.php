@@ -82,6 +82,10 @@ class SaisonFournisseur
      * @var Saison
      */
     private $saison;
+    /**
+     * @var Utilisateur
+     */
+    private $agentMaJSaisie;
 
     /**
      * Get id
@@ -437,6 +441,30 @@ class SaisonFournisseur
     public function setSaison(Saison $saison = null)
     {
         $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get agentMaJSaisie
+     *
+     * @return Utilisateur
+     */
+    public function getAgentMaJSaisie()
+    {
+        return $this->agentMaJSaisie;
+    }
+
+    /**
+     * Set agentMaJSaisie
+     *
+     * @param Utilisateur $agentMaJSaisie
+     *
+     * @return SaisonFournisseur
+     */
+    public function setAgentMaJSaisie(Utilisateur $agentMaJSaisie = null)
+    {
+        $this->agentMaJSaisie = $agentMaJSaisie;
 
         return $this;
     }

@@ -63,6 +63,8 @@ Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
         agentMaJProd:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+        agentMaJSaisie:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: saisonFournisseurs
