@@ -17,7 +17,7 @@ class SaisonType extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('enCours')
+//            ->add('enCours')
             ->add('dateDebut', DateType::class, array(
                 'required' => true,
                 'widget' => 'single_text',

@@ -32,6 +32,18 @@
                             <a class="btn btn-default"
                                href="{{ path('saison_edit', { 'id': saison.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
+                        <li>
+                            <div class="radio"><label><input name="mondofute_bundle_saisonbundle_saison_en_cours"
+                                                             value="{{ saison.id }}"
+                                            {% if saison.enCours == true %}
+                                                checked="checked"
+                                            {% endif %}
+                                                             type="radio"
+                                                             onchange="setEncours(this);"
+                                    >
+                                    En
+                                    cours</label></div>
+                        </li>
                     </ul>
                 </td>
             </tr>
@@ -48,4 +60,20 @@
             </li>
         </ul>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function setEncours(element) {
+            var $element = $(element);
+            if ($element.prop('checked')) {
+                var path = '{{ path('saison_set_en_cours' , {'id' : '_id_'}) }}';
+                path = path.replace('_id_', $element.val());
+                $.ajax(
+                    path
+                );
+            }
+        }
+    </script>
 {% endblock %}

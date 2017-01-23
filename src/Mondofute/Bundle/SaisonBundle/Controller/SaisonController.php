@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Saison controller.
@@ -101,6 +102,21 @@ class SaisonController extends Controller
             $emSite->persist($saisonSite);
             $emSite->flush();
         }
+    }
+
+    public function setEnCoursAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $saisonEnCours = $em->getRepository(Saison::class)->findOneBy(['enCours' => true]);
+        if ($saisonEnCours->getId() != $id) {
+            $saisonEnCours->setEnCours(false);
+            $saison = $em->find(Saison::class, $id);
+            $saison->setEnCours(true);
+            $em->persist($saisonEnCours);
+            $em->persist($saison);
+            $em->flush();
+        }
+        return new Response();
     }
 
     /**

@@ -22,3 +22,8 @@ saison_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteSaisonBundle:Saison:delete" }
     methods:  DELETE
+
+saison_set_en_cours:
+    path:     /{id}/setencours
+    defaults: { _controller: "MondofuteSaisonBundle:Saison:setEnCours" }
+    methods:  GET
