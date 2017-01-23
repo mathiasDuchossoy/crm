@@ -28,7 +28,8 @@ class DomaineUnifieType extends AbstractType
                     'entry_options' => array(
                         'locale' => $options['locale'],
                         'siteDomaineParent' => $siteDomaineParent,
-                        'domaineUnifieId' => $domaineUnifieId
+                        'domaineUnifieId' => $domaineUnifieId,
+                        'modeleDescriptionForfaitSki' => $options['modeleDescriptionForfaitSki']
                     )
                 )
             );
@@ -41,7 +42,8 @@ class DomaineUnifieType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\DomaineBundle\Entity\DomaineUnifie',
-            'locale' => 'fr_FR'
+            'locale' => 'fr_FR',
+            'modeleDescriptionForfaitSki' => false
         ));
     }
 
