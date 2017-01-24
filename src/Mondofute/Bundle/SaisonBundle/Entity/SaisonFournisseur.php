@@ -3,6 +3,8 @@
 namespace Mondofute\Bundle\SaisonBundle\Entity;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 
 /**
@@ -63,16 +65,6 @@ class SaisonFournisseur
     /**
      * @var Utilisateur
      */
-    private $agentSaisie;
-
-    /**
-     * @var Utilisateur
-     */
-    private $agentProd;
-
-    /**
-     * @var Utilisateur
-     */
     private $agentMaJProd;
     /**
      * @var Fournisseur
@@ -86,6 +78,10 @@ class SaisonFournisseur
      * @var Utilisateur
      */
     private $agentMaJSaisie;
+    /**
+     * @var integer
+     */
+    private $nbHebergementsActive = 0;
 
     /**
      * Get id
@@ -325,53 +321,6 @@ class SaisonFournisseur
         return $this;
     }
 
-    /**
-     * Get agentSaisie
-     *
-     * @return Utilisateur
-     */
-    public function getAgentSaisie()
-    {
-        return $this->agentSaisie;
-    }
-
-    /**
-     * Set agentSaisie
-     *
-     * @param Utilisateur $agentSaisie
-     *
-     * @return SaisonFournisseur
-     */
-    public function setAgentSaisie(Utilisateur $agentSaisie = null)
-    {
-        $this->agentSaisie = $agentSaisie;
-
-        return $this;
-    }
-
-    /**
-     * Get agentProd
-     *
-     * @return Utilisateur
-     */
-    public function getAgentProd()
-    {
-        return $this->agentProd;
-    }
-
-    /**
-     * Set agentProd
-     *
-     * @param Utilisateur $agentProd
-     *
-     * @return SaisonFournisseur
-     */
-    public function setAgentProd(Utilisateur $agentProd = null)
-    {
-        $this->agentProd = $agentProd;
-
-        return $this;
-    }
 
     /**
      * Get agentMaJProd
@@ -468,4 +417,52 @@ class SaisonFournisseur
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergementsActive($site = 'crm')
+    {
+        // compter le nombre d'hébergement actif pour cette saison pour ce fournisseur
+        // parcourir tout les hebergement de ce fournisseur
+        // récupérer le saisonHebergement concerné et vérifier si il est actif pour alimenter la variable de comptage
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        /** @var Hebergement $hebergement */
+        foreach ($this->fournisseur->getHebergements() as $fournisseurHebergement) {
+            foreach ($fournisseurHebergement->getHebergement()->getHebergements() as $hebergement) {
+                if ($hebergement->getSite()->getLibelle() == $site) {
+                    /** @var SaisonHebergement $saisonHebergement */
+                    $saisonHebergement = $hebergement->getSaisonHebergements()->filter(function (SaisonHebergement $element) {
+                        return $element->getSaison() == $this->saison;
+                    })->first();
+                    if ($saisonHebergement->getActif()) {
+                        $this->nbHebergementsActive++;
+                    }
+                }
+            }
+        }
+
+        return $this->nbHebergementsActive;
+    }
+
+    /**
+     * @param int $nbHebergementsActive
+     *
+     * @return SaisonFournisseur
+     */
+    public function setNbHebergementsActive($nbHebergementsActive = 0)
+    {
+        $this->nbHebergementsActive = $nbHebergementsActive;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergements()
+    {
+        return count($this->fournisseur->getHebergements());
+    }
+
 }

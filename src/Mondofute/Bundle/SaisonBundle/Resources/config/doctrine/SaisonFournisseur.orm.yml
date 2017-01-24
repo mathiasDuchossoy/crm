@@ -57,10 +57,6 @@ Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur:
                 unsigned: true
                 default: 0
     manyToOne:
-        agentSaisie:
-            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
-        agentProd:
-            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
         agentMaJProd:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
         agentMaJSaisie:

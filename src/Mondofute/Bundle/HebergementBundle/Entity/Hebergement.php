@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
@@ -511,11 +512,11 @@ class Hebergement
     /**
      * Add prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
      *
      * @return Hebergement
      */
-    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    public function addPrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
         $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
 
@@ -525,9 +526,9 @@ class Hebergement
     /**
      * Remove prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
      */
-    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    public function removePrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
         $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
     }

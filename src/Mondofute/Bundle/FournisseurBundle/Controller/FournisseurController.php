@@ -694,9 +694,7 @@ class FournisseurController extends Controller
                 ->setFicheTechniques($saisonFournisseur->getFicheTechniques())
                 ->setTarifTechniques($saisonFournisseur->getTarifTechniques())
                 ->setPhotosTechniques($saisonFournisseur->getPhotosTechniques())
-                ->setAgentSaisie($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentSaisie()))
                 ->setAgentMaJSaisie($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMajSaisie()))
-                ->setAgentProd($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentProd()))
                 ->setAgentMaJProd($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMaJProd()));
         }
     }

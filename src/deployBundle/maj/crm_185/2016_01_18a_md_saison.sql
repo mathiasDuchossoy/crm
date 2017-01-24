@@ -9,6 +9,12 @@ ALTER TABLE saison_fournisseur ADD CONSTRAINT FK_7E077A34F965414C FOREIGN KEY (s
 ALTER TABLE saison_hebergement ADD CONSTRAINT FK_CB6D9AF965414C FOREIGN KEY (saison_id) REFERENCES saison (id);
 ALTER TABLE saison_hebergement ADD CONSTRAINT FK_CB6D9A23BB0F66 FOREIGN KEY (hebergement_id) REFERENCES hebergement (id);*/
 
-ALTER TABLE saison_fournisseur ADD agent_ma_jsaisie_id INT UNSIGNED DEFAULT NULL;
+/*ALTER TABLE saison_fournisseur ADD agent_ma_jsaisie_id INT UNSIGNED DEFAULT NULL;
 ALTER TABLE saison_fournisseur ADD CONSTRAINT FK_7E077A349332116A FOREIGN KEY (agent_ma_jsaisie_id) REFERENCES utilisateur (id);
-CREATE INDEX IDX_7E077A349332116A ON saison_fournisseur (agent_ma_jsaisie_id);
+CREATE INDEX IDX_7E077A349332116A ON saison_fournisseur (agent_ma_jsaisie_id);*/
+
+ALTER TABLE saison_fournisseur DROP FOREIGN KEY FK_7E077A345670B5A9;
+ALTER TABLE saison_fournisseur DROP FOREIGN KEY FK_7E077A34D39B5DDF;
+DROP INDEX IDX_7E077A345670B5A9 ON saison_fournisseur;
+DROP INDEX IDX_7E077A34D39B5DDF ON saison_fournisseur;
+ALTER TABLE saison_fournisseur DROP agent_saisie_id, DROP agent_prod_id;

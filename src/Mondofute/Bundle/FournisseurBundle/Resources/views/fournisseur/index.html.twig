@@ -11,6 +11,10 @@
         <tr>
             <th>Id</th>
             <th>{{ 'enseigne' | capitalize }}</th>
+            {#<th>Fiches validées</th>#}
+            {#<th>Tarifs validés</th>#}
+            {#<th>Photos validées</th>#}
+            {#<th>HB validés</th>#}
             <th>Priorité</th>
             <th>Actions</th>
         </tr>
@@ -24,6 +28,7 @@
                 <td>
                     {{ fournisseur.enseigne }}
                 </td>
+                {#<td>{{ fournisseur }}</td>#}
                 <td>
                     <label>
                         <select id="fournisseur_priorite_{{ fournisseur.id }}"
