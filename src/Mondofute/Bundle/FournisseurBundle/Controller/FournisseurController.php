@@ -726,9 +726,15 @@ class FournisseurController extends Controller
                 ->setConditionEarlybooking($saisonFournisseur->getConditionEarlybooking())
                 ->setFicheTechniques($saisonFournisseur->getFicheTechniques())
                 ->setTarifTechniques($saisonFournisseur->getTarifTechniques())
-                ->setPhotosTechniques($saisonFournisseur->getPhotosTechniques())
-                ->setAgentMaJSaisie($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMajSaisie()))
-                ->setAgentMaJProd($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMaJProd()));
+                ->setPhotosTechniques($saisonFournisseur->getPhotosTechniques());
+
+            if (!empty($saisonFournisseur->getAgentMajSaisie())) {
+                $saisonFournisseurSite->setAgentMaJSaisie($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMajSaisie()));
+            }
+            if (!empty($saisonFournisseur->getAgentMaJProd())) {
+                $saisonFournisseurSite->setAgentMaJProd($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMaJProd()));
+            }
+
         }
     }
 

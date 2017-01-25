@@ -83,8 +83,8 @@ class SaisonFournisseurType extends AbstractType
             ))
             ->add('conditionEarlybooking', null, [
                 'required' => false])
-            ->add('agentMaJProd', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----'])
-            ->add('agentMaJSaisie', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----'])//            ->add('saison')
+            ->add('agentMaJProd', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----', 'required' => false])
+            ->add('agentMaJSaisie', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----', 'required' => false])//            ->add('saison')
         ;
 
     }
