@@ -608,6 +608,14 @@ class Hebergement
      */
     public function getSaisonHebergements()
     {
-        return $this->saisonHebergements;
+        $iterator = $this->saisonHebergements->getIterator();
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (SaisonHebergement $a, SaisonHebergement $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 }

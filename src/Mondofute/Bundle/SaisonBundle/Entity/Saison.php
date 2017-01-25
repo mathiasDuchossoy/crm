@@ -20,7 +20,7 @@ class Saison
     /**
      * @var bool
      */
-    private $enCours;
+    private $enCours = false;
 
     /**
      * @var \DateTime

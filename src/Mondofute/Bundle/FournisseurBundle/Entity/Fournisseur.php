@@ -1091,6 +1091,86 @@ class Fournisseur extends Moral
      */
     public function getSaisonFournisseurs()
     {
-        return $this->saisonFournisseurs;
+        $iterator = $this->saisonFournisseurs->getIterator();
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (SaisonFournisseur $a, SaisonFournisseur $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        return new ArrayCollection(iterator_to_array($iterator));
     }
+
+    /**
+     * @return int
+     */
+    public function getFicheTechniquesSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getFicheTechniques();
+    }
+
+    /**
+     * @return SaisonFournisseur
+     */
+    public function getSaisonFournisseurEnCours()
+    {
+        return $this->saisonFournisseurs->filter(function (SaisonFournisseur $element) {
+            return $element->getSaison()->getEnCours() == true;
+        })->first();
+    }
+
+    /**
+     * @return int
+     */
+    public function getTarifTechniquesSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getTarifTechniques();
+    }
+
+    /**
+     * @return int
+     */
+    public function getPhotosTechniquesSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getPhotosTechniques();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergementsActiveSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getNbHebergementsActive();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergementsSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getNbHebergements();
+    }
+
+    public function getAgentMaJProdSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getAgentMaJProd();
+    }
+
+    public function getAgentMaJSaisieSaisonEnCours()
+    {
+        return $this->getSaisonFournisseurEnCours()->getAgentMaJSaisie();
+    }
+
+    public function setAgentMaJProdSaisonEnCours($agentMaJProdSaisonEnCours)
+    {
+        return $this->getSaisonFournisseurEnCours()->setAgentMaJProd($agentMaJProdSaisonEnCours);
+    }
+
+    public function setAgentMaJSaisieSaisonEnCours($agentMaJSaisieSaisonEnCours)
+    {
+        return $this->getSaisonFournisseurEnCours()->setAgentMaJSaisie($agentMaJSaisieSaisonEnCours);
+    }
+
+
 }

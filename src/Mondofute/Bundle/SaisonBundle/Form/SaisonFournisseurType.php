@@ -83,13 +83,8 @@ class SaisonFournisseurType extends AbstractType
             ))
             ->add('conditionEarlybooking', null, [
                 'required' => false])
-            ->add('ficheTechniques')
-            ->add('tarifTechniques')
-            ->add('photosTechniques')
-            ->add('agentSaisie', EntityType::class, ['class' => Utilisateur::class])
-            ->add('agentMaJSaisie', EntityType::class, ['class' => Utilisateur::class])
-            ->add('agentProd', EntityType::class, ['class' => Utilisateur::class])
-            ->add('agentMaJProd', EntityType::class, ['class' => Utilisateur::class])//            ->add('saison')
+            ->add('agentMaJProd', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----'])
+            ->add('agentMaJSaisie', EntityType::class, ['class' => Utilisateur::class, 'placeholder' => '----'])//            ->add('saison')
         ;
 
     }

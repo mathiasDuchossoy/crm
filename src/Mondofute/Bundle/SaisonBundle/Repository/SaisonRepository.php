@@ -48,4 +48,9 @@ class SaisonRepository extends \Doctrine\ORM\EntityRepository
         return new Paginator($q);
     }
 
+    public function findAll()
+    {
+        return $this->findBy([], ['dateDebut' => 'DESC']);
+    }
+
 }

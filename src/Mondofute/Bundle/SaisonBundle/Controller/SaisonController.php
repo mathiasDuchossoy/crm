@@ -2,13 +2,13 @@
 
 namespace Mondofute\Bundle\SaisonBundle\Controller;
 
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SaisonBundle\Entity\Saison;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +39,7 @@ class SaisonController extends Controller
             'max_per_page' => $maxPerPage
         );
 
-        $sortbyArray = array();
+        $sortbyArray = ['entity.dateDebut' => 'DESC'];
 
         $unifies = $this->getDoctrine()->getRepository('MondofuteSaisonBundle:Saison')
             ->getList($page, $maxPerPage, $this->container->getParameter('locale'), $sortbyArray);
@@ -207,7 +207,7 @@ class SaisonController extends Controller
                 $em->flush();
 
                 $this->addFlash('success', 'Saison supprimé avec succès.');
-            } catch (Exception $e) {
+            } catch (ForeignKeyConstraintViolationException $e) {
                 $this->addFlash('error', 'La saison est utilisé par une autre entité.');
             }
         }

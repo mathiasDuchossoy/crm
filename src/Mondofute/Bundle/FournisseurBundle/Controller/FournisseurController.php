@@ -117,7 +117,8 @@ class FournisseurController extends Controller
         return $this->render('@MondofuteFournisseur/fournisseur/index.html.twig', array(
             'fournisseurs' => $entities,
             'pagination' => $pagination,
-            'priorites' => $priorites
+            'priorites' => $priorites,
+            'utilisateurs' => $em->getRepository(Utilisateur::class)->findAll()
         ));
     }
 
@@ -140,6 +141,20 @@ class FournisseurController extends Controller
         return new Response();
     }
 
+    public function setAgentMaJSaisieSaisonEnCoursAction($id, $val)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $fournisseur = $emSite->find(Fournisseur::class, $id);
+            $fournisseur->setAgentMaJSaisieSaisonEnCours($emSite->find(Utilisateur::class, $val));
+            $emSite->persist($fournisseur);
+            $emSite->flush();
+        }
+        return new Response();
+    }
+
     public function setPrioriteAction($id, $priorite)
     {
         $em = $this->getDoctrine()->getManager();
@@ -148,6 +163,20 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $fournisseur = $emSite->find(Fournisseur::class, $id);
             $fournisseur->setPriorite($priorite);
+            $emSite->persist($fournisseur);
+            $emSite->flush();
+        }
+        return new Response();
+    }
+
+    public function setAgentMaJProdSaisonEnCoursAction($id, $val)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $fournisseur = $emSite->find(Fournisseur::class, $id);
+            $fournisseur->setAgentMaJProdSaisonEnCours($emSite->find(Utilisateur::class, $val));
             $emSite->persist($fournisseur);
             $emSite->flush();
         }
@@ -289,8 +318,12 @@ class FournisseurController extends Controller
             })->first();
             if (false === $saisonFournisseur) {
                 $saisonFournisseur = new SaisonFournisseur();
+                $saisonFournisseur
+                    ->setSaison($saison)
+                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
+                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
+                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
                 $fournisseur->addSaisonFournisseur($saisonFournisseur);
-                $saisonFournisseur->setSaison($saison);
             }
         }
     }

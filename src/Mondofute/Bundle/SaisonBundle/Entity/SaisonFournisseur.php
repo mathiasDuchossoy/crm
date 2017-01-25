@@ -435,7 +435,7 @@ class SaisonFournisseur
                     $saisonHebergement = $hebergement->getSaisonHebergements()->filter(function (SaisonHebergement $element) {
                         return $element->getSaison() == $this->saison;
                     })->first();
-                    if ($saisonHebergement->getActif()) {
+                    if (!empty($saisonHebergement) && $saisonHebergement->getActif()) {
                         $this->nbHebergementsActive++;
                     }
                 }
