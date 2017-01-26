@@ -13,7 +13,7 @@
 
             {{ form_start(form) }}
             {{ form_row(form.utilisateur.prenom) }}
-            {{ form_row(form.utilisateur.nom) }}
+            {{ form_row(form.utilisateur.nom , {'attr' : {'required' : 'required'}}) }}
 
             <!-- disables autocomplete -->
             <div class="form-group" style="display:none">
