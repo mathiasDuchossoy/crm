@@ -44,6 +44,33 @@ Mondofute\Bundle\DecoteBundle\Entity\Decote:
             type: smallint
             options:
                 unsigned: true
+        variante:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        choixVariante1:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        applicationRemise:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
+                default: null
+        compteARebours:
+            type: boolean
+            options:
+                default: false
+        stock:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: true
     manyToOne:
         decoteUnifie:
             targetEntity: Mondofute\Bundle\DecoteBundle\Entity\DecoteUnifie
