@@ -150,6 +150,7 @@ class PromotionType extends AbstractType
                     Variante::stockSpecifique => Variante::getLibelle(Variante::stockSpecifique),
                 ),
                 'placeholder' => " --- Choisir une variante --- ",
+                'required' => false,
             ))
             ->add('choixVariante1', ChoiceType::class, array(
                 'choices' => array(

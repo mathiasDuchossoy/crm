@@ -60,6 +60,7 @@ Mondofute\Bundle\PromotionBundle\Entity\Promotion:
                 default: null
         compteARebours:
             type: boolean
+            nullable: true
             options:
                 default: false
         stock:
