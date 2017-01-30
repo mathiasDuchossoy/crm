@@ -166,6 +166,7 @@ class DecoteType extends AbstractType
                     Variante::venteFlash => Variante::getLibelle(Variante::venteFlash),
                     Variante::stockSpecifique => Variante::getLibelle(Variante::stockSpecifique),
                 ),
+                'required' => false,
                 'placeholder' => " --- Choisir une variante --- ",
             ))
             ->add('choixVariante1', ChoiceType::class, array(
