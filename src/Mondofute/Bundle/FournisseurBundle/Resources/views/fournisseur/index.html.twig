@@ -35,6 +35,7 @@
                         <select id="fournisseur_agent_ma_j_prod_saison_en_cours_{{ fournisseur.id }}"
                                 onchange="editFournisseurAgentMaJProdSaisonEnCours(this, '{{ fournisseur.id }}')"
                                 class="form-control">
+                            <option value=""> ---</option>
                             {% for utilisateur in utilisateurs %}
                                 <option value="{{ utilisateur.id }}"
                                         {% if fournisseur.agentMaJProdSaisonEnCours == utilisateur %}
@@ -50,6 +51,7 @@
                         <select id="fournisseur_agent_ma_j_saisie_saison_en_cours_{{ fournisseur.id }}"
                                 onchange="editFournisseurAgentMaJSaisieSaisonEnCours(this, '{{ fournisseur.id }}')"
                                 class="form-control">
+                            <option value=""> ---</option>
                             {% for utilisateur in utilisateurs %}
                                 <option value="{{ utilisateur.id }}"
                                         {% if fournisseur.agentMaJSaisieSaisonEnCours == utilisateur %}

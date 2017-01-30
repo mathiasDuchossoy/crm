@@ -1107,7 +1107,10 @@ class Fournisseur extends Moral
      */
     public function getFicheTechniquesSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getFicheTechniques();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getFicheTechniques();
+        }
+        return 0;
     }
 
     /**
@@ -1125,7 +1128,10 @@ class Fournisseur extends Moral
      */
     public function getTarifTechniquesSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getTarifTechniques();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getTarifTechniques();
+        }
+        return 0;
     }
 
     /**
@@ -1133,7 +1139,10 @@ class Fournisseur extends Moral
      */
     public function getPhotosTechniquesSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getPhotosTechniques();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getPhotosTechniques();
+        }
+        return 0;
     }
 
     /**
@@ -1141,7 +1150,10 @@ class Fournisseur extends Moral
      */
     public function getNbHebergementsActiveSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getNbHebergementsActive();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getNbHebergementsActive();
+        }
+        return 0;
     }
 
     /**
@@ -1149,27 +1161,42 @@ class Fournisseur extends Moral
      */
     public function getNbHebergementsSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getNbHebergements();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getNbHebergements();
+        }
+        return 0;
     }
 
     public function getAgentMaJProdSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getAgentMaJProd();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getAgentMaJProd();
+        }
+        return null;
     }
 
     public function getAgentMaJSaisieSaisonEnCours()
     {
-        return $this->getSaisonFournisseurEnCours()->getAgentMaJSaisie();
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getAgentMaJSaisie();
+        }
+        return null;
     }
 
     public function setAgentMaJProdSaisonEnCours($agentMaJProdSaisonEnCours)
     {
-        return $this->getSaisonFournisseurEnCours()->setAgentMaJProd($agentMaJProdSaisonEnCours);
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->setAgentMaJProd($agentMaJProdSaisonEnCours);
+        }
+        return null;
     }
 
     public function setAgentMaJSaisieSaisonEnCours($agentMaJSaisieSaisonEnCours)
     {
-        return $this->getSaisonFournisseurEnCours()->setAgentMaJSaisie($agentMaJSaisieSaisonEnCours);
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->setAgentMaJSaisie($agentMaJSaisieSaisonEnCours);
+        }
+        return null;
     }
 
 

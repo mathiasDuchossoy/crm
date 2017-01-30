@@ -148,6 +148,12 @@ class FournisseurController extends Controller
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $fournisseur = $emSite->find(Fournisseur::class, $id);
+            if (empty($fournisseur->getSaisonFournisseurEnCours())) {
+                $saisonEnCours = $emSite->getRepository(Saison::class)->findOneBy(['enCours' => true]);
+                $saisonFournisseur = new SaisonFournisseur();
+                $fournisseur->addSaisonFournisseur($saisonFournisseur);
+                $saisonFournisseur->setSaison($saisonEnCours);
+            }
             $fournisseur->setAgentMaJSaisieSaisonEnCours($emSite->find(Utilisateur::class, $val));
             $emSite->persist($fournisseur);
             $emSite->flush();
@@ -176,6 +182,12 @@ class FournisseurController extends Controller
         foreach ($sites as $site) {
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $fournisseur = $emSite->find(Fournisseur::class, $id);
+            if (empty($fournisseur->getSaisonFournisseurEnCours())) {
+                $saisonEnCours = $emSite->getRepository(Saison::class)->findOneBy(['enCours' => true]);
+                $saisonFournisseur = new SaisonFournisseur();
+                $fournisseur->addSaisonFournisseur($saisonFournisseur);
+                $saisonFournisseur->setSaison($saisonEnCours);
+            }
             $fournisseur->setAgentMaJProdSaisonEnCours($emSite->find(Utilisateur::class, $val));
             $emSite->persist($fournisseur);
             $emSite->flush();
