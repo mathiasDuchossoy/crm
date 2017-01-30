@@ -10,6 +10,10 @@ mondofute_saison:
     resource: "@MondofuteSaisonBundle/Resources/config/routing.yml"
     prefix:   /
 
+mondofute_commande:
+    resource: "@MondofuteCommandeBundle/Resources/config/routing.yml"
+    prefix:   /
+
 mondofute_promotion:
     resource: "@MondofutePromotionBundle/Resources/config/routing.yml"
     prefix:   /
