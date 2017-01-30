@@ -64,6 +64,7 @@ Mondofute\Bundle\DecoteBundle\Entity\Decote:
                 default: null
         compteARebours:
             type: boolean
+            nullable: true
             options:
                 default: false
         stock:
