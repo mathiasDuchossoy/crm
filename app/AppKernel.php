@@ -62,6 +62,7 @@ class AppKernel extends Kernel
             new Mondofute\Bundle\CoupDeCoeurBundle\MondofuteCoupDeCoeurBundle(),
             new Mondofute\Bundle\DecoteBundle\MondofuteDecoteBundle(),
             new Mondofute\Bundle\PromotionBundle\MondofutePromotionBundle(),
+            new Mondofute\Bundle\CommandeBundle\MondofuteCommandeBundle(),
             new HiDev\Bundle\CommentaireBundle\HiDevCommentaireBundle(),
             new HiDev\Bundle\AuteurBundle\HiDevAuteurBundle(),
             new Mondofute\Bundle\CommentaireBundle\MondofuteCommentaireBundle(),
