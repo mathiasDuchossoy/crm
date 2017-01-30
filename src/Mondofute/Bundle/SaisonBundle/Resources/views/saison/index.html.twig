@@ -10,6 +10,8 @@
         <tr>
             <th>Id</th>
             <th>{{ 'libelle' | capitalize }}</th>
+            <th>dateDebut</th>
+            <th>dateFin</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -21,6 +23,12 @@
                 </td>
                 <td>
                     {{ saison.libelle }}
+                </td>
+                <td>
+                    {{ saison.dateDebut|date("d/m/Y") }}
+                </td>
+                <td>
+                    {{ saison.dateFin|date("d/m/Y") }}
                 </td>
                 <td>
                     <ul class="list-unstyled">
