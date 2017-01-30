@@ -108,11 +108,13 @@ class SaisonController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $saisonEnCours = $em->getRepository(Saison::class)->findOneBy(['enCours' => true]);
-        if ($saisonEnCours->getId() != $id) {
-            $saisonEnCours->setEnCours(false);
+        if (empty($saisonEnCours) || $saisonEnCours->getId() != $id) {
+            if (!empty($saisonEnCours)) {
+                $saisonEnCours->setEnCours(false);
+                $em->persist($saisonEnCours);
+            }
             $saison = $em->find(Saison::class, $id);
             $saison->setEnCours(true);
-            $em->persist($saisonEnCours);
             $em->persist($saison);
             $em->flush();
         }
