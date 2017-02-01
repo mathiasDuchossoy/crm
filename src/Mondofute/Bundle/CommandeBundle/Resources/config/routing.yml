@@ -1,3 +1,4 @@
-mondofute_commande_homepage:
-    path:     /
-    defaults: { _controller: MondofuteCommandeBundle:Default:index }
+mondofute_commande_commande:
+    resource: "@MondofuteCommandeBundle/Resources/config/routing/commande.yml"
+    prefix:   /commande
+

@@ -1,0 +1,5 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLignePrestationAnnexeRepository
+    lifecycleCallbacks: {  }
