@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\ClientBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Nucleus\ContactBundle\Entity\Physique;
 
 /**
@@ -26,6 +28,10 @@ class Client extends Physique
      * @var string
      */
     private $nom;
+    /**
+     * @var Collection
+     */
+    private $commandes;
 
     /**
      * Get vip
@@ -131,5 +137,37 @@ class Client extends Physique
         return $this->getNom() . ', ' . $this->getPrenom();
     }
 
+    /**
+     * Add commande
+     *
+     * @param Commande $commande
+     *
+     * @return Client
+     */
+    public function addCommande(Commande $commande)
+    {
+        $this->commandes[] = $commande;
 
+        return $this;
+    }
+
+    /**
+     * Remove commande
+     *
+     * @param Commande $commande
+     */
+    public function removeCommande(Commande $commande)
+    {
+        $this->commandes->removeElement($commande);
+    }
+
+    /**
+     * Get commandes
+     *
+     * @return Collection
+     */
+    public function getCommandes()
+    {
+        return $this->commandes;
+    }
 }

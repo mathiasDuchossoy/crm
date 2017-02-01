@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme delete_form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block title %}
+    {{ 'visualisation de la commande' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'Visualisation de la commande' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table table-responsive table-striped">
+        <tbody>
+        <tr class="row">
+            <th class="col-sm-1">Id</th>
+            <td>{{ commande.id }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: right">
+
+        <ul class="list-unstyled">
+            <li>
+                <a href="{{ path('commande_index') }}">Retour à la liste</a>
+            </li>
+            <li>
+                <a class="btn btn-default"
+                   href="{{ path('commande_edit', { 'id': commande.id }) }}">Edit</a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                {#<input type="submit" value="Delete">#}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div>
+{% endblock %}

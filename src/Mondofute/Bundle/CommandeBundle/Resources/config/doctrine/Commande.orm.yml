@@ -1,6 +1,13 @@
 Mondofute\Bundle\CommandeBundle\Entity\Commande:
     type: entity
-    table: null
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: type
+        type: integer
+    discriminatorMap:
+        1: Commande
+        2: Reservation
+        3: PreReservation
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeRepository
     id:
         id:
@@ -16,7 +23,19 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         numCommande:
             type: integer
             unique: true
-        etat:
-            type: smallint
-            nullable: true
+    oneToMany:
+        commandeLignes:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne
+            mappedBy: commande
+            cascade: ['persist','remove']
+        commandeEtatDossiers:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeEtatDossier
+            mappedBy: commande
+        commandeStatutDossiers:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier
+            mappedBy: commande
+    manyToMany:
+        clients:
+            targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
+            inversedBy: commandes
     lifecycleCallbacks: {  }

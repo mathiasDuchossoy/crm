@@ -1,0 +1,22 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeStatutDossierRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        dateHeure:
+            type: datetime
+            column: DateHeure
+    manyToOne:
+        commande:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
+            inversedBy: commandeStatutDossiers
+        statutDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\StatutDossier
+            inversedBy: commandeStatutDossier
+    lifecycleCallbacks: {  }

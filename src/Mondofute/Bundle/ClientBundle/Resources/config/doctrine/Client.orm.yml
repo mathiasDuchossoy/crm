@@ -58,4 +58,8 @@ Mondofute\Bundle\ClientBundle\Entity\Client:
             type: boolean
         dateNaissance:
             type: date
+    manyToMany:
+        commandes:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
+            mappedBy: clients
     lifecycleCallbacks: {  }
