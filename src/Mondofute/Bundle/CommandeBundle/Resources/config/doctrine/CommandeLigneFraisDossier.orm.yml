@@ -1,0 +1,5 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneFraisDossier:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneFraisDossierRepository
+    lifecycleCallbacks: {  }

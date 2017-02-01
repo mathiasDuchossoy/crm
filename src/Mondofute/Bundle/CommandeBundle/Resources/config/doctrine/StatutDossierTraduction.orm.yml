@@ -1,0 +1,21 @@
+Mondofute\Bundle\CommandeBundle\Entity\StatutDossierTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\StatutDossierTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+        statutDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\StatutDossier
+            inversedBy: traductions
+    lifecycleCallbacks: {  }
