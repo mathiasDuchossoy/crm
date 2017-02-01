@@ -1,0 +1,156 @@
+{% extends '::base.html.twig' %}
+
+
+{% block infinite_form_polycollection_row %}
+    {% set collectionForm = form.commandeLignes %}
+    {% set prototypes = form.commandeLignes.vars.prototypes %}
+    <hr>
+    <div class="collection">
+        <div class="clearfix">
+            <div class="pull-left">
+                {{ form_label(collectionForm, 'Lignes de Commande') }}
+            </div>
+            <div class="pull-right">
+                {% set form = prototypes.sejour %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addTagForm(this,event);">
+                    <i class="glyphicon glyphicon-plus"></i> séjour
+                </a>
+                {% set form = prototypes.prestationAnnexe %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addTagForm(this,event);">
+                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                </a>
+                {% set form = prototypes.fraisDossier %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addTagForm(this,event);">
+                    <i class="glyphicon glyphicon-plus"></i> frais de dossier
+                </a>
+                {% set form = prototypes.remise %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addTagForm(this,event);">
+                    <i class="glyphicon glyphicon-plus"></i> remise
+                </a>
+            </div>
+        </div>
+        <div class="items">
+            {% for form in collectionForm %}
+                {{ block('entry_row') }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block entry_row %}
+    {% set type = form._type.vars.value %}
+    <div class="item">
+        <hr>
+        {% if type == 'sejour' %}
+            {{ block('commande_ligne_sejour_widget') }}
+        {% elseif type == 'prestationAnnexe' %}
+            {{ block('commande_ligne_prestation_annexe_widget') }}
+        {% else %}
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    <label>&nbsp;</label><br>
+                    <a href="#" class="btn btn-danger remove_item"
+                       onclick="removeTagForm(this,event);"
+                    >
+                        <i class="glyphicon glyphicon-minus"></i> Remove
+                    </a>
+                </div>
+            </div>
+            {{ form_rest(form) }}
+        {% endif %}
+        {#{{ form_widget(form) }}#}
+    </div>
+{% endblock %}
+
+{% block commande_ligne_sejour_widget %}
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+        <div class="col-md-2 text-right">
+            <label>&nbsp;</label><br>
+            <a href="#" class="btn btn-danger remove_item"
+               onclick="removeTagForm(this,event);"
+            >
+                <i class="glyphicon glyphicon-minus"></i> Remove
+            </a>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{% endblock %}
+
+{% block commande_ligne_prestation_annexe_widget %}
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+        <div class="col-md-2 text-right">
+            <label>&nbsp;</label><br>
+            <a href="#" class="btn btn-danger remove_item"
+               onclick="removeTagForm(this,event);"
+            >
+                <i class="glyphicon glyphicon-minus"></i> Remove
+            </a>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{% endblock %}
+
+{% block body %}
+    <section>
+        <h1>
+            {% block titre %}
+            {% endblock %}
+        </h1>
+    </section>
+    <section>
+        {#  BLOCK CONTENANT LE FORMULAIRE #}
+        {% block formulaire %}
+            {% include '::flashbags.html.twig' %}
+            {{ form_errors(form) }}
+            {{ form_start(form) }}
+            {{ block('infinite_form_polycollection_row') }}
+            {{ form_end(form) }}
+        {% endblock %}
+    </section>
+    <section>
+        {% block actions %}
+
+        {% endblock %}
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var $collectionHolder;
+
+        jQuery(document).ready(function () {
+            $collectionHolder = $('div.items');
+            $collectionHolder.data('index', $collectionHolder.find('div.item').length);
+        });
+
+        function addTagForm(element, event) {
+            event.preventDefault();
+            var $element = $(element);
+            var prototype = $element.data('prototype');
+            var index = $collectionHolder.data('index');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collectionHolder.data('index', index + 1);
+            var $newFormLi = $('<div class="item"></div>').append(newForm);
+            $collectionHolder.append($newFormLi);
+        }
+
+        function removeTagForm(element, event) {
+            event.preventDefault();
+            $(element).closest('div.item').remove();
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,26 @@
+Mondofute\Bundle\CommandeBundle\Entity\StatutDossier:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\StatutDossierRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        codeCouleur:
+            type: string
+            length: 255
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\StatutDossierTraduction
+            mappedBy: statutDossier
+        commandeStatutDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier
+            mappedBy: statutDossier
+    manyToOne:
+        groupeStatutDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\GroupeStatutDossier
+            inversedBy: statutDossiers
+    lifecycleCallbacks: {  }

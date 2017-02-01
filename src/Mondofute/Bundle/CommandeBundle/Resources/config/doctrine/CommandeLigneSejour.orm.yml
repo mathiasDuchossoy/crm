@@ -1,0 +1,5 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneSejourRepository
+    lifecycleCallbacks: {  }

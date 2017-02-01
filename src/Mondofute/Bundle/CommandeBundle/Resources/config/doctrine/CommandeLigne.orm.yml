@@ -1,0 +1,29 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
+    type: entity
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: type
+        type: integer
+    discriminatorMap:
+        1: CommandeLigneSejour
+        2: CommandeLignePrestationAnnexe
+        3: CommandeLigneFraisDossier
+        4: CommandeLigneRemise
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        montant:
+            type: integer
+    manyToOne:
+        commande:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
+            inversedBy: commandeLignes
+    lifecycleCallbacks: {  }

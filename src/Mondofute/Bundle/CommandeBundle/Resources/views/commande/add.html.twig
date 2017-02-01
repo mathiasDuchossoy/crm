@@ -1,0 +1,68 @@
+{% form_theme form.lines _self %}
+
+{# ... #}
+
+{% block infinite_form_polycollection_row %}
+    {% set collectionForm = form %}
+    <hr>
+    <div class="collection">
+        <div class="clearfix">
+            <div class="pull-left">
+                {{ form_label(collectionForm, 'Invoice lines') }}
+            </div>
+            <div class="pull-right">
+                {% set form = prototypes.line %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item">
+                    <i class="glyphicon glyphicon-plus"></i> Freight line
+                </a>
+                {% set form = prototypes.product %}
+                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                   class="btn btn-success add_item">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </a>
+            </div>
+        </div>
+        <div class="items">
+            {% for form in collectionForm %}
+                {{ block('entry_row') }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block entry_row %}
+    <div class="item">
+        <hr>
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block invoice_line_widget %}
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.description) }}</div>
+        <div class="col-md-2">{{ form_row(form.unitAmount) }}</div>
+        <div class="col-md-2">{{ form_row(form.quantity) }}</div>
+        <div class="col-md-2 text-right">
+            <label>&nbsp;</label><br>
+            <a href="#" class="btn btn-danger remove_item">
+                <i class="glyphicon glyphicon-minus"></i> Remove
+            </a>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{% endblock %}
+
+{% block invoice_product_line_widget %}
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.product) }}</div>
+        <div class="col-md-2 col-md-offset-2">{{ form_row(form.quantity) }}</div>
+        <div class="col-md-2 text-right">
+            <label>&nbsp;</label><br>
+            <a href="#" class="btn btn-danger remove_item">
+                <i class="glyphicon glyphicon-minus"></i> Remove
+            </a>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{% endblock %}

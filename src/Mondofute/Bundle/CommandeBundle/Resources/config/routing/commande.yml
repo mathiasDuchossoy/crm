@@ -1,0 +1,24 @@
+commande_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+commande_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:show" }
+    methods:  GET
+
+commande_new:
+    path:     /new
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:new" }
+    methods:  [GET, POST]
+
+commande_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:edit" }
+    methods:  [GET, POST]
+
+commande_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:delete" }
+    methods:  DELETE

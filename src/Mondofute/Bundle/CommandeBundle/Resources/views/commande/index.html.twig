@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    {{ 'Liste des commandes' | capitalize }}
+{% endblock %}
+{% block body %}
+    <h1>{{ 'liste des commandes' | capitalize }}</h1>
+    {% include '::flashbags.html.twig' %}
+    <table class="table-responsive table-striped table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+                <td>
+                    <a href="{{ path('commande_show', { 'id': commande.id }) }}">{{ commande.id }}</a>
+                </td>
+                <td>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('commande_show', { 'id': commande.id }) }}">{{ 'visualiser' | capitalize }}</a>
+                        </li>
+                        <li>
+                            <a class="btn btn-default"
+                               href="{{ path('commande_edit', { 'id': commande.id }) }}">{{ 'modifier' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if  commandes is not empty %}
+        {% include '@MondofuteCore/pagination.html.twig' %}
+    {% endif %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li>
+                <a class="btn btn-default" href="{{ path('commande_new') }}">{{ 'ajouter' | capitalize }}</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
