@@ -19,4 +19,5 @@ Mondofute\Bundle\CommandeBundle\Entity\GroupeStatutDossier:
         traductions:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\GroupeStatutDossierTraduction
             mappedBy: groupeStatutDossier
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

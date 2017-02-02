@@ -16,6 +16,7 @@ Mondofute\Bundle\CommandeBundle\Entity\StatutDossier:
         traductions:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\StatutDossierTraduction
             mappedBy: statutDossier
+            cascade: ['persist','remove']
         commandeStatutDossier:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier
             mappedBy: statutDossier
