@@ -1,3 +1,4 @@
+/*
 CREATE TABLE commande (id INT UNSIGNED AUTO_INCREMENT NOT NULL, date_commande DATETIME NOT NULL, num_commande INT NOT NULL, type INT NOT NULL, UNIQUE INDEX UNIQ_6EEAA67DB7F9FFBB (num_commande), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 CREATE TABLE commande_client (commande_id INT UNSIGNED NOT NULL, client_id INT UNSIGNED NOT NULL, INDEX IDX_C510FF8082EA2E54 (commande_id), INDEX IDX_C510FF8019EB6921 (client_id), PRIMARY KEY(commande_id, client_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 CREATE TABLE commande_etat_dossier (id INT UNSIGNED AUTO_INCREMENT NOT NULL, commande_id INT UNSIGNED DEFAULT NULL, etat_dossier_id INT UNSIGNED DEFAULT NULL, date_heure DATETIME NOT NULL, INDEX IDX_6B7FF982EA2E54 (commande_id), INDEX IDX_6B7FF9C8503043 (etat_dossier_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
@@ -31,3 +32,16 @@ ALTER TABLE groupe_statut_dossier_traduction ADD CONSTRAINT FK_FD16142CBF10D97D 
 ALTER TABLE statut_dossier ADD CONSTRAINT FK_51F9FA7BBF10D97D FOREIGN KEY (groupe_statut_dossier_id) REFERENCES groupe_statut_dossier (id);
 ALTER TABLE statut_dossier_traduction ADD CONSTRAINT FK_D573BCAE2AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
 ALTER TABLE statut_dossier_traduction ADD CONSTRAINT FK_D573BCAE14D7015F FOREIGN KEY (statut_dossier_id) REFERENCES statut_dossier (id);
+
+
+CREATE TABLE sejour_nuite (id INT UNSIGNED NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE sejour_periode (id INT UNSIGNED NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE sejour_nuite ADD CONSTRAINT FK_656CD101BF396750 FOREIGN KEY (id) REFERENCES commande_ligne (id) ON DELETE CASCADE;
+ALTER TABLE sejour_periode ADD CONSTRAINT FK_19BCD6EBBF396750 FOREIGN KEY (id) REFERENCES commande_ligne (id) ON DELETE CASCADE;
+ALTER TABLE commande_ligne_sejour ADD logement_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE commande_ligne_sejour ADD CONSTRAINT FK_8AD31C2558ABF955 FOREIGN KEY (logement_id) REFERENCES logement (id);
+CREATE INDEX IDX_8AD31C2558ABF955 ON commande_ligne_sejour (logement_id);
+*/
+ALTER TABLE commande_ligne_prestation_annexe ADD commande_ligne_sejour_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE commande_ligne_prestation_annexe ADD CONSTRAINT FK_E26A93A3A16A9F82 FOREIGN KEY (commande_ligne_sejour_id) REFERENCES commande_ligne_sejour (id);
+CREATE INDEX IDX_E26A93A3A16A9F82 ON commande_ligne_prestation_annexe (commande_ligne_sejour_id);
