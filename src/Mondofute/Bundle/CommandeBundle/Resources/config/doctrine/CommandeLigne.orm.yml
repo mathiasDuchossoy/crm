@@ -9,6 +9,8 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
         2: CommandeLignePrestationAnnexe
         3: CommandeLigneFraisDossier
         4: CommandeLigneRemise
+        5: SejourNuite
+        6: SejourPeriode
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneRepository
     id:

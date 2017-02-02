@@ -20,6 +20,8 @@ class CommandeType extends AbstractType
                 CommandeLignePrestationAnnexeType::class,
                 CommandeLigneFraisDossierType::class,
                 CommandeLigneRemiseType::class,
+                SejourNuiteType::class,
+                SejourPeriodeType::class,
             ),
             'types_options' => array(
                 CommandeLigneSejourType::class => array(// Here you can optionally define options for the InvoiceLineType
@@ -29,10 +31,15 @@ class CommandeType extends AbstractType
                 CommandeLigneFraisDossierType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 ),
                 CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                ),
+                SejourNuiteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                ),
+                SejourPeriodeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 )
             ),
             'allow_add' => true,
             'allow_delete' => true,
+            'by_reference' => false
         ));
     }
 
