@@ -31,9 +31,11 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         commandeEtatDossiers:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeEtatDossier
             mappedBy: commande
+            cascade: ['persist','remove']
         commandeStatutDossiers:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier
             mappedBy: commande
+            cascade: ['persist','remove']
     manyToMany:
         clients:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client

@@ -1,5 +1,20 @@
 Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour:
     type: entity
-    table: null
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: type
+        type: integer
+    discriminatorMap:
+        1: CommandeLigneSejour
+        2: SejourNuite
+        3: SejourPeriode
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneSejourRepository
+    manyToOne:
+        logement:
+            targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
+    oneToMany:
+        commandeLignePrestationAnnexes:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe
+            mappedBy: commandeLigneSejour
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
