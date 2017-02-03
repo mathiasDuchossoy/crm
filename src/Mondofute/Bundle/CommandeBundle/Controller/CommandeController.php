@@ -4,6 +4,8 @@ namespace Mondofute\Bundle\CommandeBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
@@ -71,7 +73,7 @@ class CommandeController extends Controller
             $em->persist($commande);
             $em->flush();
 
-//            $this->copieVersSites($commande);
+            $this->copieVersSites($commande);
 
             $this->addFlash('success', 'Commande créé avec succès.');
             return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
@@ -90,20 +92,169 @@ class CommandeController extends Controller
     function copieVersSites($commande)
     {
         /** @var EntityManager $emSite */
-        $em = $this->getDoctrine()->getManager();
-        $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0), array('classementAffichage' => 'ASC'));
-        foreach ($sites as $site) {
-            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-            $commandeSite = $emSite->find(Commande::class, $commande->getId());
-            if (empty($commandeSite)) {
-                $commandeSite = new Commande();
-//                $commandeSite->setId($commande->getId());
-//                $metadata = $emSite->getClassMetadata(get_class($commandeSite));
-//                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        $emSite = $this->getDoctrine()->getManager($commande->getSite()->getLibelle());
+        $commandeSite = $emSite->find(Commande::class, $commande->getId());
+        if (empty($commandeSite)) {
+            $commandeSite = new Commande();
+            $commandeSite->setId($commande->getId());
+            $metadata = $emSite->getClassMetadata(get_class($commandeSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        }
+        $commandeSite
+            ->setSite($emSite->find(Site::class, $commande->getSite()))
+            ->setDateCommande($commande->getDateCommande())
+            ->setNumCommande($commande->getNumCommande());
+
+        // /* *** gestion clients ***
+        $this->gestionClientSite($commande, $commandeSite, $emSite);
+        // *** fin gestion clients *** */
+
+        // /* *** gestion commande ligne ***
+        $this->gestionCommandeLigneSite($commande, $commandeSite, $emSite);
+        // *** fin gestion commande ligne *** */
+
+        // /* *** gestion commande ligne prestation annexe sejour ***
+        $this->gestionCommandeLignePrestationAnnexeSejourSite($commande, $commandeSite, $emSite);
+        // *** gestion commande ligne prestation annexe sejour *** */
+
+        $emSite->persist($commandeSite);
+        $emSite->flush();
+    }
+
+    /**
+     * @param Commande $commande
+     * @param Commande $commandeSite
+     * @param EntityManager $emSite
+     */
+    private function gestionClientSite($commande, $commandeSite, $emSite)
+    {
+        /** @var Client $clientSite */
+        /** @var Client $client */
+        // suppression clients
+        foreach ($commandeSite->getClients() as $clientSite) {
+            $client = $commande->getClients()->filter(function (Client $element) use ($clientSite) {
+                return $element->getId() == $clientSite->getId();
+            })->first();
+            if (false === $client) {
+                $commandeSite->removeClient($clientSite);
             }
-            $commandeSite->setEtat($commande->getEtat())->setDateCommande($commande->getDateCommande())->setNumCommande($commande->getNumCommande());
-            $emSite->persist($commandeSite);
-            $emSite->flush();
+        }
+        // ajout clients
+        foreach ($commande->getClients() as $client) {
+            $clientSite = $commandeSite->getClients()->filter(function (Client $element) use ($client) {
+                return $element->getId() == $client->getId();
+            })->first();
+            if (false === $clientSite) {
+                $commandeSite->addClient($emSite->find(Client::class, $client));
+            }
+        }
+    }
+
+    /**
+     * @param Commande $commande
+     * @param Commande $commandeSite
+     * @param EntityManager $emSite
+     */
+    private function gestionCommandeLigneSite($commande, $commandeSite, $emSite)
+    {
+        /** @var CommandeLigne $commandeLigneSite */
+        /** @var CommandeLigne $commandeLigne */
+        // suppression commandeLignes
+        foreach ($commandeSite->getCommandeLignes() as $commandeLigneSite) {
+            $commandeLigne = $commande->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigneSite) {
+                return $element->getId() == $commandeLigneSite->getId();
+            })->first();
+            if (false === $commandeLigne) {
+                $commandeSite->removeCommandeLigne($commandeLigneSite);
+                $emSite->remove($commandeLigneSite);
+            }
+        }
+        // ajout commandeLignes
+        foreach ($commande->getCommandeLignes() as $commandeLigne) {
+            $commandeLigneSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigne) {
+                return $element->getId() == $commandeLigne->getId();
+            })->first();
+            if (false === $commandeLigneSite) {
+                $oReflectionClass = new ReflectionClass($commandeLigne);
+                $ClassParent = $oReflectionClass->getParentClass()->getName();
+                $Class = get_class($commandeLigne);
+                $commandeLigneSite = new $Class();
+                $commandeLigneSite->setId($commandeLigne->getId());
+                $metadata = $emSite->getClassMetadata($ClassParent);
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata = $emSite->getClassMetadata($Class);
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $commandeSite->addCommandeLigne($commandeLigneSite);
+                $commandeLigneSite->setMontant($commandeLigne->getMontant());
+            }
+        }
+    }
+
+    /**
+     * @param Commande $commande
+     * @param Commande $commandeSite
+     * @param EntityManager $emSite
+     */
+    private function gestionCommandeLignePrestationAnnexeSejourSite($commande, $commandeSite, $emSite)
+    {
+        /** @var CommandeLigne $commandeLigneSite */
+        /** @var CommandeLigne $commandeLigne */
+        $commandeLignePrestationAnnexeSejourSites = new ArrayCollection();
+        $commandeLignePrestationAnnexeSejours = new ArrayCollection();
+        foreach ($commandeSite->getCommandeLignes() as $commandeLigneSite) {
+            $oReflectionClass = new ReflectionClass($commandeLigneSite);
+            if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
+                /** @var CommandeLigneSejour $commandeLigneSite */
+                foreach ($commandeLigneSite->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
+                    $commandeLignePrestationAnnexeSejourSites->add($commandeLignePrestationAnnex);
+                }
+            }
+        }
+        foreach ($commande->getCommandeLignes() as $commandeLigne) {
+            $oReflectionClass = new ReflectionClass($commandeLigne);
+            if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
+                /** @var CommandeLigneSejour $commandeLigne */
+                foreach ($commandeLigne->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
+                    $commandeLignePrestationAnnexeSejours->add($commandeLignePrestationAnnex);
+                }
+            }
+        }
+
+        /** @var CommandeLignePrestationAnnexe $commandeLigne */
+        /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
+        // suppression commandeLignePrestationAnnexeSejours
+        foreach ($commandeLignePrestationAnnexeSejourSites as $commandeLigneSite) {
+            $commandeLigne = $commandeLignePrestationAnnexeSejours->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigneSite) {
+                return $element->getId() == $commandeLigneSite->getId();
+            })->first();
+            if (false === $commandeLigne) {
+                $commandeLigneSite->getCommandeLigneSejour()->removeCommandeLignePrestationAnnex($commandeLigneSite);
+                $emSite->remove($commandeLigneSite);
+            }
+        }
+        // ajout commandeLignePrestationAnnexeSejours
+        foreach ($commandeLignePrestationAnnexeSejours as $commandeLigne) {
+            $commandeLigneSite = $commandeLignePrestationAnnexeSejourSites->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigne) {
+                return $element->getId() == $commandeLigne->getId();
+            })->first();
+            if (false === $commandeLigneSite) {
+                /** @var CommandeLigneSejour $commandeLigneSejourSite */
+                $commandeLigneSejourSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigne) {
+                    return $element->getId() == $commandeLigne->getCommandeLigneSejour()->getId();
+                })->first();
+                $oReflectionClass = new ReflectionClass($commandeLigne);
+                $ClassParent = $oReflectionClass->getParentClass()->getName();
+                $Class = get_class($commandeLigne);
+                $commandeLigneSite = new $Class();
+                $commandeLigneSite->setId($commandeLigne->getId());
+                $metadata = $emSite->getClassMetadata($ClassParent);
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $metadata = $emSite->getClassMetadata($Class);
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $commandeLigneSejourSite->addCommandeLignePrestationAnnex($commandeLigneSite);
+                $commandeLigneSite
+                    ->setMontant($commandeLigne->getMontant());
+            }
         }
     }
 
@@ -187,7 +338,7 @@ class CommandeController extends Controller
 
             $em->flush();
 
-//            $this->copieVersSites($commande);
+            $this->copieVersSites($commande);
 
             $this->addFlash('success', 'Commande modifiée avec succès.');
 

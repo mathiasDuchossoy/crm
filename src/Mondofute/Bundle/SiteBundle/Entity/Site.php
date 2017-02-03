@@ -41,30 +41,6 @@ class Site
     }
 
     /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return Site
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
      * Get crm
      *
      * @return bool
@@ -132,6 +108,35 @@ class Site
     public function setClassementReferent($classementReferent)
     {
         $this->classementReferent = $classementReferent;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return Site
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }
