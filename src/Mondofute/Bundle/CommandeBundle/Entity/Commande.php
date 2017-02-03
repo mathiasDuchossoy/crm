@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 
 class Commande
@@ -46,6 +47,10 @@ class Commande
      * @var Collection
      */
     private $commandeStatutDossiers;
+    /**
+     * @var Site
+     */
+    private $site;
 
     /**
      * Constructor
@@ -66,6 +71,18 @@ class Commande
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -266,5 +283,29 @@ class Commande
     public function getCommandeStatutDossiers()
     {
         return $this->commandeStatutDossiers;
+    }
+
+    /**
+     * Get site
+     *
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * Set site
+     *
+     * @param Site $site
+     *
+     * @return Commande
+     */
+    public function setSite(Site $site = null)
+    {
+        $this->site = $site;
+
+        return $this;
     }
 }
