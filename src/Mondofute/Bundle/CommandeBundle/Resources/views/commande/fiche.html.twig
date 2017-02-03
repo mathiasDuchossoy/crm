@@ -168,7 +168,13 @@
             {{ form_errors(form) }}
             {{ form_start(form) }}
             {{ block('infinite_form_polycollection_row') }}
-            {{ form_end(form) }}
+            {{ form_row(form.site) }}
+            {{ form_row(form.dateCommande) }}
+            {{ form_row(form.numCommande) }}
+            {{ form_row(form.clients) }}
+            {{ form_row(form._token) }}
+            {{ form_row(form.submit) }}
+            {{ form_end(form, {'render_rest': false}) }}
         {% endblock %}
     </section>
     <section>
