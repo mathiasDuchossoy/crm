@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\HebergementBundle\Entity;
 
+use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
@@ -330,20 +331,6 @@ class Hebergement
     }
 
     /**
-     * Add emplacement
-     *
-     * @param EmplacementHebergement $emplacement
-     *
-     * @return Hebergement
-     */
-    public function addEmplacement(EmplacementHebergement $emplacement)
-    {
-        $this->emplacements[] = $emplacement->setHebergement($this);
-
-        return $this;
-    }
-
-    /**
      * tri la collection d'emplacements en fonction de leur valeur traduite grace à l'objet $translator passé en parametre)
      * @param DataCollectorTranslator $translator
      * @return $this
@@ -354,8 +341,14 @@ class Hebergement
         $emplacements = $this->getEmplacements(); // ArrayCollection data.
 
         // Recueillir un itérateur de tableau.
+        /** @var ArrayIterator $iterator */
         $iterator = $emplacements->getIterator();
-        unset($emplacements);
+//        unset($emplacements);
+
+        foreach ($this->getEmplacements() as $emplacement) {
+            $translator->trans(((string)$emplacement->getTypeEmplacement()) . 'Libelle');
+            $translator->trans(((string)$emplacement->getTypeEmplacement()) . 'Libelle');
+        }
 
         foreach ($iterator as $item) {
             $translator->trans(((string)$item->getTypeEmplacement()) . 'Libelle');
@@ -363,12 +356,18 @@ class Hebergement
 
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
         $iterator->uasort(function (EmplacementHebergement $a, EmplacementHebergement $b) use ($translator) {
-            $libelle1 = $translator->trans(((string)$a->getTypeEmplacement()) . 'Libelle');
-            $libelle2 = $translator->trans(((string)$b->getTypeEmplacement()) . 'Libelle');
-            return strcmp($libelle1, $libelle2);
+            return strcmp($translator->trans(((string)$a->getTypeEmplacement()) . 'Libelle'), $translator->trans(((string)$b->getTypeEmplacement()) . 'Libelle'));
         });
+
         // passer le tableau trié dans une nouvelle collection
-        $this->emplacements = new ArrayCollection(iterator_to_array($iterator));
+        $emplacements = new ArrayCollection(iterator_to_array($iterator));
+
+        $this->getEmplacements()->clear();
+
+        foreach ($emplacements as $emplacement) {
+            $this->addEmplacement($emplacement);
+        }
+
         return $this;
     }
 
@@ -380,6 +379,20 @@ class Hebergement
     public function getEmplacements()
     {
         return $this->emplacements;
+    }
+
+    /**
+     * Add emplacement
+     *
+     * @param EmplacementHebergement $emplacement
+     *
+     * @return Hebergement
+     */
+    public function addEmplacement(EmplacementHebergement $emplacement)
+    {
+        $this->emplacements[] = $emplacement->setHebergement($this);
+
+        return $this;
     }
 
     /**

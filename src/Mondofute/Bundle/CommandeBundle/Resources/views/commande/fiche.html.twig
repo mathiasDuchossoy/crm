@@ -12,41 +12,88 @@
             </div>
             <div class="pull-right">
                 {% set form = prototypes.sejourNuite %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                <a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
+                   onclick="addTagForm(this,event,'__name__','sejour_nuite');">
                     <i class="glyphicon glyphicon-plus"></i> séjour nuite
                 </a>
                 {% set form = prototypes.sejourPeriode %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                <a href="#" data-prototype="{{ block('commande_ligne_sejour_periode_widget') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
+                   onclick="addTagForm(this,event,'__name__','sejour_periode');">
                     <i class="glyphicon glyphicon-plus"></i> séjour periode
                 </a>
                 {% set form = prototypes.prestationAnnexe %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                <a href="#" data-prototype="{{ block('commande_ligne_prestation_annexe_widget') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
+                   onclick="addTagForm(this,event,'__name__','prestation_annexe');">
                     <i class="glyphicon glyphicon-plus"></i> prestation annexe
                 </a>
                 {% set form = prototypes.fraisDossier %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                <a href="#" data-prototype="{{ block('commande_ligne_frais_dossier_widget') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
+                   onclick="addTagForm(this,event,'__name__','frais_dossier');">
                     <i class="glyphicon glyphicon-plus"></i> frais de dossier
                 </a>
                 {% set form = prototypes.remise %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
+                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
+                   onclick="addTagForm(this,event,'__name__','remise');">
                     <i class="glyphicon glyphicon-plus"></i> remise
                 </a>
             </div>
         </div>
         <div class="items">
-            {% for form in collectionForm %}
-                {{ block('entry_row') }}
-            {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Séjour nuite</h3>
+                </div>
+                <div class="panel-body" id="sejour_nuite">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_sejour_nuite_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Séjour période</h3>
+                </div>
+                <div class="panel-body" id="sejour_periode">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_sejour_periode_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Prestation annexe</h3>
+                </div>
+                <div class="panel-body" id="prestation_annexe">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_prestation_annexe_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Frais de dossier</h3>
+                </div>
+                <div class="panel-body" id="frais_dossier">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_frais_dossier_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Remise</h3>
+                </div>
+                <div class="panel-body" id="remise">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -84,57 +131,70 @@
 {% endblock %}
 
 {% block commande_ligne_sejour_nuite_widget %}
-    {% set collectionForm = form.commandeLignePrestationAnnexes %}
-    {% set type = form._type %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
-        </div>
-        <div class="collection">
-            <div class="clearfix">
-                {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
-                <a href="#" data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
+    {% set type = form._type.vars.value %}
+    {% if type == 'sejourNuite' %}
+        <div class="item">
+            {% set collectionForm = form.commandeLignePrestationAnnexes %}
+            {% set type = form._type %}
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+                <div class="collection">
+                    <div class="clearfix">
+                        {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
+                        <a href="#"
+                           data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
+                           class="btn btn-success add_item"
+                           onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
+                            <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                        </a>
+                    </div>
+                    <div class="items">
+                        {% for form in collectionForm %}
+                            {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="items">
-                {% for form in collectionForm %}
-                    {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                {% endfor %}
-            </div>
+            {{ form_widget(type) }}
         </div>
-    </div>
-    {{ form_widget(type) }}
+    {% endif %}
 {% endblock %}
 
+
 {% block commande_ligne_sejour_periode_widget %}
-    {% set collectionForm = form.commandeLignePrestationAnnexes %}
-    {% set type = form._type %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
-        </div>
-        <div class="collection">
-            <div class="clearfix">
-                {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
-                <a href="#" data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
+    {% set type = form._type.vars.value %}
+    {% if type == 'sejourPeriode' %}
+        <div class="item">
+            {% set collectionForm = form.commandeLignePrestationAnnexes %}
+            {% set type = form._type %}
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+                <div class="collection">
+                    <div class="clearfix">
+                        {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
+                        <a href="#"
+                           data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
+                           class="btn btn-success add_item"
+                           onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
+                            <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                        </a>
+                    </div>
+                    <div class="items">
+                        {% for form in collectionForm %}
+                            {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="items">
-                {% for form in collectionForm %}
-                    {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                {% endfor %}
-            </div>
+            {{ form_widget(type) }}
         </div>
-    </div>
-    {{ form_widget(type) }}
+    {% endif %}
 {% endblock %}
 
 {% block entry_row_commande_ligne_prestation_annexe_sejour %}
@@ -145,13 +205,48 @@
 
 
 {% block commande_ligne_prestation_annexe_widget %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
         </div>
-    </div>
-    {{ form_rest(form) }}
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_frais_dossier_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'fraisDossier' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remise' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -191,12 +286,13 @@
 
         jQuery(document).ready(function () {
             $('div.items').each(function (index, element) {
-                $(element).data('index', $(element).children('div.item').length);
+                $(element).data('index', $(element).children('div.panel').children('div.panel-body').children('div.item').length);
             });
         });
 
-        function addTagForm(element, event, name) {
+        function addTagForm(element, event, name, panelBodyId) {
             event.preventDefault();
+            var $panelBodyId = $('#' + panelBodyId);
             var $element = $(element);
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
@@ -205,7 +301,11 @@
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
             $collectionHolder.data('index', index + 1);
-            $collectionHolder.append(newForm);
+            if ($panelBodyId.length == 0) {
+                $collectionHolder.append(newForm);
+            } else {
+                $panelBodyId.append(newForm);
+            }
         }
 
         function removeTagForm(element, event) {
