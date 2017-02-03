@@ -177,6 +177,11 @@ class CommandeController extends Controller
             if (false === $commandeLigneSite) {
                 $oReflectionClass = new ReflectionClass($commandeLigne);
                 $ClassParent = $oReflectionClass->getParentClass()->getName();
+                if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
+                    $oReflectionClassParent = new ReflectionClass($ClassParent);
+                    $metadata = $emSite->getClassMetadata($oReflectionClassParent->getParentClass()->getName());
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                }
                 $Class = get_class($commandeLigne);
                 $commandeLigneSite = new $Class();
                 $commandeLigneSite->setId($commandeLigne->getId());
@@ -367,15 +372,15 @@ class CommandeController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
 
-//                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-//                foreach ($sites as $site) {
-//                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-//                    $commandeSite = $emSite->find(Commande::class, $commande->getId());
-//                    if (!empty($commandeSite)) {
-//                        $emSite->remove($commandeSite);
-//                        $emSite->flush();
-//                    }
-//                }
+                $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                foreach ($sites as $site) {
+                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+                    $commandeSite = $emSite->find(Commande::class, $commande->getId());
+                    if (!empty($commandeSite)) {
+                        $emSite->remove($commandeSite);
+                        $emSite->flush();
+                    }
+                }
 
                 $em->remove($commande);
                 $em->flush();
