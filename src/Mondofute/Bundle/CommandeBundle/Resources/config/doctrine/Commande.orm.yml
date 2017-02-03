@@ -40,4 +40,7 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         clients:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
             inversedBy: commandes
+    manyToOne:
+        site:
+            targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
     lifecycleCallbacks: {  }
