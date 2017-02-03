@@ -3,6 +3,9 @@
 namespace Mondofute\Bundle\CommandeBundle\Form;
 
 use Infinite\FormBundle\Form\Type\PolyCollectionType;
+use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,7 +17,18 @@ class CommandeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('dateCommande')->add('numCommande')->add('clients')->add('commandeLignes', PolyCollectionType::class, array(
+        $builder
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'required' => true,
+                'query_builder' => function (SiteRepository $er) {
+                    return $er->getSitesSansCrm();
+                }
+            ])
+            ->add('dateCommande')
+            ->add('numCommande')
+            ->add('clients')
+            ->add('commandeLignes', PolyCollectionType::class, array(
             'types' => array(
                 CommandeLigneSejourType::class,
                 CommandeLignePrestationAnnexeType::class,
