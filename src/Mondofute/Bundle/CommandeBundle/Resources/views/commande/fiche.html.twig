@@ -53,15 +53,13 @@
 
 {% block entry_row %}
     {% set type = form._type.vars.value %}
-    {#{% if  type != 'prestationAnnexe' or form.vars.value == null or (form.vars.value != null and form.vars.value.commandeLigneSejour == null) %}#}
-    <div class="item">
+    <div class="item"
+    >
         {#<hr>#}
         {% if type == 'sejourNuite' %}
             {{ block('commande_ligne_sejour_nuite_widget') }}
         {% elseif type == 'prestationAnnexe' %}
-            {#{% if form.vars.value == null or form.vars.value != null and form.vars.value.commandeLigneSejour == null %}#}
             {{ block('commande_ligne_prestation_annexe_widget') }}
-            {#{% endif %}#}
         {% elseif type == 'sejourPeriode' %}
             {{ block('commande_ligne_sejour_periode_widget') }}
         {% else %}
@@ -74,7 +72,6 @@
             {{ form_rest(form) }}
         {% endif %}
     </div>
-    {#{% endif %}#}
 {% endblock %}
 
 {% block bouton_supprimer %}
@@ -198,7 +195,6 @@
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
             var index = $collectionHolder.data('index');
-            console.log(index);
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
