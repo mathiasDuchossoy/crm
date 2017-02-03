@@ -6,8 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -145,44 +148,43 @@ class CommandeController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
 
         $originalCommandeLignes = new ArrayCollection();
-//        $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
+        $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
         /** @var CommandeLigne $commandeLigne */
         foreach ($commande->getCommandeLignes() as $commandeLigne) {
-
             $originalCommandeLignes->add($commandeLigne);
-//            $oReflectionClass = new ReflectionClass($commandeLigne);
-//            if ($oReflectionClass->getShortName() == 'CommandeLigneSejour') {
-//                /** @var CommandeLigneSejour $commandeLigne */
-//                foreach ($commandeLigne->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
-//                    if($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId())) {
-//                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(),$commandeLignePrestationAnnex);
-//                    }
-//                }
-//            }
+            $oReflectionClass = new ReflectionClass($commandeLigne);
+            if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
+                /** @var CommandeLigneSejour $commandeLigne */
+                /** @var CommandeLignePrestationAnnexe $commandeLignePrestationAnnex */
+                foreach ($commandeLigne->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
+                    if (empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
+                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(), new ArrayCollection());
+                    }
+                    $originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId())->add($commandeLignePrestationAnnex);
+                }
+            }
         }
 
         $form->handleRequest($request);
-        dump($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            dump($commande->getCommandeLignes());
             foreach ($originalCommandeLignes as $originalCommandeLigne) {
-//                foreach ($originalCommandeLignePrestationAnnexeSejours as $key => $originalCommandeLignePrestationAnnexeSejour) {
-//                    if (false === $commande->getCommandeLignes()->get($key)->getCommandeLignePrestationAnnexes()->contains($originalCommandeLignePrestationAnnexeSejour)) {
-//                        dump($originalCommandeLignePrestationAnnexeSejour);
-//                        $em->remove($originalCommandeLignePrestationAnnexeSejour);
-//                    }
-//                }
                 if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
                     $em->remove($originalCommandeLigne);
+                } else {
+                    foreach ($commande->getCommandeLignes() as $commandeLigne) {
+                        if (!empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
+                            foreach ($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()) as $originalCommandeLignePrestationAnnexeSejour) {
+                                if (false === $commandeLigne->getCommandeLignePrestationAnnexes()->contains($originalCommandeLignePrestationAnnexeSejour)) {
+                                    $em->remove($originalCommandeLignePrestationAnnexeSejour);
+                                }
+                            }
+                        }
+                    }
                 }
-//                else {
-//
-//                }
             }
-            dump($commande->getCommandeLignes());
-            die;
+
             $em->flush();
 
 //            $this->copieVersSites($commande);
