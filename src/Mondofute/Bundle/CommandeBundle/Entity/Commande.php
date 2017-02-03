@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use ReflectionClass;
 
 class Commande
 {
@@ -198,22 +197,22 @@ class Commande
      */
     public function getCommandeLignes()
     {
-        $newCommandeLignes = new ArrayCollection();
-        foreach ($this->commandeLignes as $commandeLigne) {
-            $oReflectionClass = new ReflectionClass($commandeLigne);
-            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
-                /** @var CommandeLignePrestationAnnexe $commandeLigne */
-                if (empty($commandeLigne->getCommandeLigneSejour())) {
-                    $newCommandeLignes->add($commandeLigne);
-                }
-            } else {
-                $newCommandeLignes->add($commandeLigne);
-            }
-        }
-        $this->commandeLignes->clear();
-        foreach ($newCommandeLignes as $newCommandeLigne) {
-            $this->commandeLignes->add($newCommandeLigne);
-        }
+//        $newCommandeLignes = new ArrayCollection();
+//        foreach ($this->commandeLignes as $commandeLigne) {
+//            $oReflectionClass = new ReflectionClass($commandeLigne);
+//            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
+//                /** @var CommandeLignePrestationAnnexe $commandeLigne */
+//                if (empty($commandeLigne->getCommandeLigneSejour())) {
+//                    $newCommandeLignes->add($commandeLigne);
+//                }
+//            } else {
+//                $newCommandeLignes->add($commandeLigne);
+//            }
+//        }
+//        $this->commandeLignes->clear();
+//        foreach ($newCommandeLignes as $newCommandeLigne) {
+//            $this->commandeLignes->add($newCommandeLigne);
+//        }
         return $this->commandeLignes;
     }
 
