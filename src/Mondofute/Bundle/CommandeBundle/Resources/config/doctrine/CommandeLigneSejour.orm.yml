@@ -9,6 +9,11 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour:
         2: SejourNuite
         3: SejourPeriode
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneSejourRepository
+    fields:
+        nbParticipants:
+            type: integer
+            options:
+                unsigned: true
     manyToOne:
         logement:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
