@@ -5,3 +5,7 @@ ALTER TABLE fournisseur_commentaire ADD CONSTRAINT FK_10072F60BB6FE6 FOREIGN KEY
 ALTER TABLE fournisseur_commentaire ADD CONSTRAINT FK_10072F670C757F FOREIGN KEY (fournisseur_id) REFERENCES fournisseur (id);
 ALTER TABLE utilisateur_auteur ADD CONSTRAINT FK_64F78BCBFB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id);
 ALTER TABLE utilisateur_auteur ADD CONSTRAINT FK_64F78BCBBF396750 FOREIGN KEY (id) REFERENCES auteur (id) ON DELETE CASCADE;
+ALTER TABLE fournisseur_commentaire ADD commentaire_parent_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE fournisseur_commentaire ADD CONSTRAINT FK_10072FFDED4547 FOREIGN KEY (commentaire_parent_id) REFERENCES fournisseur_commentaire (id);
+CREATE INDEX IDX_10072FFDED4547 ON fournisseur_commentaire (commentaire_parent_id);
+ALTER TABLE auteur DROP nom;
