@@ -963,7 +963,7 @@ class FournisseurController extends Controller
                 $traduction = $prestationAnnex->getTraductions()->filter(function (
                     FournisseurPrestationAnnexeTraduction $element
                 ) use ($langue) {
-                    return $element->getLangue() == $langue;
+                    return $element->getLangue() === $langue;
                 })->first();
                 if (false === $traduction) {
                     $traduction = new FournisseurPrestationAnnexeTraduction();
@@ -1557,7 +1557,7 @@ class FournisseurController extends Controller
                     $codePromoFournisseur = $codePromoFournisseurs->filter(function (CodePromoFournisseur $element) use (
                         $codePromoFamillePrestationAnnexe
                     ) {
-                        return $element->getCodePromo() == $codePromoFamillePrestationAnnexe->getCodePromo();
+                        return $element->getCodePromo() === $codePromoFamillePrestationAnnexe->getCodePromo();
                     })->first();
                     if (false === $codePromoFournisseur) {
                         $codePromoFournisseurPrestationAnnexe = new CodePromoFournisseurPrestationAnnexe();
@@ -3936,7 +3936,6 @@ class FournisseurController extends Controller
         foreach ($affectationUnifieRemoves as $affectationUnifieRemove) {
             $em->remove($affectationUnifieRemove);
         }
-//        die;
 
         $em->persist($fournisseurPrestationAnnexe);
         $em->flush();

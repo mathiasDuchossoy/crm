@@ -135,6 +135,9 @@ doctrine:
                     MondofuteCoupDeCoeurBundle: ~
                     MondofuteDecoteBundle: ~
                     MondofutePromotionBundle: ~
+                    HiDevAuteurBundle: ~
+                    HiDevCommentaireBundle: ~
+                    MondofuteCommentaireBundle: ~
                     MondofuteCommandeBundle: ~
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
@@ -194,6 +197,9 @@ doctrine:
                     MondofuteCoupDeCoeurBundle: ~
                     MondofuteDecoteBundle: ~
                     MondofutePromotionBundle: ~
+                    HiDevAuteurBundle: ~
+                    HiDevCommentaireBundle: ~
+                    MondofuteCommentaireBundle: ~
                     MondofuteCommandeBundle: ~
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
@@ -250,6 +256,9 @@ doctrine:
                     MondofuteCoupDeCoeurBundle: ~
                     MondofuteDecoteBundle: ~
                     MondofutePromotionBundle: ~
+                    HiDevAuteurBundle: ~
+                    HiDevCommentaireBundle: ~
+                    MondofuteCommentaireBundle: ~
                     MondofuteCommandeBundle: ~
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
