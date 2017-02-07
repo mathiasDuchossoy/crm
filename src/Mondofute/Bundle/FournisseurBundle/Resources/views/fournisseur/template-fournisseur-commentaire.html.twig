@@ -40,7 +40,7 @@
                     {% endif %}
                     {{ fournisseurCommentaire.auteur.nom }}
                     <span id="fournisseur-commentaire-{{ indice }}-date">
-                        {{ fournisseurCommentaire.dateHeureCreation | date("dd/MM/Y HH:mm") }}
+                        {{ fournisseurCommentaire.dateHeureCreation | date("d/m/Y H:i") }}
                     </span>
 
                     {% if utilisateur.id == fournisseurCommentaire.auteur.utilisateur.id %}
