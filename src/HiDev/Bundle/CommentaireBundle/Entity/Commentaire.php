@@ -38,6 +38,14 @@ abstract class Commentaire implements CommentaireInterface
     protected $auteur;
 
     /**
+     * Commentaire constructor.
+     */
+    public function __construct()
+    {
+        $this->setValidationModerateur(false);
+    }
+
+    /**
      * @return mixed
      */
     public function getAuteur()
@@ -82,9 +90,9 @@ abstract class Commentaire implements CommentaireInterface
      *
      * @return Commentaire
      */
-    public function setDateHeureCreation($dateHeureCreation)
+    public function setDateHeureCreation()
     {
-        $this->dateHeureCreation = $dateHeureCreation;
+        $this->dateHeureCreation = new \DateTime();
 
         return $this;
     }
@@ -106,9 +114,9 @@ abstract class Commentaire implements CommentaireInterface
      *
      * @return Commentaire
      */
-    public function setDateHeureModification($dateHeureModification)
+    public function setDateHeureModification()
     {
-        $this->dateHeureModification = $dateHeureModification;
+        $this->dateHeureModification = new \DateTime();
 
         return $this;
     }

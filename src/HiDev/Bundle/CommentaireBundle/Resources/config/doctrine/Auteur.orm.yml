@@ -10,8 +10,4 @@ HiDev\Bundle\CommentaireBundle\Entity\Auteur:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        nom:
-            type: string
-            length: 255
     lifecycleCallbacks: {  }

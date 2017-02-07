@@ -1,0 +1,9 @@
+fournisseur_commentaire_ajouter:
+    path:     /add
+    defaults: { _controller: MondofuteFournisseurBundle:Fournisseur:newCommentaire }
+#    methods: POST
+
+fournisseur_commentaire_modifier:
+    path:     /edit/{id}
+    defaults: { _controller: MondofuteFournisseurBundle:Fournisseur:editCommentaire }
+    methods:  [GET, POST]

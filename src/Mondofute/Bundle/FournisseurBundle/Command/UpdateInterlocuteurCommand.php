@@ -14,7 +14,6 @@ use commun\moyencommunicationBundle\Entity\Mobile;
 use commun\moyencommunicationBundle\Entity\MoyenCommunication;
 use commun\moyencommunicationBundle\moyenCommunicationBundle;
 use DateTime;
-use Mondofute\Bundle\FournisseurBundle\Entity\Interlocuteur;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
