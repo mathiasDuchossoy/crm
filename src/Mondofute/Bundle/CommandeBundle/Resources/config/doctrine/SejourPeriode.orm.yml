@@ -2,4 +2,7 @@ Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\SejourPeriodeRepository
+    manyToOne:
+        periode:
+            targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
     lifecycleCallbacks: {  }

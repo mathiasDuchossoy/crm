@@ -137,7 +137,8 @@
             {% set collectionForm = form.commandeLignePrestationAnnexes %}
             {% set type = form._type %}
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-6">{{ form_row(form.logement) }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -171,7 +172,10 @@
             {% set collectionForm = form.commandeLignePrestationAnnexes %}
             {% set type = form._type %}
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-2">{{ form_row(form.nbParticipants , {'attr' : {'min' : 0}}) }}</div>
+                <div class="col-md-2">{{ form_row(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~form.periode.vars.id~'");'}}) }}</div>
+                <div class="col-md-4">{{ block('widget_periode') }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -195,6 +199,38 @@
             {{ form_widget(type) }}
         </div>
     {% endif %}
+{% endblock %}
+
+{% block widget_periode %}
+    {% set choicesKey = form.periode.vars.choices|keys %}
+    <div class="form-group">{{ form_label(form.periode) }}
+        <div class="col-sm-10"><select id="{{ form.periode.vars.id }}"
+                                       name="{{ form.periode.vars.full_name }}"
+                                       class="form-control" required="required">
+                <option value=""> --- Choisir une période ---</option>
+                {% set type = '' %}
+                {% for key, element in choicesKey %}
+                    {% if form.periode.vars.choices[element].data.type != type %}
+                        {% set type = form.periode.vars.choices[element].data.type %}
+                        <optgroup label="{{ ('type_periode.'~form.periode.vars.choices[element].data.type.id)|trans }}">
+                    {% endif %}
+                    <option value="{{ form.periode.vars.choices[element].value }}"
+                            {% if form.periode.vars.value == form.periode.vars.choices[element].value %}
+                                selected="selected"
+                            {% endif %}
+                    >{{ form.periode.vars.choices[element].label }} | Stock théorique :
+                        {% if form.vars.value is not null and form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element] is defined %}
+                            {{ form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element].stock }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </option>
+                    {% if loop.last or (loop.last == false and form.periode.vars.choices[choicesKey[key + 1]].data.type != type) %}
+                        </optgroup>
+                    {% endif %}
+                {% endfor %}
+            </select></div>
+    </div>
 {% endblock %}
 
 {% block entry_row_commande_ligne_prestation_annexe_sejour %}
@@ -311,6 +347,14 @@
         function removeTagForm(element, event) {
             event.preventDefault();
             $(element).closest('div.item').remove();
+        }
+
+        function changePeriode(element, selectPeriode) {
+            var path = '{{ path('commande_get_periodes_by_logement' , { 'id' : '_id_'} ) }}';
+            path = path.replace('_id_', $(element).val());
+            $.ajax(path).done(function (data) {
+                $('#' + selectPeriode).html(data);
+            });
         }
 
     </script>

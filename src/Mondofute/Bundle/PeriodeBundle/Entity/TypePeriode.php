@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\PeriodeBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * TypePeriode
  */
@@ -20,7 +23,7 @@ class TypePeriode
      */
     private $court;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $periodes;
 
@@ -29,7 +32,7 @@ class TypePeriode
      */
     public function __construct()
     {
-        $this->periodes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->periodes = new ArrayCollection();
     }
 
     /**
@@ -107,11 +110,11 @@ class TypePeriode
     /**
      * Add periode
      *
-     * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode
+     * @param Periode $periode
      *
      * @return TypePeriode
      */
-    public function addPeriode(\Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode)
+    public function addPeriode(Periode $periode)
     {
         $this->periodes[] = $periode;
 
@@ -121,9 +124,9 @@ class TypePeriode
     /**
      * Remove periode
      *
-     * @param \Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode
+     * @param Periode $periode
      */
-    public function removePeriode(\Mondofute\Bundle\PeriodeBundle\Entity\Periode $periode)
+    public function removePeriode(Periode $periode)
     {
         $this->periodes->removeElement($periode);
     }
@@ -131,7 +134,7 @@ class TypePeriode
     /**
      * Get periodes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPeriodes()
     {

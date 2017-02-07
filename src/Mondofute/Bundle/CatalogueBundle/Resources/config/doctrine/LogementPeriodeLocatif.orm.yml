@@ -35,6 +35,7 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
     manyToOne:
         periode:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\Periode
+            inversedBy: logementPeriodeLocatifs
 #            inverseBy: periode
 #            joinColumn:
 #                name: periode_id

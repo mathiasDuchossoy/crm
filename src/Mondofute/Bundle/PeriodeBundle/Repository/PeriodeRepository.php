@@ -68,4 +68,21 @@ class PeriodeRepository extends \Doctrine\ORM\EntityRepository
         return $pag;
     }
 
+    public function findPeriodeByLogementPrixNotEmpty($logementId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        return $qb
+            ->select('periode')
+            ->from('MondofutePeriodeBundle:periode', 'periode')
+            ->join('periode.logementPeriodeLocatifs', 'logementPeriodeLocatifs')
+            ->join('logementPeriodeLocatifs.logement', 'logement')
+            ->where('logement.id = :logementId')
+            ->setParameter('logementId', $logementId)
+            ->andWhere('logementPeriodeLocatifs.prixPublic > 0')
+            ->orderBy('periode.type', 'ASC')
+            ->addOrderBy('periode.debut', 'ASC');
+
+    }
+
+
 }
