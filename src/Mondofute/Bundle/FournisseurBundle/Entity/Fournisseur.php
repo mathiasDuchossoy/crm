@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\FournisseurBundle\Entity;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
@@ -155,6 +154,7 @@ class Fournisseur extends Moral
         $this->fournisseurEnfants = new ArrayCollection();
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     /**
@@ -1092,6 +1092,13 @@ class Fournisseur extends Moral
      */
     public function getCommentaires()
     {
-        return $this->commentaires;
+//        $criteres = Criteria::create();
+//        $criteres->where(Criteria::expr()->eq('commentaireParent',null));
+//        $this->commentaires = $this->commentaires->matching($criteres);
+        $commentaires = new ArrayCollection();
+        foreach ($this->commentaires as $commentaire) {
+            $commentaires->set($commentaire->getId(), $commentaire);
+        }
+        return $commentaires;
     }
 }

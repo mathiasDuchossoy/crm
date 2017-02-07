@@ -15,6 +15,15 @@ class UtilisateurAuteur extends Auteur
      */
     private $utilisateur;
 
+    /**
+     * Get utilisateur
+     *
+     * @return Utilisateur
+     */
+    public function getUtilisateur()
+    {
+        return $this->utilisateur;
+    }
 
     /**
      * Set utilisateur
@@ -31,12 +40,10 @@ class UtilisateurAuteur extends Auteur
     }
 
     /**
-     * Get utilisateur
-     *
-     * @return Utilisateur
+     * @return string
      */
-    public function getUtilisateur()
+    public function getNom()
     {
-        return $this->utilisateur;
+        return $this->utilisateur->getPrenom() . ' ' . $this->utilisateur->getNom();
     }
 }
