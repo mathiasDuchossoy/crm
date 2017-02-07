@@ -15,11 +15,6 @@ abstract class Auteur implements AuteurInterface
     protected $id;
 
     /**
-     * @var string
-     */
-    protected $nom;
-
-    /**
      * @var ArrayCollection
      */
     protected $commentaires;
@@ -42,29 +37,6 @@ abstract class Auteur implements AuteurInterface
         return $this->id;
     }
 
-    /**
-     * Get nom
-     *
-     * @return string
-     */
-    public function getNom()
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Set nom
-     *
-     * @param string $nom
-     *
-     * @return Auteur
-     */
-    public function setNom($nom)
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
 
     public function getCommentaires()
     {

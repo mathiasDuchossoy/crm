@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\UtilisateurBundle\Entity;
 
+use HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur;
 use Nucleus\ContactBundle\Entity\Physique;
 
 /**
@@ -10,6 +11,10 @@ use Nucleus\ContactBundle\Entity\Physique;
 class Utilisateur extends Physique
 {
     private $id;
+    /**
+     * @var auteur
+     */
+    private $auteur;
 
     /**
      * @return mixed
@@ -27,4 +32,14 @@ class Utilisateur extends Physique
         $this->id = $id;
     }
 
+    public function getAuteur()
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(UtilisateurAuteur $auteur)
+    {
+        $this->auteur = $auteur;
+        return $this;
+    }
 }
