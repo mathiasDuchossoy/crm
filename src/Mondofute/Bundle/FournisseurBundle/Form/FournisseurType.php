@@ -145,6 +145,18 @@ class FournisseurType extends AbstractType
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
             ))
+            ->add('commentaires', CollectionType::class, array(
+                'entry_type' => FournisseurCommentaireType::class,
+                'allow_extra_fields' => true,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => false,
+                'translation_domain' => 'messages',
+                'prototype_name' => '__fournisseur_commentaire_name__',
+                'required' => false,
+                'empty_data' => null,
+            ))
             ->add('prestationAnnexes', CollectionType::class, array(
                 'entry_type' => FournisseurPrestationAnnexeType::class,
                 'allow_add' => true,
