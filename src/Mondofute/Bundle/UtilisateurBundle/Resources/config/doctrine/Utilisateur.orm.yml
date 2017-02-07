@@ -37,4 +37,8 @@ Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
                 inverseJoinColumns:
                     nationalite_id:
                         referencedColumnName: id
+    oneToOne:
+        auteur:
+            targetEntity: HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur
+            mappedBy: utilisateur
     lifecycleCallbacks: {  }

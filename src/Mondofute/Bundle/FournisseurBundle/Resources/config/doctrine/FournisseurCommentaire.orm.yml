@@ -5,4 +5,12 @@ Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire:
     manyToOne:
         fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
+        commentaireParent:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
+            inversedBy: reponses
+    oneToMany:
+        reponses:
+            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
+            mappedBy: commentaireParent
+            cascade: ['remove']
     lifecycleCallbacks: {  }

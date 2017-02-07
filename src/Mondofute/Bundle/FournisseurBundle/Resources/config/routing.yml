@@ -2,7 +2,6 @@ mondofute_fournisseur_fournisseur:
     resource: "@MondofuteFournisseurBundle/Resources/config/routing/fournisseur.yml"
     prefix:   /fournisseur
 
-
 new:
     path:     /new
     defaults: { _controller: MondofuteFournisseurBundle:Interlocuteur:new }
@@ -10,3 +9,7 @@ new:
 edit:
     path:     /edit
     defaults: { _controller: MondofuteFournisseurBundle:Interlocuteur:edit }
+
+mondofute_fournisseur_commentaire:
+    resource: "@MondofuteFournisseurBundle/Resources/config/routing/fournisseur-commentaire.yml"
+    prefix:   /fournisseur/commentaire/

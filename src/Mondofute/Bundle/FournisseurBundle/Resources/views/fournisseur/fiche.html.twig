@@ -20,7 +20,7 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#fiche">{{ 'fiche' | trans | capitalize }}</a></li>
                 {% if edit is defined %}
-                    <li><a data-toggle="tab" href="#commentaires">{{ 'commentaires' | trans | capitalize }}</a> </li>
+                    <li><a data-toggle="tab" href="#commentaires">{{ 'commentaires' | trans | capitalize }}</a></li>
                 {% endif %}
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
                 {% if edit is defined %}
@@ -234,10 +234,22 @@
                     </div>
                 </div>
                 {% if edit is defined %}
-                    <div id="commentaires" class="tab-pane fade in">
+                    <div id="commentaires" data-nb="{{ form.commentaires | length }}" class="tab-pane fade in">
                         <div class="form-group">
-                            <button class="btn btn-default" type="button"><span
-                                        class="glyphicon glyphicon-plus"></span></button>
+                            <div id="commentaires-contenu" class="form-group">
+                                {% for fournisseurCommentaire in form.commentaires %}
+                                    {% set indiceFournisseurCommentaire =  fournisseurCommentaire.vars.name %}
+                                    {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-commentaire.html.twig' with {'utilisateur' : app.user.utilisateur, 'fournisseurCommentaire': fournisseurCommentaire, 'fournisseur': fournisseurCommentaire.vars.value.fournisseur, 'indice': indiceFournisseurCommentaire, 'locale': app.request.locale} %}
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-10"></div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-default affiche-modal-ajout-fournisseur-commentaire"
+                                            type="button"><span
+                                                class="glyphicon glyphicon-plus"></span></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endif %}
@@ -502,6 +514,7 @@
             </div>
 
             {% include('MondofuteFournisseurBundle:fournisseur:modal-fournisseur-prestation-annexe.html.twig') %}
+            {% include '@MondofuteFournisseur/fournisseur/modal-fournisseur-commentaire.html.twig' with {'fournisseur':form} %}
         {% endblock %}
     </section>
     <section>
@@ -514,6 +527,18 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
+        "use strict";
+        if (!globals) {
+            var globals = {};
+        }
+        if (!globals.urls) {
+            globals.urls = {};
+        }
+        globals.fournisseur = {
+            'id': '{{ form.vars.value.id }}',
+        };
+        globals.urls.ajouterCommentaireFournisseur = '{{ path('fournisseur_commentaire_ajouter') }}';
+        globals.urls.modifierCommentaireFournisseur = '{{ path('fournisseur_commentaire_modifier',{id:'__id_commentaire__'}) }}';
         $(document).ready(function () {
             var $fournisseurRemiseClefsPanel = $("#fournisseur_remise_clefs_panel");
             if ($("#fournisseur_types_9").is(':checked')) {
@@ -524,6 +549,7 @@
         });
     </script>
     <script>
+        "use strict";
         var _langues = {{ langues | serialize('json') | raw }};
         var _libelleJour = {};
         {% for i in 0..6 %}
@@ -538,7 +564,141 @@
         $(document).on('click', '.modifier-liste-service', function () {
             modifierListeService();
         });
+        //        affiche la modale en mod ajout d'un commentaire/réponse
+        $(document).on('click', '.affiche-modal-ajout-fournisseur-commentaire', function () {
+            var btnDatas = $(this).data();
+            var $modal = $('#modal-fournisseur-commentaire');
+            var $commentaires = $('#commentaires');
+            $modal.find('.enregistrer-fournisseur-commentaire').data('type', 'add');
+            $modal.find('.enregistrer-fournisseur-commentaire').data('indice', $commentaires.data('nb'));
+            var datas = $modal.find('#fournisseur-commentaire-prototype').data();
+            var datasCommentaires = $('#commentaires').data();
+            var indice = datasCommentaires.nb;
+//            var form = datas.fournisseurCommentairePrototype.replace(/__fournisseur_commentaire_name__/g, indice);
 
+            if (btnDatas.commentaireParent == '') {
+                var form = datas.fournisseurCommentairePrototype;
+                $modal.find('form').html(form);
+                $modal.find('[name="fournisseur[commentaires][__fournisseur_commentaire_name__][fournisseur]"]').val(parseInt(globals.fournisseur.id));
+                $modal.find('[name="fournisseur[commentaires][__fournisseur_commentaire_name__][commentaireParent]"]').val(btnDatas.commentaireParent);
+            } else {
+                var form = datas.fournisseurCommentaireReponsePrototype;
+                $modal.find('form').html(form);
+                $modal.find('[name="reponse_fournisseur"]').val(parseInt(globals.fournisseur.id));
+                $modal.find('[name="commentaireParent"]').val(btnDatas.commentaireParent);
+            }
+            $modal.modal({show: true, backdrop: 'static'});
+        });
+        //        affiche la modal en mode modification d'un commentaire/réponse
+        $(document).on('click', '.edit-fournisseur-commentaire', function () {
+//            alert($(this).data('fournisseurCommentaireIndice'));
+            var datas = $(this).data();
+            var indice = datas.fournisseurCommentaireIndice;
+            var form = cloneFormulaire($('#form-fournisseur-commentaire-' + indice));
+            var $modal = $('#modal-fournisseur-commentaire');
+            $modal.find('.enregistrer-fournisseur-commentaire').data('type', 'edit');
+            $modal.find('.enregistrer-fournisseur-commentaire').data('indice', $(this).data('fournisseurCommentaireIndice'));
+            $modal.find('form').html(form);
+            form.css('display', '');
+            $modal.modal({show: true, backdrop: 'static'});
+        });
+        $(document).on('click', '.enregistrer-fournisseur-commentaire', function () {
+            var $modal = $('#modal-fournisseur-commentaire');
+//            empeche la fermeture de la modal
+            var $btnEnregistrer = $(this);
+            $modal.find('[name="fermer-modal"]').attr('data-dismiss', '');
+            $btnEnregistrer.removeClass('btn-primary');
+            $btnEnregistrer.addClass('btn-inverse');
+//            fin blocage fermeture modal
+
+            var prototypesFournisseurCommentaires = $modal.find('#fournisseur-commentaire-prototype').data();
+            var $commentaires = $('#commentaires');
+            var datasCommentaires = $commentaires.data();
+            var indice = $modal.find('.enregistrer-fournisseur-commentaire').data('indice');
+
+            if ($modal.find('.enregistrer-fournisseur-commentaire').data('type') == 'add') {
+
+//                cas d'un ajout de commentaire
+                $.post(
+                    globals.urls.ajouterCommentaireFournisseur,
+                    $('#form-fournisseur-commentaire-enregistrement').serialize()
+                ).done(function (retour) {
+                    var reponse = false;
+                    var liste = prototypesFournisseurCommentaires.fournisseurCommentaireListePrototype.replace(/__fournisseur_commentaire_name__/g, retour.id);
+                    var $commentairesContenu = null;
+//                    met en forme les id et name dans le formulaire en remplacant __fournisseur_commentaire_name__ par l'identifiant de l'objet créé
+
+                    $modal.find('form').html($modal.find('form').html().replace(/__fournisseur_commentaire_name__/g, retour.id).replace(/__reponse_name__/g, retour.id));
+                    var form = cloneFormulaire($modal.find('form').children(':first'));
+                    if (!retour.commentaireParent) {
+                        form.find('#fournisseur_commentaires_' + retour.id + '_contenu').val(retour.contenu);
+                        $commentairesContenu = $('#commentaires-contenu');
+                    } else {
+                        reponse = true;
+                        form.find('#contenu').val(retour.contenu);
+                        $commentairesContenu = $('#fournisseur-commentaire-reponses-' + retour.commentaireParent.id).children(':first');
+                        var $badge = $('#fournisseur-commentaire-badge-reponses-' + retour.commentaireParent.id);
+                        $badge.html(parseInt($badge.html()) + 1);
+                    }
+                    $commentairesContenu.append(liste);
+//                    empeche l'affichage lorsque nous sommes sur une création de réponse
+                    if (reponse == true) {
+                        $commentairesContenu.find('#reponses-' + retour.id).remove();
+                    }
+                    var $formConteneur = $('#form-fournisseur-commentaire-' + retour.id);
+                    $commentairesContenu.find('span#fournisseur-commentaire-' + retour.id + '-contenu').html(retour.contenu);
+                    $formConteneur.append(form);
+                    $formConteneur.attr('data-id', retour.id);
+                    $('#fournisseur-commentaire-' + retour.id + '-date').html(retour.dateHeureCreation);
+                    $commentaires.data('nb', parseInt(datasCommentaires.nb) + 1);
+//                    réactive la fermeture de la modal
+                    $modal.find('[name="fermer-modal"]').attr('data-dismiss', 'modal');
+                    $btnEnregistrer.removeClass('btn-inverse');
+                    $btnEnregistrer.addClass('btn-primary');
+//                    fin reactivation de la fermeture de la modal
+                    $modal.modal('hide');
+                }).always(function (retour) {
+                    //                    réactive la fermeture de la modal
+                    $modal.find('[name="fermer-modal"]').attr('data-dismiss', 'modal');
+                    $btnEnregistrer.removeClass('btn-inverse');
+                    $btnEnregistrer.addClass('btn-primary');
+//                    fin reactivation de la fermeture de la modal
+                });
+            } else if ($modal.find('.enregistrer-fournisseur-commentaire').data('type') == 'edit') {
+                var liste = prototypesFournisseurCommentaires.fournisseurCommentaireListePrototype.replace(/__fournisseur_commentaire_name__/g, indice);
+                var $commentairesContenu = $('#commentaires-contenu');
+                var form = cloneFormulaire($modal.find('form').children(':first'));
+//                cas d'une modification de commentaire
+                var $formConteneur = $('#form-fournisseur-commentaire-' + indice);
+                var idCommentaire = $formConteneur.data('id');
+                $.post(
+                    globals.urls.modifierCommentaireFournisseur.replace(/__id_commentaire__/g, idCommentaire),
+                    $('#form-fournisseur-commentaire-enregistrement').serialize()
+                ).done(function (retour) {
+                    var contenu = '';
+                    if (retour.commentaire == true) {
+                        contenu = form.find('#fournisseur_commentaires_' + indice + '_contenu').val();
+                    } else {
+                        contenu = form.find('#contenu').val()
+                    }
+                    $commentairesContenu.find('span#fournisseur-commentaire-' + indice + '-contenu').html(contenu);
+                    $formConteneur.html('');
+                    $formConteneur.append(form.children(':first'));
+//                    réactive la fermeture de la modal
+                    $modal.find('[name="fermer-modal"]').attr('data-dismiss', 'modal');
+                    $btnEnregistrer.removeClass('btn-inverse');
+                    $btnEnregistrer.addClass('btn-primary');
+//                    fin reactivation de la fermeture de la modal
+                    $modal.modal('hide');
+                }).always(function (retour) {
+                    //                    réactive la fermeture de la modal
+                    $modal.find('[name="fermer-modal"]').attr('data-dismiss', 'modal');
+                    $btnEnregistrer.removeClass('btn-inverse');
+                    $btnEnregistrer.addClass('btn-primary');
+//                    fin reactivation de la fermeture de la modal
+                });
+            }
+        });
         $('.afficher-modal-ajout-liste-service').on('click', function (event) {
             afficherModalListeService('add', null);
         });
@@ -573,16 +733,16 @@
             $('#liste-service-' + index).remove();
         }
         function supprimerService(indexListeService, indexService) {
-            $modal = $('#modalListeService');
+            var $modal = $('#modalListeService');
             $modal.find('#service-' + indexListeService + '-' + indexService).remove();
         }
         function supprimerTarifService(indexListeService, indexService, indexTarifService) {
-            $modal = $('#modalTarifsService');
+            var $modal = $('#modalTarifsService');
             $modal.find('#tarif-' + indexListeService + '-' + indexService + '-' + indexTarifService).remove();
         }
         function ajouterLigneService() {
-            $modalListeService = $('#modalListeService');
-            $modalLigneService = $modalListeService.find('#modal-ligne-service');
+            var $modalListeService = $('#modalListeService');
+            var $modalLigneService = $modalListeService.find('#modal-ligne-service');
             var indexService = parseInt($modalLigneService.attr('data-index'));
             var prototype = $modalLigneService.attr('data-prototype');
             prototype = prototype.replace(/__service_name__/g, indexService);
@@ -590,9 +750,9 @@
             $modalLigneService.attr('data-index', indexService + 1);
         }
         function validerTarifsService(indexListeService, indexService) {
-            $modalTarifsService = $('#modalTarifsService');
-            $modalListeService = $('#modalListeService');
-            $form = $modalTarifsService.find('#form-tarifs-service-' + indexListeService + '-' + indexService);
+            var $modalTarifsService = $('#modalTarifsService');
+            var $modalListeService = $('#modalListeService');
+            var $form = $modalTarifsService.find('#form-tarifs-service-' + indexListeService + '-' + indexService);
             $modalListeService.find('#ctn-tarifs-service-' + indexListeService + '-' + indexService).html('');
             $modalListeService.find('#ctn-tarifs-service-' + indexListeService + '-' + indexService).append($form);
             $modalTarifsService.modal('hide');
@@ -663,11 +823,11 @@
             $modalPrototypeListeService.append($(prototype));
         }
         function ajouterListeService() {
-            $listeService = $('#liste-service');
-            indexListeService = parseInt($listeService.attr('data-index'));
-            $modalListeService = $('#modalListeService');
-            $form = $modalListeService.find('#form-liste-service_' + indexListeService);
-            $ligne = $('<div class="row panel" id="liste-service-' + indexListeService + '"><div class="col-sm-10" id="titre-liste-service-' + indexListeService + '">' + $('#fournisseur_listeServices_' + indexListeService + '_libelle').val() + '</div><div class="col-sm-2"> <button type="button" class="btn btn-default afficher-modal-modif-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-edit"></span></button> <button type="button" class="btn btn-default suppr-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-trash"></span></button></div><div style="display: none;" id="ctn-form-' + indexListeService + '"></div></div>');
+            var $listeService = $('#liste-service');
+            var indexListeService = parseInt($listeService.attr('data-index'));
+            var $modalListeService = $('#modalListeService');
+            var $form = $modalListeService.find('#form-liste-service_' + indexListeService);
+            var $ligne = $('<div class="row panel" id="liste-service-' + indexListeService + '"><div class="col-sm-10" id="titre-liste-service-' + indexListeService + '">' + $('#fournisseur_listeServices_' + indexListeService + '_libelle').val() + '</div><div class="col-sm-2"> <button type="button" class="btn btn-default afficher-modal-modif-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-edit"></span></button> <button type="button" class="btn btn-default suppr-liste-service" data-index="' + indexListeService + '"><span class="glyphicon glyphicon-trash"></span></button></div><div style="display: none;" id="ctn-form-' + indexListeService + '"></div></div>');
             $ligne.find('#ctn-form-' + indexListeService).append($form);
             $ligne.appendTo($listeService);
             $listeService.attr('data-index', indexListeService + 1);
@@ -675,9 +835,9 @@
         }
         function modifierListeService() {
             $listeService = $('#liste-service');
-            indexListeService = parseInt($('#index-liste-service').attr('data-index'));
-            $modalListeService = $('#modalListeService');
-            $form = $modalListeService.find('#form-liste-service_' + indexListeService);
+            var indexListeService = parseInt($('#index-liste-service').attr('data-index'));
+            var $modalListeService = $('#modalListeService');
+            var $form = $modalListeService.find('#form-liste-service_' + indexListeService);
 //            affichage du libelle dans l'onglet service
             $listeService.find('#titre-liste-service-' + indexListeService).html($form.find('#fournisseur_listeServices_' + indexListeService + '_libelle').val());
             var $listeService = $('#liste-service-' + indexListeService);
@@ -704,7 +864,7 @@
                     $modal.find('#jours').css('display', '');
                     break;
                 case 'edit':
-                    $form = $('#formReception_' + index);
+                    var $form = $('#formReception_' + index);
                     chargerModalReception($form, index);
                     $titreModal.html('{{ 'reception.modifier' | trans }}');
                     $btnAjouter.css('display', 'none');
@@ -869,7 +1029,7 @@
             var libelle = formatLibelleReception(reception);
             prototype = prototype.replace(/__name__/g, index);
             var $prototype = $(prototype);
-            $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-2"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"><span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
+            var $form = $('<div id="contenuReception_' + index + '" class="row"><div class="col-sm-12"><div id="reception_' + index + '_libelle" class="col-sm-10">' + libelle + '</div><div class="col-sm-2"><button class="btn btn-default" onclick="afficherModaleReception(\'edit\',' + index + ');" type="button"><span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-default" onclick="supprimerReception(' + index + ');" type="button"><span class="glyphicon glyphicon-trash"></span></button></div><div id="formReception_' + index + '" style="display: none;" ></div></div>');
             $form.find('#formReception_' + index).append($prototype);
             $receptions.append($form);
             chargerReceptionDansForm($prototype, reception, index);
@@ -906,19 +1066,19 @@
         function cloneFormulaire($form) {
             var prefixe = '_deepcloned';
 //            copy jquery de l'element
-            $dest = $form.clone();
+            var $dest = $form.clone();
 //            duplique les select
-            $selects = $form.find('select');
+            var $selects = $form.find('select');
             $selects.each(function () {
                 $dest.find('#' + $(this).attr('id')).val($(this).val());
             });
 //            duplique les textareas
-            $textareas = $form.find('textarea');
+            var $textareas = $form.find('textarea');
             $textareas.each(function () {
                 $dest.find('#' + $(this).attr('id')).val($(this).val());
             });
 //            gestion des onglets pour ne pas avoir de rédondance d'id et assurer le bon fonctionnement des onglets
-            $tabs = $dest.find('.tab-pane');
+            var $tabs = $dest.find('.tab-pane');
             $tabs.each(function () {
                 $dest.find('li [href="#' + $(this).attr('id') + '"]').attr('href', '#' + $(this).attr('id') + prefixe);
                 $(this).attr('id', $(this).attr('id') + prefixe);
@@ -928,8 +1088,8 @@
         }
         function afficherModaleModifierRemiseClef(index) {
             var $remiseClefModal = $('#remiseClefModal');
-            $form = $('#formRemiseClef_' + index + ' div:first');
-            $copy = cloneFormulaire($form);
+            var $form = $('#formRemiseClef_' + index + ' div:first');
+            var $copy = cloneFormulaire($form);
             $('#modal-remise-clef-error').html('');
             $remiseClefModal.find('#contenuAjoutRemiseClef').html('');
             $('#contenuAjoutRemiseClef').append($copy);
@@ -1157,9 +1317,9 @@
             }
             $interlocuteurModal.find('.modal-title').text('Modifier interlocuteur pour le service ' + service);
 
-            $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
+            var $divFournisseurInterlocuteurClone = $divFournisseurInterlocuteur.clone();
 
-            $formInterlocuteur = $('#form-interlocuteur');
+            var $formInterlocuteur = $('#form-interlocuteur');
             $formInterlocuteur.html($divFournisseurInterlocuteurClone);
 
             $formInterlocuteur.find('input, select').each(function (index, item) {
@@ -1322,8 +1482,8 @@
 
         function testRequired() {
 
-            fail = false;
-            fail_tab = [];
+            var fail = false;
+            var fail_tab = [];
 
             $('#form-interlocuteur').find('select, textarea, input, [type="email"]').each(function () {
                 if (!$(this).prop('required')) {

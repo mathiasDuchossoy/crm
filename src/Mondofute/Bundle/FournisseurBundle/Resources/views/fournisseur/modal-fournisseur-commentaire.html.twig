@@ -1,0 +1,44 @@
+<div class="modal fade" id="modal-fournisseur-commentaire" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" name="fermer-modal" class="close" data-dismiss="modal" aria-label="Fermer"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Commentaire sur le fournisseur</h4>
+            </div>
+            <div class="modal-body">
+                <div id="fournisseur-commentaire-prototype"
+                     data-fournisseur-commentaire-prototype="
+{% filter escape %}
+{% include '@MondofuteFournisseur/fournisseur/prototype-fournisseur-commentaire.html.twig' with {'commentaire':fournisseur.commentaires.vars['prototype']} %}
+{% endfilter %}"
+                     data-fournisseur-commentaire-liste-prototype="
+{% filter escape %}
+{% include '@MondofuteFournisseur/fournisseur/template-fournisseur-commentaire.html.twig' with {'utilisateur' : app.user.utilisateur, 'fournisseurCommentaire': form.commentaires.vars['prototype'], 'locale': app.request.locale} %}
+{% endfilter %}
+"
+                     data-fournisseur-commentaire-reponse-prototype="
+{% filter escape %}
+{% include '@MondofuteFournisseur/fournisseur/prototype-fournisseur-commentaire-reponse.html.twig' with {'indice':'__reponse_name__','fournisseurCommentaire':null} %}
+{% endfilter %}
+"
+                ></div>
+                <form id="form-fournisseur-commentaire-enregistrement" class="form-horizontal">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" name="fermer-modal" class="btn btn-default" data-dismiss="modal"
+                        id="">Annuler
+                </button>
+                <button id="" type="button"
+                        class="btn btn-primary enregistrer-fournisseur-commentaire"
+                >
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
