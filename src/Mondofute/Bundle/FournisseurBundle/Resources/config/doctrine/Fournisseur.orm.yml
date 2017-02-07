@@ -119,6 +119,7 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         commentaires:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
             mappedBy: fournisseur
+            cascade: ['persist','remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

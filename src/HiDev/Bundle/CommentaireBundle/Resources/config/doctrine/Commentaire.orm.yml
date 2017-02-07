@@ -19,4 +19,6 @@ HiDev\Bundle\CommentaireBundle\Entity\Commentaire:
             type: boolean
         contenu:
             type: text
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks:
+        prePersist: [ setDateHeureCreation, setDateHeureModification ]
+        preUpdate: [ setDateHeureModification ]
