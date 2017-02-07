@@ -21,4 +21,8 @@ Mondofute\Bundle\PeriodeBundle\Entity\Periode:
         type:
             targetEntity: Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode
             inversedBy: periodes
+    oneToMany:
+        logementPeriodeLocatifs:
+            targetEntity: Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif
+            mappedBy: periode
     lifecycleCallbacks: {  }

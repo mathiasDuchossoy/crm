@@ -3,6 +3,9 @@
 namespace Mondofute\Bundle\PeriodeBundle\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 
 /**
  * Periode
@@ -29,6 +32,18 @@ class Periode
      * @var TypePeriode
      */
     private $type;
+    /**
+     * @var Collection
+     */
+    private $logementPeriodeLocatifs;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->logementPeriodeLocatifs = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -142,5 +157,44 @@ class Periode
         $this->type = $type;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return 'Du ' . date_format($this->debut, "d/m/Y") . ' au ' . date_format($this->fin, "d/m/Y");
+    }
+
+    /**
+     * Add logementPeriodeLocatif
+     *
+     * @param LogementPeriodeLocatif $logementPeriodeLocatif
+     *
+     * @return Periode
+     */
+    public function addLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
+    {
+        $this->logementPeriodeLocatifs[] = $logementPeriodeLocatif;
+
+        return $this;
+    }
+
+    /**
+     * Remove logementPeriodeLocatif
+     *
+     * @param LogementPeriodeLocatif $logementPeriodeLocatif
+     */
+    public function removeLogementPeriodeLocatif(LogementPeriodeLocatif $logementPeriodeLocatif)
+    {
+        $this->logementPeriodeLocatifs->removeElement($logementPeriodeLocatif);
+    }
+
+    /**
+     * Get logementPeriodeLocatifs
+     *
+     * @return Collection
+     */
+    public function getLogementPeriodeLocatifs()
+    {
+        return $this->logementPeriodeLocatifs;
     }
 }

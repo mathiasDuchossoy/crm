@@ -22,3 +22,8 @@ commande_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteCommandeBundle:Commande:delete" }
     methods:  DELETE
+
+commande_get_periodes_by_logement:
+    path:     /{id}/getperiodes
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:getPeriodesByLogement" }
+    methods: GET

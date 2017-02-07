@@ -38,4 +38,6 @@ class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
         return $logementPeriodeLocatifs;
 
     }
+
+
 }
