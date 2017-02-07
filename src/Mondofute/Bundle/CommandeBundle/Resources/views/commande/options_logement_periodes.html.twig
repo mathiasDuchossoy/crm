@@ -1,0 +1,17 @@
+<option value=""> --- Choisir une période ---</option>
+{% set type = '' %}
+{% for key, element in periodes %}
+    {% if element.type != type %}
+        {% set type = element.type %}
+        <optgroup label="{{ ('type_periode.'~element.type.id)|trans }}">
+    {% endif %}
+    <option value="{{ element.id }}">{{ element }} | Stock théorique :
+        {% if logementPeriodeLocatifsStockNotEmpty[element.id] is defined %}
+            {{ logementPeriodeLocatifsStockNotEmpty[element.id].stock }}
+        {% else %}
+            0
+        {% endif %}</option>
+    {% if loop.last or (loop.last == false and element.type != type) %}
+        </optgroup>
+    {% endif %}
+{% endfor %}

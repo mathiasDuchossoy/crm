@@ -5,12 +5,17 @@ namespace Mondofute\Bundle\CommandeBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
+use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
+use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -190,7 +195,26 @@ class CommandeController extends Controller
                 $metadata = $emSite->getClassMetadata($Class);
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $commandeSite->addCommandeLigne($commandeLigneSite);
-                $commandeLigneSite->setMontant($commandeLigne->getMontant());
+            }
+            $commandeLigneSite->setMontant($commandeLigne->getMontant());
+            $oReflectionClass = new ReflectionClass($commandeLigneSite);
+            switch ($oReflectionClass->getShortName()) {
+                case 'SejourPeriode':
+                    /** @var SejourPeriode $commandeLigneSite */
+                    /** @var SejourPeriode $commandeLigne */
+                    $commandeLigneSite
+                        ->setPeriode($emSite->find(Periode::class, $commandeLigne->getPeriode()))
+                        ->setNbParticipants($commandeLigne->getNbParticipants())
+                        ->setLogement($emSite->getRepository(Logement::class)->findOneBy(['logementUnifie' => $commandeLigne->getLogement()->getLogementUnifie()]));
+                    break;
+                case 'SejourNuite':
+                    /** @var SejourNuite $commandeLigneSite */
+                    /** @var SejourNuite $commandeLigne */
+                    $commandeLigneSite
+                        ->setLogement($emSite->getRepository(Logement::class)->findOneBy(['logementUnifie' => $commandeLigne->getLogement()->getLogementUnifie()]));
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -261,6 +285,25 @@ class CommandeController extends Controller
                     ->setMontant($commandeLigne->getMontant());
             }
         }
+    }
+
+    public function getPeriodesByLogementAction($id)
+    {
+        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
+        $em = $this->getDoctrine()->getManager();
+        $logement = $em->find(Logement::class, $id);
+        $logementPeriodeLocatifs = $logement->getLogementPeriodeLocatifs()->filter(function (LogementPeriodeLocatif $element) {
+            return $element->getPrixPublic() > 0;
+        });
+        $periodes = new ArrayCollection();
+        foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif) {
+            $periodes->add($logementPeriodeLocatif->getPeriode());
+        }
+
+        return $this->render('@MondofuteCommande/commande/options_logement_periodes.html.twig', array(
+            'periodes' => $periodes,
+            'logementPeriodeLocatifsStockNotEmpty' => $logement->getLogementPeriodeLocatifsStockNotEmpty()
+        ));
     }
 
     /**

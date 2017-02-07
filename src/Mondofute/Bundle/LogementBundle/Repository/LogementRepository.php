@@ -53,6 +53,8 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+//    public function
+
     public function chargerLocatif($idLogement)
     {
         $em = $this->getEntityManager();
@@ -331,4 +333,27 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         }
         return $logement;
     }
+
+
+    public function getByFournisseurHebergement($locale, $fournisseurHebergementId, $siteId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('logement , traductions ')
+            ->from('MondofuteLogementBundle:Logement', 'logement')
+            ->join('logement.traductions', 'traductions')
+            ->join('logement.logementUnifie', 'logementUnifie')
+            ->join('logement.site', 'site')
+            ->join('traductions.langue', 'langue')
+            ->join('logement.fournisseurHebergement', 'fournisseurHebergement')
+            ->where("langue.code = :code")
+            ->setParameter('code', $locale)
+            ->andWhere("fournisseurHebergement.id = :fournisseurHebergementId")
+            ->setParameter('fournisseurHebergementId', $fournisseurHebergementId)
+            ->andWhere("site.id = :siteId")
+            ->setParameter('siteId', $siteId)
+            ->orderBy('logement.id', 'ASC');
+
+        return $qb;
+    }
+
 }
