@@ -18,6 +18,7 @@
                     <i class="glyphicon glyphicon-plus"></i> séjour nuite
                 </a>
                 {% set form = prototypes.sejourPeriode %}
+                {% set name = '__name__' %}
                 <a href="#" data-prototype="{{ block('commande_ligne_sejour_periode_widget') | escape }}"
                    class="btn btn-success add_item"
                    onclick="addTagForm(this,event,'__name__','sejour_periode');">
@@ -59,7 +60,7 @@
                     <h3 class="panel-title">Séjour période</h3>
                 </div>
                 <div class="panel-body" id="sejour_periode">
-                    {% for form in collectionForm %}
+                    {% for name, form in collectionForm %}
                         {{ block('commande_ligne_sejour_periode_widget') }}
                     {% endfor %}
                 </div>
@@ -111,7 +112,7 @@
             {{ block('commande_ligne_sejour_periode_widget') }}
         {% else %}
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                {#<div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -126,7 +127,7 @@
     <a href="#" class="btn btn-danger remove_item"
        onclick="removeTagForm(this,event);"
     >
-        <i class="glyphicon glyphicon-minus"></i> Supprimer
+        <i class="glyphicon glyphicon-minus"></i>
     </a>
 {% endblock %}
 
@@ -137,7 +138,7 @@
             {% set collectionForm = form.commandeLignePrestationAnnexes %}
             {% set type = form._type %}
             <div class="row">
-                <div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                {#<div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
                 <div class="col-md-6">{{ form_row(form.logement) }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
@@ -169,30 +170,107 @@
     {% set type = form._type.vars.value %}
     {% if type == 'sejourPeriode' %}
         <div class="item">
-            {% set collectionForm = form.commandeLignePrestationAnnexes %}
-            {% set type = form._type %}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Date achat</th>
+                    <th>Logement</th>
+                    <th>Prix catalogue unitaire</th>
+                    <th>PV unitaire</th>
+                    <th>Total PV</th>
+                    <th>Fournisseur</th>
+                    <th>PA unitaire</th>
+                    <th>Total PA</th>
+                    <th>Marge TTC</th>
+                    <th>Marge TTC %</th>
+                    <th>TVA</th>
+                    <th>Marge HT</th>
+                    <th>Marge HT %</th>
+                    <th>Facture n°</th>
+                    <th>Date exigible paiement</th>
+                    <th>Paiement effectué le</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                {% set collectionForm = form.commandeLignePrestationAnnexes %}
+                {% set type = form._type %}
+                <tbody>
+                <tr>
+                    <td>
+                        {% if  form.vars.value is not null %}
+                            {{ form.vars.value.dateAchat |date("d/m/Y H:i") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                {{ form_widget(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~form.periode.vars.id~'");'}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-7 control-label" for="{{ form.nbParticipants.vars.id }}">Nb
+                                participants
+                            </label>
+                            <div class="col-sm-5">
+                                {{ form_widget(form.nbParticipants , {'attr' : {'min' : 1}}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                {{ block('widget_periode') }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ form_widget(form.prixCatalogue , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+                    <td>{{ form_widget(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+                    <td></td>
+                    <td>{% if form.vars.value is not null %}
+                            {{ form.vars.value.logement.fournisseurHebergement.fournisseur }}
+                        {% endif %}
+                    </td>
+                    <td>{{ form_widget(form.prixAchat , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{ block('bouton_supprimer') }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <div class="row">
-                <div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-                <div class="col-md-2">{{ form_row(form.nbParticipants , {'attr' : {'min' : 0}}) }}</div>
-                <div class="col-md-2">{{ form_row(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~form.periode.vars.id~'");'}}) }}</div>
-                <div class="col-md-4">{{ block('widget_periode') }}</div>
-                <div class="col-md-2 text-right">
-                    {{ block('bouton_supprimer') }}
-                </div>
                 <div class="collection">
                     <div class="clearfix">
                         {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
                         <a href="#"
                            data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
                            class="btn btn-success add_item"
-                           onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
+                           onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__' , 'prestation_annexe_sejour_{{ name }}');">
                             <i class="glyphicon glyphicon-plus"></i> prestation annexe
                         </a>
                     </div>
                     <div class="items">
-                        {% for form in collectionForm %}
-                            {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                        {% endfor %}
+                        <table class="panel table table-striped">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Prestation annexe
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody class="panel-body" id="prestation_annexe_sejour_{{ name }}">
+                            {% for form in collectionForm %}
+                                {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -203,40 +281,46 @@
 
 {% block widget_periode %}
     {% set choicesKey = form.periode.vars.choices|keys %}
-    <div class="form-group">{{ form_label(form.periode) }}
-        <div class="col-sm-10"><select id="{{ form.periode.vars.id }}"
-                                       name="{{ form.periode.vars.full_name }}"
-                                       class="form-control" required="required">
-                <option value=""> --- Choisir une période ---</option>
-                {% set type = '' %}
-                {% for key, element in choicesKey %}
-                    {% if form.periode.vars.choices[element].data.type != type %}
-                        {% set type = form.periode.vars.choices[element].data.type %}
-                        <optgroup label="{{ ('type_periode.'~form.periode.vars.choices[element].data.type.id)|trans }}">
+    <select id="{{ form.periode.vars.id }}"
+            name="{{ form.periode.vars.full_name }}"
+            class="form-control" required="required">
+        <option value=""> --- Choisir une période ---</option>
+        {% set type = '' %}
+        {% for key, element in choicesKey %}
+            {% if form.periode.vars.choices[element].data.type != type %}
+                {% set type = form.periode.vars.choices[element].data.type %}
+                <optgroup label="{{ ('type_periode.'~form.periode.vars.choices[element].data.type.id)|trans }}">
+            {% endif %}
+            <option value="{{ form.periode.vars.choices[element].value }}"
+                    {% if form.periode.vars.value == form.periode.vars.choices[element].value %}
+                        selected="selected"
                     {% endif %}
-                    <option value="{{ form.periode.vars.choices[element].value }}"
-                            {% if form.periode.vars.value == form.periode.vars.choices[element].value %}
-                                selected="selected"
-                            {% endif %}
-                    >{{ form.periode.vars.choices[element].label }} | Stock théorique :
-                        {% if form.vars.value is not null and form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element] is defined %}
-                            {{ form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element].stock }}
-                        {% else %}
-                            0
-                        {% endif %}
-                    </option>
-                    {% if loop.last or (loop.last == false and form.periode.vars.choices[choicesKey[key + 1]].data.type != type) %}
-                        </optgroup>
-                    {% endif %}
-                {% endfor %}
-            </select></div>
-    </div>
+            >{{ form.periode.vars.choices[element].label }} | Stock théorique :
+                {% if form.vars.value is not null and form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element] is defined %}
+                    {{ form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element].stock }}
+                {% else %}
+                    0
+                {% endif %}
+            </option>
+            {% if loop.last or (loop.last == false and form.periode.vars.choices[choicesKey[key + 1]].data.type != type) %}
+                </optgroup>
+            {% endif %}
+        {% endfor %}
+    </select>
+    {{ form_errors(form.periode) }}
 {% endblock %}
 
 {% block entry_row_commande_ligne_prestation_annexe_sejour %}
-    <div class="item">
-        {{ block('commande_ligne_prestation_annexe_widget') }}
-    </div>
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <tr class="item">
+            <td>
+                {{ form_widget(form.fournisseurPrestationAnnexeParam) }}
+            </td>
+            <td>{{ block('bouton_supprimer') }}</td>
+            {{ form_rest(form) }}
+        </tr>
+    {% endif %}
 {% endblock %}
 
 
@@ -245,7 +329,7 @@
     {% if type == 'prestationAnnexe' %}
         <div class="item">
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-6">{{ form_row(form.fournisseurPrestationAnnexeParam) }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -260,7 +344,15 @@
     {% if type == 'fraisDossier' %}
         <div class="item">
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Prix catalogue</label>
+                        <div class="col-md-10">
+                            {% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}0 €{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">{{ form_row(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -275,7 +367,7 @@
     {% if type == 'remise' %}
         <div class="item">
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                {#<div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -321,8 +413,8 @@
     <script type="text/javascript">
 
         jQuery(document).ready(function () {
-            $('div.items').each(function (index, element) {
-                $(element).data('index', $(element).children('div.panel').children('div.panel-body').children('div.item').length);
+            $('.items').each(function (index, element) {
+                $(element).data('index', $(element).children('.panel').children('.panel-body').children('.item').length);
             });
         });
 
@@ -333,6 +425,7 @@
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
             var index = $collectionHolder.data('index');
+            console.log(index);
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
@@ -346,7 +439,7 @@
 
         function removeTagForm(element, event) {
             event.preventDefault();
-            $(element).closest('div.item').remove();
+            $(element).closest('.item').remove();
         }
 
         function changePeriode(element, selectPeriode) {

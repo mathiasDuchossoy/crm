@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+
 /**
  * FournisseurPrestationAnnexeParamTraduction
  */
@@ -20,11 +22,11 @@ class FournisseurPrestationAnnexeParamTraduction
      */
     private $libelleFournisseurPrestationAnnexeParam;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     * @var FournisseurPrestationAnnexeParam
      */
     private $param;
     /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @var Langue
      */
     private $langue;
 
@@ -89,7 +91,7 @@ class FournisseurPrestationAnnexeParamTraduction
     /**
      * Get param
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     * @return FournisseurPrestationAnnexeParam
      */
     public function getParam()
     {
@@ -99,11 +101,11 @@ class FournisseurPrestationAnnexeParamTraduction
     /**
      * Set param
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $param
+     * @param FournisseurPrestationAnnexeParam $param
      *
      * @return FournisseurPrestationAnnexeParamTraduction
      */
-    public function setParam(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $param = null)
+    public function setParam(FournisseurPrestationAnnexeParam $param = null)
     {
         $this->param = $param;
 
@@ -113,7 +115,7 @@ class FournisseurPrestationAnnexeParamTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
@@ -123,11 +125,11 @@ class FournisseurPrestationAnnexeParamTraduction
     /**
      * Set langue
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Langue $langue
      *
      * @return FournisseurPrestationAnnexeParamTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
 

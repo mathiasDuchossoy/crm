@@ -130,4 +130,13 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
         return $result;
     }
+
+    public function findByNotTypeHebergement()
+    {
+        $q = $this->getEntityManager()->createQuery('SELECT fournisseur FROM MondofuteFournisseurBundle:Fournisseur fournisseur WHERE fournisseur.id NOT IN (
+                SELECT fournisseur2 FROM MondofuteFournisseurBundle:Fournisseur fournisseur2 LEFT JOIN fournisseur2.types types WHERE types.id = 9)');
+
+        $result = $q->getResult();
+        return $result;
+    }
 }
