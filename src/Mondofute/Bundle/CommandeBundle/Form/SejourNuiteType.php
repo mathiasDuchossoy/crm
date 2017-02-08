@@ -22,7 +22,6 @@ class SejourNuiteType extends AbstractType
         $locale = 'fr_FR';
 
         $builder
-            ->add('montant')
             ->add('commandeLignePrestationAnnexes', CollectionType::class, array(
                 'entry_type' => CommandeLignePrestationAnnexeType::class,
                 'allow_add' => true,
@@ -58,7 +57,7 @@ class SejourNuiteType extends AbstractType
                     ->add('logement', EntityType::class, [
                         'class' => Logement::class,
                         'choice_label' => 'id',
-                        'required' => true
+                        'required' => true,
                     ]);
             }
 

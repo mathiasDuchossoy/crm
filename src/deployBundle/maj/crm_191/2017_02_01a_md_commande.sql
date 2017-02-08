@@ -49,4 +49,22 @@ CREATE INDEX IDX_19BCD6EBF384C1CF ON sejour_periode (periode_id);*/
 ALTER TABLE commande_ligne_sejour ADD nb_participants INT NOT NULL;
 */
 
+/*
 ALTER TABLE commande_ligne_sejour CHANGE nb_participants nb_participants INT UNSIGNED NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne ADD prix_catalogue INT UNSIGNED DEFAULT 0 NOT NULL, ADD prix_public INT UNSIGNED DEFAULT 0 NOT NULL, ADD prix_achat INT UNSIGNED DEFAULT 0 NOT NULL, ADD quantite INT UNSIGNED DEFAULT 0 NOT NULL, DROP montant;
+*/
+
+/*
+ALTER TABLE commande_ligne ADD date_achat DATETIME NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne CHANGE quantite quantite INT UNSIGNED DEFAULT 1 NOT NULL;
+*/
+
+ALTER TABLE commande_ligne_prestation_annexe ADD fournisseur_prestation_annexe_param_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE commande_ligne_prestation_annexe ADD CONSTRAINT FK_E26A93A3F144C3CB FOREIGN KEY (fournisseur_prestation_annexe_param_id) REFERENCES fournisseur_prestation_annexe_param (id);
+CREATE INDEX IDX_E26A93A3F144C3CB ON commande_ligne_prestation_annexe (fournisseur_prestation_annexe_param_id);

@@ -10,4 +10,22 @@ namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository;
  */
 class FournisseurPrestationAnnexeParamRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * retourner les prestationAnnexeAnnexe dont le founisseur n'est pas un hébergement
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function findByFournisseurNotHebergement()
+    {
+        $qb = $this->createQueryBuilder('entity');
+        $qb
+            ->select('entity')
+            ->join('entity.fournisseurPrestationAnnexe', 'fournisseurPrestationAnnexe')
+            ->join('fournisseurPrestationAnnexe.fournisseur', 'fournisseur')
+            ->join('fournisseur.types', 'famillePrestationAnnexe')
+            ->where('famillePrestationAnnexe.id != 9');
+
+        return $qb;
+
+    }
 }

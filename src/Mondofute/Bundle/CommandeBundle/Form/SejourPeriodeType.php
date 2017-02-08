@@ -32,7 +32,10 @@ class SejourPeriodeType extends AbstractType
         $locale = 'fr_FR';
 
         $builder
-            ->add('montant')
+            ->add('prixCatalogue')
+            ->add('prixPublic')
+            ->add('quantite')
+            ->add('prixAchat')
             ->add('nbParticipants')
             ->add('commandeLignePrestationAnnexes', CollectionType::class, array(
                 'entry_type' => CommandeLignePrestationAnnexeType::class,
@@ -55,6 +58,7 @@ class SejourPeriodeType extends AbstractType
                 $fournisseurHebergementId = $data->getLogement()->getFournisseurHebergement()->getId();
                 $logementId = $data->getLogement()->getId();
                 $siteId = $data->getCommande()->getSite()->getId();
+                $periodeId = $data->getPeriode()->getId();
                 $form
                     ->add('logement', EntityType::class, [
                         'class' => Logement::class,
@@ -66,8 +70,8 @@ class SejourPeriodeType extends AbstractType
                     ])
                     ->add('periode', EntityType::class, [
                         'class' => Periode::class,
-                        'query_builder' => function (PeriodeRepository $er) use ($logementId) {
-                            return $er->findPeriodeByLogementPrixNotEmpty($logementId);
+                        'query_builder' => function (PeriodeRepository $er) use ($logementId, $periodeId) {
+                            return $er->findPeriodeByLogementPrixNotEmpty($logementId, $periodeId);
                         },
                         'empty_value' => ' --- Choisir une période --- ',
                         'required' => true,
