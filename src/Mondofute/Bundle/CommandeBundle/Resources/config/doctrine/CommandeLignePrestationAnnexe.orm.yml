@@ -6,4 +6,6 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
         commandeLigneSejour:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour
             inversedBy: commandeLignePrestationAnnexes
+        fournisseurPrestationAnnexeParam:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
     lifecycleCallbacks: {  }

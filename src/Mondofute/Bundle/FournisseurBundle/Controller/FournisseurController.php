@@ -3325,9 +3325,11 @@ class FournisseurController extends Controller
 
             // *** hebergement ***
             if (!empty($data->prestation_annexe_affectation_hebergement)
-                and !empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId])
+                and !empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId]
+                    and !empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam])
+                )
             ) {
-                if (!empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam])) {
+//                if (!empty($data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam])) {
                     $fournisseurIds = $data->prestation_annexe_affectation_hebergement[$prestationAnnexeId][$keyParam];
                     /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
                     foreach ($param->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
@@ -3400,7 +3402,7 @@ class FournisseurController extends Controller
                             }
                         }
                     }
-                }
+//                }
 
             } else {
                 foreach ($param->getPrestationAnnexeHebergements() as $prestationAnnexeHebergement) {
@@ -3425,6 +3427,7 @@ class FournisseurController extends Controller
         foreach ($affectationUnifieRemoves as $affectationUnifieRemove) {
             $em->remove($affectationUnifieRemove);
         }
+//        die;
 
         $em->persist($fournisseurPrestationAnnexe);
         $em->flush();

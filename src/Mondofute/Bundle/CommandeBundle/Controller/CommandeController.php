@@ -196,7 +196,7 @@ class CommandeController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $commandeSite->addCommandeLigne($commandeLigneSite);
             }
-            $commandeLigneSite->setMontant($commandeLigne->getMontant());
+//            $commandeLigneSite->setMontant($commandeLigne->getMontant());
             $oReflectionClass = new ReflectionClass($commandeLigneSite);
             switch ($oReflectionClass->getShortName()) {
                 case 'SejourPeriode':
@@ -281,8 +281,8 @@ class CommandeController extends Controller
                 $metadata = $emSite->getClassMetadata($Class);
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $commandeLigneSejourSite->addCommandeLignePrestationAnnex($commandeLigneSite);
-                $commandeLigneSite
-                    ->setMontant($commandeLigne->getMontant());
+//                $commandeLigneSite
+//                    ->setMontant($commandeLigne->getMontant());
             }
         }
     }
