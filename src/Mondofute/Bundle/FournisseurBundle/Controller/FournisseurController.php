@@ -3936,6 +3936,7 @@ class FournisseurController extends Controller
         foreach ($affectationUnifieRemoves as $affectationUnifieRemove) {
             $em->remove($affectationUnifieRemove);
         }
+//        die;
 
         $em->persist($fournisseurPrestationAnnexe);
         $em->flush();
