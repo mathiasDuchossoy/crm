@@ -12,7 +12,7 @@ class CommandeLigneFraisDossierType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('montant')
+            ->add('prixPublic')
             ->add('_type', HiddenType::class, array(
                 'data' => 'fraisDossier', // Arbitrary, but must be distinct
                 'mapped' => false

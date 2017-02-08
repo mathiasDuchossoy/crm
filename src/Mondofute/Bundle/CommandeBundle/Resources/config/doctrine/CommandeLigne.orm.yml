@@ -22,8 +22,28 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
             options:
                 unsigned: true
     fields:
-        montant:
+        dateAchat:
+            type: datetime
+        prixCatalogue:
             type: integer
+            options:
+                default: 0
+                unsigned: true
+        prixPublic:
+            type: integer
+            options:
+                default: 0
+                unsigned: true
+        prixAchat:
+            type: integer
+            options:
+                default: 0
+                unsigned: true
+        quantite:
+            type: integer
+            options:
+                default: 1
+                unsigned: true
     manyToOne:
         commande:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande

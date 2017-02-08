@@ -8,6 +8,7 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeStation;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexeTraduction;
 
 /**
  * FournisseurPrestationAnnexeParam
@@ -403,30 +404,6 @@ class FournisseurPrestationAnnexeParam
     }
 
     /**
-     * Get fournisseurPrestationAnnexe
-     *
-     * @return FournisseurPrestationAnnexe
-     */
-    public function getFournisseurPrestationAnnexe()
-    {
-        return $this->fournisseurPrestationAnnexe;
-    }
-
-    /**
-     * Set fournisseurPrestationAnnexe
-     *
-     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
-     *
-     * @return FournisseurPrestationAnnexeParam
-     */
-    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
-    {
-        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
-
-        return $this;
-    }
-
-    /**
      * Get forfaitQuantiteType
      *
      * @return integer
@@ -446,6 +423,46 @@ class FournisseurPrestationAnnexeParam
     public function setForfaitQuantiteType($forfaitQuantiteType = null)
     {
         $this->forfaitQuantiteType = $forfaitQuantiteType;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        $string = $this->traductions->filter(function (FournisseurPrestationAnnexeParamTraduction $element) {
+            return $element->getLangue()->getCode() == 'fr_FR';
+        })->first()->getLibelleParam();
+        return '' . $string;
+//        return 'fournisseur prestation annexe ' . $this->id;
+    }
+
+    public function getFamillePrestationAnnexe()
+    {
+        $this->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getFamillePrestationAnnexe()->getTraductions()->filter(function (FamillePrestationAnnexeTraduction $element) {
+            return $element->getLangue()->getCode() == 'fr_FR';
+        })->first();
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function getFournisseurPrestationAnnexe()
+    {
+        return $this->fournisseurPrestationAnnexe;
+    }
+
+    /**
+     * Set fournisseurPrestationAnnexe
+     *
+     * @param FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function setFournisseurPrestationAnnexe(FournisseurPrestationAnnexe $fournisseurPrestationAnnexe = null)
+    {
+        $this->fournisseurPrestationAnnexe = $fournisseurPrestationAnnexe;
 
         return $this;
     }

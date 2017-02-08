@@ -12,7 +12,7 @@ class CommandeLigneRemiseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('montant')
+//            ->add('montant')
             ->add('_type', HiddenType::class, array(
                 'data' => 'remise', // Arbitrary, but must be distinct
                 'mapped' => false
