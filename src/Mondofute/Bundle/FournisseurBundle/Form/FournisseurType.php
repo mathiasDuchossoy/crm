@@ -223,7 +223,15 @@ class FournisseurType extends AbstractType
             )
             ->add('saisonFournisseurs', CollectionType::class, array(
                 'entry_type' => SaisonFournisseurType::class
-            ));
+            ))
+            ->add('station', EntityType::class, [
+                'class' => Station::class,
+                'query_builder' => function (StationRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale, null, 1);
+                },
+                'empty_value' => ' --- Choisir une station --- ',
+                'choice_label' => 'traductions[0].libelle'
+            ]);
     }
 
     /**
