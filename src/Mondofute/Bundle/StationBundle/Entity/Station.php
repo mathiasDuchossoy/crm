@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ChoixBundle\Entity\OuiNonNC;
 use Mondofute\Bundle\DomaineBundle\Entity\Domaine;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\GeographieBundle\Entity\Departement;
 use Mondofute\Bundle\GeographieBundle\Entity\Profil;
 use Mondofute\Bundle\GeographieBundle\Entity\Secteur;
@@ -124,6 +125,10 @@ class Station
      * @var StationDateVisibilite
      */
     private $dateVisibilite;
+    /**
+     * @var Collection
+     */
+    private $fournisseurs;
 
     /**
      * Constructor
@@ -139,6 +144,7 @@ class Station
         $this->visuels = new ArrayCollection();
         $this->stationLabels = new ArrayCollection();
         $this->promotionStations = new ArrayCollection();
+        $this->fournisseurs = new ArrayCollection();
     }
 
     /**
@@ -921,5 +927,39 @@ class Station
         $this->dateVisibilite = $dateVisibilite;
 
         return $this;
+    }
+
+    /**
+     * Add fournisseur
+     *
+     * @param Fournisseur $fournisseur
+     *
+     * @return Station
+     */
+    public function addFournisseur(Fournisseur $fournisseur)
+    {
+        $this->fournisseurs[] = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove fournisseur
+     *
+     * @param Fournisseur $fournisseur
+     */
+    public function removeFournisseur(Fournisseur $fournisseur)
+    {
+        $this->fournisseurs->removeElement($fournisseur);
+    }
+
+    /**
+     * Get fournisseurs
+     *
+     * @return Collection
+     */
+    public function getFournisseurs()
+    {
+        return $this->fournisseurs;
     }
 }

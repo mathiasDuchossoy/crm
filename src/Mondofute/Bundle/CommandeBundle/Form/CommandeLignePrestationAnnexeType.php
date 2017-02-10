@@ -9,8 +9,13 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
+use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -31,7 +36,50 @@ class CommandeLignePrestationAnnexeType extends AbstractType
         $doctrine = $kernel->getContainer()->get('doctrine');
 
         $builder
-//            ->add('montant')
+            ->add('station', EntityType::class, [
+                    'class' => Station::class,
+                    'query_builder' => function (StationRepository $r) use ($locale) {
+                        return $r->getTraductionsByLocale($locale, null, 1);
+                    },
+                    'empty_value' => ' --- Choisir une station --- ',
+                    'mapped' => false,
+                    'choice_label' => 'traductions[0].libelle'
+                ]
+            )
+            ->add('famillePrestationAnnexe', EntityType::class, [
+                    'class' => FamillePrestationAnnexe::class,
+                    'query_builder' => function (FamillePrestationAnnexeRepository $r) use ($locale) {
+                        return $r->getTraductionsByLocale($locale);
+                    },
+                    'empty_value' => ' --- Choisir un type --- ',
+                    'mapped' => false,
+                    'choice_label' => 'traductions[0].libelle'
+                ]
+            )
+            ->add('fournisseur', EntityType::class, [
+                    'class' => Fournisseur::class,
+                    'empty_value' => ' --- Choisir un fournisseur --- ',
+                    'mapped' => false,
+                ]
+            )
+            ->add('dateDebut', DateType::class, array(
+                'required' => true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array(
+                    'data-date-format' => 'dd/mm/yyyy',
+                    'placeholder' => 'format_date',
+                )
+            ))
+            ->add('dateFin', DateType::class, array(
+                'required' => true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array(
+                    'data-date-format' => 'dd/mm/yyyy',
+                    'placeholder' => 'format_date',
+                )
+            ))
             ->add('_type', HiddenType::class, array(
                 'data' => 'prestationAnnexe', // Arbitrary, but must be distinct
                 'mapped' => false
@@ -45,7 +93,7 @@ class CommandeLignePrestationAnnexeType extends AbstractType
                 /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
                 if (!empty($data->getCommandeLigneSejour())) {
                     $siteId = $data->getCommandeLigneSejour()->getCommande()->getSite()->getId();
-                    $periode = $data->getCommandeLigneSejour()->getPeriode();
+//                    $periode = $data->getCommandeLigneSejour()->getPeriode();
                     $prestationAnnexeLogements = $data->getCommandeLigneSejour()->getLogement()->getFournisseurHebergement()->getLogements()->filter(function (Logement $element) use ($siteId) {
                         return $element->getSite()->getId() == $siteId;
                     })->first()->getPrestationAnnexeLogements();
@@ -62,7 +110,7 @@ class CommandeLignePrestationAnnexeType extends AbstractType
                             'choices' => $params
                         ]);
                 } else {
-                    $siteId = $data->getCommande()->getSite()->getId();
+//                    $siteId = $data->getCommande()->getSite()->getId();
                     // récupérer les prestationAnnexe dont le fournisseur n'est pas affilié à la famille 'hébegement'
 
                     $fournisseurNotHebergements = $doctrine->getRepository(Fournisseur::class)->findByNotTypeHebergement();
@@ -96,7 +144,8 @@ class CommandeLignePrestationAnnexeType extends AbstractType
 //                            return $er->findByFournisseurNotHebergement();
 //                        },
 //                    'group_by' => 'famillePrestationAnnexe',
-//                        'choices' => $car_choices,
+                        'empty_value' => ' --- Choisir une prestation annexe externe --- ',
+//                        'choices' => new ArrayCollection(),
                     ]);
             }
         });

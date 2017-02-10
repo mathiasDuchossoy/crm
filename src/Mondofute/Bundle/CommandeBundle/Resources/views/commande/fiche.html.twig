@@ -25,9 +25,14 @@
                     <i class="glyphicon glyphicon-plus"></i> séjour periode
                 </a>
                 {% set form = prototypes.prestationAnnexe %}
-                <a href="#" data-prototype="{{ block('commande_ligne_prestation_annexe_widget') | escape }}"
+                <a href="#"
+                        {#data-prototype="{{ block('commande_ligne_prestation_annexe_widget') | escape }}"#}
+                   data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | escape }}"
                    class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__','prestation_annexe');">
+                        {#onclick="addTagForm(this,event,'__name__','prestation_annexe');"#}
+                   onclick="addCommandePrestationAnnexeExterne(this,event,'__name__','prestation_annexe');"
+                   data-toggle="modal" data-target="#modal_commande_prestation_annexe_externe"
+                >
                     <i class="glyphicon glyphicon-plus"></i> prestation annexe
                 </a>
                 {% set form = prototypes.fraisDossier %}
@@ -69,10 +74,21 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Prestation annexe</h3>
                 </div>
-                <div class="panel-body" id="prestation_annexe">
-                    {% for form in collectionForm %}
-                        {{ block('commande_ligne_prestation_annexe_widget') }}
-                    {% endfor %}
+                <div class="panel-body">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Prestation annexe</th>
+                        </tr>
+                        </thead>
+                        <tbody id="prestation_annexe">
+                        {% for form in collectionForm %}
+                            {{ block('commande_ligne_prestation_annexe_widget') }}
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -123,12 +139,8 @@
 {% endblock %}
 
 {% block bouton_supprimer %}
-    {#<label>&nbsp;</label><br>#}
-    <a href="#" class="btn btn-danger remove_item"
-       onclick="removeTagForm(this,event);"
-    >
-        <i class="glyphicon glyphicon-minus"></i>
-    </a>
+    <a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i
+                class="glyphicon glyphicon-minus"></i></a>
 {% endblock %}
 
 {% block commande_ligne_sejour_nuite_widget %}
@@ -318,7 +330,7 @@
                 {{ form_widget(form.fournisseurPrestationAnnexeParam) }}
             </td>
             <td>{{ block('bouton_supprimer') }}</td>
-            {{ form_rest(form) }}
+            {{ form_row(form._type) }}
         </tr>
     {% endif %}
 {% endblock %}
@@ -327,15 +339,72 @@
 {% block commande_ligne_prestation_annexe_widget %}
     {% set type = form._type.vars.value %}
     {% if type == 'prestationAnnexe' %}
-        <div class="item">
+        <tr class="item">
+            <td>{{ form_widget(form.dateDebut, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateDebut.vars.value }}</td>
+            <td>{{ form_widget(form.dateFin, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateFin.vars.value }}</td>
+            <td>{{ form_widget(form.fournisseurPrestationAnnexeParam) }}</td>
+            <td>{{ block('bouton_supprimer') }}</td>
+            {{ form_row(form._type) }}
+        </tr>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_prestation_annexe_widget_modal %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <form class="form-horizontal">
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.fournisseurPrestationAnnexeParam) }}</div>
-                <div class="col-md-2 text-right">
-                    {{ block('bouton_supprimer') }}
+                <div class="col-md-6">
+                    <div id="rechercherParam">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="input-daterange form-inline input-group">
+                                    {{ form_widget(form.dateDebut, { 'attr' : {
+                                        'style' : 'text-align: left;',
+                                        'data-field' : 'dateDebut'
+                                    }}) }}
+                                    <span class="input-group-addon">au</span>
+                                    {{ form_widget(form.dateFin, { 'attr' : {
+                                        'style' : 'text-align: left;',
+                                        'data-field' : 'dateFin'
+                                    }}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form_widget(form.station, { 'attr' : {
+                                    'data-field' : 'station'
+                                }}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form_widget(form.famillePrestationAnnexe, { 'attr' : {
+                                    'data-field' : 'famillePrestationAnnexe'
+                                }}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>
+                                <select id="commande_fournisseur_prestation_annexe_externe"
+                                        required="required" data-field="fournisseur"
+                                        data-select-prestation-annexe-externe-id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                                        class="form-control">
+                                    <option value=""> --- Choisir un fournisseur ---</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    {{ form_widget(form.fournisseurPrestationAnnexeParam) }}
+                    {{ form_widget(form._type , { 'id' : form.fournisseurPrestationAnnexeParam.vars.id ~ '_type'} ) }}
                 </div>
             </div>
-            {{ form_rest(form) }}
-        </div>
+        </form>
     {% endif %}
 {% endblock %}
 
@@ -406,6 +475,7 @@
         {% endblock %}
     </section>
 
+    {% include ('@MondofuteCommande/commande/modal_prestation_annexe_externe.html.twig') %}
 {% endblock %}
 
 {% block javascripts %}
@@ -414,7 +484,11 @@
 
         jQuery(document).ready(function () {
             $('.items').each(function (index, element) {
-                $(element).data('index', $(element).children('.panel').children('.panel-body').children('.item').length);
+                var count = $(element).children('.panel').children('.panel-body').children('.item').length;
+                count = count + $(element).children('.panel').children('.panel-body').children('table').children('tbody').children('tr.item').length;
+                console.log($(element).children('.panel').children('.panel-body').children('table').children('tbody').children('tr.item').length);
+                $(element).data('index', count);
+//                $(element).data('index', $(element).children('.panel').children('.panel-body').children('.item').length);
             });
         });
 
@@ -425,7 +499,6 @@
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
             var index = $collectionHolder.data('index');
-            console.log(index);
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
@@ -435,6 +508,112 @@
             } else {
                 $panelBodyId.append(newForm);
             }
+        }
+
+        function addCommandePrestationAnnexeExterne(element, event, name, panelBodyId) {
+            event.preventDefault();
+            var $panelBodyId = $('#' + panelBodyId);
+            var $modalContent = $('#modal_body_commande_prestation_annexe_externe');
+            var $element = $(element);
+            var $collectionHolder = $element.closest('div.collection').find('div.items:first');
+            var prototype = $element.data('prototype');
+            var index = $collectionHolder.data('index');
+            if (!index) index = 0;
+            var regex = new RegExp(name, 'g');
+            var newForm = prototype.replace(regex, index);
+            $modalContent.html(newForm);
+            $modalContent.find('.input-daterange').each(function (index, element) {
+                activeDatePicker(element)
+            });
+            $('#rechercherParam').find('input, select').on('change', function (element) {
+                var types = {};
+                var inputDateDebutId;
+                var inputDateFinId;
+                $('#rechercherParam').find('input, select').each(function (index, element) {
+                    var $element = $(element);
+                    switch ($element.data('field')) {
+                        case 'dateDebut':
+                            inputDateDebutId = element.id;
+                            break;
+                        case 'dateFin':
+                            inputDateFinId = element.id;
+                            break;
+                        default:
+                            break;
+                    }
+                    if ($element.val()) {
+                        types[$element.data('field')] = $element.val();
+                    }
+                });
+                if ($.map(types, function (n, i) {
+                        return i;
+                    }).length == 4) {
+                    var path = '{{ path('commande_get_fournisseur_prestation_annexe_externe' , {
+                        'dateDebut' : '_dateDebut_',
+                        'dateFin' : '_dateFin_',
+                        'stationId' : '_stationId_',
+                        'typeId' : '_typeId_'
+                    } ) }}';
+                    types.dateDebut = types.dateDebut.replace(/\//g, '-');
+                    types.dateFin = types.dateFin.replace(/\//g, '-');
+                    console.log(types.famillePrestationAnnexe);
+                    path = path.replace('_dateDebut_', types.dateDebut);
+                    path = path.replace('_dateFin_', types.dateFin);
+                    path = path.replace('_stationId_', types.station);
+                    path = path.replace('_typeId_', types.famillePrestationAnnexe);
+                    $.ajax(path).done(function (data) {
+                        var $commandeFournisseurPrestationAnnexeExterne = $('#commande_fournisseur_prestation_annexe_externe');
+                        $commandeFournisseurPrestationAnnexeExterne.html(data);
+                        $commandeFournisseurPrestationAnnexeExterne.on('change', function (event) {
+                            var fournisseurId = $(this).val();
+                            var selectPrestationAnnexeExterneId = $commandeFournisseurPrestationAnnexeExterne.data('select-prestation-annexe-externe-id');
+                            var $selectPrestationAnnexeExterne = $('#' + selectPrestationAnnexeExterneId);
+                            var $prestationAnnexeExterneType = $('#' + selectPrestationAnnexeExterneId + '_type');
+                            if (fournisseurId) {
+                                var path = '{{ path('commande_get_prestation_annexe_externe' , {
+                                    'dateDebut' : '_dateDebut_',
+                                    'dateFin' : '_dateFin_',
+                                    'typeId' : '_typeId_',
+                                    'fournisseurId' : '_fournisseurId_'
+                                } ) }}';
+                                types.dateDebut = types.dateDebut.replace(/\//g, '-');
+                                types.dateFin = types.dateFin.replace(/\//g, '-');
+                                path = path.replace('_dateDebut_', types.dateDebut);
+                                path = path.replace('_dateFin_', types.dateFin);
+                                path = path.replace('_fournisseurId_', fournisseurId);
+                                path = path.replace('_typeId_', types.famillePrestationAnnexe);
+                                $.ajax(path).done(function (data) {
+                                    $selectPrestationAnnexeExterne.html(data);
+                                    console.log($selectPrestationAnnexeExterne);
+                                    $('#addPrestationAnnexe').on('click', function (event) {
+                                        var $item = $('<tr class=item></tr>');
+                                        var $inputDateDebut = $('#' + inputDateDebutId);
+                                        $inputDateDebut.hide();
+                                        var $tdInputDateDebut = $('<td></td>').append($inputDateDebut.val());
+                                        var $inputDateFin = $('#' + inputDateFinId);
+                                        $inputDateFin.hide();
+                                        var $tdInputDateFin = $('<td></td>').append($inputDateFin.val());
+                                        $item.append($tdInputDateDebut);
+                                        $item.append($tdInputDateFin);
+                                        var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
+                                        $item.append(tdInputSelecttPrestationAnnexeExterne);
+                                        var $boutonSupprimer = $('<td></td>').append('<a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i class="glyphicon glyphicon-minus"></i></a>');
+                                        $item.append($boutonSupprimer);
+                                        $panelBodyId.append($item);
+                                        $panelBodyId.append($prestationAnnexeExterneType);
+                                        $panelBodyId.append($inputDateDebut);
+                                        $panelBodyId.append($inputDateFin);
+                                        $collectionHolder.data('index', index + 1);
+                                    })
+                                });
+                            }
+                            {
+                                $selectPrestationAnnexeExterne.html('');
+                            }
+                        });
+                    });
+                }
+            })
         }
 
         function removeTagForm(element, event) {
@@ -449,6 +628,24 @@
                 $('#' + selectPeriode).html(data);
             });
         }
+
+        function activeDatePicker(element) {
+            $(element).datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            });
+        }
+
+        $('.input-daterange').each(function (index, element) {
+            activeDatePicker(element)
+        });
 
     </script>
 {% endblock %}

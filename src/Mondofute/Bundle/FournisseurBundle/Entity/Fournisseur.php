@@ -16,6 +16,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Nucleus\ContactBundle\Entity\Moral;
 
 
@@ -147,6 +148,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $prestationAnnexeFournisseurs;
+    /**
+     * @var Station
+     */
+    private $station;
 
     /**
      * Fournisseur constructor.
@@ -1286,5 +1291,29 @@ class Fournisseur extends Moral
     public function getPrestationAnnexeFournisseurs()
     {
         return $this->prestationAnnexeFournisseurs;
+    }
+
+    /**
+     * Get station
+     *
+     * @return Station
+     */
+    public function getStation()
+    {
+        return $this->station;
+    }
+
+    /**
+     * Set station
+     *
+     * @param Station $station
+     *
+     * @return Fournisseur
+     */
+    public function setStation(Station $station = null)
+    {
+        $this->station = $station;
+
+        return $this;
     }
 }

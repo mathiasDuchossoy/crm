@@ -52,7 +52,8 @@
                     {{ form_row(form.blocageVente) }}
 
                     {{ form_row(form.fournisseurParent) }}
-                    {{ form_row(form.contient) }}
+                    {{ form_row(form.contient , {'attr' : {'onchange' : 'displayStation(this, "'~form.station.vars.id~'");'}}) }}
+                    {{ form_row(form.station) }}
                     {% if form.moyenComs[0] is defined %}
                         {{ form_row(form.moyenComs[0].code_postal) }}
                         {{ form_row(form.moyenComs[0].adresse1) }}
@@ -2324,6 +2325,16 @@
                 $divParamForfaitQuanttieType.find('input').each(function (index, element) {
                     $(element).prop('required', '');
                 })
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function displayStation(element, selectStationId) {
+            var $selectStation = $('#' + selectStationId);
+            if ($(element).val() == {{ constant('Mondofute\\Bundle\\FournisseurBundle\\Entity\\FournisseurContient::PRODUIT') }}) {
+                $selectStation.prop('disabled', false);
+            } else {
+                $selectStation.prop('disabled', 'disabled');
             }
         }
     </script>
