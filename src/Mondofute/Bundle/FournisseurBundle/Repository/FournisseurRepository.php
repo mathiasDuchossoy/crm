@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Repository;
 
+use DateTime;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 
@@ -139,4 +140,49 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getResult();
         return $result;
     }
+
+    public function findFournisseurForPrestationAnnexeExterne($dateDebut, $dateFin, $stationId, $typeId)
+    {
+
+//        $qb = $this->getEntityManager()->createQuery('SELECT f
+//        FROM  MondofuteFournisseurBundle:Fournisseur f
+//        LEFT JOIN f.types types
+//        LEFT JOIN f.prestationAnnexes fpa
+//        LEFT JOIN fpa.params fpap
+//        LEFT JOIN fpap.tarifs pat
+//        LEFT JOIN pat.periodeValidites pv
+//        LEFT JOIN f.station station
+//        WHERE types.id = :typesId AND station.id = :stationId
+//        AND pv.dateDebut <= :dateDebut and pv.dateFin >= :dateFin
+//        AND f.id NOT IN (
+//            SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur
+//            LEFT JOIN fournisseur.types types2
+//            WHERE types2.id = 9
+//        )');
+
+        $qb = $this->getEntityManager()->createQuery('SELECT f
+        FROM  MondofuteFournisseurBundle:Fournisseur f 
+        LEFT JOIN f.types types
+        LEFT JOIN f.station station
+        WHERE types.id = :typesId AND station.id = :stationId
+        AND f.id NOT IN (
+            SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur 
+            LEFT JOIN fournisseur.types types2
+            WHERE types2.id = 9 
+        )');
+
+        $dateDebut = new DateTime($dateDebut);
+        $dateFin = new DateTime($dateFin);
+        $qb->setParameters([
+            'typesId' => $typeId,
+            'stationId' => $stationId,
+//            'dateDebut' => $dateDebut->format('Y-m-d'),
+//            'dateFin' => $dateFin->format('Y-m-d'),
+        ]);
+
+        $result = $qb->getResult();
+
+        return $result;
+    }
+
 }

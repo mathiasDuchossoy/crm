@@ -13,6 +13,8 @@ use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
@@ -213,6 +215,14 @@ class CommandeController extends Controller
                     $commandeLigneSite
                         ->setLogement($emSite->getRepository(Logement::class)->findOneBy(['logementUnifie' => $commandeLigne->getLogement()->getLogementUnifie()]));
                     break;
+                case 'CommandeLignePrestationAnnexe':
+                    /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
+                    /** @var CommandeLignePrestationAnnexe $commandeLigne */
+                    $commandeLigneSite
+                        ->setDateDebut($commandeLigne->getDateDebut())
+                        ->setDateFin($commandeLigne->getDateFin())
+                        ->setFournisseurPrestationAnnexeParam($emSite->find(FournisseurPrestationAnnexeParam::class, $commandeLigne->getFournisseurPrestationAnnexeParam()));
+                    break;
                 default:
                     break;
             }
@@ -281,8 +291,12 @@ class CommandeController extends Controller
                 $metadata = $emSite->getClassMetadata($Class);
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
                 $commandeLigneSejourSite->addCommandeLignePrestationAnnex($commandeLigneSite);
-//                $commandeLigneSite
-//                    ->setMontant($commandeLigne->getMontant());
+                $commandeLigneSite
+                    ->setDateDebut($commandeLigne->getDateDebut())
+                    ->setDateFin($commandeLigne->getDateFin());
+                dump($commandeLigne->getDateDebut());
+                dump($commandeLigne->getDateFin());
+                die;
             }
         }
     }
@@ -303,6 +317,26 @@ class CommandeController extends Controller
         return $this->render('@MondofuteCommande/commande/options_logement_periodes.html.twig', array(
             'periodes' => $periodes,
             'logementPeriodeLocatifsStockNotEmpty' => $logement->getLogementPeriodeLocatifsStockNotEmpty()
+        ));
+    }
+
+    public function getPrestationAnnexeExterneAction($dateDebut, $dateFin, $fournisseurId, $typeId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $prestationAnnexeExternes = $em->getRepository(FournisseurPrestationAnnexeParam::class)->findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId);
+
+        return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
+            'prestationAnnexeExternes' => $prestationAnnexeExternes
+        ));
+    }
+
+    public function getFournisseurPrestationAnnexeExterneAction($dateDebut, $dateFin, $stationId, $typeId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $fournisseurForPrestationAnnexeExternes = $em->getRepository(Fournisseur::class)->findFournisseurForPrestationAnnexeExterne($dateDebut, $dateFin, $stationId, $typeId);
+
+        return $this->render('@MondofuteCommande/commande/options_fournisseur_prestation_annexe.html.twig', array(
+            'fournisseurForPrestationAnnexeExternes' => $fournisseurForPrestationAnnexeExternes
         ));
     }
 

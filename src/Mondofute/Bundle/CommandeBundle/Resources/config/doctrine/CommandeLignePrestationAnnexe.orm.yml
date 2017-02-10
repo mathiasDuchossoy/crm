@@ -2,6 +2,11 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLignePrestationAnnexeRepository
+    fields:
+        dateDebut:
+            type: datetime
+        dateFin:
+            type: datetime
     manyToOne:
         commandeLigneSejour:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour
