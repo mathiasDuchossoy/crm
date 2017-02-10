@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Repository;
 
+use DateTime;
+
 /**
  * FournisseurPrestationAnnexeParamRepository
  *
@@ -26,6 +28,34 @@ class FournisseurPrestationAnnexeParamRepository extends \Doctrine\ORM\EntityRep
             ->where('famillePrestationAnnexe.id != 9');
 
         return $qb;
+
+    }
+
+    public function findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId)
+    {
+
+        $qb = $this->createQueryBuilder('entity');
+        $qb->select('entity')
+            ->leftJoin('entity.tarifs', 'tarifs')
+            ->leftJoin('tarifs.periodeValidites', 'periodeValidites')
+            ->join('entity.fournisseurPrestationAnnexe', 'fournisseurPrestationAnnexe')
+            ->join('fournisseurPrestationAnnexe.fournisseur', 'fournisseur')
+            ->join('fournisseur.types', 'types')
+            ->where('fournisseur.id = :fournisseurId AND periodeValidites.dateDebut <= :dateDebut AND periodeValidites.dateFin >= :dateFin')
+            ->orWhere('fournisseur.id = :fournisseurId')
+            ->andWhere('types.id = :typeId');
+
+        $dateDebut = new DateTime($dateDebut);
+        $dateFin = new DateTime($dateFin);
+        $qb->setParameters([
+            'fournisseurId' => $fournisseurId,
+            'dateDebut' => $dateDebut->format('Y-m-d'),
+            'dateFin' => $dateFin->format('Y-m-d'),
+            'typeId' => $typeId,
+        ]);
+
+        $result = $qb->getQuery()->getResult();
+        return $result;
 
     }
 }

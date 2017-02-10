@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
 use Mondofute\Bundle\FournisseurBundle\Entity\RelocationAnnulation;
@@ -13,6 +12,8 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
+use Mondofute\Bundle\StationBundle\Entity\Station;
+use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -206,7 +207,15 @@ class FournisseurType extends AbstractType
                     ),
                     'choices_as_values' => true,
                 )
-            );
+            )
+            ->add('station', EntityType::class, [
+                'class' => Station::class,
+                'query_builder' => function (StationRepository $r) use ($locale) {
+                    return $r->getTraductionsByLocale($locale, null, 1);
+                },
+                'empty_value' => ' --- Choisir une station --- ',
+                'choice_label' => 'traductions[0].libelle'
+            ]);
     }
 
     /**
