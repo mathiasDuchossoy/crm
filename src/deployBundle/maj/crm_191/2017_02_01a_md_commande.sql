@@ -65,6 +65,10 @@ ALTER TABLE commande_ligne ADD date_achat DATETIME NOT NULL;
 ALTER TABLE commande_ligne CHANGE quantite quantite INT UNSIGNED DEFAULT 1 NOT NULL;
 */
 
+/*
 ALTER TABLE commande_ligne_prestation_annexe ADD fournisseur_prestation_annexe_param_id INT UNSIGNED DEFAULT NULL;
 ALTER TABLE commande_ligne_prestation_annexe ADD CONSTRAINT FK_E26A93A3F144C3CB FOREIGN KEY (fournisseur_prestation_annexe_param_id) REFERENCES fournisseur_prestation_annexe_param (id);
 CREATE INDEX IDX_E26A93A3F144C3CB ON commande_ligne_prestation_annexe (fournisseur_prestation_annexe_param_id);
+*/
+
+ALTER TABLE commande_ligne_prestation_annexe ADD date_debut DATETIME NOT NULL, ADD date_fin DATETIME NOT NULL;

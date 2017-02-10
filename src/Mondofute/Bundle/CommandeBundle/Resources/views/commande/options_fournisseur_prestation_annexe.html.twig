@@ -1,0 +1,4 @@
+<option value=""> --- Choisir un fournisseur ---</option>
+{% for key, element in fournisseurForPrestationAnnexeExternes %}
+    <option value="{{ element.id }}">{{ element }}</option>
+{% endfor %}

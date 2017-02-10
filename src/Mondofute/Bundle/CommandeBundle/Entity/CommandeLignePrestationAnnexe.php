@@ -2,6 +2,9 @@
 
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
+use DateTime;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+
 /**
  * CommandeLignePrestationAnnexe
  */
@@ -13,9 +16,17 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
      */
     private $commandeLigneSejour;
     /**
-     * @var \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     * @var FournisseurPrestationAnnexeParam
      */
     private $fournisseurPrestationAnnexeParam;
+    /**
+     * @var DateTime
+     */
+    private $dateDebut;
+    /**
+     * @var DateTime
+     */
+    private $dateFin;
 
     /**
      * Get commandeLigneSejour
@@ -44,7 +55,7 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
     /**
      * Get fournisseurPrestationAnnexeParam
      *
-     * @return \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+     * @return FournisseurPrestationAnnexeParam
      */
     public function getFournisseurPrestationAnnexeParam()
     {
@@ -54,13 +65,61 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
     /**
      * Set fournisseurPrestationAnnexeParam
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam
+     * @param FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam
      *
      * @return CommandeLignePrestationAnnexe
      */
-    public function setFournisseurPrestationAnnexeParam(\Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam = null)
+    public function setFournisseurPrestationAnnexeParam(FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam = null)
     {
         $this->fournisseurPrestationAnnexeParam = $fournisseurPrestationAnnexeParam;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDebut
+     *
+     * @return DateTime
+     */
+    public function getDateDebut()
+    {
+        return $this->dateDebut;
+    }
+
+    /**
+     * Set dateDebut
+     *
+     * @param DateTime $dateDebut
+     *
+     * @return CommandeLignePrestationAnnexe
+     */
+    public function setDateDebut($dateDebut)
+    {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    /**
+     * Get dateFin
+     *
+     * @return DateTime
+     */
+    public function getDateFin()
+    {
+        return $this->dateFin;
+    }
+
+    /**
+     * Set dateFin
+     *
+     * @param DateTime $dateFin
+     *
+     * @return CommandeLignePrestationAnnexe
+     */
+    public function setDateFin($dateFin)
+    {
+        $this->dateFin = $dateFin;
 
         return $this;
     }
