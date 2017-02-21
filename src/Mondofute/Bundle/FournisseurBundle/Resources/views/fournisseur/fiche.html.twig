@@ -1648,7 +1648,7 @@
                 tabParametrage.addClass('active');
                 tabParametrage.addClass('in');
                 var hrefParametrage = tabParametrage.prop('id');
-                tabParametrage.closest('.tabs-panels-parametrage').find('a[href="#' + hrefParametrage + '"]').parent().parent().find('li').removeClass('active');;;;;;;
+                tabParametrage.closest('.tabs-panels-parametrage').find('a[href="#' + hrefParametrage + '"]').parent().parent().find('li').removeClass('active');
                 tabParametrage.closest('.tabs-panels-parametrage').find('a[href="#' + hrefParametrage + '"]').parent().addClass('active');
 
                 var tab = $(firstElement).closest('.tab-pane');
@@ -1656,7 +1656,7 @@
                     tab.parent().find('.tab-pane').removeClass('active');
                     tab.addClass('active');
                     var href = tab.prop('id');
-                    tab.closest('.tabs-panels').find('a[href="#' + href + '"]').parent().parent().find('li').removeClass('active');;;;;;;
+                    tab.closest('.tabs-panels').find('a[href="#' + href + '"]').parent().parent().find('li').removeClass('active');
                     tab.closest('.tabs-panels').find('a[href="#' + href + '"]').parent().addClass('active');
                 }
                 firstElement.focus();
@@ -1736,7 +1736,18 @@
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
             addTagFormDeleteLink($newFormLi);
-            periodevaliditeDatetimePicker();
+//            periodevaliditeDatetimePicker();
+            $newFormLi.find('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).on('hide', function (e) {
+                return false;
+            }).removeClass('datetimepicker');
         }
 
         function addTagFormDeleteLink($tagFormLi) {
