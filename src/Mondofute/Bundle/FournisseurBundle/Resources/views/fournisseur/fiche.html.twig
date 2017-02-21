@@ -632,6 +632,7 @@
                     $modal.find('form').html($modal.find('form').html().replace(/__fournisseur_commentaire_name__/g, retour.id).replace(/__reponse_name__/g, retour.id));
                     var form = cloneFormulaire($modal.find('form').children(':first'));
                     if (!retour.commentaireParent) {
+                        form.find('#contenu').val(retour.contenu);
                         form.find('#fournisseur_commentaires_' + retour.id + '_contenu').val(retour.contenu);
                         $commentairesContenu = $('#commentaires-contenu');
                     } else {

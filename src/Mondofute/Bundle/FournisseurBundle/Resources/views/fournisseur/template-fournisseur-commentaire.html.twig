@@ -66,7 +66,10 @@
         <div style="display:none;" id="form-fournisseur-commentaire-{{ indice }}"
              data-id="{% if fournisseurCommentaire is not null %}{{ fournisseurCommentaire.id }}{% endif %}">
             {% if form is not null %}
-                {{ form_widget(form) }}
+                {{ form_row(form.contenu) }}
+                <div style="display:none;">
+                    {{ form_widget(form) }}
+                </div>
             {% elseif fournisseurCommentaire is not null %}
                 {#{{ dump(fournisseurCommentaire) }}#}
 
