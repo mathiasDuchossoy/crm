@@ -143,6 +143,10 @@ class Fournisseur extends Moral
      * @var Station
      */
     private $station;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $commentaires;
 
     /**
      * Fournisseur constructor.
@@ -160,6 +164,8 @@ class Fournisseur extends Moral
         $this->fournisseurEnfants = new ArrayCollection();
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
+        $this->prestationAnnexeFournisseurs = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     /**
@@ -451,8 +457,7 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    )
-    {
+    ) {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -1120,5 +1125,46 @@ class Fournisseur extends Moral
         $this->station = $station;
 
         return $this;
+    }
+
+    /**
+     * Add commentaire
+     *
+     * @param FournisseurCommentaire $commentaire
+     *
+     * @return Fournisseur
+     */
+    public function addCommentaire(FournisseurCommentaire $commentaire)
+    {
+        $this->commentaires[] = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentaire
+     *
+     * @param FournisseurCommentaire $commentaire
+     */
+    public function removeCommentaire(FournisseurCommentaire $commentaire)
+    {
+        $this->commentaires->removeElement($commentaire);
+    }
+
+    /**
+     * Get commentaires
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommentaires()
+    {
+//        $criteres = Criteria::create();
+//        $criteres->where(Criteria::expr()->eq('commentaireParent',null));
+//        $this->commentaires = $this->commentaires->matching($criteres);
+        $commentaires = new ArrayCollection();
+        foreach ($this->commentaires as $commentaire) {
+            $commentaires->set($commentaire->getId(), $commentaire);
+        }
+        return $commentaires;
     }
 }
