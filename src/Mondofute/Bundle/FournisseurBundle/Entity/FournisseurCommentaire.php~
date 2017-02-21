@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 
 namespace Mondofute\Bundle\FournisseurBundle\Entity;
@@ -162,3 +163,19 @@ class FournisseurCommentaire extends Commentaire
     }
 }
 >>>>>>> gestion des commentaires dans la fiche fournisseur
+||||||| merged common ancestors
+=======
+<?php
+
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use Mondofute\Bundle\CommentaireBundle\Entity\Commentaire;
+
+/**
+ * FournisseurCommentaire
+ */
+class FournisseurCommentaire extends Commentaire
+{
+}
+
+>>>>>>> merge
