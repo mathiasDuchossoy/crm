@@ -168,6 +168,7 @@ class Fournisseur extends Moral
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->saisonFournisseurs = new ArrayCollection();
+        $this->prestationAnnexeFournisseurs = new ArrayCollection();
     }
 
     /**
