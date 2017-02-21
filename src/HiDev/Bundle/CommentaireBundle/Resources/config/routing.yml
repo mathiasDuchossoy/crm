@@ -1,0 +1,3 @@
+hi_dev_commentaire_homepage:
+    path:     /
+    defaults: { _controller: HiDevCommentaireBundle:Default:index }

@@ -1,0 +1,15 @@
+HiDev\Bundle\AuteurBundle\Entity\Auteur:
+    type: entity
+    table: null
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: type
+        type: integer
+    discriminatorMap:
+        1: UtilisateurAuteur
+    repositoryClass: HiDev\Bundle\AuteurBundle\Repository\AuteurRepository
+    oneToMany:
+        commentaires:
+            targetEntity: HiDev\Bundle\CommentaireBundle\Entity\Commentaire
+            mappedBy: auteur
+    lifecycleCallbacks: {  }

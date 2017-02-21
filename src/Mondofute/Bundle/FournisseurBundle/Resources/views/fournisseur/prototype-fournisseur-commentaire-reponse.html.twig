@@ -1,0 +1,29 @@
+<div id="fournisseur_commentaires_{{ indice }}">
+    <input id="id"
+           name="id" {% if fournisseurCommentaire is not null %}value="{{ fournisseurCommentaire.id }}"{% endif %}
+           type="hidden"
+    >
+    <input id="reponse_fournisseur"
+           name="reponse_fournisseur"
+           {% if fournisseurCommentaire.fournisseur.id is defined %}value="{{ fournisseurCommentaire.fournisseur.id }}"{% endif %}
+           type="hidden"
+    >
+    <input id="commentaireParent"
+           name="commentaireParent"
+           {% if fournisseurCommentaire.commentaireParent.id is defined %}value="{{ fournisseurCommentaire.commentaireParent.id }}"{% endif %}
+           type="hidden"
+    >
+    <input id="auteur"
+           name="auteur"
+           {% if fournisseurCommentaire.auteur.id is defined %}value="{{ fournisseurCommentaire.auteur.id }}"{% endif %}
+           type="hidden"
+    >
+    <div class="form-group"><label class="col-sm-2 control-label"
+                                   for="contenu">Contenu</label>
+        <div class="col-sm-10">
+                        <textarea id="contenu"
+                                  name="contenu"
+                                  class="form-control">{% if fournisseurCommentaire.contenu is defined %}{{ fournisseurCommentaire.contenu }}{% endif %}</textarea>
+        </div>
+    </div>
+</div>

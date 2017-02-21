@@ -1,0 +1,108 @@
+<div class="panel-group row">
+    {% if fournisseurCommentaire.vars.name is defined %}
+        {% set indice = fournisseurCommentaire.vars.name %}
+    {% endif %}
+    {% if fournisseurCommentaire.vars.value is defined %}
+        {#{{ dump(fournisseurCommentaire) }}#}
+        {% set indice = fournisseurCommentaire.vars.name %}
+        {% set form = fournisseurCommentaire %}
+        {% set fournisseurCommentaire = fournisseurCommentaire.vars.value %}
+    {% elseif fournisseurCommentaire is not null %}
+        {% set indice = fournisseurCommentaire.id %}
+        {% set form = null %}
+    {% else %}
+        {% set form = null %}
+        {% set fournisseurCommentaire = null %}
+    {% endif %}
+    <div class="col-sm-11">
+        <div class="panel panel-primary" id="panel-fournisseur-contenu-{{ indice }}">
+            <div class="panel-heading">
+                {% if fournisseurCommentaire is null %}
+                    <div class="row">
+                        <div class="col-sm-11">
+                            {{ utilisateur.prenom }} {{ utilisateur.nom }}
+                            <span id="fournisseur-commentaire-{{ indice }}-date">
+
+                    </span>
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-default edit-fournisseur-commentaire" type="button"
+                                    data-fournisseur-commentaire-indice="{{ indice }}">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+
+                    {% if utilisateur.id == fournisseurCommentaire.auteur.utilisateur.id %}
+                        <div class="row">
+                        <div class="col-sm-11">
+                    {% endif %}
+                    {{ fournisseurCommentaire.auteur.nom }}
+                    <span id="fournisseur-commentaire-{{ indice }}-date">
+                        {{ fournisseurCommentaire.dateHeureCreation | date("d/m/Y H:i") }}
+                    </span>
+
+                    {% if utilisateur.id == fournisseurCommentaire.auteur.utilisateur.id %}
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-default edit-fournisseur-commentaire" type="button"
+                                    data-fournisseur-commentaire-indice="{{ indice }}">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </button>
+                        </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="panel-body">
+            <span id="fournisseur-commentaire-{{ indice }}-contenu">
+        {% if fournisseurCommentaire is not null %}
+            {{ fournisseurCommentaire.contenu }}
+        {% endif %}
+            </span>
+            </div>
+        </div>
+        <div style="display:none;" id="form-fournisseur-commentaire-{{ indice }}"
+             data-id="{% if fournisseurCommentaire is not null %}{{ fournisseurCommentaire.id }}{% endif %}">
+            {% if form is not null %}
+                {{ form_row(form.contenu) }}
+                <div style="display:none;">
+                    {{ form_widget(form) }}
+                </div>
+            {% elseif fournisseurCommentaire is not null %}
+                {#{{ dump(fournisseurCommentaire) }}#}
+
+                {% include '@MondofuteFournisseur/fournisseur/prototype-fournisseur-commentaire-reponse.html.twig' with {'fournisseurCommentaire': fournisseurCommentaire, 'indice': indice} %}
+            {% endif %}
+        </div>
+    </div>
+    {% if fournisseurCommentaire.commentaireParent.id is not defined %}
+        <div id="reponses-{{ indice }}">
+            <div class="col-sm-1">
+                <button type="button" class="btn btn-default affiche-modal-ajout-fournisseur-commentaire"
+                        data-commentaire-parent="{{ indice }}">Répondre
+                </button>
+            </div>
+            <div class="col-sm-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+            <span role="button" data-toggle="collapse"
+                  href="#fournisseur-commentaire-reponses-{{ indice }}">réponses</span>
+                        <span id="fournisseur-commentaire-badge-reponses-{{ indice }}"
+                              class="badge">{% if fournisseurCommentaire is not null %}{{ fournisseurCommentaire.reponses | length }}{% else %}0{% endif %}</span>
+                    </div>
+                    <div id="fournisseur-commentaire-reponses-{{ indice }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {% if fournisseurCommentaire is not null %}
+                                {% for reponse in fournisseurCommentaire.reponses %}
+                                    {% include '@MondofuteFournisseur/fournisseur/template-fournisseur-commentaire.html.twig' with {'utilisateur' : utilisateur, 'fournisseurCommentaire': reponse, 'fournisseur': fournisseur, 'locale': locale} %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
