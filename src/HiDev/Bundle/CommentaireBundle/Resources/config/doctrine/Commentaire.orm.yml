@@ -1,0 +1,24 @@
+HiDev\Bundle\CommentaireBundle\Entity\Commentaire:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: HiDev\Bundle\CommentaireBundle\Repository\CommentaireRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    fields:
+        dateHeureCreation:
+            type: datetime
+        dateHeureModification:
+            type: datetime
+        validationModerateur:
+            type: boolean
+        contenu:
+            type: text
+    lifecycleCallbacks:
+        prePersist: [ setDateHeureCreation, setDateHeureModification ]
+        preUpdate: [ setDateHeureModification ]
