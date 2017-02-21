@@ -42,7 +42,7 @@ class FournisseurPrestationAnnexeParamRepository extends \Doctrine\ORM\EntityRep
             ->join('fournisseurPrestationAnnexe.fournisseur', 'fournisseur')
             ->join('fournisseur.types', 'types')
             ->where('fournisseur.id = :fournisseurId AND periodeValidites.dateDebut <= :dateDebut AND periodeValidites.dateFin >= :dateFin')
-            ->orWhere('fournisseur.id = :fournisseurId')
+            ->orWhere('fournisseur.id = :fournisseurId AND tarifs.periodeValidites IS EMPTY')
             ->andWhere('types.id = :typeId');
 
         $dateDebut = new DateTime($dateDebut);
