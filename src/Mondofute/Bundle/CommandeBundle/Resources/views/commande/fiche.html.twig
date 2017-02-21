@@ -75,12 +75,13 @@
                     <h3 class="panel-title">Prestation annexe</h3>
                 </div>
                 <div class="panel-body">
-                    <table>
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Date de début</th>
                             <th>Date de fin</th>
                             <th>Prestation annexe</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody id="prestation_annexe">
@@ -400,7 +401,12 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    {{ form_widget(form.fournisseurPrestationAnnexeParam) }}
+                    {#{{ form_widget(form.fournisseurPrestationAnnexeParam) }}#}
+                    <select id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                            name="{{ form.fournisseurPrestationAnnexeParam.vars.full_name }}"
+                            required="required" class="form-control">
+                        <option value="" selected="selected"> --- Choisir une prestation annexe externe ---</option>
+                    </select>
                     {{ form_widget(form._type , { 'id' : form.fournisseurPrestationAnnexeParam.vars.id ~ '_type'} ) }}
                 </div>
             </div>
@@ -486,9 +492,7 @@
             $('.items').each(function (index, element) {
                 var count = $(element).children('.panel').children('.panel-body').children('.item').length;
                 count = count + $(element).children('.panel').children('.panel-body').children('table').children('tbody').children('tr.item').length;
-                console.log($(element).children('.panel').children('.panel-body').children('table').children('tbody').children('tr.item').length);
                 $(element).data('index', count);
-//                $(element).data('index', $(element).children('.panel').children('.panel-body').children('.item').length);
             });
         });
 
@@ -556,7 +560,6 @@
                     } ) }}';
                     types.dateDebut = types.dateDebut.replace(/\//g, '-');
                     types.dateFin = types.dateFin.replace(/\//g, '-');
-                    console.log(types.famillePrestationAnnexe);
                     path = path.replace('_dateDebut_', types.dateDebut);
                     path = path.replace('_dateFin_', types.dateFin);
                     path = path.replace('_stationId_', types.station);
@@ -564,6 +567,7 @@
                     $.ajax(path).done(function (data) {
                         var $commandeFournisseurPrestationAnnexeExterne = $('#commande_fournisseur_prestation_annexe_externe');
                         $commandeFournisseurPrestationAnnexeExterne.html(data);
+                        $commandeFournisseurPrestationAnnexeExterne.unbind('change');
                         $commandeFournisseurPrestationAnnexeExterne.on('change', function (event) {
                             var fournisseurId = $(this).val();
                             var selectPrestationAnnexeExterneId = $commandeFournisseurPrestationAnnexeExterne.data('select-prestation-annexe-externe-id');
@@ -584,30 +588,34 @@
                                 path = path.replace('_typeId_', types.famillePrestationAnnexe);
                                 $.ajax(path).done(function (data) {
                                     $selectPrestationAnnexeExterne.html(data);
-                                    console.log($selectPrestationAnnexeExterne);
-                                    $('#addPrestationAnnexe').on('click', function (event) {
-                                        var $item = $('<tr class=item></tr>');
-                                        var $inputDateDebut = $('#' + inputDateDebutId);
-                                        $inputDateDebut.hide();
-                                        var $tdInputDateDebut = $('<td></td>').append($inputDateDebut.val());
-                                        var $inputDateFin = $('#' + inputDateFinId);
-                                        $inputDateFin.hide();
-                                        var $tdInputDateFin = $('<td></td>').append($inputDateFin.val());
-                                        $item.append($tdInputDateDebut);
-                                        $item.append($tdInputDateFin);
-                                        var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
-                                        $item.append(tdInputSelecttPrestationAnnexeExterne);
-                                        var $boutonSupprimer = $('<td></td>').append('<a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i class="glyphicon glyphicon-minus"></i></a>');
-                                        $item.append($boutonSupprimer);
-                                        $panelBodyId.append($item);
-                                        $panelBodyId.append($prestationAnnexeExterneType);
-                                        $panelBodyId.append($inputDateDebut);
-                                        $panelBodyId.append($inputDateFin);
-                                        $collectionHolder.data('index', index + 1);
+                                    var $addPrestationAnnexe = $('#addPrestationAnnexe');
+                                    $addPrestationAnnexe.unbind('click');
+                                    $addPrestationAnnexe.on('click', function (event) {
+                                        if ($selectPrestationAnnexeExterne.val()) {
+                                            var $item = $('<tr class=item></tr>');
+                                            var $inputDateDebut = $('#' + inputDateDebutId);
+                                            $inputDateDebut.hide();
+                                            var $tdInputDateDebut = $('<td></td>').append($inputDateDebut.val());
+                                            var $inputDateFin = $('#' + inputDateFinId);
+                                            $inputDateFin.hide();
+                                            var $tdInputDateFin = $('<td></td>').append($inputDateFin.val());
+                                            $item.append($tdInputDateDebut);
+                                            $item.append($tdInputDateFin);
+                                            var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
+                                            $item.append(tdInputSelecttPrestationAnnexeExterne);
+                                            {#var $boutonSupprimer = $('<td></td>').append('<a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i class="glyphicon glyphicon-minus"></i></a>');#}
+                                            var $boutonSupprimer = $('<td></td>').append('{{ block('bouton_supprimer') | e('js') }}');
+                                            $item.append($boutonSupprimer);
+                                            $panelBodyId.append($item);
+                                            $panelBodyId.append($prestationAnnexeExterneType);
+                                            $panelBodyId.append($inputDateDebut);
+                                            $panelBodyId.append($inputDateFin);
+                                            $collectionHolder.data('index', index + 1);
+                                            $('#modal_commande_prestation_annexe_externe').modal('hide');
+                                        }
                                     })
                                 });
-                            }
-                            {
+                            } else {
                                 $selectPrestationAnnexeExterne.html('');
                             }
                         });
