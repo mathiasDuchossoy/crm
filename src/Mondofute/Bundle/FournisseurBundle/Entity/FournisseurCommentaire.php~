@@ -2,6 +2,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+||||||| merged common ancestors
+=======
+<<<<<<< HEAD
+>>>>>>> merge
 ||||||| merged common ancestors
 =======
 <<<<<<< HEAD
@@ -559,5 +564,29 @@ class FournisseurCommentaire extends Commentaire
         return $this->reponses;
     }
 }
+<<<<<<< HEAD
 >>>>>>> gestion des commentaires dans la fiche fournisseur
 >>>>>>> gestion des commentaires dans la fiche fournisseur
+||||||| merged common ancestors
+>>>>>>> feature/CRM-196_Fiche_Commande
+>>>>>>> origin/feature/CRM-191_Commande
+=======
+>>>>>>> feature/CRM-196_Fiche_Commande
+>>>>>>> origin/feature/CRM-191_Commande
+||||||| merged common ancestors
+=======
+<?php
+
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use Mondofute\Bundle\CommentaireBundle\Entity\Commentaire;
+
+/**
+ * FournisseurCommentaire
+ */
+class FournisseurCommentaire extends Commentaire
+{
+}
+
+>>>>>>> merge
+>>>>>>> merge
