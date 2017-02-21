@@ -3,7 +3,6 @@
 namespace Mondofute\Bundle\FournisseurBundle\Form;
 
 use Mondofute\Bundle\FournisseurBundle\Entity\ConditionAnnulation;
-use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 use Mondofute\Bundle\FournisseurBundle\Entity\Priorite;
 use Mondofute\Bundle\FournisseurBundle\Entity\RelocationAnnulation;
@@ -144,6 +143,18 @@ class FournisseurType extends AbstractType
                 'label' => 'liste_service',
                 'translation_domain' => 'messages',
                 'prototype_name' => '__liste_service_name__',
+            ))
+            ->add('commentaires', CollectionType::class, array(
+                'entry_type' => FournisseurCommentaireType::class,
+                'allow_extra_fields' => true,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => false,
+                'translation_domain' => 'messages',
+                'prototype_name' => '__fournisseur_commentaire_name__',
+                'required' => false,
+                'empty_data' => null,
             ))
             ->add('prestationAnnexes', CollectionType::class, array(
                 'entry_type' => FournisseurPrestationAnnexeType::class,
