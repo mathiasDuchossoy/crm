@@ -1,0 +1,13 @@
+HiDev\Bundle\CommentaireBundle\Entity\Auteur:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: HiDev\Bundle\CommentaireBundle\Repository\AuteurRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+    lifecycleCallbacks: {  }

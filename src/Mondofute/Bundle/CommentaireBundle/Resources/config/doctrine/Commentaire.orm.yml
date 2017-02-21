@@ -1,0 +1,9 @@
+Mondofute\Bundle\CommentaireBundle\Entity\Commentaire:
+    type: mappedSuperclass
+    table: null
+    repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireRepository
+    manyToOne:
+        auteur:
+            targetEntity: HiDev\Bundle\AuteurBundle\Entity\Auteur
+            mappedBy: commentaires
+    lifecycleCallbacks: {  }
