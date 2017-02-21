@@ -433,6 +433,9 @@ fos_user:
     registration:
         form:
             type: Mondofute\Bundle\UtilisateurBundle\Form\RegistrationType
+    from_email:
+        address: admin@mondofute.com
+        sender_name: You
 
 sonata_media:
     # if you don't use default namespace configuration
