@@ -1,0 +1,8 @@
+Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\RemiseDecoteRepository
+    manyToOne:
+        decote:
+            targetEntity: Mondofute\Bundle\DecoteBundle\Entity\Decote
+    lifecycleCallbacks: {  }

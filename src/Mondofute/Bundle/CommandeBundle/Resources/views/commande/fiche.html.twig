@@ -47,6 +47,24 @@
                    onclick="addTagForm(this,event,'__name__','remise');">
                     <i class="glyphicon glyphicon-plus"></i> remise
                 </a>
+                {% set form = prototypes.remiseCodePromo %}
+                <a href="#" data-prototype="{{ block('commande_ligne_remise_code_promo_widget') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addRemiseCodePromo(this,event,'__name__','remise');">
+                    <i class="glyphicon glyphicon-plus"></i> remise code promo
+                </a>
+                {% set form = prototypes.remiseDecote %}
+                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addRemiseDecote(this,event,'__name__','remise');">
+                    <i class="glyphicon glyphicon-plus"></i> remise decote
+                </a>
+                {% set form = prototypes.remisePromotion %}
+                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addRemisePromotion(this,event,'__name__','remise');">
+                    <i class="glyphicon glyphicon-plus"></i> remise promotion
+                </a>
             </div>
         </div>
         <div class="items">
@@ -421,13 +439,18 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label col-md-2">Prix catalogue</label>
-                        <div class="col-md-10">
-                            {% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}0 €{% endif %}
+                        <label class="control-label col-md-6">Prix catalogue</label>
+                        <div class="col-md-6">
+                            <p class="form-control">{% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}0 €{% endif %}</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">{{ form_row(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</div>
+                <div class="col-md-3">
+                    <label class="control-label col-md-6">Prix public</label>
+                    <div class="col-md-6">
+                        {{ form_widget(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}
+                    </div>
+                </div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -439,10 +462,24 @@
 
 {% block commande_ligne_remise_widget %}
     {% set type = form._type.vars.value %}
-    {% if type == 'remise' %}
+    {% if type == 'remise' or type == 'remiseDecote' or type == 'remisePromotion' or type == 'remiseCodePromo' %}
         <div class="item">
             <div class="row">
-                {#<div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
+                <div class="col-md-6">{{ form_rest(form) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_code_promo_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remiseCodePromo' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.codePromo) }}</div>
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -506,12 +543,38 @@
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
+            var $newForm = $(newForm);
             $collectionHolder.data('index', index + 1);
             if ($panelBodyId.length == 0) {
-                $collectionHolder.append(newForm);
+                $collectionHolder.append($newForm);
             } else {
-                $panelBodyId.append(newForm);
+                $panelBodyId.append($newForm);
             }
+            return $newForm;
+        }
+
+        function addRemiseCodePromo(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_code_promo_like') }}";
+            $(newForm).find('.js-code-promo').each(function (index, element) {
+                activeSelect2(element, path);
+            });
+        }
+
+        function addRemiseDecote(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_decote_like') }}";
+            $(newForm).find('.js-decote').each(function (index, element) {
+                activeSelect2(element, path);
+            });
+        }
+
+        function addRemisePromotion(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_promotion_like') }}";
+            $(newForm).find('.js-promotion').each(function (index, element) {
+                activeSelect2(element, path);
+            });
         }
 
         function addCommandePrestationAnnexeExterne(element, event, name, panelBodyId) {
@@ -653,6 +716,55 @@
 
         $('.input-daterange').each(function (index, element) {
             activeDatePicker(element)
+        });
+
+        // *** gestion select2 ***
+        function activeSelect2(element, path) {
+            console.log(element);
+            $(element).select2({
+                width: '100%',
+                ajax: {
+                    url: path,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            site: $(this).data('site'),
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                }, // let our custom formatter work
+                minimumInputLength: 1,
+            });
+        }
+
+        $('.js-code-promo').each(function (index, element) {
+            var path = "{{ path('mondofute_get_code_promo_like') }}";
+            activeSelect2(element, path);
+        });
+
+        $('.js-decote').each(function (index, element) {
+            var path = "{{ path('mondofute_get_decote_like') }}";
+            activeSelect2(element, path);
+        });
+
+        $('.js-promotion').each(function (index, element) {
+            var path = "{{ path('mondofute_get_promotion_like') }}";
+            activeSelect2(element, path);
         });
 
     </script>

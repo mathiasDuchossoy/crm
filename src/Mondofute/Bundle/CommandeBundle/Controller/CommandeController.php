@@ -7,17 +7,23 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
+use Mondofute\Bundle\CommandeBundle\Entity\RemiseCodePromo;
+use Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote;
+use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
+use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
+use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -184,7 +190,9 @@ class CommandeController extends Controller
             if (false === $commandeLigneSite) {
                 $oReflectionClass = new ReflectionClass($commandeLigne);
                 $ClassParent = $oReflectionClass->getParentClass()->getName();
-                if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
+                if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour'
+                    || $oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneRemise'
+                ) {
                     $oReflectionClassParent = new ReflectionClass($ClassParent);
                     $metadata = $emSite->getClassMetadata($oReflectionClassParent->getParentClass()->getName());
                     $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
@@ -222,6 +230,24 @@ class CommandeController extends Controller
                         ->setDateDebut($commandeLigne->getDateDebut())
                         ->setDateFin($commandeLigne->getDateFin())
                         ->setFournisseurPrestationAnnexeParam($emSite->find(FournisseurPrestationAnnexeParam::class, $commandeLigne->getFournisseurPrestationAnnexeParam()));
+                    break;
+                case 'RemiseCodePromo':
+                    /** @var RemiseCodePromo $commandeLigneSite */
+                    /** @var RemiseCodePromo $commandeLigne */
+                    $commandeLigneSite
+                        ->setCodePromo($emSite->getRepository(CodePromo::class)->findOneBy(['codePromoUnifie' => $commandeLigne->getCodePromo()->getCodePromoUnifie()]));
+                    break;
+                case 'RemiseDecote':
+                    /** @var RemiseDecote $commandeLigneSite */
+                    /** @var RemiseDecote $commandeLigne */
+                    $commandeLigneSite
+                        ->setDecote($emSite->getRepository(Decote::class)->findOneBy(['decoteUnifie' => $commandeLigne->getDecote()->getDecoteUnifie()]));
+                    break;
+                case 'RemisePromotion':
+                    /** @var RemisePromotion $commandeLigneSite */
+                    /** @var RemisePromotion $commandeLigne */
+                    $commandeLigneSite
+                        ->setPromotion($emSite->getRepository(Promotion::class)->findOneBy(['promotionUnifie' => $commandeLigne->getPromotion()->getPromotionUnifie()]));
                     break;
                 default:
                     break;
@@ -294,9 +320,6 @@ class CommandeController extends Controller
                 $commandeLigneSite
                     ->setDateDebut($commandeLigne->getDateDebut())
                     ->setDateFin($commandeLigne->getDateFin());
-                dump($commandeLigne->getDateDebut());
-                dump($commandeLigne->getDateFin());
-                die;
             }
         }
     }
