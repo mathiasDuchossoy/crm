@@ -53,7 +53,7 @@
                         {% include ('@MondofutePromotion/promotionunifie/promotion-type-affectation.html.twig') %}
                         {{ form_row(promotion.typePeriodeSejour, {  'attr' : {
                             'data-unique_block_prefix' : promotion.typePeriodeSejour.vars['unique_block_prefix'],
-                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');displaypromotionAffectationType(this,"promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations")'
+                            'onchange' : 'displayFormTypePeriodeSejour(this,'~keyPromotion~');displaypromotionAffectationType(this,'~keyPromotion~')'
                         }}) }}
                         <div id="promotion_periode_sejour_date_{{ keyPromotion }}" class="form-group"
                                 {% if promotion.typePeriodeSejour.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::dateADate') %}
@@ -169,7 +169,7 @@
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_typeFournisseurs");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_variante");
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
-        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_compteARebours");
+        items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_stock");
 
         {% for langue in langues %}
         items.push("_mondofute_bundle_promotionbundle_promotionunifie_promotions_entry_traductions_entry_titre_{{ langue.code }}");
@@ -754,13 +754,13 @@
             }
         }
 
-        function displaypromotionAffectationType(element, divPromotionTypeAffectation) {
+        function displaypromotionAffectationType(element, keyPromotion) {
             var $element = $(element);
-            var $divPromotionTypeAffectation = $('#' + divPromotionTypeAffectation);
+            var $divPromotionTypeAffectation = $('#promotion_unifie_promotions_' + keyPromotion + '_promotionAffectations');
             var radioValue = $($divPromotionTypeAffectation.find('input:checked')[0]).val();
             var $radioTypeFournisseur = $($divPromotionTypeAffectation.find('input[value="{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypeAffectation::type') }}"]')[0]);
             var selectValue = $(element).val();
-            if (selectValue == '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}') {
+            if (selectValue == '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}' || $('#mondofute_bundle_promotionbundle_promotionunifie_promotions' + keyPromotion + '_variante').val() != {{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }} ) {
                 $radioTypeFournisseur.prop('checked', false);
                 $radioTypeFournisseur.parent().hide();
             } else {
@@ -788,6 +788,9 @@
                 $('#promotion_panel_prestation_annexe_' + keyPromotion).hide();
                 $divSejour1Semainex2.show();
                 $divSejour1Semainex2.find('input').prop('required', 'required');
+                var $selectTypePeriodeSejour = $('#mondofute_bundle_promotionbundle_promotionunifie_promotions_' + keyPromotion + '_typePeriodeSejour');
+                var typePeriodeSejourPeriode = '{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\TypePeriodeSejour::periode') }}';
+                $selectTypePeriodeSejour.find('option[value="' + typePeriodeSejourPeriode + '"]').show();
             } else {
                 for (var i = 0; i < radioTypes.length; i++) {
                     $(radioTypes[i]).parent().show();

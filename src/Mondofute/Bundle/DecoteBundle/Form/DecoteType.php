@@ -2,12 +2,15 @@
 
 namespace Mondofute\Bundle\DecoteBundle\Form;
 
+use Mondofute\Bundle\DecoteBundle\Entity\ApplicationRemise;
 use Mondofute\Bundle\DecoteBundle\Entity\CanalDecote;
+use Mondofute\Bundle\DecoteBundle\Entity\ChoixVariante1;
 use Mondofute\Bundle\DecoteBundle\Entity\Type;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeApplication;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeRemise;
+use Mondofute\Bundle\DecoteBundle\Entity\Variante;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
@@ -154,7 +157,38 @@ class DecoteType extends AbstractType
                 'expanded' => true))
             ->add('traductions', CollectionType::class, array(
                 'entry_type' => DecoteTraductionType::class,
-            ));
+            ))
+            ->add('variante', ChoiceType::class, array(
+                'choices' => array(
+                    Variante::sejour1Semainex2 => Variante::getLibelle(Variante::sejour1Semainex2),
+                    Variante::aLaPersonne => Variante::getLibelle(Variante::aLaPersonne),
+                    Variante::produitEnPack => Variante::getLibelle(Variante::produitEnPack),
+                    Variante::venteFlash => Variante::getLibelle(Variante::venteFlash),
+                    Variante::stockSpecifique => Variante::getLibelle(Variante::stockSpecifique),
+                ),
+                'required' => false,
+                'placeholder' => " --- Choisir une variante --- ",
+            ))
+            ->add('choixVariante1', ChoiceType::class, array(
+                'choices' => array(
+                    ChoixVariante1::semaineMoinsChereOfferte => ChoixVariante1::getLibelle(ChoixVariante1::semaineMoinsChereOfferte),
+                    ChoixVariante1::appliquerRemise => ChoixVariante1::getLibelle(ChoixVariante1::appliquerRemise),
+                ),
+                'expanded' => true,
+                'required' => false,
+                'empty_value' => false
+            ))
+            ->add('applicationRemise', ChoiceType::class, array(
+                'choices' => array(
+                    ApplicationRemise::deuxiemeSemaine => ApplicationRemise::getLibelle(ApplicationRemise::deuxiemeSemaine),
+                    ApplicationRemise::semaineMoinsChere => ApplicationRemise::getLibelle(ApplicationRemise::semaineMoinsChere),
+                ),
+                'expanded' => true,
+                'required' => false,
+                'empty_value' => false
+            ))
+            ->add('compteARebours')
+            ->add('stock');
     }
 
     /**

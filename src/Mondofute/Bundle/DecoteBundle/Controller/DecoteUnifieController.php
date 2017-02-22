@@ -10,6 +10,7 @@ use Exception;
 use JMS\JobQueueBundle\Entity\Job;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\DecoteBundle\Entity\CanalDecote;
+use Mondofute\Bundle\DecoteBundle\Entity\ChoixVariante1;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFamillePrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseur;
@@ -27,6 +28,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecoteUnifie;
 use Mondofute\Bundle\DecoteBundle\Entity\TypeAffectation;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite;
+use Mondofute\Bundle\DecoteBundle\Entity\Variante;
 use Mondofute\Bundle\DecoteBundle\Form\DecoteUnifieType;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
@@ -148,6 +150,10 @@ class DecoteUnifieController extends Controller
             // *** gestion typePeriodeSejour ***
             $this->gestionTypePeriodeSejour($decoteUnifie);
             // *** fin gestion typePeriodeSejour ***
+
+            // *** gestion variantes ***
+            $this->gestionVariantes($decoteUnifie);
+            // *** fin gestion variantes ***
 
             $em = $this->getDoctrine()->getManager();
 
@@ -381,6 +387,27 @@ class DecoteUnifieController extends Controller
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    /**
+     * @param DecoteUnifie $entityUnifie
+     */
+    private function gestionVariantes($entityUnifie)
+    {
+        /** @var Decote $entity */
+        foreach ($entityUnifie->getDecotes() as $entity) {
+            if ($entity->getVariante() != Variante::sejour1Semainex2) {
+                $entity->setChoixVariante1();
+                if ($entity->getVariante() != Variante::venteFlash) {
+                    $entity->setCompteARebours();
+                    if ($entity->getVariante() != Variante::stockSpecifique) {
+                        $entity->setStock();
+                    }
+                }
+            } else if ($entity->getChoixVariante1() != ChoixVariante1::appliquerRemise) {
+                $entity->setApplicationRemise();
             }
         }
     }
@@ -832,7 +859,12 @@ class DecoteUnifieController extends Controller
                     ->setTypePeriodeSejour($entity->getTypePeriodeSejour())
                     ->setTypeApplication($entity->getTypeApplication())
                     ->setType($entity->getType())
-                    ->setTypeRemise($entity->getTypeRemise());
+                    ->setTypeRemise($entity->getTypeRemise())
+                    ->setVariante($entity->getVariante())
+                    ->setChoixVariante1($entity->getChoixVariante1())
+                    ->setApplicationRemise($entity->getApplicationRemise())
+                    ->setCompteARebours($entity->getCompteARebours())
+                    ->setStock($entity->getStock());
 
                 $emSite->persist($entityUnifieSite);
 
@@ -1286,6 +1318,10 @@ class DecoteUnifieController extends Controller
             // *** gestion typePeriodeSejour ***
             $this->gestionTypePeriodeSejour($decoteUnifie);
             // *** fin gestion typePeriodeSejour ***
+
+            // *** gestion variantes ***
+            $this->gestionVariantes($decoteUnifie);
+            // *** fin gestion variantes ***
 
             $em->persist($decoteUnifie);
             $em->flush();

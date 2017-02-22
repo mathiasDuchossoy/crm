@@ -1,9 +1,9 @@
 {{ form_row(entity.variante , {'attr' : {
-    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'","promotion_unifie_promotions_'~keyPromotion~'_promotionAffectations","'~keyPromotion~'");',
+    'onchange' : 'gestionVariantes(this,"div_'~entity.variante.vars.id~'","decote_unifie_decotes_'~keyDecote~'_decoteAffectations","'~keyDecote~'");',
     'data-unique_block_prefix' : entity.variante.vars['unique_block_prefix']
 }}) }}
-<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') }}"
-        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') %}
+<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::sejour1Semainex2') }}"
+        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::sejour1Semainex2') %}
             style="display: none"
         {% endif %}
 >
@@ -12,9 +12,9 @@
         {{ form_label(entity.choixVariante1) }}
         <div class="col-sm-10">
             <div id="{{ entity.choixVariante1.vars.id }}"
-                 data-unique_block_prefix="_promotion_unifie_promotions_entry_choixVariante1">
+                 data-unique_block_prefix="_decote_unifie_decotes_entry_choixVariante1">
                 {% for element in entity.choixVariante1 %}
-                    {% if entity.variante.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::sejour1Semainex2') and element.vars.value != '' %}
+                    {% if entity.variante.vars.value == constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::sejour1Semainex2') and element.vars.value != '' %}
                         {{ form_widget(element, {'attr': {'onchange' : 'displayApplicationRemise(this,"div_'~entity.applicationRemise.vars.id~'");', 'required' : 'required'}}) }}
                     {% elseif (element.vars.value != '') %}
                         {{ form_widget(element, {'attr': {'onchange' : 'displayApplicationRemise(this,"div_'~entity.applicationRemise.vars.id~'");'}}) }}
@@ -24,7 +24,7 @@
         </div>
     </div>
     <div id="div_{{ entity.applicationRemise.vars.id }}"
-            {% if entity.choixVariante1.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\ChoixVariante1::appliquerRemise') %}
+            {% if entity.choixVariante1.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\ChoixVariante1::appliquerRemise') %}
                 style="display: none"
             {% endif %}
     >
@@ -34,7 +34,7 @@
                 <div id="{{ entity.applicationRemise.vars.id }}"
                      data-unique_block_prefix="{{ entity.applicationRemise.vars['unique_block_prefix'] }}">
                     {% for element in entity.applicationRemise %}
-                        {% if entity.choixVariante1.vars.value == constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\ChoixVariante1::appliquerRemise') %}
+                        {% if entity.choixVariante1.vars.value == constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\ChoixVariante1::appliquerRemise') %}
                             {{ form_widget(element, {'attr': { 'required' : 'required'}}) }}
                         {% elseif (element.vars.value != '') %}
                             {{ form_widget(element) }}
@@ -45,15 +45,15 @@
         </div>
     </div>
 </div>
-<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') }}"
-        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::venteFlash') %}
+<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::venteFlash') }}"
+        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::venteFlash') %}
             style="display: none"
         {% endif %}
 >
     {{ form_row(entity.compteARebours, {'attr' : {'data-unique_block_prefix' : entity.compteARebours.vars['unique_block_prefix']}}) }}
 </div>
-<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') }}"
-        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\PromotionBundle\\Entity\\Variante::stockSpecifique') %}
+<div id="div_{{ entity.variante.vars.id }}_{{ constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::stockSpecifique') }}"
+        {% if entity.variante.vars.value != constant('Mondofute\\Bundle\\DecoteBundle\\Entity\\Variante::stockSpecifique') %}
             style="display: none"
         {% endif %}
 >
