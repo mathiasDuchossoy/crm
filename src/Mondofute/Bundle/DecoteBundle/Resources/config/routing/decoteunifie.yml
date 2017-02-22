@@ -67,3 +67,8 @@ decote_get_logement_values:
     path:     /getlogementvalues/{fournisseurId}/{hebergementId}/{decoteId}/{keyDecote}
     defaults: { _controller: "MondofuteDecoteBundle:DecoteUnifie:getLogementValues"}
     methods:  GET
+
+mondofute_get_decote_like:
+    path:     getdecotelike/{site}
+    defaults: { _controller: MondofuteDecoteBundle:DecoteUnifie:getdecoteslike , site: 'fr_FR'  }
+    methods:  ['GET']

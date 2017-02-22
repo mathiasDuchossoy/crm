@@ -1,5 +1,14 @@
 Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneRemise:
     type: entity
+    inheritanceType: JOINED
+    discriminatorColumn:
+        name: type
+        type: integer
+    discriminatorMap:
+        1: CommandeLigneRemise
+        2: RemiseCodePromo
+        3: RemiseDecote
+        4: RemisePromotion
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneRemiseRepository
     lifecycleCallbacks: {  }

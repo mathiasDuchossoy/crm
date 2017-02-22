@@ -67,3 +67,8 @@ promotion_get_logement_values:
     path:     /getlogementvalues/{fournisseurId}/{hebergementId}/{promotionId}/{keyPromotion}
     defaults: { _controller: "MondofutePromotionBundle:PromotionUnifie:getLogementValues"}
     methods:  GET
+
+mondofute_get_promotion_like:
+    path:     getpromotionlike/{site}
+    defaults: { _controller: MondofutePromotionBundle:PromotionUnifie:getpromotionslike , site: 'fr_FR'  }
+    methods:  ['GET']

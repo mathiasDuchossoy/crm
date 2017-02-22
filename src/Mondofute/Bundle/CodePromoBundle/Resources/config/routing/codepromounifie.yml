@@ -47,3 +47,8 @@ codepromo_get_panel_prestation_annexe:
     path:     /getprestationannexe/{codePromoId}
     defaults: { _controller: "MondofuteCodePromoBundle:CodePromoUnifie:getPrestationAnnexe"}
     methods:  GET
+
+mondofute_get_code_promo_like:
+    path:     getcodepromolike/{site}
+    defaults: { _controller: MondofuteCodePromoBundle:CodePromoUnifie:getcodepromoslike , site: 'fr_FR'  }
+    methods:  ['GET']
