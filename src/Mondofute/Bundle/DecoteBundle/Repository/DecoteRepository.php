@@ -98,4 +98,20 @@ class DecoteRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
         return $result;
     }
+
+    public function findByLike($like, $site, $locale)
+    {
+        $q = $this->createQueryBuilder('decote')
+            ->select('decote.id, concat(traductions.titre, \' - \', decote.libelle) text')
+            ->join('decote.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->where('traductions.titre LIKE :val or decote.libelle LIKE :val')
+            ->setParameter('val', '%' . $like . '%')
+            ->andWhere('decote.site = :site')
+            ->setParameter('site', $site)
+            ->andWhere('langue.code = :code')
+            ->setParameter('code', $locale);
+
+        return $q->getQuery()->getResult();
+    }
 }

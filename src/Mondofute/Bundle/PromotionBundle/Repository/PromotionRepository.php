@@ -98,4 +98,20 @@ class PromotionRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
         return $result;
     }
+
+    public function findByLike($like, $site, $locale)
+    {
+        $q = $this->createQueryBuilder('promotion')
+            ->select('promotion.id, concat(traductions.titre, \' - \', promotion.libelle) text')
+            ->join('promotion.traductions', 'traductions')
+            ->join('traductions.langue', 'langue')
+            ->where('traductions.titre LIKE :val or promotion.libelle LIKE :val')
+            ->setParameter('val', '%' . $like . '%')
+            ->andWhere('promotion.site = :site')
+            ->setParameter('site', $site)
+            ->andWhere('langue.code = :code')
+            ->setParameter('code', $locale);
+
+        return $q->getQuery()->getResult();
+    }
 }
