@@ -23,6 +23,7 @@
                     <li><a data-toggle="tab" href="#commentaires">{{ 'commentaires' | trans | capitalize }}</a></li>
                 {% endif %}
                 <li><a data-toggle="tab" href="#service">{{ 'service' | trans | capitalize }}</a></li>
+                <li><a data-toggle="tab" href="#saison">{{ 'saison' | trans | capitalize }}</a></li>
                 {% if edit is defined %}
                     <li><a data-toggle="tab" href="#prestationannexe">{{ 'prestation.annexe' | trans | capitalize }}</a>
                     </li>
@@ -283,6 +284,7 @@
                                     class="glyphicon glyphicon-plus"></span></button>
                     </div>
                 </div>
+                {% include ('@MondofuteSaison/saisonfournisseur/fiche.html.twig') %}
                 {% if edit is defined %}
                     <div id="prestationannexe" class="tab-pane fade in">
                         {% for famillePrestationAnnexe in famillePrestationAnnexes %}

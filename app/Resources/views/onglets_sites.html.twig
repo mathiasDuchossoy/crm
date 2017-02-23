@@ -39,4 +39,9 @@
             <a data-toggle="tab" href="#data_modele_description_forfait_ski">Modèle description forfait ski</a>
         </li>
     {% endif %}
+    {% if ongletSaisonHebergement is defined and ongletSaisonHebergement == 1 %}
+        <li>
+            <a data-toggle="tab" href="#saison_hebergement">Saisons</a>
+        </li>
+    {% endif %}
 </ul>

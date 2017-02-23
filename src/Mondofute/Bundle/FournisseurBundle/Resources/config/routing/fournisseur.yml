@@ -67,3 +67,13 @@ fournisseur_set_priorite:
     path:     /setfournisseurpriorite/{id}/{priorite}
     defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:setPriorite"  }
     methods:  GET
+
+fournisseur_set_agent_ma_j_prod_saison_en_cours:
+    path:     /setagentmajprodsaisonencours/{id}/{val}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:setAgentMaJProdSaisonEnCours"  }
+    methods:  GET
+
+fournisseur_set_agent_ma_j_saisie_saison_en_cours:
+    path:     /setagentmajsaisiesaisonencours/{id}/{val}
+    defaults: { _controller: "MondofuteFournisseurBundle:Fournisseur:setAgentMaJSaisieSaisonEnCours"  }
+    methods:  GET
