@@ -4,7 +4,9 @@
 {% for prestationAnnexe in form.prestationAnnexes %}
     <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <div>
-            {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+            <div class="tabs-panels">
+                {% include('@MondofuteFournisseur/fournisseur/template-traduction-fournisseur-prestation-annexe.html.twig') with {'traductions': prestationAnnexe.traductions, 'langues': langues, 'name': prestationAnnexe.vars.id, 'entity': 'fournisseur_prestation_annexe'} %}
+            </div>
             {{ form_row(prestationAnnexe.freeSale , {'attr' : {'onclick' : 'displayFournisseurPrestationAnnexePeriodeIndisponible(this, "'~prestationAnnexe.vars.value.prestationAnnexe.id~'");'}}) }}
 
             <div id="block_fournisseur_prestation_annexe_{{ prestationAnnexe.vars.value.prestationAnnexe.id }}_periode_indisponibles"

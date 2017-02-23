@@ -26,12 +26,23 @@
             e.preventDefault();
             addTagForm($collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}, $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} , '__periode_validite_name__');
         });
-    }
+        $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }}.find('.datetimepicker').datetimepicker({
+            format: 'dd/mm/yyyy - hh:ii',
+            autoclose: true,
+            todayBtn: true,
+            startDate: 'today',
+            pickerPosition: "top-right",
+            language: 'fr',
+            minuteStep: 30
+        }).on('hide', function (e) {
+            return false;
+        }).removeClass('datetimepicker');
+    };
     if (window.jQuery) {
         var $collectionHolderperiode_validite_{{ keyParam }}_{{ name }}_{{ index }};
         var $addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<a href="#" class="add_periode_validite_link">Ajouter</a>');
         var $newLinkLiperiode_validite_{{ keyParam }}_{{ name }}_{{ index }} = $('<li></li>').append($addTagLinkperiode_validite_{{ keyParam }}_{{ name }}_{{ index }});
         collectionPeriodeValidite();
-        periodevaliditeDatetimePicker();
+//        periodevaliditeDatetimePicker();
     }
 </script>

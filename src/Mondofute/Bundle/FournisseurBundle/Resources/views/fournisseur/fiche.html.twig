@@ -1807,6 +1807,31 @@
         function enregisterPrestationAnnexe(prestationAnnexeId) {
             var $myForm = $('#form_prestation_annexe');
             if (!$myForm[0].checkValidity()) {
+                var firstElement = false;
+                $myForm.find('input').each(function (index, element) {
+                    if (!element.checkValidity() && !firstElement) {
+                        firstElement = element;
+                    }
+                });
+
+                var tabParametrage = $(firstElement).closest('.tab-pane-parametrage');
+                tabParametrage.parent().find('.tab-pane-parametrage').removeClass('active');
+                tabParametrage.parent().find('.tab-pane-parametrage').removeClass('in');
+                tabParametrage.addClass('active');
+                tabParametrage.addClass('in');
+                var hrefParametrage = tabParametrage.prop('id');
+                tabParametrage.closest('.tabs-panels-parametrage').find('a[href="#' + hrefParametrage + '"]').parent().parent().find('li').removeClass('active');
+                tabParametrage.closest('.tabs-panels-parametrage').find('a[href="#' + hrefParametrage + '"]').parent().addClass('active');
+
+                var tab = $(firstElement).closest('.tab-pane');
+                if (!tab.hasClass('tab-pane-parametrage')) {
+                    tab.parent().find('.tab-pane').removeClass('active');
+                    tab.addClass('active');
+                    var href = tab.prop('id');
+                    tab.closest('.tabs-panels').find('a[href="#' + href + '"]').parent().parent().find('li').removeClass('active');
+                    tab.closest('.tabs-panels').find('a[href="#' + href + '"]').parent().addClass('active');
+                }
+                firstElement.focus();
                 $('<input type="submit">').hide().appendTo($myForm).click().remove();
                 return false;
             }
@@ -1883,7 +1908,18 @@
             var $newFormLi = $('<li></li>').append(newForm);
             $newLinkLi.before($newFormLi);
             addTagFormDeleteLink($newFormLi);
-            periodevaliditeDatetimePicker();
+//            periodevaliditeDatetimePicker();
+            $newFormLi.find('.datetimepicker').datetimepicker({
+                format: 'dd/mm/yyyy - hh:ii',
+                autoclose: true,
+                todayBtn: true,
+                startDate: 'today',
+                pickerPosition: "top-right",
+                language: 'fr',
+                minuteStep: 30
+            }).on('hide', function (e) {
+                return false;
+            }).removeClass('datetimepicker');
         }
 
         function addTagFormDeleteLink($tagFormLi) {
