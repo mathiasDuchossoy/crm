@@ -138,6 +138,7 @@ doctrine:
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
                     MondofuteCommentaireBundle: ~
+                    MondofuteSaisonBundle: ~
             skifute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -194,6 +195,7 @@ doctrine:
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
                     MondofuteCommentaireBundle: ~
+                    MondofuteSaisonBundle: ~
             francefute:
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 auto_mapping: false
@@ -247,6 +249,7 @@ doctrine:
                     HiDevAuteurBundle: ~
                     HiDevCommentaireBundle: ~
                     MondofuteCommentaireBundle: ~
+                    MondofuteSaisonBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:

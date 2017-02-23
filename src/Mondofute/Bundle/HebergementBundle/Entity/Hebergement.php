@@ -4,8 +4,10 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement;
@@ -78,6 +80,10 @@ class Hebergement
      * @var Collection
      */
     private $promotionHebergements;
+    /**
+     * @var Collection
+     */
+    private $saisonHebergements;
 
     /**
      * Constructor
@@ -91,6 +97,7 @@ class Hebergement
         $this->motClefs = new ArrayCollection();
         $this->prestationAnnexeHebergements = new ArrayCollection();
         $this->promotionHebergements = new ArrayCollection();
+        $this->saisonHebergements = new ArrayCollection();
     }
 
     /**
@@ -505,11 +512,11 @@ class Hebergement
     /**
      * Add prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
      *
      * @return Hebergement
      */
-    public function addPrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    public function addPrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
         $this->prestationAnnexeHebergements[] = $prestationAnnexeHebergement;
 
@@ -519,9 +526,9 @@ class Hebergement
     /**
      * Remove prestationAnnexeHebergement
      *
-     * @param \Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement
+     * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
      */
-    public function removePrestationAnnexeHebergement(\Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement $prestationAnnexeHebergement)
+    public function removePrestationAnnexeHebergement(PrestationAnnexeHebergement $prestationAnnexeHebergement)
     {
         $this->prestationAnnexeHebergements->removeElement($prestationAnnexeHebergement);
     }
@@ -568,5 +575,47 @@ class Hebergement
     public function getPromotionHebergements()
     {
         return $this->promotionHebergements;
+    }
+
+    /**
+     * Add saisonHebergement
+     *
+     * @param SaisonHebergement $saisonHebergement
+     *
+     * @return Hebergement
+     */
+    public function addSaisonHebergement(SaisonHebergement $saisonHebergement)
+    {
+        $this->saisonHebergements[] = $saisonHebergement->setHebergement($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove saisonHebergement
+     *
+     * @param SaisonHebergement $saisonHebergement
+     */
+    public function removeSaisonHebergement(SaisonHebergement $saisonHebergement)
+    {
+        $this->saisonHebergements->removeElement($saisonHebergement);
+    }
+
+    /**
+     * Get saisonHebergements
+     *
+     * @return Collection
+     */
+    public function getSaisonHebergements()
+    {
+        $iterator = $this->saisonHebergements->getIterator();
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (SaisonHebergement $a, SaisonHebergement $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 }

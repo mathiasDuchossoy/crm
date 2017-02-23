@@ -117,6 +117,10 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
             mappedBy: fournisseur
             cascade: ['persist','remove']
+        saisonFournisseurs:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur
+            mappedBy: fournisseur
+            cascade: ['persist','remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

@@ -1,0 +1,4 @@
+services:
+#    mondofute_saison.example:
+#        class: Mondofute\Bundle\SaisonBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

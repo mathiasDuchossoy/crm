@@ -19,6 +19,7 @@
             {% set mesSites = form.hebergements %}
             {% set ongletFournisseurs = 1 %}
             {% set ongletServices = 1 %}
+            {% set ongletSaisonHebergement = 1 %}
             {% include '::onglets_sites.html.twig' %}
 
             <div class="tab-content" style="padding:20px;">
@@ -176,6 +177,9 @@
                             </div>
                         {% endif %}
                     </div>
+                    {% if hebergement.vars.value.site.crm == true %}
+                        {% include('@MondofuteSaison/saisonhebergement/fiche.html.twig') %}
+                    {% endif %}
                 {% endfor %}
                 <div id="data_services" class="tab-pane fade">
                     {{ form_row(form.listeService) }}

@@ -11,6 +11,12 @@
         <tr>
             <th>Id</th>
             <th>{{ 'enseigne' | capitalize }}</th>
+            <th>AgentMaJProd</th>
+            <th>AgentMaJSaisie</th>
+            <th>Fiches validées</th>
+            <th>Tarifs validés</th>
+            <th>Photos validées</th>
+            <th>HB validés</th>
             <th>Priorité</th>
             <th>Actions</th>
         </tr>
@@ -24,6 +30,43 @@
                 <td>
                     {{ fournisseur.enseigne }}
                 </td>
+                <td>
+                    <label>
+                        <select id="fournisseur_agent_ma_j_prod_saison_en_cours_{{ fournisseur.id }}"
+                                onchange="editFournisseurAgentMaJProdSaisonEnCours(this, '{{ fournisseur.id }}')"
+                                class="form-control">
+                            <option value=""> ---</option>
+                            {% for utilisateur in utilisateurs %}
+                                <option value="{{ utilisateur.id }}"
+                                        {% if fournisseur.agentMaJProdSaisonEnCours == utilisateur %}
+                                            selected="selected"
+                                        {% endif %}
+                                >{{ utilisateur }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </td>
+                <td>
+                    <label>
+                        <select id="fournisseur_agent_ma_j_saisie_saison_en_cours_{{ fournisseur.id }}"
+                                onchange="editFournisseurAgentMaJSaisieSaisonEnCours(this, '{{ fournisseur.id }}')"
+                                class="form-control">
+                            <option value=""> ---</option>
+                            {% for utilisateur in utilisateurs %}
+                                <option value="{{ utilisateur.id }}"
+                                        {% if fournisseur.agentMaJSaisieSaisonEnCours == utilisateur %}
+                                            selected="selected"
+                                        {% endif %}
+                                >{{ utilisateur }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </td>
+                <td>{{ fournisseur.ficheTechniquesSaisonEnCours }}/{{ fournisseur.nbHebergementsSaisonEnCours }}</td>
+                <td>{{ fournisseur.tarifTechniquesSaisonEnCours }}/{{ fournisseur.nbHebergementsSaisonEnCours }}</td>
+                <td>{{ fournisseur.photosTechniquesSaisonEnCours }}/{{ fournisseur.nbHebergementsSaisonEnCours }}</td>
+                <td>{{ fournisseur.nbHebergementsActiveSaisonEnCours }}
+                    /{{ fournisseur.nbHebergementsSaisonEnCours }}</td>
                 <td>
                     <label>
                         <select id="fournisseur_priorite_{{ fournisseur.id }}"
@@ -73,6 +116,18 @@
             var path = "{{ path('fournisseur_set_priorite' , {'id':'_fournisseur_' , 'priorite':'_priorite_'}) }}";
             path = path.replace('_fournisseur_', fournisseurId);
             path = path.replace('_priorite_', priorite);
+            $.ajax(path, {});
+        }
+        function editFournisseurAgentMaJProdSaisonEnCours(element, fournisseurId) {
+            var path = "{{ path('fournisseur_set_agent_ma_j_prod_saison_en_cours' , {'id':'_fournisseur_' , 'val':'_val_'}) }}";
+            path = path.replace('_fournisseur_', fournisseurId);
+            path = path.replace('_val_', $(element).val());
+            $.ajax(path, {});
+        }
+        function editFournisseurAgentMaJSaisieSaisonEnCours(element, fournisseurId) {
+            var path = "{{ path('fournisseur_set_agent_ma_j_saisie_saison_en_cours' , {'id':'_fournisseur_' , 'val':'_val_'}) }}";
+            path = path.replace('_fournisseur_', fournisseurId);
+            path = path.replace('_val_', $(element).val());
             $.ajax(path, {});
         }
     </script>

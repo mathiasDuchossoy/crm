@@ -11,6 +11,7 @@ use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form\FournisseurPrestatio
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRepository;
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
+use Mondofute\Bundle\SaisonBundle\Form\SaisonFournisseurType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -217,7 +218,10 @@ class FournisseurType extends AbstractType
                     ),
                     'choices_as_values' => true,
                 )
-            );
+            )
+            ->add('saisonFournisseurs', CollectionType::class, array(
+                'entry_type' => SaisonFournisseurType::class
+            ));
     }
 
     /**

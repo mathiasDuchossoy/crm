@@ -13,6 +13,7 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Nucleus\ContactBundle\Entity\Moral;
 
@@ -137,6 +138,10 @@ class Fournisseur extends Moral
      * @var \Doctrine\Common\Collections\Collection
      */
     private $commentaires;
+    /**
+     * @var Collection
+     */
+    private $saisonFournisseurs;
 
     /**
      * Fournisseur constructor.
@@ -155,6 +160,7 @@ class Fournisseur extends Moral
         $this->promotionFournisseurs = new ArrayCollection();
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
+        $this->saisonFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -1101,4 +1107,145 @@ class Fournisseur extends Moral
         }
         return $commentaires;
     }
+
+    /**
+     * Add saisonFournisseur
+     *
+     * @param SaisonFournisseur $saisonFournisseur
+     *
+     * @return Fournisseur
+     */
+    public function addSaisonFournisseur(SaisonFournisseur $saisonFournisseur)
+    {
+        $this->saisonFournisseurs[] = $saisonFournisseur->setFournisseur($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove saisonFournisseur
+     *
+     * @param SaisonFournisseur $saisonFournisseur
+     */
+    public function removeSaisonFournisseur(SaisonFournisseur $saisonFournisseur)
+    {
+        $this->saisonFournisseurs->removeElement($saisonFournisseur);
+    }
+
+    /**
+     * Get saisonFournisseurs
+     *
+     * @return Collection
+     */
+    public function getSaisonFournisseurs()
+    {
+        $iterator = $this->saisonFournisseurs->getIterator();
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (SaisonFournisseur $a, SaisonFournisseur $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        return new ArrayCollection(iterator_to_array($iterator));
+    }
+
+    /**
+     * @return int
+     */
+    public function getFicheTechniquesSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getFicheTechniques();
+        }
+        return 0;
+    }
+
+    /**
+     * @return SaisonFournisseur
+     */
+    public function getSaisonFournisseurEnCours()
+    {
+        return $this->saisonFournisseurs->filter(function (SaisonFournisseur $element) {
+            return $element->getSaison()->getEnCours() == true;
+        })->first();
+    }
+
+    /**
+     * @return int
+     */
+    public function getTarifTechniquesSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getTarifTechniques();
+        }
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPhotosTechniquesSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getPhotosTechniques();
+        }
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergementsActiveSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getNbHebergementsActive();
+        }
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbHebergementsSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getNbHebergements();
+        }
+        return 0;
+    }
+
+    public function getAgentMaJProdSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getAgentMaJProd();
+        }
+        return null;
+    }
+
+    public function getAgentMaJSaisieSaisonEnCours()
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->getAgentMaJSaisie();
+        }
+        return null;
+    }
+
+    public function setAgentMaJProdSaisonEnCours($agentMaJProdSaisonEnCours)
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->setAgentMaJProd($agentMaJProdSaisonEnCours);
+        }
+        return null;
+    }
+
+    public function setAgentMaJSaisieSaisonEnCours($agentMaJSaisieSaisonEnCours)
+    {
+        if (!empty($this->getSaisonFournisseurEnCours())) {
+            return $this->getSaisonFournisseurEnCours()->setAgentMaJSaisie($agentMaJSaisieSaisonEnCours);
+        }
+        return null;
+    }
+
+
 }

@@ -1,0 +1,46 @@
+<div id="saison" class="tab-pane fade">
+    {% for saisonFournisseur in form.saisonFournisseurs %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ saisonFournisseur.vars.value.saison.libelle }}</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_row(saisonFournisseur.contrat) }}
+                {{ form_row(saisonFournisseur.stock) }}
+                {{ form_row(saisonFournisseur.flux) }}
+                {{ form_row(saisonFournisseur.valideOptions) }}
+                {{ form_row(saisonFournisseur.earlybooking) }}
+                {{ form_row(saisonFournisseur.conditionEarlybooking) }}
+                <div class="form-group"><label class="col-sm-2 control-label">Fiche
+                        techniques</label>
+                    <div class="col-sm-10">
+                        <div class="form-control">{{ saisonFournisseur.vars.value.ficheTechniques }}
+                            /{{ saisonFournisseur.vars.value.nbHebergements }}</div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-sm-2 control-label">Tarif
+                        techniques</label>
+                    <div class="col-sm-10">
+                        <div class="form-control">{{ saisonFournisseur.vars.value.tarifTechniques }}
+                            /{{ saisonFournisseur.vars.value.nbHebergements }}</div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-sm-2 control-label required">Photos
+                        techniques</label>
+                    <div class="col-sm-10">
+                        <div class="form-control">{{ saisonFournisseur.vars.value.photosTechniques }}
+                            /{{ saisonFournisseur.vars.value.nbHebergements }}</div>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-sm-2 control-label required">Hébergements activés</label>
+                    <div class="col-sm-10">
+                        <div class="form-control">{{ saisonFournisseur.vars.value.nbHebergementsActive }}
+                            /{{ saisonFournisseur.vars.value.nbHebergements }}</div>
+                    </div>
+                </div>
+                {{ form_row(saisonFournisseur.agentMaJProd) }}
+                {{ form_row(saisonFournisseur.agentMaJSaisie) }}
+            </div>
+        </div>
+    {% endfor %}
+</div>

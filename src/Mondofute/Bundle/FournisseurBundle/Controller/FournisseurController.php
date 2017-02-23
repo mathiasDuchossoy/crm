@@ -51,6 +51,8 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
+use Mondofute\Bundle\SaisonBundle\Entity\Saison;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\ServiceBundle\Entity\CategorieService;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
 use Mondofute\Bundle\ServiceBundle\Entity\Service;
@@ -118,7 +120,8 @@ class FournisseurController extends Controller
         return $this->render('@MondofuteFournisseur/fournisseur/index.html.twig', array(
             'fournisseurs' => $entities,
             'pagination' => $pagination,
-            'priorites' => $priorites
+            'priorites' => $priorites,
+            'utilisateurs' => $em->getRepository(Utilisateur::class)->findAll()
         ));
     }
 
@@ -141,6 +144,26 @@ class FournisseurController extends Controller
         return new Response();
     }
 
+    public function setAgentMaJSaisieSaisonEnCoursAction($id, $val)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $fournisseur = $emSite->find(Fournisseur::class, $id);
+            if (empty($fournisseur->getSaisonFournisseurEnCours())) {
+                $saisonEnCours = $emSite->getRepository(Saison::class)->findOneBy(['enCours' => true]);
+                $saisonFournisseur = new SaisonFournisseur();
+                $fournisseur->addSaisonFournisseur($saisonFournisseur);
+                $saisonFournisseur->setSaison($saisonEnCours);
+            }
+            $fournisseur->setAgentMaJSaisieSaisonEnCours($emSite->find(Utilisateur::class, $val));
+            $emSite->persist($fournisseur);
+            $emSite->flush();
+        }
+        return new Response();
+    }
+
     public function setPrioriteAction($id, $priorite)
     {
         $em = $this->getDoctrine()->getManager();
@@ -149,6 +172,26 @@ class FournisseurController extends Controller
             $emSite = $this->getDoctrine()->getManager($site->getLibelle());
             $fournisseur = $emSite->find(Fournisseur::class, $id);
             $fournisseur->setPriorite($priorite);
+            $emSite->persist($fournisseur);
+            $emSite->flush();
+        }
+        return new Response();
+    }
+
+    public function setAgentMaJProdSaisonEnCoursAction($id, $val)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sites = $em->getRepository(Site::class)->findAll();
+        foreach ($sites as $site) {
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $fournisseur = $emSite->find(Fournisseur::class, $id);
+            if (empty($fournisseur->getSaisonFournisseurEnCours())) {
+                $saisonEnCours = $emSite->getRepository(Saison::class)->findOneBy(['enCours' => true]);
+                $saisonFournisseur = new SaisonFournisseur();
+                $fournisseur->addSaisonFournisseur($saisonFournisseur);
+                $saisonFournisseur->setSaison($saisonEnCours);
+            }
+            $fournisseur->setAgentMaJProdSaisonEnCours($emSite->find(Utilisateur::class, $val));
             $emSite->persist($fournisseur);
             $emSite->flush();
         }
@@ -175,6 +218,10 @@ class FournisseurController extends Controller
         $adresse = new Adresse();
         $adresse->setCoordonneeGps(new CoordonneesGPS());
         $fournisseur->addMoyenCom($adresse);
+
+        // *** gestion saisons ***
+        $this->gestionSaisons($fournisseur);
+        // *** fin gestion saisons ***
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array('locale' => $locale));
@@ -274,6 +321,26 @@ class FournisseurController extends Controller
             'langues' => $langues,
 //            'famillePrestationAnnexes'  => $famillePrestationAnnexes
         ));
+    }
+
+    private function gestionSaisons(Fournisseur $fournisseur)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        foreach ($saisons as $saison) {
+            $saisonFournisseur = $fournisseur->getSaisonFournisseurs()->filter(function (SaisonFournisseur $element) use ($saison) {
+                return $element->getSaison() == $saison;
+            })->first();
+            if (false === $saisonFournisseur) {
+                $saisonFournisseur = new SaisonFournisseur();
+                $saisonFournisseur
+                    ->setSaison($saison)
+                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
+                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
+                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+                $fournisseur->addSaisonFournisseur($saisonFournisseur);
+            }
+        }
     }
 
     /**
@@ -473,6 +540,10 @@ class FournisseurController extends Controller
 
                 $this->gestionConditionAnnulationDescriptionSite($fournisseur, $fournisseurSite, $emSite);
 
+                // ** gestion saison **
+                $this->gestionSaisonsSite($fournisseur, $fournisseurSite, $emSite);
+                // ** fin gestion saison **
+
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
@@ -640,6 +711,47 @@ class FournisseurController extends Controller
                 }
                 $fournisseurSite->setConditionAnnulationDescription(null);
                 break;
+        }
+    }
+
+    /**
+     * @param Fournisseur $fournisseur
+     * @param Fournisseur $fournisseurSite
+     * @param EntityManager $emSite
+     */
+    private function gestionSaisonsSite($fournisseur, $fournisseurSite, $emSite)
+    {
+        /** @var SaisonFournisseur $saisonFournisseur */
+        foreach ($fournisseur->getSaisonFournisseurs() as $saisonFournisseur) {
+            $saisonFournisseurSite = $fournisseurSite->getSaisonFournisseurs()->filter(function (SaisonFournisseur $element) use ($saisonFournisseur) {
+                return $element->getId() == $saisonFournisseur->getId();
+            })->first();
+            if (false === $saisonFournisseurSite) {
+                $saisonFournisseurSite = new SaisonFournisseur();
+                $fournisseurSite->addSaisonFournisseur($saisonFournisseurSite);
+                $saisonFournisseurSite->setId($saisonFournisseur->getId());
+                $metadata = $emSite->getClassMetadata(get_class($saisonFournisseurSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $saisonFournisseurSite->setSaison($emSite->find(Saison::class, $saisonFournisseur->getSaison()));
+            }
+            $saisonFournisseurSite
+                ->setContrat($saisonFournisseur->getContrat())
+                ->setStock($saisonFournisseur->getStock())
+                ->setFlux($saisonFournisseur->getFlux())
+                ->setValideOptions($saisonFournisseur->getValideOptions())
+                ->setEarlybooking($saisonFournisseur->getEarlybooking())
+                ->setConditionEarlybooking($saisonFournisseur->getConditionEarlybooking())
+                ->setFicheTechniques($saisonFournisseur->getFicheTechniques())
+                ->setTarifTechniques($saisonFournisseur->getTarifTechniques())
+                ->setPhotosTechniques($saisonFournisseur->getPhotosTechniques());
+
+            if (!empty($saisonFournisseur->getAgentMajSaisie())) {
+                $saisonFournisseurSite->setAgentMaJSaisie($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMajSaisie()));
+            }
+            if (!empty($saisonFournisseur->getAgentMaJProd())) {
+                $saisonFournisseurSite->setAgentMaJProd($emSite->find(Utilisateur::class, $saisonFournisseur->getAgentMaJProd()));
+            }
+
         }
     }
 
@@ -936,6 +1048,10 @@ class FournisseurController extends Controller
             ->getRepository('MondofutePrestationAnnexeBundle:FamillePrestationAnnexe')->getTraductionsByLocale($locale)
             ->getQuery()
             ->getResult();
+
+        // *** gestion saisons ***
+        $this->gestionSaisons($fournisseur);
+        // *** fin gestion saisons ***
 
         $serviceInterlocuteurs = $em->getRepository('MondofuteFournisseurBundle:ServiceInterlocuteur')->findAll();
         $deleteForm = $this->createDeleteForm($fournisseur);
@@ -2502,6 +2618,8 @@ class FournisseurController extends Controller
                 // ***** gestion remontée RM *****
                 $this->gestionInformationRMSite($fournisseur, $fournisseurSite);
                 // ***** fin remontée RM *****
+
+                $this->gestionSaisonsSite($fournisseur, $fournisseurSite, $emSite);
 
                 $this->gestionConditionAnnulationDescriptionSite($fournisseur, $fournisseurSite, $emSite);
 

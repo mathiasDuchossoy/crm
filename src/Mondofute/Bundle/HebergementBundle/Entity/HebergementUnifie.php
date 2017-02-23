@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
+use Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement;
 
 /**
  * HebergementUnifie
@@ -172,11 +173,11 @@ class HebergementUnifie
     /**
      * Add service
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service
+     * @param ServiceHebergement $service
      *
      * @return HebergementUnifie
      */
-    public function addService(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service)
+    public function addService(ServiceHebergement $service)
     {
         $this->services[] = $service;
 
@@ -186,9 +187,9 @@ class HebergementUnifie
     /**
      * Remove service
      *
-     * @param \Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service
+     * @param ServiceHebergement $service
      */
-    public function removeService(\Mondofute\Bundle\ServiceBundle\Entity\ServiceHebergement $service)
+    public function removeService(ServiceHebergement $service)
     {
         $this->services->removeElement($service);
     }

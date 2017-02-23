@@ -1,0 +1,15 @@
+<div id="saison_hebergement" class="tab-pane fade">
+    {% for saisonHebergement in hebergement.saisonHebergements %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ saisonHebergement.vars.value.saison.libelle }}</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_row(saisonHebergement.valideFiche) }}
+                {{ form_row(saisonHebergement.valideTarif) }}
+                {{ form_row(saisonHebergement.validePhoto) }}
+                {{ form_row(saisonHebergement.actif) }}
+            </div>
+        </div>
+    {% endfor %}
+</div>

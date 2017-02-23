@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Repository\TypeHebergementRepository;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\SaisonBundle\Form\SaisonHebergementType;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use Mondofute\Bundle\UniteBundle\Form\ClassementHebergementType;
@@ -85,7 +86,10 @@ class HebergementType extends AbstractType
             )
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
-            ]);
+            ])
+            ->add('saisonHebergements', CollectionType::class, array(
+                'entry_type' => SaisonHebergementType::class
+            ));
     }
 
     /**
