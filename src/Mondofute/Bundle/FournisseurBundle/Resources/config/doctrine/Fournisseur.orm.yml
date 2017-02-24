@@ -124,10 +124,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
         prestationAnnexeFournisseurs:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur
             mappedBy: fournisseur
-        commentaires:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire
-            mappedBy: fournisseur
-            cascade: ['persist','remove']
     manyToOne:
         passerelle:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle

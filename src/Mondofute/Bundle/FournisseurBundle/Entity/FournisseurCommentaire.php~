@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ||||||| merged common ancestors
 =======
 <<<<<<< HEAD
@@ -517,3 +518,84 @@ class FournisseurCommentaire extends Commentaire
     }
 }
 >>>>>>> gestion des commentaires dans la fiche fournisseur
+||||||| merged common ancestors
+=======
+<?php
+
+namespace Mondofute\Bundle\FournisseurBundle\Entity;
+
+use Mondofute\Bundle\CommentaireBundle\Entity\Commentaire;
+
+/**
+ * FournisseurCommentaire
+ */
+class FournisseurCommentaire extends Commentaire
+{
+    /**
+     * @var Fournisseur
+     */
+    private $fournisseur;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $reponses;
+
+    /**
+     * Get fournisseur
+     *
+     * @return Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
+    }
+
+    /**
+     * Set fournisseur
+     *
+     * @param Fournisseur $fournisseur
+     *
+     * @return FournisseurCommentaire
+     */
+    public function setFournisseur(Fournisseur $fournisseur = null)
+    {
+        $this->fournisseur = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Add reponse
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire $reponse
+     *
+     * @return FournisseurCommentaire
+     */
+    public function addReponse(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire $reponse)
+    {
+        $this->reponses[] = $reponse;
+
+        return $this;
+    }
+
+    /**
+     * Remove reponse
+     *
+     * @param \Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire $reponse
+     */
+    public function removeReponse(\Mondofute\Bundle\FournisseurBundle\Entity\FournisseurCommentaire $reponse)
+    {
+        $this->reponses->removeElement($reponse);
+    }
+
+    /**
+     * Get reponses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReponses()
+    {
+        return $this->reponses;
+    }
+}
+>>>>>>> origin/feature/CRM-197_Fiche_Commande_-_Bloc_Information_sejour
