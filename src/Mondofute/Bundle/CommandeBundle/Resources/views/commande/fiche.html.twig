@@ -2,85 +2,57 @@
 
 
 {% block infinite_form_polycollection_row %}
+    <style>
+        .panel-heading h3 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: normal;
+            width: 60%;
+            padding-top: 8px;
+        }
+    </style>
     {% set collectionForm = form.commandeLignes %}
     {% set prototypes = form.commandeLignes.vars.prototypes %}
     <hr>
     <div class="collection">
-        <div class="clearfix">
+        {#<div class="clearfix">
             <div class="pull-left">
                 {{ form_label(collectionForm, 'Lignes de Commande') }}
             </div>
             <div class="pull-right">
-                {% set form = prototypes.sejourNuite %}
-                <a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__','sejour_nuite');">
-                    <i class="glyphicon glyphicon-plus"></i> séjour nuite
-                </a>
-                {% set form = prototypes.sejourPeriode %}
-                {% set name = '__name__' %}
-                <a href="#" data-prototype="{{ block('commande_ligne_sejour_periode_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__','sejour_periode');">
-                    <i class="glyphicon glyphicon-plus"></i> séjour periode
-                </a>
-                {% set form = prototypes.prestationAnnexe %}
-                <a href="#"
-                        {#data-prototype="{{ block('commande_ligne_prestation_annexe_widget') | escape }}"#}
-                   data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | escape }}"
-                   class="btn btn-success add_item"
-                        {#onclick="addTagForm(this,event,'__name__','prestation_annexe');"#}
-                   onclick="addCommandePrestationAnnexeExterne(this,event,'__name__','prestation_annexe');"
-                   data-toggle="modal" data-target="#modal_commande_prestation_annexe_externe"
-                >
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
-                {% set form = prototypes.fraisDossier %}
-                <a href="#" data-prototype="{{ block('commande_ligne_frais_dossier_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__','frais_dossier');">
-                    <i class="glyphicon glyphicon-plus"></i> frais de dossier
-                </a>
-                {% set form = prototypes.remise %}
-                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__','remise');">
-                    <i class="glyphicon glyphicon-plus"></i> remise
-                </a>
-                {% set form = prototypes.remiseCodePromo %}
-                <a href="#" data-prototype="{{ block('commande_ligne_remise_code_promo_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addRemiseCodePromo(this,event,'__name__','remise');">
-                    <i class="glyphicon glyphicon-plus"></i> remise code promo
-                </a>
-                {% set form = prototypes.remiseDecote %}
-                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addRemiseDecote(this,event,'__name__','remise');">
-                    <i class="glyphicon glyphicon-plus"></i> remise decote
-                </a>
-                {% set form = prototypes.remisePromotion %}
-                <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addRemisePromotion(this,event,'__name__','remise');">
-                    <i class="glyphicon glyphicon-plus"></i> remise promotion
-                </a>
             </div>
-        </div>
+        </div>#}
         <div class="items">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Séjour nuite</h3>
+                    <h3 class="panel-title pull-left">Séjour nuite</h3>
+                    {% set form = prototypes.sejourNuite %}
+                    {% set name = '__name__' %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addTagForm(this,event,'__name__','sejour_nuite');">
+                        <i class="glyphicon glyphicon-plus"></i> séjour nuite
+                    </a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="panel-body" id="sejour_nuite">
-                    {% for form in collectionForm %}
+                    {% for name, form in collectionForm %}
                         {{ block('commande_ligne_sejour_nuite_widget') }}
                     {% endfor %}
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Séjour période</h3>
+                    <h3 class="panel-title pull-left">Séjour période</h3>
+                    {% set form = prototypes.sejourPeriode %}
+                    {#{% set name = '__name__' %}#}
+                    <a href="#" data-prototype="{{ block('commande_ligne_sejour_periode_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addTagForm(this,event,'__name__','sejour_periode');">
+                        <i class="glyphicon glyphicon-plus"></i> séjour periode
+                    </a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="panel-body" id="sejour_periode">
                     {% for name, form in collectionForm %}
@@ -90,7 +62,17 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Prestation annexe</h3>
+                    <h3 class="panel-title pull-left">Prestation annexe</h3>
+                    {% set form = prototypes.prestationAnnexe %}
+                    <a href="#"
+                       data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addCommandePrestationAnnexeExterne(this,event,'__name__','prestation_annexe');"
+                       data-toggle="modal" data-target="#modal_commande_prestation_annexe_externe"
+                    >
+                        <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                    </a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
                     <table class="table table-striped">
@@ -99,11 +81,12 @@
                             <th>Date de début</th>
                             <th>Date de fin</th>
                             <th>Prestation annexe</th>
+                            <th>Tarif</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody id="prestation_annexe">
-                        {% for form in collectionForm %}
+                        {% for name, form in collectionForm %}
                             {{ block('commande_ligne_prestation_annexe_widget') }}
                         {% endfor %}
                         </tbody>
@@ -112,7 +95,14 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Frais de dossier</h3>
+                    <h3 class="panel-title pull-left">Frais de dossier</h3>
+                    {% set form = prototypes.fraisDossier %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_frais_dossier_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addTagForm(this,event,'__name__','frais_dossier');">
+                        <i class="glyphicon glyphicon-plus"></i> frais de dossier
+                    </a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="panel-body" id="frais_dossier">
                     {% for form in collectionForm %}
@@ -122,7 +112,34 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Remise</h3>
+                    <h3 class="panel-title pull-left">Remise</h3>
+                    {#{% set form = prototypes.remise %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                       class="btn btn-success add_item"
+                       onclick="addTagForm(this,event,'__name__','remise');">
+                        <i class="glyphicon glyphicon-plus"></i> remise
+                    </a>#}
+                    {% set form = prototypes.remiseCodePromo %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_code_promo_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemiseCodePromo(this,event,'__name__','remise');">
+                        <i class="glyphicon glyphicon-plus"></i> remise code promo
+                    </a>
+                    {% set form = prototypes.remiseDecote %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemiseDecote(this,event,'__name__','remise');"
+                       style="margin-right: 15px">
+                        <i class="glyphicon glyphicon-plus"></i> remise decote
+                    </a>
+                    {% set form = prototypes.remisePromotion %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemisePromotion(this,event,'__name__','remise');"
+                       style="margin-right: 15px">
+                        <i class="glyphicon glyphicon-plus"></i> remise promotion
+                    </a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="panel-body" id="remise">
                     {% for form in collectionForm %}
@@ -176,18 +193,18 @@
                 </div>
                 <div class="collection">
                     <div class="clearfix">
-                        {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
-                        <a href="#"
-                           data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
-                           class="btn btn-success add_item"
-                           onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
-                            <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                        </a>
+                        {#{% set form = form.commandeLignePrestationAnnexes.vars.prototype %}#}
+                        {#<a href="#"#}
+                        {#data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"#}
+                        {#class="btn btn-success add_item"#}
+                        {#onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">#}
+                        {#<i class="glyphicon glyphicon-plus"></i> prestation annexe#}
+                        {#</a>#}
                     </div>
                     <div class="items">
-                        {% for form in collectionForm %}
-                            {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                        {% endfor %}
+                        {#{% for form in collectionForm %}#}
+                        {#{{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}#}
+                        {#{% endfor %}#}
                     </div>
                 </div>
             </div>
@@ -223,8 +240,6 @@
                     <th>Actions</th>
                 </tr>
                 </thead>
-                {% set collectionForm = form.commandeLignePrestationAnnexes %}
-                {% set type = form._type %}
                 <tbody>
                 <tr>
                     <td>
@@ -235,7 +250,7 @@
                     <td>
                         <div class="form-group">
                             <div class="col-sm-12">
-                                {{ form_widget(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~form.periode.vars.id~'");'}}) }}
+                                {{ form_widget(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~name~'");'}}) }}
                             </div>
                         </div>
                         <div class="form-group">
@@ -253,7 +268,7 @@
                         </div>
                     </td>
                     <td>{{ form_widget(form.prixCatalogue , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
-                    <td>{{ form_widget(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+                    <td>{{ form_widget(form.prixVente , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
                     <td></td>
                     <td>{% if form.vars.value is not null %}
                             {{ form.vars.value.logement.fournisseurHebergement.fournisseur }}
@@ -275,10 +290,14 @@
                 </tr>
                 </tbody>
             </table>
+            {% set collectionForm = form.commandeLignePrestationAnnexes %}
+            {% set type = form._type %}
+
             <div class="row">
                 <div class="collection">
                     <div class="clearfix">
                         {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
+                        {% set namePA = '__name_commande_ligne_prestation_annexe__' %}
                         <a href="#"
                            data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
                            class="btn btn-success add_item"
@@ -293,11 +312,12 @@
                                 <th>
                                     Prestation annexe
                                 </th>
+                                <th>Tarif</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody class="panel-body" id="prestation_annexe_sejour_{{ name }}">
-                            {% for form in collectionForm %}
+                            {% for namePA, form in collectionForm %}
                                 {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
                             {% endfor %}
                             </tbody>
@@ -314,7 +334,9 @@
     {% set choicesKey = form.periode.vars.choices|keys %}
     <select id="{{ form.periode.vars.id }}"
             name="{{ form.periode.vars.full_name }}"
-            class="form-control" required="required">
+            class="form-control" required="required"
+            onchange="updatePrixLogement('{{ name }}',this)"
+    >
         <option value=""> --- Choisir une période ---</option>
         {% set type = '' %}
         {% for key, element in choicesKey %}
@@ -346,8 +368,9 @@
     {% if type == 'prestationAnnexe' %}
         <tr class="item">
             <td>
-                {{ form_widget(form.fournisseurPrestationAnnexeParam) }}
+                {{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr': {'onchange' : 'changePrixPrestationAnnexeSejour(this, "'~ name ~'", "'~ namePA ~'")'}}) }}
             </td>
+            <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
             <td>{{ block('bouton_supprimer') }}</td>
             {{ form_row(form._type) }}
         </tr>
@@ -361,7 +384,8 @@
         <tr class="item">
             <td>{{ form_widget(form.dateDebut, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateDebut.vars.value }}</td>
             <td>{{ form_widget(form.dateFin, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateFin.vars.value }}</td>
-            <td>{{ form_widget(form.fournisseurPrestationAnnexeParam) }}</td>
+            <td>{{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr' : {'onchange' : 'changerPrixPrestationAnnexeExterne(this, "'~name~'")'}}) }}</td>
+            <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
             <td>{{ block('bouton_supprimer') }}</td>
             {{ form_row(form._type) }}
         </tr>
@@ -410,7 +434,7 @@
                             <label>
                                 <select id="commande_fournisseur_prestation_annexe_externe"
                                         required="required" data-field="fournisseur"
-                                        data-select-prestation-annexe-externe-id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                                        {#data-select-prestation-annexe-externe-id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"#}
                                         class="form-control">
                                     <option value=""> --- Choisir un fournisseur ---</option>
                                 </select>
@@ -425,6 +449,7 @@
                             required="required" class="form-control">
                         <option value="" selected="selected"> --- Choisir une prestation annexe externe ---</option>
                     </select>
+                    {{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 ,'style' : 'display:none'}}) }}
                     {{ form_widget(form._type , { 'id' : form.fournisseurPrestationAnnexeParam.vars.id ~ '_type'} ) }}
                 </div>
             </div>
@@ -441,14 +466,14 @@
                     <div class="form-group">
                         <label class="control-label col-md-6">Prix catalogue</label>
                         <div class="col-md-6">
-                            <p class="form-control">{% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}0 €{% endif %}</p>
+                            <p class="form-control">{% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}{{ frais_dossier }} €{% endif %}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <label class="control-label col-md-6">Prix public</label>
+                    <label class="control-label col-md-6">Prix vente</label>
                     <div class="col-md-6">
-                        {{ form_widget(form.prixPublic , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}
+                        {{ form_widget(form.prixVente , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}
                     </div>
                 </div>
                 <div class="col-md-2 text-right">
@@ -503,6 +528,7 @@
             {{ form_errors(form) }}
             {{ form_start(form) }}
             {{ block('infinite_form_polycollection_row') }}
+            {{ form_row(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}
             {{ form_row(form.site) }}
             {{ form_row(form.dateCommande) }}
             {{ form_row(form.numCommande) }}
@@ -634,14 +660,16 @@
                         $commandeFournisseurPrestationAnnexeExterne.on('change', function (event) {
                             var fournisseurId = $(this).val();
                             var selectPrestationAnnexeExterneId = $commandeFournisseurPrestationAnnexeExterne.data('select-prestation-annexe-externe-id');
-                            var $selectPrestationAnnexeExterne = $('#' + selectPrestationAnnexeExterneId);
+                            var $selectPrestationAnnexeExterne = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_fournisseurPrestationAnnexeParam');
+                            var $inputTarif = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
                             var $prestationAnnexeExterneType = $('#' + selectPrestationAnnexeExterneId + '_type');
                             if (fournisseurId) {
                                 var path = '{{ path('commande_get_prestation_annexe_externe' , {
                                     'dateDebut' : '_dateDebut_',
                                     'dateFin' : '_dateFin_',
                                     'typeId' : '_typeId_',
-                                    'fournisseurId' : '_fournisseurId_'
+                                    'fournisseurId' : '_fournisseurId_',
+                                    'stationId' : '_stationId_',
                                 } ) }}';
                                 types.dateDebut = types.dateDebut.replace(/\//g, '-');
                                 types.dateFin = types.dateFin.replace(/\//g, '-');
@@ -649,12 +677,15 @@
                                 path = path.replace('_dateFin_', types.dateFin);
                                 path = path.replace('_fournisseurId_', fournisseurId);
                                 path = path.replace('_typeId_', types.famillePrestationAnnexe);
+                                path = path.replace('_stationId_', types.station);
                                 $.ajax(path).done(function (data) {
                                     $selectPrestationAnnexeExterne.html(data);
                                     var $addPrestationAnnexe = $('#addPrestationAnnexe');
                                     $addPrestationAnnexe.unbind('click');
                                     $addPrestationAnnexe.on('click', function (event) {
                                         if ($selectPrestationAnnexeExterne.val()) {
+                                            var tarif = $($selectPrestationAnnexeExterne.find('option:selected')[0]).data('tarif');
+                                            $inputTarif.val(tarif);
                                             var $item = $('<tr class=item></tr>');
                                             var $inputDateDebut = $('#' + inputDateDebutId);
                                             $inputDateDebut.hide();
@@ -665,8 +696,12 @@
                                             $item.append($tdInputDateDebut);
                                             $item.append($tdInputDateFin);
                                             var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
+                                            $selectPrestationAnnexeExterne.on('change', function (event) {
+                                                $inputTarif.val(tarif);
+                                            });
                                             $item.append(tdInputSelecttPrestationAnnexeExterne);
-                                            {#var $boutonSupprimer = $('<td></td>').append('<a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i class="glyphicon glyphicon-minus"></i></a>');#}
+                                            $inputTarif.show();
+                                            $item.append($('<td></td>').append($inputTarif));
                                             var $boutonSupprimer = $('<td></td>').append('{{ block('bouton_supprimer') | e('js') }}');
                                             $item.append($boutonSupprimer);
                                             $panelBodyId.append($item);
@@ -692,11 +727,15 @@
             $(element).closest('.item').remove();
         }
 
-        function changePeriode(element, selectPeriode) {
+        function changePeriode(element, index) {
             var path = '{{ path('commande_get_periodes_by_logement' , { 'id' : '_id_'} ) }}';
             path = path.replace('_id_', $(element).val());
             $.ajax(path).done(function (data) {
-                $('#' + selectPeriode).html(data);
+                $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode').html(data);
+                $('#prestation_annexe_sejour_' + index).find('input.prixVente').each(function (index, element) {
+                    $(element).val(0);
+                });
+                calculPrixVenteTotal();
             });
         }
 
@@ -720,7 +759,6 @@
 
         // *** gestion select2 ***
         function activeSelect2(element, path) {
-            console.log(element);
             $(element).select2({
                 width: '100%',
                 ajax: {
@@ -748,7 +786,7 @@
                 escapeMarkup: function (markup) {
                     return markup;
                 }, // let our custom formatter work
-                minimumInputLength: 1,
+                minimumInputLength: 1
             });
         }
 
@@ -766,6 +804,82 @@
             var path = "{{ path('mondofute_get_promotion_like') }}";
             activeSelect2(element, path);
         });
+
+        function updatePrixLogement(index, element) {
+            var logementId = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();
+            var $prixCatalogue = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixCatalogue');
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
+            var $prixAchat = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixAchat');
+
+            var path = '{{ path('logement_get_prix_by_periode' , { 'id' : '_id_', 'periodeId' : '_periodeId_'} ) }}';
+            path = path.replace('_id_', logementId);
+            path = path.replace('_periodeId_', $(element).val());
+            $.ajax(path).done(function (data) {
+                if (data) {
+                    var $data = $.parseJSON(data);
+                    $prixCatalogue.val($data.prixCatalogue);
+                    $prixVente.val($data.prixVente);
+                    $prixAchat.val($data.prixAchat);
+                } else {
+                    $prixCatalogue.val(0);
+                    $prixVente.val(0);
+                    $prixAchat.val(0);
+                }
+
+                $('#prestation_annexe_sejour_' + index).find('select').each(function (index, element) {
+                    $(element).trigger('onchange');
+                });
+                calculPrixVenteTotal();
+            });
+        }
+
+        function calculPrixVenteTotal() {
+            var total = 0;
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_prixVente');
+            $('.prixVente').each(function (index, element) {
+                total = total + parseFloat($(element).val());
+            });
+            $prixVente.val(total);
+        }
+        calculPrixVenteTotal();
+
+        function changePrixPrestationAnnexeSejour(element, index, indexPA) {
+            var val = $(element).val();
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_commandeLignePrestationAnnexes_' + indexPA + '_prixVente');
+            if (val) {
+                var periodeId = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode').val();
+                var path = '{{ path('mondofute_fournisseur_prestation_annexe_param_get_prix_by_periode' , { 'id' : '_id_', 'periodeId' : '_periodeId_'} ) }}';
+                path = path.replace('_id_', $(element).val());
+                path = path.replace('_periodeId_', periodeId);
+                $.ajax(path).done(function (data) {
+                    $prixVente.val(data);
+                });
+            } else {
+                $prixVente.val(0);
+            }
+        }
+
+        function changerPrixPrestationAnnexeExterne(element, index) {
+            var val = $(element).val();
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
+            if (val) {
+                var dateDebut = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_dateDebut').val().replace(/\//g, '-');
+                var dateFin = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_dateFin').val().replace(/\//g, '-');
+                var path = '{{ path('mondofute_fournisseur_prestation_annexe_param_get_prix_by_dates' , {
+                    'id' : '_id_',
+                    'dateDebut' : '_dateDebut_',
+                    'dateFin' : '_dateFin_',
+                } ) }}';
+                path = path.replace('_id_', $(element).val());
+                path = path.replace('_dateDebut_', dateDebut);
+                path = path.replace('_dateFin_', dateFin);
+                $.ajax(path).done(function (data) {
+                    $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente').val(data);
+                });
+            } else {
+                $prixVente.val(0);
+            }
+        }
 
     </script>
 {% endblock %}

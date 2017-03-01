@@ -1452,6 +1452,25 @@ class LogementUnifieController extends Controller
             ->getForm();
     }
 
+    public function getPrixByPeriodeAction($id, $periodeId)
+    {
+        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
+        $em = $this->getDoctrine()->getManager();
+        $logement = $em->find(Logement::class, $id);
+        $logementPeriodeLocatif = $logement->getLogementPeriodeLocatifsStockNotEmpty()->filter(function (LogementPeriodeLocatif $element) use ($periodeId) {
+            return $element->getPeriode()->getId() == intval($periodeId);
+        })->first();
+        if (false === $logementPeriodeLocatif) {
+            return new Response();
+        }
+        $reponse = [
+            'prixCatalogue' => $logementPeriodeLocatif->getPrixPublic(),
+            'prixAchat' => $logementPeriodeLocatif->getPrixAchat(),
+            'prixVente' => $logementPeriodeLocatif->getPrixFournisseur()
+        ];
+        return new Response(json_encode($reponse));
+    }
+
     /**
      * Deletes a LogementUnifie entity.
      *

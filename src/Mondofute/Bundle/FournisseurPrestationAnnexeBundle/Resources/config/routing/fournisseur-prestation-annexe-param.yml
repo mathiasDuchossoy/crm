@@ -1,0 +1,9 @@
+mondofute_fournisseur_prestation_annexe_param_get_prix_by_periode:
+    path:     /{id}/{periodeId}/getprixbyperiode
+    defaults: { _controller: "MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeParam:getPrixByPeriode" }
+    methods: GET
+
+mondofute_fournisseur_prestation_annexe_param_get_prix_by_dates:
+    path:     /{id}/{dateDebut}/{dateFin}/getprixbydates
+    defaults: { _controller: "MondofuteFournisseurPrestationAnnexeBundle:FournisseurPrestationAnnexeParam:getPrixByDates" }
+    methods: GET

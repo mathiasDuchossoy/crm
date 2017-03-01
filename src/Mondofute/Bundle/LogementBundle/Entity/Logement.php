@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
@@ -567,6 +568,18 @@ class Logement
         $this->logementPeriodeLocatifs->removeElement($logementPeriodeLocatif);
     }
 
+    public function getLogementPeriodeLocatifsStockNotEmpty()
+    {
+        $logementPeriodeLocatifs = new ArrayCollection();
+        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
+        foreach ($this->getLogementPeriodeLocatifs() as $logementPeriodeLocatif) {
+            if ($logementPeriodeLocatif->getStock() > 0 and $logementPeriodeLocatif->getPeriode()->getDebut() >= new DateTime(date('Y-m-d'))) {
+                $logementPeriodeLocatifs->set($logementPeriodeLocatif->getPeriode()->getId(), $logementPeriodeLocatif);
+            }
+        }
+        return $logementPeriodeLocatifs;
+    }
+
     /**
      * Get logementPeriodeLocatifs
      *
@@ -575,18 +588,6 @@ class Logement
     public function getLogementPeriodeLocatifs()
     {
         return $this->logementPeriodeLocatifs;
-    }
-
-    public function getLogementPeriodeLocatifsStockNotEmpty()
-    {
-        $logementPeriodeLocatifs = new ArrayCollection();
-        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
-        foreach ($this->logementPeriodeLocatifs as $logementPeriodeLocatif) {
-            if ($logementPeriodeLocatif->getStock() > 0 and $logementPeriodeLocatif->getPeriode()->getDebut() > new \DateTime()) {
-                $logementPeriodeLocatifs->set($logementPeriodeLocatif->getPeriode()->getId(), $logementPeriodeLocatif);
-            }
-        }
-        return $logementPeriodeLocatifs;
     }
 
     /**

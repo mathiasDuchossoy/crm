@@ -15,6 +15,7 @@ parameters:
     sonata.media.provider.image.class: Mondofute\Bundle\MediaBundle\Provider\ImageProvider
     sonata.media.provider.youtube.class: Mondofute\Bundle\MediaBundle\Provider\YouTubeProvider
     max_per_page: 25
+    app.frais_dossier: 9
 
 framework:
     #esi:             ~
@@ -48,6 +49,8 @@ twig:
         resources:
             - 'InfiniteFormBundle::form_theme.html.twig'
             - 'SonataMediaBundle:Form:media_widgets.html.twig'
+    globals:
+        frais_dossier: '%app.frais_dossier%'
 
 # Doctrine Configuration
 doctrine:

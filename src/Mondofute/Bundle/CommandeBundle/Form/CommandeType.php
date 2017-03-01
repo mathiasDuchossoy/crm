@@ -34,6 +34,7 @@ class CommandeType extends AbstractType
         }
 
         $builder
+            ->add('prixVente')
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'required' => true,

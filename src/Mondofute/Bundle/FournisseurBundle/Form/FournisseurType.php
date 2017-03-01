@@ -13,8 +13,6 @@ use Mondofute\Bundle\PrestationAnnexeBundle\Repository\FamillePrestationAnnexeRe
 use Mondofute\Bundle\RemiseClefBundle\Form\RemiseClefType;
 use Mondofute\Bundle\SaisonBundle\Form\SaisonFournisseurType;
 use Mondofute\Bundle\ServiceBundle\Form\ListeServiceType;
-use Mondofute\Bundle\StationBundle\Entity\Station;
-use Mondofute\Bundle\StationBundle\Repository\StationRepository;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -223,15 +221,7 @@ class FournisseurType extends AbstractType
             )
             ->add('saisonFournisseurs', CollectionType::class, array(
                 'entry_type' => SaisonFournisseurType::class
-            ))
-            ->add('station', EntityType::class, [
-                'class' => Station::class,
-                'query_builder' => function (StationRepository $r) use ($locale) {
-                    return $r->getTraductionsByLocale($locale, null, 1);
-                },
-                'empty_value' => ' --- Choisir une station --- ',
-                'choice_label' => 'traductions[0].libelle'
-            ]);
+            ));
     }
 
     /**
