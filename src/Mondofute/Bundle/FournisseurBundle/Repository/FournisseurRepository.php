@@ -2,7 +2,6 @@
 
 namespace Mondofute\Bundle\FournisseurBundle\Repository;
 
-use DateTime;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 
@@ -143,45 +142,27 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
 
     public function findFournisseurForPrestationAnnexeExterne($dateDebut, $dateFin, $stationId, $typeId)
     {
-
-//        $qb = $this->getEntityManager()->createQuery('SELECT f
-//        FROM  MondofuteFournisseurBundle:Fournisseur f
-//        LEFT JOIN f.types types
-//        LEFT JOIN f.prestationAnnexes fpa
-//        LEFT JOIN fpa.params fpap
-//        LEFT JOIN fpap.tarifs pat
-//        LEFT JOIN pat.periodeValidites pv
-//        LEFT JOIN f.station station
-//        WHERE types.id = :typesId AND station.id = :stationId
-//        AND pv.dateDebut <= :dateDebut and pv.dateFin >= :dateFin
-//        AND f.id NOT IN (
-//            SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur
-//            LEFT JOIN fournisseur.types types2
-//            WHERE types2.id = 9
-//        )');
-
-        $qb = $this->getEntityManager()->createQuery('SELECT f
-        FROM  MondofuteFournisseurBundle:Fournisseur f 
-        LEFT JOIN f.types types
-        LEFT JOIN f.station station
-        WHERE types.id = :typesId AND station.id = :stationId
-        AND f.id NOT IN (
-            SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur 
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('f')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'f')
+            ->join('f.types', 'types')
+            ->join('f.prestationAnnexes', 'prestationAnnexes')
+            ->join('prestationAnnexes.params', 'params')
+            ->join('params.prestationAnnexeStations', 'prestationAnnexeStations')
+            ->join('prestationAnnexeStations.station', 'station')
+            ->where('types.id = :typesId')
+            ->andWhere('f.id NOT IN (SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur 
             LEFT JOIN fournisseur.types types2
-            WHERE types2.id = 9 
-        )');
+            WHERE types2.id = 9 )')
+            ->andWhere('station.id = :stationId');
 
-        $dateDebut = new DateTime($dateDebut);
-        $dateFin = new DateTime($dateFin);
-        $qb->setParameters([
+        $q->setParameters([
             'typesId' => $typeId,
-            'stationId' => $stationId,
-//            'dateDebut' => $dateDebut->format('Y-m-d'),
-//            'dateFin' => $dateFin->format('Y-m-d'),
+            'stationId' => $stationId
         ]);
 
-        $result = $qb->getResult();
-
+        $result = $q->getQuery()->getResult();
+//        dump($result);die;
         return $result;
     }
 

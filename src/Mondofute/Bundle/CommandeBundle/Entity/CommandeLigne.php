@@ -24,10 +24,6 @@ abstract class CommandeLigne
     /**
      * @var integer
      */
-    private $prixPublic = 0;
-    /**
-     * @var integer
-     */
     private $prixAchat = 0;
     /**
      * @var integer
@@ -37,6 +33,10 @@ abstract class CommandeLigne
      * @var DateTime
      */
     private $dateAchat;
+    /**
+     * @var integer
+     */
+    private $prixVente = 0;
 
     public function __construct()
     {
@@ -114,30 +114,6 @@ abstract class CommandeLigne
     }
 
     /**
-     * Get prixPublic
-     *
-     * @return integer
-     */
-    public function getPrixPublic()
-    {
-        return $this->prixPublic;
-    }
-
-    /**
-     * Set prixPublic
-     *
-     * @param integer $prixPublic
-     *
-     * @return CommandeLigne
-     */
-    public function setPrixPublic($prixPublic)
-    {
-        $this->prixPublic = $prixPublic;
-
-        return $this;
-    }
-
-    /**
      * Get prixAchat
      *
      * @return integer
@@ -205,6 +181,30 @@ abstract class CommandeLigne
     public function setDateAchat($dateAchat)
     {
         $this->dateAchat = $dateAchat;
+
+        return $this;
+    }
+
+    /**
+     * Get prixVente
+     *
+     * @return integer
+     */
+    public function getPrixVente()
+    {
+        return $this->prixVente;
+    }
+
+    /**
+     * Set prixVente
+     *
+     * @param integer $prixVente
+     *
+     * @return CommandeLigne
+     */
+    public function setPrixVente($prixVente)
+    {
+        $this->prixVente = $prixVente;
 
         return $this;
     }

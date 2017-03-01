@@ -34,6 +34,6 @@ commande_get_fournisseur_prestation_annexe_externe:
     methods: GET
 
 commande_get_prestation_annexe_externe:
-    path:     /{dateDebut}/{dateFin}/{fournisseurId}/{typeId}/getprestationannexeexterne
+    path:     /{dateDebut}/{dateFin}/{fournisseurId}/{typeId}/{stationId}/getprestationannexeexterne
     defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeExterne" }
     methods: GET

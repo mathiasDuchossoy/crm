@@ -38,6 +38,12 @@ class CommandeLignePrestationAnnexeType extends AbstractType
         $doctrine = $kernel->getContainer()->get('doctrine');
 
         $builder
+            ->add('prixVente', null, [
+                'attr' => [
+                    'class' => 'prixVente',
+                    'onchange' => 'calculPrixVenteTotal();'
+                ]
+            ])
             ->add('station', EntityType::class, [
                     'class' => Station::class,
                     'query_builder' => function (StationRepository $r) use ($locale) {
@@ -114,11 +120,13 @@ class CommandeLignePrestationAnnexeType extends AbstractType
                 } else {
                     $dateDebut = $data->getDateDebut();
                     $dateFin = $data->getDateFin();
+                    $originalParam = $data->getFournisseurPrestationAnnexeParam();
                     // récupérer les prestationAnnexe dont le fournisseur n'est pas affilié à la famille 'hébegement'
 
                     $fournisseurNotHebergements = $doctrine->getRepository(Fournisseur::class)->findByNotTypeHebergement();
 
                     $params = new ArrayCollection();
+                    $params->add($originalParam);
                     /** @var Fournisseur $fournisseurNotHebergement */
                     foreach ($fournisseurNotHebergements as $fournisseurNotHebergement) {
                         $fournisseurPrestationAnnexes = $fournisseurNotHebergement->getPrestationAnnexes();

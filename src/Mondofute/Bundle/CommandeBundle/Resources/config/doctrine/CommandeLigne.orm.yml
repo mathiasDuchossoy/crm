@@ -32,7 +32,7 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
             options:
                 default: 0
                 unsigned: true
-        prixPublic:
+        prixVente:
             type: integer
             options:
                 default: 0

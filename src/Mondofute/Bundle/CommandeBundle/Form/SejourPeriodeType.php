@@ -33,7 +33,12 @@ class SejourPeriodeType extends AbstractType
 
         $builder
             ->add('prixCatalogue')
-            ->add('prixPublic')
+            ->add('prixVente', null, [
+                'attr' => [
+                    'class' => 'prixVente',
+                    'onchange' => 'calculPrixVenteTotal();'
+                ]
+            ])
             ->add('quantite')
             ->add('prixAchat')
             ->add('nbParticipants')

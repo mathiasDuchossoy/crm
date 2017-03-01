@@ -22,6 +22,7 @@ class SejourNuiteType extends AbstractType
         $locale = 'fr_FR';
 
         $builder
+            ->add('prixVente')
             ->add('commandeLignePrestationAnnexes', CollectionType::class, array(
                 'entry_type' => CommandeLignePrestationAnnexeType::class,
                 'allow_add' => true,
