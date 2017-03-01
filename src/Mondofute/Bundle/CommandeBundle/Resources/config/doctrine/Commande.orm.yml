@@ -23,6 +23,11 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         numCommande:
             type: integer
             unique: true
+        prixVente:
+            type: integer
+            options:
+                default: 0
+                unsigned: true
     oneToMany:
         commandeLignes:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne

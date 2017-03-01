@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\CommandeBundle\Controller;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -20,6 +21,8 @@ use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
@@ -326,11 +329,13 @@ class CommandeController extends Controller
 
     public function getPeriodesByLogementAction($id)
     {
+        $today = new DateTime(date('Y-m-d'));
+
         /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
         $em = $this->getDoctrine()->getManager();
         $logement = $em->find(Logement::class, $id);
-        $logementPeriodeLocatifs = $logement->getLogementPeriodeLocatifs()->filter(function (LogementPeriodeLocatif $element) {
-            return $element->getPrixPublic() > 0;
+        $logementPeriodeLocatifs = $logement->getLogementPeriodeLocatifs()->filter(function (LogementPeriodeLocatif $element) use ($today) {
+            return $element->getPrixPublic() > 0 and $element->getPeriode()->getDebut() >= $today;
         });
         $periodes = new ArrayCollection();
         foreach ($logementPeriodeLocatifs as $logementPeriodeLocatif) {
@@ -343,13 +348,28 @@ class CommandeController extends Controller
         ));
     }
 
-    public function getPrestationAnnexeExterneAction($dateDebut, $dateFin, $fournisseurId, $typeId)
+    public function getPrestationAnnexeExterneAction($dateDebut, $dateFin, $fournisseurId, $typeId, $stationId)
     {
         $em = $this->getDoctrine()->getManager();
-        $prestationAnnexeExternes = $em->getRepository(FournisseurPrestationAnnexeParam::class)->findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId);
+        $prestationAnnexeExternes = $em->getRepository(FournisseurPrestationAnnexeParam::class)->findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId, $stationId);
+
+        $tarifs = new ArrayCollection();
+        /** @var FournisseurPrestationAnnexeParam $prestationAnnexeExterne */
+        foreach ($prestationAnnexeExternes as $prestationAnnexeExterne) {
+            /** @var PrestationAnnexeTarif $tarif */
+            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
+                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
+                    return $element->getDateDebut() <= new DateTime($dateDebut) && $element->getDateFin() >= new DateTime($dateFin);
+                })->first();
+                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
+                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
+                }
+            }
+        }
 
         return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
-            'prestationAnnexeExternes' => $prestationAnnexeExternes
+            'prestationAnnexeExternes' => $prestationAnnexeExternes,
+            'tarifs' => $tarifs
         ));
     }
 

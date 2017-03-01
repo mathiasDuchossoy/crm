@@ -50,6 +50,10 @@ class Commande
      * @var Site
      */
     private $site;
+    /**
+     * @var integer
+     */
+    private $prixVente = 0;
 
     /**
      * Constructor
@@ -304,6 +308,30 @@ class Commande
     public function setSite(Site $site = null)
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    /**
+     * Get prixVente
+     *
+     * @return integer
+     */
+    public function getPrixVente()
+    {
+        return $this->prixVente;
+    }
+
+    /**
+     * Set prixVente
+     *
+     * @param integer $prixVente
+     *
+     * @return Commande
+     */
+    public function setPrixVente($prixVente)
+    {
+        $this->prixVente = $prixVente;
 
         return $this;
     }
