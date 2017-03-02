@@ -5,8 +5,10 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
     fields:
         dateDebut:
             type: datetime
+            nullable: true
         dateFin:
             type: datetime
+            nullable: true
     manyToOne:
         commandeLigneSejour:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour

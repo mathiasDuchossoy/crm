@@ -1646,6 +1646,29 @@ class HebergementUnifieController extends Controller
         $application->run($input, $output);
     }
 
+    public function getForCommandeLigneSejourAction($dateDebut, $dateFin, $stationId, $fournisseurId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $hebergements = $em->getRepository(Hebergement::class)->getForCommandeLigneSejour($stationId, $fournisseurId);
+
+        $hebergementsTraduction = new ArrayCollection();
+        $locale = $this->getParameter('locale');
+        foreach ($hebergements as $hebergement) {
+            $traduction = $hebergement->getTraductions()->filter(function (HebergementTraduction $element) use ($locale) {
+                return $element->getLangue()->getCode() == $locale;
+            })->first();
+            $hebergementsTraduction->add(
+                ['id' => $hebergement->getId(),
+                    'libelle' => $traduction->getNom()]
+            );
+        }
+
+        return $this->render('@MondofuteHebergement/hebergementunifie/option-hebergements-for-commande-ligne-sejour.html.twig', array(
+            'hebergements' => $hebergementsTraduction
+        ));
+    }
+
     public function coupdecoeurDeleteAction(Request $request, HebergementUnifie $entityUnifie)
     {
         /** @var HebergementUnifie $entityUnifieSite */

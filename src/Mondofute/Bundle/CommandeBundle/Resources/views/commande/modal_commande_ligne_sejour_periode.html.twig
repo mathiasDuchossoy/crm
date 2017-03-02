@@ -1,0 +1,46 @@
+<div id="modal_commande_ligne_sejour_periode" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="modal_body_commande_ligne_sejour_periode" class="modal-body">
+                <div id="rechercherLogement">
+                    <div class="input-daterange form-inline input-group">
+                        <input id="rechercher_logement_date_debut"
+                               data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                               data-field="dateDebut"
+                               class="form-control" type="text">
+                        <span class="input-group-addon">au</span>
+                        <input id="rechercher_logement_date_fin"
+                               data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                               data-field="dateFin"
+                               class="form-control" type="text">
+                    </div>
+                    <div>
+                        <select id="rechercher_logement_station"
+                                class="form-control">
+                            {% for station in stations %}
+                                <option value="{{ station['id'] }}">{{ station['libelle'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select id="rechercher_logement_fournisseur"
+                                class="form-control">
+                            {% for fournisseur in fournisseurs %}
+                                <option value="{{ fournisseur.id }}">{{ fournisseur.enseigne }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <select id="rechercher_logement_hebergement" class="form-control">
+
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="addCommandeLigneSejourPeriode">Ajouter</button>
+            </div>
+        </div>
+    </div>
+</div>

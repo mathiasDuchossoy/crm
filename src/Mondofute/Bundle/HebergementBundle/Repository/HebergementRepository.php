@@ -55,4 +55,27 @@ class HebergementRepository extends EntityRepository
 //        dump($result);die;
         return $result;
     }
+
+    public function getForCommandeLigneSejour($stationId, $fournisseurId)
+    {
+        $qb = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->join('entity.station', 'station')
+            ->join('entity.hebergementUnifie', 'hebergementUnifie')
+            ->join('hebergementUnifie.fournisseurs', 'fournisseurs')
+            ->join('fournisseurs.fournisseur', 'fournisseur')
+            ->where('station.id = :stationId')
+            ->andWhere('fournisseur.id = :fournisseurId')
+            ->setParameters(
+                [
+                    'stationId' => $stationId,
+                    'fournisseurId' => $fournisseurId
+                ]
+            );
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+
+    }
 }
