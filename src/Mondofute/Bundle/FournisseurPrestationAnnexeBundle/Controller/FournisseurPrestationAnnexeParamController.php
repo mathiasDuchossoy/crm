@@ -30,7 +30,7 @@ class FournisseurPrestationAnnexeParamController extends Controller
                 $response = $tarif->getPrixPublic();
             } else {
                 $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($periode) {
-                    return $element->getDateDebut() >= $periode->getDebut() && $element->getDateFin() <= $periode->getFin();
+                    return $element->getDateDebut() <= $periode->getDebut() && $periode->getFin() <= $element->getDateFin();
                 })->first();
                 if (!empty($periodeValidite)) {
                     $response = $tarif->getPrixPublic();
@@ -55,7 +55,7 @@ class FournisseurPrestationAnnexeParamController extends Controller
                 $response = $tarif->getPrixPublic();
             } else {
                 $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
-                    return $element->getDateDebut() >= $dateDebut && $element->getDateFin() <= $dateFin;
+                    return $element->getDateDebut() <= $dateDebut && $dateFin >= $element->getDateFin();
                 })->first();
                 if (!empty($periodeValidite)) {
                     $response = $tarif->getPrixPublic();

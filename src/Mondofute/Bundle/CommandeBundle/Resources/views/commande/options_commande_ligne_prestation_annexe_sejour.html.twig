@@ -1,0 +1,18 @@
+<option value=""> --- Choisir une prestation annexe externe ---</option>
+{% set type = '' %}
+{% for key, element in params %}
+    {% if element.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type %}
+        {% set type = element.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe %}
+        <optgroup label="
+            {% for traduction in type.traductions %}
+            {% if traduction.langue.code == app.request.locale %}
+            {{ traduction.libelle }}
+            {% endif %}
+            {% endfor %}
+            ">
+    {% endif %}
+    <option value="{{ element.id }}">{{ element }}</option>
+    {% if loop.last or (loop.last == false and params[key + 1].fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}
+        </optgroup>
+    {% endif %}
+{% endfor %}

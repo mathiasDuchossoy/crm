@@ -28,6 +28,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -373,6 +374,23 @@ class CommandeController extends Controller
         ));
     }
 
+    public function getPrestationAnnexeSejourAction($logementId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $logement = $em->find(Logement::class, $logementId);
+        $prestationAnnexeLogements = $logement->getPrestationAnnexeLogements();
+        $params = new ArrayCollection();
+        foreach ($prestationAnnexeLogements as $prestationAnnexeLogement) {
+            if ($prestationAnnexeLogement->getActif()) {
+                $params->add($prestationAnnexeLogement->getParam());
+            }
+        }
+
+        return $this->render('@MondofuteCommande/commande/options_commande_ligne_prestation_annexe_sejour.html.twig', array(
+            'params' => $params
+        ));
+    }
+
     public function getFournisseurPrestationAnnexeExterneAction($dateDebut, $dateFin, $stationId, $typeId)
     {
         $em = $this->getDoctrine()->getManager();
@@ -443,8 +461,8 @@ class CommandeController extends Controller
 
         $form->handleRequest($request);
 
+        $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             foreach ($originalCommandeLignes as $originalCommandeLigne) {
                 if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
                     $em->remove($originalCommandeLigne);
@@ -469,11 +487,22 @@ class CommandeController extends Controller
 
             return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
         }
-
+        $stations = $em->getRepository(Station::class)->getTraductionsByLocale($this->getParameter('locale'), null, $commande->getSite()->getId())->getQuery()->getResult();
+        $stationTraductions = new ArrayCollection();
+        foreach ($stations as $station) {
+            $stationTraductions->add([
+                'id' => $station->getId(),
+                'libelle' => $station->getTraductions()->first()->getLibelle()
+            ]);
+        }
+        $fournisseurs = $em->getRepository(Fournisseur::class)->findAll();
+//        dump($stationTraductions);die;
         return $this->render('@MondofuteCommande/commande/edit.html.twig', array(
             'commande' => $commande,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
+            'stations' => $stationTraductions,
+            'fournisseurs' => $fournisseurs
         ));
     }
 
