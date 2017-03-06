@@ -40,4 +40,29 @@ class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
+    public function getForCommandeLigneSejour($logementId)
+    {
+        $now = new \DateTime();
+
+        $qb = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->join('entity.logement', 'logement')
+            ->join('entity.periode', 'periode')
+            ->where('logement = :logementId')
+            ->andWhere('entity.prixPublic > 0')
+            ->andWhere('periode.debut >= :now')
+            ->setParameters(
+                [
+                    'logementId' => $logementId,
+                    'now' => $now
+                ]
+            );
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+
+    }
+
+
 }

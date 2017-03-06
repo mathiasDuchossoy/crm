@@ -54,7 +54,7 @@ class SejourPeriodeType extends AbstractType
                 'mapped' => false
             ));
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($locale) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($locale, $options) {
             /** @var SejourPeriode $data */
             $data = $event->getData();
             /** @var FournisseurHebergement $fournisseurHebergement */
@@ -63,6 +63,28 @@ class SejourPeriodeType extends AbstractType
                 $fournisseurHebergementId = $data->getLogement()->getFournisseurHebergement()->getId();
                 $logementId = $data->getLogement()->getId();
                 $siteId = $data->getCommande()->getSite()->getId();
+                $periodeId = $data->getPeriode()->getId();
+                $form
+                    ->add('logement', EntityType::class, [
+                        'class' => Logement::class,
+                        'choice_label' => 'traductions[0].nom',
+                        'required' => true,
+                        'query_builder' => function (LogementRepository $er) use ($locale, $fournisseurHebergementId, $siteId) {
+                            return $er->getByFournisseurHebergement($locale, $fournisseurHebergementId, $siteId);
+                        },
+                    ])
+                    ->add('periode', EntityType::class, [
+                        'class' => Periode::class,
+                        'query_builder' => function (PeriodeRepository $er) use ($logementId, $periodeId) {
+                            return $er->findPeriodeByLogementPrixNotEmpty($logementId, $periodeId);
+                        },
+                        'empty_value' => ' --- Choisir une période --- ',
+                        'required' => true,
+                    ]);
+            } else if ($data && true === $options['addSejourPeriode']) {
+                $fournisseurHebergementId = $data->getLogement()->getFournisseurHebergement()->getId();
+                $siteId = $data->getLogement()->getSite()->getId();
+                $logementId = $data->getLogement()->getId();
                 $periodeId = $data->getPeriode()->getId();
                 $form
                     ->add('logement', EntityType::class, [
@@ -103,7 +125,8 @@ class SejourPeriodeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode',
-            'model_class' => 'Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode'
+            'model_class' => 'Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode',
+            'addSejourPeriode' => false
         ));
     }
 
