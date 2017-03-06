@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\CatalogueBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -75,4 +77,18 @@ class TarifLocatifController extends Controller
 
         }
     }
+
+
+    public function getForCommandeLigneSejourAction($logementId)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        $periodes = $em->getRepository(LogementPeriodeLocatif::class)->getForCommandeLigneSejour($logementId);
+
+        return $this->render('@MondofuteCatalogue/logementperiodelocatif/option-periodes-for-commande-ligne-sejour.html.twig', array(
+            'periodes' => $periodes
+        ));
+    }
+
 }

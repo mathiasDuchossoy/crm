@@ -53,6 +53,6 @@ hebergement_coup_de_coeur_delete:
     methods:  DELETE
 
 hebergement_get_for_commande_ligne_sejour:
-    path: /{dateDebut}/{dateFin}/{stationId}/{fournisseurId}/
+    path: /{stationId}/{fournisseurId}/getforcommandelignesejour
     defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:getForCommandeLigneSejour" }
     methods: GET

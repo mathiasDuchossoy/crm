@@ -1,4 +1,7 @@
-<div class="item">
+{% if ajax is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+<div class="item" id="item_commande_ligne_sejour_periode_sejour_{{ name }}">
     <table class="table table-bordered">
         <thead>
         <tr>

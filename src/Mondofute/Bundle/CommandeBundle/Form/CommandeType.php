@@ -67,6 +67,7 @@ class CommandeType extends AbstractType
                 SejourNuiteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 ),
                 SejourPeriodeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    'addSejourPeriode' => $options['addSejourPeriode']
                 ),
                 CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 ),
@@ -92,7 +93,8 @@ class CommandeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande'
+            'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande',
+            'addSejourPeriode' => false
         ));
     }
 

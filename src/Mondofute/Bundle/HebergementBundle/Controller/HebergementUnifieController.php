@@ -1721,7 +1721,7 @@ class HebergementUnifieController extends Controller
         $application->run($input, $output);
     }
 
-    public function getForCommandeLigneSejourAction($dateDebut, $dateFin, $stationId, $fournisseurId)
+    public function getForCommandeLigneSejourAction($stationId, $fournisseurId)
     {
         $em = $this->getDoctrine()->getManager();
 

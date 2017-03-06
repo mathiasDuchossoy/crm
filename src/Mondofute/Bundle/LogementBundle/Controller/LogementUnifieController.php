@@ -1452,6 +1452,32 @@ class LogementUnifieController extends Controller
             ->getForm();
     }
 
+    public function getForCommandeLigneSejourAction($fournisseurId, $hebergementId)
+    {
+        /** @var Logement $logement */
+        $em = $this->getDoctrine()->getManager();
+
+        $logements = $em->getRepository(Logement::class)->getForCommandeLigneSejour($fournisseurId, $hebergementId);
+
+        $logementsTraduction = new ArrayCollection();
+        $locale = $this->getParameter('locale');
+        foreach ($logements as $logement) {
+            $traduction = $logement->getTraductions()->filter(function (logementTraduction $element) use ($locale) {
+                return $element->getLangue()->getCode() == $locale;
+            })->first();
+            $logementsTraduction->add(
+                [
+                    'id' => $logement->getId(),
+                    'libelle' => $traduction->getNom()
+                ]
+            );
+        }
+
+        return $this->render('@MondofuteLogement/logementunifie/option-logements-for-commande-ligne-sejour.html.twig', array(
+            'logements' => $logementsTraduction
+        ));
+    }
+
     public function getPrixByPeriodeAction($id, $periodeId)
     {
         /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
