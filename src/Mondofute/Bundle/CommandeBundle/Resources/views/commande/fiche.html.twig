@@ -15,7 +15,7 @@
     {% set collectionForm = form.commandeLignes %}
     {% set prototypes = form.commandeLignes.vars.prototypes %}
     <hr>
-    <div class="collection">
+    <div class="collection" id="commange_lignes">
         {#<div class="clearfix">
             <div class="pull-left">
                 {{ form_label(collectionForm, 'Lignes de Commande') }}
@@ -747,10 +747,11 @@
             var $prixCatalogue = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixCatalogue');
             var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
             var $prixAchat = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixAchat');
+            var $periode = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode');
 
             var path = '{{ path('logement_get_prix_by_periode' , { 'id' : '_id_', 'periodeId' : '_periodeId_'} ) }}';
             path = path.replace('_id_', logementId);
-            path = path.replace('_periodeId_', $(element).val());
+            path = path.replace('_periodeId_', $periode.val());
             $.ajax(path).done(function (data) {
                 if (data) {
                     var $data = $.parseJSON(data);
@@ -818,30 +819,81 @@
             }
         }
 
-        var $rechercher_logement_date_debut = $('#rechercher_logement_date_debut');
-        var $rechercher_logement_date_fin = $('#rechercher_logement_date_fin');
+        //        var $rechercher_logement_date_debut = $('#rechercher_logement_date_debut');
+        //        var $rechercher_logement_date_fin = $('#rechercher_logement_date_fin');
         var $rechercher_logement_station = $('#rechercher_logement_station');
         var $rechercher_logement_fournisseur = $('#rechercher_logement_fournisseur');
-        $('#rechercherLogement').find('input').each(function (index, element) {
+        var $rechercher_logement_hebergement = $('#rechercher_logement_hebergement');
+        var $rechercher_logement_logement = $('#rechercher_logement_logement');
+        var $rechercher_logement_periode = $('#rechercher_logement_periode');
+        var $addCommandeLigneSejourPeriode = $('#addCommandeLigneSejourPeriode');
+        var $commange_lignes = $('#commange_lignes').find('div.items:first');
+        $('#rechercherLogement').find('input, select').each(function (index, element) {
             $(element).on('change', function (index, element) {
-                if ($rechercher_logement_date_debut.val() &&
-                    $rechercher_logement_date_fin.val() &&
+                if (
+//                      $rechercher_logement_date_debut.val() &&
+//                      $rechercher_logement_date_fin.val() &&
                     $rechercher_logement_station.val() &&
                     $rechercher_logement_fournisseur.val()) {
                     var path = '{{ path('hebergement_get_for_commande_ligne_sejour' , {
-                        'dateDebut' : '_dateDebut_',
-                        'dateFin' : '_dateFin_',
                         'stationId' : '_stationId_',
                         'fournisseurId' :  '_fournisseurId_'}) }}';
-                    path = path.replace('_dateDebut_', $rechercher_logement_date_debut.val().replace(/\//g, '-'));
-                    path = path.replace('_dateFin_', $rechercher_logement_date_fin.val().replace(/\//g, '-'));
                     path = path.replace('_stationId_', $rechercher_logement_station.val());
                     path = path.replace('_fournisseurId_', $rechercher_logement_fournisseur.val());
                     $.ajax(path).done(function (data) {
-                        $('#rechercher_logement_hebergement').html(data);
+                        $rechercher_logement_hebergement.html(data);
                     });
                 }
             });
+        });
+
+        $rechercher_logement_hebergement.on('change', function (index, element) {
+            if ($rechercher_logement_hebergement.val()) {
+                var path = '{{ path('logement_get_for_commande_ligne_sejour', {
+                    'fournisseurId' :  '_fournisseurId_',
+                    'hebergementId' : '_hebergementId_'
+                }) }}';
+//                path = path.replace('_dateDebut_', $rechercher_logement_date_debut.val().replace(/\//g, '-'));
+//                path = path.replace('_dateFin_', $rechercher_logement_date_fin.val().replace(/\//g, '-'));
+                path = path.replace('_hebergementId_', $rechercher_logement_hebergement.val());
+                path = path.replace('_fournisseurId_', $rechercher_logement_fournisseur.val());
+                $.ajax(path).done(function (data) {
+                    $rechercher_logement_logement.html(data);
+                });
+            }
+        });
+
+        $rechercher_logement_logement.on('change', function (index, element) {
+            if ($rechercher_logement_logement.val()) {
+                var path = '{{ path('mondofute_catalogue_get_for_commande_ligne_sejour', {
+                    'logementId' : '_logementId_'
+                }) }}';
+                path = path.replace('_logementId_', $rechercher_logement_logement.val());
+                $.ajax(path).done(function (data) {
+                    $rechercher_logement_periode.html(data);
+                });
+            }
+        });
+
+        $addCommandeLigneSejourPeriode.on('click', function (index, element) {
+            if ($rechercher_logement_fournisseur.val() && $rechercher_logement_periode.val() && $rechercher_logement_logement.val()) {
+                $('#modal_commande_ligne_sejour_periode').modal('hide');
+                var path = '{{ path('commande_add_commande_ligne_periode_sejour', {
+                    'logementId' : '_logementId_',
+                    'periodeId' : '_periodeId_',
+                    'index' : '_index_'
+                }) }}';
+                path = path.replace('_logementId_', $rechercher_logement_logement.val());
+                path = path.replace('_periodeId_', $rechercher_logement_periode.val());
+                path = path.replace('_index_', $commange_lignes.data('index'));
+                $.ajax(path).done(function (newForm) {
+                    var index = $commange_lignes.data('index');
+                    $commange_lignes.data('index', index + 1);
+                    $('#sejour_periode').append($(newForm));
+                    updatePrixLogement(index);
+                    window.location.href = "#item_commande_ligne_sejour_periode_sejour_" + index;
+                });
+            }
         });
 
     </script>

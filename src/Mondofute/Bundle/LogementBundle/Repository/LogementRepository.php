@@ -356,4 +356,33 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         return $qb;
     }
 
+
+    public function getForCommandeLigneSejour($fournisseurId, $hebergementId)
+    {
+        $qb = $this->createQueryBuilder('entity')
+            ->select('entity, periodes, periode ')
+            ->join('entity.fournisseurHebergement', 'fournisseurHebergement')
+            ->join('fournisseurHebergement.hebergement', 'hebergementUnifie')
+            ->join('hebergementUnifie.hebergements', 'hebergements')
+            ->join('hebergements.site', 'siteHebergement')
+            ->join('entity.site', 'site')
+            ->join('fournisseurHebergement.fournisseur', 'fournisseur')
+            ->join('entity.periodes', 'periodes')
+            ->join('periodes.periode', 'periode')
+            ->where('hebergements.id = :hebergementId')
+            ->andWhere('siteHebergement = site')
+            ->andWhere('fournisseur.id = :fournisseurId')
+            ->setParameters(
+                [
+                    'hebergementId' => $hebergementId,
+                    'fournisseurId' => $fournisseurId,
+                ]
+            );
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+
+    }
+
 }

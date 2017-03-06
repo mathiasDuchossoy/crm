@@ -1,0 +1,4 @@
+<option value=""> --- choisir un logement ---</option>
+{% for logement in logements %}
+    <option value="{{ logement['id'] }}">{{ logement['libelle'] }}</option>
+{% endfor %}

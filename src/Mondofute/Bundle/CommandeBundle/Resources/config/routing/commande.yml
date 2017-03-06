@@ -43,7 +43,7 @@ commande_get_prestation_annexe_sejour:
     defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeSejour" }
     methods: GET
 
-#commande_get_modal_body_commande_ligne_sejour_periode:
-#    path:     /{logementId}/getprestationannexesejour
-#    defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeSejour" }
-#    methods: GET
+commande_add_commande_ligne_periode_sejour:
+    path:     /{logementId}/{periodeId}/{index}/addcommandeligneperiodesejour
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:addCommandeLignePeriodeSejour" }
+    methods: GET

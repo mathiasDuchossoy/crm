@@ -3,20 +3,21 @@
         <div class="modal-content">
             <div id="modal_body_commande_ligne_sejour_periode" class="modal-body">
                 <div id="rechercherLogement">
-                    <div class="input-daterange form-inline input-group">
-                        <input id="rechercher_logement_date_debut"
-                               data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
-                               data-field="dateDebut"
-                               class="form-control" type="text">
-                        <span class="input-group-addon">au</span>
-                        <input id="rechercher_logement_date_fin"
-                               data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
-                               data-field="dateFin"
-                               class="form-control" type="text">
-                    </div>
+                    {#<div class="input-daterange form-inline input-group">#}
+                    {#<input id="rechercher_logement_date_debut"#}
+                    {#data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"#}
+                    {#data-field="dateDebut"#}
+                    {#class="form-control" type="text">#}
+                    {#<span class="input-group-addon">au</span>#}
+                    {#<input id="rechercher_logement_date_fin"#}
+                    {#data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"#}
+                    {#data-field="dateFin"#}
+                    {#class="form-control" type="text">#}
+                    {#</div>#}
                     <div>
                         <select id="rechercher_logement_station"
                                 class="form-control">
+                            <option value=""> --- Choisir une station ---</option>
                             {% for station in stations %}
                                 <option value="{{ station['id'] }}">{{ station['libelle'] }}</option>
                             {% endfor %}
@@ -25,6 +26,7 @@
                     <div>
                         <select id="rechercher_logement_fournisseur"
                                 class="form-control">
+                            <option value=""> --- Choisir un fournisseur ---</option>
                             {% for fournisseur in fournisseurs %}
                                 <option value="{{ fournisseur.id }}">{{ fournisseur.enseigne }}</option>
                             {% endfor %}
@@ -33,7 +35,14 @@
                 </div>
                 <div>
                     <select id="rechercher_logement_hebergement" class="form-control">
-
+                    </select>
+                </div>
+                <div>
+                    <select id="rechercher_logement_logement" class="form-control">
+                    </select>
+                </div>
+                <div>
+                    <select id="rechercher_logement_periode" class="form-control">
                     </select>
                 </div>
             </div>

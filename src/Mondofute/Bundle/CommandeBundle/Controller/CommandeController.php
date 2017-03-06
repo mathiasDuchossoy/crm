@@ -542,4 +542,24 @@ class CommandeController extends Controller
 
         return $this->redirectToRoute('commande_index');
     }
+
+    public function addCommandeLignePeriodeSejourAction($logementId, $periodeId, $index)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $commande = new Commande();
+        $sejourPeriode = new SejourPeriode();
+        $sejourPeriode
+            ->setPeriode($em->find(Periode::class, $periodeId))
+            ->setLogement($em->find(Logement::class, $logementId));
+
+        $commande->getCommandeLignes()->set($index, $sejourPeriode);
+
+        $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande, ['addSejourPeriode' => true])->get('commandeLignes')->get($index);
+
+        return $this->render('@MondofuteCommande/commande/commande_ligne_sejour_periode_widget.html.twig', array(
+            'form' => $form->createView(),
+            'name' => $index,
+            'ajax' => true
+        ));
+    }
 }
