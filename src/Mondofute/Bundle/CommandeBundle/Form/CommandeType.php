@@ -3,12 +3,16 @@
 namespace Mondofute\Bundle\CommandeBundle\Form;
 
 use Infinite\FormBundle\Form\Type\PolyCollectionType;
+use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\ClientBundle\Form\ClientType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Mondofute\Bundle\ClientBundle\Form\ClientClientUserType;
 
 class CommandeType extends AbstractType
 {
@@ -44,7 +48,17 @@ class CommandeType extends AbstractType
             ])
             ->add('dateCommande')
             ->add('numCommande')
-            ->add('clients')
+            ->add('clients',EntityType::class,array(
+                'class' => Client::class,
+                'multiple' => true,
+                'expanded' => false,
+                'required' => false,
+//                'entry_type' => ::class,
+//                'label' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => true,
+            ))
             ->add('commandeLignes', PolyCollectionType::class, array(
             'types' => array(
                 CommandeLigneSejourType::class,

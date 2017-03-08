@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\ClientBundle\Controller;
 
 use DateTime;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
@@ -17,7 +18,9 @@ use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Client controller.
@@ -94,22 +97,7 @@ class ClientController extends Controller
 
             if (!$this->loginExist($clientUser)) {
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
-                foreach ($sites as $site) {
-                    $clientUserClone = clone $clientUser;
-
-                    $clientClone = clone $client;
-                    $emSite = $this->getDoctrine()->getManager($site->getLibelle());
-
-                    $clientClone->setCivilite($emSite->find(Civilite::class, $client->getCivilite()->getId()));
-                    $this->dupliquerMoyenComs($client, $emSite);
-
-                    $clientUserClone->setClient($clientClone);
-
-                    $emSite->persist($clientClone);
-                    $emSite->persist($clientUserClone);
-
-                    $emSite->flush();
-                }
+                $this->newSites($clientUser,$client,$sites);
                 $this->dupliquerMoyenComs($client, $em);
 //        dump($client->getMoyenComs());die;
                 $em->persist($client);
@@ -133,7 +121,25 @@ class ClientController extends Controller
             'form' => $form->createView(),
         ));
     }
+    public function newSites(ClientUser $clientUser,Client $client,$sites){
+        foreach ($sites as $site) {
+            $clientUserClone = clone $clientUser;
 
+            $clientClone = clone $client;
+
+            $emSite = $this->getDoctrine()->getManager($site->getLibelle());
+            $civilite = $emSite->find(Civilite::class, $client->getCivilite()->getId());
+            $clientClone->setCivilite($civilite);
+            $this->dupliquerMoyenComs($client, $emSite);
+            $clientClone->setClientUser($clientUserClone);
+            $clientUserClone->setClient($clientClone);
+            $emSite->persist($clientClone);
+            $emSite->persist($clientUserClone);
+
+            $emSite->flush();
+            $emSite->clear();
+        }
+    }
     /**
      * @param Client $client
      */
@@ -147,7 +153,7 @@ class ClientController extends Controller
             ->addMoyenCom(new Email());
     }
 
-    private function loginExist(ClientUser $clientUser)
+    public function loginExist(ClientUser $clientUser)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -168,7 +174,7 @@ class ClientController extends Controller
         return false;
     }
 
-    private function dupliquerMoyenComs(Client $client, EntityManager $emSite)
+    public function dupliquerMoyenComs(Client $client, EntityManager $emSite)
     {
         foreach ($client->getMoyenComs() as $moyenCom) {
             $typeComm = (new ReflectionClass($moyenCom))->getShortName();
@@ -306,7 +312,7 @@ class ClientController extends Controller
         ));
     }
 
-    private function majSites(ClientUser $clientUser)
+    public function majSites(ClientUser $clientUser)
     {
         /** @var Site $site */
         $client = $clientUser->getClient();
@@ -382,6 +388,7 @@ class ClientController extends Controller
             $emSite->persist($clientSite);
             $emSite->persist($clientUserSite);
             $emSite->flush();
+            $emSite->clear();
             unset($login);
         }
     }
@@ -446,5 +453,25 @@ class ClientController extends Controller
         }
 
         return $this->redirectToRoute('client_index');
+    }
+
+    public function rechercheClientsAction(Request $request)
+    {
+//        dump($request->query->all());
+//        die;
+        $criteria = Criteria::create();
+//        dump($request->query->all());die;
+        foreach ($request->query->all() as $key => $value) {
+            $criteria->andWhere(Criteria::expr()->contains($key, $value));
+
+        }
+//        die;
+        $em = $this->getDoctrine()->getManager();
+        $clients = $em->getRepository(Client::class)->matching($criteria)->toArray();
+//        dump($clients);die;
+        $serializer = $this->get('jms_serializer');
+//        echo '1';
+//        die;
+        return new Response($serializer->serialize($clients, 'json'));
     }
 }

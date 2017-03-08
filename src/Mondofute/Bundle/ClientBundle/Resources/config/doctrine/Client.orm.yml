@@ -62,4 +62,11 @@ Mondofute\Bundle\ClientBundle\Entity\Client:
         commandes:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
             mappedBy: clients
+    oneToOne:
+        clientUser:
+            targetEntity: Mondofute\Bundle\ClientBundle\Entity\ClientUser
+            cascade: [ "persist", "remove" ]
+            onDelete: CASCADE
+            orphanRemoval: true
+            mappedBy: client
     lifecycleCallbacks: {  }

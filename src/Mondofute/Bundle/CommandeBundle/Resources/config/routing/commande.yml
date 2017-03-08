@@ -47,3 +47,7 @@ commande_add_commande_ligne_periode_sejour:
     path:     /{logementId}/{periodeId}/{index}/addcommandeligneperiodesejour
     defaults: { _controller: "MondofuteCommandeBundle:Commande:addCommandeLignePeriodeSejour" }
     methods: GET
+commande_ajout_client:
+    path:   /client/add
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:ajoutClient" }
+    methods: GET
