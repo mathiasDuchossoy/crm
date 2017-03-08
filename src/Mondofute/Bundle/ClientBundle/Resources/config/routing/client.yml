@@ -22,3 +22,8 @@ client_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteClientBundle:Client:delete" }
     methods:  DELETE
+
+recherche_clients:
+    path:   /search
+    defaults: { _controller: "MondofuteClientBundle:Client:rechercheClients" }
+    methods: GET

@@ -5,13 +5,20 @@ namespace Mondofute\Bundle\CommandeBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Nucleus\ContactBundle\Entity\Civilite;
+use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\Email;
+use Nucleus\MoyenComBundle\Entity\TelFixe;
+use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -64,25 +71,81 @@ class CommandeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
-
+        $commande->setNumCommande($em->getRepository(Commande::class)->countTotal()+1);
         $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
+//        gestion du premier formulaire client formulaire
+        /** @var Client $client */
+        if (empty($client = $commande->getClients()->first())) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($commande);
-            $em->flush();
+//        dump($client);
+//        die;
+            $client = new Client();
+            $client->addMoyenCom(new Adresse())
+                ->addMoyenCom(new TelFixe())
+                ->addMoyenCom(new TelMobile())
+                ->addMoyenCom(new Email())
+                ->addMoyenCom(new Email());
+            $clientUser = new ClientUser();
+            $clientUser->setClient($client);
+            $client->setClientUser($clientUser);
+        } else {
+            $clientUser = $client->getClientUser();
+        }
+        $controllerClient = new ClientController();
+        $controllerClient->setContainer($this->container);
+        $formClient = $controllerClient->createForm('Mondofute\Bundle\ClientBundle\Form\ClientClientUserType', $client);
+        $formClient->handleRequest($request);
+//        fin gestion du formulaire client
+        if ($form->isSubmitted() && $form->isValid() && $formClient->isSubmitted() && $formClient->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+//            gestion du client
+            $clientUser->setEnabled(true);
+            foreach ($client->getMoyenComs() as $moyenCom) {
+                $moyenCom->setDateCreation();
+                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
 
-            $this->copieVersSites($commande);
+                if ($typeComm == 'Email' && empty($login)) {
+                    $login = $moyenCom->getAdresse();
+                    $clientUser
+                        ->setUsername($login)
+                        ->setEmail($login);
+                }
+            }
+            $client->setDateCreation();
+            if (!$controllerClient->loginExist($clientUser)) {
+//                gestion du client
+                if (!empty($client->getId())) {
+                    $controllerClient->majSites($clientUser);
+                } else {
+                    $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                    $controllerClient->newSites($clientUser, $client, $sites);
+                    $controllerClient->dupliquerMoyenComs($client, $em);
+                }
+                $em->persist($client);
+//            fin de la gestion du client
+                if (count($commande->getClients()) <= 0) {
+                    $commande->addClient($client);
+                }
+//                dump($commande->getClients()->first());die;
+                $em->persist($commande);
+                $em->flush();
+                /*
+                 * TODO: gérer la création de nouveau client dans TOUTES LES BASES
+                 */
+                $this->copieVersSites($commande);
 
-            $this->addFlash('success', 'Commande créé avec succès.');
-            return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
+                $this->addFlash('success', 'Commande créé avec succès.');
+                return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
+            }
         }
 
         return $this->render('@MondofuteCommande/commande/new.html.twig', array(
             'commande' => $commande,
             'form' => $form->createView(),
-            'langues' => $langues
+            'langues' => $langues,
+            'formClient' => $formClient->createView()
         ));
     }
 
@@ -91,7 +154,9 @@ class CommandeController extends Controller
      */
     function copieVersSites($commande)
     {
+
         /** @var EntityManager $emSite */
+
         $emSite = $this->getDoctrine()->getManager($commande->getSite()->getLibelle());
         $commandeSite = $emSite->find(Commande::class, $commande->getId());
         if (empty($commandeSite)) {
@@ -161,7 +226,9 @@ class CommandeController extends Controller
         /** @var CommandeLigne $commandeLigne */
         // suppression commandeLignes
         foreach ($commandeSite->getCommandeLignes() as $commandeLigneSite) {
-            $commandeLigne = $commande->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigneSite) {
+            $commandeLigne = $commande->getCommandeLignes()->filter(function (CommandeLigne $element) use (
+                $commandeLigneSite
+            ) {
                 return $element->getId() == $commandeLigneSite->getId();
             })->first();
             if (false === $commandeLigne) {
@@ -171,7 +238,9 @@ class CommandeController extends Controller
         }
         // ajout commandeLignes
         foreach ($commande->getCommandeLignes() as $commandeLigne) {
-            $commandeLigneSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigne) {
+            $commandeLigneSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use (
+                $commandeLigne
+            ) {
                 return $element->getId() == $commandeLigne->getId();
             })->first();
             if (false === $commandeLigneSite) {
@@ -229,7 +298,9 @@ class CommandeController extends Controller
         /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
         // suppression commandeLignePrestationAnnexeSejours
         foreach ($commandeLignePrestationAnnexeSejourSites as $commandeLigneSite) {
-            $commandeLigne = $commandeLignePrestationAnnexeSejours->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigneSite) {
+            $commandeLigne = $commandeLignePrestationAnnexeSejours->filter(function (
+                CommandeLignePrestationAnnexe $element
+            ) use ($commandeLigneSite) {
                 return $element->getId() == $commandeLigneSite->getId();
             })->first();
             if (false === $commandeLigne) {
@@ -239,12 +310,15 @@ class CommandeController extends Controller
         }
         // ajout commandeLignePrestationAnnexeSejours
         foreach ($commandeLignePrestationAnnexeSejours as $commandeLigne) {
-            $commandeLigneSite = $commandeLignePrestationAnnexeSejourSites->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigne) {
+            $commandeLigneSite = $commandeLignePrestationAnnexeSejourSites->filter(function (
+                CommandeLignePrestationAnnexe $element
+            ) use ($commandeLigne) {
                 return $element->getId() == $commandeLigne->getId();
             })->first();
             if (false === $commandeLigneSite) {
                 /** @var CommandeLigneSejour $commandeLigneSejourSite */
-                $commandeLigneSejourSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigne) {
+                $commandeLigneSejourSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element
+                ) use ($commandeLigne) {
                     return $element->getId() == $commandeLigne->getCommandeLigneSejour()->getId();
                 })->first();
                 $oReflectionClass = new ReflectionClass($commandeLigne);
@@ -261,6 +335,31 @@ class CommandeController extends Controller
                     ->setMontant($commandeLigne->getMontant());
             }
         }
+    }
+
+    public function ajoutClientAction(Request $request)
+    {
+//        récupère l'indice en preparation pour le multi-client
+        $indice = intval($request->query->get('indice'), 10);
+        $em = $this->getDoctrine()->getManager();
+        if(empty($request->query->get('id'))){
+            $client = new Client();
+            $client->addMoyenCom(new Adresse())
+                ->addMoyenCom(new TelFixe())
+                ->addMoyenCom(new TelMobile())
+                ->addMoyenCom(new Email())
+                ->addMoyenCom(new Email());
+            $clientUser = new ClientUser();
+            $clientUser->setClient($client);
+            $client->setClientUser($clientUser);
+        }else{
+            $client = $em->getRepository(Client::class)->find($request->query->get('id'));
+        }
+//        création du formType de la commande
+        $form = $this->createForm('Mondofute\Bundle\ClientBundle\Form\ClientClientUserType', $client);
+        return $this->render('@MondofuteCommande/commande/fiche-client.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     /**
@@ -303,6 +402,7 @@ class CommandeController extends Controller
         $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande)
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
 
+
         $originalCommandeLignes = new ArrayCollection();
         $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
         /** @var CommandeLigne $commandeLigne */
@@ -314,7 +414,8 @@ class CommandeController extends Controller
                 /** @var CommandeLignePrestationAnnexe $commandeLignePrestationAnnex */
                 foreach ($commandeLigne->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
                     if (empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
-                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(), new ArrayCollection());
+                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(),
+                            new ArrayCollection());
                     }
                     $originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId())->add($commandeLignePrestationAnnex);
                 }
@@ -322,38 +423,102 @@ class CommandeController extends Controller
         }
 
         $form->handleRequest($request);
+//        gestion du premier formulaire client formulaire
+        /** @var Client $client */
+        if (empty($client = $commande->getClients()->first())) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        dump($client);
+//        die;
+            $client = new Client();
+            $client->addMoyenCom(new Adresse())
+                ->addMoyenCom(new TelFixe())
+                ->addMoyenCom(new TelMobile())
+                ->addMoyenCom(new Email())
+                ->addMoyenCom(new Email());
+            $clientUser = new ClientUser();
+            $clientUser->setClient($client);
+            $client->setClientUser($clientUser);
+        } else {
+            $clientUser = $client->getClientUser();
+        }
+        $controllerClient = new ClientController();
+        $controllerClient->setContainer($this->container);
+        $formClient = $controllerClient->createForm('Mondofute\Bundle\ClientBundle\Form\ClientClientUserType', $client);
+        $formClient->handleRequest($request);
+//        fin gestion du formulaire client
+        if ($form->isSubmitted() && $form->isValid() && $formClient->isSubmitted() && $formClient->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            foreach ($originalCommandeLignes as $originalCommandeLigne) {
-                if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
-                    $em->remove($originalCommandeLigne);
+//            gestion du client
+            $clientUser->setEnabled(true);
+            foreach ($client->getMoyenComs() as $moyenCom) {
+                $moyenCom->setDateCreation();
+                $typeComm = (new ReflectionClass($moyenCom))->getShortName();
+
+                if ($typeComm == 'Email' && empty($login)) {
+                    $login = $moyenCom->getAdresse();
+                    $clientUser
+                        ->setUsername($login)
+                        ->setEmail($login);
+                }
+            }
+            $client->setDateCreation();
+            if (!$controllerClient->loginExist($clientUser)) {
+//                gestion du client
+                if (!empty($client->getId())) {
+                    $controllerClient->majSites($clientUser);
                 } else {
-                    foreach ($commande->getCommandeLignes() as $commandeLigne) {
-                        if (!empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
-                            foreach ($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()) as $originalCommandeLignePrestationAnnexeSejour) {
-                                if (false === $commandeLigne->getCommandeLignePrestationAnnexes()->contains($originalCommandeLignePrestationAnnexeSejour)) {
-                                    $em->remove($originalCommandeLignePrestationAnnexeSejour);
+                    $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
+                    $controllerClient->newSites($clientUser, $client, $sites);
+                    $controllerClient->dupliquerMoyenComs($client, $em);
+                }
+                $em->persist($client);
+//            fin de la gestion du client
+                if (count($commande->getClients()) <= 0) {
+                    $commande->addClient($client);
+                }
+                foreach ($originalCommandeLignes as $originalCommandeLigne) {
+                    if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
+                        $em->remove($originalCommandeLigne);
+                    } else {
+                        foreach ($commande->getCommandeLignes() as $commandeLigne) {
+                            if (!empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
+                                foreach ($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()) as $originalCommandeLignePrestationAnnexeSejour) {
+                                    if (false === $commandeLigne->getCommandeLignePrestationAnnexes()->contains($originalCommandeLignePrestationAnnexeSejour)) {
+                                        $em->remove($originalCommandeLignePrestationAnnexeSejour);
+                                    }
                                 }
                             }
                         }
                     }
                 }
+//            /** @var Client $client */
+//            foreach ($commande->getClients() as $client){
+//                dump($client);
+//                if(!empty($client->getId())){
+//                    dump($client);
+//                    $tmp = $em->getRepository(Client::class)->find($client->getId());
+//                    $tmp->setClientUser($client->getClientUser())->setDateNaissance($client->getDateNaissance())->setNom($client->getNom())->setPrenom($client->getPrenom());
+//                    $commande->removeClient($client);
+//                    $commande->addClient($tmp);
+//
+//                }
+//                die;
+//            }
+                $em->flush();
+
+                $this->copieVersSites($commande);
+
+                $this->addFlash('success', 'Commande modifiée avec succès.');
+
+                return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
             }
-
-            $em->flush();
-
-            $this->copieVersSites($commande);
-
-            $this->addFlash('success', 'Commande modifiée avec succès.');
-
-            return $this->redirectToRoute('commande_edit', array('id' => $commande->getId()));
         }
 
         return $this->render('@MondofuteCommande/commande/edit.html.twig', array(
             'commande' => $commande,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
+            'formClient' => $formClient->createView()
         ));
     }
 

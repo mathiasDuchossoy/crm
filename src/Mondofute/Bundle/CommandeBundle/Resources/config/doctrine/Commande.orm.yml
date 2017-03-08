@@ -39,6 +39,7 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
     manyToMany:
         clients:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
+            cascade: ['persist', 'remove']
             inversedBy: commandes
     manyToOne:
         site:

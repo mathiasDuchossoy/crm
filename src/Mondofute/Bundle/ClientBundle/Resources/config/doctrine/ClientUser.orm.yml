@@ -23,4 +23,5 @@ Mondofute\Bundle\ClientBundle\Entity\ClientUser:
             cascade: [ "persist", "remove" ]
             onDelete: CASCADE
             orphanRemoval: true
+            inversedBy: clientUser
     lifecycleCallbacks: {  }

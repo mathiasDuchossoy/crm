@@ -22,3 +22,8 @@ commande_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteCommandeBundle:Commande:delete" }
     methods:  DELETE
+
+commande_ajout_client:
+    path:   /client/add
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:ajoutClient" }
+    methods: GET

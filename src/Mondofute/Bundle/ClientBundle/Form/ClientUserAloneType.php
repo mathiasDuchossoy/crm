@@ -6,23 +6,18 @@ use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ClientUserType extends AbstractType
+class ClientUserAloneType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('client', ClientType::class, array(
-                'data_class' => Client::class,
-                'label_attr' => array('style' => 'display:none')
-            ));
+//        $builder->add('client', ClientType::class, array(
+//            'data_class' => Client::class,
+//            'label_attr' => array('style' => 'display:none')
+//        ));
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $user = $event->getData();
             $form = $event->getForm();
@@ -54,17 +49,15 @@ class ClientUserType extends AbstractType
 
             }
         });
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
 
     }
 
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function getBlockPrefix()
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\ClientBundle\Entity\ClientUser'
-        ));
+        return 'mondofute_client_bundle_client_user_alone_type';
     }
 }
