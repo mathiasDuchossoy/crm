@@ -56,7 +56,7 @@
             <td></td>
             <td>
                 {% if form.vars.value is not null %}
-                    {{ form.vars.value.logement.fournisseurHebergement.fournisseur }}
+                    <a href="{{ path('fournisseur_show' , {'id' : form.vars.value.logement.fournisseur.id }) }}">{{ form.vars.value.logement.fournisseur }}</a>
                 {% endif %}
             </td>
             <td>{{ form_widget(form.prixAchat , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>

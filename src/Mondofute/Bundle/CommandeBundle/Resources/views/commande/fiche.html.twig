@@ -219,6 +219,118 @@
 {% block commande_ligne_sejour_periode_widget %}
     {% set type = form._type.vars.value %}
     {% if type == 'sejourPeriode' %}
+        {% if form.vars.value and promotionSejourPeriodes[form.vars.value.id] is defined %}
+            <div class="col-sm-3">
+                <table class="table">
+                    <tr>
+                        <th>Destination:</th>
+                        <td>
+                            {% if form.vars.value.logement.hebergement.station.domaine is not null %}
+                                {% for traduction in form.vars.value.logement.hebergement.station.domaine.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelle }}
+                                        &nbsp;-&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.vars.value.logement.hebergement.station.stationMere is not null %}
+                                {% for traduction in form.vars.value.logement.hebergement.station.stationMere.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelle }}
+                                        &nbsp;-&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% for traduction in form.vars.value.logement.hebergement.station.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Hébergement:</th>
+                        <td>
+                            {% for traduction in form.vars.value.logement.hebergement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}</td>
+                    </tr>
+                    <tr>
+                        <th>Dates de séjour:</th>
+                        <td>
+                            <div class="input-daterange form-inline input-group">
+                                <input data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                                       data-field="dateDebut"
+                                       class="form-control" type="text"
+                                       value="{{ form.vars.value.periode.debut | date('d/m/Y') }}"
+                                >
+                                <span class="input-group-addon">au</span>
+                                <input data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                                       data-field="dateFin"
+                                       class="form-control" type="text"
+                                       value="{{ form.vars.value.periode.fin | date('d/m/Y') }}">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Durée location:</th>
+                        <td>
+                            {% set difference = date( form.vars.value.periode.fin).diff(date(form.vars.value.periode.debut )) %}
+                            {% set leftDays = difference.days %}
+                            {% if leftDays == 1 %}
+                                1 jour
+                            {% else %}
+                                {{ leftDays }} jours
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-5">
+                <table class="table">
+                    <tr>
+                        <th>Informations en consultation:</th>
+                        <th>
+                            {% for traduction in form.vars.value.logement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Promo fournisseur:</th>
+                        <td>
+                            {% for element in promotionSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Décote masquée:</th>
+                        <td>
+                            {% for element in decoteMasqueeSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Décote visible:</th>
+                        <td>
+                            {% for element in decoteVisibleSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
         {% include ('@MondofuteCommande/commande/commande_ligne_sejour_periode_widget.html.twig') %}
     {% endif %}
 {% endblock %}
@@ -833,8 +945,8 @@
                 if (
 //                      $rechercher_logement_date_debut.val() &&
 //                      $rechercher_logement_date_fin.val() &&
-                    $rechercher_logement_station.val() &&
-                    $rechercher_logement_fournisseur.val()) {
+                $rechercher_logement_station.val() &&
+                $rechercher_logement_fournisseur.val()) {
                     var path = '{{ path('hebergement_get_for_commande_ligne_sejour' , {
                         'stationId' : '_stationId_',
                         'fournisseurId' :  '_fournisseurId_'}) }}';

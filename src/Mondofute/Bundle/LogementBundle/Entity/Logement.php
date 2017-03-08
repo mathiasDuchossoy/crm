@@ -10,6 +10,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
@@ -329,32 +330,6 @@ class Logement
     public function setLogementUnifie(LogementUnifie $logementUnifie = null)
     {
         $this->logementUnifie = $logementUnifie;
-
-        return $this;
-    }
-
-    /**
-     * Get fournisseurHebergement
-     *
-     * @return FournisseurHebergement
-     */
-    public function getFournisseurHebergement()
-    {
-        return $this->fournisseurHebergement;
-    }
-
-    /**
-     * Set fournisseurHebergement
-     *
-     * @param FournisseurHebergement $fournisseurHebergement
-     *
-     * @return Logement
-     */
-    public function setFournisseurHebergement(
-        FournisseurHebergement $fournisseurHebergement = null
-    )
-    {
-        $this->fournisseurHebergement = $fournisseurHebergement;
 
         return $this;
     }
@@ -724,5 +699,44 @@ class Logement
     public function getDecoteLogementPeriode()
     {
         return $this->decoteLogementPeriode;
+    }
+
+    public function getHebergement()
+    {
+        $site = $this->site;
+        return $this->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($site) {
+            return $element->getSite() == $site;
+        })->first();
+    }
+
+    /**
+     * Get fournisseurHebergement
+     *
+     * @return FournisseurHebergement
+     */
+    public function getFournisseurHebergement()
+    {
+        return $this->fournisseurHebergement;
+    }
+
+    /**
+     * Set fournisseurHebergement
+     *
+     * @param FournisseurHebergement $fournisseurHebergement
+     *
+     * @return Logement
+     */
+    public function setFournisseurHebergement(
+        FournisseurHebergement $fournisseurHebergement = null
+    )
+    {
+        $this->fournisseurHebergement = $fournisseurHebergement;
+
+        return $this;
+    }
+
+    public function getFournisseur()
+    {
+        return $this->getFournisseurHebergement()->getFournisseur();
     }
 }
