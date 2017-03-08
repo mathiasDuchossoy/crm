@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
 use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
@@ -47,6 +49,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
@@ -485,7 +488,9 @@ class CommandeController extends Controller
         /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
         // suppression commandeLignePrestationAnnexeSejours
         foreach ($commandeLignePrestationAnnexeSejourSites as $commandeLigneSite) {
-            $commandeLigne = $commandeLignePrestationAnnexeSejours->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigneSite) {
+            $commandeLigne = $commandeLignePrestationAnnexeSejours->filter(function (
+                CommandeLignePrestationAnnexe $element
+            ) use ($commandeLigneSite) {
                 return $element->getId() == $commandeLigneSite->getId();
             })->first();
             if (false === $commandeLigne) {
@@ -495,12 +500,15 @@ class CommandeController extends Controller
         }
         // ajout commandeLignePrestationAnnexeSejours
         foreach ($commandeLignePrestationAnnexeSejours as $commandeLigne) {
-            $commandeLigneSite = $commandeLignePrestationAnnexeSejourSites->filter(function (CommandeLignePrestationAnnexe $element) use ($commandeLigne) {
+            $commandeLigneSite = $commandeLignePrestationAnnexeSejourSites->filter(function (
+                CommandeLignePrestationAnnexe $element
+            ) use ($commandeLigne) {
                 return $element->getId() == $commandeLigne->getId();
             })->first();
             if (false === $commandeLigneSite) {
                 /** @var CommandeLigneSejour $commandeLigneSejourSite */
-                $commandeLigneSejourSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element) use ($commandeLigne) {
+                $commandeLigneSejourSite = $commandeSite->getCommandeLignes()->filter(function (CommandeLigne $element
+                ) use ($commandeLigne) {
                     return $element->getId() == $commandeLigne->getCommandeLigneSejour()->getId();
                 })->first();
                 $oReflectionClass = new ReflectionClass($commandeLigne);
@@ -568,7 +576,30 @@ class CommandeController extends Controller
         ));
     }
 
+    public function getPrestationAnnexeExterneAction($dateDebut, $dateFin, $fournisseurId, $typeId, $stationId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $prestationAnnexeExternes = $em->getRepository(FournisseurPrestationAnnexeParam::class)->findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId, $stationId);
 
+        $tarifs = new ArrayCollection();
+        /** @var FournisseurPrestationAnnexeParam $prestationAnnexeExterne */
+        foreach ($prestationAnnexeExternes as $prestationAnnexeExterne) {
+            /** @var PrestationAnnexeTarif $tarif */
+            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
+                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
+                    return $element->getDateDebut() <= new DateTime($dateDebut) && $element->getDateFin() >= new DateTime($dateFin);
+                })->first();
+                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
+                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
+                }
+            }
+        }
+
+        return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
+            'prestationAnnexeExternes' => $prestationAnnexeExternes,
+            'tarifs' => $tarifs
+        ));
+    }
 
     public function getPrestationAnnexeSejourAction($logementId)
     {
@@ -595,6 +626,31 @@ class CommandeController extends Controller
 
         return $this->render('@MondofuteCommande/commande/options_fournisseur_prestation_annexe.html.twig', array(
             'fournisseurForPrestationAnnexeExternes' => $fournisseurForPrestationAnnexeExternes
+        ));
+    }
+
+    public function ajoutClientAction(Request $request)
+    {
+//        récupère l'indice en preparation pour le multi-client
+        $indice = intval($request->query->get('indice'), 10);
+        $em = $this->getDoctrine()->getManager();
+        if(empty($request->query->get('id'))){
+            $client = new Client();
+            $client->addMoyenCom(new Adresse())
+                ->addMoyenCom(new TelFixe())
+                ->addMoyenCom(new TelMobile())
+                ->addMoyenCom(new Email())
+                ->addMoyenCom(new Email());
+            $clientUser = new ClientUser();
+            $clientUser->setClient($client);
+            $client->setClientUser($clientUser);
+        }else{
+            $client = $em->getRepository(Client::class)->find($request->query->get('id'));
+        }
+//        création du formType de la commande
+        $form = $this->createForm('Mondofute\Bundle\ClientBundle\Form\ClientClientUserType', $client);
+        return $this->render('@MondofuteCommande/commande/fiche-client.html.twig', array(
+            'form' => $form->createView(),
         ));
     }
 
@@ -665,7 +721,8 @@ class CommandeController extends Controller
                 /** @var CommandeLignePrestationAnnexe $commandeLignePrestationAnnex */
                 foreach ($commandeLigne->getCommandeLignePrestationAnnexes() as $commandeLignePrestationAnnex) {
                     if (empty($originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId()))) {
-                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(), new ArrayCollection());
+                        $originalCommandeLignePrestationAnnexeSejours->set($commandeLigne->getId(),
+                            new ArrayCollection());
                     }
                     $originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId())->add($commandeLignePrestationAnnex);
                 }
@@ -832,7 +889,6 @@ class CommandeController extends Controller
             'promotionPrestationAnnexeSejourPeriodes' => $promotionPrestationAnnexeSejourPeriodes,
             'decoteMasqueePrestationAnnexeSejourPeriodes' => $decoteMasqueePrestationAnnexeSejourPeriodes,
             'decoteVisiblePrestationAnnexeSejourPeriodes' => $decoteVisiblePrestationAnnexeSejourPeriodes,
-
         ));
     }
 
