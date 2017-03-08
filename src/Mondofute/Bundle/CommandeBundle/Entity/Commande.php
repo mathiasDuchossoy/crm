@@ -335,4 +335,28 @@ class Commande
 
         return $this;
     }
+
+    public function getCommandeLigneRemisePromotions()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == RemisePromotion::class;
+        });
+    }
+
+    public function getSejourPeriodes()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == SejourPeriode::class;
+        });
+    }
+
+    public function getCommandeLigneRemiseDecotes($type = null)
+    {
+        return $this->commandeLignes->filter(function ($element) use ($type) {
+            if (!empty($type)) {
+                return (get_class($element) == RemiseDecote::class and $element->getDecote()->getType() == $type);
+            }
+            return get_class($element) == RemiseDecote::class;
+        });
+    }
 }

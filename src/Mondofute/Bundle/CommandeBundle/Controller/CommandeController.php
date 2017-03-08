@@ -19,6 +19,11 @@ use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
+use Mondofute\Bundle\DecoteBundle\Entity\Type;
+use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour as DecoteTypePeriodeSejour;
+use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite as DecoteTypePeriodeValidite;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
@@ -27,6 +32,10 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
 use Mondofute\Bundle\PromotionBundle\Entity\Promotion;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
+use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
+use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePeriodeSejour;
+use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use ReflectionClass;
@@ -437,6 +446,7 @@ class CommandeController extends Controller
      */
     public function editAction(Request $request, Commande $commande)
     {
+        $em = $this->getDoctrine()->getManager();
         $deleteForm = $this->createDeleteForm($commande);
         $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande)
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
@@ -459,9 +469,14 @@ class CommandeController extends Controller
             }
         }
 
+        $promotionSejourPeriodes = $this->getPromotionSejourPeriodes($commande);
+
+        $decoteMasqueeSejourPeriodes = $this->getDecoteSejourPeriodes($commande, Type::masquee);
+
+        $decoteVisibleSejourPeriodes = $this->getDecoteSejourPeriodes($commande, Type::visible);
+
         $form->handleRequest($request);
 
-        $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($originalCommandeLignes as $originalCommandeLigne) {
                 if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
@@ -496,14 +511,123 @@ class CommandeController extends Controller
             ]);
         }
         $fournisseurs = $em->getRepository(Fournisseur::class)->findAll();
-//        dump($stationTraductions);die;
+
         return $this->render('@MondofuteCommande/commande/edit.html.twig', array(
             'commande' => $commande,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
             'stations' => $stationTraductions,
-            'fournisseurs' => $fournisseurs
+            'fournisseurs' => $fournisseurs,
+            'promotionSejourPeriodes' => $promotionSejourPeriodes,
+            'decoteMasqueeSejourPeriodes' => $decoteMasqueeSejourPeriodes,
+            'decoteVisibleSejourPeriodes' => $decoteVisibleSejourPeriodes
         ));
+    }
+
+    private function getPromotionSejourPeriodes(Commande $commande)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var PromotionLogementPeriode $promotionLogementPeriode */
+        /** @var RemisePromotion $commandeLigneRemisePromotion */
+        /** @var SejourPeriode $sejourPeriode */
+        /** @var PromotionLogement $promotionLogement */
+        /** @var Promotion $promotion */
+        $promotionSejourPeriodes = new ArrayCollection();
+        foreach ($commande->getSejourPeriodes() as $sejourPeriode) {
+            $promotionSejourPeriodes->set($sejourPeriode->getId(), new ArrayCollection());
+            foreach ($commande->getCommandeLigneRemisePromotions() as $commandeLigneRemisePromotion) {
+                $promotions = new ArrayCollection();
+
+                // on récupère toute les pormotions concernant le logement
+                $promotionLogements = $em->getRepository(PromotionLogement::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'promotion' => $commandeLigneRemisePromotion->getPromotion()]);
+                foreach ($promotionLogements as $promotionLogement) {
+                    if (!$promotions->contains($promotionLogement->getPromotion())) {
+                        $promotions->add($promotionLogement->getPromotion());
+                    }
+                }
+                $promotionLogementPeriodes = $em->getRepository(PromotionLogementPeriode::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'promotion' => $commandeLigneRemisePromotion->getPromotion()]);
+                foreach ($promotionLogementPeriodes as $promotionLogementPeriode) {
+                    if (!$promotions->contains($promotionLogement->getPromotion())) {
+                        $promotions->add($promotionLogementPeriode->getPromotion());
+                    }
+                }
+
+                foreach ($promotions as $promotion) {
+                    // 1er test: TypePeriodeValidite
+                    if (
+                        $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::permanent
+                        || $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::dateADate
+                        && $promotion->getPromotionPeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
+                        && $commande->getDateCommande() <= $promotion->getPromotionPeriodeValiditeDate()->getDateFin()
+                    ) {
+                        // 2eme test: TypePeriodeSejour
+                        if (
+                            $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::permanent
+                            || $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::dateADate
+                            && $promotion->getPromotionPeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
+                            && $sejourPeriode->getPeriode()->getFin() <= $promotion->getPromotionPeriodeSejourDate()->getDateFin()
+                        ) {
+                            $promotionSejourPeriodes->get($sejourPeriode->getId())->add($promotion);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $promotionSejourPeriodes;
+    }
+
+    private function getDecoteSejourPeriodes(Commande $commande, $type)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var DecoteLogementPeriode $decoteLogementPeriode */
+        /** @var RemiseDecote $commandeLigneRemiseDecote */
+        /** @var SejourPeriode $sejourPeriode */
+        /** @var DecoteLogement $decoteLogement */
+        /** @var Decote $decote */
+        $decoteSejourPeriodes = new ArrayCollection();
+        foreach ($commande->getSejourPeriodes() as $sejourPeriode) {
+            $decoteSejourPeriodes->set($sejourPeriode->getId(), new ArrayCollection());
+            foreach ($commande->getCommandeLigneRemiseDecotes($type) as $commandeLigneRemiseDecote) {
+                $decotes = new ArrayCollection();
+
+                // on récupère toute les pormotions concernant le logement
+                $decoteLogements = $em->getRepository(DecoteLogement::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'decote' => $commandeLigneRemiseDecote->getDecote()]);
+                foreach ($decoteLogements as $decoteLogement) {
+                    if (!$decotes->contains($decoteLogement->getDecote())) {
+                        $decotes->add($decoteLogement->getDecote());
+                    }
+                }
+                $decoteLogementPeriodes = $em->getRepository(DecoteLogementPeriode::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'decote' => $commandeLigneRemiseDecote->getDecote()]);
+                foreach ($decoteLogementPeriodes as $decoteLogementPeriode) {
+                    if (!$decotes->contains($decoteLogement->getDecote())) {
+                        $decotes->add($decoteLogementPeriode->getDecote());
+                    }
+                }
+
+                foreach ($decotes as $decote) {
+                    // 1er test: TypePeriodeValidite
+                    if (
+                        $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::permanent
+                        || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::dateADate
+                        && $decote->getDecotePeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
+                        && $commande->getDateCommande() <= $decote->getDecotePeriodeValiditeDate()->getDateFin()
+                    ) {
+                        // 2eme test: TypePeriodeSejour
+                        if (
+                            $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::permanent
+                            || $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::dateADate
+                            && $decote->getDecotePeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
+                            && $sejourPeriode->getPeriode()->getFin() <= $decote->getDecotePeriodeSejourDate()->getDateFin()
+                        ) {
+                            $decoteSejourPeriodes->get($sejourPeriode->getId())->add($decote);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $decoteSejourPeriodes;
     }
 
     /**
