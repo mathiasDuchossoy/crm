@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\ClientBundle\Form;
 
+use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Nucleus\ContactBundle\Entity\Civilite;
 use ReflectionClass;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,29 +12,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ClientType extends AbstractType
+class ClientClientUserType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $months = array(
-//            'janv',
-//            'févr.',
-//            'mars',
-//            'avr.',
-//            'mai',
-//            'juin',
-//            'juil.',
-//            'août',
-//            'sept.',
-//            'oct.',
-//            'nov.',
-//            'déc.'
-//        );
         $builder
+//            ->add('id')
             ->add('civilite', EntityType::class, array(
                 'class' => Civilite::class,
                 'property' => 'libelle'
@@ -56,18 +40,24 @@ class ClientType extends AbstractType
                     'nucleus_moyencombundle_telmobile',
                     'nucleus_moyencombundle_email',
                 ),
-                'label_attr' => array('style'=>'display:none')
-            ));
+            ))
+            ->add('clientUser', ClientUserAloneType::class, array(
+                'data_class' => ClientUser::class,
+//                'label_attr' => array('style'=>'display:none')
+            ))
+        ;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\ClientBundle\Entity\Client'
         ));
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'mondofute_client_bundle_client_client_user';
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
@@ -87,15 +77,10 @@ class ClientType extends AbstractType
             }
             array_push($cViewComm[$typeComm], $viewMoyenComs);
         }
-//        dump($cViewComm);die;
         foreach ($cViewComm as $viewCom) {
             foreach ($viewCom as $key => $com) {
-//                if ($key > 0) {
                 $com->vars['label'] = $com->vars['label'] . ' ' . ($key + 1);
-//                }
             }
         }
-//        die;
     }
-
 }

@@ -37,6 +37,54 @@ class Client extends Physique
      */
     private $clientUser;
 
+    /**
+     * Get vip
+     *
+     * @return boolean
+     */
+    public function getVip()
+    {
+        return $this->vip;
+    }
+
+    /**
+     * Set vip
+     *
+     * @param boolean $vip
+     *
+     * @return Client
+     */
+    public function setVip($vip)
+    {
+        $this->vip = $vip;
+
+        return $this;
+    }
+
+    /**
+     * Get dateNaissance
+     *
+     * @return \DateTime
+     */
+    public function getDateNaissance()
+    {
+        return $this->dateNaissance;
+    }
+
+    /**
+     * Set dateNaissance
+     *
+     * @param \DateTime $dateNaissance
+     *
+     * @return Client
+     */
+    public function setDateNaissance($dateNaissance)
+    {
+        $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
     public function getLabel()
     {
         return $this->getNom() . ', ' . $this->getPrenom();
@@ -147,64 +195,6 @@ class Client extends Physique
     public function setClientUser(\Mondofute\Bundle\ClientBundle\Entity\ClientUser $clientUser = null)
     {
         $this->clientUser = $clientUser->setClient($this);
-
-        return $this;
-    }
-
-    public function duplique(Client &$client)
-    {
-        $client->setDateNaissance($this->getDateNaissance())
-            ->setNom($this->getNom())
-            ->setPrenom($this->getPrenom());
-        $client->setVip($this->getVip());
-
-        return $this;
-    }
-
-    /**
-     * Get dateNaissance
-     *
-     * @return \DateTime
-     */
-    public function getDateNaissance()
-    {
-        return $this->dateNaissance;
-    }
-
-    /**
-     * Set dateNaissance
-     *
-     * @param \DateTime $dateNaissance
-     *
-     * @return Client
-     */
-    public function setDateNaissance($dateNaissance)
-    {
-        $this->dateNaissance = $dateNaissance;
-
-        return $this;
-    }
-
-    /**
-     * Get vip
-     *
-     * @return boolean
-     */
-    public function getVip()
-    {
-        return $this->vip;
-    }
-
-    /**
-     * Set vip
-     *
-     * @param boolean $vip
-     *
-     * @return Client
-     */
-    public function setVip($vip)
-    {
-        $this->vip = $vip;
 
         return $this;
     }

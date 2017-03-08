@@ -215,7 +215,6 @@
     {% endif %}
 {% endblock %}
 
-
 {% block commande_ligne_sejour_periode_widget %}
     {% set type = form._type.vars.value %}
     {% if type == 'sejourPeriode' %}
@@ -447,12 +446,80 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-            {{ block('infinite_form_polycollection_row') }}
-            {{ form_row(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}
-            {{ form_row(form.site) }}
-            {{ form_row(form.dateCommande) }}
-            {{ form_row(form.numCommande) }}
-            {{ form_row(form.clients) }}
+
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#commande-fiche">Fiche</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#commande-fiche-client">Client</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#commande-statut">Statut</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="commande-fiche" class="tab-pane fade in active">
+                    {{ block('infinite_form_polycollection_row') }}
+                    {{ form_row(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}
+                    {{ form_row(form.site) }}
+                    {{ form_row(form.dateCommande) }}
+                    {{ form_row(form.numCommande) }}
+                    {#{{ form_row(form.clients) }}#}
+                </div>
+                <div id="commande-fiche-client" class="tab-pane fade">
+                    <div class="recherche-client panel panel-primary">
+                        <div class="panel-heading">
+                            Recherche d'un client
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-4">
+                                <label class="col-md-2 control-label" for="rechercher-client-nom">Nom</label>
+                                <div class="col-md-10">
+                                    {#<select id="rechercher-client-nom"#}
+                                    {#class="form-control recherche-client-nom"></select>#}
+                                    <input id="rechercher-client-nom" autocomplete="off" type="text" list="list-clients"
+                                           class="form-control recherche-client-nom">
+                                    <ul class="list-group recherche-client-reponse-list"
+                                        style="position: absolute;z-index: 1">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="col-md-2 control-label" for="rechercher-client-prenom">Prénom</label>
+                                <div class="col-md-10">
+                                    <input id="rechercher-client-prenom" autocomplete="off"
+                                           class="form-control recherche-client-prenom">
+                                    <ul class="list-group recherche-client-reponse-list"
+                                        style="position: absolute;z-index: 1">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-default" id="nouveau-client" name="nouveau-client" data-client-id="" >{{ 'nouveau client' | trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none;">
+                        {{ form_row(form.clients) }}
+                    </div>
+                    <div class="panel-group">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Clients
+                            </div>
+                            <div id="form-clients" class="panel-body">
+                                {#{% for client in form.clients %}#}
+                                {% include '@MondofuteCommande/commande/fiche-client.html.twig' with {form : formClient} %}
+                                {#{% endfor %}#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="commande-statut" class="tab-pane fade">
+
+                </div>
+            </div>
             {{ form_row(form._token) }}
             {{ form_row(form.submit) }}
             {{ form_end(form, {'render_rest': false}) }}
@@ -471,7 +538,93 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
+        if (!urls) {
+            var urls = {};
+        }
+        urls.rechercheClients = '{{ path('recherche_clients') }}';
+        urls.ajouteFormClient = '{{ path('commande_ajout_client') }}';
+        //        gère la recherche du client pour l'autocompletion
+        $(document).on('keyup focus', '.recherche-client-nom, .recherche-client-prenom', function (e) {
+            if (e.keyCode != 16 && e.keyCode != 9) {
+                var $obj = $(this);
+                rechercherClients($(this));
+            }
+        });
+        //        charge le client sur le click droit
+        $('.recherche-client-reponse-list').on('mousedown', 'li', function (e) {
+            if (e.which == 1) {
+                var datas = $(this).data();
+                chargerFormulaireClient(datas);
+            }
+        });
+        $(document).on('click','#nouveau-client',function(e){
+            alert('ok');
+            var datas = $(this).data();
+            chargerFormulaireClient(datas);
+        });
+        function chargerFormulaireClient(datas) {
+            $.get(
+                {
+                    url: urls.ajouteFormClient,
+                    data: {
+                        id: datas.clientId,
+                    }
+                }
+            ).done(function (data) {
+                $('#form-clients').html(data);
+                $('#mondofute_bundle_commandebundle_commande_clients option:selected').removeAttr('selected');
+                $('#mondofute_bundle_commandebundle_commande_clients option[value="' + datas.clientId + '"]').attr('selected', 'selected');
+            });
+        }
+        //        efface l'autocompletion lorsqu'on sort du champ
+        $(document).on('blur', '.recherche-client-nom, .recherche-client-prenom ', function () {
+            var $form = $(this).closest('.recherche-client');
+            //            vide les ul d'autocompletion
+            $form.find('.recherche-client-reponse-list').html('');
+        });
+        function rechercherClients($obj, $callback) {
+//            récupération du formulaire de recherche client
+            var $form = $obj.closest('.recherche-client');
+//            instanciation de l'objet contenant les critères de recherche
+            var dataRecherche = {};
+            dataRecherche.nom = $form.find('.recherche-client-nom').val();
+            dataRecherche.prenom = $form.find('.recherche-client-prenom').val();
+            if (dataRecherche.nom.length > 0 || dataRecherche.prenom.length > 0) {
+                //            récupère l'ul d'autocompletion liée à l'objet déclencheur
+                var $listeReponse = $obj.find('+ .recherche-client-reponse-list');
+//                lance la recherche des clients avec les criteres
+                $.get(
+                    {
+                        url: urls.rechercheClients,
+                        data: dataRecherche,
+                        dataType: 'json'
+                    }
+                ).done(function (data) {
+//            vide les ul d'autocompletion
+                    $form.find('.recherche-client-reponse-list').html('');
+                    if ($obj.is(':focus')) {
+                        chargerListeClient($listeReponse, data, dataRecherche);
+                    }
+                    if ($callback) {
+                        $callback();
+                    }
+                });
+            }
+        }
+        function chargerListeClient($obj, data, dataRecherche) {
+            if (data.length > 0) {
+                var nom = '';
+                var prenom = '';
+                var expression = '';
+                for (var i = 0; i < data.length; i++) {
+                    $obj.append($('<li class="list-group-item" data-client-id="' + data[i].id + '">' + data[i].nom.replace(new RegExp(dataRecherche.nom), '<b>' + dataRecherche.nom + '</b>') + ' ' + data[i].prenom.replace(new RegExp(dataRecherche.prenom), '<b>' + dataRecherche.prenom + '</b>') + '</li>'));
+                }
+            } else {
+                $obj.append($('<li class="list-group-item" data-client-id="-1">Aucun résultat trouvé</li>'));
+            }
+        }
 
+        //        fin js recherche client
         jQuery(document).ready(function () {
             $('.items').each(function (index, element) {
                 var count = $(element).children('.panel').children('.panel-body').children('.item').length;
