@@ -1,0 +1,18 @@
+<option value=""> --- Choisir une période ---</option>
+{% set type = '' %}
+{% for key, element in logementPeriodeLocatifs %}
+    {% if element.periode.type != type %}
+        {% set type = element.periode.type %}
+        <optgroup label="{{ ('type_periode.'~element.periode.type.id)|trans }}">
+    {% endif %}
+    <option
+            {% if element.periode.debut == dateDebut and  element.periode.fin == dateFin %}
+                selected="selected"
+            {% endif %}
+            value="{{ element.periode.id }}">{{ element.periode }} | Stock théorique :
+        {{ element.stock }}
+    </option>
+    {% if loop.last or (loop.last == false and logementPeriodeLocatifs[key + 1].periode.type != type) %}
+        </optgroup>
+    {% endif %}
+{% endfor %}
