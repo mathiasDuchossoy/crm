@@ -224,6 +224,13 @@ class CommandeController extends Controller
             }
 //            $commandeLigneSite->setMontant($commandeLigne->getMontant());
             $oReflectionClass = new ReflectionClass($commandeLigneSite);
+            $commandeLigneSite
+                ->setPrixCatalogue($commandeLigne->getPrixCatalogue())
+                ->setPrixVente($commandeLigne->getPrixVente())
+                ->setPrixAchat($commandeLigne->getPrixAchat())
+                ->setQuantite($commandeLigne->getQuantite())
+                ->setDateAchat($commandeLigne->getDateAchat())
+                ->setDatePaiement($commandeLigne->getDatePaiement());
             switch ($oReflectionClass->getShortName()) {
                 case 'SejourPeriode':
                     /** @var SejourPeriode $commandeLigneSite */

@@ -37,6 +37,10 @@ abstract class CommandeLigne
      * @var integer
      */
     private $prixVente = 0;
+    /**
+     * @var \DateTime
+     */
+    private $datePaiement;
 
     public function __construct()
     {
@@ -205,6 +209,30 @@ abstract class CommandeLigne
     public function setPrixVente($prixVente)
     {
         $this->prixVente = $prixVente;
+
+        return $this;
+    }
+
+    /**
+     * Get datePaiement
+     *
+     * @return \DateTime
+     */
+    public function getDatePaiement()
+    {
+        return $this->datePaiement;
+    }
+
+    /**
+     * Set datePaiement
+     *
+     * @param \DateTime $datePaiement
+     *
+     * @return CommandeLigne
+     */
+    public function setDatePaiement($datePaiement)
+    {
+        $this->datePaiement = $datePaiement;
 
         return $this;
     }

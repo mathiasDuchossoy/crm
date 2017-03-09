@@ -11,6 +11,7 @@ use Mondofute\Bundle\PeriodeBundle\Repository\PeriodeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -52,6 +53,17 @@ class SejourPeriodeType extends AbstractType
             ->add('_type', HiddenType::class, array(
                 'data' => 'sejourPeriode', // Arbitrary, but must be distinct
                 'mapped' => false
+            ))
+            ->add('datePaiement', DateType::class, array(
+                'required' => true,
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array(
+                    'data-date-format' => 'dd/mm/yyyy',
+                    'placeholder' => 'format_date',
+                    'class' => 'date',
+                    'data-provide' => 'datepicker',
+                )
             ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($locale, $options) {
