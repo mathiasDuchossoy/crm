@@ -33,13 +33,6 @@ class SejourPeriodeType extends AbstractType
         $locale = 'fr_FR';
 
         $builder
-            ->add('dateAchat'
-                , null, [
-                    'attr' => [
-                        'style' => 'display:none'
-                    ]
-                ]
-            )
             ->add('prixCatalogue')
             ->add('prixVente', null, [
                 'attr' => [
@@ -47,11 +40,7 @@ class SejourPeriodeType extends AbstractType
                     'onchange' => 'calculPrixVenteTotal();'
                 ]
             ])
-            ->add('quantite', null, [
-                'attr' => [
-                    'style' => 'display:none'
-                ]
-            ])
+            ->add('quantite')
             ->add('prixAchat')
             ->add('nbParticipants')
             ->add('commandeLignePrestationAnnexes', CollectionType::class, array(
@@ -66,7 +55,7 @@ class SejourPeriodeType extends AbstractType
                 'mapped' => false
             ))
             ->add('datePaiement', DateType::class, array(
-                'required' => false,
+                'required' => true,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
