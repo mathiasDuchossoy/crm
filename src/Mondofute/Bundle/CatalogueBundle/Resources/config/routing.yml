@@ -13,6 +13,11 @@ mondofute_catalogue_enregistrer_tarifs_locatif:
     methods:  POST
 
 mondofute_catalogue_get_for_commande_ligne_sejour:
-    path: /{logementId}/getforcommandelignesejour
+    path: /catalogue/{logementId}/getforcommandelignesejour
     defaults: { _controller: "MondofuteCatalogueBundle:TarifLocatif:getForCommandeLigneSejour" }
+    methods: GET
+
+mondofute_catalogue_periode_get_by_dates:
+    path: /catalogue/{logementId}/{dateDebut}/{dateFin}/getbydates
+    defaults: { _controller: "MondofuteCatalogueBundle:TarifLocatif:getByDates" }
     methods: GET
