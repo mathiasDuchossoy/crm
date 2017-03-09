@@ -47,6 +47,9 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
             options:
                 default: 1
                 unsigned: true
+        datePaiement:
+            type: datetime
+            nullable: true
     manyToOne:
         commande:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
