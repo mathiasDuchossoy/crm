@@ -128,14 +128,14 @@
                         <i class="glyphicon glyphicon-plus"></i> remise code promo
                     </a>
                     {% set form = prototypes.remiseDecote %}
-                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_decote_widget') | escape }}"
                        class="btn btn-success add_item pull-right"
                        onclick="addRemiseDecote(this,event,'__name__','remise');"
                        style="margin-right: 15px">
                         <i class="glyphicon glyphicon-plus"></i> remise decote
                     </a>
                     {% set form = prototypes.remisePromotion %}
-                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_promotion_widget') | escape }}"
                        class="btn btn-success add_item pull-right"
                        onclick="addRemisePromotion(this,event,'__name__','remise');"
                        style="margin-right: 15px">
@@ -145,7 +145,13 @@
                 </div>
                 <div class="panel-body" id="remise">
                     {% for form in collectionForm %}
-                        {{ block('commande_ligne_remise_widget') }}
+                        {{ block('commande_ligne_remise_decote_widget') }}
+                    {% endfor %}
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_code_promo_widget') }}
+                    {% endfor %}
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_promotion_widget') }}
                     {% endfor %}
                 </div>
             </div>
@@ -261,16 +267,23 @@
                         <th>Dates de séjour:</th>
                         <td>
                             <div class="input-daterange form-inline input-group">
-                                <input data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                                <input data-date-format="dd/mm/yyyy"
+                                        {#placeholder="jj/mm/aaaa" #}
+                                       style="text-align: left;"
                                        data-field="dateDebut"
                                        class="form-control" type="text"
-                                       value="{{ form.vars.value.periode.debut | date('d/m/Y') }}"
+                                       placeholder="{{ form.vars.value.periode.debut | date('d/m/Y') }}"
+                                       id="date_debut_sejour_{{ name }}"
+                                       onchange="dateSejourChangePeriode('{{ name }}');"
                                 >
                                 <span class="input-group-addon">au</span>
-                                <input data-date-format="dd/mm/yyyy" placeholder="jj/mm/aaaa" style="text-align: left;"
+                                <input data-date-format="dd/mm/yyyy" style="text-align: left;"
                                        data-field="dateFin"
                                        class="form-control" type="text"
-                                       value="{{ form.vars.value.periode.fin | date('d/m/Y') }}">
+                                       placeholder="{{ form.vars.value.periode.fin | date('d/m/Y') }}"
+                                       id="date_fin_sejour_{{ name }}"
+                                       onchange="dateSejourChangePeriode('{{ name }}');"
+                                >
                             </div>
                         </td>
                     </tr>
@@ -299,8 +312,16 @@
                                 {% endif %}
                             {% endfor %}
                         </th>
+                        {% for SejourPeriode in promotionPrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <th>
+                                    {{ promotionPrestationAnnexe.libelle }}
+                                </th>
+                            {% endfor %}
+                        {% endfor %}
                     </tr>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -311,6 +332,16 @@
                                 {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
                             {% endfor %}
                         </td>
+                        {% for SejourPeriode in promotionPrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                     <tr>
                         <th>Décote masquée:</th>
@@ -319,6 +350,16 @@
                                 {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
                             {% endfor %}
                         </td>
+                        {% for SejourPeriode in decoteMasqueePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                     <tr>
                         <th>Décote visible:</th>
@@ -327,6 +368,16 @@
                                 {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
                             {% endfor %}
                         </td>
+                        {% for SejourPeriode in decoteVisiblePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 </table>
             </div>
@@ -392,7 +443,11 @@
                         {% endfor %}
                         ">
                         {% endif %}
-                        <option value="{{ element.value }}">{{ element.label }}</option>
+                        <option
+                                {% if form.fournisseurPrestationAnnexeParam.vars.value ==  element.value %}
+                                    selected="selected"
+                                {% endif %}
+                                value="{{ element.value }}">{{ element.label }}</option>
                         {% if loop.last or (loop.last == false and element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}
                             </optgroup>
                         {% endif %}
@@ -541,7 +596,37 @@
                     {{ block('bouton_supprimer') }}
                 </div>
             </div>
-            {{ form_rest(form) }}
+            {{ form_row(form._type) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_promotion_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remisePromotion' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.promotion) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_row(form._type) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_decote_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remiseDecote' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.decote) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_row(form._type) }}
         </div>
     {% endif %}
 {% endblock %}
@@ -1007,6 +1092,23 @@
                 });
             }
         });
+
+        function dateSejourChangePeriode(index) {
+            var date_debut_sejour = $('#date_debut_sejour_' + index).val();
+            var date_fin_sejour = $('#date_fin_sejour_' + index).val();
+            var $selectPeriode = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode');
+            var logement = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();;;;;;;;;;;;;;;;;;;;;
+            if (date_debut_sejour && date_fin_sejour && logement) {
+                var path = '{{ path('mondofute_catalogue_periode_get_by_dates' , {
+                    'logementId' : '_logementId_','dateDebut' : '_dateDebut_','dateFin' : '_dateFin_'}) }}';
+                path = path.replace('_logementId_', logement);
+                path = path.replace('_dateDebut_', date_debut_sejour.replace(/\//g, '-'));
+                path = path.replace('_dateFin_', date_fin_sejour.replace(/\//g, '-'));
+                $.ajax(path).done(function (data) {
+                    $selectPeriode.html(data);
+                });
+            }
+        }
 
     </script>
 {% endblock %}

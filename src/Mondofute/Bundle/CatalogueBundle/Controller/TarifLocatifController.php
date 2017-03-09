@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\CatalogueBundle\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
@@ -76,6 +77,20 @@ class TarifLocatifController extends Controller
         }
     }
 
+    public function getByDatesAction($logementId, $dateDebut, $dateFin)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        $logementPeriodeLocatifs = $em->getRepository(LogementPeriodeLocatif::class)->getByDates($logementId, $dateDebut, $dateFin);
+
+        return $this->render('@MondofuteCatalogue/logementperiodelocatif/options-logement-periode-locatif.html.twig', array(
+            'logementPeriodeLocatifs' => $logementPeriodeLocatifs,
+            'dateDebut' => new DateTime(date($dateDebut)),
+            'dateFin' => new DateTime(date($dateFin)),
+        ));
+    }
+
 
     public function getForCommandeLigneSejourAction($logementId)
     {
@@ -88,5 +103,6 @@ class TarifLocatifController extends Controller
             'periodes' => $periodes
         ));
     }
+
 
 }

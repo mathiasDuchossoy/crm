@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\CatalogueBundle\Repository;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -62,6 +63,33 @@ class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
 //        dump($result);die;
         return $result;
 
+    }
+
+    public function getByDates($logementId, $dateDebut, $dateFin)
+    {
+        $now = new \DateTime();
+
+        $qb = $this->createQueryBuilder('entity')
+            ->select('entity')
+            ->join('entity.logement', 'logement')
+            ->join('entity.periode', 'periode')
+            ->where('logement = :logementId')
+            ->andWhere('entity.prixPublic > 0')
+            ->andWhere('periode.debut >= :now')
+            ->andWhere('periode.debut <= :dateDebut')
+            ->andWhere('periode.fin >= :dateFin')
+            ->setParameters(
+                [
+                    'logementId' => $logementId,
+                    'now' => $now,
+                    'dateDebut' => new DateTime(date($dateDebut)),
+                    'dateFin' => new DateTime(date($dateFin))
+                ]
+            );
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
     }
 
 
