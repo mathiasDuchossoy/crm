@@ -55,7 +55,7 @@ class SejourPeriodeType extends AbstractType
                 'mapped' => false
             ))
             ->add('datePaiement', DateType::class, array(
-                'required' => true,
+                'required' => false,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'attr' => array(
