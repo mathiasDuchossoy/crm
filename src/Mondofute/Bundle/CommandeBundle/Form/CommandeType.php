@@ -5,6 +5,8 @@ namespace Mondofute\Bundle\CommandeBundle\Form;
 use Infinite\FormBundle\Form\Type\PolyCollectionType;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Form\ClientType;
+use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
+use Mondofute\Bundle\CommandeBundle\Repository\StatutDossierRepository;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -16,6 +18,13 @@ use Mondofute\Bundle\ClientBundle\Form\ClientClientUserType;
 
 class CommandeType extends AbstractType
 {
+    private $statutDossier;
+
+    public function __construct($statutDossier)
+    {
+        $this->statutDossier = $statutDossier;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +46,7 @@ class CommandeType extends AbstractType
             $site = $siteRepository->findOneBy(['crm' => true]);
         }
 
+        $locale = $options['locale'];
         $builder
             ->add('prixVente')
             ->add('site', EntityType::class, [
@@ -48,16 +58,28 @@ class CommandeType extends AbstractType
             ])
             ->add('dateCommande')
             ->add('numCommande')
-            ->add('clients',EntityType::class,array(
+            ->add('clients', EntityType::class, array(
                 'class' => Client::class,
                 'multiple' => true,
                 'expanded' => false,
                 'required' => false,
-//                'entry_type' => ::class,
-//                'label' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => true,
+            ))
+            ->add('statutDossier', EntityType::class, array(
+                'class' => StatutDossier::class,
+                'mapped' => false,
+                'choice_label' => 'id',
+                'query_builder' => function (StatutDossierRepository $r) use ($locale) {
+                    $qb = $r->createQueryBuilder('s');
+                    $qb->select('s, traductions', 'gsd')
+                        ->join('s.groupeStatutDossier', 'gsd')
+                        ->join('gsd.traductions', 'gsdtrad')
+                        ->join('s.traductions', 'traductions')
+                        ->join('traductions.langue', 'langue')
+                        ->where('langue.code = :code')
+                        ->setParameter('code', $locale);
+                    return $qb;
+                },
+                'data' => $this->statutDossier,
             ))
             ->add('commandeLignes', PolyCollectionType::class, array(
             'types' => array(
@@ -108,7 +130,8 @@ class CommandeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande',
-            'addSejourPeriode' => false
+            'addSejourPeriode' => false,
+            'locale' => 'fr_FR'
         ));
     }
 

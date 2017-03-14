@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\CommandeBundle\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mondofute\Bundle\ClientBundle\Controller\ClientController;
@@ -33,6 +34,9 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
+use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
+use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
@@ -54,6 +58,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * Commande controller.
@@ -101,8 +106,7 @@ class CommandeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
-
-        $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande);
+        $form = $this->createForm(new CommandeType(null), $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 //        gestion du premier formulaire client formulaire
@@ -513,7 +517,7 @@ class CommandeController extends Controller
 //        récupère l'indice en preparation pour le multi-client
         $indice = intval($request->query->get('indice'), 10);
         $em = $this->getDoctrine()->getManager();
-        if(empty($request->query->get('id'))){
+        if (empty($request->query->get('id'))) {
             $client = new Client();
             $client->addMoyenCom(new Adresse())
                 ->addMoyenCom(new TelFixe())
@@ -523,7 +527,7 @@ class CommandeController extends Controller
             $clientUser = new ClientUser();
             $clientUser->setClient($client);
             $client->setClientUser($clientUser);
-        }else{
+        } else {
             $client = $em->getRepository(Client::class)->find($request->query->get('id'));
         }
 //        création du formType de la commande
@@ -570,8 +574,13 @@ class CommandeController extends Controller
     public function editAction(Request $request, Commande $commande)
     {
         $em = $this->getDoctrine()->getManager();
+//        gère le classement des commandeStatutDossier afin d'avoir le statut en cours
+        $criteresStatut = Criteria::create();
+        $criteresStatut->orderBy(array('dateHeure'=>'DESC'));
+        /** @var CommandeStatutDossier $originalStatutDossier */
+        $originalStatutDossier = $commande->getCommandeStatutDossiers()->matching($criteresStatut)->first();
         $deleteForm = $this->createDeleteForm($commande);
-        $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande)
+        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier()), $commande, array('locale'=>$request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
 
         $originalCommandeLignes = new ArrayCollection();
@@ -647,6 +656,15 @@ class CommandeController extends Controller
                 }
             }
             //            gestion du client
+//            ajoute le nouveau statut si le statut en cours est différent du statut choisi
+            if($originalStatutDossier->getStatutDossier()->getId() != $request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']){
+                $commandeStatutDossier = new CommandeStatutDossier();
+                $commandeStatutDossier->setCommande($commande);
+                $commandeStatutDossier->setDateHeure(new \DateTime());
+                $commandeStatutDossier->setStatutDossier($em->getRepository(StatutDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']));
+                $commande->addCommandeStatutDossier($commandeStatutDossier);
+            }
+//            gestion du client
             $clientUser->setEnabled(true);
             foreach ($client->getMoyenComs() as $moyenCom) {
                 $moyenCom->setDateCreation();
