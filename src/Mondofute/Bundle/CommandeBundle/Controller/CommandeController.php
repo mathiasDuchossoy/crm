@@ -25,6 +25,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
 use Mondofute\Bundle\DecoteBundle\Entity\Type;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeSejour as DecoteTypePeriodeSejour;
 use Mondofute\Bundle\DecoteBundle\Entity\TypePeriodeValidite as DecoteTypePeriodeValidite;
+use Mondofute\Bundle\DecoteBundle\Entity\TypeRemise;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
@@ -568,7 +569,7 @@ class CommandeController extends Controller
                 }
                 $promotionLogementPeriodes = $em->getRepository(PromotionLogementPeriode::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'promotion' => $commandeLigneRemisePromotion->getPromotion()]);
                 foreach ($promotionLogementPeriodes as $promotionLogementPeriode) {
-                    if (!$promotions->contains($promotionLogement->getPromotion())) {
+                    if (!$promotions->contains($promotionLogementPeriode->getPromotion())) {
                         $promotions->add($promotionLogementPeriode->getPromotion());
                     }
                 }
@@ -580,6 +581,9 @@ class CommandeController extends Controller
                         || $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::dateADate
                         && $promotion->getPromotionPeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
                         && $commande->getDateCommande() <= $promotion->getPromotionPeriodeValiditeDate()->getDateFin()
+                        || $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::periode
+                        && $sejourPeriode->getDateAchat() >= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . $promotion->getPromotionPeriodeValiditeJour()->getJourDebut() . 'D'))
+                        && $sejourPeriode->getDateAchat() <= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . intval($promotion->getPromotionPeriodeValiditeJour()->getJourFin()) . 'D'))
                     ) {
                         // 2eme test: TypePeriodeSejour
                         if (
@@ -587,8 +591,22 @@ class CommandeController extends Controller
                             || $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::dateADate
                             && $promotion->getPromotionPeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
                             && $sejourPeriode->getPeriode()->getFin() <= $promotion->getPromotionPeriodeSejourDate()->getDateFin()
+                            || $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::periode
+
                         ) {
-                            $promotionSejourPeriodes->get($sejourPeriode->getId())->add($promotion);
+                            if ($promotion->getTypePeriodeSejour() == DecoteTypePeriodeSejour::periode) {
+                                /** @var PeriodeValidite $periodeValidite */
+                                $ok = false;
+                                /** @var PromotionLogementPeriode $logementPeriode */
+                                foreach ($promotion->getLogementPeriodes() as $logementPeriode) {
+                                    if (!$ok && $logementPeriode->getPeriode() == $sejourPeriode->getPeriode()) {
+                                        $promotionSejourPeriodes->get($sejourPeriode->getId())->add($promotion);
+                                        $ok = true;
+                                    }
+                                }
+                            } else {
+                                $promotionSejourPeriodes->get($sejourPeriode->getId())->add($promotion);
+                            }
                         }
                     }
                 }
@@ -612,7 +630,7 @@ class CommandeController extends Controller
             foreach ($commande->getCommandeLigneRemiseDecotes($type) as $commandeLigneRemiseDecote) {
                 $decotes = new ArrayCollection();
 
-                // on récupère toute les pormotions concernant le logement
+                // on récupère toute les promotions concernant le logement
                 $decoteLogements = $em->getRepository(DecoteLogement::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'decote' => $commandeLigneRemiseDecote->getDecote()]);
                 foreach ($decoteLogements as $decoteLogement) {
                     if (!$decotes->contains($decoteLogement->getDecote())) {
@@ -621,7 +639,7 @@ class CommandeController extends Controller
                 }
                 $decoteLogementPeriodes = $em->getRepository(DecoteLogementPeriode::class)->findBy(['logement' => $sejourPeriode->getLogement(), 'decote' => $commandeLigneRemiseDecote->getDecote()]);
                 foreach ($decoteLogementPeriodes as $decoteLogementPeriode) {
-                    if (!$decotes->contains($decoteLogement->getDecote())) {
+                    if (!$decotes->contains($decoteLogementPeriode->getDecote())) {
                         $decotes->add($decoteLogementPeriode->getDecote());
                     }
                 }
@@ -633,6 +651,10 @@ class CommandeController extends Controller
                         || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::dateADate
                         && $decote->getDecotePeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
                         && $commande->getDateCommande() <= $decote->getDecotePeriodeValiditeDate()->getDateFin()
+                        || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::periode
+                        && $sejourPeriode->getDateAchat() >= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . $decote->getDecotePeriodeValiditeJour()->getJourDebut() . 'D'))
+                        && $sejourPeriode->getDateAchat() <= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . intval($decote->getDecotePeriodeValiditeJour()->getJourFin()) . 'D'))
+                        || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::weekend && $sejourPeriode->getPeriode()->getType()->getId() == 1
                     ) {
                         // 2eme test: TypePeriodeSejour
                         if (
@@ -640,14 +662,47 @@ class CommandeController extends Controller
                             || $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::dateADate
                             && $decote->getDecotePeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
                             && $sejourPeriode->getPeriode()->getFin() <= $decote->getDecotePeriodeSejourDate()->getDateFin()
+                            || $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::periode
                         ) {
-                            $decoteSejourPeriodes->get($sejourPeriode->getId())->add($decote);
+                            if ($decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::periode) {
+                                /** @var PeriodeValidite $periodeValidite */
+                                $ok = false;
+                                /** @var DecoteLogementPeriode $logementPeriode */
+                                foreach ($decote->getLogementPeriodes() as $logementPeriode) {
+                                    if (!$ok && $logementPeriode->getPeriode() == $sejourPeriode->getPeriode()) {
+                                        $decoteSejourPeriodes->get($sejourPeriode->getId())->add($decote);
+                                        $ok = true;
+                                    }
+                                }
+                            } else {
+                                $decoteSejourPeriodes->get($sejourPeriode->getId())->add($decote);
+                            }
                         }
                     }
                 }
             }
-        }
 
+            $decoteTmp = new Decote();
+            foreach ($decoteSejourPeriodes->get($sejourPeriode->getId()) as $decote) {
+                // traitement pour savoir si le type est un pourcentage
+                if ($decote->getTypeRemise() == TypeRemise::poucentage) {
+                    $val = ($sejourPeriode->getPrixVente() * $decote->getValeurRemise()) / 100;
+                } else {
+                    $val = $decote->getValeurRemise();
+                }
+                if ($decoteTmp->getTypeRemise() == TypeRemise::poucentage) {
+                    $valTmp = ($sejourPeriode->getPrixVente() * $decoteTmp->getValeurRemise()) / 100;
+                } else {
+                    $valTmp = $decoteTmp->getValeurRemise();
+                }
+                if ($val > $valTmp) {
+                    $decoteSejourPeriodes->get($sejourPeriode->getId())->removeElement($decoteTmp);
+                } else {
+                    $decoteSejourPeriodes->get($sejourPeriode->getId())->removeElement($decote);
+                }
+                $decoteTmp = $decote;
+            }
+        }
         return $decoteSejourPeriodes;
     }
 
@@ -683,6 +738,9 @@ class CommandeController extends Controller
                             || $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::dateADate
                             && $promotion->getPromotionPeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
                             && $commande->getDateCommande() <= $promotion->getPromotionPeriodeValiditeDate()->getDateFin()
+                            || $promotion->getTypePeriodeValidite() == PromotionTypePeriodeValidite::periode
+                            && $sejourPeriode->getDateAchat() >= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . $promotion->getPromotionPeriodeValiditeJour()->getJourDebut() . 'D'))
+                            && $sejourPeriode->getDateAchat() <= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . intval($promotion->getPromotionPeriodeValiditeJour()->getJourFin()) . 'D'))
                         ) {
                             // 2eme test: TypePeriodeSejour
                             if (
@@ -690,8 +748,22 @@ class CommandeController extends Controller
                                 || $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::dateADate
                                 && $promotion->getPromotionPeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
                                 && $sejourPeriode->getPeriode()->getFin() <= $promotion->getPromotionPeriodeSejourDate()->getDateFin()
+                                || $promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::periode
                             ) {
-                                $promotionSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($promotion);
+                                if ($promotion->getTypePeriodeSejour() == PromotionTypePeriodeSejour::periode) {
+                                    /** @var PeriodeValidite $periodeValidite */
+                                    $ok = false;
+                                    foreach ($promotion->getPeriodeValidites() as $periodeValidite) {
+                                        if (!$ok && $periodeValidite->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
+                                            && $sejourPeriode->getPeriode()->getFin() <= $periodeValidite->getDateFin()
+                                        ) {
+                                            $promotionSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($promotion);
+                                            $ok = true;
+                                        }
+                                    }
+                                } else {
+                                    $promotionSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($promotion);
+                                }
                             }
                         }
                     }
@@ -731,8 +803,12 @@ class CommandeController extends Controller
                         if (
                             $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::permanent
                             || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::dateADate
-                            && $decote->getDecotePeriodeValiditeDate()->getDateDebut() <= $commande->getDateCommande()
-                            && $commande->getDateCommande() <= $decote->getDecotePeriodeValiditeDate()->getDateFin()
+                            && $decote->getDecotePeriodeValiditeDate()->getDateDebut() <= $sejourPeriode->getDateAchat()
+                            && $sejourPeriode->getDateAchat() <= $decote->getDecotePeriodeValiditeDate()->getDateFin()
+                            || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::periode
+                            && $sejourPeriode->getDateAchat() >= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . $decote->getDecotePeriodeValiditeJour()->getJourDebut() . 'D'))
+                            && $sejourPeriode->getDateAchat() <= date_sub(new DateTime(date($sejourPeriode->getPeriode()->getDebut()->format('y-m-d'))), new \DateInterval('P' . intval($decote->getDecotePeriodeValiditeJour()->getJourFin()) . 'D'))
+                            || $decote->getTypePeriodeValidite() == DecoteTypePeriodeValidite::weekend && $sejourPeriode->getPeriode()->getType()->getId() == 1
                         ) {
                             // 2eme test: TypePeriodeSejour
                             if (
@@ -740,11 +816,45 @@ class CommandeController extends Controller
                                 || $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::dateADate
                                 && $decote->getDecotePeriodeSejourDate()->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
                                 && $sejourPeriode->getPeriode()->getFin() <= $decote->getDecotePeriodeSejourDate()->getDateFin()
+                                || $decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::periode
                             ) {
-                                $decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($decote);
+                                if ($decote->getTypePeriodeSejour() == DecoteTypePeriodeSejour::periode) {
+                                    /** @var PeriodeValidite $periodeValidite */
+                                    $ok = false;
+                                    foreach ($decote->getPeriodeValidites() as $periodeValidite) {
+                                        if (!$ok && $periodeValidite->getDateDebut() <= $sejourPeriode->getPeriode()->getDebut()
+                                            && $sejourPeriode->getPeriode()->getFin() <= $periodeValidite->getDateFin()
+                                        ) {
+                                            $decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($decote);
+                                            $ok = true;
+                                        }
+                                    }
+                                } else {
+                                    $decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->add($decote);
+                                }
                             }
                         }
                     }
+                }
+                $decoteTmp = new Decote();
+                foreach ($decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId()) as $decote) {
+                    // traitement pour savoir si le type est un pourcentage
+                    if ($decote->getTypeRemise() == TypeRemise::poucentage) {
+                        $val = ($sejourPeriode->getPrixVente() * $decote->getValeurRemise()) / 100;
+                    } else {
+                        $val = $decote->getValeurRemise();
+                    }
+                    if ($decoteTmp->getTypeRemise() == TypeRemise::poucentage) {
+                        $valTmp = ($sejourPeriode->getPrixVente() * $decoteTmp->getValeurRemise()) / 100;
+                    } else {
+                        $valTmp = $decoteTmp->getValeurRemise();
+                    }
+                    if ($val > $valTmp) {
+                        $decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->removeElement($decoteTmp);
+                    } else {
+                        $decoteSejourPeriodes->get($sejourPeriode->getId())->get($commandeLignePrestationAnnex->getId())->removeElement($decote);
+                    }
+                    $decoteTmp = $decote;
                 }
             }
         }
