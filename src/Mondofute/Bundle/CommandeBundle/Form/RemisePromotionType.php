@@ -18,7 +18,7 @@ class RemisePromotionType extends AbstractType
     {
         $site = $options['site'];
         $builder
-            ->add('prixVente')
+//            ->add('prixVente')
             ->add('promotion', EntityType::class, [
                 'class' => Promotion::class,
                 'choice_label' => 'libelle',
