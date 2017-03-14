@@ -11,7 +11,6 @@ use Mondofute\Bundle\PeriodeBundle\Repository\PeriodeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,11 +33,13 @@ class SejourPeriodeType extends AbstractType
         $locale = 'fr_FR';
 
         $builder
-            ->add('dateAchat', DateTimeType::Class, [
-                'attr' => [
-                    'style' => 'display:none'
+            ->add('dateAchat'
+                , null, [
+                    'attr' => [
+                        'style' => 'display:none'
+                    ]
                 ]
-            ])
+            )
             ->add('prixCatalogue')
             ->add('prixVente', null, [
                 'attr' => [

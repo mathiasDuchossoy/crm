@@ -1053,7 +1053,8 @@ class CommandeController extends Controller
         $sejourPeriode = new SejourPeriode();
         $sejourPeriode
             ->setPeriode($em->find(Periode::class, $periodeId))
-            ->setLogement($em->find(Logement::class, $logementId));
+            ->setLogement($em->find(Logement::class, $logementId))
+            ->setDateAchat(new DateTime());
 
         $commande->getCommandeLignes()->set($index, $sejourPeriode);
 
