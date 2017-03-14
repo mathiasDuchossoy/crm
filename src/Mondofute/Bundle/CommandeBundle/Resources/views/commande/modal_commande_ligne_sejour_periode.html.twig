@@ -14,9 +14,11 @@
                                 <select id="rechercher_logement_station"
                                         class="form-control">
                                     <option value=""> --- Choisir une station ---</option>
-                                    {% for station in stations %}
-                                        <option value="{{ station['id'] }}">{{ station['libelle'] }}</option>
-                                    {% endfor %}
+                                    {% if stations is defined %}
+                                        {% for station in stations %}
+                                            <option value="{{ station['id'] }}">{{ station['libelle'] }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
                         </div>
@@ -27,9 +29,11 @@
                                 <select id="rechercher_logement_fournisseur"
                                         class="form-control">
                                     <option value=""> --- Choisir un fournisseur ---</option>
-                                    {% for fournisseur in fournisseurs %}
-                                        <option value="{{ fournisseur.id }}">{{ fournisseur.enseigne }}</option>
-                                    {% endfor %}
+                                    {% if fournisseurs is defined %}
+                                        {% for fournisseur in fournisseurs %}
+                                            <option value="{{ fournisseur.id }}">{{ fournisseur.enseigne }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
                         </div>
