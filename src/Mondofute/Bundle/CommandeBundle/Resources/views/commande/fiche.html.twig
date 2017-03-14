@@ -311,12 +311,14 @@
                                 {% endif %}
                             {% endfor %}
                         </th>
-                        {% for SejourPeriode in promotionPrestationAnnexeSejourPeriodes[form.vars.value.id] %}
-                            {% for promotionPrestationAnnexe in SejourPeriode %}
-                                <th>
-                                    {{ promotionPrestationAnnexe.libelle }}
-                                </th>
-                            {% endfor %}
+                        {% for commandeLignePrestationAnnexe in form.vars.value.commandeLignePrestationAnnexes %}
+                            <th>
+                                {% for traduction in commandeLignePrestationAnnexe.fournisseurPrestationAnnexeParam.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelleParam }}
+                                    {% endif %}
+                                {% endfor %}
+                            </th>
                         {% endfor %}
                     </tr>
                     <tr>
@@ -343,13 +345,13 @@
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th>Décote masquée:</th>
+                        <th>Décote visible:</th>
                         <td>
-                            {% for element in decoteMasqueeSejourPeriodes[form.vars.value.id] %}
+                            {% for element in decoteVisibleSejourPeriodes[form.vars.value.id] %}
                                 {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
                             {% endfor %}
                         </td>
-                        {% for SejourPeriode in decoteMasqueePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                        {% for SejourPeriode in decoteVisiblePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
                             {% for promotionPrestationAnnexe in SejourPeriode %}
                                 <td>
                                     {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
@@ -361,13 +363,13 @@
                         {% endfor %}
                     </tr>
                     <tr>
-                        <th>Décote visible:</th>
+                        <th>Décote masquée:</th>
                         <td>
-                            {% for element in decoteVisibleSejourPeriodes[form.vars.value.id] %}
+                            {% for element in decoteMasqueeSejourPeriodes[form.vars.value.id] %}
                                 {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
                             {% endfor %}
                         </td>
-                        {% for SejourPeriode in decoteVisiblePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                        {% for SejourPeriode in decoteMasqueePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
                             {% for promotionPrestationAnnexe in SejourPeriode %}
                                 <td>
                                     {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
@@ -1280,7 +1282,7 @@
             var date_debut_sejour = $('#date_debut_sejour_' + index).val();
             var date_fin_sejour = $('#date_fin_sejour_' + index).val();
             var $selectPeriode = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode');
-            var logement = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();;;;;;;;;;;;;;;;;;;;;
+            var logement = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();
             if (date_debut_sejour && date_fin_sejour && logement) {
                 var path = '{{ path('mondofute_catalogue_periode_get_by_dates' , {
                     'logementId' : '_logementId_','dateDebut' : '_dateDebut_','dateFin' : '_dateFin_'}) }}';
