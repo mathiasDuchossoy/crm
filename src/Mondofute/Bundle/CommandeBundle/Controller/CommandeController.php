@@ -107,8 +107,7 @@ class CommandeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
-
-        $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande);
+        $form = $this->createForm(new CommandeType(null), $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 //        gestion du premier formulaire client formulaire
@@ -634,7 +633,7 @@ class CommandeController extends Controller
 //        récupère l'indice en preparation pour le multi-client
         $indice = intval($request->query->get('indice'), 10);
         $em = $this->getDoctrine()->getManager();
-        if(empty($request->query->get('id'))){
+        if (empty($request->query->get('id'))) {
             $client = new Client();
             $client->addMoyenCom(new Adresse())
                 ->addMoyenCom(new TelFixe())
@@ -644,7 +643,7 @@ class CommandeController extends Controller
             $clientUser = new ClientUser();
             $clientUser->setClient($client);
             $client->setClientUser($clientUser);
-        }else{
+        } else {
             $client = $em->getRepository(Client::class)->find($request->query->get('id'));
         }
 //        création du formType de la commande
@@ -706,8 +705,7 @@ class CommandeController extends Controller
         $originalLitigeDossiers = $commande->getCommandeLitigeDossiers();
 //        fin de la gestion des litiges
         $deleteForm = $this->createDeleteForm($commande);
-        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier(), $originalLitigeDossier),
-            $commande, array('locale' => $request->getLocale()))
+        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier()), $commande, array('locale'=>$request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
 
         $originalCommandeLignes = new ArrayCollection();
