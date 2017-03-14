@@ -30,6 +30,8 @@
                 {% if  form.vars.value is not null %}
                     {{ form.vars.value.dateAchat |date("d/m/Y H:i") }}
                 {% endif %}
+                {{ form_widget(form.dateAchat) }}
+                {{ form_widget(form.quantite) }}
             </td>
             <td>
                 <div class="form-group">
