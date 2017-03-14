@@ -162,6 +162,11 @@
         </h1>
     </section>
     <section>
+        <div style="background-color: #00b3ee" class="row">
+            <div class="col-md-12">
+                statut
+            </div>
+        </div>
         {#  BLOCK CONTENANT LE FORMULAIRE #}
         {% block formulaire %}
             {% include '::flashbags.html.twig' %}
@@ -216,7 +221,8 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <button type="button" class="btn btn-default" id="nouveau-client" name="nouveau-client" data-client-id="" >{{ 'nouveau client' | trans }}</button>
+                                <button type="button" class="btn btn-default" id="nouveau-client" name="nouveau-client"
+                                        data-client-id="">{{ 'nouveau client' | trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -237,7 +243,31 @@
                     </div>
                 </div>
                 <div id="commande-statut" class="tab-pane fade">
-
+                    {#{{ dump(form.statutDossier) }}#}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"
+                               for="{{ form.statutDossier.vars.id }}">{{ 'statut' | trans }}</label>
+                        <div class="col-md-10">
+                            <select class="form-control" id="{{ form.statutDossier.vars.id }}"
+                                    name="{{ form.statutDossier.vars.full_name }}">
+                                {% for statutDossier in form.statutDossier.vars.choices %}
+                                    {# récupération du libelle du groupeStatutDossier associé #}
+                                    {% set libelleGroupe = '' %}
+                                    {% for groupe in statutDossier.data.groupeStatutDossier.traductions %}
+                                        {% if groupe.langue.code == app.request.locale %}
+                                            {% set libelleGroupe = groupe.libelle %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {# gestion de l'option statutDossier#}
+                                    <option {% if form.statutDossier.vars.data.id is defined and form.statutDossier.vars.data.id == statutDossier.data.id %}selected="selected"{% endif %}
+                                            value="{{ statutDossier.data.id }}"
+                                            style="background-color:{{ statutDossier.data.codeCouleur }};">{{ libelleGroupe }}
+                                        - {{ statutDossier.data.traductions[0].libelle }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {#{{ form_row(form.statutDossier,{'attr':{'test':'test'}}) }}#}
                 </div>
             </div>
             {{ form_row(form._token) }}
@@ -275,7 +305,7 @@
                 chargerFormulaireClient(datas);
             }
         });
-        $(document).on('click','#nouveau-client',function(e){
+        $(document).on('click', '#nouveau-client', function (e) {
             alert('ok');
             var datas = $(this).data();
             chargerFormulaireClient(datas);
