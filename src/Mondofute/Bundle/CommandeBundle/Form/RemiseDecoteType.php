@@ -18,7 +18,7 @@ class RemiseDecoteType extends AbstractType
     {
         $site = $options['site'];
         $builder
-            ->add('prixVente')
+//            ->add('prixVente')
             ->add('decote', EntityType::class, [
                 'class' => Decote::class,
                 'choice_label' => 'libelle',
