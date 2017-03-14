@@ -67,10 +67,10 @@ class LogementPeriodeLocatifRepository extends \Doctrine\ORM\EntityRepository
 
     public function getByDates($logementId, $dateDebut, $dateFin)
     {
-        $now = new \DateTime();
+        $now = new \DateTime(date('y-m-d'));
 
         $qb = $this->createQueryBuilder('entity')
-            ->select('entity')
+            ->select('entity, periode')
             ->join('entity.logement', 'logement')
             ->join('entity.periode', 'periode')
             ->where('logement = :logementId')
