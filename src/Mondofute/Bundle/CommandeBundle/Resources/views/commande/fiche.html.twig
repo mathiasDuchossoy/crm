@@ -844,6 +844,7 @@
                                             $panelBodyId.append($prestationAnnexeExterneType);
                                             $panelBodyId.append($inputDateDebut);
                                             $panelBodyId.append($inputDateFin);
+                                            $panelBodyId.append($('<input name="mondofute_bundle_commandebundle_commande[commandeLignes][' + index + '][_type]" value="prestationAnnexe" type="hidden">'));
                                             $collectionHolder.data('index', index + 1);
                                             $('#modal_commande_prestation_annexe_externe').modal('hide');
                                         }
