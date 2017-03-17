@@ -357,6 +357,10 @@ class Hebergement
         $iterator = $emplacements->getIterator();
         unset($emplacements);
 
+        foreach ($iterator as $item) {
+            $translator->trans(((string)$item->getTypeEmplacement()) . 'Libelle');
+        }
+
         // trier la nouvelle itération, en fonction de l'ordre d'affichage
         $iterator->uasort(function (EmplacementHebergement $a, EmplacementHebergement $b) use ($translator) {
             $libelle1 = $translator->trans(((string)$a->getTypeEmplacement()) . 'Libelle');

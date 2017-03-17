@@ -419,7 +419,6 @@
                             $promotionWidgetTypeFournisseur.hide();
                             break;
                         case '3':
-                            console.log('la');
                             $promotionPanelPrestationAnnexe.hide();
                             $promotionPanelHebergement.hide();
                             break;
@@ -496,19 +495,21 @@
             var $element = $(element);
             var $listGroup = $('#' + $element.data('list_group'));
             $listGroup.find('input.' + classFamille + '[type=checkbox]').prop('checked', $element.prop("checked"));
-            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
+//            $listGroup.find('input:checkbox').prop('checked', $element.prop("checked"));
             $listGroup.find('input:checkbox[id^="checkbox_all_"]').each(function (index, val) {
-                $(val).triggerHandler('click');
-            })
+                if ($(val).data('parent-famille') == classFamille) {
+                    $(val).prop('checked', $element.prop("checked"));
+                    $(val).triggerHandler('click');
+                }
+            });
         }
 
         function checkListStationHebergement(checkbox, className) {
             $('.' + className).each(function (index, element) {
                 $(element).find('input[type=checkbox]').prop('checked', $(checkbox).prop('checked'));
                 $(element).find('input:checkbox[id^="checkbox_all_logement_"]').triggerHandler('click');
-            })
+            });
         }
-
 
         $(document).ready(function () {
             {% if panelPromotion is defined %}
