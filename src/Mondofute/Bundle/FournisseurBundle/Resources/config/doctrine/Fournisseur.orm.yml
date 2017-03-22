@@ -122,9 +122,6 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             mappedBy: fournisseur
             cascade: ['persist','remove']
     manyToOne:
-        passerelle:
-            targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\FournisseurPasserelle
-            inversedBy: fournisseurs
         fournisseurParent:
             targetEntity: Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur
             inversedBy: fournisseurEnfants
@@ -136,6 +133,9 @@ Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur:
             targetEntity: Application\Sonata\MediaBundle\Entity\Media
             cascade: ['persist','remove']
 #            orphanRemoval: true
+        paramPasserelle:
+            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+            cascade: ['persist','remove']
     manyToMany:
         types:
             targetEntity: Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe

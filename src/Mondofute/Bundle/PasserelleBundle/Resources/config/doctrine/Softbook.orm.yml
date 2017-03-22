@@ -1,0 +1,21 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Softbook:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\SoftbookRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    fields:
+        paramA:
+            type: string
+            length: 255
+        paramB:
+            type: string
+            length: 255
+    manyToOne:
+        type:
+            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\SoftbookType
+    lifecycleCallbacks: {  }
