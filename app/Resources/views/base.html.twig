@@ -17,18 +17,65 @@
     {% endif %}
 </head>
 <body>
-{% block header %}
-    <div class="row">
-        {% include '::header.html.twig' %}
+<nav class="navbar navbar-default no-margin">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header fixed-brand">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" id="menu-toggle">
+            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+        </button>
+        <a class="navbar-brand" href="{{ path('mondofute_accueil_homepage') }}"><i class="fa fa-rocket fa-4"></i>Mondofute</a>
+    </div><!-- navbar-header-->
+
+    {#<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">#}
+    <ul class="nav navbar-nav">
+        <li class="active">
+            <button class="navbar-toggle collapse in" data-toggle="collapse" id="menu-toggle-2"><span
+                        class="glyphicon glyphicon-th-large" aria-hidden="true"></span></button>
+        </li>
+    </ul>
+    {#</div>#}
+
+    {# ***** LOGIN ***** #}
+    <ul class="nav navbar-nav navbar-right" style="padding-right: 50px;">
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <li style="color: black; margin-top: 15px;">
+                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+            </li>
+            <li>
+                <a href="{{ path('fos_user_security_logout') }}">
+                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{{ path('utilisateur_new') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+            </li>
+            <li>
+                <a href="{{ path('fos_user_security_login') }}"><span
+                            class="glyphicon glyphicon-log-in"></span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+    {# ***** FIN LOGIN ***** #}
+</nav>
+<div id="wrapper">
+    <!-- Sidebar -->
+    {% include ('sidebar_nav.html.twig') %}
+    <!-- /#sidebar-wrapper -->
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid xyz">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% block body %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
     </div>
-{% endblock %}
-<div class="container">
-    <div class="row">
-        {% block body %}{% endblock %}
-    </div>
+    <!-- /#page-content-wrapper -->
 </div>
-{% block footer %}
-{% endblock %}
 {% block javascripts %}
     {% javascripts
     'js/jquery.min.js'
@@ -36,10 +83,54 @@
     'js/bootstrap-datepicker.js'
     'js/bootstrap-datetimepicker.js'
     'js/select2.js'
-    'js/gestion-password.js'
-    %}
+    'js/gestion-password.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script type="text/javascript">
+        //        $("#menu-toggle").click(function (e) {
+        //            console.log('tata');
+        //            e.preventDefault();
+        //            $("#wrapper").toggleClass("toggled");
+        //        });
+        $("#menu-toggle-2").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled-2");
+            if ($("#wrapper").hasClass("toggled-2")) {
+                console.log('coucou');
+                $('#sidebar-wrapper').css('overflow-y', 'hidden')
+            } else {
+                $('#sidebar-wrapper').css('overflow-y', 'visible')
+            }
+            $('#menu ul').hide();
+        });
+        $('li.dropdown-submenu').hover(function () {
+            $(this).find('.dropdown-menu:first').show();
+        }, function () {
+            $(this).find('.dropdown-menu:first').hide();
+        });
+
+        function initMenu() {
+            $('#menu ul').hide();
+            $('#menu ul').children('.current').parent().show();
+            //$('#menu ul:first').show();
+            $('#menu li a').click(
+                function () {
+                    var checkElement = $(this).next();
+                    if ((checkElement.is('ul')) && (checkElement.is(':visible'))) {
+                        return false;
+                    }
+                    if ((checkElement.is('ul')) && (!checkElement.is(':visible'))) {
+                        $('#menu ul:visible').slideUp('normal');
+                        checkElement.slideDown('normal');
+                        return false;
+                    }
+                }
+            );
+        }
+        $(document).ready(function () {
+            initMenu();
+        });
+    </script>
     <script type="text/javascript">
         //        var itemNonPersonalisable = [];
         //                var items = [];
@@ -72,11 +163,11 @@
 //                        dépile tab par le bas (systeme First In Last Out) afin d'afficher les bons onglets
                             while ((id = tab.pop())) {
                                 $('a[href="#' + id + '"]')
-                                        .tab('show')
-                                        .on('shown.bs.tab', function () {
-                                            $('#' + obj + '').focus();
+                                    .tab('show')
+                                    .on('shown.bs.tab', function () {
+                                        $('#' + obj + '').focus();
 //                                        return false;
-                                        });
+                                    });
                             }
 //                        instancie le premier element invalid
                             premierElementInvalid = $(this);
@@ -241,7 +332,6 @@
         }
 
 
-
         function displayChild(element, div) {
             $element = $(element);
             $stationChild = $('#' + div);
@@ -265,19 +355,17 @@
          * @param dateFin
          * @param provenance
          */
-        function changeDateTimes(dateDebut, dateFin, provenance )
-        {
-            var $dateDebut  = $('#' + dateDebut);
+        function changeDateTimes(dateDebut, dateFin, provenance) {
+            var $dateDebut = $('#' + dateDebut);
             var dateDebutSplit = $dateDebut.val().split(" - ");
             var dateTimeDebut = new Date(dateDebutSplit[0].split("/").reverse().join("-") + ' ' + dateDebutSplit[1]);
 
-            var $dateFin    = $('#' + dateFin);
+            var $dateFin = $('#' + dateFin);
             var dateFinSplit = $dateFin.val().split(" - ");
             var dateTimeFin = new Date(dateFinSplit[0].split("/").reverse().join("-") + ' ' + dateFinSplit[1]);
 
-            if(dateTimeDebut > dateTimeFin)
-            {
-                switch (provenance){
+            if (dateTimeDebut > dateTimeFin) {
+                switch (provenance) {
                     case 'dateDebut':
                         $dateFin.val($dateDebut.val());
                         break;
@@ -292,14 +380,13 @@
 
 
         function compareDates(dateDebut, dateFin, provenance) {
-            var $dateDebut  = $('#' + dateDebut);
-            var dateDebutObject =  new Date($dateDebut.val().split("/").reverse().join("-"));
-            var $dateFin    = $('#' + dateFin);
-            var dateFinObject =  new Date($dateFin.val().split("/").reverse().join("-"));
+            var $dateDebut = $('#' + dateDebut);
+            var dateDebutObject = new Date($dateDebut.val().split("/").reverse().join("-"));
+            var $dateFin = $('#' + dateFin);
+            var dateFinObject = new Date($dateFin.val().split("/").reverse().join("-"));
 
-            if(dateDebutObject > dateFinObject)
-            {
-                switch (provenance){
+            if (dateDebutObject > dateFinObject) {
+                switch (provenance) {
                     case 'dateDebut':
                         $dateFin.val($dateDebut.val());
                         break;
@@ -327,7 +414,7 @@
             else {
                 var dateDebut = $element.find('.date-debut').first();
                 var date = new Date();
-                $(dateDebut).val( date.toLocaleDateString() + " - " + date.toLocaleTimeString().slice(0 , 5));
+                $(dateDebut).val(date.toLocaleDateString() + " - " + date.toLocaleTimeString().slice(0, 5));
                 $element.show();
                 $buttonEdit.hide();
                 $buttonRemove.show();

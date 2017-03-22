@@ -1,0 +1,361 @@
+<div id="sidebar-wrapper">
+    <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+
+        <li class="{% if 'geographie' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>
+                Géographie</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                {# *** SECTEUR *** #}
+                <li class="dropdown-submenu {% if 'secteur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Secteur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'secteur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_secteur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'secteur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_secteur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN SECTEUR *** #}
+                {# *** REGION *** #}
+                <li class="dropdown-submenu {% if 'region' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Région</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'region_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_region_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'region_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_region_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN REGION *** #}
+                {# *** DEPARTEMENT *** #}
+                <li class="dropdown-submenu {% if 'departement' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Département</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'departement_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_departement_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'departement_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_departement_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN DEPARTEMENT *** #}
+                {# *** ZONE TOURISTIQUE *** #}
+                <li class="dropdown-submenu {% if 'zonetouristique' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Zone Touristique</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'zonetouristique_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_zonetouristique_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'zonetouristique_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_zonetouristique_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** DOMAINE ***** #}
+        <li class="{% if 'domaine' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Domaine</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                {# *** DOMAINE *** #}
+                <li class="dropdown-submenu {% if 'domaine' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Domaine</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'domaine_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('domaine_domaine_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'domaine_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('domaine_domaine_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN DOMAINE *** #}
+                {# *** PROFIL *** #}
+                <li class="dropdown-submenu {% if 'profil' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Profil</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'profil_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_profil_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'profil_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_profil_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# *** FIN PROFIL *** #}
+            </ul>
+        </li>
+        {# ***** FIN DOMAINE ***** #}
+        {# ***** STATION ***** #}
+        <li class="dropdown {% if 'station_station' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Station</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'station_station' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Station</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'station_station_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('station_station_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'station_station_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('station_station_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN STATION ***** #}
+        {# ***** FOURNISSEUR ***** #}
+        <li class="dropdown {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Fournisseur</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'fournisseur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Fournisseur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'fournisseur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('fournisseur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'fournisseur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('fournisseur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN FOURNISSEUR ***** #}
+        {# ***** UTILISATEUR ***** #}
+        <li class="dropdown {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Utilisateur</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'utilisateur' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Utilisateur</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'utilisateur_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'utilisateur_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('utilisateur_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN UTILISATEUR ***** #}
+        {# ***** CLIENT ***** #}
+        <li class="dropdown {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Client</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'client' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Client</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'client_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'client_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('client_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN CLIENT ***** #}
+        {# ***** HEBERGEMENT ***** #}
+        <li class="dropdown {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Hébergement</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'hebergement' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Hebergement</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'hebergement_hebergement_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'hebergement_hebergement_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('hebergement_hebergement_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN HEBERGEMENT ***** #}
+        {# ***** PARAMETRAGE ***** #}
+        <li class="dropdown {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">{{ 'parametrages' | trans |capitalize }}</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'type_service' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'type.service' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'type_service_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'type_service_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('type_service_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-submenu {% if 'periode' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'periode' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'periode_periode_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'periode_periode_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('periode_periode_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FAMILLE PRESTATION ANNEXE ***** #}
+                <li class="dropdown-submenu {% if 'familleprestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'famille prestation annexe' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'familleprestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('familleprestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN FAMILLE PRESTATION ANNEXE ***** #}
+                {# ***** STATION LABEL ***** #}
+                <li class="dropdown-submenu {% if 'stationlabel' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'station label' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'stationlabel_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationlabel_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'stationlabel_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('stationlabel_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN STATION LABEL ***** #}
+                {# ***** GRANDE VILLE ***** #}
+                <li class="dropdown-submenu {% if 'grandeville' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'grande ville' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'geographie_grandeville_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_grandeville_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'geographie_grandeville_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('geographie_grandeville_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN GRANDE VILLE ***** #}
+                {# ***** NOMBRE DE CHAMBRE ***** #}
+                <li class="dropdown-submenu {% if 'nombredechambre' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'nombre de chambre' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'nombredechambre_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('nombredechambre_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'nombredechambre_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('nombredechambre_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN NOMBRE DE CHAMBRE ***** #}
+                {# ***** CANAL DECOTE ***** #}
+                <li class="dropdown-submenu {% if 'canaldecote' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'canal decote' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'canaldecote_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('canaldecote_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'canaldecote_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('canaldecote_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN CANAL DECOTE ***** #}
+                {# ***** SAISON ***** #}
+                <li class="dropdown-submenu {% if 'saison' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'saison' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'saison_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('saison_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'saison_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('saison_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN SAISON ***** #}
+            </ul>
+        </li>
+        {# ***** FIN PARAMETRAGE ***** #}
+        {# ***** PRESTATION ANNEXE ***** #}
+        <li class="dropdown {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Prestation annexe</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'prestationannexe' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Prestation annexe</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'prestationannexe_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('prestationannexe_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'prestationannexe_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('prestationannexe_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN PRESTATION ANNEXE ***** #}
+        {# ***** CODE PROMO ***** #}
+        <li class="dropdown {% if 'codepromo' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Code promo</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'codepromo' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Code promo</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'codepromo_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('codepromo_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'codepromo_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('codepromo_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN CODE PROMO ***** #}
+        {# ***** DECOTE ***** #}
+        <li class="dropdown {% if 'decote' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Decote</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'decote' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Decote</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'decote_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('decote_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'decote_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('decote_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN DECOTE ***** #}
+        {# ***** PROMOTION ***** #}
+        <li class="dropdown {% if 'promotion' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Promotion</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'promotion' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Promotion</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'promotion_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('promotion_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'promotion_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('promotion_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN PROMOTION ***** #}
+    </ul>
+</div>
