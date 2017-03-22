@@ -31,10 +31,6 @@ class Fournisseur extends Moral
      */
     private $interlocuteurs;
     /**
-     * @var FournisseurPasserelle
-     */
-    private $passerelle;
-    /**
      * @var integer
      */
     private $contient = FournisseurContient::PRODUIT;
@@ -142,6 +138,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $saisonFournisseurs;
+    /**
+     * @var \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+     */
+    private $paramPasserelle;
 
     /**
      * Fournisseur constructor.
@@ -204,30 +204,6 @@ class Fournisseur extends Moral
     public function removeInterlocuteur(FournisseurInterlocuteur $interlocuteur)
     {
         $this->interlocuteurs->removeElement($interlocuteur);
-    }
-
-    /**
-     * Get passerelle
-     *
-     * @return FournisseurPasserelle
-     */
-    public function getPasserelle()
-    {
-        return $this->passerelle;
-    }
-
-    /**
-     * Set passerelle
-     *
-     * @param FournisseurPasserelle $passerelle
-     *
-     * @return Fournisseur
-     */
-    public function setPasserelle(FournisseurPasserelle $passerelle = null)
-    {
-        $this->passerelle = $passerelle;
-
-        return $this;
     }
 
     function __clone()
@@ -1247,5 +1223,27 @@ class Fournisseur extends Moral
         return null;
     }
 
+    /**
+     * Get paramPasserelle
+     *
+     * @return \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+     */
+    public function getParamPasserelle()
+    {
+        return $this->paramPasserelle;
+    }
 
+    /**
+     * Set paramPasserelle
+     *
+     * @param \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle $paramPasserelle
+     *
+     * @return Fournisseur
+     */
+    public function setParamPasserelle(\Mondofute\Bundle\PasserelleBundle\Entity\Passerelle $paramPasserelle = null)
+    {
+        $this->paramPasserelle = $paramPasserelle;
+
+        return $this;
+    }
 }

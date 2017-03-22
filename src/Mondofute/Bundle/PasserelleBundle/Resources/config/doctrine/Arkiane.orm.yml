@@ -1,0 +1,15 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Arkiane:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\ArkianeRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    fields:
+        url:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

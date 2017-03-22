@@ -1,0 +1,22 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Pass:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\PassRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+        classe:
+            type: string
+            length: 255
+    oneToMany:
+        paramPasserelles:
+            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+            mappedBy: passerelle
+    lifecycleCallbacks: {  }
