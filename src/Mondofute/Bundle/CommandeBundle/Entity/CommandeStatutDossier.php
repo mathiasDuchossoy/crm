@@ -41,7 +41,7 @@ class CommandeStatutDossier
      * @param int $id
      * @return CommandeStatutDossier
      */
-    public function setId(int $id)
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
