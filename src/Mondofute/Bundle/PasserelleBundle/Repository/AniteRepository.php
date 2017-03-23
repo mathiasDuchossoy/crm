@@ -1,6 +1,6 @@
 <?php
 
-namespace HiDev\PasserelleBundle\Repository;
+namespace Mondofute\Bundle\PasserelleBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

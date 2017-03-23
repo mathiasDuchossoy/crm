@@ -9,9 +9,9 @@
 namespace Mondofute\Bundle\PasserelleBundle\Entity;
 
 
-use Mondofute\FournisseurBundle\Entity\Fournisseur;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 
-abstract class PasserelleFactory
+class PasserelleFactory
 {
     static public function init(Fournisseur $fournisseur)
     {

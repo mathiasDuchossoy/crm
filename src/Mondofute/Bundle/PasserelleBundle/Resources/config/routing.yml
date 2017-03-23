@@ -1,3 +1,4 @@
 mondofute_passerelle_homepage:
-    path:     /
+    path:     passerelle/{id}
     defaults: { _controller: MondofutePasserelleBundle:Default:index }
+    methods: GET
