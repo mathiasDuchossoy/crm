@@ -53,6 +53,8 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         return $result;
     }
 
+//    public function
+
     public function chargerLocatif($idLogement)
     {
         $em = $this->getEntityManager();
@@ -331,4 +333,56 @@ class LogementRepository extends \Doctrine\ORM\EntityRepository
         }
         return $logement;
     }
+
+
+    public function getByFournisseurHebergement($locale, $fournisseurHebergementId, $siteId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('logement , traductions ')
+            ->from('MondofuteLogementBundle:Logement', 'logement')
+            ->join('logement.traductions', 'traductions')
+            ->join('logement.logementUnifie', 'logementUnifie')
+            ->join('logement.site', 'site')
+            ->join('traductions.langue', 'langue')
+            ->join('logement.fournisseurHebergement', 'fournisseurHebergement')
+            ->where("langue.code = :code")
+            ->setParameter('code', $locale)
+            ->andWhere("fournisseurHebergement.id = :fournisseurHebergementId")
+            ->setParameter('fournisseurHebergementId', $fournisseurHebergementId)
+            ->andWhere("site.id = :siteId")
+            ->setParameter('siteId', $siteId)
+            ->orderBy('logement.id', 'ASC');
+
+        return $qb;
+    }
+
+
+    public function getForCommandeLigneSejour($fournisseurId, $hebergementId)
+    {
+        $qb = $this->createQueryBuilder('entity')
+            ->select('entity, periodes, periode ')
+            ->join('entity.fournisseurHebergement', 'fournisseurHebergement')
+            ->join('fournisseurHebergement.hebergement', 'hebergementUnifie')
+            ->join('hebergementUnifie.hebergements', 'hebergements')
+            ->join('hebergements.site', 'siteHebergement')
+            ->join('entity.site', 'site')
+            ->join('fournisseurHebergement.fournisseur', 'fournisseur')
+            ->join('entity.periodes', 'periodes')
+            ->join('periodes.periode', 'periode')
+            ->where('hebergements.id = :hebergementId')
+            ->andWhere('siteHebergement = site')
+            ->andWhere('fournisseur.id = :fournisseurId')
+            ->setParameters(
+                [
+                    'hebergementId' => $hebergementId,
+                    'fournisseurId' => $fournisseurId,
+                ]
+            );
+
+        $result = $qb->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+
+    }
+
 }

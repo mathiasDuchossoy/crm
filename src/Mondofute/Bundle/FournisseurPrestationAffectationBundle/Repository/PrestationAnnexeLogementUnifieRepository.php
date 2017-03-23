@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAffectationBundle\Repository;
 
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * PrestationAnnexeLogementUnifieRepository
  *
@@ -30,8 +32,15 @@ class PrestationAnnexeLogementUnifieRepository extends \Doctrine\ORM\EntityRepos
             ->andWhere('logementUnifie.id = :logementUnifieId')
             ->setParameter('logementUnifieId', $logementUnifieId);
 
-        $result = $qb->getQuery()->getOneOrNullResult();
-
+        try {
+            $result = $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $exception) {
+            dump($paramId);
+            dump($logementUnifieId);
+            dump($result = $qb->getQuery()->getResult());
+            die;
+        }
+//dump($result);die;
         return $result;
     }
 

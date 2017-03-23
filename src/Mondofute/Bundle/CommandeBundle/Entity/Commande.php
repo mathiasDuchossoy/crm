@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use ReflectionClass;
 
 class Commande
 {
@@ -51,6 +50,10 @@ class Commande
      * @var Site
      */
     private $site;
+    /**
+     * @var integer
+     */
+    private $prixVente = 0;
 
     /**
      * Constructor
@@ -198,22 +201,22 @@ class Commande
      */
     public function getCommandeLignes()
     {
-        $newCommandeLignes = new ArrayCollection();
-        foreach ($this->commandeLignes as $commandeLigne) {
-            $oReflectionClass = new ReflectionClass($commandeLigne);
-            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
-                /** @var CommandeLignePrestationAnnexe $commandeLigne */
-                if (empty($commandeLigne->getCommandeLigneSejour())) {
-                    $newCommandeLignes->add($commandeLigne);
-                }
-            } else {
-                $newCommandeLignes->add($commandeLigne);
-            }
-        }
-        $this->commandeLignes->clear();
-        foreach ($newCommandeLignes as $newCommandeLigne) {
-            $this->commandeLignes->add($newCommandeLigne);
-        }
+//        $newCommandeLignes = new ArrayCollection();
+//        foreach ($this->commandeLignes as $commandeLigne) {
+//            $oReflectionClass = new ReflectionClass($commandeLigne);
+//            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
+//                /** @var CommandeLignePrestationAnnexe $commandeLigne */
+//                if (empty($commandeLigne->getCommandeLigneSejour())) {
+//                    $newCommandeLignes->add($commandeLigne);
+//                }
+//            } else {
+//                $newCommandeLignes->add($commandeLigne);
+//            }
+//        }
+//        $this->commandeLignes->clear();
+//        foreach ($newCommandeLignes as $newCommandeLigne) {
+//            $this->commandeLignes->add($newCommandeLigne);
+//        }
         return $this->commandeLignes;
     }
 
@@ -307,5 +310,53 @@ class Commande
         $this->site = $site;
 
         return $this;
+    }
+
+    /**
+     * Get prixVente
+     *
+     * @return integer
+     */
+    public function getPrixVente()
+    {
+        return $this->prixVente;
+    }
+
+    /**
+     * Set prixVente
+     *
+     * @param integer $prixVente
+     *
+     * @return Commande
+     */
+    public function setPrixVente($prixVente)
+    {
+        $this->prixVente = $prixVente;
+
+        return $this;
+    }
+
+    public function getCommandeLigneRemisePromotions()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == RemisePromotion::class;
+        });
+    }
+
+    public function getSejourPeriodes()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == SejourPeriode::class;
+        });
+    }
+
+    public function getCommandeLigneRemiseDecotes($type = null)
+    {
+        return $this->commandeLignes->filter(function ($element) use ($type) {
+            if (!empty($type)) {
+                return (get_class($element) == RemiseDecote::class and $element->getDecote()->getType() == $type);
+            }
+            return get_class($element) == RemiseDecote::class;
+        });
     }
 }

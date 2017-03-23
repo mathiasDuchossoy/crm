@@ -2,8 +2,17 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLignePrestationAnnexeRepository
+    fields:
+        dateDebut:
+            type: datetime
+            nullable: true
+        dateFin:
+            type: datetime
+            nullable: true
     manyToOne:
         commandeLigneSejour:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour
             inversedBy: commandeLignePrestationAnnexes
+        fournisseurPrestationAnnexeParam:
+            targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
     lifecycleCallbacks: {  }

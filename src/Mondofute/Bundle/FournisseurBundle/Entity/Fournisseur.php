@@ -6,6 +6,7 @@ use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
+use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
@@ -142,6 +143,10 @@ class Fournisseur extends Moral
      * @var Collection
      */
     private $saisonFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $prestationAnnexeFournisseurs;
 
     /**
      * Fournisseur constructor.
@@ -161,6 +166,7 @@ class Fournisseur extends Moral
         $this->promotionFournisseurPrestationAnnexes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->saisonFournisseurs = new ArrayCollection();
+        $this->prestationAnnexeFournisseurs = new ArrayCollection();
     }
 
     /**
@@ -1248,4 +1254,38 @@ class Fournisseur extends Moral
     }
 
 
+
+    /**
+     * Add prestationAnnexeFournisseur
+     *
+     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     *
+     * @return Fournisseur
+     */
+    public function addPrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs[] = $prestationAnnexeFournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Remove prestationAnnexeFournisseur
+     *
+     * @param PrestationAnnexeFournisseur $prestationAnnexeFournisseur
+     */
+    public function removePrestationAnnexeFournisseur(PrestationAnnexeFournisseur $prestationAnnexeFournisseur)
+    {
+        $this->prestationAnnexeFournisseurs->removeElement($prestationAnnexeFournisseur);
+    }
+
+    /**
+     * Get prestationAnnexeFournisseurs
+     *
+     * @return Collection
+     */
+    public function getPrestationAnnexeFournisseurs()
+    {
+        return $this->prestationAnnexeFournisseurs;
+    }
 }

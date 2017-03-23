@@ -1,0 +1,116 @@
+{% if ajax is defined %}
+    {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% endif %}
+<div class="item" id="item_commande_ligne_sejour_periode_sejour_{{ name }}">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Date achat</th>
+            <th>Logement</th>
+            <th>Prix catalogue unitaire</th>
+            <th>PV unitaire</th>
+            <th>Total PV</th>
+            <th>Fournisseur</th>
+            <th>PA unitaire</th>
+            <th>Total PA</th>
+            <th>Marge TTC</th>
+            <th>Marge TTC %</th>
+            <th>TVA</th>
+            <th>Marge HT</th>
+            <th>Marge HT %</th>
+            <th>Facture n°</th>
+            <th>Date exigible paiement</th>
+            <th>Paiement effectué le</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {% if  form.vars.value is not null %}
+                    {{ form.vars.value.dateAchat |date("d/m/Y H:i") }}
+                {% endif %}
+                {{ form_widget(form.dateAchat) }}
+                {{ form_widget(form.quantite) }}
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {{ form_widget(form.logement, {'attr': {'onchange' : 'changePeriode(this,"'~name~'");'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-7 control-label" for="{{ form.nbParticipants.vars.id }}">Nb
+                        participants
+                    </label>
+                    <div class="col-sm-5">
+                        {{ form_widget(form.nbParticipants , {'attr' : {'min' : 1}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {{ block('widget_periode', '@MondofuteCommande/commande/fiche.html.twig') }}
+                    </div>
+                </div>
+            </td>
+            <td>{{ form_widget(form.prixCatalogue , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+            <td>{{ form_widget(form.prixVente , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+            <td></td>
+            <td>
+                {% if form.vars.value is not null %}
+                    <a href="{{ path('fournisseur_show' , {'id' : form.vars.value.logement.fournisseur.id }) }}">{{ form.vars.value.logement.fournisseur }}</a>
+                {% endif %}
+            </td>
+            <td>{{ form_widget(form.prixAchat , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{ form_widget(form.datePaiement) }}</td>
+            <td>
+                {{ block('bouton_supprimer', '@MondofuteCommande/commande/fiche.html.twig') }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {% set collectionForm = form.commandeLignePrestationAnnexes %}
+    {% set type = form._type %}
+
+    <div class="row">
+        <div class="collection">
+            <div class="clearfix">
+                {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
+                {% set namePA = '__name_commande_ligne_prestation_annexe__' %}
+                <a href="#"
+                   data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour', '@MondofuteCommande/commande/fiche.html.twig') | escape }}"
+                   class="btn btn-success add_item"
+                   onclick="addCommandePrestationAnnexeExterneSejourForm(this,event,'__name_commande_ligne_prestation_annexe__' , 'prestation_annexe_sejour_{{ name }}', '{{ name }}');">
+                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                </a>
+            </div>
+            <div class="items">
+                <table class="panel table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Prestation annexe
+                        </th>
+                        <th>Tarif</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="panel-body" id="prestation_annexe_sejour_{{ name }}">
+                    {% for namePA, form in collectionForm %}
+                        {{ block('entry_row_commande_ligne_prestation_annexe_sejour' , '@MondofuteCommande/commande/fiche.html.twig') }}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{ form_widget(type) }}
+</div>

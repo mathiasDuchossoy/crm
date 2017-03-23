@@ -17,6 +17,7 @@ Mondofute\Bundle\DecoteBundle\Entity\DecotePeriodeValiditeJour:
                 unsigned: true
         jourFin:
             type: integer
+            nullable: true
             options:
                 unsigned: true
     lifecycleCallbacks: {  }

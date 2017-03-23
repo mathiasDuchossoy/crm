@@ -207,30 +207,6 @@ class Promotion
     }
 
     /**
-     * Get typeRemise
-     *
-     * @return integer
-     */
-    public function getTypeRemise()
-    {
-        return $this->typeRemise;
-    }
-
-    /**
-     * Set typeRemise
-     *
-     * @param integer $typeRemise
-     *
-     * @return Promotion
-     */
-    public function setTypeRemise($typeRemise)
-    {
-        $this->typeRemise = $typeRemise;
-
-        return $this;
-    }
-
-    /**
      * Get valeurRemise
      *
      * @return string
@@ -936,6 +912,35 @@ class Promotion
     public function setStock($stock = null)
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getTypeRemiseLibelle()
+    {
+        return TypeRemise::getLibelle($this->getTypeRemise());
+    }
+
+    /**
+     * Get typeRemise
+     *
+     * @return integer
+     */
+    public function getTypeRemise()
+    {
+        return $this->typeRemise;
+    }
+
+    /**
+     * Set typeRemise
+     *
+     * @param integer $typeRemise
+     *
+     * @return Promotion
+     */
+    public function setTypeRemise($typeRemise)
+    {
+        $this->typeRemise = $typeRemise;
 
         return $this;
     }

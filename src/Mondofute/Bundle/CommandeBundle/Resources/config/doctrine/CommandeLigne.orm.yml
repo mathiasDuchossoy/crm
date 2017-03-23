@@ -11,6 +11,9 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
         4: CommandeLigneRemise
         5: SejourNuite
         6: SejourPeriode
+        7: RemiseCodePromo
+        8: RemiseDecote
+        9: RemisePromotion
     table: null
     repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLigneRepository
     id:
@@ -22,8 +25,31 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
             options:
                 unsigned: true
     fields:
-        montant:
+        dateAchat:
+            type: datetime
+        prixCatalogue:
             type: integer
+            options:
+                default: 0
+                unsigned: true
+        prixVente:
+            type: integer
+            options:
+                default: 0
+                unsigned: true
+        prixAchat:
+            type: integer
+            options:
+                default: 0
+                unsigned: true
+        quantite:
+            type: integer
+            options:
+                default: 1
+                unsigned: true
+        datePaiement:
+            type: datetime
+            nullable: true
     manyToOne:
         commande:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande

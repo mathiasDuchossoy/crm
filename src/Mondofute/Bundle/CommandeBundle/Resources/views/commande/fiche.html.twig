@@ -2,51 +2,159 @@
 
 
 {% block infinite_form_polycollection_row %}
+    <style>
+        .panel-heading h3 {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: normal;
+            width: 60%;
+            padding-top: 8px;
+        }
+    </style>
     {% set collectionForm = form.commandeLignes %}
     {% set prototypes = form.commandeLignes.vars.prototypes %}
     <hr>
-    <div class="collection">
-        <div class="clearfix">
+    <div class="collection" id="commange_lignes">
+        {#<div class="clearfix">
             <div class="pull-left">
                 {{ form_label(collectionForm, 'Lignes de Commande') }}
             </div>
             <div class="pull-right">
-                {% set form = prototypes.sejourNuite %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
-                    <i class="glyphicon glyphicon-plus"></i> séjour nuite
-                </a>
-                {% set form = prototypes.sejourPeriode %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
-                    <i class="glyphicon glyphicon-plus"></i> séjour periode
-                </a>
-                {% set form = prototypes.prestationAnnexe %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
-                {% set form = prototypes.fraisDossier %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
-                    <i class="glyphicon glyphicon-plus"></i> frais de dossier
-                </a>
-                {% set form = prototypes.remise %}
-                <a href="#" data-prototype="{{ block('entry_row') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name__');">
-                    <i class="glyphicon glyphicon-plus"></i> remise
-                </a>
             </div>
-        </div>
+        </div>#}
         <div class="items">
-            {% for form in collectionForm %}
-                {{ block('entry_row') }}
-            {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Séjour nuite</h3>
+                    {% set form = prototypes.sejourNuite %}
+                    {% set name = '__name__' %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addTagForm(this,event,'__name__','sejour_nuite');">
+                        <i class="glyphicon glyphicon-plus"></i> séjour nuite
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body" id="sejour_nuite">
+                    {% for name, form in collectionForm %}
+                        {{ block('commande_ligne_sejour_nuite_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Séjour période</h3>
+                    {% set form = prototypes.sejourPeriode %}
+                    {#{% set name = '__name__' %}#}
+                    <a href="#" data-prototype="{{ block('commande_ligne_sejour_periode_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                            {#onclick="addCommandeLigneSejourPeriodeForm(this,event,'__name__','sejour_periode');"#}
+                       data-toggle="modal" data-target="#modal_commande_ligne_sejour_periode"
+                    >
+                        <i class="glyphicon glyphicon-plus"></i> séjour periode
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body" id="sejour_periode">
+                    {% for name, form in collectionForm %}
+                        {{ block('commande_ligne_sejour_periode_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Prestation annexe</h3>
+                    {% set form = prototypes.prestationAnnexe %}
+                    <a href="#"
+                       data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addCommandePrestationAnnexeExterne(this,event,'__name__','prestation_annexe');"
+                       data-toggle="modal" data-target="#modal_commande_prestation_annexe_externe"
+                    >
+                        <i class="glyphicon glyphicon-plus"></i> prestation annexe
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Prestation annexe</th>
+                            <th>Tarif</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="prestation_annexe">
+                        {% for name, form in collectionForm %}
+                            {{ block('commande_ligne_prestation_annexe_widget') }}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Frais de dossier</h3>
+                    {% set form = prototypes.fraisDossier %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_frais_dossier_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addTagForm(this,event,'__name__','frais_dossier');">
+                        <i class="glyphicon glyphicon-plus"></i> frais de dossier
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body" id="frais_dossier">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_frais_dossier_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title pull-left">Remise</h3>
+                    {#{% set form = prototypes.remise %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_widget') | escape }}"
+                       class="btn btn-success add_item"
+                       onclick="addTagForm(this,event,'__name__','remise');">
+                        <i class="glyphicon glyphicon-plus"></i> remise
+                    </a>#}
+                    {% set form = prototypes.remiseCodePromo %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_code_promo_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemiseCodePromo(this,event,'__name__','remise');">
+                        <i class="glyphicon glyphicon-plus"></i> remise code promo
+                    </a>
+                    {% set form = prototypes.remiseDecote %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_decote_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemiseDecote(this,event,'__name__','remise');"
+                       style="margin-right: 15px">
+                        <i class="glyphicon glyphicon-plus"></i> remise decote
+                    </a>
+                    {% set form = prototypes.remisePromotion %}
+                    <a href="#" data-prototype="{{ block('commande_ligne_remise_promotion_widget') | escape }}"
+                       class="btn btn-success add_item pull-right"
+                       onclick="addRemisePromotion(this,event,'__name__','remise');"
+                       style="margin-right: 15px">
+                        <i class="glyphicon glyphicon-plus"></i> remise promotion
+                    </a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body" id="remise">
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_decote_widget') }}
+                    {% endfor %}
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_code_promo_widget') }}
+                    {% endfor %}
+                    {% for form in collectionForm %}
+                        {{ block('commande_ligne_remise_promotion_widget') }}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -64,7 +172,7 @@
             {{ block('commande_ligne_sejour_periode_widget') }}
         {% else %}
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
+                {#<div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
                 <div class="col-md-2 text-right">
                     {{ block('bouton_supprimer') }}
                 </div>
@@ -75,83 +183,454 @@
 {% endblock %}
 
 {% block bouton_supprimer %}
-    {#<label>&nbsp;</label><br>#}
-    <a href="#" class="btn btn-danger remove_item"
-       onclick="removeTagForm(this,event);"
-    >
-        <i class="glyphicon glyphicon-minus"></i> Supprimer
-    </a>
+    <a href="#" class="btn btn-danger remove_item" onclick="removeTagForm(this,event);"><i
+                class="glyphicon glyphicon-minus"></i></a>
 {% endblock %}
 
 {% block commande_ligne_sejour_nuite_widget %}
-    {% set collectionForm = form.commandeLignePrestationAnnexes %}
-    {% set type = form._type %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
-        </div>
-        <div class="collection">
-            <div class="clearfix">
-                {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
-                <a href="#" data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
+    {% set type = form._type.vars.value %}
+    {% if type == 'sejourNuite' %}
+        <div class="item">
+            {% set collectionForm = form.commandeLignePrestationAnnexes %}
+            {% set type = form._type %}
+            <div class="row">
+                {#<div class="col-md-2">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>#}
+                <div class="col-md-6">{{ form_row(form.logement) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+                <div class="collection">
+                    <div class="clearfix">
+                        {#{% set form = form.commandeLignePrestationAnnexes.vars.prototype %}#}
+                        {#<a href="#"#}
+                        {#data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"#}
+                        {#class="btn btn-success add_item"#}
+                        {#onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">#}
+                        {#<i class="glyphicon glyphicon-plus"></i> prestation annexe#}
+                        {#</a>#}
+                    </div>
+                    <div class="items">
+                        {#{% for form in collectionForm %}#}
+                        {#{{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}#}
+                        {#{% endfor %}#}
+                    </div>
+                </div>
             </div>
-            <div class="items">
-                {% for form in collectionForm %}
-                    {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                {% endfor %}
-            </div>
+            {{ form_widget(type) }}
         </div>
-    </div>
-    {{ form_widget(type) }}
+    {% endif %}
 {% endblock %}
 
+
 {% block commande_ligne_sejour_periode_widget %}
-    {% set collectionForm = form.commandeLignePrestationAnnexes %}
-    {% set type = form._type %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
-        </div>
-        <div class="collection">
-            <div class="clearfix">
-                {% set form = form.commandeLignePrestationAnnexes.vars.prototype %}
-                <a href="#" data-prototype="{{ block('entry_row_commande_ligne_prestation_annexe_sejour') | escape }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name_commande_ligne_prestation_annexe__');">
-                    <i class="glyphicon glyphicon-plus"></i> prestation annexe
-                </a>
+    {% set type = form._type.vars.value %}
+    {% if type == 'sejourPeriode' %}
+        {% if form.vars.value and promotionSejourPeriodes[form.vars.value.id] is defined %}
+            <div class="col-sm-3">
+                <table class="table">
+                    <tr>
+                        <th>Destination:</th>
+                        <td>
+                            {% if form.vars.value.logement.hebergement.station.domaine is not null %}
+                                {% for traduction in form.vars.value.logement.hebergement.station.domaine.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelle }}
+                                        &nbsp;-&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% if form.vars.value.logement.hebergement.station.stationMere is not null %}
+                                {% for traduction in form.vars.value.logement.hebergement.station.stationMere.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelle }}
+                                        &nbsp;-&nbsp;
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {% for traduction in form.vars.value.logement.hebergement.station.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.libelle }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Hébergement:</th>
+                        <td>
+                            {% for traduction in form.vars.value.logement.hebergement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}</td>
+                    </tr>
+                    <tr>
+                        <th>Dates de séjour:</th>
+                        <td>
+                            <div class="input-daterange form-inline input-group">
+                                <input data-date-format="dd/mm/yyyy"
+                                        {#placeholder="jj/mm/aaaa" #}
+                                       style="text-align: left;"
+                                       data-field="dateDebut"
+                                       class="form-control" type="text"
+                                       placeholder="{{ form.vars.value.periode.debut | date('d/m/Y') }}"
+                                       id="date_debut_sejour_{{ name }}"
+                                       onchange="dateSejourChangePeriode('{{ name }}');"
+                                >
+                                <span class="input-group-addon">au</span>
+                                <input data-date-format="dd/mm/yyyy" style="text-align: left;"
+                                       data-field="dateFin"
+                                       class="form-control" type="text"
+                                       placeholder="{{ form.vars.value.periode.fin | date('d/m/Y') }}"
+                                       id="date_fin_sejour_{{ name }}"
+                                       onchange="dateSejourChangePeriode('{{ name }}');"
+                                >
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Durée location:</th>
+                        <td>
+                            {% set difference = date( form.vars.value.periode.fin).diff(date(form.vars.value.periode.debut )) %}
+                            {% set leftDays = difference.days %}
+                            {% if leftDays == 1 %}
+                                1 jour
+                            {% else %}
+                                {{ leftDays }} jours
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="items">
-                {% for form in collectionForm %}
-                    {{ block('entry_row_commande_ligne_prestation_annexe_sejour') }}
-                {% endfor %}
+            <div class="col-sm-5">
+                <table class="table">
+                    <tr>
+                        <th>Informations en consultation:</th>
+                        <th>
+                            {% for traduction in form.vars.value.logement.traductions %}
+                                {% if traduction.langue.code == app.request.locale %}
+                                    {{ traduction.nom }}
+                                {% endif %}
+                            {% endfor %}
+                        </th>
+                        {% for commandeLignePrestationAnnexe in form.vars.value.commandeLignePrestationAnnexes %}
+                            <th>
+                                {% for traduction in commandeLignePrestationAnnexe.fournisseurPrestationAnnexeParam.traductions %}
+                                    {% if traduction.langue.code == app.request.locale %}
+                                        {{ traduction.libelleParam }}
+                                    {% endif %}
+                                {% endfor %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>Promo fournisseur:</th>
+                        <td>
+                            {% for element in promotionSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% for SejourPeriode in promotionPrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Décote visible:</th>
+                        <td>
+                            {% for element in decoteVisibleSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% for SejourPeriode in decoteVisiblePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <th>Décote masquée:</th>
+                        <td>
+                            {% for element in decoteMasqueeSejourPeriodes[form.vars.value.id] %}
+                                {{ element.valeurRemise }} {{ element.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                            {% endfor %}
+                        </td>
+                        {% for SejourPeriode in decoteMasqueePrestationAnnexeSejourPeriodes[form.vars.value.id] %}
+                            {% for promotionPrestationAnnexe in SejourPeriode %}
+                                <td>
+                                    {{ promotionPrestationAnnexe.valeurRemise }} {{ promotionPrestationAnnexe.typeRemiseLibelle }}{% if loop.first != loop.last and loop != loop.last %} + {% endif %}
+                                </td>
+                            {% endfor %}
+                            {% if SejourPeriode is empty %}
+                                <td></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </table>
             </div>
-        </div>
-    </div>
-    {{ form_widget(type) }}
+        {% endif %}
+        {% include ('@MondofuteCommande/commande/commande_ligne_sejour_periode_widget.html.twig') %}
+    {% endif %}
+{% endblock %}
+
+{% block widget_periode %}
+    {% set choicesKey = form.periode.vars.choices|keys %}
+    <select id="{{ form.periode.vars.id }}"
+            name="{{ form.periode.vars.full_name }}"
+            class="form-control" required="required"
+            onchange="updatePrixLogement('{{ name }}',this)"
+    >
+        <option value=""> --- Choisir une période ---</option>
+        {% set type = '' %}
+        {% for key, element in choicesKey %}
+            {% if form.periode.vars.choices[element].data.type != type %}
+                {% set type = form.periode.vars.choices[element].data.type %}
+                <optgroup label="{{ ('type_periode.'~form.periode.vars.choices[element].data.type.id)|trans }}">
+            {% endif %}
+            <option value="{{ form.periode.vars.choices[element].value }}"
+                    {% if form.periode.vars.value == form.periode.vars.choices[element].value %}
+                        selected="selected"
+                    {% endif %}
+            >{{ form.periode.vars.choices[element].label }} | Stock théorique :
+                {% if form.vars.value is not null and form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element] is defined %}
+                    {{ form.vars.value.logement.LogementPeriodeLocatifsStockNotEmpty[element].stock }}
+                {% else %}
+                    0
+                {% endif %}
+            </option>
+            {% if loop.last or (loop.last == false and form.periode.vars.choices[choicesKey[key + 1]].data.type != type) %}
+                </optgroup>
+            {% endif %}
+        {% endfor %}
+    </select>
+    {{ form_errors(form.periode) }}
 {% endblock %}
 
 {% block entry_row_commande_ligne_prestation_annexe_sejour %}
-    <div class="item">
-        {{ block('commande_ligne_prestation_annexe_widget') }}
-    </div>
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <tr class="item">
+            <td>
+                <select id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                        name="{{ form.fournisseurPrestationAnnexeParam.vars.full_name }}"
+                        required="required"
+                        onchange="changePrixPrestationAnnexeSejour(this, '{{ name }}', '{{ namePA }}')"
+                        class="form-control">
+                    {#{% include ('@MondofuteCommande/commande/options_commande_ligne_prestation_annexe_sejour.html.twig') %}#}
+                    <option value=""> --- Choisir une prestation annexe externe ---</option>
+                    {% set type = '' %}
+                    {% for key, element in form.fournisseurPrestationAnnexeParam.vars.choices %}
+                        {% if element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type %}
+                            {% set type = element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe %}
+                            <optgroup label="
+                        {% for traduction in type.traductions %}
+                        {% if traduction.langue.code == app.request.locale %}
+                        {{ traduction.libelle }}
+                        {% endif %}
+                        {% endfor %}
+                        ">
+                        {% endif %}
+                        <option
+                                {% if form.fournisseurPrestationAnnexeParam.vars.value ==  element.value %}
+                                    selected="selected"
+                                {% endif %}
+                                value="{{ element.value }}">{{ element.label }}</option>
+                        {% if loop.last or (loop.last == false and element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}
+                            </optgroup>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                {#{{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr': {'onchange' : 'changePrixPrestationAnnexeSejour(this, "'~ name ~'", "'~ namePA ~'")'}}) }}#}
+            </td>
+            <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
+            <td>{{ block('bouton_supprimer') }}</td>
+            {{ form_row(form._type) }}
+        </tr>
+    {% endif %}
 {% endblock %}
 
 
 {% block commande_ligne_prestation_annexe_widget %}
-    <div class="row">
-        <div class="col-md-6">{{ form_row(form.montant , {'type' : 'number' , 'attr' : {'step' : 'any' } }) }}</div>
-        <div class="col-md-2 text-right">
-            {{ block('bouton_supprimer') }}
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <tr class="item">
+            <td>{{ form_widget(form.dateDebut, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateDebut.vars.value }}</td>
+            <td>{{ form_widget(form.dateFin, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateFin.vars.value }}</td>
+            <td>
+                {{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr' : {'onchange' : 'changerPrixPrestationAnnexeExterne(this, "'~name~'")'}}) }}
+            </td>
+            <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
+            <td>{{ block('bouton_supprimer') }}</td>
+            {{ form_row(form._type) }}
+        </tr>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_prestation_annexe_widget_modal %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'prestationAnnexe' %}
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="rechercherParam">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="input-daterange form-inline input-group">
+                                    {{ form_widget(form.dateDebut, { 'attr' : {
+                                        'style' : 'text-align: left;',
+                                        'data-field' : 'dateDebut'
+                                    }}) }}
+                                    <span class="input-group-addon">au</span>
+                                    {{ form_widget(form.dateFin, { 'attr' : {
+                                        'style' : 'text-align: left;',
+                                        'data-field' : 'dateFin'
+                                    }}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form_widget(form.station, { 'attr' : {
+                                    'data-field' : 'station'
+                                }}) }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                {{ form_widget(form.famillePrestationAnnexe, { 'attr' : {
+                                    'data-field' : 'famillePrestationAnnexe'
+                                }}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>
+                                <select id="commande_fournisseur_prestation_annexe_externe"
+                                        required="required" data-field="fournisseur"
+                                        {#data-select-prestation-annexe-externe-id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"#}
+                                        class="form-control">
+                                    <option value=""> --- Choisir un fournisseur ---</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    {#{{ form_widget(form.fournisseurPrestationAnnexeParam) }}#}
+                    <select id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                            name="{{ form.fournisseurPrestationAnnexeParam.vars.full_name }}"
+                            required="required" class="form-control">
+                        <option value="" selected="selected"> --- Choisir une prestation annexe externe ---</option>
+                    </select>
+                    {{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 ,'style' : 'display:none'}}) }}
+                    {{ form_widget(form._type , { 'id' : form.fournisseurPrestationAnnexeParam.vars.id ~ '_type'} ) }}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_frais_dossier_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'fraisDossier' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label col-md-6">Prix catalogue</label>
+                        <div class="col-md-6">
+                            <p class="form-control">{% if form.vars.value is not null %}{{ form.vars.value.prixCatalogue }} €{% else %}{{ frais_dossier }} €{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="control-label col-md-6">Prix vente</label>
+                    <div class="col-md-6">
+                        {{ form_widget(form.prixVente , {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 } }) }}
+                    </div>
+                </div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
         </div>
-    </div>
-    {{ form_rest(form) }}
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remise' or type == 'remiseDecote' or type == 'remisePromotion' or type == 'remiseCodePromo' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_rest(form) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_code_promo_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remiseCodePromo' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.codePromo) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_row(form._type) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_promotion_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remisePromotion' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.promotion) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_row(form._type) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block commande_ligne_remise_decote_widget %}
+    {% set type = form._type.vars.value %}
+    {% if type == 'remiseDecote' %}
+        <div class="item">
+            <div class="row">
+                <div class="col-md-6">{{ form_row(form.decote) }}</div>
+                <div class="col-md-2 text-right">
+                    {{ block('bouton_supprimer') }}
+                </div>
+            </div>
+            {{ form_row(form._type) }}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -168,6 +647,7 @@
             {{ form_errors(form) }}
             {{ form_start(form) }}
             {{ block('infinite_form_polycollection_row') }}
+            {{ form_row(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}
             {{ form_row(form.site) }}
             {{ form_row(form.dateCommande) }}
             {{ form_row(form.numCommande) }}
@@ -183,6 +663,8 @@
         {% endblock %}
     </section>
 
+    {% include ('@MondofuteCommande/commande/modal_prestation_annexe_externe.html.twig') %}
+    {% include ('@MondofuteCommande/commande/modal_commande_ligne_sejour_periode.html.twig') %}
 {% endblock %}
 
 {% block javascripts %}
@@ -190,13 +672,16 @@
     <script type="text/javascript">
 
         jQuery(document).ready(function () {
-            $('div.items').each(function (index, element) {
-                $(element).data('index', $(element).children('div.item').length);
+            $('.items').each(function (index, element) {
+                var count = $(element).children('.panel').children('.panel-body').children('.item').length;
+                count = count + $(element).children('.panel').children('.panel-body').children('table').children('tbody').children('tr.item').length;
+                $(element).data('index', count);
             });
         });
 
-        function addTagForm(element, event, name) {
+        function addTagForm(element, event, name, panelBodyId) {
             event.preventDefault();
+            var $panelBodyId = $('#' + panelBodyId);
             var $element = $(element);
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
@@ -204,13 +689,428 @@
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
+            var $newForm = $(newForm);
             $collectionHolder.data('index', index + 1);
-            $collectionHolder.append(newForm);
+            $newForm.data('index', index);
+            if ($panelBodyId.length == 0) {
+                $collectionHolder.append($newForm);
+            } else {
+                $panelBodyId.append($newForm);
+            }
+            return $newForm;
+        }
+
+        function addCommandeLigneSejourPeriodeForm(element, event, name, panelBodyId) {
+//            addTagForm(element, event, name, panelBodyId);
+//            $('#modal_commande_ligne_sejour_periode').modal();
+
+        }
+
+        function addCommandePrestationAnnexeExterneSejourForm(element, event, name, panelBodyId, nameParent) {
+            var $newForm = addTagForm(element, event, name, panelBodyId);
+            var path = '{{ path('commande_get_prestation_annexe_sejour' , {'logementId' : '_logementId_'}) }}';
+            path = path.replace('_logementId_', $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + nameParent + '_logement').val());
+            $.ajax(path).done(function (data) {
+                $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + nameParent + '_commandeLignePrestationAnnexes_' + $newForm.data('index') + '_fournisseurPrestationAnnexeParam').html(data);
+            });
+        }
+
+        function addRemiseCodePromo(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_code_promo_like') }}";
+            $(newForm).find('.js-code-promo').each(function (index, element) {
+                activeSelect2(element, path);
+            });
+        }
+
+        function addRemiseDecote(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_decote_like') }}";
+            $(newForm).find('.js-decote').each(function (index, element) {
+                activeSelect2(element, path);
+            });
+        }
+
+        function addRemisePromotion(element, event, name, panelBodyId) {
+            var newForm = addTagForm(element, event, name, panelBodyId);
+            var path = "{{ path('mondofute_get_promotion_like') }}";
+            $(newForm).find('.js-promotion').each(function (index, element) {
+                activeSelect2(element, path);
+            });
+        }
+
+        function addCommandePrestationAnnexeExterne(element, event, name, panelBodyId) {
+            event.preventDefault();
+            var $panelBodyId = $('#' + panelBodyId);
+            var $modalContent = $('#modal_body_commande_prestation_annexe_externe');
+            var $element = $(element);
+            var $collectionHolder = $element.closest('div.collection').find('div.items:first');
+            var prototype = $element.data('prototype');
+            var index = $collectionHolder.data('index');
+            if (!index) index = 0;
+            var regex = new RegExp(name, 'g');
+            var newForm = prototype.replace(regex, index);
+            $modalContent.html(newForm);
+            $modalContent.find('.input-daterange').each(function (index, element) {
+                activeDatePicker(element)
+            });
+            $('#rechercherParam').find('input, select').on('change', function (element) {
+                var types = {};
+                var inputDateDebutId;
+                var inputDateFinId;
+                $('#rechercherParam').find('input, select').each(function (index, element) {
+                    var $element = $(element);
+                    switch ($element.data('field')) {
+                        case 'dateDebut':
+                            inputDateDebutId = element.id;
+                            break;
+                        case 'dateFin':
+                            inputDateFinId = element.id;
+                            break;
+                        default:
+                            break;
+                    }
+                    if ($element.val()) {
+                        types[$element.data('field')] = $element.val();
+                    }
+                });
+                if ($.map(types, function (n, i) {
+                        return i;
+                    }).length == 4) {
+                    var path = '{{ path('commande_get_fournisseur_prestation_annexe_externe' , {
+                        'dateDebut' : '_dateDebut_',
+                        'dateFin' : '_dateFin_',
+                        'stationId' : '_stationId_',
+                        'typeId' : '_typeId_'
+                    } ) }}';
+                    types.dateDebut = types.dateDebut.replace(/\//g, '-');
+                    types.dateFin = types.dateFin.replace(/\//g, '-');
+                    path = path.replace('_dateDebut_', types.dateDebut);
+                    path = path.replace('_dateFin_', types.dateFin);
+                    path = path.replace('_stationId_', types.station);
+                    path = path.replace('_typeId_', types.famillePrestationAnnexe);
+                    $.ajax(path).done(function (data) {
+                        var $commandeFournisseurPrestationAnnexeExterne = $('#commande_fournisseur_prestation_annexe_externe');
+                        $commandeFournisseurPrestationAnnexeExterne.html(data);
+                        $commandeFournisseurPrestationAnnexeExterne.unbind('change');
+                        $commandeFournisseurPrestationAnnexeExterne.on('change', function (event) {
+                            var fournisseurId = $(this).val();
+                            var selectPrestationAnnexeExterneId = $commandeFournisseurPrestationAnnexeExterne.data('select-prestation-annexe-externe-id');
+                            var $selectPrestationAnnexeExterne = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_fournisseurPrestationAnnexeParam');
+                            var $inputTarif = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
+                            var $prestationAnnexeExterneType = $('#' + selectPrestationAnnexeExterneId + '_type');
+                            if (fournisseurId) {
+                                var path = '{{ path('commande_get_prestation_annexe_externe' , {
+                                    'dateDebut' : '_dateDebut_',
+                                    'dateFin' : '_dateFin_',
+                                    'typeId' : '_typeId_',
+                                    'fournisseurId' : '_fournisseurId_',
+                                    'stationId' : '_stationId_',
+                                } ) }}';
+                                types.dateDebut = types.dateDebut.replace(/\//g, '-');
+                                types.dateFin = types.dateFin.replace(/\//g, '-');
+                                path = path.replace('_dateDebut_', types.dateDebut);
+                                path = path.replace('_dateFin_', types.dateFin);
+                                path = path.replace('_fournisseurId_', fournisseurId);
+                                path = path.replace('_typeId_', types.famillePrestationAnnexe);
+                                path = path.replace('_stationId_', types.station);
+                                $.ajax(path).done(function (data) {
+                                    $selectPrestationAnnexeExterne.html(data);
+                                    var $addPrestationAnnexe = $('#addPrestationAnnexe');
+                                    $addPrestationAnnexe.unbind('click');
+                                    $addPrestationAnnexe.on('click', function (event) {
+                                        if ($selectPrestationAnnexeExterne.val()) {
+                                            var tarif = $($selectPrestationAnnexeExterne.find('option:selected')[0]).data('tarif');
+                                            $inputTarif.val(tarif);
+                                            var $item = $('<tr class=item></tr>');
+                                            var $inputDateDebut = $('#' + inputDateDebutId);
+                                            $inputDateDebut.hide();
+                                            var $tdInputDateDebut = $('<td></td>').append($inputDateDebut.val());
+                                            var $inputDateFin = $('#' + inputDateFinId);
+                                            $inputDateFin.hide();
+                                            var $tdInputDateFin = $('<td></td>').append($inputDateFin.val());
+                                            $item.append($tdInputDateDebut);
+                                            $item.append($tdInputDateFin);
+                                            var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
+                                            $selectPrestationAnnexeExterne.on('change', function (event) {
+                                                $inputTarif.val(tarif);
+                                            });
+                                            $item.append(tdInputSelecttPrestationAnnexeExterne);
+                                            $inputTarif.show();
+                                            $item.append($('<td></td>').append($inputTarif));
+                                            var $boutonSupprimer = $('<td></td>').append('{{ block('bouton_supprimer') | e('js') }}');
+                                            $item.append($boutonSupprimer);
+                                            $panelBodyId.append($item);
+                                            $panelBodyId.append($prestationAnnexeExterneType);
+                                            $panelBodyId.append($inputDateDebut);
+                                            $panelBodyId.append($inputDateFin);
+                                            $panelBodyId.append($('<input name="mondofute_bundle_commandebundle_commande[commandeLignes][' + index + '][_type]" value="prestationAnnexe" type="hidden">'));
+                                            $collectionHolder.data('index', index + 1);
+                                            $('#modal_commande_prestation_annexe_externe').modal('hide');
+                                        }
+                                    })
+                                });
+                            } else {
+                                $selectPrestationAnnexeExterne.html('');
+                            }
+                        });
+                    });
+                }
+            })
         }
 
         function removeTagForm(element, event) {
             event.preventDefault();
-            $(element).closest('div.item').remove();
+            $(element).closest('.item').remove();
+        }
+
+        function changePeriode(element, index) {
+            var path = '{{ path('commande_get_periodes_by_logement' , { 'id' : '_id_'} ) }}';
+            path = path.replace('_id_', $(element).val());
+            $.ajax(path).done(function (data) {
+                $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode').html(data);
+                $('#prestation_annexe_sejour_' + index).find('input.prixVente').each(function (index, element) {
+                    $(element).val(0);
+                });
+                calculPrixVenteTotal();
+            });
+        }
+
+        function activeDatePicker(element) {
+            $(element).datepicker({
+                todayBtn: "linked",
+                format: "dd/mm/yyyy",
+                autoclose: "true",
+                pickerPosition: "bottom-left",
+                startView: "day",
+                minView: "month",
+                daysOfWeekHighlighted: [0, 6],
+                language: "fr",
+                todayHighlight: true
+            });
+        }
+
+        $('.input-daterange').each(function (index, element) {
+            activeDatePicker(element)
+        });
+
+        // *** gestion select2 ***
+        function activeSelect2(element, path) {
+            $(element).select2({
+                width: '100%',
+                ajax: {
+                    url: path,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            site: $(this).data('site'),
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                }, // let our custom formatter work
+                minimumInputLength: 1
+            });
+        }
+
+        $('.js-code-promo').each(function (index, element) {
+            var path = "{{ path('mondofute_get_code_promo_like') }}";
+            activeSelect2(element, path);
+        });
+
+        $('.js-decote').each(function (index, element) {
+            var path = "{{ path('mondofute_get_decote_like') }}";
+            activeSelect2(element, path);
+        });
+
+        $('.js-promotion').each(function (index, element) {
+            var path = "{{ path('mondofute_get_promotion_like') }}";
+            activeSelect2(element, path);
+        });
+
+        function updatePrixLogement(index, element) {
+            var logementId = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();
+            var $prixCatalogue = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixCatalogue');
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
+            var $prixAchat = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixAchat');
+            var $periode = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode');
+
+            var path = '{{ path('logement_get_prix_by_periode' , { 'id' : '_id_', 'periodeId' : '_periodeId_'} ) }}';
+            path = path.replace('_id_', logementId);
+            path = path.replace('_periodeId_', $periode.val());
+            $.ajax(path).done(function (data) {
+                if (data) {
+                    var $data = $.parseJSON(data);
+                    $prixCatalogue.val($data.prixCatalogue);
+                    $prixVente.val($data.prixVente);
+                    $prixAchat.val($data.prixAchat);
+                } else {
+                    $prixCatalogue.val(0);
+                    $prixVente.val(0);
+                    $prixAchat.val(0);
+                }
+
+                $('#prestation_annexe_sejour_' + index).find('select').each(function (index, element) {
+                    $(element).trigger('onchange');
+                });
+                calculPrixVenteTotal();
+            });
+        }
+
+        function calculPrixVenteTotal() {
+            var total = 0;
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_prixVente');
+            $('.prixVente').each(function (index, element) {
+                total = total + parseFloat($(element).val());
+            });
+            $prixVente.val(total);
+        }
+        calculPrixVenteTotal();
+
+        function changePrixPrestationAnnexeSejour(element, index, indexPA) {
+            var val = $(element).val();
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_commandeLignePrestationAnnexes_' + indexPA + '_prixVente');
+            if (val) {
+                var periodeId = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode').val();
+                var path = '{{ path('mondofute_fournisseur_prestation_annexe_param_get_prix_by_periode' , { 'id' : '_id_', 'periodeId' : '_periodeId_'} ) }}';
+                path = path.replace('_id_', $(element).val());
+                path = path.replace('_periodeId_', periodeId);
+                $.ajax(path).done(function (data) {
+                    $prixVente.val(data);
+                });
+            } else {
+                $prixVente.val(0);
+            }
+        }
+
+        function changerPrixPrestationAnnexeExterne(element, index) {
+            var val = $(element).val();
+            var $prixVente = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
+            if (val) {
+                var dateDebut = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_dateDebut').val().replace(/\//g, '-');
+                var dateFin = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_dateFin').val().replace(/\//g, '-');
+                var path = '{{ path('mondofute_fournisseur_prestation_annexe_param_get_prix_by_dates' , {
+                    'id' : '_id_',
+                    'dateDebut' : '_dateDebut_',
+                    'dateFin' : '_dateFin_',
+                } ) }}';
+                path = path.replace('_id_', $(element).val());
+                path = path.replace('_dateDebut_', dateDebut);
+                path = path.replace('_dateFin_', dateFin);
+                $.ajax(path).done(function (data) {
+                    $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente').val(data);
+                });
+            } else {
+                $prixVente.val(0);
+            }
+        }
+
+        //        var $rechercher_logement_date_debut = $('#rechercher_logement_date_debut');
+        //        var $rechercher_logement_date_fin = $('#rechercher_logement_date_fin');
+        var $rechercher_logement_station = $('#rechercher_logement_station');
+        var $rechercher_logement_fournisseur = $('#rechercher_logement_fournisseur');
+        var $rechercher_logement_hebergement = $('#rechercher_logement_hebergement');
+        var $rechercher_logement_logement = $('#rechercher_logement_logement');
+        var $rechercher_logement_periode = $('#rechercher_logement_periode');
+        var $addCommandeLigneSejourPeriode = $('#addCommandeLigneSejourPeriode');
+        var $commange_lignes = $('#commange_lignes').find('div.items:first');
+        $('#rechercherLogement').find('input, select').each(function (index, element) {
+            $(element).on('change', function (index, element) {
+                if (
+//                      $rechercher_logement_date_debut.val() &&
+//                      $rechercher_logement_date_fin.val() &&
+                $rechercher_logement_station.val() &&
+                $rechercher_logement_fournisseur.val()) {
+                    var path = '{{ path('hebergement_get_for_commande_ligne_sejour' , {
+                        'stationId' : '_stationId_',
+                        'fournisseurId' :  '_fournisseurId_'}) }}';
+                    path = path.replace('_stationId_', $rechercher_logement_station.val());
+                    path = path.replace('_fournisseurId_', $rechercher_logement_fournisseur.val());
+                    $.ajax(path).done(function (data) {
+                        $rechercher_logement_hebergement.html(data);
+                    });
+                }
+            });
+        });
+
+        $rechercher_logement_hebergement.on('change', function (index, element) {
+            if ($rechercher_logement_hebergement.val()) {
+                var path = '{{ path('logement_get_for_commande_ligne_sejour', {
+                    'fournisseurId' :  '_fournisseurId_',
+                    'hebergementId' : '_hebergementId_'
+                }) }}';
+//                path = path.replace('_dateDebut_', $rechercher_logement_date_debut.val().replace(/\//g, '-'));
+//                path = path.replace('_dateFin_', $rechercher_logement_date_fin.val().replace(/\//g, '-'));
+                path = path.replace('_hebergementId_', $rechercher_logement_hebergement.val());
+                path = path.replace('_fournisseurId_', $rechercher_logement_fournisseur.val());
+                $.ajax(path).done(function (data) {
+                    $rechercher_logement_logement.html(data);
+                });
+            }
+        });
+
+        $rechercher_logement_logement.on('change', function (index, element) {
+            if ($rechercher_logement_logement.val()) {
+                var path = '{{ path('mondofute_catalogue_get_for_commande_ligne_sejour', {
+                    'logementId' : '_logementId_'
+                }) }}';
+                path = path.replace('_logementId_', $rechercher_logement_logement.val());
+                $.ajax(path).done(function (data) {
+                    $rechercher_logement_periode.html(data);
+                });
+            }
+        });
+
+        $addCommandeLigneSejourPeriode.on('click', function (index, element) {
+            if ($rechercher_logement_fournisseur.val() && $rechercher_logement_periode.val() && $rechercher_logement_logement.val()) {
+                $('#modal_commande_ligne_sejour_periode').modal('hide');
+                var path = '{{ path('commande_add_commande_ligne_periode_sejour', {
+                    'logementId' : '_logementId_',
+                    'periodeId' : '_periodeId_',
+                    'index' : '_index_'
+                }) }}';
+                path = path.replace('_logementId_', $rechercher_logement_logement.val());
+                path = path.replace('_periodeId_', $rechercher_logement_periode.val());
+                path = path.replace('_index_', $commange_lignes.data('index'));
+                $.ajax(path).done(function (newForm) {
+                    var index = $commange_lignes.data('index');
+                    $commange_lignes.data('index', index + 1);
+                    $('#sejour_periode').append($(newForm));
+                    updatePrixLogement(index);
+                    window.location.href = "#item_commande_ligne_sejour_periode_sejour_" + index;
+                });
+            }
+        });
+
+        function dateSejourChangePeriode(index) {
+            var date_debut_sejour = $('#date_debut_sejour_' + index).val();
+            var date_fin_sejour = $('#date_fin_sejour_' + index).val();
+            var $selectPeriode = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_periode');
+            var logement = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_logement').val();
+            if (date_debut_sejour && date_fin_sejour && logement) {
+                var path = '{{ path('mondofute_catalogue_periode_get_by_dates' , {
+                    'logementId' : '_logementId_','dateDebut' : '_dateDebut_','dateFin' : '_dateFin_'}) }}';
+                path = path.replace('_logementId_', logement);
+                path = path.replace('_dateDebut_', date_debut_sejour.replace(/\//g, '-'));
+                path = path.replace('_dateFin_', date_fin_sejour.replace(/\//g, '-'));
+                $.ajax(path).done(function (data) {
+                    $selectPeriode.html(data);
+                });
+            }
         }
 
     </script>

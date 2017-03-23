@@ -67,3 +67,13 @@ popup_logement_logement_set_desactive:
     path:     /{id}/desactive/{desactive}
     defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:setDesactive" }
     methods:  GET
+
+logement_get_prix_by_periode:
+    path:     /{id}/{periodeId}/getprixbyperiode
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:getPrixByPeriode" }
+    methods:  GET
+
+logement_get_for_commande_ligne_sejour:
+    path: /{fournisseurId}/{hebergementId}/getforcommandelignesejour
+    defaults: { _controller: "MondofuteLogementBundle:LogementUnifie:getForCommandeLigneSejour" }
+    methods: GET

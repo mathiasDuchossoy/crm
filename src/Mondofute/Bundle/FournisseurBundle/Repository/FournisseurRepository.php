@@ -130,4 +130,40 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
         return $result;
     }
+
+    public function findByNotTypeHebergement()
+    {
+        $q = $this->getEntityManager()->createQuery('SELECT fournisseur FROM MondofuteFournisseurBundle:Fournisseur fournisseur WHERE fournisseur.id NOT IN (
+                SELECT fournisseur2 FROM MondofuteFournisseurBundle:Fournisseur fournisseur2 LEFT JOIN fournisseur2.types types WHERE types.id = 9)');
+
+        $result = $q->getResult();
+        return $result;
+    }
+
+    public function findFournisseurForPrestationAnnexeExterne($dateDebut, $dateFin, $stationId, $typeId)
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q->select('f')
+            ->from('MondofuteFournisseurBundle:Fournisseur', 'f')
+            ->join('f.types', 'types')
+            ->join('f.prestationAnnexes', 'prestationAnnexes')
+            ->join('prestationAnnexes.params', 'params')
+            ->join('params.prestationAnnexeStations', 'prestationAnnexeStations')
+            ->join('prestationAnnexeStations.station', 'station')
+            ->where('types.id = :typesId')
+            ->andWhere('f.id NOT IN (SELECT fournisseur.id FROM MondofuteFournisseurBundle:Fournisseur fournisseur 
+            LEFT JOIN fournisseur.types types2
+            WHERE types2.id = 9 )')
+            ->andWhere('station.id = :stationId');
+
+        $q->setParameters([
+            'typesId' => $typeId,
+            'stationId' => $stationId
+        ]);
+
+        $result = $q->getQuery()->getResult();
+//        dump($result);die;
+        return $result;
+    }
+
 }

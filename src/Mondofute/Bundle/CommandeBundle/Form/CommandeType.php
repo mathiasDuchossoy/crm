@@ -17,7 +17,24 @@ class CommandeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        global $kernel;
+
+        if ('AppCache' == get_class($kernel)) {
+            $kernel = $kernel->getKernel();
+        }
+        $doctrine = $kernel->getContainer()->get('doctrine');
+
+        $siteRepository = $doctrine->getRepository('MondofuteSiteBundle:Site');
+        $data = $builder->getData();
+
+        if ($data && null !== $data->getId()) {
+            $site = $data->getSite();
+        } else {
+            $site = $siteRepository->findOneBy(['crm' => true]);
+        }
+
         $builder
+            ->add('prixVente')
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'required' => true,
@@ -33,9 +50,12 @@ class CommandeType extends AbstractType
                 CommandeLigneSejourType::class,
                 CommandeLignePrestationAnnexeType::class,
                 CommandeLigneFraisDossierType::class,
-                CommandeLigneRemiseType::class,
                 SejourNuiteType::class,
                 SejourPeriodeType::class,
+                CommandeLigneRemiseType::class,
+                RemiseCodePromoType::class,
+                RemiseDecoteType::class,
+                RemisePromotionType::class,
             ),
             'types_options' => array(
                 CommandeLigneSejourType::class => array(// Here you can optionally define options for the InvoiceLineType
@@ -44,11 +64,21 @@ class CommandeType extends AbstractType
                 ),
                 CommandeLigneFraisDossierType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 ),
-                CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                ),
                 SejourNuiteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
                 ),
                 SejourPeriodeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    'addSejourPeriode' => $options['addSejourPeriode']
+                ),
+                CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                ),
+                RemiseCodePromoType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    'site' => $site
+                ),
+                RemiseDecoteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    'site' => $site
+                ),
+                RemisePromotionType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    'site' => $site
                 )
             ),
             'allow_add' => true,
@@ -63,7 +93,8 @@ class CommandeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande'
+            'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande',
+            'addSejourPeriode' => false
         ));
     }
 

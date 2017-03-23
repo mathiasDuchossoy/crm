@@ -22,3 +22,28 @@ commande_delete:
     path:     /{id}/delete
     defaults: { _controller: "MondofuteCommandeBundle:Commande:delete" }
     methods:  DELETE
+
+commande_get_periodes_by_logement:
+    path:     /{id}/getperiodes
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:getPeriodesByLogement" }
+    methods: GET
+
+commande_get_fournisseur_prestation_annexe_externe:
+    path:     /{dateDebut}/{dateFin}/{stationId}/{typeId}/getfournisseurforprestationannexeexterne
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:getFournisseurPrestationAnnexeExterne" }
+    methods: GET
+
+commande_get_prestation_annexe_externe:
+    path:     /{dateDebut}/{dateFin}/{fournisseurId}/{typeId}/{stationId}/getprestationannexeexterne
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeExterne" }
+    methods: GET
+
+commande_get_prestation_annexe_sejour:
+    path:     /{logementId}/getprestationannexesejour
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeSejour" }
+    methods: GET
+
+commande_add_commande_ligne_periode_sejour:
+    path:     /{logementId}/{periodeId}/{index}/addcommandeligneperiodesejour
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:addCommandeLignePeriodeSejour" }
+    methods: GET

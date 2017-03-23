@@ -51,3 +51,8 @@ hebergement_coup_de_coeur_delete:
     path: /{id}/coupdecoeur/delete
     defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:coupdecoeurDelete" }
     methods:  DELETE
+
+hebergement_get_for_commande_ligne_sejour:
+    path: /{stationId}/{fournisseurId}/getforcommandelignesejour
+    defaults: { _controller: "MondofuteHebergementBundle:HebergementUnifie:getForCommandeLigneSejour" }
+    methods: GET

@@ -1,3 +1,4 @@
+/*
 CREATE TABLE commande (id INT UNSIGNED AUTO_INCREMENT NOT NULL, site_id INT UNSIGNED DEFAULT NULL, date_commande DATETIME NOT NULL, num_commande INT NOT NULL, type INT NOT NULL, UNIQUE INDEX UNIQ_6EEAA67DB7F9FFBB (num_commande), INDEX IDX_6EEAA67DF6BD1646 (site_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 CREATE TABLE commande_client (commande_id INT UNSIGNED NOT NULL, client_id INT UNSIGNED NOT NULL, INDEX IDX_C510FF8082EA2E54 (commande_id), INDEX IDX_C510FF8019EB6921 (client_id), PRIMARY KEY(commande_id, client_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 CREATE TABLE commande_etat_dossier (id INT UNSIGNED AUTO_INCREMENT NOT NULL, commande_id INT UNSIGNED DEFAULT NULL, etat_dossier_id INT UNSIGNED DEFAULT NULL, date_heure DATETIME NOT NULL, INDEX IDX_6B7FF982EA2E54 (commande_id), INDEX IDX_6B7FF9C8503043 (etat_dossier_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
@@ -38,3 +39,36 @@ ALTER TABLE sejour_periode ADD CONSTRAINT FK_19BCD6EBBF396750 FOREIGN KEY (id) R
 ALTER TABLE statut_dossier ADD CONSTRAINT FK_51F9FA7BBF10D97D FOREIGN KEY (groupe_statut_dossier_id) REFERENCES groupe_statut_dossier (id);
 ALTER TABLE statut_dossier_traduction ADD CONSTRAINT FK_D573BCAE2AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
 ALTER TABLE statut_dossier_traduction ADD CONSTRAINT FK_D573BCAE14D7015F FOREIGN KEY (statut_dossier_id) REFERENCES statut_dossier (id);
+*/
+
+/*ALTER TABLE sejour_periode ADD periode_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE sejour_periode ADD CONSTRAINT FK_19BCD6EBF384C1CF FOREIGN KEY (periode_id) REFERENCES periode (id);
+CREATE INDEX IDX_19BCD6EBF384C1CF ON sejour_periode (periode_id);*/
+
+/*
+ALTER TABLE commande_ligne_sejour ADD nb_participants INT NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne_sejour CHANGE nb_participants nb_participants INT UNSIGNED NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne ADD prix_catalogue INT UNSIGNED DEFAULT 0 NOT NULL, ADD prix_public INT UNSIGNED DEFAULT 0 NOT NULL, ADD prix_achat INT UNSIGNED DEFAULT 0 NOT NULL, ADD quantite INT UNSIGNED DEFAULT 0 NOT NULL, DROP montant;
+*/
+
+/*
+ALTER TABLE commande_ligne ADD date_achat DATETIME NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne CHANGE quantite quantite INT UNSIGNED DEFAULT 1 NOT NULL;
+*/
+
+/*
+ALTER TABLE commande_ligne_prestation_annexe ADD fournisseur_prestation_annexe_param_id INT UNSIGNED DEFAULT NULL;
+ALTER TABLE commande_ligne_prestation_annexe ADD CONSTRAINT FK_E26A93A3F144C3CB FOREIGN KEY (fournisseur_prestation_annexe_param_id) REFERENCES fournisseur_prestation_annexe_param (id);
+CREATE INDEX IDX_E26A93A3F144C3CB ON commande_ligne_prestation_annexe (fournisseur_prestation_annexe_param_id);
+*/
+
+ALTER TABLE commande_ligne_prestation_annexe ADD date_debut DATETIME NOT NULL, ADD date_fin DATETIME NOT NULL;

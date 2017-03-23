@@ -20,6 +20,10 @@ class CommandeLigneSejour extends CommandeLigne
      * @var Collection
      */
     private $commandeLignePrestationAnnexes;
+    /**
+     * @var integer
+     */
+    private $nbParticipants;
 
     /**
      * Constructor
@@ -85,5 +89,29 @@ class CommandeLigneSejour extends CommandeLigne
     public function getCommandeLignePrestationAnnexes()
     {
         return $this->commandeLignePrestationAnnexes;
+    }
+
+    /**
+     * Get nbParticipants
+     *
+     * @return integer
+     */
+    public function getNbParticipants()
+    {
+        return $this->nbParticipants;
+    }
+
+    /**
+     * Set nbParticipants
+     *
+     * @param integer $nbParticipants
+     *
+     * @return CommandeLigneSejour
+     */
+    public function setNbParticipants($nbParticipants)
+    {
+        $this->nbParticipants = $nbParticipants;
+
+        return $this;
     }
 }

@@ -7,6 +7,5 @@ namespace Mondofute\Bundle\CommandeBundle\Entity;
  */
 class CommandeLigneFraisDossier extends CommandeLigne
 {
-
 }
 

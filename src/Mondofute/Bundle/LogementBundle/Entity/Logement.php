@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\LogementBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
@@ -9,6 +10,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogementPeriode;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogement;
@@ -333,32 +335,6 @@ class Logement
     }
 
     /**
-     * Get fournisseurHebergement
-     *
-     * @return FournisseurHebergement
-     */
-    public function getFournisseurHebergement()
-    {
-        return $this->fournisseurHebergement;
-    }
-
-    /**
-     * Set fournisseurHebergement
-     *
-     * @param FournisseurHebergement $fournisseurHebergement
-     *
-     * @return Logement
-     */
-    public function setFournisseurHebergement(
-        FournisseurHebergement $fournisseurHebergement = null
-    )
-    {
-        $this->fournisseurHebergement = $fournisseurHebergement;
-
-        return $this;
-    }
-
-    /**
      * Add photo
      *
      * @param LogementPhoto $photo
@@ -567,6 +543,18 @@ class Logement
         $this->logementPeriodeLocatifs->removeElement($logementPeriodeLocatif);
     }
 
+    public function getLogementPeriodeLocatifsStockNotEmpty()
+    {
+        $logementPeriodeLocatifs = new ArrayCollection();
+        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
+        foreach ($this->getLogementPeriodeLocatifs() as $logementPeriodeLocatif) {
+            if ($logementPeriodeLocatif->getStock() > 0 and $logementPeriodeLocatif->getPeriode()->getDebut() >= new DateTime(date('Y-m-d'))) {
+                $logementPeriodeLocatifs->set($logementPeriodeLocatif->getPeriode()->getId(), $logementPeriodeLocatif);
+            }
+        }
+        return $logementPeriodeLocatifs;
+    }
+
     /**
      * Get logementPeriodeLocatifs
      *
@@ -711,5 +699,44 @@ class Logement
     public function getDecoteLogementPeriode()
     {
         return $this->decoteLogementPeriode;
+    }
+
+    public function getHebergement()
+    {
+        $site = $this->site;
+        return $this->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($site) {
+            return $element->getSite() == $site;
+        })->first();
+    }
+
+    /**
+     * Get fournisseurHebergement
+     *
+     * @return FournisseurHebergement
+     */
+    public function getFournisseurHebergement()
+    {
+        return $this->fournisseurHebergement;
+    }
+
+    /**
+     * Set fournisseurHebergement
+     *
+     * @param FournisseurHebergement $fournisseurHebergement
+     *
+     * @return Logement
+     */
+    public function setFournisseurHebergement(
+        FournisseurHebergement $fournisseurHebergement = null
+    )
+    {
+        $this->fournisseurHebergement = $fournisseurHebergement;
+
+        return $this;
+    }
+
+    public function getFournisseur()
+    {
+        return $this->getFournisseurHebergement()->getFournisseur();
     }
 }

@@ -1,0 +1,23 @@
+{#{{ dump( prestationAnnexeExternes[0].fournisseurPrestationAnnexe ) }}#}
+{#{{ dump( tarifs ) }}#}
+{#{{ app.request.locale }}#}
+{#<select>#}
+<option value=""> --- Choisir une prestation annexe ---</option>
+{#{% set type = '' %}#}
+    {% for key, element in prestationAnnexeExternes %}
+        {#{% if element.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type %}#}
+        {#{% set type = element.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe %}#}
+        {#<optgroup label="#}
+        {#{% for traduction in type.traductions%}#}
+        {#{% if traduction.langue.code == app.request.locale %}#}
+        {#{{ traduction.libelle }}#}
+        {#{% endif %}#}
+        {#{% endfor %}#}
+        {#">#}
+        {#{% endif %}#}
+        <option value="{{ element.id }}" data-tarif="{{ tarifs[element.id] }}">{{ element }}</option>
+        {#{% if loop.last or (loop.last == false and element..fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}#}
+        {#</optgroup>#}
+        {#{% endif %}#}
+    {% endfor %}
+{#</select>#}

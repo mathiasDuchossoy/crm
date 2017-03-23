@@ -1343,6 +1343,51 @@ class LogementUnifieController extends Controller
             ->getForm();
     }
 
+    public function getForCommandeLigneSejourAction($fournisseurId, $hebergementId)
+    {
+        /** @var Logement $logement */
+        $em = $this->getDoctrine()->getManager();
+
+        $logements = $em->getRepository(Logement::class)->getForCommandeLigneSejour($fournisseurId, $hebergementId);
+
+        $logementsTraduction = new ArrayCollection();
+        $locale = $this->getParameter('locale');
+        foreach ($logements as $logement) {
+            $traduction = $logement->getTraductions()->filter(function (logementTraduction $element) use ($locale) {
+                return $element->getLangue()->getCode() == $locale;
+            })->first();
+            $logementsTraduction->add(
+                [
+                    'id' => $logement->getId(),
+                    'libelle' => $traduction->getNom()
+                ]
+            );
+        }
+
+        return $this->render('@MondofuteLogement/logementunifie/option-logements-for-commande-ligne-sejour.html.twig', array(
+            'logements' => $logementsTraduction
+        ));
+    }
+
+    public function getPrixByPeriodeAction($id, $periodeId)
+    {
+        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
+        $em = $this->getDoctrine()->getManager();
+        $logement = $em->find(Logement::class, $id);
+        $logementPeriodeLocatif = $logement->getLogementPeriodeLocatifsStockNotEmpty()->filter(function (LogementPeriodeLocatif $element) use ($periodeId) {
+            return $element->getPeriode()->getId() == intval($periodeId);
+        })->first();
+        if (false === $logementPeriodeLocatif) {
+            return new Response();
+        }
+        $reponse = [
+            'prixCatalogue' => $logementPeriodeLocatif->getPrixPublic(),
+            'prixAchat' => $logementPeriodeLocatif->getPrixAchat(),
+            'prixVente' => $logementPeriodeLocatif->getPrixFournisseur()
+        ];
+        return new Response(json_encode($reponse));
+    }
+
     /**
      * Deletes a LogementUnifie entity.
      *

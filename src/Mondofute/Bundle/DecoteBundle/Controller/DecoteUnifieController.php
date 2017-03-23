@@ -50,6 +50,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * DecoteUnifie controller.
@@ -1874,6 +1875,17 @@ class DecoteUnifieController extends Controller
             'decote' => $form->children['decotes'][0],
             'keyDecote' => '_keyDecote_'
         ));
+    }
+
+    public function getdecoteslikeAction(Request $request)
+    {
+        $locale = $request->getLocale();
+        $like = $request->get('q');
+        $site = $request->get('site');
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository(Decote::class)->findByLike($like, $site, $locale);
+
+        return new Response(json_encode($data));
     }
 
     /**

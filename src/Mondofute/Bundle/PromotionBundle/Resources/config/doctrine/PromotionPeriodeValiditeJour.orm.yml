@@ -17,6 +17,7 @@ Mondofute\Bundle\PromotionBundle\Entity\PromotionPeriodeValiditeJour:
                 unsigned: true
         jourFin:
             type: integer
+            nullable: true
             options:
                 unsigned: true
     lifecycleCallbacks: {  }

@@ -1,0 +1,12 @@
+<option value=""> --- choisir une periode ---</option>
+{% set type = '' %}
+{% for key, element in periodes %}
+    {% if element.periode.type != type %}
+        {% set type = element.periode.type %}
+        <optgroup label="{{ ('type_periode.'~type.id)|trans }}">
+    {% endif %}
+    <option value="{{ element.periode.id }}">{{ element.periode }}</option>
+    {% if loop.last or (loop.last == false and periodes[key + 1].periode.type != type) %}
+        </optgroup>
+    {% endif %}
+{% endfor %}

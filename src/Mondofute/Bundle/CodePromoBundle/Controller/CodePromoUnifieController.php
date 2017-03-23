@@ -34,6 +34,7 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -1572,6 +1573,16 @@ class CodePromoUnifieController extends Controller
             'codePromo' => $form->children['codePromos'][0],
             'keyCodePromo' => '_keyCodePromo_'
         ));
+    }
+
+    public function getcodepromoslikeAction(Request $request)
+    {
+        $like = $request->get('q');
+        $site = $request->get('site');
+        $em = $this->getDoctrine()->getManager();
+        $data = $em->getRepository(CodePromo::class)->findByLike($like, $site);
+
+        return new Response(json_encode($data));
     }
 
 }

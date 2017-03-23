@@ -1,0 +1,8 @@
+Mondofute\Bundle\CommandeBundle\Entity\RemiseCodePromo:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\RemiseCodePromoRepository
+    manyToOne:
+        codePromo:
+            targetEntity: Mondofute\Bundle\CodePromoBundle\Entity\CodePromo
+    lifecycleCallbacks: {  }
