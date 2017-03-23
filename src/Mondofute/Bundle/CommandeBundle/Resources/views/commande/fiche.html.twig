@@ -652,7 +652,7 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-            {% if form.statutDossier.vars.data is not null  %}
+            {% if form.statutDossier.vars.data is not null %}
                 <div style="background-color: {{ form.statutDossier.vars.data.codeCouleur }}" class="row alert">
                     <div class="col-md-12">
                         {#récupération du libelle du groupeStatutDossier associé#}

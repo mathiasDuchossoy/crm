@@ -56,7 +56,7 @@ class Commande
      */
     private $prixVente = 0;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $commandeLitigeDossiers;
 

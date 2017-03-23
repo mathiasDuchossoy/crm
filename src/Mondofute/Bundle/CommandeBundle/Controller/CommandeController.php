@@ -107,7 +107,7 @@ class CommandeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
-        $form = $this->createForm(new CommandeType(null), $commande);
+        $form = $this->createForm(new CommandeType(null, null), $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 //        gestion du premier formulaire client formulaire
@@ -705,9 +705,9 @@ class CommandeController extends Controller
         $originalLitigeDossiers = $commande->getCommandeLitigeDossiers();
 //        fin de la gestion des litiges
         $deleteForm = $this->createDeleteForm($commande);
-        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier()), $commande, array('locale'=>$request->getLocale()))
+        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier(), $originalLitigeDossier),
+            $commande, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
-
         $originalCommandeLignes = new ArrayCollection();
         $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
         /** @var CommandeLigne $commandeLigne */
