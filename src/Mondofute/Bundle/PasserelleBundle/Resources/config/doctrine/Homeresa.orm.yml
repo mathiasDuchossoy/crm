@@ -1,0 +1,15 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Homeresa:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\HomeresaRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    fields:
+        paramD:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

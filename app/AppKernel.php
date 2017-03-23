@@ -66,6 +66,7 @@ class AppKernel extends Kernel
             new HiDev\Bundle\AuteurBundle\HiDevAuteurBundle(),
             new Mondofute\Bundle\CommentaireBundle\MondofuteCommentaireBundle(),
             new Mondofute\Bundle\SaisonBundle\MondofuteSaisonBundle(),
+            new Mondofute\Bundle\PasserelleBundle\MondofutePasserelleBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

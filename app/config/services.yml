@@ -63,3 +63,5 @@ services:
                 alias: polycollection
     mondofute_core_bundle_controller:
         class: Mondofute\Bundle\CoreBundle\Controller\CoreController
+    mondofute_passerelle_factory:
+        class: Mondofute\Bundle\PasserelleBundle\Entity\PasserelleFactory

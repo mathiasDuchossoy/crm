@@ -1,0 +1,15 @@
+Mondofute\Bundle\PasserelleBundle\Entity\PierreVacances:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\PierreVacancesRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    fields:
+        url:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
