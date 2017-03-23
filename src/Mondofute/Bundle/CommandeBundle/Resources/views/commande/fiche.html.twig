@@ -162,17 +162,34 @@
         </h1>
     </section>
     <section>
-        <div style="background-color: #00b3ee" class="row">
-            <div class="col-md-12">
-                statut
-            </div>
-        </div>
         {#  BLOCK CONTENANT LE FORMULAIRE #}
         {% block formulaire %}
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
+            {% if form.statutDossier.vars.data is not null %}
+                <div style="background-color: {{ form.statutDossier.vars.data.codeCouleur }}" class="row alert">
+                    <div class="col-md-12">
+                        {#récupération du libelle du groupeStatutDossier associé#}
+                        {% set libelleGroupe = '' %}
+                        {% set libelleStatut = '' %}
+                        {% if form.statutDossier.vars.data.groupeStatutDossier is not null %}
+                            {% for groupe in form.statutDossier.vars.data.groupeStatutDossier.traductions %}
+                                {% if groupe.langue.code == app.request.locale %}
+                                    {% set libelleGroupe = groupe.libelle~' - ' %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
 
+                        {% for statut in form.statutDossier.vars.data.traductions %}
+                            {% if statut.langue.code == app.request.locale %}
+                                {% set libelleStatut = statut.libelle %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ libelleGroupe }}{{ libelleStatut }}
+                    </div>
+                </div>
+            {% endif %}
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" href="#commande-fiche">Fiche</a>
@@ -253,20 +270,23 @@
                                 {% for statutDossier in form.statutDossier.vars.choices %}
                                     {# récupération du libelle du groupeStatutDossier associé #}
                                     {% set libelleGroupe = '' %}
-                                    {% for groupe in statutDossier.data.groupeStatutDossier.traductions %}
-                                        {% if groupe.langue.code == app.request.locale %}
-                                            {% set libelleGroupe = groupe.libelle %}
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% if statutDossier.data.groupeStatutDossier is not null %}
+                                        {% for groupe in statutDossier.data.groupeStatutDossier.traductions %}
+                                            {% if groupe.langue.code == app.request.locale %}
+                                                {% set libelleGroupe = groupe.libelle~' - ' %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                     {# gestion de l'option statutDossier#}
                                     <option {% if form.statutDossier.vars.data.id is defined and form.statutDossier.vars.data.id == statutDossier.data.id %}selected="selected"{% endif %}
                                             value="{{ statutDossier.data.id }}"
-                                            style="background-color:{{ statutDossier.data.codeCouleur }};">{{ libelleGroupe }}
-                                        - {{ statutDossier.data.traductions[0].libelle }}</option>
+                                            style="background-color:{{ statutDossier.data.codeCouleur }};">{{ libelleGroupe }}{{ statutDossier.data.traductions[0].libelle }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
+
+                    {{ form_row(form.litigeDossier) }}
                     {#{{ form_row(form.statutDossier,{'attr':{'test':'test'}}) }}#}
                 </div>
             </div>
@@ -306,7 +326,6 @@
             }
         });
         $(document).on('click', '#nouveau-client', function (e) {
-            alert('ok');
             var datas = $(this).data();
             chargerFormulaireClient(datas);
         });

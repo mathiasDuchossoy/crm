@@ -2,12 +2,13 @@
 
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
-use DateTime;
+use Mondofute\Bundle\CommandeBundle\Entity\Commande;
+use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 
 /**
- * CommandeStatutDossier
+ * CommandeLitigeDossier
  */
-class CommandeStatutDossier
+class CommandeLitigeDossier
 {
     /**
      * @var int
@@ -15,7 +16,7 @@ class CommandeStatutDossier
     private $id;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $dateHeure;
     /**
@@ -23,9 +24,9 @@ class CommandeStatutDossier
      */
     private $commande;
     /**
-     * @var StatutDossier
+     * @var LitigeDossier
      */
-    private $statutDossier;
+    private $litigeDossier;
 
     /**
      * Get id
@@ -39,18 +40,19 @@ class CommandeStatutDossier
 
     /**
      * @param int $id
-     * @return CommandeStatutDossier
+     * @return CommandeLitigeDossier
      */
-    public function setId(int $id): CommandeStatutDossier
+    public function setId(int $id): CommandeLitigeDossier
     {
         $this->id = $id;
         return $this;
     }
 
+
     /**
      * Get dateHeure
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDateHeure()
     {
@@ -60,9 +62,9 @@ class CommandeStatutDossier
     /**
      * Set dateHeure
      *
-     * @param DateTime $dateHeure
+     * @param \DateTime $dateHeure
      *
-     * @return CommandeStatutDossier
+     * @return CommandeLitigeDossier
      */
     public function setDateHeure($dateHeure)
     {
@@ -86,7 +88,7 @@ class CommandeStatutDossier
      *
      * @param Commande $commande
      *
-     * @return CommandeStatutDossier
+     * @return CommandeLitigeDossier
      */
     public function setCommande(Commande $commande = null)
     {
@@ -96,25 +98,25 @@ class CommandeStatutDossier
     }
 
     /**
-     * Get statutDossier
+     * Get litigeDossier
      *
-     * @return StatutDossier
+     * @return LitigeDossier
      */
-    public function getStatutDossier()
+    public function getLitigeDossier()
     {
-        return $this->statutDossier;
+        return $this->litigeDossier;
     }
 
     /**
-     * Set statutDossier
+     * Set litigeDossier
      *
-     * @param StatutDossier $statutDossier
+     * @param LitigeDossier $litigeDossier
      *
-     * @return CommandeStatutDossier
+     * @return CommandeLitigeDossier
      */
-    public function setStatutDossier(StatutDossier $statutDossier = null)
+    public function setLitigeDossier(LitigeDossier $litigeDossier = null)
     {
-        $this->statutDossier = $statutDossier;
+        $this->litigeDossier = $litigeDossier;
 
         return $this;
     }

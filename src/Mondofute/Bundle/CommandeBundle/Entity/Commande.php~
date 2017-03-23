@@ -13,7 +13,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 
@@ -52,10 +51,6 @@ class Commande
      * @var Site
      */
     private $site;
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $commandeLitigeDossiers;
 
     /**
      * Constructor
@@ -66,7 +61,6 @@ class Commande
         $this->commandeLignes = new ArrayCollection();
         $this->commandeEtatDossiers = new ArrayCollection();
         $this->commandeStatutDossiers = new ArrayCollection();
-        $this->commandeLitigeDossiers = new ArrayCollection();
     }
 
     /**
@@ -313,41 +307,5 @@ class Commande
         $this->site = $site;
 
         return $this;
-    }
-
-    /**
-     * Add commandeLitigeDossier
-     *
-     * @param CommandeLitigeDossier $commandeLitigeDossier
-     *
-     * @return Commande
-     */
-    public function addCommandeLitigeDossier(
-        CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers[] = $commandeLitigeDossier;
-
-        return $this;
-    }
-
-    /**
-     * Remove commandeLitigeDossier
-     *
-     * @param CommandeLitigeDossier $commandeLitigeDossier
-     */
-    public function removeCommandeLitigeDossier(
-        CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers->removeElement($commandeLitigeDossier);
-    }
-
-    /**
-     * Get commandeLitigeDossiers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCommandeLitigeDossiers()
-    {
-        return $this->commandeLitigeDossiers;
     }
 }
