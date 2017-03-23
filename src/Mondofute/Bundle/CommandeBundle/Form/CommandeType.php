@@ -5,7 +5,9 @@ namespace Mondofute\Bundle\CommandeBundle\Form;
 use Infinite\FormBundle\Form\Type\PolyCollectionType;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Form\ClientType;
+use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
+use Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierRepository;
 use Mondofute\Bundle\CommandeBundle\Repository\StatutDossierRepository;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
@@ -19,10 +21,12 @@ use Mondofute\Bundle\ClientBundle\Form\ClientClientUserType;
 class CommandeType extends AbstractType
 {
     private $statutDossier;
+    private $litigeDossier;
 
-    public function __construct($statutDossier)
+    public function __construct($statutDossier, $litigeDossier)
     {
         $this->statutDossier = $statutDossier;
+        $this->litigeDossier = $litigeDossier;
     }
 
     /**
@@ -71,15 +75,32 @@ class CommandeType extends AbstractType
                 'query_builder' => function (StatutDossierRepository $r) use ($locale) {
                     $qb = $r->createQueryBuilder('s');
                     $qb->select('s, traductions', 'gsd')
-                        ->join('s.groupeStatutDossier', 'gsd')
-                        ->join('gsd.traductions', 'gsdtrad')
                         ->join('s.traductions', 'traductions')
                         ->join('traductions.langue', 'langue')
+                        ->leftJoin('s.groupeStatutDossier', 'gsd')
+                        ->leftJoin('gsd.traductions', 'gsdtrad')
                         ->where('langue.code = :code')
                         ->setParameter('code', $locale);
                     return $qb;
                 },
                 'data' => $this->statutDossier,
+            ))
+            ->add('litigeDossier', EntityType::class, array(
+                'class' => LitigeDossier::class,
+                'mapped' => false,
+                'choice_label' => 'traductions[0].libelle',
+                'placeholder' => '--- Veuillez choisir un litige ---',
+                'required' => false,
+                'query_builder' => function (LitigeDossierRepository $rep) use ($locale) {
+                    $qb = $rep->createQueryBuilder('ld');
+                    $qb->select('ld, traductions')
+                        ->join('ld.traductions', 'traductions')
+                        ->join('traductions.langue', 'langue')
+                        ->where('langue.code = :code')
+                        ->setParameter('code', $locale);
+                    return $qb;
+                },
+                'data' => $this->litigeDossier,
             ))
             ->add('commandeLignes', PolyCollectionType::class, array(
             'types' => array(

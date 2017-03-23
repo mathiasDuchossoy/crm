@@ -1,0 +1,55 @@
+<?php
+
+namespace Mondofute\Bundle\CommandeBundle\Entity;
+
+/**
+ * CommandeLitigeDossier
+ */
+class CommandeLitigeDossier
+{
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $dateHeure;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set dateHeure
+     *
+     * @param \DateTime $dateHeure
+     *
+     * @return CommandeLitigeDossier
+     */
+    public function setDateHeure($dateHeure)
+    {
+        $this->dateHeure = $dateHeure;
+
+        return $this;
+    }
+
+    /**
+     * Get dateHeure
+     *
+     * @return \DateTime
+     */
+    public function getDateHeure()
+    {
+        return $this->dateHeure;
+    }
+}
+

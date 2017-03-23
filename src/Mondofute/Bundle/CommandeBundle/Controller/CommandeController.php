@@ -32,7 +32,9 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
+use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
 use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -45,7 +47,11 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionLogementPeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePeriodeSejour;
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
-use Mondofute\Bundle\StationBundle\Entity\Station;
+use Nucleus\ContactBundle\Entity\Civilite;
+use Nucleus\MoyenComBundle\Entity\Adresse;
+use Nucleus\MoyenComBundle\Entity\Email;
+use Nucleus\MoyenComBundle\Entity\TelFixe;
+use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -99,7 +105,7 @@ class CommandeController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
         $commande->setNumCommande($em->getRepository(Commande::class)->countTotal() + 1);
-        $form = $this->createForm(new CommandeType(null), $commande);
+        $form = $this->createForm(new CommandeType(null, null), $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 //        gestion du premier formulaire client formulaire
@@ -127,6 +133,20 @@ class CommandeController extends Controller
 //        fin gestion du formulaire client
         if ($form->isSubmitted() && $form->isValid() && $formClient->isSubmitted() && $formClient->isValid()) {
             $em = $this->getDoctrine()->getManager();
+//            if($originalStatutDossier->getStatutDossier()->getId() != $request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']){
+            $commandeStatutDossier = new CommandeStatutDossier();
+            $commandeStatutDossier->setCommande($commande);
+            $commandeStatutDossier->setDateHeure(new \DateTime());
+            $commandeStatutDossier->setStatutDossier($em->getRepository(StatutDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']));
+            $commande->addCommandeStatutDossier($commandeStatutDossier);
+            if ($request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier'] != '') {
+                $commandeLitigeDossier = new CommandeLitigeDossier();
+                $commandeLitigeDossier->setCommande($commande);
+                $commandeLitigeDossier->setLitigeDossier($em->getRepository(LitigeDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier']));
+                $commandeLitigeDossier->setDateHeure(new \DateTime());
+                $commande->addCommandeLitigeDossier($commandeLitigeDossier);
+            }
+//            }
 //            gestion du client
             $clientUser->setEnabled(true);
             foreach ($client->getMoyenComs() as $moyenCom) {
@@ -194,7 +214,10 @@ class CommandeController extends Controller
             ->setSite($emSite->find(Site::class, $commande->getSite()))
             ->setDateCommande($commande->getDateCommande())
             ->setNumCommande($commande->getNumCommande());
-
+//        gestion litiges
+        $this->gestionLitigeSite($commande, $commandeSite, $emSite);
+//        gestion statut
+        $this->gestionStatutSite($commande, $commandeSite, $emSite);
         // /* *** gestion clients ***
         $this->gestionClientSite($commande, $commandeSite, $emSite);
         // *** fin gestion clients *** */
@@ -209,6 +232,76 @@ class CommandeController extends Controller
 
         $emSite->persist($commandeSite);
         $emSite->flush();
+    }
+
+    public function gestionLitigeSite($commande, $commandeSite, $emSite)
+    {
+        /** @var EntityManager $emSite */
+        /** @var Commande $commandeSite */
+        /** @var Commande $commande */
+        /** @var CommandeLitigeDossier $commandeLitige */
+//        gestion de la suppression distante des commande litige
+        foreach ($commandeSite->getCommandeLitigeDossiers() as $commandeLitigeSite) {
+            $commandeLitige = $commande->getCommandeLitigeDossiers()->filter(function (CommandeLitigeDossier $element
+            ) use ($commandeLitigeSite) {
+                return $element->getId() == $commandeLitigeSite->getId();
+            })->first();
+            if (false === $commandeLitige) {
+                $commandeSite->removeCommandeLitigeDossier($commandeLitigeSite);
+            }
+        }
+        // ajout commande litige avec forcage de l'id
+        foreach ($commande->getCommandeLitigeDossiers() as $commandeLitige) {
+            $commandeLitigeSite = $commandeSite->getCommandeLitigeDossiers()->filter(function (
+                CommandeLitigeDossier $element
+            ) use ($commandeLitige) {
+                return $element->getId() == $commandeLitige->getId();
+            })->first();
+            if (false === $commandeLitigeSite) {
+                $commandeLitigeSite = new CommandeLitigeDossier();
+                $commandeLitigeSite->setDateHeure($commandeLitige->getDateHeure())->setLitigeDossier($emSite->find(LitigeDossier::class,
+                    $commandeLitige->getLitigeDossier()))->setCommande($commandeSite)->setId($commandeLitige->getId());
+
+                $metadata = $emSite->getClassMetadata(get_class($commandeLitigeSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $commandeSite->addCommandeLitigeDossier($commandeLitigeSite);
+            }
+        }
+    }
+
+    public function gestionStatutSite($commande, $commandeSite, $emSite)
+    {
+        /** @var EntityManager $emSite */
+        /** @var Commande $commandeSite */
+        /** @var Commande $commande */
+        /** @var CommandeStatutDossier $commandeStatut */
+//        gestion de la suppression distante des commande litige
+        foreach ($commandeSite->getCommandeStatutDossiers() as $commandeStatutSite) {
+            $commandeStatut = $commande->getCommandeStatutDossiers()->filter(function (CommandeStatutDossier $element
+            ) use ($commandeStatutSite) {
+                return $element->getId() == $commandeStatutSite->getId();
+            })->first();
+            if (false === $commandeStatut) {
+                $commandeSite->removeCommandeStatutDossier($commandeStatutSite);
+            }
+        }
+        // ajout commande litige avec forcage de l'id
+        foreach ($commande->getCommandeStatutDossiers() as $commandeStatut) {
+            $commandeStatutSite = $commandeSite->getCommandeStatutDossiers()->filter(function (
+                CommandeStatutDossier $element
+            ) use ($commandeStatut) {
+                return $element->getId() == $commandeStatut->getId();
+            })->first();
+            if (false === $commandeStatutSite) {
+                $commandeStatutSite = new CommandeStatutDossier();
+                $commandeStatutSite->setDateHeure($commandeStatut->getDateHeure())->setStatutDossier($emSite->find(StatutDossier::class,
+                    $commandeStatut->getStatutDossier()))->setCommande($commandeSite)->setId($commandeStatut->getId());
+
+                $metadata = $emSite->getClassMetadata(get_class($commandeStatutSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $commandeSite->addCommandeStatutDossier($commandeStatutSite);
+            }
+        }
     }
 
     /**
@@ -529,11 +622,22 @@ class CommandeController extends Controller
     {
 //        gère le classement des commandeStatutDossier afin d'avoir le statut en cours
         $criteresStatut = Criteria::create();
-        $criteresStatut->orderBy(array('dateHeure'=>'DESC'));
+        $criteresStatut->orderBy(array('dateHeure' => 'DESC'));
         /** @var CommandeStatutDossier $originalStatutDossier */
+        /** @var CommandeLitigeDossier $originalLitigeDossier */
         $originalStatutDossier = $commande->getCommandeStatutDossiers()->matching($criteresStatut)->first();
+//        récupération du litige en cours (null si pas de litige) et de la collection de litiges
+        $originalLitigeDossier = $commande->getCommandeLitigeDossiers()->matching($criteresStatut)->first();
+        if ($originalLitigeDossier == false) {
+            $originalLitigeDossier = null;
+        } else {
+            $originalLitigeDossier = $originalLitigeDossier->getLitigeDossier();
+        }
+        $originalLitigeDossiers = $commande->getCommandeLitigeDossiers();
+//        fin de la gestion des litiges
         $deleteForm = $this->createDeleteForm($commande);
-        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier()), $commande, array('locale'=>$request->getLocale()))
+        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier(), $originalLitigeDossier),
+            $commande, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
 
         $originalCommandeLignes = new ArrayCollection();
@@ -571,9 +675,6 @@ class CommandeController extends Controller
 //        gestion du premier formulaire client formulaire
         /** @var Client $client */
         if (empty($client = $commande->getClients()->first())) {
-
-//        dump($client);
-//        die;
             $client = new Client();
             $client->addMoyenCom(new Adresse())
                 ->addMoyenCom(new TelFixe())
@@ -601,6 +702,34 @@ class CommandeController extends Controller
                 $commandeStatutDossier->setStatutDossier($em->getRepository(StatutDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']));
                 $commande->addCommandeStatutDossier($commandeStatutDossier);
             }
+//            gestion des litiges
+//            si litige est vide on supprime l'historique des litiges
+            if ($request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier'] == '') {
+                foreach ($commande->getCommandeLitigeDossiers() as $each) {
+                    $commande->removeCommandeLitigeDossier($each);
+                    $em->remove($each);
+                }
+            } else {
+//                vérifie si au moins un litige est présent
+                if ($originalLitigeDossier != null) {
+//                    si un litige est présent on vérifie si l'état du litige a changé, si oui on ajoute le nouvel état du litige
+                    if ($originalLitigeDossier->getId() != $request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier']) {
+                        $commandeLitigeDossier = new CommandeLitigeDossier();
+                        $commandeLitigeDossier->setCommande($commande);
+                        $commandeLitigeDossier->setLitigeDossier($em->getRepository(LitigeDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier']));
+                        $commandeLitigeDossier->setDateHeure(new \DateTime());
+                        $commande->addCommandeLitigeDossier($commandeLitigeDossier);
+                    }
+                } else {
+//                    si aucun litige est déjà présent on ajoute le nouvel état
+                    $commandeLitigeDossier = new CommandeLitigeDossier();
+                    $commandeLitigeDossier->setCommande($commande);
+                    $commandeLitigeDossier->setLitigeDossier($em->getRepository(LitigeDossier::class)->find($request->request->get('mondofute_bundle_commandebundle_commande')['litigeDossier']));
+                    $commandeLitigeDossier->setDateHeure(new \DateTime());
+                    $commande->addCommandeLitigeDossier($commandeLitigeDossier);
+                }
+            }
+//            fin de la gestion des litiges
 //            gestion du client
             $clientUser->setEnabled(true);
             foreach ($client->getMoyenComs() as $moyenCom) {

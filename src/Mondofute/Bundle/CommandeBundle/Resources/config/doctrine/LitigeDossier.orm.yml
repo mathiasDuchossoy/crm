@@ -1,0 +1,23 @@
+Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        codeCouleur:
+            type: string
+            length: 255
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\LitigeDossierTraduction
+            mappedBy: litigeDossier
+            cascade: ['persist','remove']
+        commandeLitigeDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier
+            mappedBy: litigeDossier
+    lifecycleCallbacks: {  }
