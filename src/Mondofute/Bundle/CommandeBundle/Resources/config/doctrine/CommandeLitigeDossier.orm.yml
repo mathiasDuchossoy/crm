@@ -1,0 +1,21 @@
+Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\CommandeLitigeDossierRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        dateHeure:
+            type: datetime
+    manyToOne:
+        commande:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
+            inversedBy: commandeLitigeDossiers
+        litigeDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier
+            inversedBy: commandeLitigeDossier
+    lifecycleCallbacks: {  }

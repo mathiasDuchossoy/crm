@@ -1,0 +1,7 @@
+CREATE TABLE commande_litige_dossier (id INT AUTO_INCREMENT NOT NULL, commande_id INT UNSIGNED DEFAULT NULL, litige_dossier_id INT DEFAULT NULL, date_heure DATETIME NOT NULL, INDEX IDX_3E96AF5882EA2E54 (commande_id), INDEX IDX_3E96AF58CF2208C1 (litige_dossier_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE litige_dossier (id INT AUTO_INCREMENT NOT NULL, code_couleur VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE litige_dossier_traduction (id INT AUTO_INCREMENT NOT NULL, langue_id INT UNSIGNED DEFAULT NULL, litige_dossier_id INT DEFAULT NULL, libelle VARCHAR(255) NOT NULL, INDEX IDX_C19B995C2AADBACD (langue_id), INDEX IDX_C19B995CCF2208C1 (litige_dossier_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE commande_litige_dossier ADD CONSTRAINT FK_3E96AF5882EA2E54 FOREIGN KEY (commande_id) REFERENCES commande (id);
+ALTER TABLE commande_litige_dossier ADD CONSTRAINT FK_3E96AF58CF2208C1 FOREIGN KEY (litige_dossier_id) REFERENCES litige_dossier (id);
+ALTER TABLE litige_dossier_traduction ADD CONSTRAINT FK_C19B995C2AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
+ALTER TABLE litige_dossier_traduction ADD CONSTRAINT FK_C19B995CCF2208C1 FOREIGN KEY (litige_dossier_id) REFERENCES litige_dossier (id);

@@ -13,8 +13,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
+use ReflectionClass;
 
 class Commande
 {
@@ -51,14 +51,6 @@ class Commande
      * @var Site
      */
     private $site;
-    /**
-     * @var integer
-     */
-    private $prixVente = 0;
-    /**
-     * @var Collection
-     */
-    private $commandeLitigeDossiers;
 
     /**
      * Constructor
@@ -69,7 +61,6 @@ class Commande
         $this->commandeLignes = new ArrayCollection();
         $this->commandeEtatDossiers = new ArrayCollection();
         $this->commandeStatutDossiers = new ArrayCollection();
-        $this->commandeLitigeDossiers = new ArrayCollection();
     }
 
     /**
@@ -207,22 +198,22 @@ class Commande
      */
     public function getCommandeLignes()
     {
-//        $newCommandeLignes = new ArrayCollection();
-//        foreach ($this->commandeLignes as $commandeLigne) {
-//            $oReflectionClass = new ReflectionClass($commandeLigne);
-//            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
-//                /** @var CommandeLignePrestationAnnexe $commandeLigne */
-//                if (empty($commandeLigne->getCommandeLigneSejour())) {
-//                    $newCommandeLignes->add($commandeLigne);
-//                }
-//            } else {
-//                $newCommandeLignes->add($commandeLigne);
-//            }
-//        }
-//        $this->commandeLignes->clear();
-//        foreach ($newCommandeLignes as $newCommandeLigne) {
-//            $this->commandeLignes->add($newCommandeLigne);
-//        }
+        $newCommandeLignes = new ArrayCollection();
+        foreach ($this->commandeLignes as $commandeLigne) {
+            $oReflectionClass = new ReflectionClass($commandeLigne);
+            if ($oReflectionClass->getShortName() == 'CommandeLignePrestationAnnexe') {
+                /** @var CommandeLignePrestationAnnexe $commandeLigne */
+                if (empty($commandeLigne->getCommandeLigneSejour())) {
+                    $newCommandeLignes->add($commandeLigne);
+                }
+            } else {
+                $newCommandeLignes->add($commandeLigne);
+            }
+        }
+        $this->commandeLignes->clear();
+        foreach ($newCommandeLignes as $newCommandeLigne) {
+            $this->commandeLignes->add($newCommandeLigne);
+        }
         return $this->commandeLignes;
     }
 
@@ -316,96 +307,5 @@ class Commande
         $this->site = $site;
 
         return $this;
-    }
-
-    /**
-     * Get prixVente
-     *
-     * @return integer
-     */
-    public function getPrixVente()
-    {
-        return $this->prixVente;
-    }
-
-    /**
-     * Set prixVente
-     *
-     * @param integer $prixVente
-     *
-     * @return Commande
-     */
-    public function setPrixVente($prixVente)
-    {
-        $this->prixVente = $prixVente;
-
-        return $this;
-    }
-
-    public function getCommandeLigneRemisePromotions()
-    {
-        return $this->commandeLignes->filter(function ($element) {
-            return get_class($element) == RemisePromotion::class;
-        });
-    }
-
-    public function getSejourPeriodes()
-    {
-        return $this->commandeLignes->filter(function ($element) {
-            return get_class($element) == SejourPeriode::class;
-        });
-    }
-
-    public function getCommandeLigneRemiseDecotes($type = null)
-    {
-        return $this->commandeLignes->filter(function ($element) use ($type) {
-            if (!empty($type)) {
-                return (get_class($element) == RemiseDecote::class and $element->getDecote()->getType() == $type);
-            }
-            return get_class($element) == RemiseDecote::class;
-        });
-    }
-
-    public function getPrestationAnnexeExternes()
-    {
-        return $this->commandeLignes->filter(function ($element) {
-            return get_class($element) == CommandeLignePrestationAnnexe::class;
-        });
-    }
-
-    /**
-     * Add commandeLitigeDossier
-     *
-     * @param CommandeLitigeDossier $commandeLitigeDossier
-     *
-     * @return Commande
-     */
-    public function addCommandeLitigeDossier(
-        CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers[] = $commandeLitigeDossier;
-
-        return $this;
-    }
-
-    /**
-     * Remove commandeLitigeDossier
-     *
-     * @param CommandeLitigeDossier $commandeLitigeDossier
-     */
-    public function removeCommandeLitigeDossier(
-        CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers->removeElement($commandeLitigeDossier);
-    }
-
-    /**
-     * Get commandeLitigeDossiers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCommandeLitigeDossiers()
-    {
-        return $this->commandeLitigeDossiers;
     }
 }

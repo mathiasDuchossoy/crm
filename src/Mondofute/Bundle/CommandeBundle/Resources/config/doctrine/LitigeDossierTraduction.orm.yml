@@ -1,0 +1,21 @@
+Mondofute\Bundle\CommandeBundle\Entity\LitigeDossierTraduction:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierTraductionRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    manyToOne:
+        langue:
+            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+        litigeDossier:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier
+            inversedBy: traductions
+    lifecycleCallbacks: {  }
