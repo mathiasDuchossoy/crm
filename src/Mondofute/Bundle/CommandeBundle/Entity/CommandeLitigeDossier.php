@@ -42,7 +42,7 @@ class CommandeLitigeDossier
      * @param int $id
      * @return CommandeLitigeDossier
      */
-    public function setId(int $id): CommandeLitigeDossier
+    public function setId(int $id)
     {
         $this->id = $id;
         return $this;
