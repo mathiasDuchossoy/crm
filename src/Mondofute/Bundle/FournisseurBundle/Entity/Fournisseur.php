@@ -9,6 +9,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Traits\FournisseurTrait;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexe;
 use Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
+use Mondofute\Bundle\PasserelleBundle\Entity\Passerelle;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseur;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
@@ -131,7 +132,7 @@ class Fournisseur extends Moral
      */
     private $promotionFournisseurPrestationAnnexes;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $commentaires;
     /**
@@ -139,7 +140,7 @@ class Fournisseur extends Moral
      */
     private $saisonFournisseurs;
     /**
-     * @var \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+     * @var Passerelle
      */
     private $paramPasserelle;
 
@@ -428,7 +429,8 @@ class Fournisseur extends Moral
      */
     public function setFournisseurParent(
         Fournisseur $fournisseurParent = null
-    ) {
+    )
+    {
         $this->fournisseurParent = $fournisseurParent;
 
         return $this;
@@ -933,7 +935,8 @@ class Fournisseur extends Moral
      */
     public function setConditionAnnulationDescription(
         ConditionAnnulationDescription $conditionAnnulationDescription = null
-    ) {
+    )
+    {
         $this->conditionAnnulationDescription = $conditionAnnulationDescription;
 
         return $this;
@@ -1016,7 +1019,8 @@ class Fournisseur extends Moral
      */
     public function addPromotionFournisseurPrestationAnnex(
         PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
-    ) {
+    )
+    {
         $this->promotionFournisseurPrestationAnnexes[] = $promotionFournisseurPrestationAnnex->setFournisseur($this);
 
         return $this;
@@ -1029,7 +1033,8 @@ class Fournisseur extends Moral
      */
     public function removePromotionFournisseurPrestationAnnex(
         PromotionFournisseurPrestationAnnexe $promotionFournisseurPrestationAnnex
-    ) {
+    )
+    {
         $this->promotionFournisseurPrestationAnnexes->removeElement($promotionFournisseurPrestationAnnex);
     }
 
@@ -1226,7 +1231,7 @@ class Fournisseur extends Moral
     /**
      * Get paramPasserelle
      *
-     * @return \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle
+     * @return Passerelle
      */
     public function getParamPasserelle()
     {
@@ -1236,14 +1241,22 @@ class Fournisseur extends Moral
     /**
      * Set paramPasserelle
      *
-     * @param \Mondofute\Bundle\PasserelleBundle\Entity\Passerelle $paramPasserelle
+     * @param Passerelle $paramPasserelle
      *
      * @return Fournisseur
      */
-    public function setParamPasserelle(\Mondofute\Bundle\PasserelleBundle\Entity\Passerelle $paramPasserelle = null)
+    public function setParamPasserelle(Passerelle $paramPasserelle = null)
     {
         $this->paramPasserelle = $paramPasserelle;
 
         return $this;
+    }
+
+    public function getPasserelle()
+    {
+        if (!empty($this->paramPasserelle)) {
+            return $this->paramPasserelle->getPasserelle();
+        }
+        return null;
     }
 }
