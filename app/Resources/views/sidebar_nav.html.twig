@@ -370,5 +370,23 @@
             </ul>
         </li>
         {# ***** FIN PROMOTION ***** #}
+        {# ***** COMMANDE ***** #}
+        <li class="dropdown {% if 'commande' in app.request.attributes.get('_route') %} active {% endif %}">
+            <a role="button">Commande</a>
+            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                <li class="dropdown-submenu {% if 'commande' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">Commande</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'commande_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('commande_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'commande_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('commande_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        {# ***** FIN COMMANDE ***** #}
     </ul>
 </div>
