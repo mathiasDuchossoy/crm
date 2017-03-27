@@ -50,6 +50,9 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
         datePaiement:
             type: datetime
             nullable: true
+        dateEmailFournisseur:
+            type: datetime
+            nullable: true
     manyToOne:
         commande:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande

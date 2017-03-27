@@ -366,6 +366,13 @@ class Commande
         });
     }
 
+    public function getPrestationAnnexeExternes()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == CommandeLignePrestationAnnexe::class;
+        });
+    }
+
     /**
      * Add commandeLitigeDossier
      *
