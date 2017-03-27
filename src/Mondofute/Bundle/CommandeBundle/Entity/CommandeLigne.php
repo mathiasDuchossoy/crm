@@ -41,6 +41,10 @@ abstract class CommandeLigne
      * @var \DateTime
      */
     private $datePaiement;
+    /**
+     * @var \DateTime
+     */
+    private $dateEmailFournisseur;
 
     public function __construct()
     {
@@ -233,6 +237,30 @@ abstract class CommandeLigne
     public function setDatePaiement($datePaiement)
     {
         $this->datePaiement = $datePaiement;
+
+        return $this;
+    }
+
+    /**
+     * Get dateEmailFournisseur
+     *
+     * @return \DateTime
+     */
+    public function getDateEmailFournisseur()
+    {
+        return $this->dateEmailFournisseur;
+    }
+
+    /**
+     * Set dateEmailFournisseur
+     *
+     * @param \DateTime $dateEmailFournisseur
+     *
+     * @return CommandeLigne
+     */
+    public function setDateEmailFournisseur($dateEmailFournisseur)
+    {
+        $this->dateEmailFournisseur = $dateEmailFournisseur;
 
         return $this;
     }

@@ -359,4 +359,11 @@ class Commande
             return get_class($element) == RemiseDecote::class;
         });
     }
+
+    public function getPrestationAnnexeExternes()
+    {
+        return $this->commandeLignes->filter(function ($element) {
+            return get_class($element) == CommandeLignePrestationAnnexe::class;
+        });
+    }
 }

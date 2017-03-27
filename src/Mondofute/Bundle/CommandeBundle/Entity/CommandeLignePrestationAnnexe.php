@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use DateTime;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\StationBundle\Entity\Station;
 
 /**
  * CommandeLignePrestationAnnexe
@@ -27,6 +28,10 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
      * @var DateTime
      */
     private $dateFin;
+    /**
+     * @var Station
+     */
+    private $station;
 
     /**
      * Get commandeLigneSejour
@@ -48,30 +53,6 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
     public function setCommandeLigneSejour(CommandeLigneSejour $commandeLigneSejour = null)
     {
         $this->commandeLigneSejour = $commandeLigneSejour;
-
-        return $this;
-    }
-
-    /**
-     * Get fournisseurPrestationAnnexeParam
-     *
-     * @return FournisseurPrestationAnnexeParam
-     */
-    public function getFournisseurPrestationAnnexeParam()
-    {
-        return $this->fournisseurPrestationAnnexeParam;
-    }
-
-    /**
-     * Set fournisseurPrestationAnnexeParam
-     *
-     * @param FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam
-     *
-     * @return CommandeLignePrestationAnnexe
-     */
-    public function setFournisseurPrestationAnnexeParam(FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam = null)
-    {
-        $this->fournisseurPrestationAnnexeParam = $fournisseurPrestationAnnexeParam;
 
         return $this;
     }
@@ -120,6 +101,59 @@ class CommandeLignePrestationAnnexe extends CommandeLigne
     public function setDateFin($dateFin)
     {
         $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getFournisseur()
+    {
+        return $this->getFournisseurPrestationAnnexeParam()->getFournisseurPrestationAnnexe()->getFournisseur();
+    }
+
+    /**
+     * Get fournisseurPrestationAnnexeParam
+     *
+     * @return FournisseurPrestationAnnexeParam
+     */
+    public function getFournisseurPrestationAnnexeParam()
+    {
+        return $this->fournisseurPrestationAnnexeParam;
+    }
+
+    /**
+     * Set fournisseurPrestationAnnexeParam
+     *
+     * @param FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam
+     *
+     * @return CommandeLignePrestationAnnexe
+     */
+    public function setFournisseurPrestationAnnexeParam(FournisseurPrestationAnnexeParam $fournisseurPrestationAnnexeParam = null)
+    {
+        $this->fournisseurPrestationAnnexeParam = $fournisseurPrestationAnnexeParam;
+
+        return $this;
+    }
+
+    /**
+     * Get station
+     *
+     * @return Station
+     */
+    public function getStation()
+    {
+        return $this->station;
+    }
+
+    /**
+     * Set station
+     *
+     * @param Station $station
+     *
+     * @return CommandeLignePrestationAnnexe
+     */
+    public function setStation(Station $station = null)
+    {
+        $this->station = $station;
 
         return $this;
     }

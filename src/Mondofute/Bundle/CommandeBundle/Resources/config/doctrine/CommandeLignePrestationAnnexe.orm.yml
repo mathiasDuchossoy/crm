@@ -15,4 +15,6 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe:
             inversedBy: commandeLignePrestationAnnexes
         fournisseurPrestationAnnexeParam:
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam
+        station:
+            targetEntity: Mondofute\Bundle\StationBundle\Entity\Station
     lifecycleCallbacks: {  }
