@@ -962,4 +962,14 @@ class Station
     {
         return $this->fournisseurs;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->traductions->filter(function (StationTraduction $element) {
+            return $element->getLangue()->getCode() == 'fr_FR';
+        })->first()->getLibelle();
+    }
 }

@@ -9,14 +9,32 @@
         <thead>
         <tr>
             <th>Id</th>
+            <th>Numéro de commande</th>
+            <th>Date de réservation</th>
+            <th>Client</th>
+            <th>Montant</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for commande in commandes %}
             <tr>
-                <td>
+                <td rowspan="3">
                     <a href="{{ path('commande_show', { 'id': commande.id }) }}">{{ commande.id }}</a>
+                </td>
+                <td>
+                    {{ commande.numCommande }}
+                </td>
+                <td>
+                    {{ commande.dateCommande | date('d/m/y h:m:s') }}
+                </td>
+                <td>
+                    {% for client in commande.clients %}
+                        {{ client }}<br/>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ commande.prixVente }}&nbsp;&euro;
                 </td>
                 <td>
                     <ul class="list-unstyled">
@@ -29,6 +47,87 @@
                                href="{{ path('commande_edit', { 'id': commande.id }) }}">{{ 'modifier' | capitalize }}</a>
                         </li>
                     </ul>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <div class="panel panel-default" style="position: relative">
+                        <div class="panel-heading" role="tab" id="heading_sejour_{{ commande.id }}">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" href="#collapse_sejour_{{ commande.id }}"
+                                   aria-expanded="false" aria-controls="collapse_sejour_{{ commande.id }}">
+                                    Séjours
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse_sejour_{{ commande.id }}" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="heading_sejour_{{ commande.id }}">
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Dates</th>
+                                        <th>Fournisseur</th>
+                                        <th>Station</th>
+                                        <th>Hébergement</th>
+                                        <th>LM</th>
+                                        <th>RM</th>
+                                        <th>Date mail fournisseur</th>
+                                    </tr>
+                                    {% for element in commande.sejourPeriodes %}
+                                        <tr>
+                                            <td>{{ element.periode.debut | date('d/m/y') }}
+                                                &nbsp;au&nbsp;{{ element.periode.fin | date('d/m/y') }}</td>
+                                            <td>{{ element.fournisseur }}</td>
+                                            <td>{{ element.station }}</td>
+                                            <td>{{ element.hebergement }}</td>
+                                            <td>{% if element.locationMaterielExists %}Oui{% else %}Non{% endif %}</td>
+                                            <td>{% if element.remonteeMecaniqueExists %}Oui{% else %}Non{% endif %}</td>
+                                            <td>{% if element.dateEmailFournisseur %}{{ element.dateEmailFournisseur | date('d/m/y') }}{% else %}Non envoyé{% endif %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+
+                <td colspan="5">
+                    <div class="panel panel-default" style="position: relative">
+                        <div class="panel-heading" role="tab" id="heading_prestation_annexe_{{ commande.id }}">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse"
+                                   href="#collapse_prestation_annexe_{{ commande.id }}"
+                                   aria-expanded="false" aria-controls="collapse_prestation_annexe_{{ commande.id }}">
+                                    Prestations annexe externes
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse_prestation_annexe_{{ commande.id }}" class="panel-collapse collapse"
+                             role="tabpanel"
+                             aria-labelledby="heading_{{ commande.id }}">
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>Dates</th>
+                                        <th>Fournisseur</th>
+                                        <th>Station</th>
+                                        <th>Date mail fournisseur</th>
+                                    </tr>
+                                    {% for element in commande.PrestationAnnexeExternes %}
+                                        <tr>
+                                            <td>{{ element.dateDebut| date('d/m/y') }}
+                                                &nbsp;au&nbsp;{{ element.dateFin| date('d/m/y') }}</td>
+                                            <td>{{ element.fournisseur }}</td>
+                                            <td>{{ element.station }}</td>
+                                            <td>{% if element.dateEmailFournisseur %}{{ element.dateEmailFournisseur | date('d/m/y') }}{% else %}Non envoyé{% endif %}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         {% endfor %}

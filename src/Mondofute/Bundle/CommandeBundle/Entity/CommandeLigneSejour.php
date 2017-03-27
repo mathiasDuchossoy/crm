@@ -4,7 +4,10 @@ namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
+use Mondofute\Bundle\HebergementBundle\Entity\HebergementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\StationBundle\Entity\StationTraduction;
 
 /**
  * CommandeLigneSejour
@@ -30,6 +33,7 @@ class CommandeLigneSejour extends CommandeLigne
      */
     public function __construct()
     {
+        parent::__construct();
         $this->commandeLignePrestationAnnexes = new ArrayCollection();
     }
 
@@ -82,16 +86,6 @@ class CommandeLigneSejour extends CommandeLigne
     }
 
     /**
-     * Get commandeLignePrestationAnnexes
-     *
-     * @return Collection
-     */
-    public function getCommandeLignePrestationAnnexes()
-    {
-        return $this->commandeLignePrestationAnnexes;
-    }
-
-    /**
      * Get nbParticipants
      *
      * @return integer
@@ -114,4 +108,62 @@ class CommandeLigneSejour extends CommandeLigne
 
         return $this;
     }
+
+    public function getFournisseur()
+    {
+        return $this->logement->getFournisseur();
+    }
+
+    public function getStation()
+    {
+        $site = $this->logement->getSite();
+        return $this->logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($site) {
+            return $element->getSite() == $site;
+        })->first()->getStation()->getTraductions()->filter(function (StationTraduction $element) {
+            return $element->getLangue()->getCode() == 'fr_FR';
+        })->first()->getLibelle();
+    }
+
+    public function getHebergement()
+    {
+        $site = $this->logement->getSite();
+        return $this->logement->getFournisseurHebergement()->getHebergement()->getHebergements()->filter(function (Hebergement $element) use ($site) {
+            return $element->getSite() == $site;
+        })->first()->getTraductions()->filter(function (HebergementTraduction $element) {
+            return $element->getLangue()->getCode() == 'fr_FR';
+        })->first()->getNom();
+    }
+
+    public function getLocationMaterielExists()
+    {
+        $remonteeMecaniques = $this->getCommandeLignePrestationAnnexes()->filter(function (CommandeLignePrestationAnnexe $element) {
+            return $element->getFournisseurPrestationAnnexeParam()->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId() == 2;
+        });
+        if ($remonteeMecaniques->isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Get commandeLignePrestationAnnexes
+     *
+     * @return Collection
+     */
+    public function getCommandeLignePrestationAnnexes()
+    {
+        return $this->commandeLignePrestationAnnexes;
+    }
+
+    public function getRemonteeMecaniqueExists()
+    {
+        $remonteeMecaniques = $this->getCommandeLignePrestationAnnexes()->filter(function (CommandeLignePrestationAnnexe $element) {
+            return $element->getFournisseurPrestationAnnexeParam()->getFournisseurPrestationAnnexe()->getPrestationAnnexe()->getFamillePrestationAnnexe()->getId() == 1;
+        });
+        if ($remonteeMecaniques->isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
 }
