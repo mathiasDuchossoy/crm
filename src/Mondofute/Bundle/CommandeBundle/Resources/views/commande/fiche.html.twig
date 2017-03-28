@@ -82,6 +82,7 @@
                         <tr>
                             <th>Date de début</th>
                             <th>Date de fin</th>
+                            <th>Station</th>
                             <th>Prestation annexe</th>
                             <th>Tarif</th>
                             <th>Actions</th>
@@ -471,6 +472,7 @@
         <tr class="item">
             <td>{{ form_widget(form.dateDebut, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateDebut.vars.value }}</td>
             <td>{{ form_widget(form.dateFin, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateFin.vars.value }}</td>
+            <td>{{ form_widget(form.station, {'attr' : {'style' : 'display:none'}}) }}{{ form.vars.value.station }}</td>
             <td>
                 {{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr' : {'onchange' : 'changerPrixPrestationAnnexeExterne(this, "'~name~'")'}}) }}
             </td>
@@ -799,6 +801,7 @@
                             var $selectPrestationAnnexeExterne = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_fournisseurPrestationAnnexeParam');
                             var $inputTarif = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_prixVente');
                             var $prestationAnnexeExterneType = $('#' + selectPrestationAnnexeExterneId + '_type');
+                            var $inputStation = $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + index + '_station');
                             if (fournisseurId) {
                                 var path = '{{ path('commande_get_prestation_annexe_externe' , {
                                     'dateDebut' : '_dateDebut_',
@@ -831,6 +834,12 @@
                                             var $tdInputDateFin = $('<td></td>').append($inputDateFin.val());
                                             $item.append($tdInputDateDebut);
                                             $item.append($tdInputDateFin);
+                                            var $tdInputStation = $('<td></td>');
+                                            $inputStation.hide();
+                                            $tdInputStation.append($inputStation);
+                                            var textStation = $inputStation.find('option:selected').text();
+                                            $tdInputStation.append(textStation);
+                                            $item.append($tdInputStation);
                                             var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
                                             $selectPrestationAnnexeExterne.on('change', function (event) {
                                                 $inputTarif.val(tarif);

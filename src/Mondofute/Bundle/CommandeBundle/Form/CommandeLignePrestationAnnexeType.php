@@ -50,7 +50,6 @@ class CommandeLignePrestationAnnexeType extends AbstractType
                         return $r->getTraductionsByLocale($locale, null, 1);
                     },
                     'empty_value' => ' --- Choisir une station --- ',
-                    'mapped' => false,
                     'choice_label' => 'traductions[0].libelle'
                 ]
             )

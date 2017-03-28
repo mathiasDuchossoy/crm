@@ -100,6 +100,9 @@ class CommandeController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->gestionNumeroCommande($commande);
+
             $em->persist($commande);
             $em->flush();
 
@@ -114,6 +117,18 @@ class CommandeController extends Controller
             'form' => $form->createView(),
             'langues' => $langues
         ));
+    }
+
+    /**
+     * @param Commande $commande
+     */
+    public function gestionNumeroCommande($commande)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $date = new DateTime();
+        $dateNumeroCommande = $date->format('Ymd');
+        $countCommande = $em->getRepository(Commande::class)->countCommandeForDay($dateNumeroCommande);
+        $commande->setNumCommande($dateNumeroCommande . (intval($countCommande) + 1));
     }
 
     /**
@@ -251,6 +266,7 @@ class CommandeController extends Controller
                     /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
                     /** @var CommandeLignePrestationAnnexe $commandeLigne */
                     $commandeLigneSite
+                        ->setStation($emSite->getRepository(Station::class)->findOneBy(['stationUnifie' => $commandeLigne->getStation()->getStationUnifie()]))
                         ->setDateDebut($commandeLigne->getDateDebut())
                         ->setDateFin($commandeLigne->getDateFin())
                         ->setFournisseurPrestationAnnexeParam($emSite->find(FournisseurPrestationAnnexeParam::class, $commandeLigne->getFournisseurPrestationAnnexeParam()));
