@@ -104,8 +104,8 @@ class CommandeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
         $commande = new Commande();
-        $commande->setNumCommande($em->getRepository(Commande::class)->countTotal() + 1);
-        $form = $this->createForm(new CommandeType(null, null), $commande);
+
+        $form = $this->createForm('Mondofute\Bundle\CommandeBundle\Form\CommandeType', $commande);
         $form->add('submit', SubmitType::class, array('label' => 'Enregistrer'));
         $form->handleRequest($request);
 //        gestion du premier formulaire client formulaire
@@ -132,6 +132,8 @@ class CommandeController extends Controller
         $formClient->handleRequest($request);
 //        fin gestion du formulaire client
         if ($form->isSubmitted() && $form->isValid() && $formClient->isSubmitted() && $formClient->isValid()) {
+            $this->gestionNumeroCommande($commande);
+
             $em = $this->getDoctrine()->getManager();
 //            if($originalStatutDossier->getStatutDossier()->getId() != $request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']){
             $commandeStatutDossier = new CommandeStatutDossier();
@@ -194,6 +196,18 @@ class CommandeController extends Controller
             'langues' => $langues,
             'formClient' => $formClient->createView()
         ));
+    }
+
+    /**
+     * @param Commande $commande
+     */
+    public function gestionNumeroCommande($commande)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $date = new DateTime();
+        $dateNumeroCommande = $date->format('Ymd');
+        $countCommande = $em->getRepository(Commande::class)->countCommandeForDay($dateNumeroCommande);
+        $commande->setNumCommande($dateNumeroCommande . (intval($countCommande) + 1));
     }
 
     /**
@@ -408,6 +422,7 @@ class CommandeController extends Controller
                     /** @var CommandeLignePrestationAnnexe $commandeLigneSite */
                     /** @var CommandeLignePrestationAnnexe $commandeLigne */
                     $commandeLigneSite
+                        ->setStation($emSite->getRepository(Station::class)->findOneBy(['stationUnifie' => $commandeLigne->getStation()->getStationUnifie()]))
                         ->setDateDebut($commandeLigne->getDateDebut())
                         ->setDateFin($commandeLigne->getDateFin())
                         ->setFournisseurPrestationAnnexeParam($emSite->find(FournisseurPrestationAnnexeParam::class, $commandeLigne->getFournisseurPrestationAnnexeParam()));
@@ -582,7 +597,6 @@ class CommandeController extends Controller
             'fournisseurForPrestationAnnexeExternes' => $fournisseurForPrestationAnnexeExternes
         ));
     }
-
 
     /**
      * Finds and displays a commande entity.

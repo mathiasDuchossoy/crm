@@ -47,4 +47,14 @@ class CommandeRepository extends \Doctrine\ORM\EntityRepository
 
         return new Paginator($q);
     }
+
+    public function countCommandeForDay($date)
+    {
+        return $this->createQueryBuilder('entity')
+            ->select('COUNT(entity)')
+            ->where("entity.numCommande like '$date%'")
+//            ->setParameter('date' , $date)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
