@@ -5,6 +5,7 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Repository\ReceptionRepository;
+use Mondofute\Bundle\PasserelleBundle\Form\CodePasserelleType;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
@@ -91,6 +92,19 @@ class FournisseurHebergementType extends AbstractType
                 array(
                     'label' => 'ajouter',
                     'attr' => array('class' => 'btn btn-default addReception', 'title' => 'ajouter.reception')
+                ))
+            ->add('codePasserelles', CollectionType::class,
+                [
+                    'prototype_name' => '__name_code_passerelle_label__',
+                    'entry_type' => CodePasserelleType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true,
+                ])
+            ->add('ajouterCodePasserelle', ButtonType::class,
+                array(
+                    'label' => 'ajouter',
+                    'attr' => array('class' => 'btn btn-default addCodePasserelle', 'title' => 'ajouter.codePasserelle')
                 ));
 
     }
