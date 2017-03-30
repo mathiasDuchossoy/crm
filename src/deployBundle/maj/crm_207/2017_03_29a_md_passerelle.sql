@@ -1,0 +1,4 @@
+CREATE TABLE fournisseur_hebergement_code_passerelle (fournisseur_hebergement_id INT UNSIGNED NOT NULL, code_passerelle_id INT NOT NULL, INDEX IDX_6FF6E1739E819CB8 (fournisseur_hebergement_id), INDEX IDX_6FF6E173D6D9D217 (code_passerelle_id), PRIMARY KEY(fournisseur_hebergement_id, code_passerelle_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+CREATE TABLE code_passerelle (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
+ALTER TABLE fournisseur_hebergement_code_passerelle ADD CONSTRAINT FK_6FF6E1739E819CB8 FOREIGN KEY (fournisseur_hebergement_id) REFERENCES fournisseur_hebergement (id) ON DELETE CASCADE;
+ALTER TABLE fournisseur_hebergement_code_passerelle ADD CONSTRAINT FK_6FF6E173D6D9D217 FOREIGN KEY (code_passerelle_id) REFERENCES code_passerelle (id) ON DELETE CASCADE;

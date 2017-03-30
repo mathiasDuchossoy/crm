@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
+use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
@@ -58,6 +59,10 @@ class FournisseurHebergement
      * @var Collection
      */
     private $logements;
+    /**
+     * @var Collection
+     */
+    private $codePasserelles;
 
     /**
      * FournisseurHebergement constructor.
@@ -336,5 +341,39 @@ class FournisseurHebergement
     public function getLogements()
     {
         return $this->logements;
+    }
+
+    /**
+     * Add codePasserelle
+     *
+     * @param CodePasserelle $codePasserelle
+     *
+     * @return FournisseurHebergement
+     */
+    public function addCodePasserelle(CodePasserelle $codePasserelle)
+    {
+        $this->codePasserelles[] = $codePasserelle;
+
+        return $this;
+    }
+
+    /**
+     * Remove codePasserelle
+     *
+     * @param CodePasserelle $codePasserelle
+     */
+    public function removeCodePasserelle(CodePasserelle $codePasserelle)
+    {
+        $this->codePasserelles->removeElement($codePasserelle);
+    }
+
+    /**
+     * Get codePasserelles
+     *
+     * @return Collection
+     */
+    public function getCodePasserelles()
+    {
+        return $this->codePasserelles;
     }
 }

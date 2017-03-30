@@ -1,0 +1,15 @@
+Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\CodePasserelleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
