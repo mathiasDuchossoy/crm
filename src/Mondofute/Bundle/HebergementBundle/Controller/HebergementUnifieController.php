@@ -1896,6 +1896,12 @@ class HebergementUnifieController extends Controller
                 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
             ));
 
+        $newFournisseurs = new ArrayCollection();
+        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
+            $newFournisseurs->set($fournisseur->getId(), $fournisseur);
+        }
+        $entityUnifie->setFournisseurs($newFournisseurs);
+
         // *** récupération originals fournisseurHebergement ***
         $originalFournisseurHebergements = new ArrayCollection();
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
@@ -1904,6 +1910,13 @@ class HebergementUnifieController extends Controller
         // *** fin récupération originals gestion fournisseurHebergement ***
 
         $editForm->handleRequest($request);
+
+//        $newFournisseurs = new ArrayCollection();
+//        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
+//            $newFournisseurs->set($fournisseur->getId(), $fournisseur);
+//        }
+//        $entityUnifie->setFournisseurs($newFournisseurs);
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($entityUnifie->getHebergements() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
@@ -2335,6 +2348,17 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
+
+
+//        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
+//            dump($keyFournisseur);
+//            foreach ($fournisseur->getCodePasserelles() as $key => $item) {
+//                dump($key);
+//                dump($item);
+//            }
+//        }
+//        dump($editForm->createView());
+//        die;
 
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,
