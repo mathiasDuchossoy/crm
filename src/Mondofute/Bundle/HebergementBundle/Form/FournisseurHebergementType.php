@@ -143,6 +143,5 @@ class FournisseurHebergementType extends AbstractType
 //        ajoute l'option 'nouveau' dans le select remise de clef
         $option = new ChoiceView(array(), 'add', 'nouveau');
         $view->children['remiseClef']->vars['choices'][] = $option;
-
     }
 }

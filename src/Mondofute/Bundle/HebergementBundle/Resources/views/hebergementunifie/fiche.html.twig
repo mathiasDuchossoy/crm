@@ -887,23 +887,31 @@
                 supprimerReceptionParFournisseur($(receptions));
             });
             $(document).on('click', 'button.addReception', function () {
-                console.log('afficherModaleAjoutReception');
                 afficherModaleAjoutReception($(this).attr('data-fournisseur'));
             });
             $(document).on('click', 'button.addCodePasserelle', function () {
-                console.log('test');
-                var fournisseurId = $(this).attr('data-fournisseur');
-                var $hebergementUnifieFournisseursCodePasserelles = $('#hebergement_unifie_fournisseurs_' + fournisseurId + '_codePasserelles');
-                var prototype = $hebergementUnifieFournisseursCodePasserelles.data('prototype');
-                $hebergementUnifieFournisseursCodePasserelles.append(prototype);
-
+                var keyFournisseur = $(this).attr('data-fournisseur');
+//                console.log(keyFournisseur);
+                var $collectionHolder = $('#hebergement_unifie_fournisseurs_' + keyFournisseur + '_codePasserelles');
+                var prototype = $collectionHolder.data('prototype');
+//                console.log(prototype);
+                var index = $collectionHolder.data('index');
+                if (!index) index = 0;
+                var newForm = prototype.replace(/__name_code_passerelle_label__/g, index);
+                var $newForm = $(newForm);
+                var $input = $newForm.find('div#hebergement_unifie_fournisseurs_' + keyFournisseur + '_codePasserelles_' + index);
+//                console.log($newForm);
+//                console.log($input);
+                $collectionHolder.data('index', index + 1);
+                $newForm.data('index', index);
+                $collectionHolder.append($input);
+//                $collectionHolder.append($newForm);
             });
             $(document).on('click', 'button[name="liste_logements"]', function () {
                 afficherModalListeLogements(parseInt($(this).attr('data-fournisseur-hebergement')));
             });
             $(document).on('click', 'button[name="prestation-annexe-stocks-hebergement"]', function () {
                 afficherModalPrestationAnnexeStocksHebergement(parseInt($(this).attr('data-fournisseur-hebergement')));
-//                alert('ok');
             });
         });
     </script>
