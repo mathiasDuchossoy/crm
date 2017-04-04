@@ -1,5 +1,32 @@
 {% extends '::base.html.twig' %}
 
+{% block bouton_supprimer %}
+    <div class="col-sm-1">
+        <a href="#" class="btn btn-danger remove_item" onclick="removeCodePasserelleForm(this,event);"><i
+                    class="glyphicon glyphicon-minus"></i></a>
+    </div>
+{% endblock %}
+
+{% block  block_code_passerelle %}
+    <div>
+        <div class="form-group item"
+             id="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}">
+            <label class="col-sm-2 control-label required"
+                   for="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}_libelle">libellé</label>
+            <div class="col-sm-9"><input
+                        id="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}_libelle"
+                        name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][codePasserelles][{{ name_codePasserelle }}][libelle]"
+                        required="required" maxlength="255" class="form-control"
+                        value="{% if valueCodePasserelle is defined %}{{ valueCodePasserelle }}{% endif %}" type="text">
+
+            </div>
+            {% if valueCodePasserelle is defined %}
+                {{ block('bouton_supprimer') }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
 {% block body %}
     <section>
         <h1>
@@ -234,7 +261,20 @@
                         </div>
                     </div>
                     {% set nbFournisseurs = 0 %}
-                    {% include ('@MondofuteHebergement/hebergementunifie/prototype-fournisseur-hebergement.html.twig') %}
+                    <div id="form_fournisseurs"
+                         data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
+                         data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
+                            {#data-prototype="{% filter escape %}{% include ('@MondofuteHebergement/hebergementunifie/prototype-fournisseur-hebergement.html.twig')#}
+                            {#with {'fournisseur' : form_widget(form.children['fournisseurs'].vars['prototype']),#}
+                            {#keyFournisseur : 0#}
+                            {#} %}{% endfilter %}"#}
+                         class="row">
+                        {% for keyFournisseur, fournisseur in form.fournisseurs %}
+                            {% if fournisseur.vars.value.fournisseur is not null %}
+                                {% include ('@MondofuteHebergement/hebergementunifie/prototype-fournisseur-hebergement.html.twig') %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                     <div id="nb_fournisseurs" data-index="{{ nbFournisseurs }}">
 
                     </div>
@@ -657,10 +697,19 @@
             $newForm.find('#hebergement_unifie_fournisseurs_' + id + '_receptions').attr('data-fournisseur', id);
             $newForm.find('.addReception').attr('data-fournisseur', id);
             $newForm.find('.addCodePasserelle').attr('data-fournisseur', id);
+            {#var prototypePasserelle = '{% include '@MondofuteHebergement/hebergementunifie/prototype-code-passerelle.html.twig' with { 'keyFournisseur' : '0' , 'name' : '__name__' , 'name_codePasserelle' : '0'} | e('js') %}';#}
+
+            {% set keyFournisseur = '__keyFournisseur__' %}
+            {% set name = '__name__' %}
+            {% set name_codePasserelle = '__name_code_passerelle_label__' %}
+            var prototypePasserelle = '{{ block('block_code_passerelle') | e('js') }}';
+            prototypePasserelle = prototypePasserelle.replace(/__name__/g, id);
+            prototypePasserelle = prototypePasserelle.replace(/__keyFournisseur__/g, id);
             supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
             supprimerReceptionParFournisseur($newForm.find('[id$="_receptions"]'));
 //            ajoute le formulaire dans la page
             $formFournisseurHebergement.append($newForm.html());
+            $('#hebergement_unifie_fournisseurs_' + id + '_codePasserelles').data('prototype', prototypePasserelle);
 
 //            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'))
 //            incrémente le nombre de fournisseurs associés
@@ -900,10 +949,13 @@
                 var newForm = prototype.replace(/__name_code_passerelle_label__/g, index);
                 var $newForm = $(newForm);
                 var $input = $newForm.find('div#hebergement_unifie_fournisseurs_' + keyFournisseur + '_codePasserelles_' + index);
+                var $boutonSupprimer = $('{{ block('bouton_supprimer') | e('js') }}');
+
 //                console.log($newForm);
 //                console.log($input);
                 $collectionHolder.data('index', index + 1);
                 $newForm.data('index', index);
+                $input.append($boutonSupprimer);
                 $collectionHolder.append($input);
 //                $collectionHolder.append($newForm);
             });
@@ -1089,6 +1141,11 @@
             $('#hebergement_unifie_submit').prop('disabled', false);
             $('#remise_clef_submit').prop('disabled', false);
         });
+
+        function removeCodePasserelleForm(element, event) {
+            event.preventDefault();
+            $(element).closest('.item').remove();
+        }
 
     </script>
 

@@ -29,6 +29,18 @@ class CodePasserelle
     }
 
     /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Get libelle
      *
      * @return string

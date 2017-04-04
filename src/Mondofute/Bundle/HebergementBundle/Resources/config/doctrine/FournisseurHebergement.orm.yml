@@ -47,4 +47,5 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
         codePasserelles:
             targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle
             cascade: ['persist','remove']
+            orphanRemoval: true
     lifecycleCallbacks: {  }
