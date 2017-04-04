@@ -146,14 +146,6 @@ class HebergementUnifie
         return $this->fournisseurs;
     }
 
-    public function setFournisseurs($newFournisseurs)
-    {
-        $this->fournisseurs->clear();
-        foreach ($newFournisseurs as $key => $newFournisseur) {
-            $this->fournisseurs->set($key, $newFournisseur);
-        }
-    }
-
     /**
      * Get listeService
      *

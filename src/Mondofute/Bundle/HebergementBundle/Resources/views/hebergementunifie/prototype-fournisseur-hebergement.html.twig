@@ -1,14 +1,5 @@
-<div id="form_fournisseurs"
-     data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
-     data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
-     class="row">
-    {#{{ dump(form.fournisseurs) }}#}
-
-    {% for keyFournisseur, fournisseur in form.fournisseurs %}
-        {#{{ dump(keyFournisseur) }}#}
-        {% if fournisseur.vars.value.fournisseur is not null %}
-            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
-                 class="panel panel-default">
+<div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
+     class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
@@ -65,12 +56,14 @@
                         {{ form_label(fournisseur.codePasserelles) }}
                         <div class="col-sm-10">
                             <div id="hebergement_unifie_fournisseurs_{{ fournisseur.fournisseur.vars.value }}_codePasserelles"
-                                    {#data-prototype="{{ form_row(fournisseur.codePasserelles.vars.prototype) | e }}"#}
-                                 data-prototype="{% filter escape %}{% include '@MondofuteHebergement/hebergementunifie/prototype-code-passerelle.html.twig' with { 'name' : fournisseur.fournisseur.vars.value , 'name_codePasserelle' : '__name_code_passerelle_label__'} %}{% endfilter %}"
+                                 data-prototype="{% set name = fournisseur.fournisseur.vars.value %}{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
                                  data-index="{{ fournisseur.codePasserelles | length }}"
                             >
-                                {% for key , codePasserelle in fournisseur.codePasserelles %}
-                                    {{ form_row(codePasserelle.libelle , {'id' : 'hebergement_unifie_fournisseurs_'~fournisseur.fournisseur.vars.value~'_codePasserelles_'~key}) }}
+                                {% for keyCodePasserelle , codePasserelle in fournisseur.codePasserelles %}
+                                    {% set name = fournisseur.fournisseur.vars.value %}
+                                    {% set name_codePasserelle = keyCodePasserelle %}
+                                    {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
+                                    {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
                                 {% endfor %}
                             </div>
                         </div>
@@ -105,6 +98,3 @@
                     {% set nbFournisseurs = nbFournisseurs + 1 %}
                 </div>
             </div>
-        {% endif %}
-    {% endfor %}
-</div>

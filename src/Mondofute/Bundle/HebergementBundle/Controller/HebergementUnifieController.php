@@ -13,6 +13,7 @@ use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteHebergement;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
@@ -39,6 +40,7 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
@@ -920,6 +922,33 @@ class HebergementUnifieController extends Controller
 //                        initialise un objet
                         $fournisseurSite = new FournisseurHebergement();
                     }
+                    // *** gestion codes passerelle ***
+                    /** @var CodePasserelle $codePasserelle */
+                    /** @var CodePasserelle $codePasserelleSite */
+                    foreach ($fournisseurSite->getCodePasserelles() as $codePasserelleSite) {
+                        $codePasserelle = $fournisseur->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelleSite) {
+                            return $element->getId() == $codePasserelleSite->getId();
+                        })->first();
+                        if (false === $codePasserelle) {
+                            $fournisseurSite->getCodePasserelles()->removeElement($codePasserelleSite);
+                        }
+                    }
+                    foreach ($fournisseur->getCodePasserelles() as $codePasserelle) {
+                        $codePasserelleSite = $fournisseurSite->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelle) {
+                            return $element->getId() == $codePasserelle->getId();
+                        })->first();
+                        if (false === $codePasserelleSite) {
+                            $codePasserelleSite = new CodePasserelle();
+                            $codePasserelleSite->setId($codePasserelle->getId());
+                            /** @var EntityManager $emSite */
+                            $metadata = $emSite->getClassMetadata(get_class($codePasserelleSite));
+                            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                            $fournisseurSite->addCodePasserelle($codePasserelle);
+                        }
+                        $codePasserelleSite->setLibelle($codePasserelle->getLibelle());
+                    }
+                    // *** fin gestion codes passerelle ***
+
                     foreach ($fournisseurSite->getReceptions() as $receptionSite) {
                         $fournisseurSite->removeReception($receptionSite);
                     }
@@ -1896,14 +1925,10 @@ class HebergementUnifieController extends Controller
                 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
             ));
 
-        $newFournisseurs = new ArrayCollection();
-        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
-            $newFournisseurs->set($fournisseur->getId(), $fournisseur);
-        }
-        $entityUnifie->setFournisseurs($newFournisseurs);
 
         // *** récupération originals fournisseurHebergement ***
         $originalFournisseurHebergements = new ArrayCollection();
+        /** @var FournisseurHebergement $fournisseurHebergement */
         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
             $originalFournisseurHebergements->add($fournisseurHebergement);
         }
@@ -1911,12 +1936,9 @@ class HebergementUnifieController extends Controller
 
         $editForm->handleRequest($request);
 
-//        $newFournisseurs = new ArrayCollection();
-//        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
-//            $newFournisseurs->set($fournisseur->getId(), $fournisseur);
-//        }
-//        $entityUnifie->setFournisseurs($newFournisseurs);
-
+        // ********************************
+        // *** VALIDATION DU FORMULAIRE ***
+        // ********************************
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($entityUnifie->getHebergements() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
@@ -2348,17 +2370,6 @@ class HebergementUnifieController extends Controller
                 return $this->redirectToRoute('hebergement_hebergement_edit', array('id' => $entityUnifie->getId()));
             }
         }
-
-
-//        foreach ($entityUnifie->getFournisseurs() as $keyFournisseur => $fournisseur) {
-//            dump($keyFournisseur);
-//            foreach ($fournisseur->getCodePasserelles() as $key => $item) {
-//                dump($key);
-//                dump($item);
-//            }
-//        }
-//        dump($editForm->createView());
-//        die;
 
         return $this->render('@MondofuteHebergement/hebergementunifie/edit.html.twig', array(
             'entity' => $entityUnifie,

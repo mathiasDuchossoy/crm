@@ -99,7 +99,7 @@ class FournisseurHebergementType extends AbstractType
                     'entry_type' => CodePasserelleType::class,
                     'allow_add' => true,
                     'by_reference' => false,
-                    'allow_delete' => true,
+                    'allow_delete' => true
                 ])
             ->add('ajouterCodePasserelle', ButtonType::class,
                 array(
