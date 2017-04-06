@@ -5,8 +5,8 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Repository\ReceptionRepository;
-use Mondofute\Bundle\PasserelleBundle\Form\CodePasserelleType;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Form\SaisonCodePasserelleType;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
@@ -93,19 +93,14 @@ class FournisseurHebergementType extends AbstractType
                     'label' => 'ajouter',
                     'attr' => array('class' => 'btn btn-default addReception', 'title' => 'ajouter.reception')
                 ))
-            ->add('codePasserelles', CollectionType::class,
+            ->add('saisonCodePasserelles', CollectionType::class,
                 [
-                    'prototype_name' => '__name_code_passerelle_label__',
-                    'entry_type' => CodePasserelleType::class,
+                    'prototype_name' => '__name_saison_code_passerelle_label__',
+                    'entry_type' => SaisonCodePasserelleType::class,
                     'allow_add' => true,
                     'by_reference' => false,
                     'allow_delete' => true
-                ])
-            ->add('ajouterCodePasserelle', ButtonType::class,
-                array(
-                    'label' => 'ajouter',
-                    'attr' => array('class' => 'btn btn-default addCodePasserelle', 'title' => 'ajouter.codePasserelle')
-                ));
+                ]);
 
     }
 

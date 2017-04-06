@@ -16,7 +16,10 @@ class CodePasserelle
      * @var string
      */
     private $libelle;
-
+    /**
+     * @var \Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
+     */
+    private $saisonCodePasserelle;
 
     /**
      * Get id
@@ -63,5 +66,28 @@ class CodePasserelle
 
         return $this;
     }
-}
 
+    /**
+     * Get saisonCodePasserelle
+     *
+     * @return \Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
+     */
+    public function getSaisonCodePasserelle()
+    {
+        return $this->saisonCodePasserelle;
+    }
+
+    /**
+     * Set saisonCodePasserelle
+     *
+     * @param \Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle $saisonCodePasserelle
+     *
+     * @return CodePasserelle
+     */
+    public function setSaisonCodePasserelle(\Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle $saisonCodePasserelle = null)
+    {
+        $this->saisonCodePasserelle = $saisonCodePasserelle;
+
+        return $this;
+    }
+}

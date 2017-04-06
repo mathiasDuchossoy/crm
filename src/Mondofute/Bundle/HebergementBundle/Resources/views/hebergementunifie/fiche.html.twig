@@ -10,12 +10,12 @@
 {% block  block_code_passerelle %}
     <div>
         <div class="form-group item"
-             id="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}">
+             id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}">
             <label class="col-sm-2 control-label required"
-                   for="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}_libelle">libellé</label>
+                   for="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle">libellé</label>
             <div class="col-sm-9"><input
-                        id="hebergement_unifie_fournisseurs_{{ name }}_codePasserelles_{{ name_codePasserelle }}_libelle"
-                        name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][codePasserelles][{{ name_codePasserelle }}][libelle]"
+                        id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle"
+                        name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][codePasserelles][{{ name_codePasserelle }}][libelle]"
                         required="required" maxlength="255" class="form-control"
                         value="{% if valueCodePasserelle is defined %}{{ valueCodePasserelle }}{% endif %}" type="text">
 
@@ -23,6 +23,62 @@
             {% if valueCodePasserelle is defined %}
                 {{ block('bouton_supprimer') }}
             {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block block_saison_code_passerelle %}
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            {% for keySaison, saison in saisons %}
+                <li role="presentation" class="{% if keySaison == 0 %}active{% endif %}">
+                    <a href="#saison_code_passerelle_{{ name }}_{{ keySaison }}"
+                       aria-controls="saison_code_passerelle_{{ name }}_{{ keySaison }}" role="tab"
+                       data-toggle="tab">{{ saison.libelle }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
+                {% if saisonCodePasserelle.saison is defined %}
+                    {% set saisonId = saisonCodePasserelle.saison.vars.value %}
+                {% else %}
+                    {% set saisonId =  saisonCodePasserelle.id %}
+                {% endif %}
+                <div role="tabpanel" class="tab-pane {% if keySaisonCodePasserelle == 0 %}active{% endif %}"
+                     id="saison_code_passerelle_{{ name }}_{{ keySaisonCodePasserelle }}">
+                    <div class="form-group">
+                        {#{{ form_label(fournisseur.saisonCodePasserelles) }}#}
+                        <div class="col-sm-10">
+                            <div id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles"
+                                 data-prototype="{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
+                                 {% if saisonCodePasserelle.codePasserelles is defined %}data-index="{{ saisonCodePasserelle.codePasserelles | length }}"{% endif %}
+                            >
+                                {% if saisonCodePasserelle.codePasserelles is defined %}
+                                    {% for keyCodePasserelle , codePasserelle in saisonCodePasserelle.codePasserelles %}
+                                        {% set name = fournisseur.fournisseur.vars.value %}
+                                        {% set name_codePasserelle = keyCodePasserelle %}
+                                        {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
+                                        {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
+                                    {% endfor %}
+                                {% endif %}
+                                <input name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][saison]"
+                                       type="hidden" value="{{ saisonId }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button"
+                                class="btn btn-default addCodePasserelle btn"
+                                data-fournisseur="{{ name }}"
+                                data-key-saison-code-passerelle="{{ keySaisonCodePasserelle }}">ajouter
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
@@ -688,28 +744,28 @@
 
             var formTraductions = genererFormulaireFournisseurHebergementTraductions(id, _langues);
 
+            {% set keyFournisseur = '__keyFournisseur__' %}
+            {% set name = '__name__' %}
+            {% set name_codePasserelle = '__name_code_passerelle_label__' %}
+            {% set saisonCodePasserelles = saisons %}
+            var prototypePasserelle = '{{ block('block_saison_code_passerelle') | e('js') }}';
+            prototypePasserelle = prototypePasserelle.replace(/__name__/g, id);
+            prototypePasserelle = prototypePasserelle.replace(/__keyFournisseur__/g, id);
+
 //            mise en forme du formulaire
-            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + formTraductions + '</div></div></div>';
+            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + prototypePasserelle + formTraductions + '</div></div></div>';
             var $newForm = $(newForm);
 //            donnes la valeur du fournisseur dans le hidden fournisseur
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
             $newForm.find('#hebergement_unifie_fournisseurs_' + id + '_receptions').attr('data-fournisseur', id);
             $newForm.find('.addReception').attr('data-fournisseur', id);
-            $newForm.find('.addCodePasserelle').attr('data-fournisseur', id);
-            {#var prototypePasserelle = '{% include '@MondofuteHebergement/hebergementunifie/prototype-code-passerelle.html.twig' with { 'keyFournisseur' : '0' , 'name' : '__name__' , 'name_codePasserelle' : '0'} | e('js') %}';#}
+//            $newForm.find('.addCodePasserelle').attr('data-fournisseur', id);
 
-            {% set keyFournisseur = '__keyFournisseur__' %}
-            {% set name = '__name__' %}
-            {% set name_codePasserelle = '__name_code_passerelle_label__' %}
-            var prototypePasserelle = '{{ block('block_code_passerelle') | e('js') }}';
-            prototypePasserelle = prototypePasserelle.replace(/__name__/g, id);
-            prototypePasserelle = prototypePasserelle.replace(/__keyFournisseur__/g, id);
             supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
             supprimerReceptionParFournisseur($newForm.find('[id$="_receptions"]'));
 //            ajoute le formulaire dans la page
             $formFournisseurHebergement.append($newForm.html());
-            $('#hebergement_unifie_fournisseurs_' + id + '_codePasserelles').data('prototype', prototypePasserelle);
 
 //            supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'))
 //            incrémente le nombre de fournisseurs associés
@@ -939,24 +995,25 @@
                 afficherModaleAjoutReception($(this).attr('data-fournisseur'));
             });
             $(document).on('click', 'button.addCodePasserelle', function () {
-                var keyFournisseur = $(this).attr('data-fournisseur');
+                var keyFournisseur = $(this).data('fournisseur');
+                var keySaisonCodePasserelle = $(this).data('key-saison-code-passerelle');
 //                console.log(keyFournisseur);
-                var $collectionHolder = $('#hebergement_unifie_fournisseurs_' + keyFournisseur + '_codePasserelles');
+                {#hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}#}
+                var $collectionHolder = $('#hebergement_unifie_fournisseurs_' + keyFournisseur + '_saisonCodePasserelles_' + keySaisonCodePasserelle + '_codePasserelles');
                 var prototype = $collectionHolder.data('prototype');
-//                console.log(prototype);
                 var index = $collectionHolder.data('index');
                 if (!index) index = 0;
                 var newForm = prototype.replace(/__name_code_passerelle_label__/g, index);
                 var $newForm = $(newForm);
-                var $input = $newForm.find('div#hebergement_unifie_fournisseurs_' + keyFournisseur + '_codePasserelles_' + index);
+                var $input = $newForm.find('div#hebergement_unifie_fournisseurs_' + keyFournisseur + '_saisonCodePasserelles_' + keySaisonCodePasserelle + '_codePasserelles_' + index);
                 var $boutonSupprimer = $('{{ block('bouton_supprimer') | e('js') }}');
 
 //                console.log($newForm);
-//                console.log($input);
+                console.log($input);
                 $collectionHolder.data('index', index + 1);
                 $newForm.data('index', index);
-                $input.append($boutonSupprimer);
                 $collectionHolder.append($input);
+                $input.append($boutonSupprimer);
 //                $collectionHolder.append($newForm);
             });
             $(document).on('click', 'button[name="liste_logements"]', function () {

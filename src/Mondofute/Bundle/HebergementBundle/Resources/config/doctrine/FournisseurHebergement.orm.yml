@@ -44,8 +44,8 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
     manyToMany:
         receptions:
             targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Reception
-        codePasserelles:
-            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle
+        saisonCodePasserelles:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
             cascade: ['persist','remove']
             orphanRemoval: true
     lifecycleCallbacks: {  }
