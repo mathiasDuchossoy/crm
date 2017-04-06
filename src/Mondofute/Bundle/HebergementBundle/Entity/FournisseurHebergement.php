@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
-use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
@@ -62,7 +62,7 @@ class FournisseurHebergement
     /**
      * @var Collection
      */
-    private $codePasserelles;
+    private $saisonCodePasserelles;
 
     /**
      * FournisseurHebergement constructor.
@@ -78,6 +78,7 @@ class FournisseurHebergement
         $this->telMobile->setDateCreation();
         $this->receptions = new ArrayCollection();
         $this->logements = new ArrayCollection();
+        $this->saisonCodePasserelles = new ArrayCollection();
     }
 
     /**
@@ -344,36 +345,36 @@ class FournisseurHebergement
     }
 
     /**
-     * Add codePasserelle
+     * Add saisonCodePasserelle
      *
-     * @param CodePasserelle $codePasserelle
+     * @param SaisonCodePasserelle $saisonCodePasserelle
      *
      * @return FournisseurHebergement
      */
-    public function addCodePasserelle(CodePasserelle $codePasserelle)
+    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
     {
-        $this->codePasserelles[] = $codePasserelle;
+        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
 
         return $this;
     }
 
     /**
-     * Remove codePasserelle
+     * Remove saisonCodePasserelle
      *
-     * @param CodePasserelle $codePasserelle
+     * @param SaisonCodePasserelle $saisonCodePasserelle
      */
-    public function removeCodePasserelle(CodePasserelle $codePasserelle)
+    public function removeSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
     {
-        $this->codePasserelles->removeElement($codePasserelle);
+        $this->saisonCodePasserelles->removeElement($saisonCodePasserelle);
     }
 
     /**
-     * Get codePasserelles
+     * Get saisonCodePasserelles
      *
      * @return Collection
      */
-    public function getCodePasserelles()
+    public function getSaisonCodePasserelles()
     {
-        return $this->codePasserelles;
+        return $this->saisonCodePasserelles;
     }
 }

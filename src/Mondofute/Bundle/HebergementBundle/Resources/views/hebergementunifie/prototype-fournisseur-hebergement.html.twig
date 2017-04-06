@@ -52,23 +52,9 @@
                         </div>
                     </div>
                     {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value }}) }}
-                    <div class="form-group">
-                        {{ form_label(fournisseur.codePasserelles) }}
-                        <div class="col-sm-10">
-                            <div id="hebergement_unifie_fournisseurs_{{ fournisseur.fournisseur.vars.value }}_codePasserelles"
-                                 data-prototype="{% set name = fournisseur.fournisseur.vars.value %}{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
-                                 data-index="{{ fournisseur.codePasserelles | length }}"
-                            >
-                                {% for keyCodePasserelle , codePasserelle in fournisseur.codePasserelles %}
-                                    {% set name = fournisseur.fournisseur.vars.value %}
-                                    {% set name_codePasserelle = keyCodePasserelle %}
-                                    {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
-                                    {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    {{ form_row(fournisseur.ajouterCodePasserelle, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value }}) }}
+                    {% set name = fournisseur.fournisseur.vars.value %}
+                    {% set saisonCodePasserelles = fournisseur.saisonCodePasserelles %}
+                    {{ block('block_saison_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
                     <ul class="nav nav-tabs">
                         {#gestion du premier onglet#}
                         {% set first = true %}

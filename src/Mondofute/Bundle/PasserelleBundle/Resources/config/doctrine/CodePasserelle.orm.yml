@@ -12,4 +12,9 @@ Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle:
         libelle:
             type: string
             length: 255
+    manyToOne:
+        saisonCodePasserelle:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
+            inversedBy: codePasserelles
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
