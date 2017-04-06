@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\LogementBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 
 /**
  * LogementUnifie
@@ -26,6 +27,10 @@ class LogementUnifie
      * @var boolean
      */
     private $desactive = false;
+    /**
+     * @var Collection
+     */
+    private $saisonCodePasserelles;
 
     /**
      * Constructor
@@ -33,6 +38,7 @@ class LogementUnifie
     public function __construct()
     {
         $this->logements = new ArrayCollection();
+        $this->saisonCodePasserelles = new ArrayCollection();
     }
 
     /**
@@ -151,5 +157,43 @@ class LogementUnifie
         $this->desactive = $desactive;
 
         return $this;
+    }
+
+    /**
+     * Add saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     *
+     * @return LogementUnifie
+     */
+    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
+
+        return $this;
+    }
+
+    /**
+     * Remove saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     */
+    public function removeSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles->removeElement($saisonCodePasserelle);
+    }
+
+    /**
+     * Get saisonCodePasserelles
+     *
+     * @return Collection
+     */
+    public function getSaisonCodePasserelles()
+    {
+        $iterator = $this->saisonCodePasserelles->getIterator();
+        $iterator->uasort(function (SaisonCodePasserelle $a, SaisonCodePasserelle $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+        return new ArrayCollection(iterator_to_array($iterator));
     }
 }
