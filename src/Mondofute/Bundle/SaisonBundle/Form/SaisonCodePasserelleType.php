@@ -6,7 +6,6 @@ use Mondofute\Bundle\PasserelleBundle\Form\CodePasserelleType;
 use Mondofute\Bundle\SaisonBundle\Entity\Saison;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,11 +30,6 @@ class SaisonCodePasserelleType extends AbstractType
                     ]
                 ]
             )
-            ->add('button', ButtonType::class,
-                array(
-                    'label' => 'ajouter',
-                    'attr' => array('class' => 'btn btn-default addCodePasserelle', 'title' => 'ajouter.codePasserelle')
-                ))
             ->add('codePasserelles', CollectionType::class,
                 [
                     'prototype_name' => '__name_code_passerelle_label__',

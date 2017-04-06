@@ -20,7 +20,10 @@ use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
 use Mondofute\Bundle\LogementBundle\Entity\NombreDeChambre;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
+use Mondofute\Bundle\SaisonBundle\Entity\Saison;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -314,6 +317,9 @@ class LogementUnifieController extends Controller
             $logement->setFournisseurHebergement($fournisseurHebergement);
         }
 
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $this->addSaisonCodePasserelle($logementUnifie, $saisons);
+
         $form = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
             array('locale' => $request->getLocale()));
         $form->add('submit', SubmitType::class, array(
@@ -416,8 +422,27 @@ class LogementUnifieController extends Controller
             'langues' => $langues,
             'logementUnifie' => $logementUnifie,
             'form' => $form->createView(),
-            'fournisseurHebergement' => $fournisseurHebergement
+            'fournisseurHebergement' => $fournisseurHebergement,
+            'ongletSaisonCodePasserelle' => true
         ));
+    }
+
+    /**
+     * @param LogementUnifie $entityUnifie
+     * @param ArrayCollection $saisons
+     */
+    private function addSaisonCodePasserelle(LogementUnifie $entityUnifie, $saisons)
+    {
+        foreach ($saisons as $saison) {
+            $saisonCodePasserelle = $entityUnifie->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saison) {
+                return $element->getSaison() == $saison;
+            })->first();
+            if (false === $saisonCodePasserelle) {
+                $saisonCodePasserelle = new SaisonCodePasserelle();
+                $saisonCodePasserelle->setSaison($saison);
+                $entityUnifie->addSaisonCodePasserelle($saisonCodePasserelle);
+            }
+        }
     }
 
     /**
@@ -621,6 +646,7 @@ class LogementUnifieController extends Controller
                 }
 
                 // ********** FIN GESTION DES MEDIAS **********
+                $this->gestionCodePasserelleSite($entitySite, $entity, $emSite);
 
                 $emSite->persist($entitySite);
                 $emSite->flush();
@@ -687,6 +713,62 @@ class LogementUnifieController extends Controller
             $traductionSite->setLibelle($traduction->getLibelle())
                 ->setLangue($emSite->find(Langue::class, $traduction->getLangue()));
             $logementPhotoSite->addTraduction($traductionSite);
+        }
+    }
+
+    /**
+     * @param LogementUnifie $logementUnifieSite
+     * @param LogementUnifie $logementUnifie
+     * @param EntityManager $emSite
+     */
+    private function gestionCodePasserelleSite($logementUnifieSite, $logementUnifie, $emSite)
+    {
+        /** @var CodePasserelle $codePasserelle */
+        /** @var CodePasserelle $codePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelle */
+        foreach ($logementUnifieSite->getSaisonCodePasserelles() as $saisonCodePasserelleSite) {
+            $saisonCodePasserelle = $logementUnifie->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelleSite) {
+                return $element->getId() == $saisonCodePasserelleSite->getId();
+            })->first();
+            if (false === $saisonCodePasserelle) {
+                $logementUnifieSite->removeSaisonCodePasserelle($saisonCodePasserelleSite);
+            } else {
+                foreach ($saisonCodePasserelleSite->getCodePasserelles() as $codePasserelleSite) {
+                    $codePasserelle = $saisonCodePasserelle->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelleSite) {
+                        return $element->getId() == $codePasserelleSite->getId();
+                    })->first();
+                    if (false === $codePasserelle) {
+                        $saisonCodePasserelleSite->getCodePasserelles()->removeElement($codePasserelleSite);
+                    }
+                }
+            }
+        }
+        foreach ($logementUnifie->getSaisonCodePasserelles() as $saisonCodePasserelle) {
+            $saisonCodePasserelleSite = $logementUnifieSite->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelle) {
+                return $element->getId() == $saisonCodePasserelle->getId();
+            })->first();
+            if (false === $saisonCodePasserelleSite) {
+                $saisonCodePasserelleSite = new SaisonCodePasserelle();
+                $saisonCodePasserelleSite->setId($saisonCodePasserelle->getId());
+                $metadata = $emSite->getClassMetadata(get_class($saisonCodePasserelleSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $logementUnifieSite->addSaisonCodePasserelle($saisonCodePasserelleSite);
+                $saisonCodePasserelleSite->setSaison($emSite->find(Saison::class, $saisonCodePasserelle->getSaison()));
+            }
+            foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                $codePasserelleSite = $saisonCodePasserelleSite->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelle) {
+                    return $element->getId() == $codePasserelle->getId();
+                })->first();
+                if (false === $codePasserelleSite) {
+                    $codePasserelleSite = new CodePasserelle();
+                    $codePasserelleSite->setId($codePasserelle->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($codePasserelleSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    $saisonCodePasserelleSite->addCodePasserelle($codePasserelleSite);
+                }
+                $codePasserelleSite->setLibelle($codePasserelle->getLibelle());
+            }
         }
     }
 
@@ -813,7 +895,7 @@ class LogementUnifieController extends Controller
             array(
                 'locale' => $request->getLocale(),
                 'action' => $this->generateUrl('popup_logement_logement_new',
-                    array('idFournisseurHebergement' => $fournisseurHebergement->getId()))
+                    array('idFournisseurLogement' => $fournisseurHebergement->getId()))
             ));
         $form->add('submit', SubmitType::class, array(
             'label' => $this->get('translator')->trans('Enregistrer'),
@@ -1087,6 +1169,9 @@ class LogementUnifieController extends Controller
         $this->ajouterLogementsDansForm($logementUnifie);
         $this->logementsSortByAffichage($logementUnifie);
 
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $this->addSaisonCodePasserelle($logementUnifie, $saisons);
+
         $deleteForm = $this->createDeleteFormPopup($logementUnifie);
         $editForm = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
             array('locale' => $request->getLocale()))
@@ -1324,6 +1409,7 @@ class LogementUnifieController extends Controller
             'langues' => $langues,
             'fournisseurHebergement' => $fournisseurHebergement,
             'maxInputVars' => ini_get('max_input_vars'),
+            'ongletSaisonCodePasserelle' => true
         ));
     }
 

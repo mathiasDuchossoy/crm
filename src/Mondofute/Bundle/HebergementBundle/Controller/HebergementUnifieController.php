@@ -1954,7 +1954,7 @@ class HebergementUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($entityUnifie);
         $this->addSaisons($entityUnifie);
 
-        $saisons = $em->getRepository(Saison::class)->findBy([], ['dateDebut' => 'Desc']);
+        $saisons = $em->getRepository(Saison::class)->findAll();
         $this->addSaisonCodePasserelle($entityUnifie, $saisons);
 
         $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
