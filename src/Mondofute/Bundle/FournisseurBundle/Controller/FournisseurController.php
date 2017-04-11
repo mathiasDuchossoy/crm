@@ -45,6 +45,7 @@ use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementUnifie;
+use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\FamillePrestationAnnexe;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
@@ -52,6 +53,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\PromotionFamillePrestationAnnexe;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClefTraduction;
 use Mondofute\Bundle\SaisonBundle\Entity\Saison;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\ServiceBundle\Entity\CategorieService;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -334,10 +336,13 @@ class FournisseurController extends Controller
             if (false === $saisonFournisseur) {
                 $saisonFournisseur = new SaisonFournisseur();
                 $saisonFournisseur
-                    ->setSaison($saison)
-                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
-                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
-                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+                    ->setSaison($saison);
+                if (false !== $fournisseur->getSaisonFournisseurs()->first()) {
+                    $saisonFournisseur
+                        ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
+                        ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
+                        ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+                }
                 $fournisseur->addSaisonFournisseur($saisonFournisseur);
             }
         }
@@ -544,6 +549,8 @@ class FournisseurController extends Controller
                 $this->gestionSaisonsSite($fournisseur, $fournisseurSite, $emSite);
                 // ** fin gestion saison **
 
+                $this->gestionCodePasserelleSite($fournisseurSite, $fournisseur, $emSite);
+
                 $emSite->persist($fournisseurSite);
 
                 $emSite->flush();
@@ -561,7 +568,8 @@ class FournisseurController extends Controller
         Fournisseur $fournisseurSite,
         $listeServices,
         EntityManager $emSite
-    ) {
+    )
+    {
         /** @var ListeService $listeService */
         foreach ($listeServices as $listeService) {
             if (empty($listeService->getId()) || empty($listeServiceSite = $emSite->getRepository(ListeService::class)->find($listeService->getId()))) {
@@ -686,7 +694,8 @@ class FournisseurController extends Controller
         Fournisseur $fournisseur,
         Fournisseur $fournisseurSite,
         EntityManager $em
-    ) {
+    )
+    {
         switch ($fournisseurSite->getConditionAnnulation()) {
             case ConditionAnnulation::standard:
                 $standard = $em->find(ConditionAnnulationDescription::class, 1);
@@ -1057,6 +1066,10 @@ class FournisseurController extends Controller
         $deleteForm = $this->createDeleteForm($fournisseur);
         $fournisseur->triReceptions();
         $fournisseur->triRemiseClefs();
+
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $this->addSaisonCodePasserelle($fournisseur, $saisons);
+
         $editForm = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array('locale' => $locale))
             ->add('submit', SubmitType::class, array('label' => 'mettre.a.jour'));
@@ -1301,10 +1314,32 @@ class FournisseurController extends Controller
         ));
     }
 
+    /**
+     * @param Fournisseur $fournisseur
+     * @param ArrayCollection $saisons
+     */
+    private function addSaisonCodePasserelle($fournisseur, $saisons)
+    {
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
+        foreach ($fournisseur->getPrestationAnnexes() as $prestationAnnex) {
+            foreach ($saisons as $saison) {
+                $saisonCodePasserelle = $prestationAnnex->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saison) {
+                    return $element->getSaison() == $saison;
+                })->first();
+                if (false === $saisonCodePasserelle) {
+                    $saisonCodePasserelle = new SaisonCodePasserelle();
+                    $saisonCodePasserelle->setSaison($saison);
+                    $prestationAnnex->addSaisonCodePasserelle($saisonCodePasserelle);
+                }
+            }
+        }
+    }
+
     private function deletePrestationsAnnexeUnifies(
         FournisseurPrestationAnnexe $originalPrestationAnnex,
         EntityManager $em
-    ) {
+    )
+    {
         $prestationAnnexeUnifies = new ArrayCollection();
         foreach ($originalPrestationAnnex->getParams() as $param) {
             /** @var PrestationAnnexeStation $item */
@@ -1326,7 +1361,7 @@ class FournisseurController extends Controller
                 }
             }
             /** @var PrestationAnnexeLogement $item */
-            foreach ($param->getPrestationAnnexeLogements() as $item) {
+            foreach ($param->getPrestationAnnexeFournisseurs() as $item) {
                 if (!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeLogementUnifie())) {
                     $prestationAnnexeUnifies->add($item->getPrestationAnnexeLogementUnifie());
                 }
@@ -1519,8 +1554,7 @@ class FournisseurController extends Controller
         foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
             if (empty($fournisseurPrestationAnnexe->getId())) {
                 foreach ($codePromoFamillePrestationAnnexes as $codePromoFamillePrestationAnnexe) {
-                    $codePromoFournisseur = $codePromoFournisseurs->filter(function (CodePromoFournisseur $element) use
-                    (
+                    $codePromoFournisseur = $codePromoFournisseurs->filter(function (CodePromoFournisseur $element) use (
                         $codePromoFamillePrestationAnnexe
                     ) {
                         return $element->getCodePromo() == $codePromoFamillePrestationAnnexe->getCodePromo();
@@ -2392,8 +2426,7 @@ class FournisseurController extends Controller
                 /** @var RemiseClef $remiseClef */
                 foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
                     if (!empty($remiseClef->getId())) {
-                        $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use
-                        (
+                        $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
                             $remiseClef
                         ) {
                             return $element->getId() == $remiseClef->getId();
@@ -2623,6 +2656,8 @@ class FournisseurController extends Controller
 
                 $this->gestionConditionAnnulationDescriptionSite($fournisseur, $fournisseurSite, $emSite);
 
+                $this->gestionCodePasserelleSite($fournisseurSite, $fournisseur, $emSite);
+
                 $emSite->persist($fournisseurSite);
                 $emSite->flush();
             } else {
@@ -2634,7 +2669,8 @@ class FournisseurController extends Controller
     private function gestionPromotionFamillePrestationAnnexe(
         Fournisseur $fournisseur,
         $originalFamillePrestationAnnexes
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
         foreach ($originalFamillePrestationAnnexes as $originalFamillePrestationAnnex) {
             if (!$fournisseur->getTypes()->contains($originalFamillePrestationAnnex)) {
@@ -2864,7 +2900,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $prestationAnnexeId,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         /** @var FournisseurPrestationAnnexeParam $param */
@@ -2907,6 +2944,9 @@ class FournisseurController extends Controller
         $langues = $em->getRepository(Langue::class)->findBy(array(), array('id' => 'ASC'));
 
         // *** fin gestion prestations annexe ***
+
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $this->addSaisonCodePasserelle($fournisseur, $saisons);
 
         $form = $this->createForm('Mondofute\Bundle\FournisseurBundle\Form\FournisseurType', $fournisseur,
             array(
@@ -2954,7 +2994,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $paramIndex,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
 
@@ -3060,7 +3101,8 @@ class FournisseurController extends Controller
         $stationId,
         $fournisseurCurrentId,
         $paramIndex
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
         $site = $em->find(Site::class, $siteId);
@@ -3106,7 +3148,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $paramIndex,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
 
@@ -3191,7 +3234,9 @@ class FournisseurController extends Controller
         Request $request,
         Fournisseur $fournisseur,
         $prestationAnnexeId
-    ) {
+    )
+    {
+        /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->get('data'));
 
@@ -3213,11 +3258,12 @@ class FournisseurController extends Controller
 
         // gestion traductions
         $langues = $em->getRepository(Langue::class)->findAll();
+        /** @var Langue $langue */
         foreach ($langues as $langue) {
             $traduction = $fournisseurPrestationAnnexe->getTraductions()->filter(function (
                 FournisseurPrestationAnnexeTraduction $element
             ) use ($langue) {
-                return $element->getLangue() == $langue;
+                return $element->getLangue() === $langue;
             })->first();
             if (false === $traduction) {
                 $traduction = new FournisseurPrestationAnnexeTraduction();
@@ -3238,6 +3284,68 @@ class FournisseurController extends Controller
             $fournisseurPrestationAnnexe->setFreeSale(false);
             unset($fournisseurPrestationAnnexePost->periodes);
         }
+
+        // /* gestion des code passerelles
+        /** @var SaisonCodePasserelle $saisonCodePasserelle */
+        if (!empty($fournisseurPrestationAnnexePost->saisonCodePasserelles)) {
+            foreach ($fournisseurPrestationAnnexePost->saisonCodePasserelles as $saisonCodePasserellePost) {
+                $saisonCodePasserelle = $fournisseurPrestationAnnexe->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserellePost) {
+                    return $element->getSaison()->getId() == $saisonCodePasserellePost->saison;
+                })->first();
+                if (false === $saisonCodePasserelle) {
+                    $saisonCodePasserelle = new SaisonCodePasserelle();
+                    $fournisseurPrestationAnnexe->addSaisonCodePasserelle($saisonCodePasserelle);
+                    $saisonCodePasserelle->setSaison($em->find(Saison::class, $saisonCodePasserellePost->saison));
+                }
+                if (!empty($saisonCodePasserellePost->codePasserelles)) {
+                    foreach ($saisonCodePasserelle->getCodePasserelles() as $keyCodePasserelle => $codePasserelle) {
+                        if (!empty($saisonCodePasserellePost->codePasserelles[$keyCodePasserelle])) {
+                            $codePasserellePost = $saisonCodePasserellePost->codePasserelles[$keyCodePasserelle];
+                            if (!empty($codePasserellePost->libelle)) {
+                                $codePasserelle->setLibelle($codePasserellePost->libelle);
+                            } else {
+                                $saisonCodePasserelle->removeCodePasserelle($codePasserelle);
+                                $em->remove($codePasserelle);
+                            }
+                        } else {
+                            $saisonCodePasserelle->removeCodePasserelle($codePasserelle);
+                            $em->remove($codePasserelle);
+                        }
+                    }
+                    foreach ($saisonCodePasserellePost->codePasserelles as $keyCodePasserellePost => $codePasserellePost) {
+                        if (!empty($codePasserelle = $saisonCodePasserelle->getCodePasserelles()->get($keyCodePasserellePost))) {
+//                            // on modifie le libelle
+//                            if (!empty($codePasserellePost->libelle)) {
+//                                $codePasserelle->setLibelle($codePasserellePost->libelle);
+//                                dump($keyCodePasserellePost);
+//                            } else {
+//                                dump($keyCodePasserellePost);
+//                                $saisonCodePasserelle->removeCodePasserelle($codePasserelle);
+//                            }
+                        } else {
+                            // on cré le code passerelle
+                            if (!empty($codePasserellePost->libelle)) {
+                                $codePasserelle = new CodePasserelle();
+                                $saisonCodePasserelle->addCodePasserelle($codePasserelle);
+                                $codePasserelle->setLibelle($codePasserellePost->libelle);
+                            }
+                        }
+                    }
+                } else {
+                    // supprimer tout
+                    foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                        $saisonCodePasserelle->removeCodePasserelle($codePasserelle);
+                        $em->remove($codePasserelle);
+                    }
+                }
+            }
+        } else {
+            // supprimer tout
+            foreach ($fournisseurPrestationAnnexe->getSaisonCodePasserelles() as $saisonCodePasserelle) {
+                $fournisseurPrestationAnnexe->removeSaisonCodePasserelle($saisonCodePasserelle);
+            }
+        }
+        // fin gestion des code passerelles */
 
         // /* gestion fournisseur prestation annexe periode
         if (!empty($fournisseurPrestationAnnexePost->periodeIndisponibles)) {
@@ -3821,6 +3929,9 @@ class FournisseurController extends Controller
         }
 
         $em->persist($fournisseurPrestationAnnexe);
+
+//        die;
+
         $em->flush();
 
         $this->mAJSites($fournisseur);
@@ -3842,7 +3953,8 @@ class FournisseurController extends Controller
         $prestationAnnexeHebergementFournisseurId,
         $postSitesAEnregistrer,
         $prestationAnnexeHebergementsPosts
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
         $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(),
@@ -3880,7 +3992,7 @@ class FournisseurController extends Controller
                 $prestationAnnexeLogement = $prestationAnnexeLogementUnifie->getPrestationAnnexeLogements()->filter(function (
                     PrestationAnnexeLogement $element
                 ) use ($prestationAnnexeHebergement) {
-                    return $element->getSite() == $prestationAnnexeHebergement->getSite();
+                    return $element->getSite() === $prestationAnnexeHebergement->getSite();
                 })->first();
 
                 $capacite = $prestationAnnexeHebergement->getParam()->getCapacite();
@@ -3904,7 +4016,8 @@ class FournisseurController extends Controller
     private function gestionPromotionFournisseurPrestationAnnexe(
         Fournisseur $fournisseur,
         FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
-    ) {
+    )
+    {
         $kernel = $this->get('kernel');
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -3916,6 +4029,70 @@ class FournisseurController extends Controller
         ));
         $output = new NullOutput();
         $application->run($input, $output);
+    }
+
+    /**
+     * @param Fournisseur $fournisseurSite
+     * @param Fournisseur $fournisseur
+     * @param EntityManager $emSite
+     */
+    private function gestionCodePasserelleSite($fournisseurSite, $fournisseur, $emSite)
+    {
+        /** @var CodePasserelle $codePasserelle */
+        /** @var CodePasserelle $codePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelle */
+        /** @var FournisseurPrestationAnnexe $prestationAnnex */
+        /** @var FournisseurPrestationAnnexe $prestationAnnexSite */
+        foreach ($fournisseurSite->getPrestationAnnexes() as $keyPrestationAnnexe => $prestationAnnexSite) {
+            foreach ($prestationAnnexSite->getSaisonCodePasserelles() as $saisonCodePasserelleSite) {
+                $saisonCodePasserelle = $fournisseur->getPrestationAnnexes()->get($keyPrestationAnnexe)->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelleSite) {
+                    return $element->getId() == $saisonCodePasserelleSite->getId();
+                })->first();
+                if (false === $saisonCodePasserelle) {
+                    $prestationAnnexSite->removeSaisonCodePasserelle($saisonCodePasserelleSite);
+                    $emSite->remove($saisonCodePasserelleSite);
+                } else {
+                    foreach ($saisonCodePasserelleSite->getCodePasserelles() as $codePasserelleSite) {
+                        $codePasserelle = $saisonCodePasserelle->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelleSite) {
+                            return $element->getId() == $codePasserelleSite->getId();
+                        })->first();
+                        if (false === $codePasserelle) {
+                            $saisonCodePasserelleSite->removeCodePasserelle($codePasserelleSite);
+                            $emSite->remove($codePasserelleSite);
+                        }
+                    }
+                }
+            }
+        }
+        foreach ($fournisseur->getPrestationAnnexes() as $keyPrestationAnnexe => $prestationAnnex) {
+            foreach ($prestationAnnex->getSaisonCodePasserelles() as $saisonCodePasserelle) {
+                $saisonCodePasserelleSite = $fournisseurSite->getPrestationAnnexes()->get($keyPrestationAnnexe)->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelle) {
+                    return $element->getId() == $saisonCodePasserelle->getId();
+                })->first();
+                if (false === $saisonCodePasserelleSite) {
+                    $saisonCodePasserelleSite = new SaisonCodePasserelle();
+                    $saisonCodePasserelleSite->setId($saisonCodePasserelle->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($saisonCodePasserelleSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    $fournisseurSite->getPrestationAnnexes()->get($keyPrestationAnnexe)->addSaisonCodePasserelle($saisonCodePasserelleSite);
+                    $saisonCodePasserelleSite->setSaison($emSite->find(Saison::class, $saisonCodePasserelle->getSaison()));
+                }
+                foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                    $codePasserelleSite = $saisonCodePasserelleSite->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelle) {
+                        return $element->getId() == $codePasserelle->getId();
+                    })->first();
+                    if (false === $codePasserelleSite) {
+                        $codePasserelleSite = new CodePasserelle();
+                        $codePasserelleSite->setId($codePasserelle->getId());
+                        $metadata = $emSite->getClassMetadata(get_class($codePasserelleSite));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $saisonCodePasserelleSite->addCodePasserelle($codePasserelleSite);
+                    }
+                    $codePasserelleSite->setLibelle($codePasserelle->getLibelle());
+                }
+            }
+        }
     }
 
 }

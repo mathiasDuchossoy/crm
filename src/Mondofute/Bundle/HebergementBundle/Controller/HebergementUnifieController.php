@@ -325,6 +325,7 @@ class HebergementUnifieController extends Controller
             'langues' => $langues,
             'entity' => $entityUnifie,
             'form' => $formView,
+            'saisons' => $em->getRepository(Saison::class)->findAll()
         ));
     }
 
@@ -1364,7 +1365,8 @@ class HebergementUnifieController extends Controller
                         return $element->getId() == $codePasserelleSite->getId();
                     })->first();
                     if (false === $codePasserelle) {
-                        $saisonCodePasserelleSite->getCodePasserelles()->removeElement($codePasserelleSite);
+                        $saisonCodePasserelleSite->removeCodePasserelle($codePasserelleSite);
+                        $emSite->remove($codePasserelleSite);
                     }
                 }
             }
@@ -1967,11 +1969,22 @@ class HebergementUnifieController extends Controller
 
         // *** récupération originals fournisseurHebergement ***
         $originalFournisseurHebergements = new ArrayCollection();
+        $originalCodePasserelles = new ArrayCollection();
         /** @var FournisseurHebergement $fournisseurHebergement */
-        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+        foreach ($entityUnifie->getFournisseurs() as $keyFournisseurHebergement => $fournisseurHebergement) {
             $originalFournisseurHebergements->add($fournisseurHebergement);
+            // /* originales codePasserelles
+            $originalCodePasserelles->set($keyFournisseurHebergement, new ArrayCollection());
+            foreach ($fournisseurHebergement->getSaisonCodePasserelles() as $key => $saisonCodePasserelle) {
+                $originalCodePasserelles->get($keyFournisseurHebergement)->set($key, new ArrayCollection());
+                foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                    $originalCodePasserelles->get($keyFournisseurHebergement)->get($key)->add($codePasserelle);
+                }
+            }
+            // fin originales codePasserelles */
         }
         // *** fin récupération originals gestion fournisseurHebergement ***
+
 
         $editForm->handleRequest($request);
 
@@ -2136,7 +2149,7 @@ class HebergementUnifieController extends Controller
 
             // *** gestion suppression fournisseurs hebergement ***
             /** @var FournisseurHebergement $originalFournisseurHebergement */
-            foreach ($originalFournisseurHebergements as $originalFournisseurHebergement) {
+            foreach ($originalFournisseurHebergements as $keyFournisseurHebergement => $originalFournisseurHebergement) {
                 if (false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement)) {
                     // *** suppression des code promo logement ***
                     foreach ($entityUnifie->getHebergements() as $hebergement) {
@@ -2178,10 +2191,17 @@ class HebergementUnifieController extends Controller
                     }
                     // *** fin suppression des decoteHebergements correspondants ***
                     $em->remove($originalFournisseurHebergement);
+                } else {
+                    foreach ($originalCodePasserelles->get($keyFournisseurHebergement) as $keySaisonCodePasserelle => $saisonCodePasserelles) {
+                        foreach ($saisonCodePasserelles as $codePasserelle) {
+                            if(false === $entityUnifie->getFournisseurs()->get($keyFournisseurHebergement)->getSaisonCodePasserelles()->get($keySaisonCodePasserelle)->getCodePasserelles()->contains($codePasserelle)) {
+                                $entityUnifie->getFournisseurs()->get($keyFournisseurHebergement)->getSaisonCodePasserelles()->get($keySaisonCodePasserelle)->removeCodePasserelle($codePasserelle);
+                                $em->remove($codePasserelle);
+                            }
+                        }
+                    }
                 }
             }
-
-
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -2207,7 +2227,7 @@ class HebergementUnifieController extends Controller
                         $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
                             $site
                         ) {
-                            return $element->getSite() == $site;
+                            return $element->getSite() === $site;
                         })->first();
                         // si hébergement existe
                         if (!empty($entitySite)) {
@@ -2232,7 +2252,7 @@ class HebergementUnifieController extends Controller
                             }
                             // si l'hébergemenent visuel existe déjà pour le site
                             if (!empty($entityVisuelSite)) {
-                                if ($entityVisuelSite->getVisuel() != $entityVisuel->getVisuel()) {
+                                if ($entityVisuelSite->getVisuel() !== $entityVisuel->getVisuel()) {
 //                                    // si l'hébergementVisuelSite avait déjà un visuel
 //                                    if (!empty($entityVisuelSite->getVisuel()) && !$visuelToRemoveCollection->contains($entityVisuelSite->getVisuel()))
 //                                    {
@@ -2253,7 +2273,7 @@ class HebergementUnifieController extends Controller
                                         $traductionSite = $traductionSites->filter(function (
                                             HebergementVisuelTraduction $element
                                         ) use ($traduction) {
-                                            return $element->getLangue() == $traduction->getLangue();
+                                            return $element->getLangue() === $traduction->getLangue();
                                         })->first();
                                     }
                                     if (empty($traductionSite)) {
@@ -2316,7 +2336,7 @@ class HebergementUnifieController extends Controller
                     if ($hebergement->getStation()->getId() != $originalStations->get($hebergement->getId())->getId()) {
                         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                             $logement = $fournisseurHebergement->getLogements()->filter(function (Logement $element) use ($hebergement) {
-                                return $element->getSite() == $hebergement->getSite();
+                                return $element->getSite() === $hebergement->getSite();
                             })->first();
                             if (false !== $logement) {
                                 $this->gestionPromotionStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());

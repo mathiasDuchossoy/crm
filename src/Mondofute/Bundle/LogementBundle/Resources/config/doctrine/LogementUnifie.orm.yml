@@ -28,5 +28,4 @@ Mondofute\Bundle\LogementBundle\Entity\LogementUnifie:
         saisonCodePasserelles:
             targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
             cascade: ['persist','remove']
-            orphanRemoval: true
     lifecycleCallbacks: {  }

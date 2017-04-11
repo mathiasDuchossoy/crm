@@ -14,7 +14,6 @@ Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle:
     oneToMany:
         codePasserelles:
             targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle
-            cascade: ['persist','remove']
             mappedBy: saisonCodePasserelle
-            orphanRemoval: true
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

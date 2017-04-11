@@ -733,13 +733,15 @@ class LogementUnifieController extends Controller
             })->first();
             if (false === $saisonCodePasserelle) {
                 $logementUnifieSite->removeSaisonCodePasserelle($saisonCodePasserelleSite);
+                $emSite->remove($saisonCodePasserelleSite);
             } else {
                 foreach ($saisonCodePasserelleSite->getCodePasserelles() as $codePasserelleSite) {
                     $codePasserelle = $saisonCodePasserelle->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelleSite) {
                         return $element->getId() == $codePasserelleSite->getId();
                     })->first();
                     if (false === $codePasserelle) {
-                        $saisonCodePasserelleSite->getCodePasserelles()->removeElement($codePasserelleSite);
+                        $saisonCodePasserelleSite->removeCodePasserelle($codePasserelleSite);
+                        $emSite->remove($codePasserelleSite);
                     }
                 }
             }
@@ -1172,6 +1174,16 @@ class LogementUnifieController extends Controller
         $saisons = $em->getRepository(Saison::class)->findAll();
         $this->addSaisonCodePasserelle($logementUnifie, $saisons);
 
+        // /* originales codePasserelles
+        $originalCodePasserelles = new ArrayCollection();
+        foreach ($logementUnifie->getSaisonCodePasserelles() as $key => $saisonCodePasserelle) {
+            $originalCodePasserelles->set($key, new ArrayCollection());
+            foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                $originalCodePasserelles->get($key)->add($codePasserelle);
+            }
+        }
+        // fin originales codePasserelles */
+
         $deleteForm = $this->createDeleteFormPopup($logementUnifie);
         $editForm = $this->createForm('Mondofute\Bundle\LogementBundle\Form\LogementUnifieType', $logementUnifie,
             array('locale' => $request->getLocale()))
@@ -1348,6 +1360,17 @@ class LogementUnifieController extends Controller
                 }
             }
             // ***** Fin Gestion des Medias *****
+//            dump($logementUnifie);
+//            die;
+
+            foreach ($originalCodePasserelles as $key => $originalCodePasserelle) {
+                foreach ($originalCodePasserelle as $codePasserelle) {
+                    if(false === $logementUnifie->getSaisonCodePasserelles()->get($key)->getCodePasserelles()->contains($codePasserelle)) {
+                        $logementUnifie->getSaisonCodePasserelles()->get($key)->removeCodePasserelle($codePasserelle);
+                        $em->remove($codePasserelle);
+                    }
+                }
+            }
 
             $em->persist($logementUnifie);
             $em->flush();
