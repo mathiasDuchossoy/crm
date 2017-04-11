@@ -47,5 +47,4 @@ Mondofute\Bundle\HebergementBundle\Entity\FournisseurHebergement:
         saisonCodePasserelles:
             targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
             cascade: ['persist','remove']
-            orphanRemoval: true
     lifecycleCallbacks: {  }

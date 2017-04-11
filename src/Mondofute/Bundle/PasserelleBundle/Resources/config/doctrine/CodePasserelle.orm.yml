@@ -16,5 +16,4 @@ Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle:
         saisonCodePasserelle:
             targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
             inversedBy: codePasserelles
-            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

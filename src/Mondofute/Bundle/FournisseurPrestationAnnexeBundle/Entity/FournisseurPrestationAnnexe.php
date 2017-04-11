@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\PrestationAnnexeBundle\Entity\PrestationAnnexe;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionFournisseurPrestationAnnexe;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 
 /**
  * FournisseurPrestationAnnexe
@@ -57,6 +58,10 @@ class FournisseurPrestationAnnexe
      * @var Collection
      */
     private $fournisseurPrestationAnnexeStockFournisseurs;
+    /**
+     * @var Collection
+     */
+    private $saisonCodePasserelles;
 
     /**
      * Constructor
@@ -70,6 +75,7 @@ class FournisseurPrestationAnnexe
         $this->periodeIndisponibles = new ArrayCollection();
         $this->fournisseurPrestationAnnexeStockHebergements = new ArrayCollection();
         $this->fournisseurPrestationAnnexeStockFournisseurs = new ArrayCollection();
+        $this->saisonCodePasserelles = new ArrayCollection();
     }
 
     /**
@@ -402,5 +408,39 @@ class FournisseurPrestationAnnexe
     public function getFournisseurPrestationAnnexeStockFournisseurs()
     {
         return $this->fournisseurPrestationAnnexeStockFournisseurs;
+    }
+
+    /**
+     * Add saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     *
+     * @return FournisseurPrestationAnnexe
+     */
+    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
+
+        return $this;
+    }
+
+    /**
+     * Remove saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     */
+    public function removeSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles->removeElement($saisonCodePasserelle);
+    }
+
+    /**
+     * Get saisonCodePasserelles
+     *
+     * @return Collection
+     */
+    public function getSaisonCodePasserelles()
+    {
+        return $this->saisonCodePasserelles;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Form;
 
+use Mondofute\Bundle\SaisonBundle\Form\SaisonCodePasserelleType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +35,11 @@ class FournisseurPrestationAnnexeType extends AbstractType
                     'allow_delete' => true,
                     'by_reference' => false,
                 )
-            );
+            )
+            ->add('saisonCodePasserelles', CollectionType::class,
+                [
+                    'entry_type' => SaisonCodePasserelleType::class,
+                ]);
     }
 
     /**
