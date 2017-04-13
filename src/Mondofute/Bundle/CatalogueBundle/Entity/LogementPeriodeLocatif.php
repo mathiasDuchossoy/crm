@@ -33,11 +33,15 @@ class LogementPeriodeLocatif
     /**
      * @var string
      */
-    private $prixFournisseur;
+    private $prixAchat;
     /**
      * @var string
      */
-    private $prixAchat;
+    private $prixCatalogue = 0;
+    /**
+     * @var string
+     */
+    private $comMondofute = 0;
 
     /**
      * Get prixPublic
@@ -112,31 +116,6 @@ class LogementPeriodeLocatif
     }
 
     /**
-     * Get prixFournisseur
-     *
-     * @return Logement
-     * @return string
-     */
-    public function getPrixFournisseur()
-    {
-        return $this->prixFournisseur;
-    }
-
-    /**
-     * Set prixFournisseur
-     *
-     * @param string $prixFournisseur
-     *
-     * @return LogementPeriodeLocatif
-     */
-    public function setPrixFournisseur($prixFournisseur)
-    {
-        $this->prixFournisseur = $prixFournisseur;
-
-        return $this;
-    }
-
-    /**
      * Get prixAchat
      *
      * @return string
@@ -160,7 +139,6 @@ class LogementPeriodeLocatif
         return $this;
     }
 
-
     /**
      * Get logement
      *
@@ -181,6 +159,54 @@ class LogementPeriodeLocatif
     public function setLogement(Logement $logement)
     {
         $this->logement = $logement;
+
+        return $this;
+    }
+
+    /**
+     * Get prixCatalogue
+     *
+     * @return string
+     */
+    public function getPrixCatalogue()
+    {
+        return $this->prixCatalogue;
+    }
+
+    /**
+     * Set prixCatalogue
+     *
+     * @param string $prixCatalogue
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setPrixCatalogue($prixCatalogue)
+    {
+        $this->prixCatalogue = $prixCatalogue;
+
+        return $this;
+    }
+
+    /**
+     * Get comMondofute
+     *
+     * @return string
+     */
+    public function getComMondofute()
+    {
+        return $this->comMondofute;
+    }
+
+    /**
+     * Set comMondofute
+     *
+     * @param string $comMondofute
+     *
+     * @return LogementPeriodeLocatif
+     */
+    public function setComMondofute($comMondofute)
+    {
+        $this->comMondofute = $comMondofute;
 
         return $this;
     }

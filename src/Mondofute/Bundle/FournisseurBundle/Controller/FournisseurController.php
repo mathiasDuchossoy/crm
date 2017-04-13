@@ -335,9 +335,10 @@ class FournisseurController extends Controller
                 $saisonFournisseur = new SaisonFournisseur();
                 $saisonFournisseur
                     ->setSaison($saison)
-                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
-                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
-                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+//                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
+//                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
+//                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie())
+                ;
                 $fournisseur->addSaisonFournisseur($saisonFournisseur);
             }
         }

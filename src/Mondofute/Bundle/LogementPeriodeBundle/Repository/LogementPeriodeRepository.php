@@ -30,7 +30,7 @@ class LogementPeriodeRepository extends \Doctrine\ORM\EntityRepository
     public function chargerLocatif($logementPeriode)
     {
         $retour = true;
-        $sql = 'SELECT lpl.stock, lpl.prix_public AS prixPublic , lpl.prix_fournisseur AS prixFournisseur, lpl.prix_achat AS prixAchat FROM logement_periode_locatif AS lpl WHERE lpl.logement_id=? AND lpl.periode_id=?';
+        $sql = 'SELECT lpl.stock, lpl.prix_public AS prixPublic , lpl.com_mondofute AS comMondofute, lpl.prix_catalogue AS prixCatalogue, lpl.prix_achat AS prixAchat FROM logement_periode_locatif AS lpl WHERE lpl.logement_id=? AND lpl.periode_id=?';
         $this->connexion->beginTransaction();
         $stmt = $this->connexion->prepare($sql);
         if (!$stmt) {
@@ -54,7 +54,8 @@ class LogementPeriodeRepository extends \Doctrine\ORM\EntityRepository
                                 ->setPeriode($logementPeriode->getPeriode())
                                 ->setStock($result['stock'])
                                 ->setPrixPublic($result['prixPublic'])
-                                ->setPrixFournisseur($result['prixFournisseur'])
+                                ->setComMondofute($result['comMondofute'])
+                                ->setPrixCatalogue($result['prixCatalogue'])
                                 ->setPrixAchat($result['prixAchat']);
                             $logementPeriode->setLocatif($locatif);
                         }
