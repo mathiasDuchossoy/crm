@@ -109,7 +109,8 @@ function modificationDonneesTarifs($obj) {
             donneesModifiees[i] = {
                 periodeId: datas.periode_id,
                 prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
-                prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                comMondofute: $('input[name="comMondofute[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+                prixCatalogue: $('input[name="prixCatalogue[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
                 prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
                 stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
             };
@@ -122,7 +123,8 @@ function modificationDonneesTarifs($obj) {
         donneesModifiees.push({
             periodeId: datas.periode_id,
             prixPublic: $('input[name="prixPublic[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
-            prixFournisseur: $('input[name="prixFournisseur[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            comMondofute: $('input[name="comMondofute[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
+            prixCatalogue: $('input[name="prixCatalogue[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
             prixAchat: $('input[name="prixAchat[' + datas.periode_id + ']"]').val().replace(/,/g, '.'),
             stock: $('input[name="stock[' + datas.periode_id + ']"]').val(),
         });

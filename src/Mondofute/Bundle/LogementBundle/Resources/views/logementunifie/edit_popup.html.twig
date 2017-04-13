@@ -76,16 +76,29 @@
                     sortDescending: ": activer pour trier la colonne par ordre décroissant"
                 }
             },
-            colonnes: [{
-                'mDataProp': "periode",
-                title: 'periode',
-            }, {'mDataProp': "prix_public", title: 'prix public'}, {
-                'mDataProp': "prix_fournisseur",
-                title: 'prix fournisseur'
-            }, {'mDataProp': "prix_achat", title: 'prix d\'achat'}, {
-                'mDataProp': "stock",
-                title: 'stock'
-            }]
+            colonnes: [
+                {
+                    'mDataProp': "periode",
+                    title: 'periode'
+                },
+                {
+                    'mDataProp': "prix_catalogue",
+                    title: 'prix catalogue'
+                },
+                {
+                    'mDataProp': "prix_public",
+                    title: 'prix public'
+                },
+                {
+                    'mDataProp': "com_mondofute",
+                    title: 'com Mondofute'
+                },
+                {
+                    'mDataProp': "prix_achat", title: 'prix d\'achat'
+                }, {
+                    'mDataProp': "stock",
+                    title: 'stock'
+                }]
         };
         var logementUnifieId = parseInt({{ logementUnifie.id }});
         var donnees = Array();
@@ -104,7 +117,8 @@
         donnees[{{ periode.periode.type.id }}].push({
             'periode': '<span style="display:none;">{{ periode.periode.debut | date('Ymd') }}{{ periode.periode.fin | date('Ymd') }}</span> du {{ periode.periode.debut | date('d-m-Y') }} au {{ periode.periode.fin | date('d-m-Y') }}',
             'prix_public': genererInputTarifLocatif('prixPublic',{{ periode.locatif.prixPublic }},{{ periode.periode.id }}),
-            'prix_fournisseur': genererInputTarifLocatif('prixFournisseur',{{ periode.locatif.prixFournisseur }},{{ periode.periode.id }}),
+            'com_mondofute': genererInputTarifLocatif('comMondofute',{{ periode.locatif.comMondofute }},{{ periode.periode.id }}),
+            'prix_catalogue': genererInputTarifLocatif('prixCatalogue',{{ periode.locatif.prixCatalogue }},{{ periode.periode.id }}),
             'prix_achat': genererInputTarifLocatif('prixAchat',{{ periode.locatif.prixAchat }},{{ periode.periode.id }}),
             'stock': genererInputTarifLocatif('stock',{{ periode.locatif.stock }},{{ periode.periode.id }}),
         });
@@ -114,7 +128,7 @@
         $(document).delegate('button#logement_unifie_submit', 'click', function (e) {
             var $form = $(this).closest('form');
             if ($form.get(0).checkValidity() == true) {
-                desactiveChamps($form, ['input[name^="prixPublic"]', 'input[name^="prixFournisseur"]', 'input[name^="prixAchat"]', 'input[name^="stock"]']);
+                desactiveChamps($form, ['input[name^="prixPublic"]', 'input[name^="prixCatalogue"]', 'input[name^="comMondofute"]', 'input[name^="prixAchat"]', 'input[name^="stock"]']);
             }
         });
         $(document).ready(function () {
