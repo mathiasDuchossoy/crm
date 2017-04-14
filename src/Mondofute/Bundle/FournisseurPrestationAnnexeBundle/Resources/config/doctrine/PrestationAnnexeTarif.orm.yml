@@ -11,7 +11,19 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif:
             options:
                 unsigned: true
     fields:
+        prixCatalogue:
+            type: decimal
+            precision: 10
+            scale: '2'
         prixPublic:
+            type: decimal
+            precision: 10
+            scale: '2'
+        comMondofute:
+            type: decimal
+            precision: 10
+            scale: '2'
+        prixAchat:
             type: decimal
             precision: 10
             scale: '2'
