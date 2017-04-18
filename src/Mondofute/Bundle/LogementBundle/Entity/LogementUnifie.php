@@ -160,20 +160,6 @@ class LogementUnifie
     }
 
     /**
-     * Add saisonCodePasserelle
-     *
-     * @param SaisonCodePasserelle $saisonCodePasserelle
-     *
-     * @return LogementUnifie
-     */
-    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
-    {
-        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
-
-        return $this;
-    }
-
-    /**
      * Remove saisonCodePasserelle
      *
      * @param SaisonCodePasserelle $saisonCodePasserelle
@@ -194,6 +180,25 @@ class LogementUnifie
         $iterator->uasort(function (SaisonCodePasserelle $a, SaisonCodePasserelle $b) {
             return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
         });
-        return new ArrayCollection(iterator_to_array($iterator));
+        $this->saisonCodePasserelles->clear();
+        $newCodePasserelles = new ArrayCollection(iterator_to_array($iterator));
+        foreach ($newCodePasserelles as $item) {
+            $this->addSaisonCodePasserelle($item);
+        }
+        return $this->saisonCodePasserelles;
+    }
+
+    /**
+     * Add saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     *
+     * @return LogementUnifie
+     */
+    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
+
+        return $this;
     }
 }
