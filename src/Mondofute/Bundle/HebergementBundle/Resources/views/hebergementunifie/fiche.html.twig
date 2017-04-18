@@ -28,57 +28,61 @@
 {% endblock %}
 
 {% block block_saison_code_passerelle %}
-    <div>
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            {% for keySaison, saison in saisons %}
-                <li role="presentation" class="{% if keySaison == 0 %}active{% endif %}">
-                    <a href="#saison_code_passerelle_{{ name }}_{{ keySaison }}"
-                       aria-controls="saison_code_passerelle_{{ name }}_{{ keySaison }}" role="tab"
-                       data-toggle="tab">{{ saison.libelle }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="panel panel-default">
+        <div class="panel-heading">Code passerelle</div>
+        <div class="panel-body">
+            {{ dump(saisonCodePasserelles) }}
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                {% for keySaison, saison in saisons %}
+                    <li role="presentation" class="{% if keySaison == 0 %}active{% endif %}">
+                        <a href="#saison_code_passerelle_{{ name }}_{{ keySaison }}"
+                           aria-controls="saison_code_passerelle_{{ name }}_{{ keySaison }}" role="tab"
+                           data-toggle="tab">{{ saison.libelle }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
 
-        <!-- Tab panes -->
-        <div class="tab-content">
-            {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
-                {% if saisonCodePasserelle.saison is defined %}
-                    {% set saisonId = saisonCodePasserelle.saison.vars.value %}
-                {% else %}
-                    {% set saisonId =  saisonCodePasserelle.id %}
-                {% endif %}
-                <div role="tabpanel" class="tab-pane {% if keySaisonCodePasserelle == 0 %}active{% endif %}"
-                     id="saison_code_passerelle_{{ name }}_{{ keySaisonCodePasserelle }}">
-                    <div class="form-group">
-                        {#{{ form_label(fournisseur.saisonCodePasserelles) }}#}
-                        <div class="col-sm-10">
-                            <div id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles"
-                                 data-prototype="{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
-                                 {% if saisonCodePasserelle.codePasserelles is defined %}data-index="{{ saisonCodePasserelle.codePasserelles | length }}"{% endif %}
-                            >
-                                {% if saisonCodePasserelle.codePasserelles is defined %}
-                                    {% for keyCodePasserelle , codePasserelle in saisonCodePasserelle.codePasserelles %}
-                                        {% set name = fournisseur.fournisseur.vars.value %}
-                                        {% set name_codePasserelle = keyCodePasserelle %}
-                                        {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
-                                        {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
-                                    {% endfor %}
-                                {% endif %}
-                                <input name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][saison]"
-                                       type="hidden" value="{{ saisonId }}">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
+                    {% if saisonCodePasserelle.saison is defined %}
+                        {% set saisonId = saisonCodePasserelle.saison.vars.value %}
+                    {% else %}
+                        {% set saisonId =  saisonCodePasserelle.id %}
+                    {% endif %}
+                    <div role="tabpanel" class="tab-pane {% if keySaisonCodePasserelle == 0 %}active{% endif %}"
+                         id="saison_code_passerelle_{{ name }}_{{ keySaisonCodePasserelle }}">
+                        <div class="form-group">
+                            {#{{ form_label(fournisseur.saisonCodePasserelles) }}#}
+                            <div class="col-sm-10">
+                                <div id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles"
+                                     data-prototype="{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
+                                     {% if saisonCodePasserelle.codePasserelles is defined %}data-index="{{ saisonCodePasserelle.codePasserelles | length }}"{% endif %}
+                                >
+                                    {% if saisonCodePasserelle.codePasserelles is defined %}
+                                        {% for keyCodePasserelle , codePasserelle in saisonCodePasserelle.codePasserelles %}
+                                            {% set name = fournisseur.fournisseur.vars.value %}
+                                            {% set name_codePasserelle = keyCodePasserelle %}
+                                            {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
+                                            {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <input name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][saison]"
+                                           type="hidden" value="{{ saisonId }}">
+                                </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <button type="button"
+                                    class="btn btn-default addCodePasserelle btn"
+                                    data-fournisseur="{{ name }}"
+                                    data-key-saison-code-passerelle="{{ keySaisonCodePasserelle }}">ajouter
+                            </button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <button type="button"
-                                class="btn btn-default addCodePasserelle btn"
-                                data-fournisseur="{{ name }}"
-                                data-key-saison-code-passerelle="{{ keySaisonCodePasserelle }}">ajouter
-                        </button>
-                    </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
