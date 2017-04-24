@@ -334,10 +334,13 @@ class FournisseurController extends Controller
             if (false === $saisonFournisseur) {
                 $saisonFournisseur = new SaisonFournisseur();
                 $saisonFournisseur
-                    ->setSaison($saison)
-                    ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
-                    ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
-                    ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+                    ->setSaison($saison);
+                if (!empty($fournisseur->getSaisonFournisseurs()->first())) {
+                    $saisonFournisseur
+                        ->setFlux($fournisseur->getSaisonFournisseurs()->first()->getFlux())
+                        ->setAgentMaJProd($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJProd())
+                        ->setAgentMaJSaisie($fournisseur->getSaisonFournisseurs()->first()->getAgentMaJSaisie());
+                }
                 $fournisseur->addSaisonFournisseur($saisonFournisseur);
             }
         }
@@ -561,7 +564,8 @@ class FournisseurController extends Controller
         Fournisseur $fournisseurSite,
         $listeServices,
         EntityManager $emSite
-    ) {
+    )
+    {
         /** @var ListeService $listeService */
         foreach ($listeServices as $listeService) {
             if (empty($listeService->getId()) || empty($listeServiceSite = $emSite->getRepository(ListeService::class)->find($listeService->getId()))) {
@@ -686,7 +690,8 @@ class FournisseurController extends Controller
         Fournisseur $fournisseur,
         Fournisseur $fournisseurSite,
         EntityManager $em
-    ) {
+    )
+    {
         switch ($fournisseurSite->getConditionAnnulation()) {
             case ConditionAnnulation::standard:
                 $standard = $em->find(ConditionAnnulationDescription::class, 1);
@@ -1304,7 +1309,8 @@ class FournisseurController extends Controller
     private function deletePrestationsAnnexeUnifies(
         FournisseurPrestationAnnexe $originalPrestationAnnex,
         EntityManager $em
-    ) {
+    )
+    {
         $prestationAnnexeUnifies = new ArrayCollection();
         foreach ($originalPrestationAnnex->getParams() as $param) {
             /** @var PrestationAnnexeStation $item */
@@ -1519,8 +1525,7 @@ class FournisseurController extends Controller
         foreach ($fournisseur->getPrestationAnnexes() as $fournisseurPrestationAnnexe) {
             if (empty($fournisseurPrestationAnnexe->getId())) {
                 foreach ($codePromoFamillePrestationAnnexes as $codePromoFamillePrestationAnnexe) {
-                    $codePromoFournisseur = $codePromoFournisseurs->filter(function (CodePromoFournisseur $element) use
-                    (
+                    $codePromoFournisseur = $codePromoFournisseurs->filter(function (CodePromoFournisseur $element) use (
                         $codePromoFamillePrestationAnnexe
                     ) {
                         return $element->getCodePromo() == $codePromoFamillePrestationAnnexe->getCodePromo();
@@ -2392,8 +2397,7 @@ class FournisseurController extends Controller
                 /** @var RemiseClef $remiseClef */
                 foreach ($fournisseur->getRemiseClefs() as $remiseClef) {
                     if (!empty($remiseClef->getId())) {
-                        $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use
-                        (
+                        $remiseClefSite = $fournisseurSite->getRemiseClefs()->filter(function (RemiseClef $element) use (
                             $remiseClef
                         ) {
                             return $element->getId() == $remiseClef->getId();
@@ -2634,7 +2638,8 @@ class FournisseurController extends Controller
     private function gestionPromotionFamillePrestationAnnexe(
         Fournisseur $fournisseur,
         $originalFamillePrestationAnnexes
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
         foreach ($originalFamillePrestationAnnexes as $originalFamillePrestationAnnex) {
             if (!$fournisseur->getTypes()->contains($originalFamillePrestationAnnex)) {
@@ -2864,7 +2869,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $prestationAnnexeId,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         /** @var PrestationAnnexeHebergement $prestationAnnexeHebergement */
         /** @var FournisseurPrestationAnnexe $fournisseurPrestationAnnexe */
         /** @var FournisseurPrestationAnnexeParam $param */
@@ -2954,7 +2960,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $paramIndex,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
         $sites = $em->getRepository(Site::class)->findBy(array(), array('id' => 'ASC'));
 
@@ -3060,7 +3067,8 @@ class FournisseurController extends Controller
         $stationId,
         $fournisseurCurrentId,
         $paramIndex
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
         $site = $em->find(Site::class, $siteId);
@@ -3106,7 +3114,8 @@ class FournisseurController extends Controller
         $fournisseurId,
         $paramIndex,
         $fournisseurHebergementType
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
 
@@ -3191,7 +3200,8 @@ class FournisseurController extends Controller
         Request $request,
         Fournisseur $fournisseur,
         $prestationAnnexeId
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
         $data = json_decode($request->get('data'));
 
@@ -3842,7 +3852,8 @@ class FournisseurController extends Controller
         $prestationAnnexeHebergementFournisseurId,
         $postSitesAEnregistrer,
         $prestationAnnexeHebergementsPosts
-    ) {
+    )
+    {
         $em = $this->getDoctrine()->getManager();
 
         $logementUnifies = $em->getRepository(LogementUnifie::class)->findByFournisseurHebergement($prestationAnnexeHebergement->getFournisseur()->getId(),
@@ -3904,7 +3915,8 @@ class FournisseurController extends Controller
     private function gestionPromotionFournisseurPrestationAnnexe(
         Fournisseur $fournisseur,
         FournisseurPrestationAnnexe $fournisseurPrestationAnnexe
-    ) {
+    )
+    {
         $kernel = $this->get('kernel');
         $application = new Application($kernel);
         $application->setAutoExit(false);
