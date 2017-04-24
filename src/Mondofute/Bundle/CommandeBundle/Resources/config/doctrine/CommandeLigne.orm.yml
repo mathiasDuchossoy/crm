@@ -57,4 +57,9 @@ Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne:
         commande:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Commande
             inversedBy: commandeLignes
+    oneToMany:
+        participants:
+            targetEntity: Mondofute\Bundle\CommandeBundle\Entity\Participant
+            mappedBy: commandeLigne
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }
