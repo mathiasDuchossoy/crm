@@ -77,9 +77,14 @@
         </tr>
         </tbody>
     </table>
+
+    {% set idCollectionParticipant = 'commande_ligne_sejour_' ~ name~'_participant' %}
+    {% set collectionForm = form.participants %}
+    {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
+    {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
+
     {% set collectionForm = form.commandeLignePrestationAnnexes %}
     {% set type = form._type %}
-
     <div class="row">
         <div class="collection">
             <div class="clearfix">
@@ -113,4 +118,5 @@
         </div>
     </div>
     {{ form_widget(type) }}
+
 </div>
