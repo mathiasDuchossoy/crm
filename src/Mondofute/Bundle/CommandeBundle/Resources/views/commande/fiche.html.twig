@@ -67,7 +67,9 @@
                     <h3 class="panel-title pull-left">Prestation annexe</h3>
                     {% set form = prototypes.prestationAnnexe %}
                     <a href="#"
-                       data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | escape }}"
+                       data-prototype="{{ block('commande_ligne_prestation_annexe_widget_modal') | e }}"
+                            {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
+                       data-prototype-participant="{{ block('item_participant' , '@MondofuteCommande/commande/block_participant.html.twig') | e }}"
                        class="btn btn-success add_item pull-right"
                        onclick="addCommandePrestationAnnexeExterne(this,event,'__name__','prestation_annexe');"
                        data-toggle="modal" data-target="#modal_commande_prestation_annexe_externe"
@@ -455,6 +457,11 @@
                         {% endif %}
                     {% endfor %}
                 </select>
+
+                {% set idCollectionParticipant = 'commande_ligne_sejour_'~name~'prestation_annexe_'~namePA~'_participant' %}
+                {% set collectionForm = form.participants %}
+                {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
+                {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
                 {#{{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr': {'onchange' : 'changePrixPrestationAnnexeSejour(this, "'~ name ~'", "'~ namePA ~'")'}}) }}#}
             </td>
             <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
@@ -989,10 +996,13 @@
             var $element = $(element);
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
+            var prototypeParticipant = $element.data('prototype-participant');
             var index = $collectionHolder.data('index');
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
+            var newFormParticipant = prototypeParticipant.replace(/__name_commande_ligne_participant__/g, 0);
+            newFormParticipant = newFormParticipant.replace(/__name__/g, index);
             $modalContent.html(newForm);
             $modalContent.find('.input-daterange').each(function (index, element) {
                 activeDatePicker(element)
@@ -1080,6 +1090,16 @@
                                             $tdInputStation.append($inputStation);
                                             var textStation = $inputStation.find('option:selected').text();
                                             $tdInputStation.append(textStation);
+
+                                            {% set idCollectionParticipant = 'commande_ligne_prestation_annexe___name_commande_ligne_prestation_annexe___participant' %}
+                                            {% set formCommandeLigneParticipant = null %}
+                                            var block_participant = '{{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') | e('js') }}';
+                                            {% set collectionForm = [] %}
+//                                            block_participant = block_participant.replace(/__name_commande_ligne_prestation_annexe__/g , 0);
+                                            block_participant = block_participant.replace(/__name__/g, index);
+                                            $tdInputStation.append(block_participant);
+                                            $tdInputStation.find('a.add_item').data('prototype', newFormParticipant);
+
                                             $item.append($tdInputStation);
                                             var tdInputSelecttPrestationAnnexeExterne = $('<td></td>').append($selectPrestationAnnexeExterne);
                                             $selectPrestationAnnexeExterne.on('change', function (event) {

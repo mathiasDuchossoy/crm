@@ -70,6 +70,7 @@ class Commande
         $this->commandeEtatDossiers = new ArrayCollection();
         $this->commandeStatutDossiers = new ArrayCollection();
         $this->commandeLitigeDossiers = new ArrayCollection();
+        $this->dateCommande = new DateTime();
     }
 
     /**

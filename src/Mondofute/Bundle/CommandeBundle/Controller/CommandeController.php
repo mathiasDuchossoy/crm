@@ -16,6 +16,7 @@ use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
+use Mondofute\Bundle\CommandeBundle\Entity\Participant;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
@@ -50,6 +51,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePe
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
+use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
@@ -203,7 +205,7 @@ class CommandeController extends Controller
     /**
      * @param Commande $commande
      */
-    public function gestionNumeroCommande($commande)
+    private function gestionNumeroCommande($commande)
     {
         $em = $this->getDoctrine()->getManager();
         $date = new DateTime();
@@ -368,6 +370,16 @@ class CommandeController extends Controller
             if (false === $commandeLigne) {
                 $commandeSite->removeCommandeLigne($commandeLigneSite);
                 $emSite->remove($commandeLigneSite);
+            } else {
+                foreach ($commandeLigneSite->getParticipants() as $participantSite) {
+                    $participant = $commandeLigne->getParticipants()->filter(function (Participant $element) use ($participantSite) {
+                        return $element->getId() == $participantSite->getId();
+                    })->first();
+                    if (false === $participant) {
+                        $commandeLigneSite->removeParticipant($participantSite);
+                        $emSite->remove($participantSite);
+                    }
+                }
             }
         }
         // ajout commandeLignes
@@ -449,6 +461,24 @@ class CommandeController extends Controller
                     break;
                 default:
                     break;
+            }
+            foreach ($commandeLigne->getParticipants() as $participant) {
+                $participantSite = $commandeLigneSite->getParticipants()->filter(function (Participant $element) use ($participant) {
+                    return $element->getId() == $participant->getId();
+                })->first();
+                if (false === $participantSite) {
+                    $participantSite = new Participant();
+                    $commandeLigneSite->addParticipant($participantSite);
+                    $participantSite->setId($participant->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($participantSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                }
+                /** @var Participant $participant */
+                $participantSite
+                    ->setDateNaissance($participant->getDateNaissance())
+                    ->setPrenom($participant->getPrenom())
+                    ->setNom($participant->getNom())
+                    ->setCivilite($emSite->find(Civilite::class, $participant->getCivilite()));
             }
         }
     }
@@ -686,8 +716,9 @@ class CommandeController extends Controller
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
         $originalCommandeLignes = new ArrayCollection();
         $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
+        $originalCommandeLigneParticipants = new ArrayCollection();
         /** @var CommandeLigne $commandeLigne */
-        foreach ($commande->getCommandeLignes() as $commandeLigne) {
+        foreach ($commande->getCommandeLignes() as $key => $commandeLigne) {
             $originalCommandeLignes->add($commandeLigne);
             $oReflectionClass = new ReflectionClass($commandeLigne);
             if ($oReflectionClass->getParentClass()->getShortName() == 'CommandeLigneSejour') {
@@ -700,6 +731,10 @@ class CommandeController extends Controller
                     }
                     $originalCommandeLignePrestationAnnexeSejours->get($commandeLigne->getId())->add($commandeLignePrestationAnnex);
                 }
+            }
+            $originalCommandeLigneParticipants->set($key, new ArrayCollection());
+            foreach ($commandeLigne->getParticipants() as $participant) {
+                $originalCommandeLigneParticipants->get($key)->add($participant);
             }
         }
 
@@ -802,7 +837,9 @@ class CommandeController extends Controller
                 if (count($commande->getClients()) <= 0) {
                     $commande->addClient($client);
                 }
-                foreach ($originalCommandeLignes as $originalCommandeLigne) {
+
+
+                foreach ($originalCommandeLignes as $key => $originalCommandeLigne) {
                     if (false === $commande->getCommandeLignes()->contains($originalCommandeLigne)) {
                         $em->remove($originalCommandeLigne);
                     } else {
@@ -815,8 +852,14 @@ class CommandeController extends Controller
                                 }
                             }
                         }
+                        foreach ($originalCommandeLigneParticipants->get($key) as $originalParticipant) {
+                            if (false === $commande->getCommandeLignes()->get($key)->getParticipants()->contains($originalParticipant)) {
+                                $em->remove($originalParticipant);
+                            }
+                        }
                     }
                 }
+
 //            /** @var Client $client */
 //            foreach ($commande->getClients() as $client){
 //                dump($client);
@@ -847,6 +890,7 @@ class CommandeController extends Controller
                 'libelle' => $station->getTraductions()->first()->getLibelle()
             ]);
         }
+
         $fournisseurs = $em->getRepository(Fournisseur::class)->findAll();
 
         return $this->render('@MondofuteCommande/commande/edit.html.twig', array(
