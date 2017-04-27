@@ -24,24 +24,24 @@
             </div>
         </div>#}
         <div class="items">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title pull-left">Séjour nuite</h3>
-                    {% set form = prototypes.sejourNuite %}
-                    {% set name = '__name__' %}
-                    <a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"
-                       class="btn btn-success add_item pull-right"
-                       onclick="addTagForm(this,event,'__name__','sejour_nuite');">
-                        <i class="glyphicon glyphicon-plus"></i> séjour nuite
-                    </a>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="panel-body" id="sejour_nuite">
-                    {% for name, form in collectionForm %}
-                        {{ block('commande_ligne_sejour_nuite_widget') }}
-                    {% endfor %}
-                </div>
-            </div>
+            {% set name = '__name__' %}
+            {#<div class="panel panel-default">#}
+            {#<div class="panel-heading">#}
+            {#<h3 class="panel-title pull-left">Séjour nuite</h3>#}
+            {#{% set form = prototypes.sejourNuite %}#}
+            {#<a href="#" data-prototype="{{ block('commande_ligne_sejour_nuite_widget') | escape }}"#}
+            {#class="btn btn-success add_item pull-right"#}
+            {#onclick="addTagForm(this,event,'__name__','sejour_nuite');">#}
+            {#<i class="glyphicon glyphicon-plus"></i> séjour nuite#}
+            {#</a>#}
+            {#<div class="clearfix"></div>#}
+            {#</div>#}
+            {#<div class="panel-body" id="sejour_nuite">#}
+            {#{% for name, form in collectionForm %}#}
+            {#{{ block('commande_ligne_sejour_nuite_widget') }}#}
+            {#{% endfor %}#}
+            {#</div>#}
+            {#</div>#}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title pull-left">Séjour période</h3>
@@ -717,8 +717,9 @@
 
         function addCommandePrestationAnnexeExterneSejourForm(element, event, name, panelBodyId, nameParent) {
             var $newForm = addTagForm(element, event, name, panelBodyId);
-            var path = '{{ path('commande_get_prestation_annexe_sejour' , {'logementId' : '_logementId_'}) }}';
+            var path = '{{ path('commande_get_prestation_annexe_sejour' , {'logementId' : '_logementId_', 'periodeId' : '_periodeId_'}) }}';
             path = path.replace('_logementId_', $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + nameParent + '_logement').val());
+            path = path.replace('_periodeId_', $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + nameParent + '_periode').val());
             $.ajax(path).done(function (data) {
                 $('#mondofute_bundle_commandebundle_commande_commandeLignes_' + nameParent + '_commandeLignePrestationAnnexes_' + $newForm.data('index') + '_fournisseurPrestationAnnexeParam').html(data);
             });

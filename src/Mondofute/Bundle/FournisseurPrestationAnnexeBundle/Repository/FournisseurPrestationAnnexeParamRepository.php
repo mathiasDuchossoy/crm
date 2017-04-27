@@ -44,9 +44,11 @@ class FournisseurPrestationAnnexeParamRepository extends \Doctrine\ORM\EntityRep
             ->join('entity.prestationAnnexeStations', 'prestationAnnexeStations')
             ->join('prestationAnnexeStations.station', 'station')
             ->where('fournisseur.id = :fournisseurId AND periodeValidites.dateDebut <= :dateDebut AND periodeValidites.dateFin >= :dateFin')
-            ->orWhere('fournisseur.id = :fournisseurId AND tarifs.periodeValidites IS EMPTY')
+//            ->orWhere('fournisseur.id = :fournisseurId AND tarifs.periodeValidites IS EMPTY')
+            ->orWhere('fournisseur.id = :fournisseurId AND fournisseurPrestationAnnexe.freeSale = true')
             ->andWhere('types.id = :typeId')
-            ->andWhere('station.id = :stationId');
+            ->andWhere('station.id = :stationId')
+            ->andWhere('entity.tarifs is not empty');
 
         $dateDebut = new DateTime($dateDebut);
         $dateFin = new DateTime($dateFin);
@@ -59,7 +61,8 @@ class FournisseurPrestationAnnexeParamRepository extends \Doctrine\ORM\EntityRep
         ]);
 
         $result = $qb->getQuery()->getResult();
-//        dump($result);die;
+//        dump($result);
+//        die;
         return $result;
 
     }

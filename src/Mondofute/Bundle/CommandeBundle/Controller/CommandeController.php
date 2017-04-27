@@ -30,6 +30,7 @@ use Mondofute\Bundle\DecoteBundle\Entity\TypeRemise;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeLogement;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
+use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexePeriodeIndisponible;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
@@ -419,20 +420,33 @@ class CommandeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $prestationAnnexeExternes = $em->getRepository(FournisseurPrestationAnnexeParam::class)->findPrestationAnnexeExterne($dateDebut, $dateFin, $fournisseurId, $typeId, $stationId);
+        $dateDebut = new DateTime($dateDebut);
+        $dateFin = new DateTime($dateFin);
 
         $tarifs = new ArrayCollection();
         /** @var FournisseurPrestationAnnexeParam $prestationAnnexeExterne */
         foreach ($prestationAnnexeExternes as $prestationAnnexeExterne) {
             /** @var PrestationAnnexeTarif $tarif */
-            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
-                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
-                    return $element->getDateDebut() <= new DateTime($dateDebut) && $element->getDateFin() >= new DateTime($dateFin);
+            $prestationAnnexeExterneTarif = $prestationAnnexeExterne->getTarifs()->filter(function (PrestationAnnexeTarif $element) use ($dateDebut, $dateFin) {
+                return $element->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
+                    return $element->getDateDebut() <= $dateDebut && $element->getDateFin() >= $dateFin;
                 })->first();
-                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
-                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
-                }
+            })->first();
+            if (false === $prestationAnnexeExterneTarif && $prestationAnnexeExterne->getFournisseurPrestationAnnexe()->getFreeSale()) {
+                $tarifs->set($prestationAnnexeExterne->getId(), $prestationAnnexeExterne->getTarifs()->first()->getPrixPublic());
+            } else {
+                $tarifs->set($prestationAnnexeExterne->getId(), $prestationAnnexeExterneTarif->getPrixPublic());
             }
+//            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
+//                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
+//                    return $element->getDateDebut() <= $dateDebut && $element->getDateFin() >= $dateFin;
+//                })->first();
+//                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
+//                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
+//                }
+//            }
         }
+//        dump($tarifs);die;
 
         return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
             'prestationAnnexeExternes' => $prestationAnnexeExternes,
@@ -440,15 +454,33 @@ class CommandeController extends Controller
         ));
     }
 
-    public function getPrestationAnnexeSejourAction($logementId)
+    public function getPrestationAnnexeSejourAction($logementId, $periodeId)
     {
         $em = $this->getDoctrine()->getManager();
         $logement = $em->find(Logement::class, $logementId);
+        $periode = $em->find(Periode::class, $periodeId);
         $prestationAnnexeLogements = $logement->getPrestationAnnexeLogements();
         $params = new ArrayCollection();
         /** @var PrestationAnnexeLogement $prestationAnnexeLogement */
         foreach ($prestationAnnexeLogements as $prestationAnnexeLogement) {
-            if ($prestationAnnexeLogement->getActif() && $logement->getFournisseur() == $prestationAnnexeLogement->getParam()->getFournisseurPrestationAnnexe()->getFournisseur()) {
+            $fournisseurPrestationAnnexe = $prestationAnnexeLogement->getParam()->getFournisseurPrestationAnnexe();
+            if (
+                $prestationAnnexeLogement->getActif()
+                &&
+                ((!$fournisseurPrestationAnnexe->getFreeSale() && $prestationAnnexeLogement->getParam()->getTarifs()->filter(function (PrestationAnnexeTarif $element) use ($periode) {
+                            return $element->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($periode) {
+                                return $element->getDateDebut() <= $periode->getDebut() && $periode->getFin() <= $element->getDateFin();
+                            })->first();
+                        })->first())
+                    ||
+                    ($fournisseurPrestationAnnexe->getFreeSale() && !$fournisseurPrestationAnnexe->getPeriodeIndisponibles()->filter(function (FournisseurPrestationAnnexePeriodeIndisponible $element) use ($periode) {
+                            return
+                                $periode->getDebut() >= $element->getDateDebut() && $element->getDateDebut() <= $periode->getFin()
+                                || $periode->getDebut() >= $element->getDateFin() && $element->getDateFin() <= $periode->getFin();
+                        })->first())
+                )
+                && $logement->getFournisseur() === $fournisseurPrestationAnnexe->getFournisseur()
+            ) {
                 $params->add($prestationAnnexeLogement->getParam());
             }
         }
