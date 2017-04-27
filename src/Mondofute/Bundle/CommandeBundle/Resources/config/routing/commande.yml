@@ -39,7 +39,7 @@ commande_get_prestation_annexe_externe:
     methods: GET
 
 commande_get_prestation_annexe_sejour:
-    path:     /{logementId}/getprestationannexesejour
+    path:     /{logementId}/{periodeId}/getprestationannexesejour
     defaults: { _controller: "MondofuteCommandeBundle:Commande:getPrestationAnnexeSejour" }
     methods: GET
 
