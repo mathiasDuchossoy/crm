@@ -627,7 +627,16 @@ class CommandeController extends Controller
             } else {
                 $tarifs->set($prestationAnnexeExterne->getId(), $prestationAnnexeExterneTarif->getPrixPublic());
             }
+//            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
+//                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
+//                    return $element->getDateDebut() <= $dateDebut && $element->getDateFin() >= $dateFin;
+//                })->first();
+//                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
+//                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
+//                }
+//            }
         }
+//        dump($tarifs);die;
 
         return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
             'prestationAnnexeExternes' => $prestationAnnexeExternes,
