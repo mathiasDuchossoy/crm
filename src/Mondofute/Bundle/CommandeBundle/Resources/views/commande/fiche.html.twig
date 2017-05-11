@@ -647,7 +647,7 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-            {% if form.statutDossier.vars.data is not null %}
+            {% if form.statutDossier.vars.data is not null  %}
                 <div style="background-color: {{ form.statutDossier.vars.data.codeCouleur }}" class="row alert">
                     <div class="col-md-12">
                         {#récupération du libelle du groupeStatutDossier associé#}
@@ -667,6 +667,22 @@
                             {% endif %}
                         {% endfor %}
                         {{ libelleGroupe }}{{ libelleStatut }}
+                    </div>
+                </div>
+            {% endif %}
+            {#{{ dump(form) }}#}
+            {% if form.litigeDossier.vars.data is not null and form.litigeDossier.vars.data.message == 1 %}
+                <div style="background-color: {{ form.litigeDossier.vars.data.codeCouleur }}" class="row alert">
+                    <div class="col-md-12">
+                        {#récupération du libelle du groupeStatutDossier associé#}
+                        {% set libelleStatut = '' %}
+
+                        {% for statut in form.litigeDossier.vars.data.traductions %}
+                            {% if statut.langue.code == app.request.locale %}
+                                {% set libelleStatut = statut.libelle %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ libelleStatut }}
                     </div>
                 </div>
             {% endif %}
@@ -766,8 +782,31 @@
                             </select>
                         </div>
                     </div>
-
-                    {{ form_row(form.litigeDossier) }}
+                    <div class="form-group">
+                        <label class="col-md-2 control-label"
+                               for="{{ form.litigeDossier.vars.id }}">{{ 'litige' | trans }}</label>
+                        <div class="col-md-10">
+                            <select class="form-control" id="{{ form.litigeDossier.vars.id }}"
+                                    name="{{ form.litigeDossier.vars.full_name }}">
+                                {% for litigeDossier in form.litigeDossier.vars.choices %}
+                                    {# récupération du libelle du groupeStatutDossier associé #}
+                                    {#{% set libelleGroupe = '' %}#}
+                                    {#{% if litigeDossier.data.litigeDossier is not null %}#}
+                                        {#{% for groupe in statutDossier.data.groupeStatutDossier.traductions %}#}
+                                            {#{% if groupe.langue.code == app.request.locale %}#}
+                                                {#{% set libelleGroupe = groupe.libelle~' - ' %}#}
+                                            {#{% endif %}#}
+                                        {#{% endfor %}#}
+                                    {#{% endif %}#}
+                                    {# gestion de l'option statutDossier#}
+                                    <option {% if form.litigeDossier.vars.data.id is defined and form.litigeDossier.vars.data.id == litigeDossier.data.id %}selected="selected"{% endif %}
+                                            value="{{ litigeDossier.data.id }}"
+                                            style="background-color:{{ litigeDossier.data.codeCouleur }};">{{ litigeDossier.data.traductions[0].libelle }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {#{{ form_row(form.litigeDossier) }}#}
                     {#{{ form_row(form.statutDossier,{'attr':{'test':'test'}}) }}#}
                 </div>
             </div>
