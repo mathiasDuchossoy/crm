@@ -12,6 +12,11 @@ Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier:
         codeCouleur:
             type: string
             length: 255
+        message:
+            type: smallint
+            options:
+                default: '1'
+                unsigned: true
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\LitigeDossierTraduction
