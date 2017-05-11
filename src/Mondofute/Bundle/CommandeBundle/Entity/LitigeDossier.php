@@ -3,8 +3,6 @@
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
-use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossierTraduction;
 
 /**
  * LitigeDossier
@@ -28,6 +26,10 @@ class LitigeDossier
      * @var \Doctrine\Common\Collections\Collection
      */
     private $commandeLitigeDossier;
+    /**
+     * @var integer
+     */
+    private $message;
 
     /**
      * Constructor
@@ -140,5 +142,29 @@ class LitigeDossier
     public function getCommandeLitigeDossier()
     {
         return $this->commandeLitigeDossier;
+    }
+
+    /**
+     * Get message
+     *
+     * @return integer
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Set message
+     *
+     * @param integer $message
+     *
+     * @return LitigeDossier
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
     }
 }

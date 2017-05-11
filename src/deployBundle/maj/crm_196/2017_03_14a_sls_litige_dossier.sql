@@ -5,3 +5,4 @@ ALTER TABLE commande_litige_dossier ADD CONSTRAINT FK_3E96AF5882EA2E54 FOREIGN K
 ALTER TABLE commande_litige_dossier ADD CONSTRAINT FK_3E96AF58CF2208C1 FOREIGN KEY (litige_dossier_id) REFERENCES litige_dossier (id);
 ALTER TABLE litige_dossier_traduction ADD CONSTRAINT FK_C19B995C2AADBACD FOREIGN KEY (langue_id) REFERENCES langue (id);
 ALTER TABLE litige_dossier_traduction ADD CONSTRAINT FK_C19B995CCF2208C1 FOREIGN KEY (litige_dossier_id) REFERENCES litige_dossier (id);
+ALTER TABLE litige_dossier ADD message SMALLINT UNSIGNED DEFAULT 1 NOT NULL;
