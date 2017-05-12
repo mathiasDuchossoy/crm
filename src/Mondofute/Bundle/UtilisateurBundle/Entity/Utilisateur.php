@@ -42,4 +42,9 @@ class Utilisateur extends Physique
         $this->auteur = $auteur;
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getPrenom() . ' ' . $this->getNom();
+    }
 }

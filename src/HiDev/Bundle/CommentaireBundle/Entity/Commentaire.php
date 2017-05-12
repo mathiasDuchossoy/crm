@@ -55,6 +55,7 @@ abstract class Commentaire implements CommentaireInterface
 
     /**
      * @param mixed $auteur
+     *
      * @return Commentaire
      */
     public function setAuteur($auteur)
@@ -86,8 +87,6 @@ abstract class Commentaire implements CommentaireInterface
     /**
      * Set dateHeureCreation
      *
-     * @param \DateTime $dateHeureCreation
-     *
      * @return Commentaire
      */
     public function setDateHeureCreation()
@@ -109,8 +108,6 @@ abstract class Commentaire implements CommentaireInterface
 
     /**
      * Set dateHeureModification
-     *
-     * @param \DateTime $dateHeureModification
      *
      * @return Commentaire
      */

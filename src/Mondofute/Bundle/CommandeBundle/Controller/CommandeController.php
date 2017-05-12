@@ -743,8 +743,10 @@ class CommandeController extends Controller
         $originalLitigeDossiers = $commande->getCommandeLitigeDossiers();
 //        fin de la gestion des litiges
         $deleteForm = $this->createDeleteForm($commande);
+        $user = $this->getUser()->getUtilisateur();
+//        dump($user);die;
         $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier(), $originalLitigeDossier),
-            $commande, array('locale' => $request->getLocale()))
+            $commande, array('locale' => $request->getLocale(), 'user' => $user))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
         $originalCommandeLignes = new ArrayCollection();
         $originalCommandeLignePrestationAnnexeSejours = new ArrayCollection();
@@ -769,6 +771,13 @@ class CommandeController extends Controller
                 $originalCommandeLigneParticipants->get($key)->add($participant);
             }
         }
+
+        // *** gestion commentaire utilisateur ***
+        $originalCommentaireUtilisateurs = new ArrayCollection();
+        foreach ($commande->getCommentaireUtilisateurs() as $commentaireUtilisateur) {
+            $originalCommentaireUtilisateurs->add($commentaireUtilisateur);
+        }
+        // *** fin gestion commentaire utilisateur ***
 
         $promotionSejourPeriodes = $this->getPromotionSejourPeriodes($commande);
 
@@ -889,6 +898,25 @@ class CommandeController extends Controller
                                 $em->remove($originalParticipant);
                             }
                         }
+                    }
+                }
+//            /** @var Client $client */
+//            foreach ($commande->getClients() as $client){
+//                dump($client);
+//                if(!empty($client->getId())){
+//                    dump($client);
+//                    $tmp = $em->getRepository(Client::class)->find($client->getId());
+//                    $tmp->setClientUser($client->getClientUser())->setDateNaissance($client->getDateNaissance())->setNom($client->getNom())->setPrenom($client->getPrenom());
+//                    $commande->removeClient($client);
+//                    $commande->addClient($tmp);
+//
+//                }
+//                die;
+//            }
+
+                foreach ($originalCommentaireUtilisateurs as $originalCommentaireUtilisateur) {
+                    if (false === $commande->getCommentaireUtilisateurs()->contains($originalCommentaireUtilisateur)) {
+                        $em->remove($originalCommentaireUtilisateur);
                     }
                 }
 

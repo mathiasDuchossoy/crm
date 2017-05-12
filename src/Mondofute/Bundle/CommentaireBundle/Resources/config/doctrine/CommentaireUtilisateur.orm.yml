@@ -1,0 +1,11 @@
+Mondofute\Bundle\CommentaireBundle\Entity\CommentaireUtilisateur:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireUtilisateurRepository
+    manyToOne:
+        utilisateur:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+        commentaireParent:
+            targetEntity: Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient
+            inversedBy: reponses
+    lifecycleCallbacks: {  }

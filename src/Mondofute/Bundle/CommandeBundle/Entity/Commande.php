@@ -14,6 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 class Commande
@@ -59,6 +62,14 @@ class Commande
      * @var Collection
      */
     private $commandeLitigeDossiers;
+    /**
+     * @var CommentaireClient
+     */
+    private $commentaireClient;
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $commentaireInterne;
 
     /**
      * Constructor
@@ -71,7 +82,6 @@ class Commande
         $this->commandeStatutDossiers = new ArrayCollection();
         $this->dateCommande = new DateTime();
         $this->commandeLitigeDossiers = new ArrayCollection();
-        $this->dateCommande = new DateTime();
     }
 
     /**
@@ -428,6 +438,68 @@ class Commande
     public function getCommandeLitigeDossiers()
     {
         return $this->commandeLitigeDossiers;
+    }
+
+    /**
+     * Get commentaireClient
+     *
+     * @return CommentaireClient
+     */
+    public function getCommentaireClient()
+    {
+        return $this->commentaireClient;
+    }
+
+    /**
+     * Set commentaireClient
+     *
+     * @param CommentaireClient $commentaireClient
+     *
+     * @return Commande
+     */
+    public function setCommentaireClient(CommentaireClient $commentaireClient = null)
+    {
+        $this->commentaireClient = $commentaireClient;
+
+        return $this;
+    }
+
+    /**
+     * Add commentaireInterne
+     *
+     * @param CommentaireInterne $commentaireInterne
+     *
+     * @return Commande
+     */
+    public function addCommentaireInterne(CommentaireInterne $commentaireInterne)
+    {
+        $this->commentaireInterne[] = $commentaireInterne;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentaireInterne
+     *
+     * @param CommentaireInterne $commentaireInterne
+     */
+    public function removeCommentaireInterne(CommentaireInterne $commentaireInterne)
+    {
+        $this->commentaireInterne->removeElement($commentaireInterne);
+    }
+
+    /**
+     * Get commentaireInterne
+     *
+     * @return Collection
+     */
+    public function getCommentaireInterne()
+    {
+        return $this->commentaireInterne;
+    }
+
+    public function getCommentaireUtilisateurs() {
+        return $this->commentaireClient->getReponses();
     }
 
     /**

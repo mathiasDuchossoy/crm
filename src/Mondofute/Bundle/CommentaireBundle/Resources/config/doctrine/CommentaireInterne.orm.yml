@@ -1,0 +1,8 @@
+Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireInterneRepository
+    manyToOne:
+        utilisateur:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+    lifecycleCallbacks: {  }

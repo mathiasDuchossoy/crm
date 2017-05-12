@@ -8,6 +8,8 @@ use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
 use Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierRepository;
 use Mondofute\Bundle\CommandeBundle\Repository\StatutDossierRepository;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
+use Mondofute\Bundle\CommentaireBundle\Form\CommentaireClientType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -138,7 +140,11 @@ class CommandeType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false
-        ));
+        ))
+        ->add('commentaireClient' , CommentaireClientType::class, [
+            'data_class' => CommentaireClient::class,
+            'user' => $options['user']
+        ]);
     }
 
     /**
@@ -148,8 +154,9 @@ class CommandeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande',
+            'addSejourPeriode' => false,
             'locale' => 'fr_FR',
-            'addSejourPeriode' => false
+            'user' => null
         ));
     }
 
