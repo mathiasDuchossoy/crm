@@ -36,6 +36,7 @@ class LitigeDossier
      */
     public function __construct()
     {
+        $this->message = 1;
         $this->traductions = new ArrayCollection();
         $this->commandeLitigeDossier = new ArrayCollection();
     }
