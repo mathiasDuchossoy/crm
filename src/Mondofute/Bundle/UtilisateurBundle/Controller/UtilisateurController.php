@@ -293,7 +293,32 @@ class UtilisateurController extends Controller
 
                 $em->persist($utilisateurUser);
                 $em->persist($utilisateur);
+
+                if (empty($utilisateur->getAuteur())) {
+                    $utilisateurAuteur = new UtilisateurAuteur();
+                    $utilisateurAuteur->setUtilisateur($utilisateur);
+                    $em->persist($utilisateurAuteur);
+                }
+
                 $em->flush();
+
+                $utilisateurAuteur = $utilisateur->getAuteur();
+                /** @var Site $siteSansCrm */
+                /** @var EntityManager $emSite */
+                $siteSansCrms = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+                foreach ($siteSansCrms as $siteSansCrm) {
+                    $emSite = $this->getDoctrine()->getManager($siteSansCrm->getLibelle());
+                    $utilisateurAuteurSite = $emSite->find(UtilisateurAuteur::class, $utilisateurAuteur);
+                    if (empty($utilisateurAuteurSite)) {
+                        $utilisateurAuteurSite = new UtilisateurAuteur();
+                        $utilisateurAuteurSite->setUtilisateur($emSite->find(Utilisateur::class, $utilisateur));
+                        $emSite->persist($utilisateurAuteur);
+                        $utilisateurAuteurSite->setId($utilisateurAuteur->getId());
+                        $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    }
+                    $emSite->flush();
+                }
 
                 // add flash messages
                 $this->addFlash(
