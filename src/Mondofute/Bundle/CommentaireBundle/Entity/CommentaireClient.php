@@ -13,26 +13,14 @@ use Mondofute\Bundle\ClientBundle\Entity\Client;
  */
 class CommentaireClient extends BaseCommentaire
 {
-//    /**
-//     * @var int
-//     */
-//    private $id;
-//
-//
-//    /**
-//     * Get id
-//     *
-//     * @return int
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
+    /**
+     * @var int
+     */
+    protected $id;
     /**
      * @var Collection
      */
     private $reponses;
-
     /**
      * @var Client
      */
@@ -49,6 +37,28 @@ class CommentaireClient extends BaseCommentaire
     {
         parent::__construct();
         $this->reponses = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -144,4 +154,5 @@ class CommentaireClient extends BaseCommentaire
 
         return $this;
     }
+
 }

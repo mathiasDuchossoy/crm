@@ -20,4 +20,6 @@ ALTER TABLE commentaire_client DROP FOREIGN KEY FK_D3C0D4D219EB6921;
 DROP INDEX IDX_D3C0D4D219EB6921 ON commentaire_client;
 ALTER TABLE commentaire_client DROP client_id;*/
 
-ALTER TABLE commentaire_client ADD utilisateur_modification VARCHAR(255) NOT NULL;
+--ALTER TABLE commentaire_client ADD utilisateur_modification VARCHAR(255) NOT NULL;
+
+ALTER TABLE commentaire_client CHANGE utilisateur_modification utilisateur_modification VARCHAR(255) DEFAULT NULL;

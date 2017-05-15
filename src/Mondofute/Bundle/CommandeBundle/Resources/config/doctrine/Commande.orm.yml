@@ -49,9 +49,10 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         clients:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
             inversedBy: commandes
-        commentaireInterne:
+        commentaireInternes:
             targetEntity: Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne
             cascade: ['persist','remove']
+            orphanRemoval: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site

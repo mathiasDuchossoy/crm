@@ -11,7 +11,7 @@ namespace HiDev\Bundle\CommentaireBundle\Entity;
 
 interface CommentaireInterface
 {
-    public function getAuteur();
-
-    public function setAuteur($auteur);
+//    public function getAuteur();
+//
+//    public function setAuteur($auteur);
 }

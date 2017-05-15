@@ -9,5 +9,4 @@ use HiDev\Bundle\CommentaireBundle\Entity\Auteur as BaseAuteur;
  */
 abstract class Auteur extends BaseAuteur
 {
-
 }

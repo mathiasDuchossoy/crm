@@ -2,55 +2,64 @@
 
 namespace Mondofute\Bundle\CommentaireBundle\Entity;
 
-use HiDev\Bundle\CommentaireBundle\Entity\Commentaire as BaseCommentaire;
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
-
 /**
  * CommentaireInterne
  */
-class CommentaireInterne extends BaseCommentaire
+class CommentaireInterne extends Commentaire
 {
-//    /**
-//     * @var int
-//     */
-//    private $id;
-//
-//
-//    /**
-//     * Get id
-//     *
-//     * @return int
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
     /**
-     * @var Utilisateur
+     * @var int
      */
-    private $utilisateur;
+    protected $id;
+
 
     /**
-     * Get utilisateur
+     * Get id
      *
-     * @return Utilisateur
+     * @return int
      */
-    public function getUtilisateur()
+    public function getId()
     {
-        return $this->utilisateur;
+        return $this->id;
     }
 
     /**
-     * Set utilisateur
+     * @param int $id
      *
-     * @param Utilisateur $utilisateur
-     *
-     * @return CommentaireInterne
+     * @return $this
      */
-    public function setUtilisateur(Utilisateur $utilisateur = null)
+    public function setId($id)
     {
-        $this->utilisateur = $utilisateur;
+        $this->id = $id;
 
         return $this;
     }
+//    /**
+//     * @var Utilisateur
+//     */
+//    private $utilisateur;
+//
+//    /**
+//     * Get utilisateur
+//     *
+//     * @return Utilisateur
+//     */
+//    public function getUtilisateur()
+//    {
+//        return $this->utilisateur;
+//    }
+//
+//    /**
+//     * Set utilisateur
+//     *
+//     * @param Utilisateur $utilisateur
+//     *
+//     * @return CommentaireInterne
+//     */
+//    public function setUtilisateur(Utilisateur $utilisateur = null)
+//    {
+//        $this->utilisateur = $utilisateur;
+//
+//        return $this;
+//    }
 }

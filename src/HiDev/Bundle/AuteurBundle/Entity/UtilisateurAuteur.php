@@ -9,11 +9,28 @@ use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
  */
 class UtilisateurAuteur extends Auteur
 {
+//    /**
+//     * @var int
+//     */
+//    protected $id;
 
     /**
      * @var Utilisateur
      */
     private $utilisateur;
+
+    /**
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->utilisateur->getPrenom() . ' ' . $this->utilisateur->getNom();
+    }
+
+    public function __toString()
+    {
+        return $this->getUtilisateur()->__toString();
+    }
 
     /**
      * Get utilisateur
@@ -40,10 +57,22 @@ class UtilisateurAuteur extends Auteur
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getNom()
+    public function getId()
     {
-        return $this->utilisateur->getPrenom() . ' ' . $this->utilisateur->getNom();
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

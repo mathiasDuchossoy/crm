@@ -2,6 +2,8 @@
 
 namespace HiDev\Bundle\CommentaireBundle\Entity;
 
+use DateTime;
+
 /**
  * Commentaire
  */
@@ -13,12 +15,12 @@ abstract class Commentaire implements CommentaireInterface
     protected $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $dateHeureCreation;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $dateHeureModification;
 
@@ -33,35 +35,11 @@ abstract class Commentaire implements CommentaireInterface
     protected $contenu;
 
     /**
-     * @var
-     */
-    protected $auteur;
-
-    /**
      * Commentaire constructor.
      */
     public function __construct()
     {
         $this->setValidationModerateur(false);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAuteur()
-    {
-        return $this->auteur;
-    }
-
-    /**
-     * @param mixed $auteur
-     *
-     * @return Commentaire
-     */
-    public function setAuteur($auteur)
-    {
-        $this->auteur = $auteur;
-        return $this;
     }
 
     /**
@@ -77,7 +55,7 @@ abstract class Commentaire implements CommentaireInterface
     /**
      * Get dateHeureCreation
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateHeureCreation()
     {
@@ -91,7 +69,7 @@ abstract class Commentaire implements CommentaireInterface
      */
     public function setDateHeureCreation()
     {
-        $this->dateHeureCreation = new \DateTime();
+        $this->dateHeureCreation = new DateTime();
 
         return $this;
     }
@@ -99,7 +77,7 @@ abstract class Commentaire implements CommentaireInterface
     /**
      * Get dateHeureModification
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateHeureModification()
     {
@@ -113,7 +91,7 @@ abstract class Commentaire implements CommentaireInterface
      */
     public function setDateHeureModification()
     {
-        $this->dateHeureModification = new \DateTime();
+        $this->dateHeureModification = new DateTime();
 
         return $this;
     }

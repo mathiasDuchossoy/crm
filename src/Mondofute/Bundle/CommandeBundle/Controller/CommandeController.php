@@ -7,8 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Controller\ClientController;
+use HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur;
+use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
@@ -25,6 +26,9 @@ use Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote;
 use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireUtilisateur;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
 use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
@@ -57,6 +61,7 @@ use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
+use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -248,6 +253,10 @@ class CommandeController extends Controller
         // /* *** gestion commande ligne prestation annexe sejour ***
         $this->gestionCommandeLignePrestationAnnexeSejourSite($commande, $commandeSite, $emSite);
         // *** gestion commande ligne prestation annexe sejour *** */
+
+        $this->gestionCommentaireClientSite($commande, $commandeSite, $emSite);
+
+        $this->gestionCommentaireInterneSite($commande, $commandeSite, $emSite);
 
         $emSite->persist($commandeSite);
         $emSite->flush();
@@ -558,6 +567,89 @@ class CommandeController extends Controller
         }
     }
 
+    /**
+     * @param Commande $commande
+     * @param Commande $commandeSite
+     * @param EntityManager $emSite
+     */
+    function gestionCommentaireClientSite($commande, $commandeSite, $emSite)
+    {
+
+        if (empty($commentaireClientSite = $commandeSite->getCommentaireClient())) {
+            $commentaireClientSite = new CommentaireClient();
+            $commandeSite->setCommentaireClient($commentaireClientSite);
+            $commentaireClientSite->setId($commande->getCommentaireClient()->getId());
+            $metadata = $emSite->getClassMetadata(get_class($commentaireClientSite));
+            $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+        }
+        $commentaireClientSite->setContenu($commande->getCommentaireClient()->getContenu())->setValidationModerateur($commande->getCommentaireClient()->getValidationModerateur());
+        /** @var CommentaireUtilisateur $commentaireUtilisateurSite */
+        /** @var CommentaireUtilisateur $commentaireUtilisateur */
+        // suppression commentaireUtilisateurs
+        foreach ($commandeSite->getCommentaireUtilisateurs() as $commentaireUtilisateurSite) {
+            $commentaireUtilisateur = $commande->getCommentaireUtilisateurs()->filter(function (CommentaireUtilisateur $element) use ($commentaireUtilisateurSite) {
+                return $element->getId() == $commentaireUtilisateurSite->getId();
+            })->first();
+            if (false === $commentaireUtilisateur) {
+                $commandeSite->getCommentaireClient()->removeReponse($commentaireUtilisateurSite);
+            }
+        }
+        // ajout commentaireUtilisateurs
+        foreach ($commande->getCommentaireUtilisateurs() as $commentaireUtilisateur) {
+            $commentaireUtilisateurSite = $commandeSite->getCommentaireUtilisateurs()->filter(function (CommentaireUtilisateur $element) use ($commentaireUtilisateur) {
+                return $element->getId() == $commentaireUtilisateur->getId();
+            })->first();
+            if (false === $commentaireUtilisateurSite) {
+                $commentaireUtilisateurSite = new CommentaireUtilisateur();
+                $commandeSite->getCommentaireClient()->addReponse($commentaireUtilisateurSite);
+                $commentaireUtilisateurSite
+                    ->setUtilisateur($emSite->find(Utilisateur::class, $commentaireUtilisateur->getUtilisateur()));
+                $commentaireUtilisateurSite->setId($commentaireUtilisateur->getId());
+                $metadata = $emSite->getClassMetadata(get_class($commentaireUtilisateurSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+            }
+            $commentaireUtilisateurSite
+                ->setContenu($commentaireUtilisateur->getContenu())
+                ->setValidationModerateur($commentaireUtilisateur->getValidationModerateur());
+        }
+    }
+
+    /**
+     * @param Commande $commande
+     * @param Commande $commandeSite
+     * @param EntityManager $emSite
+     */
+    public function gestionCommentaireInterneSite($commande, $commandeSite, $emSite)
+    {
+        /** @var CommentaireInterne $commentaireInterneSite */
+        /** @var CommentaireInterne $commentaireInterne */
+        // suppression commentaireInternes
+        foreach ($commandeSite->getCommentaireInternes() as $commentaireInterneSite) {
+            $commentaireInterne = $commande->getCommentaireInternes()->filter(function (CommentaireInterne $element) use ($commentaireInterneSite) {
+                return $element->getId() == $commentaireInterneSite->getId();
+            })->first();
+            if (false === $commentaireInterne) {
+                $commandeSite->removeCommentaireInterne($commentaireInterneSite);
+            }
+        }
+        // ajout commentaireInternes
+        foreach ($commande->getCommentaireInternes() as $commentaireInterne) {
+            $commentaireInterneSite = $commandeSite->getCommentaireInternes()->filter(function (CommentaireInterne $element) use ($commentaireInterne) {
+                return $element->getId() == $commentaireInterne->getId();
+            })->first();
+            if (false === $commentaireInterneSite) {
+                $commentaireInterneSite = new CommentaireInterne();
+                $commandeSite->addCommentaireInterne($commentaireInterneSite);
+
+                $commentaireInterneSite->setId($commentaireInterne->getId());
+                $metadata = $emSite->getClassMetadata(get_class($commentaireInterneSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+//                $commandeSite->addCommentaireInterne($emSite->find(CommentaireInterne::class, $commentaireInterne));
+            }
+            $commentaireInterneSite->setAuteur($emSite->find(UtilisateurAuteur::class, $commentaireInterne->getAuteur()))->setContenu($commentaireInterne->getContenu())->setValidationModerateur($commentaireInterne->getContenu());
+        }
+    }
+
     public function ajoutClientAction(Request $request)
     {
 //        récupère l'indice en preparation pour le multi-client
@@ -627,16 +719,7 @@ class CommandeController extends Controller
             } else {
                 $tarifs->set($prestationAnnexeExterne->getId(), $prestationAnnexeExterneTarif->getPrixPublic());
             }
-//            foreach ($prestationAnnexeExterne->getTarifs() as $tarif) {
-//                $periodeValidite = $tarif->getPeriodeValidites()->filter(function (PeriodeValidite $element) use ($dateDebut, $dateFin) {
-//                    return $element->getDateDebut() <= $dateDebut && $element->getDateFin() >= $dateFin;
-//                })->first();
-//                if (!empty($periodeValidite) or $tarif->getPeriodeValidites()->isEmpty()) {
-//                    $tarifs->set($prestationAnnexeExterne->getId(), $tarif->getPrixPublic());
-//                }
-//            }
         }
-//        dump($tarifs);die;
 
         return $this->render('@MondofuteCommande/commande/options_prestation_annexe_externe.html.twig', array(
             'prestationAnnexeExternes' => $prestationAnnexeExternes,

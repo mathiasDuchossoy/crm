@@ -6,6 +6,7 @@ HiDev\Bundle\AuteurBundle\Entity\Auteur:
         name: type
         type: integer
     discriminatorMap:
+        0: Auteur
         1: UtilisateurAuteur
     repositoryClass: HiDev\Bundle\AuteurBundle\Repository\AuteurRepository
     oneToMany:

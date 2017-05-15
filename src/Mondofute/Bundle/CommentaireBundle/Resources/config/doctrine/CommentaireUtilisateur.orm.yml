@@ -2,6 +2,14 @@ Mondofute\Bundle\CommentaireBundle\Entity\CommentaireUtilisateur:
     type: entity
     table: null
     repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireUtilisateurRepository
+    attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
     manyToOne:
         utilisateur:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur

@@ -10,30 +10,40 @@ use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
  */
 class CommentaireUtilisateur extends BaseCommentaire
 {
-//    /**
-//     * @var int
-//     */
-//    private $id;
-//
-//
-//    /**
-//     * Get id
-//     *
-//     * @return int
-//     */
-//    public function getId()
-//    {
-//        return $this->id;
-//    }
+    /**
+     * @var int
+     */
+    protected $id;
     /**
      * @var Utilisateur
      */
     private $utilisateur;
-
     /**
      * @var CommentaireClient
      */
     private $commentaireParent;
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get utilisateur

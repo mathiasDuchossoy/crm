@@ -67,9 +67,10 @@ class Commande
      */
     private $commentaireClient;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * /**
+     * @var Collection
      */
-    private $commentaireInterne;
+    private $commentaireInternes;
 
     /**
      * Constructor
@@ -82,6 +83,7 @@ class Commande
         $this->commandeStatutDossiers = new ArrayCollection();
         $this->dateCommande = new DateTime();
         $this->commandeLitigeDossiers = new ArrayCollection();
+        $this->commentaireInternes = new ArrayCollection();
     }
 
     /**
@@ -464,6 +466,11 @@ class Commande
         return $this;
     }
 
+    public function getCommentaireUtilisateurs()
+    {
+        return $this->commentaireClient->getReponses();
+    }
+
     /**
      * Add commentaireInterne
      *
@@ -473,7 +480,7 @@ class Commande
      */
     public function addCommentaireInterne(CommentaireInterne $commentaireInterne)
     {
-        $this->commentaireInterne[] = $commentaireInterne;
+        $this->commentaireInternes[] = $commentaireInterne;
 
         return $this;
     }
@@ -485,21 +492,17 @@ class Commande
      */
     public function removeCommentaireInterne(CommentaireInterne $commentaireInterne)
     {
-        $this->commentaireInterne->removeElement($commentaireInterne);
+        $this->commentaireInternes->removeElement($commentaireInterne);
     }
 
     /**
-     * Get commentaireInterne
+     * Get commentaireInternes
      *
      * @return Collection
      */
-    public function getCommentaireInterne()
+    public function getCommentaireInternes()
     {
-        return $this->commentaireInterne;
-    }
-
-    public function getCommentaireUtilisateurs() {
-        return $this->commentaireClient->getReponses();
+        return $this->commentaireInternes;
     }
 
     /**

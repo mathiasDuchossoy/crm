@@ -3,6 +3,13 @@ Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient:
     table: null
     repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireClientRepository
     attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
         contenu:
             type: text
             nullable: true
@@ -13,6 +20,7 @@ Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient:
     fields:
         utilisateurModification:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateir
+            nullable: true
 #    manyToOne:
 #        client:
 #            targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client

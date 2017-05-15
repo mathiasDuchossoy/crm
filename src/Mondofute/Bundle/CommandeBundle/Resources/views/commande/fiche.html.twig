@@ -847,6 +847,8 @@
                     <div role="tabpanel" class="tab-pane" id="commentaire">
                         {% set commentaireClient = form.commentaireClient %}
                         {% include '@MondofuteCommentaire/commentaire/commentaire-client-widget.html.twig' %}
+                        {% set commentaires = form.commentaireInternes %}
+                        {% include '@MondofuteCommentaire/commentaire/commentaire-interne-widget.html.twig' %}
                     </div>
                 </div>
             </div>
