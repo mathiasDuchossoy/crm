@@ -9,10 +9,10 @@ use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
  */
 class UtilisateurAuteur extends Auteur
 {
-//    /**
-//     * @var int
-//     */
-//    protected $id;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
      * @var Utilisateur

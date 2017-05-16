@@ -127,12 +127,12 @@ class UtilisateurController extends Controller
                     $emSite->persist($utilisateurClone);
                     $emSite->persist($utilisateurUserClone);
 
-
                     $utilisateurAuteurSite = new UtilisateurAuteur();
                     $utilisateurAuteurSite->setId($utilisateurAuteur->getId());
                     $utilisateurAuteurSite->setUtilisateur($utilisateurClone);
                     $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
                     $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    $emSite->persist($utilisateurAuteurSite);
 
                     $emSite->flush();
                 }
@@ -312,12 +312,12 @@ class UtilisateurController extends Controller
                     if (empty($utilisateurAuteurSite)) {
                         $utilisateurAuteurSite = new UtilisateurAuteur();
                         $utilisateurAuteurSite->setUtilisateur($emSite->find(Utilisateur::class, $utilisateur));
-                        $emSite->persist($utilisateurAuteur);
                         $utilisateurAuteurSite->setId($utilisateurAuteur->getId());
                         $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
                         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $emSite->persist($utilisateurAuteurSite);
+                        $emSite->flush();
                     }
-                    $emSite->flush();
                 }
 
                 // add flash messages

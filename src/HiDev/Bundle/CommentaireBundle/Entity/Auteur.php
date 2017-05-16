@@ -10,14 +10,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Auteur implements AuteurInterface
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var ArrayCollection
      */
     protected $commentaires;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
      * Auteur constructor.

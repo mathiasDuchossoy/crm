@@ -2,8 +2,6 @@
 
 namespace Mondofute\Bundle\CommentaireBundle\Form;
 
-use HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,11 +14,11 @@ class CommentaireInterneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('auteur'
-                , EntityType::class, [
-                    'class' => UtilisateurAuteur::class
-                ]
-            )
+//            ->add('auteur'
+//                , EntityType::class, [
+//                    'class' => UtilisateurAuteur::class
+//                ]
+//            )
             ->add('contenu');
     }
 

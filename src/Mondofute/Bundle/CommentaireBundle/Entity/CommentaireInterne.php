@@ -12,6 +12,30 @@ class CommentaireInterne extends Commentaire
      */
     protected $id;
 
+//    protected $auteur;
+
+//    /**
+//     * Get auteur
+//     *
+//     * @return UtilisateurAuteur
+//     */
+//    public function getAuteur()
+//    {
+//        return $this->auteur;
+//    }
+//
+//    /**
+//     * @param UtilisateurAuteur $auteur
+//     *
+//     * @return $this
+//     */
+//    public function setAuteur($auteur)
+//    {
+//        $this->auteur = $auteur;
+//
+//        return $this;
+//    }
+//
 
     /**
      * Get id
@@ -62,4 +86,5 @@ class CommentaireInterne extends Commentaire
 //
 //        return $this;
 //    }
+
 }

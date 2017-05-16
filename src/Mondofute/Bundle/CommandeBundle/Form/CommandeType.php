@@ -84,6 +84,7 @@ class CommandeType extends AbstractType
                     return $qb;
                 },
                 'data' => $this->statutDossier,
+                'required' => true
             ))
             ->add('litigeDossier', EntityType::class, array(
                 'class' => LitigeDossier::class,

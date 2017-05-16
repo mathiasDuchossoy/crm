@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
+use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
@@ -26,11 +26,11 @@ use Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote;
 use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
+use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
+use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
 use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne;
 use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireUtilisateur;
-use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
-use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseurPrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
@@ -56,12 +56,11 @@ use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePe
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
-use Nucleus\ContactBundle\Entity\Civilite;
+use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
-use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use ReflectionClass;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -572,7 +571,7 @@ class CommandeController extends Controller
      * @param Commande $commandeSite
      * @param EntityManager $emSite
      */
-    function gestionCommentaireClientSite($commande, $commandeSite, $emSite)
+    private function gestionCommentaireClientSite($commande, $commandeSite, $emSite)
     {
 
         if (empty($commentaireClientSite = $commandeSite->getCommentaireClient())) {
@@ -619,7 +618,7 @@ class CommandeController extends Controller
      * @param Commande $commandeSite
      * @param EntityManager $emSite
      */
-    public function gestionCommentaireInterneSite($commande, $commandeSite, $emSite)
+    private function gestionCommentaireInterneSite($commande, $commandeSite, $emSite)
     {
         /** @var CommentaireInterne $commentaireInterneSite */
         /** @var CommentaireInterne $commentaireInterne */
@@ -646,7 +645,19 @@ class CommandeController extends Controller
                 $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 //                $commandeSite->addCommentaireInterne($emSite->find(CommentaireInterne::class, $commentaireInterne));
             }
-            $commentaireInterneSite->setAuteur($emSite->find(UtilisateurAuteur::class, $commentaireInterne->getAuteur()))->setContenu($commentaireInterne->getContenu())->setValidationModerateur($commentaireInterne->getContenu());
+//            dump($commentaireInterne);die;
+            if (empty($utilisateurAuteurSite = $emSite->find(UtilisateurAuteur::class, $commentaireInterne->getAuteur()))) {
+                $utilisateurAuteurSite = new UtilisateurAuteur();
+                $utilisateurAuteurSite->setUtilisateur($emSite->find(Utilisateur::class, $commentaireInterne->getAuteur()->getUtilisateur()));
+                $utilisateurAuteurSite->setId($commentaireInterne->getAuteur()->getId());
+                $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $emSite->persist($utilisateurAuteurSite);
+            }
+            $commentaireInterneSite
+                ->setAuteur($utilisateurAuteurSite)
+                ->setContenu($commentaireInterne->getContenu())
+                ->setValidationModerateur($commentaireInterne->getContenu());
         }
     }
 
@@ -828,7 +839,9 @@ class CommandeController extends Controller
         $deleteForm = $this->createDeleteForm($commande);
         $user = $this->getUser()->getUtilisateur();
 //        dump($user);die;
-        $form = $this->createForm(new CommandeType($originalStatutDossier->getStatutDossier(), $originalLitigeDossier),
+        $statutDossier = null;
+        if (!empty($originalStatutDossier)) $statutDossier = $originalStatutDossier->getStatutDossier();
+        $form = $this->createForm(new CommandeType($statutDossier, $originalLitigeDossier),
             $commande, array('locale' => $request->getLocale(), 'user' => $user))
             ->add('submit', SubmitType::class, array('label' => 'Mettre à jour'));
         $originalCommandeLignes = new ArrayCollection();
@@ -983,25 +996,14 @@ class CommandeController extends Controller
                         }
                     }
                 }
-//            /** @var Client $client */
-//            foreach ($commande->getClients() as $client){
-//                dump($client);
-//                if(!empty($client->getId())){
-//                    dump($client);
-//                    $tmp = $em->getRepository(Client::class)->find($client->getId());
-//                    $tmp->setClientUser($client->getClientUser())->setDateNaissance($client->getDateNaissance())->setNom($client->getNom())->setPrenom($client->getPrenom());
-//                    $commande->removeClient($client);
-//                    $commande->addClient($tmp);
-//
-//                }
-//                die;
-//            }
 
                 foreach ($originalCommentaireUtilisateurs as $originalCommentaireUtilisateur) {
                     if (false === $commande->getCommentaireUtilisateurs()->contains($originalCommentaireUtilisateur)) {
                         $em->remove($originalCommentaireUtilisateur);
                     }
                 }
+
+                $this->gestionCommentaireInterne($commande);
 
                 $em->flush();
 
@@ -1353,6 +1355,27 @@ class CommandeController extends Controller
         }
 
         return $decoteSejourPeriodes;
+    }
+
+    /**
+     * @param Commande $commande
+     */
+    private function gestionCommentaireInterne($commande)
+    {
+        /** @var CommentaireInterne $commentaireInterne */
+        /** @var Utilisateur $utilisateur */
+        $utilisateur = $this->getUser()->getUtilisateur();
+        foreach ($commande->getCommentaireInternes() as $commentaireInterne) {
+            if (empty($commentaireInterne->getAuteur())) {
+                if (empty($utilisateurAuteur = $utilisateur->getAuteur())) {
+                    $utilisateurAuteur = new UtilisateurAuteur();
+                    $utilisateurAuteur->setUtilisateur($utilisateur);
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($utilisateurAuteur);
+                }
+                $commentaireInterne->setAuteur($utilisateurAuteur);
+            }
+        }
     }
 
     /**

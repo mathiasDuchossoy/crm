@@ -2,14 +2,15 @@ HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur:
     type: entity
     table: null
     repositoryClass: HiDev\Bundle\AuteurBundle\Repository\UtilisateurAuteurRepository
-#    id:
-#        id:
-#            type: integer
-#            id: true
-#            generator:
-#                strategy: AUTO
-#            options:
-#                unsigned: true
+    attributeOverride:
+        id:
+            id:
+                type: integer
+                id: true
+                generator:
+                    strategy: AUTO
+                options:
+                    unsigned: true
     oneToOne:
         utilisateur:
             targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
