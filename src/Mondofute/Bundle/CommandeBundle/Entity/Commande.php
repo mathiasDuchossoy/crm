@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
 use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -468,7 +467,10 @@ class Commande
 
     public function getCommentaireUtilisateurs()
     {
-        return $this->commentaireClient->getReponses();
+        if (!empty($this->commentaireClient)) {
+            return $this->commentaireClient->getReponses();
+        }
+        return null;
     }
 
     /**
