@@ -1,0 +1,18 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Anite:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\AniteRepository
+#    id:
+#        id:
+#            type: integer
+#            id: true
+#            generator:
+#                strategy: AUTO
+    fields:
+        param1:
+            type: string
+            length: 255
+        param2:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

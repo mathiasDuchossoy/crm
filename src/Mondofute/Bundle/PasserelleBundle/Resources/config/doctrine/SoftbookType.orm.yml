@@ -1,0 +1,15 @@
+Mondofute\Bundle\PasserelleBundle\Entity\SoftbookType:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\SoftbookTypeRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        libelle:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }

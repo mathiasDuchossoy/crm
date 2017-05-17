@@ -1,0 +1,29 @@
+Mondofute\Bundle\PasserelleBundle\Entity\Passerelle:
+    discriminatorColumn:
+        name: discr
+        type: integer
+    discriminatorMap:
+        1: Anite
+        2: Softbook
+        3: Arkiane
+        4: PierreVacances
+        5: Homeresa
+    inheritanceType: JOINED
+    type: entity
+    table: param_passerelle
+    repositoryClass: Mondofute\Bundle\PasserelleBundle\Repository\PasserelleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        passerelle:
+            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\Pass
+            inversedBy: paramPasserelles
+#    oneToMany:
+#        fournisseurs:
+#            targetEntity: Mondofute\FournisseurBundle\Entity\Fournisseur
+#            mappedBy: passerelle
+    lifecycleCallbacks: {  }

@@ -1,0 +1,18 @@
+<h1>Liste des passerelles</h1>
+<ul>
+    {% for passerelle in passerelles %}
+        <li>{{ passerelle.id }} {{ passerelle.libelle }}</li>
+    {% endfor %}
+</ul>
+
+<h1>Fournisseur</h1>
+<div>
+    nom fournisseur: {{ fournisseur.enseigne }}
+</div>
+<div>
+    {% if (fournisseur.paramPasserelle.passerelle is defined) and (fournisseur.paramPasserelle.passerelle is not null) %}
+        type de passerelle: {{ fournisseur.paramPasserelle.passerelle.libelle }}
+    {% else %}
+        Aucune passerelle
+    {% endif %}
+</div>
