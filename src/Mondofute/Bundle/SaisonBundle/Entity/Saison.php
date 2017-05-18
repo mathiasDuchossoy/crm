@@ -55,30 +55,6 @@ class Saison
     }
 
     /**
-     * Get libelle
-     *
-     * @return string
-     */
-    public function getLibelle()
-    {
-        return $this->libelle;
-    }
-
-    /**
-     * Set libelle
-     *
-     * @param string $libelle
-     *
-     * @return Saison
-     */
-    public function setLibelle($libelle)
-    {
-        $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
      * Get enCours
      *
      * @return bool
@@ -146,6 +122,35 @@ class Saison
     public function setDateFin($dateFin)
     {
         $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     *
+     * @return Saison
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }

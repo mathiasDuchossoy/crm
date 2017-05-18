@@ -1,7 +1,7 @@
 {% if formAjax is defined %}
     {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% endif %}
-{% for prestationAnnexe in form.prestationAnnexes %}
+{% for keyFournisseurPrestationAnnexe, prestationAnnexe in form.prestationAnnexes %}
     <div id="{{ prestationAnnexe.vars.id }}" data-id="{{ prestationAnnexe.vars.value.id }}">
         <div>
             <div class="tabs-panels">
@@ -30,6 +30,8 @@
                     {% endfor %}
                 </ul>
             </div>
+            {% set saisonCodePasserelles = prestationAnnexe.saisonCodePasserelles %}
+            {{ block('block_saison_code_passerelle', '@MondofuteFournisseur/fournisseur/fiche.html.twig') }}
         </div>
         <div>
             <h4>Params</h4>

@@ -1,4 +1,79 @@
 {% extends '::base_popup.html.twig' %}
+
+{% block bouton_supprimer %}
+    <div class="col-sm-1">
+        <a href="#" class="btn btn-danger remove_item" onclick="removeCodePasserelleForm(this,event);"><i
+                    class="glyphicon glyphicon-minus"></i></a>
+    </div>
+{% endblock %}
+
+{% block  block_code_passerelle %}
+    <div>
+        <div class="form-group item"
+             id="logement_unifie_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}">
+            <label class="col-sm-2 control-label required"
+                   for="logement_unifie__saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle">libellé</label>
+            <div class="col-sm-9"><input
+                        id="logement_unifie__saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle"
+                        name="logement_unifie[saisonCodePasserelles][{{ keySaisonCodePasserelle }}][codePasserelles][{{ name_codePasserelle }}][libelle]"
+                        required="required" maxlength="255" class="form-control"
+                        value="{% if valueCodePasserelle is defined %}{{ valueCodePasserelle }}{% endif %}" type="text">
+
+            </div>
+            {{ block('bouton_supprimer') }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block block_saison_code_passerelle %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Code passerelle</div>
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
+                    <li role="presentation" class="{% if loop.index0 == 0 %}active{% endif %}">
+                        <a href="#saison_code_passerelle_{{ keySaisonCodePasserelle }}"
+                           aria-controls="saison_code_passerelle_{{ keySaisonCodePasserelle }}" role="tab"
+                           data-toggle="tab">{{ saisonCodePasserelle.vars.value.saison }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
+                    <div role="tabpanel" class="tab-pane {% if loop.index0 == 0 %}active{% endif %}"
+                         id="saison_code_passerelle_{{ keySaisonCodePasserelle }}">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <div id="logement_unifie_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles"
+                                     data-prototype="{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle') | e ('html') }}"
+                                     data-index="{{ saisonCodePasserelle.codePasserelles | length }}"
+                                >
+                                    {% for keyCodePasserelle , codePasserelle in saisonCodePasserelle.codePasserelles %}
+                                        {% set name_codePasserelle = keyCodePasserelle %}
+                                        {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
+                                        {{ block('block_code_passerelle') }}
+                                    {% endfor %}
+                                    <input name="logement_unifie[saisonCodePasserelles][{{ keySaisonCodePasserelle }}][saison]"
+                                           type="hidden" value="{{ saisonCodePasserelle.saison.vars.value }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button"
+                                    class="btn btn-default addCodePasserelle btn"
+                                    data-key-saison-code-passerelle="{{ keySaisonCodePasserelle }}">ajouter
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block body %}
     <section>
         <h1>
@@ -95,6 +170,10 @@
                         tarifs
                     </div>
                 {% endif %}
+                <div id="data_code_passerelles" role="tabpanel" class="tab-pane fade">
+                    {% set saisonCodePasserelles = form.saisonCodePasserelles %}
+                    {{ block('block_saison_code_passerelle') }}
+                </div>
             </div>
             {{ form_row(form.submit) }}
             {{ form_row(form._token) }}
@@ -307,6 +386,25 @@
                 $FormLi.remove();
             });
         }
+    </script>
+
+    <script type="text/javascript">
+        $('.addCodePasserelle').on('click', function (event) {
+            var keySaisonCodePasserelle = $(this).data('key-saison-code-passerelle');
+            var $collection = $('#logement_unifie_saisonCodePasserelles_' + keySaisonCodePasserelle + '_codePasserelles');
+            var prototype = $collection.data('prototype');
+            var index = $collection.data('index');
+            var newForm = prototype.replace(/__name_code_passerelle_label__/g, index);
+            $collection.data('index', index + 1);
+            var $newForm = $(newForm);
+            $collection.append($newForm);
+        });
+
+        function removeCodePasserelleForm(element, event) {
+            event.preventDefault();
+            $(element).closest('.item').remove();
+        }
+
     </script>
 
 {% endblock %}

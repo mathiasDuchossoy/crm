@@ -6,6 +6,7 @@ use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\HebergementBundle\Entity\Reception;
 use Mondofute\Bundle\HebergementBundle\Repository\ReceptionRepository;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Form\SaisonCodePasserelleType;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
@@ -91,7 +92,15 @@ class FournisseurHebergementType extends AbstractType
                 array(
                     'label' => 'ajouter',
                     'attr' => array('class' => 'btn btn-default addReception', 'title' => 'ajouter.reception')
-                ));
+                ))
+            ->add('saisonCodePasserelles', CollectionType::class,
+                [
+                    'prototype_name' => '__name_saison_code_passerelle_label__',
+                    'entry_type' => SaisonCodePasserelleType::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true
+                ]);
 
     }
 
@@ -129,6 +138,5 @@ class FournisseurHebergementType extends AbstractType
 //        ajoute l'option 'nouveau' dans le select remise de clef
         $option = new ChoiceView(array(), 'add', 'nouveau');
         $view->children['remiseClef']->vars['choices'][] = $option;
-
     }
 }
