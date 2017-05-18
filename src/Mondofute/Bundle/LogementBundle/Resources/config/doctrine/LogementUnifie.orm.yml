@@ -24,5 +24,8 @@ Mondofute\Bundle\LogementBundle\Entity\LogementUnifie:
             targetEntity: Mondofute\Bundle\LogementBundle\Entity\Logement
             mappedBy: logementUnifie
             cascade: ['persist','remove']
-
+    manyToMany:
+        saisonCodePasserelles:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

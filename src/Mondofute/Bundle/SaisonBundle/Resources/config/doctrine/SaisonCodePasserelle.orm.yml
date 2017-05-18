@@ -1,0 +1,19 @@
+Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\SaisonBundle\Repository\SaisonCodePasserelleRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    manyToOne:
+        saison:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\Saison
+    oneToMany:
+        codePasserelles:
+            targetEntity: Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle
+            mappedBy: saisonCodePasserelle
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

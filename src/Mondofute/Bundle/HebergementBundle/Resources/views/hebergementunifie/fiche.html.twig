@@ -1,5 +1,91 @@
 {% extends '::base.html.twig' %}
 
+{% block bouton_supprimer %}
+    <div class="col-sm-1">
+        <a href="#" class="btn btn-danger remove_item" onclick="removeCodePasserelleForm(this,event);"><i
+                    class="glyphicon glyphicon-minus"></i></a>
+    </div>
+{% endblock %}
+
+{% block  block_code_passerelle %}
+    <div>
+        <div class="form-group item"
+             id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}">
+            <label class="col-sm-2 control-label required"
+                   for="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle">libellé</label>
+            <div class="col-sm-9"><input
+                        id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}_libelle"
+                        name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][codePasserelles][{{ name_codePasserelle }}][libelle]"
+                        required="required" maxlength="255" class="form-control"
+                        value="{% if valueCodePasserelle is defined %}{{ valueCodePasserelle }}{% endif %}" type="text">
+
+            </div>
+            {% if valueCodePasserelle is defined %}
+                {{ block('bouton_supprimer') }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block block_saison_code_passerelle %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Code passerelle</div>
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                {% for keySaison, saison in saisons %}
+                    <li role="presentation" class="{% if keySaison == 0 %}active{% endif %}">
+                        <a href="#saison_code_passerelle_{{ name }}_{{ keySaison }}"
+                           aria-controls="saison_code_passerelle_{{ name }}_{{ keySaison }}" role="tab"
+                           data-toggle="tab">{{ saison.libelle }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                {% for keySaisonCodePasserelle, saisonCodePasserelle in saisonCodePasserelles %}
+                    {% if saisonCodePasserelle.saison is defined %}
+                        {% set saisonId = saisonCodePasserelle.saison.vars.value %}
+                    {% else %}
+                        {% set saisonId =  saisonCodePasserelle.id %}
+                    {% endif %}
+                    <div role="tabpanel" class="tab-pane {% if keySaisonCodePasserelle == 0 %}active{% endif %}"
+                         id="saison_code_passerelle_{{ name }}_{{ keySaisonCodePasserelle }}">
+                        <div class="form-group">
+                            {#{{ form_label(fournisseur.saisonCodePasserelles) }}#}
+                            <div class="col-sm-10">
+                                <div id="hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles"
+                                     data-prototype="{% set name_codePasserelle = '__name_code_passerelle_label__' %}{{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') | e ('html') }}"
+                                     {% if saisonCodePasserelle.codePasserelles is defined %}data-index="{{ saisonCodePasserelle.codePasserelles | length }}"{% endif %}
+                                >
+                                    {% if saisonCodePasserelle.codePasserelles is defined %}
+                                        {% for keyCodePasserelle , codePasserelle in saisonCodePasserelle.codePasserelles %}
+                                            {% set name = fournisseur.fournisseur.vars.value %}
+                                            {% set name_codePasserelle = keyCodePasserelle %}
+                                            {% set valueCodePasserelle = codePasserelle.vars.value.libelle %}
+                                            {{ block('block_code_passerelle', '@MondofuteHebergement/hebergementunifie/fiche.html.twig') }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <input name="hebergement_unifie[fournisseurs][{{ keyFournisseur }}][saisonCodePasserelles][{{ keySaisonCodePasserelle }}][saison]"
+                                           type="hidden" value="{{ saisonId }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button"
+                                    class="btn btn-default addCodePasserelle btn"
+                                    data-fournisseur="{{ name }}"
+                                    data-key-saison-code-passerelle="{{ keySaisonCodePasserelle }}">ajouter
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block body %}
     <section>
         <h1>
@@ -237,93 +323,14 @@
                     <div id="form_fournisseurs"
                          data-traduction-prototype="{{ form_widget(form.fournisseurs.vars['prototype'].traductions.vars['prototype']) | e }}"
                          data-prototype="{{ form_widget(form.children['fournisseurs'].vars['prototype']) | e }}"
+                            {#data-prototype="{% filter escape %}{% include ('@MondofuteHebergement/hebergementunifie/prototype-fournisseur-hebergement.html.twig')#}
+                            {#with {'fournisseur' : form_widget(form.children['fournisseurs'].vars['prototype']),#}
+                            {#keyFournisseur : 0#}
+                            {#} %}{% endfilter %}"#}
                          class="row">
-                        {% for fournisseur in form.fournisseurs %}
-                        {% if fournisseur.vars.value.fournisseur is not null %}
-                            <div id="fournisseur{{ fournisseur.vars.value.fournisseur.id }}"
-                                 class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        Fournisseur: {{ fournisseur.vars.value.fournisseur.enseigne }}</h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12">
-                                            <button title="{{ 'liste.logements' | trans }}" name="liste_logements"
-                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
-                                                    class="btn btn-default"
-                                                    type="button"><span
-                                                        class="glyphicon glyphicon-list"></span> {{ 'logements' | trans }}
-                                            </button>
-                                            <button title="{{ 'prestation_annexe.stocks_hebergement' | trans }}"
-                                                    name="prestation-annexe-stocks-hebergement"
-                                                    data-fournisseur-hebergement="{{ fournisseur.vars.value.id }}"
-                                                    class="btn btn-default"
-                                                    type="button"><span
-                                                        class="glyphicon glyphicon-list"></span> {{ 'stocks' | trans }}
-                                            </button>
-                                        </div>
-                                    </div>
-                                    {{ form_row(fournisseur.fournisseur) }}
-                                    {{ form_row(fournisseur.telFixe) }}
-                                    {{ form_row(fournisseur.telMobile) }}
-                                    {{ form_row(fournisseur.adresse) }}
-                                    {{ form_row(fournisseur.remiseClef, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label required">Receptions</label>
-                                        <div class="col-sm-10">
-                                            <div id="hebergement_unifie_fournisseurs_0_receptions"
-                                                 data-fournisseur="{{ fournisseur.fournisseur.vars.value }}">
-                                                {% for reception in fournisseur.receptions.vars.choices %}
-                                                    {#Gestion du libelle à afficher#}
-                                                    {#traduction du jour#}
-                                                    {% set libelle = ('Jour.'~reception.data.jour~'.Libelle') | trans %}
-                                                    {#traduction de la tranche1#}
-                                                    {% set libelle = libelle~' '~('de'|trans)~' '~(reception.data.tranche1.debut|date("H"))~('h'|trans)~(reception.data.tranche1.debut|date("i")) %}
-                                                    {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche1.fin|date("H"))~('h'|trans)~(reception.data.tranche1.fin|date("i")) %}
-                                                    {# verification qu'au moins une des donnees de la tranche2 soit différente de 00 #}
-                                                    {% if((reception.data.tranche2.debut|date("H") != '00') or (reception.data.tranche2.debut|date("i") != '00') or (reception.data.tranche2.fin|date("H") != '00') or (reception.data.tranche2.fin|date("i") != '00')) %}
-                                                        {#traduction de la tranche2#}
-                                                        {% set libelle = libelle~' '~('et'|trans)~' '~('de'|trans)~' '~(reception.data.tranche2.debut|date("H"))~('h'|trans)~(reception.data.tranche2.debut|date("i")) %}
-                                                        {% set libelle = libelle~' '~('à'|trans)~' '~ (reception.data.tranche2.fin|date("H"))~('h'|trans)~(reception.data.tranche2.fin|date("i")) %}
-                                                    {% endif %}
-                                                    {#affichage de la donnée#}
-                                                    {{ form_widget(fournisseur.receptions.children[reception.value], {'label': libelle}) }}
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{ form_row(fournisseur.button, {'attr':{'data-fournisseur': fournisseur.fournisseur.vars.value}}) }}
-                                    <ul class="nav nav-tabs">
-                                        {#gestion du premier onglet#}
-                                        {% set first = true %}
-                                        {% set idLangue = 0 %}
-                                        {% for langue in langues %}
-                                            <li {% if(first==true) %}class="active"{% set first = false %}{% set idLangue = langue.id %}{% endif %}>
-                                                <a href="#fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ langue.id }}"
-                                                   data-toggle="tab" aria-expanded="true">
-                                                    {% for traduction in langue.traductions %}
-                                                        {% if (traduction.langue == langue and traduction.langueTraduction.code == app.request.locale) %}
-                                                            {{ traduction.libelle }}
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                    <div class="tab-content">
-                                        {% for traduction in fournisseur.traductions %}
-                                            {#affichage de la zone de traduction avec affichage de la premiere langue trouvée plus haut#}
-                                            <div id="fournisseur_hebergement_{{ fournisseur.vars.value.fournisseur.id }}_langue_{{ traduction.vars.value.langue.id }}"
-                                                 class="tab-pane fade in {% if (idLangue == traduction.vars.value.langue.id) %}active{% endif %}">
-
-                                                    {{ form_widget(traduction) }}
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                        {% set nbFournisseurs = nbFournisseurs + 1 %}
-                                    </div>
-                                </div>
+                        {% for keyFournisseur, fournisseur in form.fournisseurs %}
+                            {% if fournisseur.vars.value.fournisseur is not null %}
+                                {% include ('@MondofuteHebergement/hebergementunifie/prototype-fournisseur-hebergement.html.twig') %}
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -738,16 +745,26 @@
 //            récupère le prototype du formulaire FournisseurHebergementType
             var formPrototype = $formFournisseurHebergement.attr('data-prototype');
 
-            formTraductions = genererFormulaireFournisseurHebergementTraductions(id, _langues);
+            var formTraductions = genererFormulaireFournisseurHebergementTraductions(id, _langues);
+
+            {% set keyFournisseur = '__keyFournisseur__' %}
+            {% set name = '__name__' %}
+            {% set name_codePasserelle = '__name_code_passerelle_label__' %}
+            {% set saisonCodePasserelles = saisons %}
+            var prototypePasserelle = '{{ block('block_saison_code_passerelle') | e('js') }}';
+            prototypePasserelle = prototypePasserelle.replace(/__name__/g, id);
+            prototypePasserelle = prototypePasserelle.replace(/__keyFournisseur__/g, id);
 
 //            mise en forme du formulaire
-            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + formTraductions + '</div></div></div>';
+            var newForm = '<div><div id="fournisseur' + id + '" class="panel panel-default"><div class="panel-heading"><h1 class="panel-title"> Fournisseur: ' + label + '</h1></div><div class="panel-body">' + formPrototype.replace(/__name__/g, id) + prototypePasserelle + formTraductions + '</div></div></div>';
             var $newForm = $(newForm);
 //            donnes la valeur du fournisseur dans le hidden fournisseur
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_fournisseur"] option[value="' + id + '"]').attr('selected', 'selected');
             $newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]').attr('data-fournisseur', id);
             $newForm.find('#hebergement_unifie_fournisseurs_' + id + '_receptions').attr('data-fournisseur', id);
             $newForm.find('.addReception').attr('data-fournisseur', id);
+//            $newForm.find('.addCodePasserelle').attr('data-fournisseur', id);
+
             supprimerRemiseClefParFournisseur($newForm.find('select[id="hebergement_unifie_fournisseurs_' + id + '_remiseClef"]'));
             supprimerReceptionParFournisseur($newForm.find('[id$="_receptions"]'));
 //            ajoute le formulaire dans la page
@@ -980,12 +997,33 @@
             $(document).on('click', 'button.addReception', function () {
                 afficherModaleAjoutReception($(this).attr('data-fournisseur'));
             });
+            $(document).on('click', 'button.addCodePasserelle', function () {
+                var keyFournisseur = $(this).data('fournisseur');
+                var keySaisonCodePasserelle = $(this).data('key-saison-code-passerelle');
+//                console.log(keyFournisseur);
+                {#hebergement_unifie_fournisseurs_{{ name }}_saisonCodePasserelles_{{ keySaisonCodePasserelle }}_codePasserelles_{{ name_codePasserelle }}#}
+                var $collectionHolder = $('#hebergement_unifie_fournisseurs_' + keyFournisseur + '_saisonCodePasserelles_' + keySaisonCodePasserelle + '_codePasserelles');
+                var prototype = $collectionHolder.data('prototype');
+                var index = $collectionHolder.data('index');
+                if (!index) index = 0;
+                var newForm = prototype.replace(/__name_code_passerelle_label__/g, index);
+                var $newForm = $(newForm);
+                var $input = $newForm.find('div#hebergement_unifie_fournisseurs_' + keyFournisseur + '_saisonCodePasserelles_' + keySaisonCodePasserelle + '_codePasserelles_' + index);
+                var $boutonSupprimer = $('{{ block('bouton_supprimer') | e('js') }}');
+
+//                console.log($newForm);
+                console.log($input);
+                $collectionHolder.data('index', index + 1);
+                $newForm.data('index', index);
+                $collectionHolder.append($input);
+                $input.append($boutonSupprimer);
+//                $collectionHolder.append($newForm);
+            });
             $(document).on('click', 'button[name="liste_logements"]', function () {
                 afficherModalListeLogements(parseInt($(this).attr('data-fournisseur-hebergement')));
             });
             $(document).on('click', 'button[name="prestation-annexe-stocks-hebergement"]', function () {
                 afficherModalPrestationAnnexeStocksHebergement(parseInt($(this).attr('data-fournisseur-hebergement')));
-//                alert('ok');
             });
         });
     </script>
@@ -1163,6 +1201,11 @@
             $('#hebergement_unifie_submit').prop('disabled', false);
             $('#remise_clef_submit').prop('disabled', false);
         });
+
+        function removeCodePasserelleForm(element, event) {
+            event.preventDefault();
+            $(element).closest('.item').remove();
+        }
 
     </script>
 

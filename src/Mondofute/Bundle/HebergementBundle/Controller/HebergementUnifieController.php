@@ -13,6 +13,7 @@ use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoFournisseur;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoHebergement;
 use Mondofute\Bundle\CodePromoApplicationBundle\Entity\CodePromoLogement;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
+use Mondofute\Bundle\DecoteBundle\Entity\DecoteHebergement;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseur;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeFournisseurUnifie;
@@ -39,10 +40,12 @@ use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
 use Mondofute\Bundle\SaisonBundle\Entity\Saison;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonFournisseur;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
 use Mondofute\Bundle\ServiceBundle\Entity\ListeService;
@@ -322,6 +325,7 @@ class HebergementUnifieController extends Controller
             'langues' => $langues,
             'entity' => $entityUnifie,
             'form' => $formView,
+            'saisons' => $em->getRepository(Saison::class)->findAll()
         ));
     }
 
@@ -910,6 +914,7 @@ class HebergementUnifieController extends Controller
                     }
                     $emSite->persist($serviceSite);
                 }
+
 //                balaye les fournisseurHebergement et copie les données
                 foreach ($entityUnifie->getFournisseurs() as $fournisseur) {
                     if (empty($fournisseurSite = $emSite->getRepository(FournisseurHebergement::class)->findOneBy(array(
@@ -920,6 +925,7 @@ class HebergementUnifieController extends Controller
 //                        initialise un objet
                         $fournisseurSite = new FournisseurHebergement();
                     }
+
                     foreach ($fournisseurSite->getReceptions() as $receptionSite) {
                         $fournisseurSite->removeReception($receptionSite);
                     }
@@ -949,6 +955,10 @@ class HebergementUnifieController extends Controller
                         ->setFournisseur($emSite->getRepository(Fournisseur::class)->findOneBy(array('id' => $fournisseur->getFournisseur()->getId())));
                     $fournisseurSite->setRemiseClef($emSite->getRepository(RemiseClef::class)->findOneBy(array('id' => $fournisseur->getRemiseClef()->getId())));
                     $entityUnifieSite->addFournisseur($fournisseurSite);
+
+                    // *** gestion codes passerelle ***
+                    $this->gestionCodePasserelleSite($fournisseurSite, $fournisseur, $emSite);
+                    // *** fin gestion codes passerelle ***
                 }
 //            Récupération de l'hébergement sur le site distant si elle existe sinon créer une nouvelle entité
                 if (empty(($entitySite = $emSite->getRepository(Hebergement::class)->findOneBy(array('hebergementUnifie' => $entityUnifieSite))))) {
@@ -1330,6 +1340,63 @@ class HebergementUnifieController extends Controller
         $telMobileFournisseurSite
             ->setSmsing($telMobileFournisseur->getSmsing())
             ->setNumero($telMobileFournisseur->getNumero());
+    }
+
+    /**
+     * @param FournisseurHebergement $fournisseurSite
+     * @param FournisseurHebergement $fournisseur
+     * @param EntityManager $emSite
+     */
+    private function gestionCodePasserelleSite($fournisseurSite, $fournisseur, $emSite)
+    {
+        /** @var CodePasserelle $codePasserelle */
+        /** @var CodePasserelle $codePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelleSite */
+        /** @var SaisonCodePasserelle $saisonCodePasserelle */
+        foreach ($fournisseurSite->getSaisonCodePasserelles() as $saisonCodePasserelleSite) {
+            $saisonCodePasserelle = $fournisseur->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelleSite) {
+                return $element->getId() == $saisonCodePasserelleSite->getId();
+            })->first();
+            if (false === $saisonCodePasserelle) {
+                $fournisseurSite->removeSaisonCodePasserelle($saisonCodePasserelleSite);
+            } else {
+                foreach ($saisonCodePasserelleSite->getCodePasserelles() as $codePasserelleSite) {
+                    $codePasserelle = $saisonCodePasserelle->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelleSite) {
+                        return $element->getId() == $codePasserelleSite->getId();
+                    })->first();
+                    if (false === $codePasserelle) {
+                        $saisonCodePasserelleSite->removeCodePasserelle($codePasserelleSite);
+                        $emSite->remove($codePasserelleSite);
+                    }
+                }
+            }
+        }
+        foreach ($fournisseur->getSaisonCodePasserelles() as $saisonCodePasserelle) {
+            $saisonCodePasserelleSite = $fournisseurSite->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saisonCodePasserelle) {
+                return $element->getId() == $saisonCodePasserelle->getId();
+            })->first();
+            if (false === $saisonCodePasserelleSite) {
+                $saisonCodePasserelleSite = new SaisonCodePasserelle();
+                $saisonCodePasserelleSite->setId($saisonCodePasserelle->getId());
+                $metadata = $emSite->getClassMetadata(get_class($saisonCodePasserelleSite));
+                $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                $fournisseurSite->addSaisonCodePasserelle($saisonCodePasserelleSite);
+                $saisonCodePasserelleSite->setSaison($emSite->find(Saison::class, $saisonCodePasserelle->getSaison()));
+            }
+            foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                $codePasserelleSite = $saisonCodePasserelleSite->getCodePasserelles()->filter(function (CodePasserelle $element) use ($codePasserelle) {
+                    return $element->getId() == $codePasserelle->getId();
+                })->first();
+                if (false === $codePasserelleSite) {
+                    $codePasserelleSite = new CodePasserelle();
+                    $codePasserelleSite->setId($codePasserelle->getId());
+                    $metadata = $emSite->getClassMetadata(get_class($codePasserelleSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    $saisonCodePasserelleSite->addCodePasserelle($codePasserelleSite);
+                }
+                $codePasserelleSite->setLibelle($codePasserelle->getLibelle());
+            }
+        }
     }
 
     public function gestionEmplacementsSiteDistant(Site $site, Hebergement $entity, Hebergement $entitySite)
@@ -1889,6 +1956,9 @@ class HebergementUnifieController extends Controller
         $deleteForm = $this->createDeleteForm($entityUnifie);
         $this->addSaisons($entityUnifie);
 
+        $saisons = $em->getRepository(Saison::class)->findAll();
+        $this->addSaisonCodePasserelle($entityUnifie, $saisons);
+
         $editForm = $this->createForm('Mondofute\Bundle\HebergementBundle\Form\HebergementUnifieType',
             $entityUnifie, array('locale' => $request->getLocale()))
             ->add('submit', SubmitType::class, array(
@@ -1896,14 +1966,33 @@ class HebergementUnifieController extends Controller
                 'attr' => array('onclick' => 'copieNonPersonnalisable();remplirChampsVide();')
             ));
 
+
         // *** récupération originals fournisseurHebergement ***
         $originalFournisseurHebergements = new ArrayCollection();
-        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+        $originalCodePasserelles = new ArrayCollection();
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($entityUnifie->getFournisseurs() as $keyFournisseurHebergement => $fournisseurHebergement) {
             $originalFournisseurHebergements->add($fournisseurHebergement);
+            // /* originales codePasserelles
+            $originalCodePasserelles->set($keyFournisseurHebergement, new ArrayCollection());
+            foreach ($fournisseurHebergement->getSaisonCodePasserelles() as $key => $saisonCodePasserelle) {
+                $originalCodePasserelles->get($keyFournisseurHebergement)->set($key, new ArrayCollection());
+                foreach ($saisonCodePasserelle->getCodePasserelles() as $codePasserelle) {
+                    $originalCodePasserelles->get($keyFournisseurHebergement)->get($key)->add($codePasserelle);
+                }
+            }
+            // fin originales codePasserelles */
         }
         // *** fin récupération originals gestion fournisseurHebergement ***
 
+
         $editForm->handleRequest($request);
+
+//        dump($entityUnifie->getFournisseurs()->last()->getSaisonCodePasserelles());die;
+
+        // ********************************
+        // *** VALIDATION DU FORMULAIRE ***
+        // ********************************
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             foreach ($entityUnifie->getHebergements() as $entity) {
                 if (false === in_array($entity->getSite()->getId(), $sitesAEnregistrer)) {
@@ -2060,7 +2149,7 @@ class HebergementUnifieController extends Controller
 
             // *** gestion suppression fournisseurs hebergement ***
             /** @var FournisseurHebergement $originalFournisseurHebergement */
-            foreach ($originalFournisseurHebergements as $originalFournisseurHebergement) {
+            foreach ($originalFournisseurHebergements as $keyFournisseurHebergement => $originalFournisseurHebergement) {
                 if (false === $entityUnifie->getFournisseurs()->contains($originalFournisseurHebergement)) {
                     // *** suppression des code promo logement ***
                     foreach ($entityUnifie->getHebergements() as $hebergement) {
@@ -2102,10 +2191,17 @@ class HebergementUnifieController extends Controller
                     }
                     // *** fin suppression des decoteHebergements correspondants ***
                     $em->remove($originalFournisseurHebergement);
+                } else {
+                    foreach ($originalCodePasserelles->get($keyFournisseurHebergement) as $keySaisonCodePasserelle => $saisonCodePasserelles) {
+                        foreach ($saisonCodePasserelles as $codePasserelle) {
+                            if(false === $entityUnifie->getFournisseurs()->get($keyFournisseurHebergement)->getSaisonCodePasserelles()->get($keySaisonCodePasserelle)->getCodePasserelles()->contains($codePasserelle)) {
+                                $entityUnifie->getFournisseurs()->get($keyFournisseurHebergement)->getSaisonCodePasserelles()->get($keySaisonCodePasserelle)->removeCodePasserelle($codePasserelle);
+                                $em->remove($codePasserelle);
+                            }
+                        }
+                    }
                 }
             }
-
-
             // *** fin gestion suppression des fournisseurs hebergement ***
 
             // ***** Gestion des Medias *****
@@ -2131,7 +2227,7 @@ class HebergementUnifieController extends Controller
                         $entitySite = $entityUnifie->getHebergements()->filter(function (Hebergement $element) use (
                             $site
                         ) {
-                            return $element->getSite() == $site;
+                            return $element->getSite() === $site;
                         })->first();
                         // si hébergement existe
                         if (!empty($entitySite)) {
@@ -2156,7 +2252,7 @@ class HebergementUnifieController extends Controller
                             }
                             // si l'hébergemenent visuel existe déjà pour le site
                             if (!empty($entityVisuelSite)) {
-                                if ($entityVisuelSite->getVisuel() != $entityVisuel->getVisuel()) {
+                                if ($entityVisuelSite->getVisuel() !== $entityVisuel->getVisuel()) {
 //                                    // si l'hébergementVisuelSite avait déjà un visuel
 //                                    if (!empty($entityVisuelSite->getVisuel()) && !$visuelToRemoveCollection->contains($entityVisuelSite->getVisuel()))
 //                                    {
@@ -2177,7 +2273,7 @@ class HebergementUnifieController extends Controller
                                         $traductionSite = $traductionSites->filter(function (
                                             HebergementVisuelTraduction $element
                                         ) use ($traduction) {
-                                            return $element->getLangue() == $traduction->getLangue();
+                                            return $element->getLangue() === $traduction->getLangue();
                                         })->first();
                                     }
                                     if (empty($traductionSite)) {
@@ -2240,7 +2336,7 @@ class HebergementUnifieController extends Controller
                     if ($hebergement->getStation()->getId() != $originalStations->get($hebergement->getId())->getId()) {
                         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                             $logement = $fournisseurHebergement->getLogements()->filter(function (Logement $element) use ($hebergement) {
-                                return $element->getSite() == $hebergement->getSite();
+                                return $element->getSite() === $hebergement->getSite();
                             })->first();
                             if (false !== $logement) {
                                 $this->gestionPromotionStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());
@@ -2344,7 +2440,29 @@ class HebergementUnifieController extends Controller
             'sitesAEnregistrer' => $sitesAEnregistrer,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'saisons' => $saisons
         ));
+    }
+
+    /**
+     * @param HebergementUnifie $entityUnifie
+     * @param ArrayCollection $saisons
+     */
+    private function addSaisonCodePasserelle(HebergementUnifie $entityUnifie, $saisons)
+    {
+        /** @var FournisseurHebergement $fournisseurHebergement */
+        foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
+            foreach ($saisons as $saison) {
+                $saisonCodePasserelle = $fournisseurHebergement->getSaisonCodePasserelles()->filter(function (SaisonCodePasserelle $element) use ($saison) {
+                    return $element->getSaison() == $saison;
+                })->first();
+                if (false === $saisonCodePasserelle) {
+                    $saisonCodePasserelle = new SaisonCodePasserelle();
+                    $saisonCodePasserelle->setSaison($saison);
+                    $fournisseurHebergement->addSaisonCodePasserelle($saisonCodePasserelle);
+                }
+            }
+        }
     }
 
     private function deleteTarifSites(ServiceHebergementTarif $tarif)
@@ -2362,7 +2480,6 @@ class HebergementUnifieController extends Controller
 //                $listeServiceSite->setFournisseur(null);
 //                $emSite->remove($listeServiceSite);
             }
-
         }
     }
 
@@ -2383,7 +2500,6 @@ class HebergementUnifieController extends Controller
 //                $emSite->remove($listeServiceSite);
                 }
             }
-
         }
     }
 

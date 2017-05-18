@@ -51,4 +51,9 @@ Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationA
             targetEntity: Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeStockFournisseur
             mappedBy: fournisseurPrestationAnnexe
             cascade: ['remove']
+    manyToMany:
+        saisonCodePasserelles:
+            targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle
+            cascade: ['persist','remove']
+            orphanRemoval: true
     lifecycleCallbacks: {  }

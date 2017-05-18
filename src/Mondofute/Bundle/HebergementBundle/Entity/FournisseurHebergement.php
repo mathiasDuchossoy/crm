@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\RemiseClefBundle\Entity\RemiseClef;
+use Mondofute\Bundle\SaisonBundle\Entity\SaisonCodePasserelle;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\CoordonneesGPS;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
@@ -58,6 +59,10 @@ class FournisseurHebergement
      * @var Collection
      */
     private $logements;
+    /**
+     * @var Collection
+     */
+    private $saisonCodePasserelles;
 
     /**
      * FournisseurHebergement constructor.
@@ -73,6 +78,7 @@ class FournisseurHebergement
         $this->telMobile->setDateCreation();
         $this->receptions = new ArrayCollection();
         $this->logements = new ArrayCollection();
+        $this->saisonCodePasserelles = new ArrayCollection();
     }
 
     /**
@@ -336,5 +342,48 @@ class FournisseurHebergement
     public function getLogements()
     {
         return $this->logements;
+    }
+
+    /**
+     * Remove saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     */
+    public function removeSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles->removeElement($saisonCodePasserelle);
+    }
+
+    /**
+     * Get saisonCodePasserelles
+     *
+     * @return Collection
+     */
+    public function getSaisonCodePasserelles()
+    {
+        $iterator = $this->saisonCodePasserelles->getIterator();
+        $iterator->uasort(function (SaisonCodePasserelle $a, SaisonCodePasserelle $b) {
+            return ($a->getSaison()->getDateDebut() > $b->getSaison()->getDateDebut()) ? -1 : 1;
+        });
+        $this->saisonCodePasserelles->clear();
+        $newCodePasserelles = new ArrayCollection(iterator_to_array($iterator));
+        foreach ($newCodePasserelles as $item) {
+            $this->addSaisonCodePasserelle($item);
+        }
+        return $this->saisonCodePasserelles;
+    }
+
+    /**
+     * Add saisonCodePasserelle
+     *
+     * @param SaisonCodePasserelle $saisonCodePasserelle
+     *
+     * @return FournisseurHebergement
+     */
+    public function addSaisonCodePasserelle(SaisonCodePasserelle $saisonCodePasserelle)
+    {
+        $this->saisonCodePasserelles[] = $saisonCodePasserelle;
+
+        return $this;
     }
 }
