@@ -1361,7 +1361,7 @@ class FournisseurController extends Controller
                 }
             }
             /** @var PrestationAnnexeLogement $item */
-            foreach ($param->getPrestationAnnexeLogements() as $item) {
+            foreach ($param->getPrestationAnnexeFournisseurs() as $item) {
                 if (!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeLogementUnifie())) {
                     $prestationAnnexeUnifies->add($item->getPrestationAnnexeLogementUnifie());
                 }
@@ -3929,6 +3929,9 @@ class FournisseurController extends Controller
         }
 
         $em->persist($fournisseurPrestationAnnexe);
+
+//        die;
+
         $em->flush();
 
         $this->mAJSites($fournisseur);
