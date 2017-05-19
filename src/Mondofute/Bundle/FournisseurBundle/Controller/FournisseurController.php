@@ -1361,7 +1361,7 @@ class FournisseurController extends Controller
                 }
             }
             /** @var PrestationAnnexeLogement $item */
-            foreach ($param->getPrestationAnnexeFournisseurs() as $item) {
+            foreach ($param->getPrestationAnnexeLogements() as $item) {
                 if (!$prestationAnnexeUnifies->contains($item->getPrestationAnnexeLogementUnifie())) {
                     $prestationAnnexeUnifies->add($item->getPrestationAnnexeLogementUnifie());
                 }
@@ -1971,7 +1971,10 @@ class FournisseurController extends Controller
                                 $paramSite->addTarif($tarifSite);
                             }
                             $tarifSite
-                                ->setPrixPublic($tarif->getPrixPublic());
+                                ->setPrixCatalogue($tarif->getPrixCatalogue())
+                                ->setPrixPublic($tarif->getPrixPublic())
+                                ->setComMondofute($tarif->getComMondofute())
+                                ->setPrixAchat($tarif->getPrixAchat());
                             // *** periode validite ***
                             /** @var PeriodeValidite $periodeValidite */
                             foreach ($tarif->getPeriodeValidites() as $periodeValidite) {
@@ -3428,7 +3431,7 @@ class FournisseurController extends Controller
                         $traduction = $param->getTraductions()->filter(function (
                             FournisseurPrestationAnnexeParamTraduction $element
                         ) use ($langue) {
-                            return $element->getLangue() == $langue;
+                            return $element->getLangue() === $langue;
                         })->first();
                         if (false === $traduction) {
                             $traduction = new FournisseurPrestationAnnexeParamTraduction();
@@ -3470,7 +3473,11 @@ class FournisseurController extends Controller
                                     $param->addTarif($tarif);
                                 }
 
-                                $tarif->setPrixPublic($tarifPost->prixPublic);
+                                $tarif
+                                    ->setPrixCatalogue($tarifPost->prixCatalogue)
+                                    ->setPrixPublic($tarifPost->prixPublic)
+                                    ->setComMondofute($tarifPost->comMondofute)
+                                    ->setPrixAchat($tarifPost->prixAchat);
 
                                 if (!empty($tarifPost->periodeValidites)) {
                                     $periodeValiditePosts = $tarifPost->periodeValidites;
@@ -3929,9 +3936,6 @@ class FournisseurController extends Controller
         }
 
         $em->persist($fournisseurPrestationAnnexe);
-
-//        die;
-
         $em->flush();
 
         $this->mAJSites($fournisseur);

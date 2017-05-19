@@ -31,8 +31,9 @@ class TarifLocatifController extends Controller
                             'logement_id',
                             'periode_id',
                             'stock',
+                            'prix_catalogue',
                             'prix_public',
-                            'prix_fournisseur',
+                            'com_mondofute',
                             'prix_achat'
                         );
                         $table = 'logement_periode_locatif';
@@ -51,8 +52,9 @@ class TarifLocatifController extends Controller
                                             $logement->getId(),
                                             $tarif['periodeId'],
                                             $tarif['stock'],
+                                            $tarif['prixCatalogue'],
                                             $tarif['prixPublic'],
-                                            $tarif['prixFournisseur'],
+                                            $tarif['comMondofute'],
                                             $tarif['prixAchat']
                                         ));
                                     }

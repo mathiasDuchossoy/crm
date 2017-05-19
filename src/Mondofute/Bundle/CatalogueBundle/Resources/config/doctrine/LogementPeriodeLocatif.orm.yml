@@ -10,13 +10,19 @@ Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif:
         logement:
             associationKey: true
     fields:
+        prixCatalogue:
+            type: decimal
+            precision: 10
+            scale: '2'
+            options:
+                default: 0
         prixPublic:
             type: decimal
             precision: 10
             scale: '2'
             options:
                 default: 0
-        prixFournisseur:
+        comMondofute:
             type: decimal
             precision: 10
             scale: '2'
