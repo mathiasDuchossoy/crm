@@ -27,6 +27,18 @@ class PrestationAnnexeTarif
      * @var FournisseurPrestationAnnexeParam
      */
     private $param;
+    /**
+     * @var string
+     */
+    private $prixCatalogue;
+    /**
+     * @var string
+     */
+    private $comMondofute;
+    /**
+     * @var string
+     */
+    private $prixAchat;
 
     /**
      * Constructor
@@ -132,6 +144,78 @@ class PrestationAnnexeTarif
     public function setParam(FournisseurPrestationAnnexeParam $param = null)
     {
         $this->param = $param;
+
+        return $this;
+    }
+
+    /**
+     * Get prixCatalogue
+     *
+     * @return string
+     */
+    public function getPrixCatalogue()
+    {
+        return $this->prixCatalogue;
+    }
+
+    /**
+     * Set prixCatalogue
+     *
+     * @param string $prixCatalogue
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function setPrixCatalogue($prixCatalogue)
+    {
+        $this->prixCatalogue = $prixCatalogue;
+
+        return $this;
+    }
+
+    /**
+     * Get comMondofute
+     *
+     * @return string
+     */
+    public function getComMondofute()
+    {
+        return $this->comMondofute;
+    }
+
+    /**
+     * Set comMondofute
+     *
+     * @param string $comMondofute
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function setComMondofute($comMondofute)
+    {
+        $this->comMondofute = $comMondofute;
+
+        return $this;
+    }
+
+    /**
+     * Get prixAchat
+     *
+     * @return string
+     */
+    public function getPrixAchat()
+    {
+        return $this->prixAchat;
+    }
+
+    /**
+     * Set prixAchat
+     *
+     * @param string $prixAchat
+     *
+     * @return PrestationAnnexeTarif
+     */
+    public function setPrixAchat($prixAchat)
+    {
+        $this->prixAchat = $prixAchat;
 
         return $this;
     }

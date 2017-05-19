@@ -1,4 +1,21 @@
-{{ form_row(tarif.prixPublic) }}
+<table>
+    <thead>
+    <tr>
+        <th>{{ form_label(tarif.prixCatalogue) }}</th>
+        <th>{{ form_label(tarif.prixPublic) }}</th>
+        <th>{{ form_label(tarif.comMondofute) }}</th>
+        <th>{{ form_label(tarif.prixAchat) }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ form_widget(tarif.prixCatalogue, { 'type' : 'number' , 'attr' :{ 'min' : 0, 'step' : "any"}}) }}</td>
+        <td>{{ form_widget(tarif.prixPublic, { 'type' : 'number' , 'attr' :{ 'min' : 0, 'step' : "any"}}) }}</td>
+        <td>{{ form_widget(tarif.comMondofute, { 'type' : 'number' , 'attr' :{ 'min' : 0, 'step' : "any"}}) }}</td>
+        <td>{{ form_widget(tarif.prixAchat, { 'type' : 'number' , 'attr': { 'min' : 0, 'step' : "any"}}) }}</td>
+    </tr>
+    </tbody>
+</table>
 <h3>Périodes de validité</h3>
 <ul class="periode_validites_{{ keyParam }}_{{ name }}_{{ index }}"
         {#data-prototype="{{ form_widget(tarif.periodeValidites.vars.prototype)|e('html_attr') }}">#}
