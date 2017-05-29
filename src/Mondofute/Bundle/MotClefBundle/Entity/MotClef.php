@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\MotClefBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
  * MotClef
@@ -26,9 +25,9 @@ class MotClef
      */
     private $hebergements;
     /**
-     * @var Langue
+     * @var Collection
      */
-    private $langue;
+    private $traductions;
 
     /**
      * Constructor
@@ -36,6 +35,7 @@ class MotClef
     public function __construct()
     {
         $this->hebergements = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -121,26 +121,36 @@ class MotClef
     }
 
     /**
-     * Get langue
+     * Add traduction
      *
-     * @return Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
-    }
-
-    /**
-     * Set langue
-     *
-     * @param Langue $langue
+     * @param MotClefTraduction $traduction
      *
      * @return MotClef
      */
-    public function setLangue(Langue $langue = null)
+    public function addTraduction(MotClefTraduction $traduction)
     {
-        $this->langue = $langue;
+        $this->traductions[] = $traduction;
 
         return $this;
+    }
+
+    /**
+     * Remove traduction
+     *
+     * @param MotClefTraduction $traduction
+     */
+    public function removeTraduction(MotClefTraduction $traduction)
+    {
+        $this->traductions->removeElement($traduction);
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }
