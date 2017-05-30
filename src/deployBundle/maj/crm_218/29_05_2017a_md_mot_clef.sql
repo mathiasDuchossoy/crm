@@ -7,3 +7,5 @@ ALTER TABLE mot_clef_traduction_hebergement ADD CONSTRAINT FK_4DA9025D23BB0F66 F
 ALTER TABLE mot_clef DROP FOREIGN KEY FK_ADC770E42AADBACD;
 DROP INDEX IDX_ADC770E42AADBACD ON mot_clef;
 ALTER TABLE mot_clef DROP langue_id, DROP libelle;
+
+DROP TABLE `mot_clef_hebergement`;

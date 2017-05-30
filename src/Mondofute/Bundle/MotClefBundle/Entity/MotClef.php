@@ -89,7 +89,7 @@ class MotClef
      */
     public function addTraduction(MotClefTraduction $traduction)
     {
-        $this->traductions[] = $traduction;
+        $this->traductions[] = $traduction->setMotClef($this);
 
         return $this;
     }

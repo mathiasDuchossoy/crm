@@ -282,6 +282,19 @@
                     </ul>
                 </li>
                 {# ***** FIN SAISON ***** #}
+                {# ***** SAISON ***** #}
+                <li class="dropdown-submenu {% if 'motclef' in app.request.attributes.get('_route') %} active {% endif %}">
+                    <a role="button">{{ 'motclef' | trans |capitalize }}</a>
+                    <ul class="dropdown-menu">
+                        <li class="{% if 'mondofute_motclef_index' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('mondofute_motclef_index') }}">{{ 'liste' |capitalize }}</a>
+                        </li>
+                        <li class="{% if 'mondofute_motclef_new' in app.request.attributes.get('_route') %} active {% endif %}">
+                            <a href="{{ path('mondofute_motclef_new') }}">{{ 'ajouter' | capitalize }}</a>
+                        </li>
+                    </ul>
+                </li>
+                {# ***** FIN SAISON ***** #}
             </ul>
         </li>
         {# ***** FIN PARAMETRAGE ***** #}

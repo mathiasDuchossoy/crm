@@ -1,0 +1,27 @@
+{% extends '@MondofuteMotClef/motclef/fiche.html.twig' %}
+
+{% block title %}
+    {{ 'modification du mot clef' | capitalize }}
+{% endblock %}
+
+{#  GESTION DU TITRE A AFFICHER DANS LA PAGE #}
+{% block titre %}
+    Modification du grande ville
+{% endblock %}
+
+{#  BLOCK DES ACTIONS AUTRES QUE LA MISE A JOUR#}
+{% block actions %}
+    <div style="text-align: right">
+        <ul class="list-unstyled">
+            <li><a href="{{ path('mondofute_motclef_index') }}">{{ 'retour à la liste' | capitalize }}</a></li>
+            <li>{{ form(delete_form) }}</li>
+        </ul>
+
+    </div>
+
+{% endblock %}
+
+{#  GESTION DU BLOCK CONTENANT LE JAVASCRIPT#}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
