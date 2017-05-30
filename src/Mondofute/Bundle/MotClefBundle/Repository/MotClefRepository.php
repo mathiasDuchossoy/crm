@@ -10,15 +10,4 @@ namespace Mondofute\Bundle\MotClefBundle\Repository;
  */
 class MotClefRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findByLike($like, $langue)
-    {
-        $q = $this->createQueryBuilder('motClefRepository')
-            ->select('motClefRepository.id, motClefRepository.libelle text')
-            ->where('motClefRepository.libelle LIKE :val')
-            ->setParameter('val', '%' . $like . '%')
-            ->andWhere('motClefRepository.langue = :langue')
-            ->setParameter('langue', $langue);
-
-        return $q->getQuery()->getResult();
-    }
 }

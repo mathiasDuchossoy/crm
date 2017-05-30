@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
-use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -65,10 +64,6 @@ class Hebergement
      */
     private $actif = true;
     /**
-     * @var Collection
-     */
-    private $motClefs;
-    /**
      * @var HebergementCoupDeCoeur
      */
     private $coupDeCoeur;
@@ -84,6 +79,10 @@ class Hebergement
      * @var Collection
      */
     private $saisonHebergements;
+    /**
+     * @var Collection
+     */
+    private $motClefTraductions;
 
     /**
      * Constructor
@@ -94,10 +93,10 @@ class Hebergement
         $this->emplacements = new ArrayCollection();
         $this->moyenComs = new ArrayCollection();
         $this->visuels = new ArrayCollection();
-        $this->motClefs = new ArrayCollection();
         $this->prestationAnnexeHebergements = new ArrayCollection();
         $this->promotionHebergements = new ArrayCollection();
         $this->saisonHebergements = new ArrayCollection();
+        $this->motClefTraductions = new ArrayCollection();
     }
 
     /**
@@ -479,41 +478,6 @@ class Hebergement
     }
 
     /**
-     * Add motClef
-     *
-     * @param MotClef $motClef
-     *
-     * @return Hebergement
-     */
-    public function addMotClef(MotClef $motClef)
-    {
-        $this->motClefs[] = $motClef->addHebergement($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove motClef
-     *
-     * @param MotClef $motClef
-     */
-    public function removeMotClef(MotClef $motClef)
-    {
-        $this->motClefs->removeElement($motClef);
-        $motClef->removeHebergement($this);
-    }
-
-    /**
-     * Get motClefs
-     *
-     * @return Collection
-     */
-    public function getMotClefs()
-    {
-        return $this->motClefs;
-    }
-
-    /**
      * Add prestationAnnexeHebergement
      *
      * @param PrestationAnnexeHebergement $prestationAnnexeHebergement
@@ -621,5 +585,39 @@ class Hebergement
 
         // passer le tableau trié dans une nouvelle collection
         return new ArrayCollection(iterator_to_array($iterator));
+    }
+
+    /**
+     * Add motClefTraduction
+     *
+     * @param \Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction
+     *
+     * @return Hebergement
+     */
+    public function addMotClefTraduction(\Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction)
+    {
+        $this->motClefTraductions[] = $motClefTraduction;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClefTraduction
+     *
+     * @param \Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction
+     */
+    public function removeMotClefTraduction(\Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction)
+    {
+        $this->motClefTraductions->removeElement($motClefTraduction);
+    }
+
+    /**
+     * Get motClefTraductions
+     *
+     * @return Collection
+     */
+    public function getMotClefTraductions()
+    {
+        return $this->motClefTraductions;
     }
 }

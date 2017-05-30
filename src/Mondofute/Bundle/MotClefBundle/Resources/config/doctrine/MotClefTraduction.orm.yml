@@ -20,4 +20,8 @@ Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction:
         motClef:
             targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
             inversedBy: traductions
+    manyToMany:
+        hebergements:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: motClefTraductions
     lifecycleCallbacks: {  }

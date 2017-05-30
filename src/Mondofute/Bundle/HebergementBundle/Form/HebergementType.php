@@ -4,7 +4,7 @@ namespace Mondofute\Bundle\HebergementBundle\Form;
 
 use Mondofute\Bundle\HebergementBundle\Entity\TypeHebergement;
 use Mondofute\Bundle\HebergementBundle\Repository\TypeHebergementRepository;
-use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction;
 use Mondofute\Bundle\SaisonBundle\Form\SaisonHebergementType;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\StationBundle\Repository\StationRepository;
@@ -73,17 +73,16 @@ class HebergementType extends AbstractType
                 'by_reference' => false,
                 'required' => false,
             ))
-            ->add('motClefs', EntityType::class, array(
-                    'class' => MotClef::class,
-                    "choice_label" => "libelle",
-                    'multiple' => true,
+            ->add('motClefTraductions', EntityType::class, array(
+                'class' => MotClefTraduction::class,
+                "choice_label" => "libelle",
+                'multiple' => true,
 //                'expanded'  => true,
-                    'attr' => [
+                'attr' => [
 //                    'class' => 'js-mot-clef-multiple'
-                    ],
-                    'required' => false,
-                )
-            )
+                ],
+                'required' => false,
+            ))
             ->add('coupDeCoeur', HebergementCoupDeCoeurType::class, [
                 'required' => false
             ])

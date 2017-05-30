@@ -10,10 +10,6 @@ Mondofute\Bundle\MotClefBundle\Entity\MotClef:
                 strategy: AUTO
             options:
                 unsigned: true
-    manyToMany:
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
-            inversedBy: motClefs
     oneToMany:
         traductions:
             targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction
