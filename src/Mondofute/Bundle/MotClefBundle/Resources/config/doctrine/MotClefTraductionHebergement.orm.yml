@@ -1,0 +1,14 @@
+Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\MotClefBundle\Repository\MotClefTraductionHebergementRepository
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        classement:
+            type: smallint
+    lifecycleCallbacks: {  }
