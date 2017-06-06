@@ -2,14 +2,13 @@
 
 namespace Mondofute\Bundle\MotClefBundle\Form;
 
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MotClefTraductionType extends AbstractType
+class MotClefTraductionHebergementType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -17,19 +16,18 @@ class MotClefTraductionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle', TextType::class, array(
-                'required' => true
-            ))
-            ->add('langue', EntityType::class, array(
-                'class' => Langue::class,
-                'choice_label' => 'id',
-                'label_attr' => [
-                    'style' => 'display:none',
-                ],
-                'attr' => [
-                    'style' => 'display:none',
-                ],
-            ));
+            ->add('classement')
+            ->add('motClefTraduction', EntityType::class, [
+                'class' => MotClefTraduction::class,
+                "choice_label" => "id",
+//                'multiple' => true,
+//                'expanded'  => true,
+//                'attr' => [
+//                    'class' => 'js-mot-clef-multiple'
+//                ],
+                'required' => false,
+            ])
+;
     }
 
     /**
@@ -38,7 +36,7 @@ class MotClefTraductionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction'
+            'data_class' => 'Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement'
         ));
     }
 
@@ -47,7 +45,7 @@ class MotClefTraductionType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'mondofute_bundle_motclefbundle_motcleftraduction';
+        return 'mondofute_bundle_motclefbundle_motcleftraductionhebergement';
     }
 
 

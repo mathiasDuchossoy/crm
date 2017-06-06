@@ -39,7 +39,7 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
-use Mondofute\Bundle\MotClefBundle\Entity\MotClef;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement;
 use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
@@ -1250,7 +1250,7 @@ class HebergementUnifieController extends Controller
                 // *** fin gestion code promo hebergement ***
 
                 // *** gestion motClef ***
-                $this->gestionMotClef($entity, $entitySite, $emSite);
+                $this->gestionMotClefTraductionHebergement($entity, $entitySite, $emSite);
                 // *** fin gestion motClef ***
 
 
@@ -1548,26 +1548,26 @@ class HebergementUnifieController extends Controller
      * @param Hebergement $entitySite
      * @param EntityManager $emSite
      */
-    private function gestionMotClef($entity, $entitySite, $emSite)
+    private function gestionMotClefTraductionHebergement($entity, $entitySite, $emSite)
     {
-        /** @var MotClef $motClef */
-        /** @var MotClef $motClefSite */
-        foreach ($entitySite->getMotClefs() as $motClefSite) {
-            $motClef = $entity->getMotClefs()->filter(function (MotClef $element) use ($motClefSite) {
+        /** @var MotClefTraductionHebergement $motClef */
+        /** @var MotClefTraductionHebergement $motClefSite */
+        foreach ($entitySite->getMotClefTraductionHebergements() as $motClefSite) {
+            $motClef = $entity->getMotClefTraductionHebergements()->filter(function (MotClefTraductionHebergement $element) use ($motClefSite) {
                 return $element->getId() == $motClefSite->getId();
             })->first();
             if (false === $motClef) {
-                $entitySite->removeMotClef($motClefSite);
+                $entitySite->removeMotClefTraductionHebergement($motClefSite);
             }
         }
 
-        foreach ($entity->getMotClefs() as $motClef) {
-            $motClefSite = $entitySite->getMotClefs()->filter(function (MotClef $element) use ($motClef) {
+        foreach ($entity->getMotClefTraductionHebergements() as $motClef) {
+            $motClefSite = $entitySite->getMotClefTraductionHebergements()->filter(function (MotClefTraductionHebergement $element) use ($motClef) {
                 return $element->getId() == $motClef->getId();
             })->first();
             if (false === $motClefSite) {
-                $motClefSite = $emSite->find(MotClef::class, $motClef);
-                $entitySite->addMotClef($motClefSite);
+                $motClefSite = $emSite->find(MotClefTraductionHebergement::class, $motClef);
+                $entitySite->addMotClefTraductionHebergement($motClefSite);
             }
         }
     }
@@ -1930,7 +1930,7 @@ class HebergementUnifieController extends Controller
 
         $originalHebergementVisuels = new ArrayCollection();
         $originalVisuels = new ArrayCollection();
-        $originalMotClefs = new ArrayCollection();
+        $originalMotClefTraductionHebergements = new ArrayCollection();
 //          Créer un ArrayCollection des objets d'hébergements courants dans la base de données
         /** @var Hebergement $entity */
         foreach ($entityUnifie->getHebergements() as $entity) {
@@ -1944,9 +1944,9 @@ class HebergementUnifieController extends Controller
                     $originalVisuels->add($entityVisuel->getVisuel());
                 }
             }
-            $originalMotClefs->set($entity->getId(), new ArrayCollection());
-            foreach ($entity->getMotClefs() as $motClef) {
-                $originalMotClefs->get($entity->getId())->add($motClef);
+            $originalMotClefTraductionHebergements->set($entity->getId(), new ArrayCollection());
+            foreach ($entity->getMotClefTraductionHebergements() as $motClef) {
+                $originalMotClefTraductionHebergements->get($entity->getId())->add($motClef);
             }
         }
 
@@ -2133,17 +2133,29 @@ class HebergementUnifieController extends Controller
                 }
                 // ************* fin gestion des emplacements *************
                 // *** gestion des motclefs ***
-                /** @var MotClef $motClef */
-                foreach ($entity->getMotClefs() as $motClef) {
-                    if (!$motClef->getHebergements()->contains($entity)) {
-                        $motClef->addHebergement($entity);
+                /** @var MotClefTraductionHebergement $motClef */
+//                foreach ($entity->getMotClefTraductionHebergements() as $motClef) {
+//                    dump($motClef->getHebergements());
+//                    if (!$motClef->getHebergements()->contains($entity)) {
+//                        $motClef->addHebergement($entity);
+//                    }
+//                }
+//                die;
+
+//            /** @var Hebergement $hebergement */
+//            foreach ($entityUnifie->getHebergements() as $hebergement) {
+//                foreach ($entity->getMotClefTraductionHebergements() as $motClefTraductionHebergement) {
+//                    dump($motClefTraductionHebergement);
+//                }
+//            }
+
+                foreach ($originalMotClefTraductionHebergements->get($entity->getId()) as $motClef) {
+                    if (!$entity->getMotClefTraductionHebergements()->contains($motClef)) {
+                        $entity->removeMotClefTraductionHebergement($motClef);
+                        $em->remove($motClef);
                     }
                 }
-                foreach ($originalMotClefs->get($entity->getId()) as $motClef) {
-                    if (false === $entity->getMotClefs()->contains($motClef)) {
-                        $motClef->removeHebergement($entity);
-                    }
-                }
+//                die;
                 // *** fin gestion des motclefs ***
             }
 
@@ -2377,7 +2389,7 @@ class HebergementUnifieController extends Controller
                     if ($hebergement->getStation()->getId() != $originalStations->get($hebergement->getId())->getId()) {
                         foreach ($entityUnifie->getFournisseurs() as $fournisseurHebergement) {
                             $logement = $fournisseurHebergement->getLogements()->filter(function (Logement $element) use ($hebergement) {
-                                return $element->getSite() == $hebergement->getSite();
+                                return $element->getSite() === $hebergement->getSite();
                             })->first();
                             if (false !== $logement) {
                                 $this->gestionDecoteStation($entityUnifie, $fournisseurHebergement->getFournisseur()->getId());
@@ -2616,6 +2628,7 @@ class HebergementUnifieController extends Controller
      */
     public function deleteAction(Request $request, HebergementUnifie $entityUnifie)
     {
+        /** @var EntityManager $em */
         /** @var HebergementUnifie $entityUnifieSite */
         $em = $this->getDoctrine()->getManager();
         $sitesDistants = $em->getRepository(Site::class)->findBy(array('crm' => 0));
@@ -2802,6 +2815,7 @@ class HebergementUnifieController extends Controller
             $em->flush();
             foreach ($sitesDistants as $siteDistant) {
                 $emSite = $this->getDoctrine()->getManager($siteDistant->getLibelle());
+                /** @var EntityManager $emSite */
                 $this->gestionSaisonsSite(
                     $entityUnifie->getHebergements()->filter(function (Hebergement $element) use ($siteDistant) {
                         return $element->getSite()->getId() == $siteDistant->getId();

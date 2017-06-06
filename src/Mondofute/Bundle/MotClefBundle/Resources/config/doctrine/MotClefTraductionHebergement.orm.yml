@@ -3,12 +3,17 @@ Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement:
     table: null
     repositoryClass: Mondofute\Bundle\MotClefBundle\Repository\MotClefTraductionHebergementRepository
     id:
-        id:
-            type: integer
-            id: true
-            generator:
-                strategy: AUTO
+        motClefTraduction:
+            associationKey: true
+        hebergement:
+            associationKey: true
     fields:
         classement:
             type: smallint
+    manyToOne:
+        motClefTraduction:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction
+        hebergement:
+            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
+            inversedBy: motClefTraductionHebergements
     lifecycleCallbacks: {  }

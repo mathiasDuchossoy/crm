@@ -120,7 +120,7 @@
                         {{ form_row(hebergement.station, { 'attr' : { 'data-unique_block_prefix' : hebergement.station.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
-                        {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefTraductions , 'siteId' : hebergement.vars.value.site.id} %}
+                        {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefTraductionHebergements , 'siteId' : hebergement.vars.value.site.id} %}
                         {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur } %}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Emplacements</label>
@@ -1130,21 +1130,56 @@
                     return {
                         q: params.term,
                         langue: $(this).data('langue'),
-                        page: params.page
                     };
                 },
                 processResults: function (data, params) {
-                    params.page = params.page || 1;
                     return {
-                        results: data,
-                        pagination: {
-                            more: (params.page * 30) < data.total_count
-                        }
+                        results: data
                     };
                 },
-                cache: true
+//                cache: true
             },
             minimumInputLength: 1
+        });
+        $("ul.select2-selection__rendered").sortable({
+            stop: function( event, ui ) {
+                console.log(ui.item.data('li'));
+                console.log(ui.item.data('info'));
+            }
+        });
+
+
+        var $eventSelect = $(".js-mot-clef-multiple");
+        $eventSelect.on("select2:select", function (e) {
+            var motClefId = $(this).data('motclefId');
+            var langue = $(this).data('langue');
+            var $collection = $('#'+motClefId+'_values');
+            var index = $collection.data('index');
+            var prototype = $('#tablist_' + motClefId).data('prototype');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collection.data('index', index + 1);
+            var id = e.params.data.id;
+            var $newFormLi = $('<li id="mot_clef_value_'+motClefId+'"></li>').append(newForm);
+            $newFormLi.find('[id$="classement"]').val(index);
+            $newFormLi.find('[id$="motClefTraduction"]').val(id);
+            $collection.append($newFormLi);
+
+            var $divClassement = $('#classement_' + motClefId + '_' + langue);
+            $divClassement.append($('<li></li>').append());
+            console.log($divClassement);
+
+//            $(this).parent().find('[title="'+e.params.data.text+'"]').data('li' , 'mot_clef_value_'+motClefId );
+//            console.log( $(this).parent().find('[title="'+e.params.data.text+'"]').data('li'));
+//            $(this).parent().find('[title="'+e.params.data.text+'"]').attr('data-info', '222');
+//            $(this).find('[value="' + e.params.data.id + '"]').replaceWith('<option selected value="' + id + '">' + e.params.data.text + '</option>');
+            data= $(this).select2('data');
+            console.log(data);
+        });
+        $eventSelect.on("select2:unselect", function (e) {
+            if($(this).parent().find('[title="'+e.params.data.text+'"]').length == 0) {
+                var motClefId = $(this).data('motclefId');
+                $('#mot_clef_value_'+motClefId).remove();
+            }
         });
         // *** fin gestion select2 ***
 

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement;
 
 /**
  * MotClefTraduction
@@ -33,6 +34,10 @@ class MotClefTraduction
      * @var Collection
      */
     private $hebergements;
+    /**
+     * @var Collection
+     */
+    private $motClefTraductionHebergements;
 
     /**
      * Constructor
@@ -40,6 +45,7 @@ class MotClefTraduction
     public function __construct()
     {
         $this->hebergements = new ArrayCollection();
+        $this->motClefTraductionHebergements = new ArrayCollection();
     }
 
     /**
@@ -156,5 +162,47 @@ class MotClefTraduction
     public function getHebergements()
     {
         return $this->hebergements;
+    }
+
+    /**
+     * Add motClefTraductionHebergement
+     *
+     * @param MotClefTraductionHebergement $motClefTraductionHebergement
+     *
+     * @return MotClefTraduction
+     */
+    public function addMotClefTraductionHebergement(MotClefTraductionHebergement $motClefTraductionHebergement)
+    {
+        $this->motClefTraductionHebergements[] = $motClefTraductionHebergement;
+
+        return $this;
+    }
+
+    /**
+     * Remove motClefTraductionHebergement
+     *
+     * @param MotClefTraductionHebergement $motClefTraductionHebergement
+     */
+    public function removeMotClefTraductionHebergement(MotClefTraductionHebergement $motClefTraductionHebergement)
+    {
+        $this->motClefTraductionHebergements->removeElement($motClefTraductionHebergement);
+    }
+
+    /**
+     * Get motClefTraductionHebergements
+     *
+     * @return Collection
+     */
+    public function getMotClefTraductionHebergements()
+    {
+        return $this->motClefTraductionHebergements;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->libelle;
     }
 }

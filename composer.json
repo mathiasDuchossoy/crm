@@ -41,7 +41,7 @@
     "eternicode/bootstrap-datepicker": "dev-master#f4df9ac6679b15b12157324c556e0da1c628af6e",
     "nucleus/managerBDDBundle": "dev-master",
     "components/bootstrap-datetimepicker": "dev-master#fc82da7cd6144a8bd68f1f286ddb11a0e3be4571",
-    "components/jqueryui": "1.12.0.1",
+    "components/jqueryui": "1.12.1",
     "ivaynberg/select2": "^4.0",
     "willdurand/geocoder": "2.4.*",
     "illuminate/support": "4.1.*",

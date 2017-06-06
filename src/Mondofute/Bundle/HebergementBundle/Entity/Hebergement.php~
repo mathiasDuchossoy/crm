@@ -5,7 +5,6 @@ namespace Mondofute\Bundle\HebergementBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnnexeHebergement;
-use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement;
 use Mondofute\Bundle\PromotionBundle\Entity\PromotionHebergement;
 use Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
@@ -83,7 +82,7 @@ class Hebergement
     /**
      * @var Collection
      */
-    private $motClefTraductionHebergements;
+    private $motClefTraductions;
 
     /**
      * Constructor
@@ -97,7 +96,7 @@ class Hebergement
         $this->prestationAnnexeHebergements = new ArrayCollection();
         $this->promotionHebergements = new ArrayCollection();
         $this->saisonHebergements = new ArrayCollection();
-        $this->motClefTraductionHebergements = new ArrayCollection();
+        $this->motClefTraductions = new ArrayCollection();
     }
 
     /**
@@ -589,36 +588,36 @@ class Hebergement
     }
 
     /**
-     * Add motClefTraductionHebergement
+     * Add motClefTraduction
      *
-     * @param MotClefTraductionHebergement $motClefTraductionHebergement
+     * @param \Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction
      *
      * @return Hebergement
      */
-    public function addMotClefTraductionHebergement(MotClefTraductionHebergement $motClefTraductionHebergement)
+    public function addMotClefTraduction(\Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction)
     {
-        $this->motClefTraductionHebergements[] = $motClefTraductionHebergement->setHebergement($this);
+        $this->motClefTraductions[] = $motClefTraduction;
 
         return $this;
     }
 
     /**
-     * Remove motClefTraductionHebergement
+     * Remove motClefTraduction
      *
-     * @param MotClefTraductionHebergement $motClefTraductionHebergement
+     * @param \Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction
      */
-    public function removeMotClefTraductionHebergement(MotClefTraductionHebergement $motClefTraductionHebergement)
+    public function removeMotClefTraduction(\Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction $motClefTraduction)
     {
-        $this->motClefTraductionHebergements->removeElement($motClefTraductionHebergement);
+        $this->motClefTraductions->removeElement($motClefTraduction);
     }
 
     /**
-     * Get motClefTraductionHebergements
+     * Get motClefTraductions
      *
      * @return Collection
      */
-    public function getMotClefTraductionHebergements()
+    public function getMotClefTraductions()
     {
-        return $this->motClefTraductionHebergements;
+        return $this->motClefTraductions;
     }
 }
