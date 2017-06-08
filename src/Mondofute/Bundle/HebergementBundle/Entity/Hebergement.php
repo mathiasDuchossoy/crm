@@ -619,6 +619,15 @@ class Hebergement
      */
     public function getMotClefTraductionHebergements()
     {
-        return $this->motClefTraductionHebergements;
+        $iterator = $this->motClefTraductionHebergements->getIterator();
+
+        // trier la nouvelle itération, en fonction de l'ordre d'affichage
+        $iterator->uasort(function (MotClefTraductionHebergement $a, MotClefTraductionHebergement $b) {
+            return ($a->getClassement() < $b->getClassement()) ? -1 : 1;
+        });
+
+        // passer le tableau trié dans une nouvelle collection
+        return new ArrayCollection(iterator_to_array($iterator));
+//        return $this->motClefTraductionHebergements;
     }
 }
