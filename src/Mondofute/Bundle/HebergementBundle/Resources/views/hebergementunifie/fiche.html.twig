@@ -1159,21 +1159,27 @@
             var newForm = prototype.replace(/__name__/g, index);
             $collection.data('index', index + 1);
             var id = e.params.data.id;
-            var $newFormLi = $('<li id="mot_clef_value_'+motClefId+'"></li>').append(newForm);
+            var idNewFormLi = motClefId + '_li___name__';
+            idNewFormLi = idNewFormLi.replace(/__name__/g, id);
+            var $newFormLi = $('<li id="' + idNewFormLi + '"></li>').append(newForm);
             $newFormLi.find('[id$="classement"]').val(index);
             $newFormLi.find('[id$="motClefTraduction"]').val(id);
             $collection.append($newFormLi);
 
             var $divClassement = $('#classement_' + motClefId + '_' + langue);
-            $divClassement.append($('<li></li>').append());
-            console.log($divClassement);
 
-//            $(this).parent().find('[title="'+e.params.data.text+'"]').data('li' , 'mot_clef_value_'+motClefId );
-//            console.log( $(this).parent().find('[title="'+e.params.data.text+'"]').data('li'));
-//            $(this).parent().find('[title="'+e.params.data.text+'"]').attr('data-info', '222');
-//            $(this).find('[value="' + e.params.data.id + '"]').replaceWith('<option selected value="' + id + '">' + e.params.data.text + '</option>');
-            data= $(this).select2('data');
-            console.log(data);
+            $divClassement.append($('<li data-motcleftraductionid="' + id + '">' + e.params.data.text + '</li>'));
+            $divClassement.sortable({
+                placeholder: "fond",
+                update: function (event, ui) {
+                    $(this).children().each(function (index, element) {
+                        var $div = $('#' + motClefId + '_li_' + $(element).data('motcleftraductionid'));
+                        var $classement = $div.find('[id$=_classement]');
+                        $classement.val(index);
+                    });
+                }
+            });
+            $divClassement.disableSelection();
         });
         $eventSelect.on("select2:unselect", function (e) {
             if($(this).parent().find('[title="'+e.params.data.text+'"]').length == 0) {
@@ -1181,6 +1187,28 @@
                 $('#mot_clef_value_'+motClefId).remove();
             }
         });
+
+        $(function () {
+
+            $(".sortable").sortable({
+                placeholder: "fond",
+                update: function (event, ui) {
+                    $(this).children().each(function (index, element) {
+                        var $div = $('#' + $(this).parent().data('motclefid') + '_li_' + $(element).data('motcleftraductionid'));
+                        var $classement = $div.find('[id$=_classement]');
+                        $classement.val(index);
+                    });
+                }
+            });
+            $(".sortable").disableSelection();
+
+//            $(".sortable").each(function(i, item) {
+//              console.log(item)   ;
+//            })
+//            $(".sortable").disableSelection();
+        });
+
+
         // *** fin gestion select2 ***
 
         $('.datetimepicker').datetimepicker({

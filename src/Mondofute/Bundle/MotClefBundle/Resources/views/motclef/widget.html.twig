@@ -37,18 +37,20 @@
                         </select>
                     </div>
                 </div>
-                <ul id="classement_{{ motClefs.vars.id }}_{{ langue.id }}">
+                <ul id="classement_{{ motClefs.vars.id }}_{{ langue.id }}" data-motclefid="{{ motClefs.vars.id }}"
+                    class="sortable">
                     {% for motClef in motClefs.vars.data %}
                         {% if motClef.motClefTraduction.langue.id == langue.id %}
-                            <li >{{ motClef.motClefTraduction }}</li>
+                            <li data-motcleftraductionid="{{ motClef.motClefTraduction.id }}">{{ motClef.motClefTraduction }}</li>
                         {% endif %}
                     {% endfor %}
                 </ul>
             </div>
         {% endfor %}
-        <ul id="{{ motClefs.vars.id }}_values"  data-index="{{ motClefs | length }}">
+
+        <ul id="{{ motClefs.vars.id }}_values" data-index="{{ motClefs | length }}" style="display: none">
             {% for motClef in motClefs %}
-                <li id="mot_clef_value_{{ motClefs.vars.id }}">{{ form_widget(motClef) }}</li>
+                <li id="{{ motClefs.vars.id }}_li_{{ motClef.vars.data.motClefTraduction.id }}">{{ form_widget(motClef) }}</li>
             {% endfor %}
         </ul>
     </div>

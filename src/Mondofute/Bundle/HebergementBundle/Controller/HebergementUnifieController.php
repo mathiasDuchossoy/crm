@@ -39,6 +39,7 @@ use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\LogementBundle\Entity\LogementTraduction;
 use Mondofute\Bundle\LogementPeriodeBundle\Entity\LogementPeriode;
+use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction;
 use Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement;
 use Mondofute\Bundle\PasserelleBundle\Entity\CodePasserelle;
 use Mondofute\Bundle\PeriodeBundle\Entity\TypePeriode;
@@ -1554,7 +1555,7 @@ class HebergementUnifieController extends Controller
         /** @var MotClefTraductionHebergement $motClefSite */
         foreach ($entitySite->getMotClefTraductionHebergements() as $motClefSite) {
             $motClef = $entity->getMotClefTraductionHebergements()->filter(function (MotClefTraductionHebergement $element) use ($motClefSite) {
-                return $element->getId() == $motClefSite->getId();
+                return $element->getMotClefTraduction()->getId() == $motClefSite->getMotClefTraduction()->getId() && $element->getHebergement()->getId() == $motClefSite->getHebergement()->getId();
             })->first();
             if (false === $motClef) {
                 $entitySite->removeMotClefTraductionHebergement($motClefSite);
@@ -1562,13 +1563,20 @@ class HebergementUnifieController extends Controller
         }
 
         foreach ($entity->getMotClefTraductionHebergements() as $motClef) {
-            $motClefSite = $entitySite->getMotClefTraductionHebergements()->filter(function (MotClefTraductionHebergement $element) use ($motClef) {
-                return $element->getId() == $motClef->getId();
+            $motClefTraductionHebergementSite = $entitySite->getMotClefTraductionHebergements()->filter(function (MotClefTraductionHebergement $element) use ($motClef) {
+                return $element->getMotClefTraduction()->getId() == $motClef->getMotClefTraduction()->getId() && $element->getHebergement()->getId() == $motClef->getHebergement()->getId();
             })->first();
-            if (false === $motClefSite) {
-                $motClefSite = $emSite->find(MotClefTraductionHebergement::class, $motClef);
-                $entitySite->addMotClefTraductionHebergement($motClefSite);
+            if (false === $motClefTraductionHebergementSite) {
+                $motClefTraductionHebergementSite = new MotClefTraductionHebergement();
+//                $motClefSite = $emSite->find(MotClefTraductionHebergement::class, $motClef);
+                $hebergementSite = $emSite->getRepository(Hebergement::class)->findOneBy(['hebergementUnifie' => $motClef->getHebergement()->getHebergementUnifie()]);
+                $motClefTraductionHebergementSite->setHebergement($hebergementSite);
+                $motClefTraductionSite = $emSite->getRepository(MotClefTraduction::class)->findOneBy(['motClef' => $motClef->getMotClefTraduction()->getMotClef(), 'langue' => $motClef->getMotClefTraduction()->getLangue()]);
+                $motClefTraductionHebergementSite->setMotClefTraduction($motClefTraductionSite);
+//                $motClefSite = $emSite->getRepository(MotClefTraductionHebergement::class)->findOneBy(['hebergement']);
+                $entitySite->addMotClefTraductionHebergement($motClefTraductionHebergementSite);
             }
+            $motClefTraductionHebergementSite->setClassement($motClef->getClassement());
         }
     }
 
