@@ -1,4 +1,4 @@
-<div>
+<div id="tablist_{{ motClefs.vars.id }}" data-prototype="{{ form_widget(motClefs.vars.prototype) | e }}" >
     <h3>Mot clefs</h3>
     <ul class="nav nav-tabs" role="tablist">
         {% for keyLangue, langue in langues %}
@@ -15,7 +15,7 @@
         {% endfor %}
     </ul>
 
-    <div class="tab-content">
+    <div class="tab-content" >
         {% for keyLangue, langue in langues %}
             <div role="tabpanel" class="tab-pane  {% if keyLangue == 0 %}active{% endif %}"
                  id="mot-clef-site-{{ siteId }}-langue-{{ langue.id }}">
@@ -23,25 +23,36 @@
                     <label class="col-sm-2 control-label required" for="{{ motClefs.vars.id }}_{{ langue.id }}">VOUS
                         ALLEZ AIMER ...</label>
                     <div class="col-sm-10">
-                        <select id="{{ motClefs.vars.id }}_{{ langue.id }}" name="{{ motClefs.vars.full_name }}"
+                        <select id="{{ motClefs.vars.id }}_{{ langue.id }}"
+                                data-motclef-id="{{ motClefs.vars.id }}"
                                 class="form-control js-mot-clef-multiple" multiple="multiple"
                                 data-langue="{{ langue.id }}">
-                            {% for motClef in motClefs.vars.choices %}
-                                {% if motClef.data.langue.id == langue.id %}
-                                    <option value="{{ motClef.value }}"
-                                            {% for motClefVal in motClefs.vars.value %}
-                                                {% if motClefVal == motClef.value %}
-                                                    selected="selected"
-                                                {% endif %}
-                                            {% endfor %}
-                                    >{{ motClef.label }}</option>
+                            {% for motClef in motClefs.vars.data %}
+                                {% if motClef.motClefTraduction.langue.id == langue.id %}
+                                    <option value="{{ motClef.motClefTraduction.id }}"
+                                        selected="selected"
+                                    >{{ motClef.motClefTraduction }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
                     </div>
                 </div>
+                <ul id="classement_{{ motClefs.vars.id }}_{{ langue.id }}" data-motclefid="{{ motClefs.vars.id }}"
+                    class="sortable">
+                    {% for motClef in motClefs.vars.data %}
+                        {% if motClef.motClefTraduction.langue.id == langue.id %}
+                            <li data-motcleftraductionid="{{ motClef.motClefTraduction.id }}">{{ motClef.motClefTraduction }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
         {% endfor %}
+
+        <ul id="{{ motClefs.vars.id }}_values" data-index="{{ motClefs | length }}" style="display: none">
+            {% for motClef in motClefs %}
+                <li id="{{ motClefs.vars.id }}_li_{{ motClef.vars.data.motClefTraduction.id }}">{{ form_widget(motClef) }}</li>
+            {% endfor %}
+        </ul>
     </div>
 
 </div>

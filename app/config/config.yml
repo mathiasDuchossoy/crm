@@ -314,6 +314,7 @@ assetic:
         jquery_js:
             inputs:
                 - "%kernel.root_dir%/../vendor/components/jquery/jquery.min.js"
+                - "%kernel.root_dir%/../components/jquery-ui/jquery-ui.js"
 #                - "https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"
 #                - "https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"
 #                - "https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"
@@ -414,6 +415,9 @@ assetic:
 #            filters:
 #                - lessphp
             output: css/hebergement-edit.min.css
+        jquery_ui_css:
+            inputs: "%kernel.root_dir%/../components/jquery-ui/themes/base/jquery-ui.css"
+            output: css/jquery-ui.css
         bootstrap_glyphicons_ttf:
            inputs:
                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"

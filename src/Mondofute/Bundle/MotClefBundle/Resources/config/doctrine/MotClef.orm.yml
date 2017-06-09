@@ -10,15 +10,9 @@ Mondofute\Bundle\MotClefBundle\Entity\MotClef:
                 strategy: AUTO
             options:
                 unsigned: true
-    fields:
-        libelle:
-            type: string
-            length: 255
-    manyToMany:
-        hebergements:
-            targetEntity: Mondofute\Bundle\HebergementBundle\Entity\Hebergement
-            inversedBy: motClefs
-    manyToOne:
-        langue:
-            targetEntity: Mondofute\Bundle\LangueBundle\Entity\Langue
+    oneToMany:
+        traductions:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClefTraduction
+            mappedBy: motClef
+            cascade:  ['persist' , 'remove']
     lifecycleCallbacks: {  }

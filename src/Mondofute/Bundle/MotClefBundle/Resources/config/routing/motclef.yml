@@ -1,0 +1,24 @@
+mondofute_motclef_index:
+    path:     /list/{page}/{maxPerPage}
+    defaults: { _controller: "MondofuteMotClefBundle:MotClef:index", page: 1 , maxPerPage: %max_per_page% }
+    methods:  GET
+
+mondofute_motclef_show:
+    path:     /{id}/show
+    defaults: { _controller: "MondofuteMotClefBundle:MotClef:show" }
+    methods:  GET
+
+mondofute_motclef_new:
+    path:     /new
+    defaults: { _controller: "MondofuteMotClefBundle:MotClef:new" }
+    methods:  [GET, POST]
+
+mondofute_motclef_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MondofuteMotClefBundle:MotClef:edit" }
+    methods:  [GET, POST]
+
+mondofute_motclef_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MondofuteMotClefBundle:MotClef:delete" }
+    methods:  DELETE

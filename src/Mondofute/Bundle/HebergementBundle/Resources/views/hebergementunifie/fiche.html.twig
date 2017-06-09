@@ -118,11 +118,9 @@
                          data-crm="{{ hebergement.vars.value.site.crm | number_format }}">
                         {{ form_row(hebergement.typeHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typeHebergement.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.station, { 'attr' : { 'data-unique_block_prefix' : hebergement.station.vars['unique_block_prefix']  }}) }}
-                        {#{{ form_row(hebergement.typesHebergement, { 'attr' : { 'data-unique_block_prefix' : hebergement.typesHebergement.vars['unique_block_prefix']  }}) }}#}
                         {{ form_row(hebergement.classement, { 'attr' : { 'class' : 'form-inline', 'data-unique_block_prefix' : hebergement.classement.vars['unique_block_prefix']  }}) }}
                         {{ form_row(hebergement.moyenComs[0], {'label' : 'Adresse', 'attr' : { 'data-unique_block_prefix' : hebergement.moyenComs.vars['unique_block_prefix']  }}) }}
-                        {#{{ form_row(hebergement.motClefs) }}#}
-                        {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefs , 'siteId' : hebergement.vars.value.site.id} %}
+                        {% include ('@MondofuteMotClef/motclef/widget.html.twig') with {'motClefs' : hebergement.motClefTraductionHebergements , 'siteId' : hebergement.vars.value.site.id} %}
                         {% include ('@MondofuteCoupDeCoeur/form_coup_de_coeur.html.twig') with {'coupDeCoeur' : hebergement.coupDeCoeur } %}
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Emplacements</label>
@@ -1130,61 +1128,87 @@
                 delay: 250,
                 data: function (params) {
                     return {
-                        q: params.term, // search term
+                        q: params.term,
                         langue: $(this).data('langue'),
-                        page: params.page
                     };
                 },
                 processResults: function (data, params) {
-                    params.page = params.page || 1;
                     return {
-                        results: data,
-                        pagination: {
-                            more: (params.page * 30) < data.total_count
-                        }
+                        results: data
                     };
                 },
-                cache: true
+//                cache: true
             },
-            escapeMarkup: function (markup) {
-                return markup;
-            }, // let our custom formatter work
-            minimumInputLength: 1,
-//            data: data,
-            tags: true,
-            createTag: function (params) {
-                return {
-                    id: params.term,
-                    text: params.term,
-                    isNew: true
-                }
-            },
-            insertTag: function (data, tag) {
-                // Insert the tag at the end of the results
-                data.push(tag);
+            minimumInputLength: 1
+        });
+        $("ul.select2-selection__rendered").sortable({
+            stop: function( event, ui ) {
+                console.log(ui.item.data('li'));
+                console.log(ui.item.data('info'));
             }
         });
+
 
         var $eventSelect = $(".js-mot-clef-multiple");
         $eventSelect.on("select2:select", function (e) {
-
+            var motClefId = $(this).data('motclefId');
             var langue = $(this).data('langue');
+            var $collection = $('#'+motClefId+'_values');
+            var index = $collection.data('index');
+            var prototype = $('#tablist_' + motClefId).data('prototype');
+            var newForm = prototype.replace(/__name__/g, index);
+            $collection.data('index', index + 1);
             var id = e.params.data.id;
-            if (e.params.data.isNew) {
-                // append the new option element prenamently:
-                // store the new tag:
-                $.ajax("{{ path('mondofute_mot_clef_new') }}", {
-                    data: {
-                        value: e.params.data.text,
-                        langue: langue
-                    },
-                    async: false
-                }).done(function (data) {
-                    id = data;
-                });
-            }
-            $(this).find('[value="' + e.params.data.id + '"]').replaceWith('<option selected value="' + id + '">' + e.params.data.text + '</option>');
+            var idNewFormLi = motClefId + '_li___name__';
+            idNewFormLi = idNewFormLi.replace(/__name__/g, id);
+            var $newFormLi = $('<li id="' + idNewFormLi + '"></li>').append(newForm);
+            $newFormLi.find('[id$="classement"]').val(index);
+            $newFormLi.find('[id$="motClefTraduction"]').val(id);
+            $collection.append($newFormLi);
+
+            var $divClassement = $('#classement_' + motClefId + '_' + langue);
+
+            $divClassement.append($('<li data-motcleftraductionid="' + id + '">' + e.params.data.text + '</li>'));
+            $divClassement.sortable({
+                placeholder: "fond",
+                update: function (event, ui) {
+                    $(this).children().each(function (index, element) {
+                        var $div = $('#' + motClefId + '_li_' + $(element).data('motcleftraductionid'));
+                        var $classement = $div.find('[id$=_classement]');
+                        $classement.val(index);
+                    });
+                }
+            });
+            $divClassement.disableSelection();
         });
+        $eventSelect.on("select2:unselect", function (e) {
+            if($(this).parent().find('[title="'+e.params.data.text+'"]').length == 0) {
+                var motClefId = $(this).data('motclefId');
+                $('#mot_clef_value_'+motClefId).remove();
+            }
+        });
+
+        $(function () {
+
+            $(".sortable").sortable({
+                placeholder: "fond",
+                update: function (event, ui) {
+                    $(this).children().each(function (index, element) {
+                        var $div = $('#' + $(this).parent().data('motclefid') + '_li_' + $(element).data('motcleftraductionid'));
+                        var $classement = $div.find('[id$=_classement]');
+                        $classement.val(index);
+                    });
+                }
+            });
+            $(".sortable").disableSelection();
+
+//            $(".sortable").each(function(i, item) {
+//              console.log(item)   ;
+//            })
+//            $(".sortable").disableSelection();
+        });
+
+
         // *** fin gestion select2 ***
 
         $('.datetimepicker').datetimepicker({

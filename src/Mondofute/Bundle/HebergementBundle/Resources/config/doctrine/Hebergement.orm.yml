@@ -51,6 +51,10 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
             targetEntity: Mondofute\Bundle\SaisonBundle\Entity\SaisonHebergement
             mappedBy: hebergement
             cascade: ['persist','remove']
+        motClefTraductionHebergements:
+            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClefTraductionHebergement
+            mappedBy: hebergement
+            cascade: ['persist','remove']
     oneToOne:
         classement:
             targetEntity: Mondofute\Bundle\UniteBundle\Entity\ClassementHebergement
@@ -63,9 +67,5 @@ Mondofute\Bundle\HebergementBundle\Entity\Hebergement:
     manyToMany:
         moyenComs:
             targetEntity: Nucleus\MoyenComBundle\Entity\MoyenCommunication
-            cascade: ['persist']
-        motClefs:
-            targetEntity: Mondofute\Bundle\MotClefBundle\Entity\MotClef
-            mappedBy: hebergements
             cascade: ['persist']
     lifecycleCallbacks: {  }

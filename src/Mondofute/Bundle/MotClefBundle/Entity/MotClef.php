@@ -4,8 +4,6 @@ namespace Mondofute\Bundle\MotClefBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mondofute\Bundle\HebergementBundle\Entity\Hebergement;
-use Mondofute\Bundle\LangueBundle\Entity\Langue;
 
 /**
  * MotClef
@@ -24,18 +22,14 @@ class MotClef
     /**
      * @var Collection
      */
-    private $hebergements;
-    /**
-     * @var Langue
-     */
-    private $langue;
+    private $traductions;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->hebergements = new ArrayCollection();
+        $this->traductions = new ArrayCollection();
     }
 
     /**
@@ -87,60 +81,36 @@ class MotClef
     }
 
     /**
-     * Add hebergement
+     * Add traduction
      *
-     * @param Hebergement $hebergement
+     * @param MotClefTraduction $traduction
      *
      * @return MotClef
      */
-    public function addHebergement(Hebergement $hebergement)
+    public function addTraduction(MotClefTraduction $traduction)
     {
-        $this->hebergements[] = $hebergement;
+        $this->traductions[] = $traduction->setMotClef($this);
 
         return $this;
     }
 
     /**
-     * Remove hebergement
+     * Remove traduction
      *
-     * @param Hebergement $hebergement
+     * @param MotClefTraduction $traduction
      */
-    public function removeHebergement(Hebergement $hebergement)
+    public function removeTraduction(MotClefTraduction $traduction)
     {
-        $this->hebergements->removeElement($hebergement);
+        $this->traductions->removeElement($traduction);
     }
 
     /**
-     * Get hebergements
+     * Get traductions
      *
      * @return Collection
      */
-    public function getHebergements()
+    public function getTraductions()
     {
-        return $this->hebergements;
-    }
-
-    /**
-     * Get langue
-     *
-     * @return Langue
-     */
-    public function getLangue()
-    {
-        return $this->langue;
-    }
-
-    /**
-     * Set langue
-     *
-     * @param Langue $langue
-     *
-     * @return MotClef
-     */
-    public function setLangue(Langue $langue = null)
-    {
-        $this->langue = $langue;
-
-        return $this;
+        return $this->traductions;
     }
 }

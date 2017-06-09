@@ -3,6 +3,6 @@ mondofute_get_mot_clef_like:
     defaults: { _controller: MondofuteMotClefBundle:MotClef:getmotclefslike , langue: 'fr_FR'  }
     methods: ['GET']
 
-mondofute_mot_clef_new:
-    path: motclef/ajax/new
-    defaults: { _controller: MondofuteMotClefBundle:MotClef:ajaxNew }
+mondofute_mot_clef_mot_clef:
+    resource: "@MondofuteMotClefBundle/Resources/config/routing/motclef.yml"
+    prefix:   /motclef
