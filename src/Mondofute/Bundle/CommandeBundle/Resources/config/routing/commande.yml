@@ -51,3 +51,13 @@ commande_ajout_client:
     path:   /client/add
     defaults: { _controller: "MondofuteCommandeBundle:Commande:ajoutClient" }
     methods: GET
+
+commande_add_statut_dossier:
+    path:   /{id}/addstatutdossier/{statutDossierId}
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:addStatutDossier" }
+    methods: GET
+
+commande_add_litige_dossier:
+    path:   /{id}/addlitigedossier/{litigeDossierId}
+    defaults: { _controller: "MondofuteCommandeBundle:Commande:addLitigeDossier" }
+    methods: GET

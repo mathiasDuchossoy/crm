@@ -12,8 +12,8 @@ namespace Mondofute\Bundle\CommandeBundle\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 
 class Commande
@@ -261,20 +261,6 @@ class Commande
     }
 
     /**
-     * Add commandeStatutDossier
-     *
-     * @param CommandeStatutDossier $commandeStatutDossier
-     *
-     * @return Commande
-     */
-    public function addCommandeStatutDossier(CommandeStatutDossier $commandeStatutDossier)
-    {
-        $this->commandeStatutDossiers[] = $commandeStatutDossier->setCommande($this);
-
-        return $this;
-    }
-
-    /**
      * Remove commandeStatutDossier
      *
      * @param CommandeStatutDossier $commandeStatutDossier
@@ -282,16 +268,6 @@ class Commande
     public function removeCommandeStatutDossier(CommandeStatutDossier $commandeStatutDossier)
     {
         $this->commandeStatutDossiers->removeElement($commandeStatutDossier);
-    }
-
-    /**
-     * Get commandeStatutDossiers
-     *
-     * @return Collection
-     */
-    public function getCommandeStatutDossiers()
-    {
-        return $this->commandeStatutDossiers;
     }
 
     /**
@@ -374,6 +350,98 @@ class Commande
     }
 
     /**
+     * Remove commandeLitigeDossier
+     *
+     * @param CommandeLitigeDossier $commandeLitigeDossier
+     */
+    public function removeCommandeLitigeDossier(
+        CommandeLitigeDossier $commandeLitigeDossier
+    )
+    {
+        $this->commandeLitigeDossiers->removeElement($commandeLitigeDossier);
+    }
+
+    /**
+     * @return CommandeStatutDossier
+     */
+    public function getCommandeStatutDossier()
+    {
+        $criteresStatut = Criteria::create();
+        $criteresStatut->orderBy(array('dateHeure' => 'DESC'));
+        return $this->getCommandeStatutDossiers()->matching($criteresStatut)->first();
+    }
+
+    /**
+     * Get commandeStatutDossiers
+     *
+     * @return Collection
+     */
+    public function getCommandeStatutDossiers()
+    {
+        return $this->commandeStatutDossiers;
+    }
+
+    /**
+     * @param StatutDossier $statutDossier
+     *
+     * @return $this
+     */
+    public function addStatutDossier($statutDossier)
+    {
+        $commandeStatutDossier = new CommandeStatutDossier($statutDossier);
+        $this->addCommandeStatutDossier($commandeStatutDossier);
+
+        return $this;
+    }
+
+    /**
+     * Add commandeStatutDossier
+     *
+     * @param CommandeStatutDossier $commandeStatutDossier
+     *
+     * @return Commande
+     */
+    public function addCommandeStatutDossier(CommandeStatutDossier $commandeStatutDossier)
+    {
+        $this->commandeStatutDossiers[] = $commandeStatutDossier->setCommande($this);
+
+        return $this;
+    }
+
+    /**
+     * @return CommandeLitigeDossier
+     */
+    public function getCommandeLitigeDossier()
+    {
+        $criteresLitige = Criteria::create();
+        $criteresLitige->orderBy(array('dateHeure' => 'DESC'));
+        return $this->getCommandeLitigeDossiers()->matching($criteresLitige)->first();
+    }
+
+    /**
+     * Get commandeLitigeDossiers
+     *
+     * @return Collection
+     */
+    public function getCommandeLitigeDossiers()
+    {
+        return $this->commandeLitigeDossiers;
+    }
+
+    /**
+     * @param LitigeDossier $litigeDossier
+     *
+     * @return $this
+     */
+    public function addLitigeDossier($litigeDossier)
+    {
+        $commandeLitigeDossier = new CommandeLitigeDossier($litigeDossier);
+        $this->addCommandeLitigeDossier($commandeLitigeDossier);
+
+        return $this;
+    }
+
+    /**
      * Add commandeLitigeDossier
      *
      * @param CommandeLitigeDossier $commandeLitigeDossier
@@ -382,30 +450,11 @@ class Commande
      */
     public function addCommandeLitigeDossier(
         CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers[] = $commandeLitigeDossier;
+    )
+    {
+        $this->commandeLitigeDossiers[] = $commandeLitigeDossier->setCommande($this);
 
         return $this;
     }
 
-    /**
-     * Remove commandeLitigeDossier
-     *
-     * @param CommandeLitigeDossier $commandeLitigeDossier
-     */
-    public function removeCommandeLitigeDossier(
-        CommandeLitigeDossier $commandeLitigeDossier
-    ) {
-        $this->commandeLitigeDossiers->removeElement($commandeLitigeDossier);
-    }
-
-    /**
-     * Get commandeLitigeDossiers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCommandeLitigeDossiers()
-    {
-        return $this->commandeLitigeDossiers;
-    }
 }
