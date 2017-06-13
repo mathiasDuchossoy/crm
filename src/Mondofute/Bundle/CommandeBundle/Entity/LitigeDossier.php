@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * LitigeDossier
@@ -19,11 +20,11 @@ class LitigeDossier
      */
     private $codeCouleur;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $traductions;
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $commandeLitigeDossier;
     /**
@@ -100,16 +101,6 @@ class LitigeDossier
     }
 
     /**
-     * Get traductions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
      * Add commandeLitigeDossier
      *
      * @param CommandeLitigeDossier $commandeLitigeDossier
@@ -118,7 +109,8 @@ class LitigeDossier
      */
     public function addCommandeLitigeDossier(
         CommandeLitigeDossier $commandeLitigeDossier
-    ) {
+    )
+    {
         $this->commandeLitigeDossier[] = $commandeLitigeDossier;
 
         return $this;
@@ -131,14 +123,15 @@ class LitigeDossier
      */
     public function removeCommandeLitigeDossier(
         CommandeLitigeDossier $commandeLitigeDossier
-    ) {
+    )
+    {
         $this->commandeLitigeDossier->removeElement($commandeLitigeDossier);
     }
 
     /**
      * Get commandeLitigeDossier
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getCommandeLitigeDossier()
     {
@@ -167,5 +160,27 @@ class LitigeDossier
         $this->message = $message;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $locale = 'fr_FR';
+        $return = $this->getTraductions()->filter(function (LitigeDossierTraduction $element) use ($locale) {
+            return $element->getLangue()->getCode() == $locale;
+        })->first()->getLibelle();
+        return $return;
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }

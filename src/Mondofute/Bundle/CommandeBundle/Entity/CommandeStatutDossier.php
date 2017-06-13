@@ -27,6 +27,12 @@ class CommandeStatutDossier
      */
     private $statutDossier;
 
+    public function __construct($statutDossier = null)
+    {
+        $this->statutDossier = $statutDossier;
+        $this->dateHeure = new DateTime();
+    }
+
     /**
      * Get id
      *

@@ -4,6 +4,7 @@ namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use DateTime;
 
+
 /**
  * CommandeLitigeDossier
  */
@@ -26,6 +27,13 @@ class CommandeLitigeDossier
      * @var LitigeDossier
      */
     private $litigeDossier;
+
+
+    public function __construct($litigeDossier = null)
+    {
+        $this->litigeDossier = $litigeDossier;
+        $this->dateHeure = new DateTime();
+    }
 
     /**
      * Get id

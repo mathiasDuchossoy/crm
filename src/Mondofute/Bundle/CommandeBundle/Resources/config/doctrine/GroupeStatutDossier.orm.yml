@@ -8,10 +8,8 @@ Mondofute\Bundle\CommandeBundle\Entity\GroupeStatutDossier:
             id: true
             generator:
                 strategy: AUTO
-    fields:
-        libelle:
-            type: string
-            length: 255
+            options:
+                unsigned: true
     oneToMany:
         statutDossiers:
             targetEntity: Mondofute\Bundle\CommandeBundle\Entity\StatutDossier

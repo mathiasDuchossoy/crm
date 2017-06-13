@@ -2,6 +2,8 @@
 
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
+use Mondofute\Bundle\LangueBundle\Entity\Langue;
+
 /**
  * StatutDossierTraduction
  */
@@ -17,11 +19,11 @@ class StatutDossierTraduction
      */
     private $libelle;
     /**
-     * @var \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @var Langue
      */
     private $langue;
     /**
-     * @var \Mondofute\Bundle\CommandeBundle\Entity\StatutDossier
+     * @var StatutDossier
      */
     private $statutDossier;
 
@@ -62,7 +64,7 @@ class StatutDossierTraduction
     /**
      * Get langue
      *
-     * @return \Mondofute\Bundle\LangueBundle\Entity\Langue
+     * @return Langue
      */
     public function getLangue()
     {
@@ -72,11 +74,11 @@ class StatutDossierTraduction
     /**
      * Set langue
      *
-     * @param \Mondofute\Bundle\LangueBundle\Entity\Langue $langue
+     * @param Langue $langue
      *
      * @return StatutDossierTraduction
      */
-    public function setLangue(\Mondofute\Bundle\LangueBundle\Entity\Langue $langue = null)
+    public function setLangue(Langue $langue = null)
     {
         $this->langue = $langue;
 
@@ -86,7 +88,7 @@ class StatutDossierTraduction
     /**
      * Get statutDossier
      *
-     * @return \Mondofute\Bundle\CommandeBundle\Entity\StatutDossier
+     * @return StatutDossier
      */
     public function getStatutDossier()
     {
@@ -96,11 +98,11 @@ class StatutDossierTraduction
     /**
      * Set statutDossier
      *
-     * @param \Mondofute\Bundle\CommandeBundle\Entity\StatutDossier $statutDossier
+     * @param StatutDossier $statutDossier
      *
      * @return StatutDossierTraduction
      */
-    public function setStatutDossier(\Mondofute\Bundle\CommandeBundle\Entity\StatutDossier $statutDossier = null)
+    public function setStatutDossier(StatutDossier $statutDossier = null)
     {
         $this->statutDossier = $statutDossier;
 

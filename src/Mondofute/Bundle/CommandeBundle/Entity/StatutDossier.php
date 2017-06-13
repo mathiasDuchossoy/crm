@@ -100,40 +100,6 @@ class StatutDossier
     }
 
     /**
-     * Get traductions
-     *
-     * @return Collection
-     */
-    public function getTraductions()
-    {
-        return $this->traductions;
-    }
-
-    /**
-     * Get groupeStatutDossier
-     *
-     * @return GroupeStatutDossier
-     */
-    public function getGroupeStatutDossier()
-    {
-        return $this->groupeStatutDossier;
-    }
-
-    /**
-     * Set groupeStatutDossier
-     *
-     * @param GroupeStatutDossier $groupeStatutDossier
-     *
-     * @return StatutDossier
-     */
-    public function setGroupeStatutDossier(GroupeStatutDossier $groupeStatutDossier = null)
-    {
-        $this->groupeStatutDossier = $groupeStatutDossier;
-
-        return $this;
-    }
-
-    /**
      * Add commandeStatutDossier
      *
      * @param CommandeStatutDossier $commandeStatutDossier
@@ -165,5 +131,57 @@ class StatutDossier
     public function getCommandeStatutDossier()
     {
         return $this->commandeStatutDossier;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $locale = 'fr_FR';
+        $return = '';
+        if (!empty($this->getGroupeStatutDossier())) {
+            $return .= $this->getGroupeStatutDossier()->getTraductions()->filter(function (GroupeStatutDossierTraduction $element) use ($locale) {
+                    return $element->getLangue()->getCode() == $locale;
+                })->first()->getLibelle() . ' - ';
+        }
+        $return .= $this->getTraductions()->filter(function (StatutDossierTraduction $element) use ($locale) {
+            return $element->getLangue()->getCode() == $locale;
+        })->first()->getLibelle();
+        return $return;
+    }
+
+    /**
+     * Get groupeStatutDossier
+     *
+     * @return GroupeStatutDossier
+     */
+    public function getGroupeStatutDossier()
+    {
+        return $this->groupeStatutDossier;
+    }
+
+    /**
+     * Set groupeStatutDossier
+     *
+     * @param GroupeStatutDossier $groupeStatutDossier
+     *
+     * @return StatutDossier
+     */
+    public function setGroupeStatutDossier(GroupeStatutDossier $groupeStatutDossier = null)
+    {
+        $this->groupeStatutDossier = $groupeStatutDossier;
+
+        return $this;
+    }
+
+    /**
+     * Get traductions
+     *
+     * @return Collection
+     */
+    public function getTraductions()
+    {
+        return $this->traductions;
     }
 }

@@ -55,10 +55,12 @@ use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
 use Nucleus\MoyenComBundle\Entity\TelMobile;
 use ReflectionClass;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Commande controller.
@@ -93,7 +95,9 @@ class CommandeController extends Controller
 
         return $this->render('@MondofuteCommande/commande/index.html.twig', array(
             'commandes' => $unifies,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'statuts' => $em->getRepository(StatutDossier::class)->findAll(),
+            'litiges' => $em->getRepository(LitigeDossier::class)->findAll()
         ));
     }
 
@@ -112,9 +116,6 @@ class CommandeController extends Controller
 //        gestion du premier formulaire client formulaire
         /** @var Client $client */
         if (empty($client = $commande->getClients()->first())) {
-
-//        dump($client);
-//        die;
             $client = new Client();
             $client->addMoyenCom(new Adresse())
                 ->addMoyenCom(new TelFixe())
@@ -1236,5 +1237,43 @@ class CommandeController extends Controller
             'name' => $index,
             'ajax' => true
         ));
+    }
+
+    /**
+     * @ParamConverter("statutDossier", class="MondofuteCommandeBundle:StatutDossier", options={"id" = "statutDossierId"})
+     *
+     * @return Response
+     */
+    public function addStatutDossierAction(Commande $commande, StatutDossier $statutDossier)
+    {
+        $commande->addStatutDossier($statutDossier);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $emSite = $this->getDoctrine()->getManager($commande->getSite()->getLibelle());
+        $commandeSite = $emSite->find(Commande::class, $commande);
+        $commandeSite->addStatutDossier($emSite->find(StatutDossier::class, $statutDossier));
+        $emSite->flush();
+
+        return new Response();
+    }
+
+    /**
+     * @ParamConverter("litigeDossier", class="MondofuteCommandeBundle:LitigeDossier", options={"id" = "litigeDossierId"})
+     *
+     * @return Response
+     */
+    public function addLitigeDossierAction(Commande $commande, LitigeDossier $litigeDossier)
+    {
+        $commande->addLitigeDossier($litigeDossier);
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        $emSite = $this->getDoctrine()->getManager($commande->getSite()->getLibelle());
+        $commandeSite = $emSite->find(Commande::class, $commande);
+        $commandeSite->addLitigeDossier($emSite->find(LitigeDossier::class, $litigeDossier));
+        $emSite->flush();
+
+        return new Response();
     }
 }
