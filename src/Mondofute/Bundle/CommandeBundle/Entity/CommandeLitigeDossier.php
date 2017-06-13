@@ -2,8 +2,7 @@
 
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
-use Mondofute\Bundle\CommandeBundle\Entity\Commande;
-use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
+use DateTime;
 
 /**
  * CommandeLitigeDossier
@@ -16,7 +15,7 @@ class CommandeLitigeDossier
     private $id;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateHeure;
     /**
@@ -42,7 +41,7 @@ class CommandeLitigeDossier
      * @param int $id
      * @return CommandeLitigeDossier
      */
-    public function setId(int $id): CommandeLitigeDossier
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
@@ -52,7 +51,7 @@ class CommandeLitigeDossier
     /**
      * Get dateHeure
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateHeure()
     {
@@ -62,7 +61,7 @@ class CommandeLitigeDossier
     /**
      * Set dateHeure
      *
-     * @param \DateTime $dateHeure
+     * @param DateTime $dateHeure
      *
      * @return CommandeLitigeDossier
      */

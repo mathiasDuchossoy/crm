@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use Mondofute\Bundle\CatalogueBundle\Entity\LogementPeriodeLocatif;
+use Mondofute\Bundle\ClientBundle\Controller\ClientController;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
 use Mondofute\Bundle\ClientBundle\Entity\ClientUser;
 use Mondofute\Bundle\CodePromoBundle\Entity\CodePromo;
@@ -16,11 +16,16 @@ use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
+use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
+use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\RemiseCodePromo;
 use Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote;
 use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourNuite;
 use Mondofute\Bundle\CommandeBundle\Entity\SejourPeriode;
+use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
+use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\DecoteBundle\Entity\Decote;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteFournisseurPrestationAnnexe;
 use Mondofute\Bundle\DecoteBundle\Entity\DecoteLogement;
@@ -34,11 +39,6 @@ use Mondofute\Bundle\FournisseurPrestationAffectationBundle\Entity\PrestationAnn
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\FournisseurPrestationAnnexeParam;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PeriodeValidite;
 use Mondofute\Bundle\FournisseurPrestationAnnexeBundle\Entity\PrestationAnnexeTarif;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
-use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
-use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
-use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
-use Mondofute\Bundle\CommandeBundle\Form\CommandeType;
 use Mondofute\Bundle\LangueBundle\Entity\Langue;
 use Mondofute\Bundle\LogementBundle\Entity\Logement;
 use Mondofute\Bundle\PeriodeBundle\Entity\Periode;
@@ -50,7 +50,6 @@ use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeSejour as PromotionTypePe
 use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionTypePeriodeValidite;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
-use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;
@@ -628,31 +627,6 @@ class CommandeController extends Controller
         ));
     }
 
-    public function ajoutClientAction(Request $request)
-    {
-//        récupère l'indice en preparation pour le multi-client
-        $indice = intval($request->query->get('indice'), 10);
-        $em = $this->getDoctrine()->getManager();
-        if (empty($request->query->get('id'))) {
-            $client = new Client();
-            $client->addMoyenCom(new Adresse())
-                ->addMoyenCom(new TelFixe())
-                ->addMoyenCom(new TelMobile())
-                ->addMoyenCom(new Email())
-                ->addMoyenCom(new Email());
-            $clientUser = new ClientUser();
-            $clientUser->setClient($client);
-            $client->setClientUser($clientUser);
-        } else {
-            $client = $em->getRepository(Client::class)->find($request->query->get('id'));
-        }
-//        création du formType de la commande
-        $form = $this->createForm('Mondofute\Bundle\ClientBundle\Form\ClientClientUserType', $client);
-        return $this->render('@MondofuteCommande/commande/fiche-client.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
-
     /**
      * Finds and displays a commande entity.
      *
@@ -689,6 +663,7 @@ class CommandeController extends Controller
      */
     public function editAction(Request $request, Commande $commande)
     {
+        $em = $this->getDoctrine()->getManager();
 //        gère le classement des commandeStatutDossier afin d'avoir le statut en cours
         $criteresStatut = Criteria::create();
         $criteresStatut->orderBy(array('dateHeure' => 'DESC'));
@@ -762,7 +737,6 @@ class CommandeController extends Controller
         $formClient->handleRequest($request);
 //        fin gestion du formulaire client
         if ($form->isSubmitted() && $form->isValid() && $formClient->isSubmitted() && $formClient->isValid()) {
-            $em = $this->getDoctrine()->getManager();
 //            ajoute le nouveau statut si le statut en cours est différent du statut choisi
             if ($originalStatutDossier->getStatutDossier()->getId() != $request->request->get('mondofute_bundle_commandebundle_commande')['statutDossier']) {
                 $commandeStatutDossier = new CommandeStatutDossier();

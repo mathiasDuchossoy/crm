@@ -565,18 +565,6 @@ class Logement
         return $this->logementPeriodeLocatifs;
     }
 
-    public function getLogementPeriodeLocatifsStockNotEmpty()
-    {
-        $logementPeriodeLocatifs = new ArrayCollection();
-        /** @var LogementPeriodeLocatif $logementPeriodeLocatif */
-        foreach ($this->logementPeriodeLocatifs as $logementPeriodeLocatif) {
-            if ($logementPeriodeLocatif->getStock() > 0 and $logementPeriodeLocatif->getPeriode()->getDebut() > new \DateTime()) {
-                $logementPeriodeLocatifs->set($logementPeriodeLocatif->getPeriode()->getId(), $logementPeriodeLocatif);
-            }
-        }
-        return $logementPeriodeLocatifs;
-    }
-
     /**
      * Add promotionLogement
      *
