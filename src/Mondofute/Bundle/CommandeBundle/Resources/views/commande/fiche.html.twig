@@ -678,8 +678,7 @@
         </h1>
     </section>
     <section>
-        {#  BLOCK CONTENANT LE FORMULAIRE #}
-        {% block formulaire %}
+        <div>
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
@@ -732,6 +731,7 @@
                 <li>
                     <a data-toggle="tab" href="#commande-statut">Statut</a>
                 </li>
+                <li role="presentation"><a href="#commentaire" aria-controls="commentaire" role="tab" data-toggle="tab">Commentaire</a></li>
             </ul>
             <div class="tab-content">
                 <div id="commande-fiche" class="tab-pane fade in active">
@@ -845,11 +845,17 @@
                     {#{{ form_row(form.litigeDossier) }}#}
                     {#{{ form_row(form.statutDossier,{'attr':{'test':'test'}}) }}#}
                 </div>
+                <div role="tabpanel" class="tab-pane" id="commentaire">
+                    {% set commentaireClient = form.commentaireClient %}
+                    {% include '@MondofuteCommentaire/commentaire/commentaire-client-widget.html.twig' %}
+                    {% set commentaires = form.commentaireInternes %}
+                    {% include '@MondofuteCommentaire/commentaire/commentaire-interne-widget.html.twig' %}
+                </div>
             </div>
             {{ form_row(form._token) }}
             {{ form_row(form.submit) }}
             {{ form_end(form, {'render_rest': false}) }}
-        {% endblock %}
+        </div>
     </section>
     <section>
         {% block actions %}
@@ -964,12 +970,18 @@
             var $element = $(element);
             var $collectionHolder = $element.closest('div.collection').find('div.items:first');
             var prototype = $element.data('prototype');
-            var index = $collectionHolder.data('index');
+            var index;
+            if ($collectionHolder.length != 0) {
+                index = $collectionHolder.data('index');
+            } else  {
+                index = $panelBodyId.data('index');
+            }
             if (!index) index = 0;
             var regex = new RegExp(name, 'g');
             var newForm = prototype.replace(regex, index);
             var $newForm = $(newForm);
             $collectionHolder.data('index', index + 1);
+            $panelBodyId.data('index', index + 1);
             $newForm.data('index', index);
             if ($panelBodyId.length == 0) {
                 $collectionHolder.append($newForm);

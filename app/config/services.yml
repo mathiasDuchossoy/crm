@@ -63,5 +63,12 @@ services:
                 alias: polycollection
     mondofute_core_bundle_controller:
         class: Mondofute\Bundle\CoreBundle\Controller\CoreController
+
+
+    my.listener:
+        class: Mondofute\Bundle\UtilisateurBundle\EventListener\EntityListener
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
     mondofute_passerelle_factory:
         class: Mondofute\Bundle\PasserelleBundle\Entity\PasserelleFactory

@@ -19,6 +19,9 @@ HiDev\Bundle\CommentaireBundle\Entity\Commentaire:
             type: boolean
         contenu:
             type: text
+#    oneToOne:
+#        auteur:
+#            targetEntity: HiDev\Bundle\AuteurBundle\Entity\Auteur
     lifecycleCallbacks:
         prePersist: [ setDateHeureCreation, setDateHeureModification ]
         preUpdate: [ setDateHeureModification ]

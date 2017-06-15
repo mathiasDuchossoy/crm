@@ -49,7 +49,14 @@ Mondofute\Bundle\CommandeBundle\Entity\Commande:
         clients:
             targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
             inversedBy: commandes
+        commentaireInternes:
+            targetEntity: Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne
+            cascade: ['persist','remove']
+            orphanRemoval: true
     manyToOne:
         site:
             targetEntity: Mondofute\Bundle\SiteBundle\Entity\Site
+        commentaireClient:
+            targetEntity: Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient
+            cascade: ['persist','remove']
     lifecycleCallbacks: {  }

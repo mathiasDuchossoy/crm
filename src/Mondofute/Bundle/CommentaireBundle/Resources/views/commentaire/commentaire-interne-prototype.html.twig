@@ -1,0 +1,23 @@
+<div class="row item">
+    <div class="col-md-1"></div>
+    <div class="col-md-2">
+        {% if commentaire.vars.data is null %}
+            {{ app.user.utilisateur }} :
+        {% else %}
+            {{ commentaire.vars.data.auteur }} :
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        {% if commentaire.vars.data == null or commentaire.vars.data.auteur.utilisateur == app.user.utilisateur %}
+            {{ form_widget(commentaire.contenu) }}
+        {% else %}
+            {{ form_widget(commentaire.contenu , {'attr' : {'style' : 'display:none'} }) }}
+            <textarea class="form-control" disabled>{{ commentaire.contenu.vars.value }}</textarea>
+        {% endif %}
+    </div>
+    {% if commentaire.vars.data == null or commentaire.vars.data.auteur.utilisateur == app.user.utilisateur %}
+        <div class="col-md-2 text-right">
+            {{ block('bouton_supprimer', '@MondofuteCommande/commande/fiche.html.twig') }}
+        </div>
+    {% endif %}
+</div>

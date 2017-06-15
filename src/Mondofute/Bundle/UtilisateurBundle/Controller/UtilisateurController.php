@@ -3,8 +3,10 @@
 namespace Mondofute\Bundle\UtilisateurBundle\Controller;
 
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use FOS\UserBundle\Model\UserInterface;
+use HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
 use Mondofute\Bundle\UtilisateurBundle\Entity\UtilisateurUser;
@@ -56,6 +58,7 @@ class UtilisateurController extends Controller
      */
     public function newAction(Request $request)
     {
+        /** @var EntityManager $emSite */
 //        $this->container->parameters['session.storage.options']['domain'];
 //        dump($this->container->getParameter("fos_user.model_manager_name"));
 //        dump($this->container->getParameter("fos_user.model_manager_name"));
@@ -96,6 +99,10 @@ class UtilisateurController extends Controller
                 $em->persist($utilisateur);
                 $em->persist($utilisateurUser);
 
+                $utilisateurAuteur = new UtilisateurAuteur();
+                $utilisateurAuteur->setUtilisateur($utilisateur);
+                $em->persist($utilisateurAuteur);
+
                 $em->flush();
 
                 $sites = $em->getRepository(Site::class)->findBy(array('crm' => 0));
@@ -119,6 +126,13 @@ class UtilisateurController extends Controller
 
                     $emSite->persist($utilisateurClone);
                     $emSite->persist($utilisateurUserClone);
+
+                    $utilisateurAuteurSite = new UtilisateurAuteur();
+                    $utilisateurAuteurSite->setId($utilisateurAuteur->getId());
+                    $utilisateurAuteurSite->setUtilisateur($utilisateurClone);
+                    $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
+                    $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                    $emSite->persist($utilisateurAuteurSite);
 
                     $emSite->flush();
                 }
@@ -279,7 +293,32 @@ class UtilisateurController extends Controller
 
                 $em->persist($utilisateurUser);
                 $em->persist($utilisateur);
+
+                if (empty($utilisateur->getAuteur())) {
+                    $utilisateurAuteur = new UtilisateurAuteur();
+                    $utilisateurAuteur->setUtilisateur($utilisateur);
+                    $em->persist($utilisateurAuteur);
+                }
+
                 $em->flush();
+
+                $utilisateurAuteur = $utilisateur->getAuteur();
+                /** @var Site $siteSansCrm */
+                /** @var EntityManager $emSite */
+                $siteSansCrms = $em->getRepository(Site::class)->chargerSansCrmParClassementAffichage();
+                foreach ($siteSansCrms as $siteSansCrm) {
+                    $emSite = $this->getDoctrine()->getManager($siteSansCrm->getLibelle());
+                    $utilisateurAuteurSite = $emSite->find(UtilisateurAuteur::class, $utilisateurAuteur);
+                    if (empty($utilisateurAuteurSite)) {
+                        $utilisateurAuteurSite = new UtilisateurAuteur();
+                        $utilisateurAuteurSite->setUtilisateur($emSite->find(Utilisateur::class, $utilisateur));
+                        $utilisateurAuteurSite->setId($utilisateurAuteur->getId());
+                        $metadata = $emSite->getClassMetadata(get_class($utilisateurAuteurSite));
+                        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
+                        $emSite->persist($utilisateurAuteurSite);
+                        $emSite->flush();
+                    }
+                }
 
                 // add flash messages
                 $this->addFlash(

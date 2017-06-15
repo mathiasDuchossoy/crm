@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Interne</h3>
+    </div>
+    <div class="panel-body">
+        <div id="commentaire_interne" data-index="{{ commentaires | length }}">
+            {% for commentaire in commentaires %}
+                {% include '@MondofuteCommentaire/commentaire/commentaire-interne-prototype.html.twig' %}
+            {% endfor %}
+        </div>
+        {% set commentaire = commentaires.vars.prototype %}
+        <a href="#"
+           data-prototype="{{ include ('@MondofuteCommentaire/commentaire/commentaire-interne-prototype.html.twig' )| e }}"
+           class="btn btn-success add_item pull-right"
+           onclick="addTagForm(this,event,'__name__','commentaire_interne');">
+            <i class="glyphicon glyphicon-plus"></i> Répondre
+        </a>
+    </div>
+</div>

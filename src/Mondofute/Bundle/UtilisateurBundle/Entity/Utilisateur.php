@@ -11,8 +11,9 @@ use Nucleus\ContactBundle\Entity\Physique;
 class Utilisateur extends Physique
 {
     private $id;
+
     /**
-     * @var auteur
+     * @var UtilisateurAuteur auteur
      */
     private $auteur;
 
@@ -32,14 +33,28 @@ class Utilisateur extends Physique
         $this->id = $id;
     }
 
+    /**
+     * @return UtilisateurAuteur auteur
+     */
     public function getAuteur()
     {
         return $this->auteur;
     }
 
+    /**
+     * @param UtilisateurAuteur $auteur
+     *
+     * @return $this
+     */
     public function setAuteur(UtilisateurAuteur $auteur)
     {
         $this->auteur = $auteur;
+
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getPrenom() . ' ' . $this->getNom();
     }
 }

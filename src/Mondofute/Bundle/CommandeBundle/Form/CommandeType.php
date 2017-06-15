@@ -8,6 +8,9 @@ use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
 use Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierRepository;
 use Mondofute\Bundle\CommandeBundle\Repository\StatutDossierRepository;
+use Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient;
+use Mondofute\Bundle\CommentaireBundle\Form\CommentaireClientType;
+use Mondofute\Bundle\CommentaireBundle\Form\CommentaireInterneType;
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -81,6 +84,7 @@ class CommandeType extends AbstractType
                     return $qb;
                 },
                 'data' => $this->statutDossier,
+                'required' => true
             ))
             ->add('litigeDossier', EntityType::class, array(
                 'class' => LitigeDossier::class,
@@ -100,45 +104,55 @@ class CommandeType extends AbstractType
                 'data' => $this->litigeDossier,
             ))
             ->add('commandeLignes', PolyCollectionType::class, array(
-            'types' => array(
-                CommandeLigneSejourType::class,
-                CommandeLignePrestationAnnexeType::class,
-                CommandeLigneFraisDossierType::class,
-                SejourNuiteType::class,
-                SejourPeriodeType::class,
-                CommandeLigneRemiseType::class,
-                RemiseCodePromoType::class,
-                RemiseDecoteType::class,
-                RemisePromotionType::class,
-            ),
-            'types_options' => array(
-                CommandeLigneSejourType::class => array(// Here you can optionally define options for the InvoiceLineType
+                'types' => array(
+                    CommandeLigneSejourType::class,
+                    CommandeLignePrestationAnnexeType::class,
+                    CommandeLigneFraisDossierType::class,
+                    SejourNuiteType::class,
+                    SejourPeriodeType::class,
+                    CommandeLigneRemiseType::class,
+                    RemiseCodePromoType::class,
+                    RemiseDecoteType::class,
+                    RemisePromotionType::class,
                 ),
-                CommandeLignePrestationAnnexeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                'types_options' => array(
+                    CommandeLigneSejourType::class => array(// Here you can optionally define options for the InvoiceLineType
+                    ),
+                    CommandeLignePrestationAnnexeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    ),
+                    CommandeLigneFraisDossierType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    ),
+                    SejourNuiteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    ),
+                    SejourPeriodeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                        'addSejourPeriode' => $options['addSejourPeriode']
+                    ),
+                    CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                    ),
+                    RemiseCodePromoType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                        'site' => $site
+                    ),
+                    RemiseDecoteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                        'site' => $site
+                    ),
+                    RemisePromotionType::class => array(// Here you can optionally define options for the InvoiceProductLineType
+                        'site' => $site
+                    )
                 ),
-                CommandeLigneFraisDossierType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                ),
-                SejourNuiteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                ),
-                SejourPeriodeType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                    'addSejourPeriode' => $options['addSejourPeriode']
-                ),
-                CommandeLigneRemiseType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                ),
-                RemiseCodePromoType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                    'site' => $site
-                ),
-                RemiseDecoteType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                    'site' => $site
-                ),
-                RemisePromotionType::class => array(// Here you can optionally define options for the InvoiceProductLineType
-                    'site' => $site
-                )
-            ),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false
-        ));
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ))
+            ->add('commentaireClient', CommentaireClientType::class, [
+                'data_class' => CommentaireClient::class,
+                'user' => $options['user']
+            ])
+            ->add('commentaireInternes', CollectionType::class, array(
+                'entry_type' => CommentaireInterneType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ));
     }
 
     /**
@@ -148,8 +162,9 @@ class CommandeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mondofute\Bundle\CommandeBundle\Entity\Commande',
+            'addSejourPeriode' => false,
             'locale' => 'fr_FR',
-            'addSejourPeriode' => false
+            'user' => null
         ));
     }
 

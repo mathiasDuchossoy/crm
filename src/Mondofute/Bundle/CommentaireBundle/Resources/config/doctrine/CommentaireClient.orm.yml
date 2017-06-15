@@ -1,0 +1,32 @@
+Mondofute\Bundle\CommentaireBundle\Entity\CommentaireClient:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireClientRepository
+    attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+        contenu:
+            type: text
+            nullable: true
+        validationModerateur:
+            type: boolean
+            options:
+                default: true
+    fields:
+        utilisateurModification:
+            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateir
+            nullable: true
+#    manyToOne:
+#        client:
+#            targetEntity: Mondofute\Bundle\ClientBundle\Entity\Client
+    oneToMany:
+        reponses:
+            targetEntity: Mondofute\Bundle\CommentaireBundle\Entity\CommentaireUtilisateur
+            mappedBy: commentaireParent
+            cascade: ['persist','remove']
+    lifecycleCallbacks: {  }

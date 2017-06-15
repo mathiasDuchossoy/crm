@@ -1,0 +1,16 @@
+Mondofute\Bundle\CommentaireBundle\Entity\CommentaireInterne:
+    type: entity
+    table: null
+    repositoryClass: Mondofute\Bundle\CommentaireBundle\Repository\CommentaireInterneRepository
+    attributeOverride:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+            options:
+                unsigned: true
+#    manyToOne:
+#        utilisateur:
+#            targetEntity: Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur
+    lifecycleCallbacks: {  }

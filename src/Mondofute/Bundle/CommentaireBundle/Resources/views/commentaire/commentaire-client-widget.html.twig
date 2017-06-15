@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Client</h3>
+    </div>
+    <div class="panel-body">
+        {{ form_widget(commentaireClient.contenu) }}
+        <div id="commentaire_utilisateur" data-index="{{ commentaireClient.reponses | length }}">
+            {% for commentaireUtilisateur in commentaireClient.reponses %}
+                {% include '@MondofuteCommentaire/commentaire/commentaire-utilisateur-widget.html.twig' %}
+            {% endfor %}
+        </div>
+        {% set commentaireUtilisateur = commentaireClient.reponses.vars.prototype %}
+        <a href="#" data-prototype="{{  include ('@MondofuteCommentaire/commentaire/commentaire-utilisateur-widget.html.twig' )| e   }}"
+           class="btn btn-success add_item pull-right"
+           onclick="addTagForm(this,event,'__name__','commentaire_utilisateur');">
+            <i class="glyphicon glyphicon-plus"></i> Répondre
+        </a>
+    </div>
+</div>

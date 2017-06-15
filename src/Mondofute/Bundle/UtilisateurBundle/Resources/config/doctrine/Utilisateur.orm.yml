@@ -41,4 +41,5 @@ Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur:
         auteur:
             targetEntity: HiDev\Bundle\AuteurBundle\Entity\UtilisateurAuteur
             mappedBy: utilisateur
+            cascade: [ "persist", "remove" ]
     lifecycleCallbacks: {  }
