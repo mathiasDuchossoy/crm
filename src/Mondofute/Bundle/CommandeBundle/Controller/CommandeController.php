@@ -57,6 +57,7 @@ use Mondofute\Bundle\PromotionBundle\Entity\TypePeriodeValidite as PromotionType
 use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\StationBundle\Entity\Station;
 use Mondofute\Bundle\UtilisateurBundle\Entity\Utilisateur;
+use Nucleus\ContactBundle\Entity\Civilite;
 use Nucleus\MoyenComBundle\Entity\Adresse;
 use Nucleus\MoyenComBundle\Entity\Email;
 use Nucleus\MoyenComBundle\Entity\TelFixe;

@@ -470,7 +470,7 @@ class Commande
         if (!empty($this->commentaireClient)) {
             return $this->commentaireClient->getReponses();
         }
-        return null;
+        return new ArrayCollection();
     }
 
     /**
