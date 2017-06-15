@@ -15,6 +15,7 @@
             <th>Montant</th>
             <th>Statut</th>
             <th>Litige</th>
+            <th>Site</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -71,6 +72,9 @@
                     </label>
                 </td>
                 <td>
+                    {{ commande.site }}
+                </td>
+                <td>
                     <ul class="list-unstyled">
                         <li>
                             <a class="btn btn-default"
@@ -84,7 +88,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     {% if commande.sejourPeriodes is not empty %}
                         <div class="panel panel-default" style="position: relative">
                             <div class="panel-heading" role="tab" id="heading_sejour_{{ commande.id }}">
@@ -128,7 +132,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     {% if commande.prestationAnnexeExternes is not empty %}
                         <div class="panel panel-default" style="position: relative">
                             <div class="panel-heading" role="tab" id="heading_prestation_annexe_{{ commande.id }}">
