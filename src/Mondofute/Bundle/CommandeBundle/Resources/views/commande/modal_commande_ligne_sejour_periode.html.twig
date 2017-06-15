@@ -29,8 +29,8 @@
                                 <select id="rechercher_logement_fournisseur"
                                         class="form-control">
                                     <option value=""> --- Choisir un fournisseur ---</option>
-                                    {% if fournisseurs is defined %}
-                                        {% for fournisseur in fournisseurs %}
+                                    {% if fournisseurHebergements is defined %}
+                                        {% for fournisseur in fournisseurHebergements %}
                                             <option value="{{ fournisseur.id }}">{{ fournisseur.enseigne }}</option>
                                         {% endfor %}
                                     {% endif %}

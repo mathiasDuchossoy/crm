@@ -4,7 +4,6 @@ namespace Mondofute\Bundle\CommandeBundle\Form;
 
 use Infinite\FormBundle\Form\Type\PolyCollectionType;
 use Mondofute\Bundle\ClientBundle\Entity\Client;
-use Mondofute\Bundle\ClientBundle\Form\ClientType;
 use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\StatutDossier;
 use Mondofute\Bundle\CommandeBundle\Repository\LitigeDossierRepository;
@@ -13,17 +12,15 @@ use Mondofute\Bundle\SiteBundle\Entity\Site;
 use Mondofute\Bundle\SiteBundle\Repository\SiteRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Mondofute\Bundle\ClientBundle\Form\ClientClientUserType;
 
 class CommandeType extends AbstractType
 {
     private $statutDossier;
     private $litigeDossier;
 
-    public function __construct($statutDossier, $litigeDossier)
+    public function __construct($statutDossier = null, $litigeDossier = null)
     {
         $this->statutDossier = $statutDossier;
         $this->litigeDossier = $litigeDossier;

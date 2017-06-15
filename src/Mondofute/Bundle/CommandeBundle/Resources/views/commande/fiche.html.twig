@@ -427,46 +427,69 @@
     {% set type = form._type.vars.value %}
     {% if type == 'prestationAnnexe' %}
         <tr class="item">
-            <td>
-                <select id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
-                        name="{{ form.fournisseurPrestationAnnexeParam.vars.full_name }}"
-                        required="required"
-                        onchange="changePrixPrestationAnnexeSejour(this, '{{ name }}', '{{ namePA }}')"
-                        class="form-control">
-                    {#{% include ('@MondofuteCommande/commande/options_commande_ligne_prestation_annexe_sejour.html.twig') %}#}
-                    <option value=""> --- Choisir une prestation annexe externe ---</option>
-                    {% set type = '' %}
-                    {% for key, element in form.fournisseurPrestationAnnexeParam.vars.choices %}
-                        {% if element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type %}
-                            {% set type = element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe %}
-                            <optgroup label="
+            <td colspan="3">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Prestation annexe
+                        </th>
+                        <th>Tarif</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <select id="{{ form.fournisseurPrestationAnnexeParam.vars.id }}"
+                                            name="{{ form.fournisseurPrestationAnnexeParam.vars.full_name }}"
+                                            required="required"
+                                            onchange="changePrixPrestationAnnexeSejour(this, '{{ name }}', '{{ namePA }}')"
+                                            class="form-control">
+                                        {#{% include ('@MondofuteCommande/commande/options_commande_ligne_prestation_annexe_sejour.html.twig') %}#}
+                                        <option value=""> --- Choisir une prestation annexe ---</option>
+                                        {% set type = '' %}
+                                        {% for key, element in form.fournisseurPrestationAnnexeParam.vars.choices %}
+                                            {% if element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type %}
+                                                {% set type = element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe %}
+                                                <optgroup label="
                         {% for traduction in type.traductions %}
                         {% if traduction.langue.code == app.request.locale %}
                         {{ traduction.libelle }}
                         {% endif %}
                         {% endfor %}
                         ">
-                        {% endif %}
-                        <option
-                                {% if form.fournisseurPrestationAnnexeParam.vars.value ==  element.value %}
-                                    selected="selected"
-                                {% endif %}
-                                value="{{ element.value }}">{{ element.label }}</option>
-                        {% if loop.last or (loop.last == false and element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}
-                            </optgroup>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-
-                {% set idCollectionParticipant = 'commande_ligne_sejour_'~name~'prestation_annexe_'~namePA~'_participant' %}
-                {% set collectionForm = form.participants %}
-                {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
-                {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
-                {#{{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr': {'onchange' : 'changePrixPrestationAnnexeSejour(this, "'~ name ~'", "'~ namePA ~'")'}}) }}#}
+                                            {% endif %}
+                                            <option
+                                                    {% if form.fournisseurPrestationAnnexeParam.vars.value ==  element.value %}
+                                                        selected="selected"
+                                                    {% endif %}
+                                                    value="{{ element.value }}">{{ element.label }}</option>
+                                            {% if loop.last or (loop.last == false and element.data.fournisseurPrestationAnnexe.prestationAnnexe.famillePrestationAnnexe != type) %}
+                                                </optgroup>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
+                        <td>{{ block('bouton_supprimer') }}
+                            {{ form_row(form._type) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            {% set idCollectionParticipant = 'commande_ligne_sejour_'~name~'prestation_annexe_'~namePA~'_participant' %}
+                            {% set collectionForm = form.participants %}
+                            {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
+                            {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </td>
-            <td>{{ form_widget(form.prixVente, {'type' : 'number' , 'attr' : {'step' : 'any', 'min' : 0 }}) }}</td>
-            <td>{{ block('bouton_supprimer') }}</td>
-            {{ form_row(form._type) }}
         </tr>
     {% endif %}
 {% endblock %}
@@ -478,7 +501,13 @@
         <tr class="item">
             <td>{{ form_widget(form.dateDebut, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateDebut.vars.value }}</td>
             <td>{{ form_widget(form.dateFin, {'attr' : {'style' : 'display:none'}}) }}{{ form.dateFin.vars.value }}</td>
-            <td>{{ form_widget(form.station, {'attr' : {'style' : 'display:none'}}) }}{{ form.vars.value.station }}</td>
+            <td style="width: 900px">{{ form_widget(form.station, {'attr' : {'style' : 'display:none'}}) }}{{ form.vars.value.station }}
+                {#{% set idCollectionParticipant = 'commande_ligne_prestation_annexe___name_commande_ligne_prestation_annexe___participant' %}#}
+                {% set idCollectionParticipant = form.participants.vars.id %}
+                {% set collectionForm = form.participants %}
+                {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
+                {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
+            </td>
             <td>
                 {{ form_widget(form.fournisseurPrestationAnnexeParam, {'attr' : {'onchange' : 'changerPrixPrestationAnnexeExterne(this, "'~name~'")'}}) }}
             </td>
@@ -654,7 +683,7 @@
             {% include '::flashbags.html.twig' %}
             {{ form_errors(form) }}
             {{ form_start(form) }}
-            {% if form.statutDossier.vars.data is not null  %}
+            {% if form.statutDossier.vars.data is not null %}
                 <div style="background-color: {{ form.statutDossier.vars.data.codeCouleur }}" class="row alert">
                     <div class="col-md-12">
                         {#récupération du libelle du groupeStatutDossier associé#}
@@ -799,11 +828,11 @@
                                     {# récupération du libelle du groupeStatutDossier associé #}
                                     {#{% set libelleGroupe = '' %}#}
                                     {#{% if litigeDossier.data.litigeDossier is not null %}#}
-                                        {#{% for groupe in statutDossier.data.groupeStatutDossier.traductions %}#}
-                                            {#{% if groupe.langue.code == app.request.locale %}#}
-                                                {#{% set libelleGroupe = groupe.libelle~' - ' %}#}
-                                            {#{% endif %}#}
-                                        {#{% endfor %}#}
+                                    {#{% for groupe in statutDossier.data.groupeStatutDossier.traductions %}#}
+                                    {#{% if groupe.langue.code == app.request.locale %}#}
+                                    {#{% set libelleGroupe = groupe.libelle~' - ' %}#}
+                                    {#{% endif %}#}
+                                    {#{% endfor %}#}
                                     {#{% endif %}#}
                                     {# gestion de l'option statutDossier#}
                                     <option {% if form.litigeDossier.vars.data.id is defined and form.litigeDossier.vars.data.id == litigeDossier.data.id %}selected="selected"{% endif %}
@@ -1092,7 +1121,7 @@
                                             var textStation = $inputStation.find('option:selected').text();
                                             $tdInputStation.append(textStation);
 
-                                            {% set idCollectionParticipant = 'commande_ligne_prestation_annexe___name_commande_ligne_prestation_annexe___participant' %}
+                                            {% set idCollectionParticipant = 'commande_ligne_prestation_annexe___name_commande_ligne_prestation_annexe___participants' %}
                                             {% set formCommandeLigneParticipant = null %}
                                             var block_participant = '{{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') | e('js') }}';
                                             {% set collectionForm = [] %}

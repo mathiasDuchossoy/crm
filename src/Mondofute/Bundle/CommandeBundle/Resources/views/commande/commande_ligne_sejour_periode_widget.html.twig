@@ -78,7 +78,7 @@
         </tbody>
     </table>
 
-    {% set idCollectionParticipant = 'commande_ligne_sejour_' ~ name~'_participant' %}
+    {% set idCollectionParticipant = 'commande_ligne_sejour_' ~ name~'_participants' %}
     {% set collectionForm = form.participants %}
     {% set formCommandeLigneParticipant = form.participants.vars.prototype %}
     {{ block('block_participant' , '@MondofuteCommande/commande/block_participant.html.twig') }}
@@ -98,16 +98,7 @@
                 </a>
             </div>
             <div class="items">
-                <table class="panel table table-striped">
-                    <thead>
-                    <tr>
-                        <th>
-                            Prestation annexe
-                        </th>
-                        <th>Tarif</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
+                <table class="panel table">
                     <tbody class="panel-body" id="prestation_annexe_sejour_{{ name }}">
                     {% for namePA, form in collectionForm %}
                         {{ block('entry_row_commande_ligne_prestation_annexe_sejour' , '@MondofuteCommande/commande/fiche.html.twig') }}

@@ -1,38 +1,42 @@
 {% block block_participant %}
     {#{% set type = form._type %}#}
     <div class="row">
-        <div class="collection">
-            <div class="clearfix">
-                {#{% set formCommandeLigneParticipant = form.participants.vars.prototype %}#}
-                <a href="#"
-                   data-prototype="{{ block('item_participant') | e }}"
-                   class="btn btn-success add_item"
-                   onclick="addTagForm(this,event,'__name_commande_ligne_participant__' , '{{ idCollectionParticipant }}');"
-                >
-                    <i class="glyphicon glyphicon-plus"></i> participants
-                </a>
+        <div class="col-md-12 collection">
+            <div class="row">
+                <div class="col-md-12 clearfix">
+                    {#{% set formCommandeLigneParticipant = form.participants.vars.prototype %}#}
+                    <a href="#"
+                       data-prototype="{{ block('item_participant') | e }}"
+                       class="btn btn-success add_item"
+                       onclick="addTagForm(this,event,'__name_commande_ligne_participant__' , '{{ idCollectionParticipant }}');"
+                    >
+                        <i class="glyphicon glyphicon-plus"></i> participants
+                    </a>
+                </div>
             </div>
-            <div class="items">
-                <table class="panel table table-striped">
-                    <thead>
-                    <tr>
-                        <th>
-                            Civilité
-                        </th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Date de naissance</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody class="panel-body" id="{{ idCollectionParticipant }}">
-                    {% if collectionForm is defined %}
-                        {% for formCommandeLigneParticipant in collectionForm %}
-                            {{ block('item_participant') }}
-                        {% endfor %}
-                    {% endif %}
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="col-md-12 items">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Civilité
+                            </th>
+                            <th>Prénom</th>
+                            <th>Nom</th>
+                            <th>Date de naissance</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="panel-body" id="{{ idCollectionParticipant }}">
+                        {% if collectionForm is defined %}
+                            {% for formCommandeLigneParticipant in collectionForm %}
+                                {{ block('item_participant') }}
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -16,10 +16,10 @@ use Mondofute\Bundle\CommandeBundle\Entity\Commande;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigne;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLignePrestationAnnexe;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLigneSejour;
-use Mondofute\Bundle\CommandeBundle\Entity\Participant;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeLitigeDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\CommandeStatutDossier;
 use Mondofute\Bundle\CommandeBundle\Entity\LitigeDossier;
+use Mondofute\Bundle\CommandeBundle\Entity\Participant;
 use Mondofute\Bundle\CommandeBundle\Entity\RemiseCodePromo;
 use Mondofute\Bundle\CommandeBundle\Entity\RemiseDecote;
 use Mondofute\Bundle\CommandeBundle\Entity\RemisePromotion;
@@ -892,19 +892,6 @@ class CommandeController extends Controller
                     }
                 }
 
-//            /** @var Client $client */
-//            foreach ($commande->getClients() as $client){
-//                dump($client);
-//                if(!empty($client->getId())){
-//                    dump($client);
-//                    $tmp = $em->getRepository(Client::class)->find($client->getId());
-//                    $tmp->setClientUser($client->getClientUser())->setDateNaissance($client->getDateNaissance())->setNom($client->getNom())->setPrenom($client->getPrenom());
-//                    $commande->removeClient($client);
-//                    $commande->addClient($tmp);
-//
-//                }
-//                die;
-//            }
                 $em->flush();
 
                 $this->copieVersSites($commande);
@@ -923,7 +910,7 @@ class CommandeController extends Controller
             ]);
         }
 
-        $fournisseurs = $em->getRepository(Fournisseur::class)->findAll();
+        $fournisseurHebergements = $em->getRepository(Fournisseur::class)->getFournisseurHebergements();
 
         return $this->render('@MondofuteCommande/commande/edit.html.twig', array(
             'commande' => $commande,
@@ -931,7 +918,7 @@ class CommandeController extends Controller
             'delete_form' => $deleteForm->createView(),
             'formClient' => $formClient->createView(),
             'stations' => $stationTraductions,
-            'fournisseurs' => $fournisseurs,
+            'fournisseurHebergements' => $fournisseurHebergements,
             'promotionSejourPeriodes' => $promotionSejourPeriodes,
             'decoteMasqueeSejourPeriodes' => $decoteMasqueeSejourPeriodes,
             'decoteVisibleSejourPeriodes' => $decoteVisibleSejourPeriodes,
