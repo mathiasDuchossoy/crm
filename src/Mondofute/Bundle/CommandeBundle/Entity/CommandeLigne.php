@@ -3,6 +3,8 @@
 namespace Mondofute\Bundle\CommandeBundle\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * CommandeLigne
@@ -38,16 +40,21 @@ abstract class CommandeLigne
      */
     private $prixVente = 0;
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $datePaiement;
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateEmailFournisseur;
+    /**
+     * @var Collection
+     */
+    private $participants;
 
     public function __construct()
     {
+        $this->participants = new ArrayCollection();
         $this->dateAchat = new DateTime();
     }
 
@@ -220,7 +227,7 @@ abstract class CommandeLigne
     /**
      * Get datePaiement
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDatePaiement()
     {
@@ -230,7 +237,7 @@ abstract class CommandeLigne
     /**
      * Set datePaiement
      *
-     * @param \DateTime $datePaiement
+     * @param DateTime $datePaiement
      *
      * @return CommandeLigne
      */
@@ -244,7 +251,7 @@ abstract class CommandeLigne
     /**
      * Get dateEmailFournisseur
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateEmailFournisseur()
     {
@@ -254,7 +261,7 @@ abstract class CommandeLigne
     /**
      * Set dateEmailFournisseur
      *
-     * @param \DateTime $dateEmailFournisseur
+     * @param DateTime $dateEmailFournisseur
      *
      * @return CommandeLigne
      */
@@ -263,5 +270,39 @@ abstract class CommandeLigne
         $this->dateEmailFournisseur = $dateEmailFournisseur;
 
         return $this;
+    }
+
+    /**
+     * Add participant
+     *
+     * @param Participant $participant
+     *
+     * @return CommandeLigne
+     */
+    public function addParticipant(Participant $participant)
+    {
+        $this->participants[] = $participant->setCommandeLigne($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove participant
+     *
+     * @param Participant $participant
+     */
+    public function removeParticipant(Participant $participant)
+    {
+        $this->participants->removeElement($participant);
+    }
+
+    /**
+     * Get participants
+     *
+     * @return Collection
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
     }
 }

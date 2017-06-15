@@ -69,7 +69,9 @@ class Commande
         $this->commandeLignes = new ArrayCollection();
         $this->commandeEtatDossiers = new ArrayCollection();
         $this->commandeStatutDossiers = new ArrayCollection();
+        $this->dateCommande = new DateTime();
         $this->commandeLitigeDossiers = new ArrayCollection();
+        $this->dateCommande = new DateTime();
     }
 
     /**

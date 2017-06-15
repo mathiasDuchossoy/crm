@@ -3,6 +3,7 @@
 namespace Mondofute\Bundle\FournisseurBundle\Repository;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Mondofute\Bundle\FournisseurBundle\Entity\Fournisseur;
 use Mondofute\Bundle\FournisseurBundle\Entity\FournisseurContient;
 
 /**
@@ -164,6 +165,18 @@ class FournisseurRepository extends \Doctrine\ORM\EntityRepository
         $result = $q->getQuery()->getResult();
 //        dump($result);die;
         return $result;
+    }
+
+    public function getFournisseurHebergements()
+    {
+        $q = $this->getEntityManager()->createQueryBuilder();
+        $q
+            ->select('fournisseur')
+            ->from(Fournisseur::class, 'fournisseur')
+            ->join('fournisseur.types', 'types')
+            ->where('types.id = 9');
+        return $q->getQuery()->getResult();
+
     }
 
 }

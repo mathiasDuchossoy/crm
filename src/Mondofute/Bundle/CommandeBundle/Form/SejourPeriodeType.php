@@ -75,7 +75,14 @@ class SejourPeriodeType extends AbstractType
                     'class' => 'date',
                     'data-provide' => 'datepicker',
                 )
-            ));
+            ))
+            ->add('participants', CollectionType::class, [
+                'entry_type' => ParticipantType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype_name' => '__name_commande_ligne_participant__'
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($locale, $options) {
             /** @var SejourPeriode $data */
